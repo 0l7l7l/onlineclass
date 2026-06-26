@@ -1,0 +1,1572 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일본어 온라인 클래스</title>
+    <style>
+        /* ================= 전역 변수 및 초기화 ================= */
+        :root {
+            --bg-beige: #F9F6F0;
+            --main-beige: #F1EAE0;
+            --point-brown: #6E5A4B;
+            --border-color: #E5DEC9;
+            --white: #ffffff;
+            --text-dark: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-beige);
+            color: var(--point-brown);
+            font-family: 'Noto Sans KR', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 공통 유틸리티 클래스 */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        /* =================  공통 버튼 및 카드 컴포넌트 ================= */
+        .btn-transparent {
+            background: transparent;
+            border: 2px solid var(--point-brown);
+            color: var(--point-brown);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-transparent:hover {
+                background: var(--point-brown);
+                color: var(--white);
+            }
+
+        .card {
+            background-color: var(--white);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .mypage-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .money-balance {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .balance-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #92400e;
+            letter-spacing: 0.05em;
+        }
+
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-dark);
+        }
+
+        .mini-stat-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .mini-stat {
+            background: var(--bg-beige);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.875rem;
+        }
+
+            .mini-stat strong {
+                display: block;
+                margin-top: 0.25rem;
+                color: var(--text-dark);
+            }
+
+        .charge-amount-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .charge-amount-btn {
+            border: 1px solid var(--border-color);
+            background: var(--white);
+            color: var(--point-brown);
+            padding: 0.65rem 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+            .charge-amount-btn.active {
+                border: 2px solid var(--point-brown);
+                background: var(--main-beige);
+            }
+
+        .bank-info-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        /* ================= 레이아웃 (헤더, 사이드바, 메인) ================= */
+        header {
+            background-color: var(--white);
+            border-b: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .header-logo {
+            font-size: 1.125rem;
+            font-weight: bold;
+            tracking-character: 0.05em;
+            cursor: pointer;
+        }
+
+        .header-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--point-brown);
+        }
+
+        #sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 40;
+        }
+
+        aside {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 16rem;
+            background-color: var(--white);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem;
+            z-index: 50;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+            aside.active {
+                transform: translateX(0);
+            }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--point-brown);
+        }
+
+        .menu-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0.4;
+            padding: 0 0.75rem;
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: var(--point-brown);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+            .nav-link:hover {
+                background-color: var(--main-beige);
+            }
+
+            .nav-link.active-style {
+                font-weight: bold;
+                color: #78350f;
+                background-color: #fef3c7;
+            }
+
+        main {
+            flex: 1;
+            max-width: 56rem;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .spa-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* =================  메인 자동 슬라이더 영역 ================= */
+        #sec-main {
+            position: relative;
+            overflow: hidden;
+            min-height: 450px;
+            justify-content: center;
+        }
+
+        .slide-container {
+            position: relative;
+            width: 100%;
+            max-width: 42rem;
+            margin: 0 auto;
+        }
+
+        .main-slide {
+            transition: opacity 0.7s ease, transform 0.7s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+            .main-slide h1 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                line-height: 1.4;
+            }
+
+            .main-slide p {
+                font-size: 0.875rem;
+                opacity: 0.8;
+                line-height: 1.6;
+                max-width: 32rem;
+                margin: 0 auto;
+            }
+
+        /* 코스 스타일 */
+        .course-card {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #b45309;
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-card h2 {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #92400e;
+            tracking-character: 0.05em;
+        }
+
+        .course-card h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .course-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .meta-tag {
+            font-size: 0.75rem;
+            font-weight: bold;
+            background-color: var(--main-beige);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+        }
+
+        .meta-price {
+            font-size: 1.25rem;
+            font-weight: 900;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 50%;
+            background-color: #d1d5db;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .dot.active {
+                background-color: var(--point-brown);
+            }
+
+        /* =================  서브 섹션 스타일 ================= */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 2px solid var(--point-brown);
+            padding-bottom: 0.5rem;
+        }
+
+        /* 그리드 시스템 */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .sub-btn-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            max-width: 42rem;
+            margin: 0 auto;
+            padding-top: 1rem;
+        }
+
+            .sub-btn-grid .btn-transparent {
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+                border-radius: 0.75rem;
+            }
+
+        .sub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        /* 테이블 스타일 */
+        .table-responsive {
+            overflow-x: auto;
+            background-color: var(--white);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--main-beige);
+        }
+
+        .bg-highlight {
+            background-color: rgba(254, 243, 199, 0.4);
+        }
+
+        /* 티켓 슬라이더 */
+        .ticket-slider-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 28rem;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .btn-circle {
+            width: 2.5rem;
+            height: 2.5rem;
+            border: 2px solid var(--point-brown);
+            background: none;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+            .btn-circle:hover {
+                background-color: var(--point-brown);
+                color: var(--white);
+            }
+
+        .ticket-card-box {
+            width: 100%;
+            padding: 0 1rem;
+        }
+
+        .ticket-card {
+            background-color: var(--bg-beige);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 2px solid var(--point-brown);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* 예약 폼 */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .radio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .radio-label {
+            border: 1px solid var(--border-color);
+            padding: 0.625rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            display: block;
+        }
+
+            .radio-label:hover {
+                background-color: #fffbeb;
+            }
+
+        input[type="datetime-local"] {
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            background-color: var(--bg-beige);
+            color: var(--point-brown);
+        }
+
+        /* 모달 오버레이 */
+        /* 가로로 넓고 세로가 슬림한 직사각형 구조 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(110, 90, 75, 0.4);
+            padding: 0 1rem;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            width: 100%;
+            max-width: 26rem; /* 가로 폭을 살짝 넓힘 */
+            padding: 1.25rem 1.5rem; /* 위아래 패딩을 줄임 */
+            border-radius: 0.75rem;
+            position: relative;
+            border: 2px solid var(--point-brown);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .modal-content h3 {
+            font-size: 1.125rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        /* 입력창과 버튼 간격을 좁혀 세로 길이를 축소 */
+        .modal-form-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.375rem;
+            background-color: var(--bg-beige);
+            font-size: 0.85rem;
+        }
+
+        .modal-content .btn-transparent {
+            padding: 0.6rem;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .modal-footer-text {
+            text-center: center;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        /* 디버그 스위치 */
+        .debug-switch {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--white);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            /*      shadow: 0 4px 6px rgba(0,0,0,0.1);*/
+            border: 1px solid var(--border-color);
+            font-size: 0.75rem;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+            .debug-switch button {
+                border: none;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                cursor: pointer;
+            }
+
+        /* ================= 6. 미디어 쿼리 (반응형 PC 환경) ================= */
+        @media (min-width: 768px) {
+            body {
+                flex-direction: row;
+            }
+
+            header {
+                display: none;
+            }
+
+            aside {
+                position: sticky;
+                transform: translateX(0);
+                height: 100vh;
+            }
+
+            .sidebar-close {
+                display: none;
+            }
+
+            .main-slide h1 {
+                font-size: 2rem;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .mypage-grid {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+
+            .mini-stat-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .sub-btn-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .course-meta {
+                flex-direction: row;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            table {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo" onclick="showSection('main')">세상모든언어 | 세모일본어온라인</div>
+        <button onclick="toggleSidebar()" class="header-toggle">☰</button>
+    </header>
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="hidden"></div>
+
+    <aside id="sidebar">
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div class="sidebar-title" onclick="showSection('main'); closeSidebarMobile();">일본어온라인수업</div>
+                <button onclick="toggleSidebar()" class="sidebar-close">&times;</button>
+            </div>
+
+            <nav>
+                <div id="nav-guest">
+                    <p class="menu-label">MENU</p>
+                    <a href="#" onclick="showSection('main'); closeSidebarMobile();" class="nav-link">메인</a>
+                    <a href="#" onclick="showSection('info'); closeSidebarMobile();" class="nav-link">수업 안내</a>
+                    <a href="#" onclick="showSection('schedule'); closeSidebarMobile();" class="nav-link">그룹 스케줄표</a>
+                    <a href="#" onclick="showSection('qa'); closeSidebarMobile();" class="nav-link">Q&A</a>
+                    <a href="#" onclick="showSection('archive'); closeSidebarMobile();" class="nav-link">자료실</a>
+                    <div style="padding: 1rem 0.5rem 0 0.5rem;">
+                        <button onclick="openModal('login')" class="btn-transparent w-full">로그인</button>
+                    </div>
+                </div>
+
+                <div id="nav-student" class="hidden">
+                    <p class="menu-label" style="color: #92400e; opacity: 0.6;">STUDENT PAGE</p>
+                    <a href="#" onclick="showSection('reserve'); closeSidebarMobile();" class="nav-link active-style">📅 수업 예약</a>
+                    <a href="#" onclick="showSection('ticket'); closeSidebarMobile();" class="nav-link">🎫 티켓 구매</a>
+                    <a href="#" onclick="showSection('mypage'); closeSidebarMobile();" class="nav-link">👤 마이페이지</a>
+                    <div style="padding: 1rem 0.5rem 0 0.5rem;">
+                        <button onclick="logout()" class="btn-transparent w-full" style="border-color: #fca5a5; color: #ef4444;">로그아웃</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div style="font-size: 0.75rem; opacity: 0.5; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <p>© 2026 JP CLASS</p>
+        </div>
+    </aside>
+
+    <main>
+
+        <section id="sec-main" class="spa-section">
+            <div class="slide-container">
+
+                <div class="main-slide text-center">
+                    <h1>💻 전국 어디서나 1:1 홈케어<br>방구석에서 시작하는 고효율 일본어 온라인 클래스!</h1>
+                    <p>무거운 책 들고 학원까지 오가는 시간, 너무 아까우셨죠? 이제 집, 카페, 회사 회의실 어디서든 노트북이나 스마트폰 하나로 일본 현지 느낌 그대로 수업을 재미있고 타이트하게 즐겨보세요!</p>
+                    <div style="padding-top: 1rem;">
+                        <button onclick="openModal('login')" class="btn-transparent" style="padding: 0.75rem 2rem; font-size: 1rem;">지금 바로 시작하기</button>
+                    </div>
+                </div>
+
+                <div class="main-slide course-card text-center hidden" style="opacity: 0; transform: translateX(32px);">
+                    <div style="text-align: center;"><span class="badge">추천 코스</span></div>
+                    <h2>COURSE 01</h2>
+                    <h3>나도 문자마스터 코스</h3>
+                    <p style="font-weight: 600; color: #4b5563;">🎯 히라가나, 가타카나에서 번번이 좌절했던 왕초보 수강생</p>
+                    <p>하루 딱 25분 화면에만 온전히 집중하세요! 직관적인 화면 공유와 풍부한 시각 자료를 통해 지루할 틈 없이 일본어 글자가 머리에 쏙쏙 박힙니다. 작심삼일 프로 포기자도 무조건 정복!</p>
+                    <div class="course-meta">
+                        <span class="meta-tag">25분 실시간 밀착 케어</span>
+                        <span class="meta-price">99,000원</span>
+                    </div>
+                    <div style="padding-top: 0.5rem;">
+                        <button onclick="showSection('ticket')" class="btn-transparent" style="font-size: 0.75rem;">상세 정보 및 구매</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="slider-dots">
+                <button onclick="setMainSlide(0)" id="main-dot-0" class="dot active"></button>
+                <button onclick="setMainSlide(1)" id="main-dot-1" class="dot"></button>
+            </div>
+        </section>
+
+        <section id="sec-info" class="spa-section hidden">
+            <div id="info-main" class="text-center" style="display: flex; flex-direction: column; gap: 2rem; padding: 2rem 0;">
+                <div>
+                    <h2 style="font-size: 1.875rem; font-weight: 900; color: var(--point-brown);">우리는 이렇게 공부한다!</h2>
+                    <p style="font-size: 1.125rem; font-weight: 500; color: #451a03; margin-top: 0.5rem;">우리만의 특별 레시피로 일본어 입이 드디어 트이도록! 👄</p>
+                </div>
+
+                <div class="sub-btn-grid">
+                    <button onclick="showSubInfo('method')" class="btn-transparent">
+                        <span style="font-size: 1.5rem;">🎯</span>
+                        <span style="font-weight: bold;">메뉴1: 수업 방법</span>
+                        <span style="font-size: 0.75rem; opacity: 0.6; font-weight: normal;">개인/듀오/그룹 맞춤형 프로세스</span>
+                    </button>
+                    <button onclick="showSubInfo('ticket-info')" class="btn-transparent">
+                        <span style="font-size: 1.5rem;">🎫</span>
+                        <span style="font-weight: bold;">메뉴2: 티켓 종류</span>
+                        <span style="font-size: 0.75rem; opacity: 0.6; font-weight: normal;">3개월 PDF 열람권 포함 티켓 안내</span>
+                    </button>
+                    <button onclick="showSubInfo('target')" class="btn-transparent">
+                        <span style="font-size: 1.5rem;">✨</span>
+                        <span style="font-weight: bold;">메뉴3: 추천 대상</span>
+                        <span style="font-size: 0.75rem; opacity: 0.6; font-weight: normal;">이런 분들이 들으면 효과 만점!</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="info-sub-method" class="info-sub-content card hidden" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="sub-header">
+                    <h3 style="font-size: 1.25rem; font-weight: bold;">🎯 우리만의 특별한 일본어 수업 방법</h3>
+                    <button onclick="goBackToInfoMain()" class="btn-transparent" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">← 돌아가기</button>
+                </div>
+                <div style="font-size: 0.875rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1rem;">
+                    <p style="font-weight: 600; color: #78350f;">말하기 중심의 3단계 스텝</p>
+                    <ul style="list-style-type: none; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><strong>1단계:</strong> 자체 제작 PDF 교재로 핵심 표현을 가볍게 예습합니다.</li>
+                        <li><strong>2단계:</strong> 온라인 실시간 수업(1:1, 1:2, 그룹)을 통해 무한 복습 대화를 진행합니다.</li>
+                        <li><strong>3단계:</strong> 수업 종료 후 제공되는 피드백 노트로 교정받습니다.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="info-sub-ticket-info" class="info-sub-content card hidden" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="sub-header">
+                    <h3 style="font-size: 1.25rem; font-weight: bold;">🎫 효율적인 수강 티켓 시스템</h3>
+                    <button onclick="goBackToInfoMain()" class="btn-transparent" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">← 돌아가기</button>
+                </div>
+                <div style="font-size: 0.875rem; line-height: 1.6; display: flex; flex-direction: column; gap: 1rem;">
+                    <p style="font-weight: 600; color: #78350f;">모든 티켓에는 'PDF 3개월 열람권'이 기본 장착!</p>
+                    <div class="grid-2">
+                        <div class="card" style="background-color: var(--bg-beige);">
+                            <h4 style="font-weight: bold; margin-bottom: 0.25rem;">단독 수업 이용권</h4>
+                            <p style="font-size: 0.75rem; opacity: 0.7;">원하는 주제를 선별하여 자유롭게 예약하고 참여하는 쿠폰형 티켓</p>
+                        </div>
+                        <div class="card" style="background-color: var(--bg-beige);">
+                            <h4 style="font-weight: bold; margin-bottom: 0.25rem;">정기 패키지권</h4>
+                            <p style="font-size: 0.75rem; opacity: 0.7;">체계적인 단계별 입트이기 트레이닝을 위한 할인 적용 패키지</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="info-sub-target" class="info-sub-content card hidden" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="sub-header">
+                    <h3 style="font-size: 1.25rem; font-weight: bold;">✨ 이런 분들에게 강력 추천합니다</h3>
+                    <button onclick="goBackToInfoMain()" class="btn-transparent" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">← 돌아가기</button>
+                </div>
+                <div style="font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: flex-start;"><span>✔️</span><p>문법은 대충 아는데 막상 일본인 앞에 서면 머리가 하얘지시는 분</p></div>
+                    <div style="display: flex; gap: 0.5rem; align-items: flex-start;"><span>✔️</span><p>딱딱한 교과서 표현 말고, 요즘 일본 현지인들이 쓰는 진짜 회화를 배우고 싶으신 분</p></div>
+                    <div style="display: flex; gap: 0.5rem; align-items: flex-start;"><span>✔️</span><p>학원 다닐 시간은 없고, 내가 원하는 시간에 스마트폰이나 PC로 편하게 매칭 수업을 듣고 싶으신 분</p></div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="sec-schedule" class="spa-section hidden">
+            <h2 class="section-title">그룹 스케줄표 (예시)</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>시간</th>
+                            <th>월요일</th>
+                            <th>수요일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;">10:00 - 11:00</td>
+                            <td class="bg-highlight">[초급] 기초 회화</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">19:00 - 20:00</td>
+                            <td>-</td>
+                            <td class="bg-highlight">[비즈니스] 회화</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <section id="sec-qa" class="spa-section hidden">
+            <h2 class="section-title">Q&A</h2>
+            <div class="card" style="font-size: 0.875rem;">
+                <p style="font-weight: bold;">Q. 티켓 구매 시 교재 3개월 열람 조건은 어떻게 적용되나요?</p>
+                <p style="margin-top: 0.25rem; opacity: 0.8;">A. 구매일 기점으로 3개월(90일)간 전용 자료실에서 실시간 열람이 가능합니다.</p>
+            </div>
+        </section>
+
+        <section id="sec-archive" class="spa-section hidden">
+            <h2 class="section-title">자료실</h2>
+            <div class="card text-center" style="padding: 2rem; opacity: 0.4; font-size: 0.875rem;">
+                🔒 티켓을 구매한 회원 전용 PDF 열람 공간입니다.
+            </div>
+        </section>
+
+
+
+        <!-- 수업예약 -->
+        <!--<section id="sec-schedule" class="spa-section hidden">-->
+        <!-- 수업예약 -->
+        <section id="sec-reserve" class="spa-section hidden">
+            <h2 class="section-title">수업 예약 시스템</h2>
+
+            <div class="card" style="display: flex; flex-direction: column; gap: 1.5rem; font-size: 0.875rem; max-width: 480px; margin: 0 auto;">
+
+                <!-- 현재 회원의 보유 티켓 정보 (로직 연동용 가상 데이터) -->
+                <div style="background: var(--bg-beige); padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: bold; color: var(--text-dark);">내 보유 티켓 현황</span>
+                    <span style="font-weight: bold; color: var(--point-brown); font-size: 1rem;"><span id="user-tickets">8</span>장 수강 가능</span>
+                </div>
+
+                <!-- 1단계: 수업 형태 선택 -->
+                <div class="form-group">
+                    <label style="font-weight: bold; color: var(--point-brown); display: block; margin-bottom: 0.5rem;">1. 수업 형태 선택</label>
+                    <div class="radio-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem;">
+                        <label class="radio-label" id="lbl-all" style="border: 1px solid var(--border-color); text-align: center; padding: 0.6rem 0; border-radius: 4px; cursor: pointer;">
+                            <input type="radio" name="c-type" value="all" style="display: none;"> 전체보기
+                        </label>
+                        <label class="radio-label" id="lbl-ind" style="border: 2px solid var(--point-brown); background: var(--main-beige); font-weight: bold; text-align: center; padding: 0.6rem 0; border-radius: 4px; cursor: pointer;">
+                            <input type="radio" name="c-type" value="individual" checked style="display: none;"> 개인(1:1)
+                        </label>
+                        <label class="radio-label" id="lbl-duo" style="border: 1px solid var(--border-color); text-align: center; padding: 0.6rem 0; border-radius: 4px; cursor: pointer;">
+                            <input type="radio" name="c-type" value="duo" style="display: none;"> 듀오(1:2)
+                        </label>
+                        <label class="radio-label" id="lbl-grp" style="border: 1px solid var(--border-color); text-align: center; padding: 0.6rem 0; border-radius: 4px; cursor: pointer;">
+                            <input type="radio" name="c-type" value="group" style="display: none;"> 그룹(고정)
+                        </label>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 0;">
+
+                <!-- [흐름 A] 개인 / 듀오 / 전체보기용 컨텐츠 영역 -->
+                <div id="area-individual-flow">
+                    <!-- 2단계: 선생님이 열어둔 날짜 선택 -->
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label style="font-weight: bold; color: var(--point-brown); display: block; margin-bottom: 0.25rem;">2. 선생님 오픈 날짜 선택</label>
+                        <div class="inline-calendar" style="border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 0.75rem; background: var(--white);">
+                            <div class="cal-month" style="text-align: center; font-weight: bold; margin-bottom: 0.5rem; color: var(--point-brown);">2026년 7월</div>
+                            <div class="cal-dates-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center;">
+                                <!-- 예시용 활성 날짜 버튼들 -->
+                                <button type="button" class="cal-date-btn active-date" style="border: 2px solid var(--point-brown); background: var(--main-beige); font-weight: bold; padding: 0.4rem 0; border-radius: 4px; cursor: pointer;">2</button>
+                                <button type="button" class="cal-date-btn" style="border: 1px solid var(--border-color); background: var(--white); padding: 0.4rem 0; border-radius: 4px; cursor: pointer;">3</button>
+                                <button type="button" class="cal-date-btn" style="border: 1px solid var(--border-color); background: var(--white); padding: 0.4rem 0; border-radius: 4px; cursor: pointer;">4</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3단계: 선생님의 빈자리 시간 선택 -->
+                    <div class="form-group">
+                        <label style="font-weight: bold; color: var(--point-brown); display: block; margin-bottom: 0.5rem;">3. 빈자리 시간 선택 (실시간 반영)</label>
+                        <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                            <button type="button" class="time-slot-btn" style="padding: 0.6rem; border: 1px solid var(--border-color); background: var(--white); text-align: left; border-radius: 4px; cursor: pointer;">
+                                🕐 14:00 ~ 14:25 <span style="float: right; color: green; font-weight: bold; font-size: 0.75rem;">예약 가능 (1석 남음)</span>
+                            </button>
+                            <button type="button" class="time-slot-btn" style="padding: 0.6rem; border: 1px solid var(--border-color); background: var(--white); text-align: left; border-radius: 4px; cursor: pointer;">
+                                🕐 15:30 ~ 15:55 <span style="float: right; color: green; font-weight: bold; font-size: 0.75rem;">예약 가능 (1석 남음)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- [흐름 B] 그룹 전용 컨텐츠 영역 (초기 숨김) -->
+                <div id="area-group-flow" style="display: none;">
+                    <!-- 2단계: 주간 요일 선택 (티켓 제한 연동) -->
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label style="font-weight: bold; color: var(--point-brown); display: block;">2. 주간 고정 요일 선택</label>
+                        <span id="ticket-notice" style="font-size: 0.75rem; color: #b45309; display: block; margin-bottom: 0.5rem;">* 보유 티켓(8장) 기준 최대 2개 요일 선택 가능 (주 2회)</span>
+
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem;">
+                            <label class="day-checkbox-label" style="border: 1px solid var(--border-color); padding: 0.6rem 0; text-align: center; border-radius: 4px; cursor: pointer; background: var(--white);">
+                                <input type="checkbox" name="grp-day" value="월" class="grp-day-chk" style="display: none;"> 월요일
+                            </label>
+                            <label class="day-checkbox-label" style="border: 1px solid var(--border-color); padding: 0.6rem 0; text-align: center; border-radius: 4px; cursor: pointer; background: var(--white);">
+                                <input type="checkbox" name="grp-day" value="화" class="grp-day-chk" style="display: none;"> 화요일
+                            </label>
+                            <label class="day-checkbox-label" style="border: 1px solid var(--border-color); padding: 0.6rem 0; text-align: center; border-radius: 4px; cursor: pointer; background: var(--white);">
+                                <input type="checkbox" name="grp-day" value="수" class="grp-day-chk" style="display: none;"> 수요일
+                            </label>
+                            <label class="day-checkbox-label" style="border: 1px solid var(--border-color); padding: 0.6rem 0; text-align: center; border-radius: 4px; cursor: pointer; background: var(--white);">
+                                <input type="checkbox" name="grp-day" value="목" class="grp-day-chk" style="display: none;"> 목요일
+                            </label>
+                            <label class="day-checkbox-label" style="border: 1px solid var(--border-color); padding: 0.6rem 0; text-align: center; border-radius: 4px; cursor: pointer; background: var(--white);">
+                                <input type="checkbox" name="grp-day" value="금" class="grp-day-chk" style="display: none;"> 금요일
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 3단계: 개설된 그룹 강의시간 선택 -->
+                    <div class="form-group">
+                        <label style="font-weight: bold; color: var(--point-brown); display: block; margin-bottom: 0.5rem;">3. 지정된 개설 강의 시간 선택</label>
+                        <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                            <button type="button" class="group-time-btn" style="padding: 0.6rem; border: 1px solid var(--border-color); background: var(--white); text-align: left; border-radius: 4px; cursor: pointer;">
+                                🎓 A반: 17:30 ~ 19:25 (100분 연속진행) <span style="float: right; opacity: 0.7; font-size: 0.75rem;" class="group-status-count">현재 2명 신청중</span>
+                            </button>
+                            <button type="button" class="group-time-btn" style="padding: 0.6rem; border: 1px solid var(--border-color); background: var(--white); text-align: left; border-radius: 4px; cursor: pointer;">
+                                🎓 B반: 19:30 ~ 21:25 (100분 연속진행) <span style="float: right; opacity: 0.7; font-size: 0.75rem;" class="group-status-count">현재 0명 신청중</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 최종 확정 버튼 -->
+                <button id="main-submit-btn" class="btn-transparent w-full" style="padding: 0.85rem; background: var(--point-brown); color: var(--white); font-weight: bold; border: none; border-radius: 4px; cursor: pointer;">수업 예약 확정하기</button>
+            </div>
+        </section>
+
+
+
+        <section id="sec-ticket" class="spa-section hidden">
+            <div id="ticket-main" class="text-center" style="display: flex; flex-direction: column; gap: 1.5rem; padding: 1.5rem 0;">
+                <div>
+                    <h2 style="font-size: 1.5rem; font-weight: bold; color: var(--point-brown);">수강 티켓 구매 안내</h2>
+                    <p style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.25rem;">모든 티켓에는 전용 학습 PDF 3개월 열람권이 포함되어 있습니다.</p>
+                </div>
+
+                <div class="grid-3" style="max-w: 48rem; margin: 0 auto; width: 100%;">
+                    <button onclick="showTicketSub('personal')" class="btn-transparent" style="padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"><span style="font-size: 1.25rem;">🙋‍♂️</span><span style="font-size: 0.875rem;">개인(1:1) 티켓</span></button>
+                    <button onclick="showTicketSub('duo')" class="btn-transparent" style="padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"><span style="font-size: 1.25rem;">👥</span><span style="font-size: 0.875rem;">듀오(1:2) 티켓</span></button>
+                    <button onclick="showTicketSub('group')" class="btn-transparent" style="padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"><span style="font-size: 1.25rem;">🏫</span><span style="font-size: 0.875rem;">그룹(1:N) 티켓</span></button>
+                    <button onclick="showTicketSub('package')" class="btn-transparent" style="padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;"><span style="font-size: 1.25rem;">🎁</span><span style="font-size: 0.875rem;">할인 패키지</span></button>
+                </div>
+            </div>
+
+            <div id="ticket-sub-container" class="card hidden" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="sub-header">
+                    <h3 id="ticket-sub-title" style="font-size: 1.25rem; font-weight: bold;">티켓 라벨</h3>
+                    <button onclick="goBackToTicketMain()" class="btn-transparent" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">← 목록으로</button>
+                </div>
+
+                <div class="ticket-slider-wrapper">
+                    <button onclick="moveSlider(-1)" class="btn-circle">&lt;</button>
+                    <div class="ticket-card-box">
+                        <div class="ticket-card text-center">
+                            <div style="text-align: center;"><span class="badge" style="background-color: #b45309;">Light</span></div>
+                            <h4 id="card-title-0" style="font-size: 1.125rem; font-weight: bold;">1회 체험권</h4>
+                            <p style="font-size: 0.75rem; opacity: 0.7; line-height: 1.4;">부담 없이 분위기를 파악하고<br>나에게 맞는지 경험해보는 맛보기 티켓</p>
+                            <p id="card-price-0" style="font-size: 1.25rem; font-weight: 900;">35,000원</p>
+                            <button onclick="alert('구매 프로세스로 이동합니다.')" class="btn-transparent w-full" style="background: var(--white); font-size: 0.75rem;">확인 후 구매하기</button>
+                        </div>
+                        <div class="ticket-card text-center hidden">
+                            <div style="text-align: center;"><span class="badge" style="background-color: #b45309;">Best</span></div>
+                            <h4 id="card-title-1" style="font-size: 1.125rem; font-weight: bold;">5회 수강권</h4>
+                            <p style="font-size: 0.75rem; opacity: 0.7; line-height: 1.4;">단기 목표를 세우고 확실하게<br>기초 회화의 틀을 잡는 정석 코스</p>
+                            <p id="card-price-1" style="font-size: 1.25rem; font-weight: 900;">160,000원</p>
+                            <button onclick="alert('구매 프로세스로 이동합니다.')" class="btn-transparent w-full" style="background: var(--white); font-size: 0.75rem;">확인 후 구매하기</button>
+                        </div>
+                        <div class="ticket-card text-center hidden">
+                            <div style="text-align: center;"><span class="badge" style="background-color: #b45309;">Premium</span></div>
+                            <h4 id="card-title-2" style="font-size: 1.125rem; font-weight: bold;">10회 수강권</h4>
+                            <p style="font-size: 0.75rem; opacity: 0.7; line-height: 1.4;">비즈니스, 프리토킹까지<br>원어민처럼 입을 트이게 하는 마스터 코스</p>
+                            <p id="card-price-2" style="font-size: 1.25rem; font-weight: 900;">300,000원</p>
+                            <button onclick="alert('구매 프로세스로 이동합니다.')" class="btn-transparent w-full" style="background: var(--white); font-size: 0.75rem;">확인 후 구매하기</button>
+                        </div>
+                    </div>
+                    <button onclick="moveSlider(1)" class="btn-circle">&gt;</button>
+                </div>
+                <div class="text-center" id="slider-indicator" style="font-size: 0.75rem; opacity: 0.5;">1 / 3</div>
+            </div>
+        </section>
+
+        <section id="sec-mypage" class="spa-section hidden">
+            <h2 class="section-title">마이페이지</h2>
+
+            <div class="mypage-grid">
+                <div class="card money-balance">
+                    <div>
+                        <p class="balance-label">SEMO MONEY</p>
+                        <p class="balance-amount"><span id="semo-balance">0</span> 세모</p>
+                        <p style="font-size: 0.75rem; opacity: 0.75; margin-top: 0.35rem;">티켓 구매와 수업 결제에 사용할 수 있는 전자머니입니다.</p>
+                    </div>
+                    <button onclick="openChargeModal()" class="btn-transparent w-full" style="padding: 0.75rem;">세모 충전하기</button>
+                </div>
+
+                <div class="card" style="font-size: 0.875rem;">
+                    <p style="font-weight: 600;">환영합니다, <span style="color: #92400e; font-weight: bold;">학생(Role)</span>님!</p>
+                    <p style="font-size: 0.75rem; opacity: 0.75; margin-top: 0.25rem;">구매하신 수업 티켓 정보 및 3개월 교재 열람 상태를 점검할 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="mini-stat-list">
+                <div class="mini-stat">
+                    <span style="font-size: 0.75rem; opacity: 0.7;">보유 티켓</span>
+                    <strong><span id="mypage-ticket-count">4</span>장</strong>
+                </div>
+                <div class="mini-stat">
+                    <span style="font-size: 0.75rem; opacity: 0.7;">교재 열람</span>
+                    <strong>72일 남음</strong>
+                </div>
+                <div class="mini-stat">
+                    <span style="font-size: 0.75rem; opacity: 0.7;">다음 수업</span>
+                    <strong>금 15:30</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="sub-header">
+                    <h3 style="font-size: 1rem;">최근 세모 충전 신청</h3>
+                    <span style="font-size: 0.75rem; opacity: 0.65;">무통장입금 확인 후 반영</span>
+                </div>
+                <div class="table-responsive" style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>신청일</th>
+                                <th>금액</th>
+                                <th>입금자명</th>
+                                <th>상태</th>
+                            </tr>
+                        </thead>
+                        <tbody id="charge-history-body">
+                            <tr>
+                                <td colspan="4" class="text-center" style="font-size: 0.8rem; opacity: 0.65;">아직 충전 신청 내역이 없습니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="debug-switch">
+        <p style="font-weight: bold; margin-bottom: 2px;">💡 확인용 스위치</p>
+        <button onclick="setRole('guest')" style="background-color: #e5e7eb;">비로그인</button>
+        <button onclick="setRole('student')" style="background-color: #fde68a;">학생 로그인</button>
+    </div>
+
+    <div id="auth-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="position: relative;">
+            <button onclick="closeModal()" class="modal-close">&times;</button>
+
+            <div id="form-login" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <h3 style="font-size: 1.25rem; font-weight: bold; text-align: center; margin-bottom: 0.5rem;">LOGIN</h3>
+                <div class="form-group">
+                    <label style="font-size: 0.75rem; font-weight: 600;">아이디</label>
+                    <input type="text" id="login-id" placeholder="아이디 입력">
+                </div>
+                <div class="form-group">
+                    <label style="font-size: 0.75rem; font-weight: 600;">비밀번호</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button onclick="login()" class="btn-transparent w-full" style="margin-top: 0.5rem;">로그인하기</button>
+                <p class="text-center" style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem;">계정이 없으신가요? <a href="#" onclick="toggleAuthForm('signup')" style="font-weight: bold; color: var(--point-brown);">회원가입</a></p>
+            </div>
+
+            <div id="form-signup" class="hidden" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <h3 style="font-size: 1.25rem; font-weight: bold; text-align: center; margin-bottom: 0.5rem;">SIGN UP</h3>
+                <div class="form-group">
+                    <label style="font-size: 0.75rem; font-weight: 600;">아이디 지정</label>
+                    <input type="text" placeholder="아이디">
+                </div>
+                <div class="form-group">
+                    <label style="font-size: 0.75rem; font-weight: 600;">비밀번호</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button onclick="alert('회원가입 완료!'); toggleAuthForm('login');" class="btn-transparent w-full" style="margin-top: 0.5rem;">가입 완료</button>
+                <p class="text-center" style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem;">이미 계정이 있으신가요? <a href="#" onclick="toggleAuthForm('login')" style="font-weight: bold; color: var(--point-brown);">로그인</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="charge-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="position: relative;">
+            <button onclick="closeChargeModal()" class="modal-close">&times;</button>
+            <h3>세모 충전 신청</h3>
+            <div class="modal-form-body">
+                <div class="bank-info-box">
+                    <p><strong>무통장입금 계좌</strong></p>
+                    <p>국민은행 123456-00-123456</p>
+                    <p>예금주: 세상모든언어</p>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-size: 0.75rem; font-weight: 600;">충전 금액</label>
+                    <div class="charge-amount-grid">
+                        <button type="button" onclick="selectChargeAmount(30000, this)" class="charge-amount-btn">30,000 세모</button>
+                        <button type="button" onclick="selectChargeAmount(50000, this)" class="charge-amount-btn">50,000 세모</button>
+                        <button type="button" onclick="selectChargeAmount(100000, this)" class="charge-amount-btn">100,000 세모</button>
+                        <button type="button" onclick="selectChargeAmount(200000, this)" class="charge-amount-btn">200,000 세모</button>
+                    </div>
+                    <input type="number" id="charge-amount" min="10000" step="1000" placeholder="직접 입력: 10,000 세모 이상">
+                </div>
+
+                <div class="form-group">
+                    <label style="font-size: 0.75rem; font-weight: 600;">입금자명</label>
+                    <input type="text" id="depositor-name" placeholder="실제 입금자명을 입력해 주세요">
+                </div>
+
+                <button onclick="submitChargeRequest()" class="btn-transparent w-full">충전 신청하기</button>
+                <p class="modal-footer-text text-center">입금 확인 후 관리자 승인으로 세모가 반영됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>// ================= 메인 상단 비주얼 자동 슬라이더 구현부 =================
+        let currentMainSlide = 0;
+        const totalMainSlides = 2;
+        let mainSlideInterval;
+
+        function updateMainSlide() {
+            const slides = document.querySelectorAll('.main-slide');
+            slides.forEach((slide, index) => {
+                const dot = document.getElementById(`main-dot-${index}`);
+                if (index === currentMainSlide) {
+                    slide.classList.remove('hidden');
+                    setTimeout(() => {
+                        slide.style.opacity = '1';
+                        slide.style.transform = 'translateX(0)';
+                    }, 50);
+                    if (dot) dot.classList.add('active');
+                } else {
+                    slide.classList.add('hidden');
+                    slide.style.opacity = '0';
+                    slide.style.transform = 'translateX(32px)';
+                    if (dot) dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextMainSlide() {
+            currentMainSlide = (currentMainSlide + 1) % totalMainSlides;
+            updateMainSlide();
+        }
+
+        function setMainSlide(index) {
+            currentMainSlide = index;
+            updateMainSlide();
+            resetMainInterval();
+        }
+
+        function startMainInterval() {
+            mainSlideInterval = setInterval(nextMainSlide, 4000); // 4초 설정 전환
+        }
+
+        function resetMainInterval() {
+            clearInterval(mainSlideInterval);
+            startMainInterval();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            startMainInterval();
+        });
+
+
+        // ================= SPA 페이지 분기 인터랙션 기능 구현부 =================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                overlay.classList.add('hidden');
+            } else {
+                sidebar.classList.add('active');
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        function closeSidebarMobile() {
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }
+        }
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.spa-section');
+            sections.forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById(`sec-${sectionId}`);
+            if (target) target.classList.remove('hidden');
+        }
+
+        function openModal(type) {
+            closeSidebarMobile();
+            document.getElementById('auth-modal').classList.remove('hidden');
+            toggleAuthForm(type);
+        }
+        function closeModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function openChargeModal() {
+            closeSidebarMobile();
+            document.getElementById('charge-modal').classList.remove('hidden');
+            document.getElementById('depositor-name').focus();
+        }
+
+        function closeChargeModal() {
+            document.getElementById('charge-modal').classList.add('hidden');
+        }
+
+        function selectChargeAmount(amount, button) {
+            document.getElementById('charge-amount').value = amount;
+            document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        function submitChargeRequest() {
+            const amountInput = document.getElementById('charge-amount');
+            const depositorInput = document.getElementById('depositor-name');
+            const amount = parseInt(amountInput.value, 10);
+            const depositorName = depositorInput.value.trim();
+
+            if (!amount || amount < 10000) {
+                alert('충전 금액은 10,000 세모 이상 입력해 주세요.');
+                amountInput.focus();
+                return;
+            }
+
+            if (!depositorName) {
+                alert('입금자명을 입력해 주세요.');
+                depositorInput.focus();
+                return;
+            }
+
+            const historyBody = document.getElementById('charge-history-body');
+            const today = new Date().toISOString().slice(0, 10);
+            historyBody.innerHTML = `
+                <tr>
+                    <td>${today}</td>
+                    <td>${amount.toLocaleString()} 세모</td>
+                    <td>${depositorName}</td>
+                    <td><span style="font-weight: 700; color: #b45309;">입금 대기</span></td>
+                </tr>
+            `;
+
+            closeChargeModal();
+            amountInput.value = '';
+            depositorInput.value = '';
+            document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+            alert('충전 신청이 접수되었습니다. 안내 계좌로 입금해 주세요.');
+        }
+
+        function toggleAuthForm(type) {
+            if (type === 'login') {
+                document.getElementById('form-login').classList.remove('hidden');
+                document.getElementById('form-signup').classList.add('hidden');
+            } else {
+                document.getElementById('form-login').classList.add('hidden');
+                document.getElementById('form-signup').classList.remove('hidden');
+            }
+        }
+
+        function setRole(role) {
+            const navGuest = document.getElementById('nav-guest');
+            const navStudent = document.getElementById('nav-student');
+            if (role === 'student') {
+                navGuest.classList.add('hidden');
+                navStudent.classList.remove('hidden');
+                showSection('reserve');
+            } else {
+                navGuest.classList.remove('hidden');
+                navStudent.classList.add('hidden');
+                showSection('main');
+            }
+        }
+
+        async function login() {
+            const idInput = document.getElementById('login-id').value.trim();
+            const passwordInput = document.getElementById('login-password').value;
+
+            if (!idInput || !passwordInput) {
+                alert('아이디와 비밀번호를 입력해 주세요.');
+                return;
+            }
+
+            const formData = new URLSearchParams();
+            formData.append('id', idInput);
+            formData.append('password', passwordInput);
+
+            try {
+                const response = await fetch('api/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    },
+                    body: formData.toString()
+                });
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    alert(result.message || '로그인에 실패했습니다.');
+                    return;
+                }
+
+                closeModal();
+                setRole('student');
+                alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);
+            } catch (error) {
+                alert('로그인 중 오류가 발생했습니다.');
+            }
+        }
+
+        function logout() {
+            setRole('guest');
+            alert('로그아웃 되었습니다.');
+        }
+
+        function showSubInfo(subId) {
+            document.getElementById('info-main').classList.add('hidden');
+            const subContents = document.querySelectorAll('.info-sub-content');
+            subContents.forEach(content => content.classList.add('hidden'));
+            document.getElementById(`info-sub-${subId}`).classList.remove('hidden');
+        }
+
+        function goBackToInfoMain() {
+            const subContents = document.querySelectorAll('.info-sub-content');
+            subContents.forEach(content => content.classList.add('hidden'));
+            document.getElementById('info-main').classList.remove('hidden');
+        }
+
+
+        // ================= 티켓 구매 레이아웃 핸들러 슬라이더 =================
+        let currentCardIndex = 0;
+        const totalCards = 3;
+
+        const ticketData = {
+            personal: { title: "🙋‍♂️ 개인(1:1) 수업 티켓", prices: ["40,000원", "185,000원", "350,000원"] },
+            duo: { title: "👥 듀오(1:2) 수업 티켓", prices: ["25,000원", "115,000원", "210,000원"] },
+            group: { title: "🏫 그룹(1:N) 수업 티켓", prices: ["18,000원", "85,000원", "150,000원"] },
+            package: { title: "🎁 특별 할인 패키지", prices: ["60,000원", "270,000원", "490,000원"] }
+        };
+
+        function showTicketSub(menuKey) {
+            document.getElementById('ticket-main').classList.add('hidden');
+            document.getElementById('ticket-sub-container').classList.remove('hidden');
+            document.getElementById('ticket-sub-title').innerText = ticketData[menuKey].title;
+            document.getElementById('card-price-0').innerText = ticketData[menuKey].prices[0];
+            document.getElementById('card-price-1').innerText = ticketData[menuKey].prices[1];
+            document.getElementById('card-price-2').innerText = ticketData[menuKey].prices[2];
+            currentCardIndex = 0;
+            updateCardVisibility();
+        }
+
+        function goBackToTicketMain() {
+            document.getElementById('ticket-sub-container').classList.add('hidden');
+            document.getElementById('ticket-main').classList.remove('hidden');
+        }
+
+        function moveSlider(direction) {
+            currentCardIndex += direction;
+            if (currentCardIndex < 0) currentCardIndex = totalCards - 1;
+            if (currentCardIndex >= totalCards) currentCardIndex = 0;
+            updateCardVisibility();
+        }
+
+        function updateCardVisibility() {
+            const cards = document.querySelectorAll('.ticket-card');
+            cards.forEach((card, index) => {
+                if (index === currentCardIndex) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            document.getElementById('slider-indicator').innerText = `${currentCardIndex + 1} / ${totalCards}`;
+        }
+
+        // 가상의 유저 티켓 수량 기준 세팅 (4장=1개선택, 8장=2개선택)
+        const userTickets = parseInt(document.getElementById('user-tickets').innerText);
+        const maxAllowedDays = userTickets >= 8 ? 2 : 1;
+
+        // UI 메시지 업데이트
+        document.getElementById('ticket-notice').innerText = `* 보유 티켓(${userTickets}장) 기준 매주 최대 ${maxAllowedDays}개 요일 선택 가능`;
+
+
+        // 1. 수업형태 탭 체인지 로직
+        document.querySelectorAll('input[name="c-type"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const flowType = e.target.value;
+                const indFlow = document.getElementById('area-individual-flow');
+                const grpFlow = document.getElementById('area-group-flow');
+                const submitBtn = document.getElementById('main-submit-btn');
+
+                // 라디오 UI 초기화 및 타겟 강조
+                document.querySelectorAll('.radio-label').forEach(lbl => {
+                    lbl.style.border = "1px solid var(--border-color)";
+                    lbl.style.backgroundColor = "var(--white)";
+                    lbl.style.fontWeight = "normal";
+                });
+                const currentLabel = e.target.closest('.radio-label');
+                currentLabel.style.border = "2px solid var(--point-brown)";
+                currentLabel.style.backgroundColor = "var(--main-beige)";
+                currentLabel.style.fontWeight = "bold";
+
+                // 흐름 분기 분기
+                if (flowType === 'group') {
+                    indFlow.style.display = 'none';
+                    grpFlow.style.display = 'block';
+                    submitBtn.innerText = "그룹 정기 스케줄 고정 확정";
+                } else {
+                    indFlow.style.display = 'block';
+                    grpFlow.style.display = 'none';
+                    submitBtn.innerText = "수업 예약 확정하기";
+                }
+            });
+        });
+
+        // 2. [그룹용] 요일 체크박스 제한 및 스타일 연동 로직
+        const dayCheckboxes = document.querySelectorAll('.grp-day-chk');
+        dayCheckboxes.forEach(chk => {
+            chk.addEventListener('change', (e) => {
+                const checkedCount = document.querySelectorAll('.grp-day-chk:checked').length;
+                const currentLabel = e.target.closest('.day-checkbox-label');
+
+                if (checkedCount > maxAllowedDays) {
+                    // 한도 초과 시 체크 차단
+                    e.target.checked = false;
+                    alert(`보유하신 티켓으로는 주 ${maxAllowedDays}회(요일 ${maxAllowedDays}개)까지만 선택 가능합니다.`);
+                    return;
+                }
+
+                // 스타일에 반영
+                if (e.target.checked) {
+                    currentLabel.style.border = "2px solid var(--point-brown)";
+                    currentLabel.style.backgroundColor = "var(--main-beige)";
+                    currentLabel.style.fontWeight = "bold";
+                } else {
+                    currentLabel.style.border = "1px solid var(--border-color)";
+                    currentLabel.style.backgroundColor = "var(--white)";
+                    currentLabel.style.fontWeight = "normal";
+                }
+            });
+        });
+
+        // 3. 버튼 클릭 피드백 모음 (날짜/시간)
+        document.querySelectorAll('.cal-date-btn, .time-slot-btn, .group-time-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const btnItem = e.target.closest('button');
+                const siblings = btnItem.parentElement.querySelectorAll('button');
+
+                siblings.forEach(s => {
+                    s.style.border = "1px solid var(--border-color)";
+                    s.style.backgroundColor = "var(--white)";
+                    s.style.color = "var(--text-dark)";
+                });
+
+                btnItem.style.border = "2px solid var(--point-brown)";
+                btnItem.style.backgroundColor = "var(--main-beige)";
+                btnItem.style.color = "var(--point-brown)";
+            });
+        });
+
+
+        // 그룹 수업 마스터 데이터 (백엔드에서 관리)
+        const groupCourses = [
+            {
+                courseId: "GROUP001",
+                name: "문자마스터반 - 주1회",
+                duration: "5주",
+                sessionMinutes: 25,
+                frequency: "1회/주",
+                schedule: [
+                    { dayOfWeek: "월", startTime: "14:00", endTime: "14:25" },
+                    { dayOfWeek: "수", startTime: "19:00", endTime: "19:25" },
+                    { dayOfWeek: "금", startTime: "15:30", endTime: "15:55" }
+                ],
+                maxStudents: 6,
+                currentEnrolled: 2,
+                price: 85000,
+                ticketType: "GROUP_1WEEK"
+            },
+            {
+                courseId: "GROUP002",
+                name: "문자마스터반 - 주2회",
+                duration: "1개월",
+                sessionMinutes: 25,
+                frequency: "2회/주",
+                schedule: [
+                    { dayOfWeek: "월", startTime: "17:30", endTime: "19:25" },
+                    { dayOfWeek: "목", startTime: "17:30", endTime: "19:25" }
+                ],
+                maxStudents: 8,
+                currentEnrolled: 5,
+                price: 150000,
+                ticketType: "GROUP_2WEEK"
+            }
+        ];
+
+        // 학생의 그룹 수업 등록 정보
+        const studentGroupEnrollments = [
+            {
+                enrollmentId: "ENR001",
+                studentId: "STU001",
+                courseId: "GROUP001",
+                enrolledDate: "2026-06-25",
+                selectedDays: ["월", "금"],  // 선택한 요일
+                status: "active",  // active, completed, dropped
+                ticketUsagePerWeek: 2
+            }
+        ];</script>
+</body>
+</html>
