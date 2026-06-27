@@ -1762,6 +1762,7 @@
 
         <section id="sec-mypage" class="spa-section hidden">
             <h2 class="section-title">마이페이지</h2>
+            <<<<<<< HEAD
 
             <div class="mypage-grid">
                 <div class="card money-balance">
@@ -1815,8 +1816,60 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
+                    =======
+                    <div class="reserve-layout-container">
+                        <div class="grid-2">
+                            <div class="card" style="display:flex; flex-direction:column; justify-content:center;">
+                                <p style="font-size:0.875rem; font-weight:bold; color:#a16207; letter-spacing:0.05em;">SEMO MONEY</p>
+                                <h3 style="font-size:2.5rem; font-weight:900; color:var(--point-brown); margin: 0.5rem 0;"><span id="mypage-money">0</span> 세모</h3>
+                                <p style="font-size:0.875rem; opacity:0.6; margin-bottom: 1.5rem;">티켓 구매와 수업 결제에 사용할 수 있는 전자머니입니다.</p>
+                                <button class="btn-transparent w-full" style="padding:1rem; font-size:1rem;">세모 충전하기</button>
+                            </div>
+                            <div class="card" style="display:flex; flex-direction:column; justify-content:center;">
+                                <h4 style="font-size:1.125rem; font-weight:bold; color:var(--point-brown); margin-bottom:0.5rem;">환영합니다, <span id="mypage-name">사용자</span>(<span id="mypage-role">Role</span>)님!</h4>
+                                <p style="font-size:0.875rem; opacity:0.7; line-height:1.6;">구매하신 수업 티켓 정보 및 3개월 교재 열람 상태를 점검할 수 있습니다.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-3" style="margin-top: 1rem;">
+                            <div class="card">
+                                <p style="font-size:0.75rem; opacity:0.5; font-weight:bold; margin-bottom:0.5rem;">보유 티켓</p>
+                                <p style="font-size:1.25rem; font-weight:bold;"><span id="mypage-tickets">0</span>장</p>
+                            </div>
+                            <div class="card">
+                                <p style="font-size:0.75rem; opacity:0.5; font-weight:bold; margin-bottom:0.5rem;">교재 열람</p>
+                                <p style="font-size:1.25rem; font-weight:bold;"><span id="mypage-pdf-days">0</span>일 남음</p>
+                            </div>
+                            <div class="card">
+                                <p style="font-size:0.75rem; opacity:0.5; font-weight:bold; margin-bottom:0.5rem;">다음 수업</p>
+                                <p style="font-size:1.25rem; font-weight:bold;" id="mypage-next-class">없음</p>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top: 1rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border-color); padding-bottom:0.75rem; margin-bottom:1rem;">
+                                <h4 style="font-size:1.125rem; font-weight:bold; color:var(--point-brown);">최근 세모 충전 신청</h4>
+                                <span style="font-size:0.75rem; opacity:0.5;">무통장입금 확인 후 반영</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>신청일</th>
+                                            <th>금액</th>
+                                            <th>상세 내역</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="mypage-histories">
+                                        <tr>
+                                            <td colspan="3" style="color:#9ca3af; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            >>>>>>> ab884c66ee0ccd603d25225fa8b965b5c1155778
+                        </div>
+                    </div>
         </section>
     </main>
 
@@ -1986,7 +2039,11 @@
             const target = document.getElementById(`sec-${sectionId}`);
             if (target) target.classList.remove('hidden');
 
+<<<<<<< HEAD
             if (sectionId === 'mypage') {
+=======
+                if(sectionId === 'mypage') {
+>>>>>>> ab884c66ee0ccd603d25225fa8b965b5c1155778
                 loadMyPageData();
             }
         }
@@ -1998,6 +2055,7 @@
 
                 if (result.success) {
                     const data = result.data;
+<<<<<<< HEAD
                     document.getElementById('semo-balance').innerText = data.money.toLocaleString();
                     document.getElementById('mypage-name').innerText = data.name;
                     document.getElementById('mypage-role').innerText = data.role;
@@ -2006,20 +2064,41 @@
                     document.getElementById('mypage-next-class').innerText = data.next_class;
 
                     const tbody = document.getElementById('charge-history-body');
+=======
+                        document.getElementById('mypage-money').innerText = data.money.toLocaleString();
+                        document.getElementById('mypage-name').innerText = data.name;
+                        document.getElementById('mypage-role').innerText = data.role;
+                        document.getElementById('mypage-tickets').innerText = data.tickets;
+                        document.getElementById('mypage-pdf-days').innerText = data.pdf_days;
+                        document.getElementById('mypage-next-class').innerText = data.next_class;
+
+                        const tbody = document.getElementById('mypage-histories');
+>>>>>>> ab884c66ee0ccd603d25225fa8b965b5c1155778
                     tbody.innerHTML = '';
                     if (data.histories && data.histories.length > 0) {
                         data.histories.forEach(h => {
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                    <td>${h.created_at.split(' ')[0]}</td>
-                                    <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount).toLocaleString()}</td>
-                                    <td>본인</td>
-                                    <td><span style="font-size:0.75rem; background:#f3f4f6; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">대기중</span></td>
-                                `;
+<<<<<<< HEAD
+                                        <td>${h.created_at.split(' ')[0]}</td>
+                                        <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount).toLocaleString()}</td>
+                                        <td>본인</td>
+                                        <td><span style="font-size:0.75rem; background:#f3f4f6; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">대기중</span></td>
+                                    `;
                             tbody.appendChild(tr);
                         });
                     } else {
                         tbody.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td></tr>';
+=======
+                                    <td>${h.created_at.split(' ')[0]}</td>
+                                    <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount).toLocaleString()}</td>
+                                    <td>${h.description || '충전'}</td>
+                                `;
+                                tbody.appendChild(tr);
+                            });
+                        } else {
+                            tbody.innerHTML = '<tr><td colspan="3" style="color:#9ca3af; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td></tr>';
+>>>>>>> ab884c66ee0ccd603d25225fa8b965b5c1155778
                     }
                 }
             } catch (error) {
@@ -2027,6 +2106,7 @@
             }
         }
 
+<<<<<<< HEAD
         // 충전 모달 로직
         function openChargeModal() {
             document.getElementById('charge-modal').classList.remove('hidden');
@@ -2088,6 +2168,8 @@
             }
         }
 
+=======
+>>>>>>> ab884c66ee0ccd603d25225fa8b965b5c1155778
         function openModal(type) { closeSidebarMobile(); document.getElementById('auth-modal').classList.remove('hidden'); toggleAuthForm(type); }
         function closeModal() { document.getElementById('auth-modal').classList.add('hidden'); }
         function toggleAuthForm(type) {
