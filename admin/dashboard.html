@@ -21,17 +21,17 @@
             border-left: 5px solid #4e73df;
         }
 
-            .card.success {
-                border-left-color: #1cc88a;
-            }
+        .card.success {
+            border-left-color: #1cc88a;
+        }
 
-            .card.info {
-                border-left-color: #36b9cc;
-            }
+        .card.info {
+            border-left-color: #36b9cc;
+        }
 
-            .card.warning {
-                border-left-color: #f6c23e;
-            }
+        .card.warning {
+            border-left-color: #f6c23e;
+        }
 
         .card-title {
             font-size: 12px;
@@ -45,6 +45,95 @@
             font-size: 24px;
             font-weight: bold;
             color: #5a5c69;
+        }
+
+        /* ==========================================================================
+           새로 추가된 예약 스케줄러 스타일 (상/하 분할형)
+           ========================================================================== */
+        .scheduler-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .scheduler-top {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        .scheduler-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* 미니 캘린더 커스텀 마크업 스타일 */
+        .mini-calendar {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .mini-calendar th, .mini-calendar td {
+            padding: 8px 4px;
+            font-size: 14px;
+        }
+        .mini-calendar td.clickable {
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .mini-calendar td.clickable:hover {
+            background: #eaecf4;
+        }
+        .mini-calendar td.active-day {
+            background: #4e73df !important;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* 하단 타임라인 테이블 스타일 */
+        .timeline-scroll {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+        .timeline-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        .timeline-table th, .timeline-table td {
+            border: 1px solid #e3e6f0;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .timeline-table th {
+            background: #f8f9fc;
+            color: #4e73df;
+        }
+        .timeline-cell {
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8f9fc;
+        }
+        .timeline-cell:hover {
+            background: #eaecf4;
+        }
+        .timeline-cell.booked {
+            background: #d1e7dd;
+            color: #0f5132;
+            font-weight: bold;
+        }
+        .timeline-cell.booked.full {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .action-flex {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -61,12 +150,14 @@
                 <a href="#" id="logout-link" class="logout-link" onclick="openModal('logoutModal'); return false;">로그아웃</a>
             </div>
             <div id="user-logged-out" style="display: none;">
-                로그인이 필요합니다.<br><br>
+                <로그인이 필요합니다.<br><br>
                 <button class="btn btn-primary" onclick="openModal('loginModal')">로그인하기</button>
             </div>
         </div>
 
         <button class="menu-btn active" onclick="switchPage('main-home-page', this)">🏠 대시보드 홈</button>
+        <!-- 캘린더 스케줄 메뉴 위치 추가 -->
+        <button class="menu-btn" onclick="switchPage('schedule-page', this)">📅 예약 스케줄 관리</button>
         <button class="menu-btn" onclick="switchPage('users-page', this)">👤 회원 관리</button>
         <button class="menu-btn" onclick="switchPage('approvals-page', this)">💰 충전/입금 승인</button>
         <button class="menu-btn" onclick="switchPage('products-page', this)">🎟️ 상품 및 티켓 관리</button>
@@ -74,6 +165,7 @@
 
     <div class="main-content">
 
+        <!-- [TAB 1] 홈 대시보드 -->
         <div id="main-home-page" class="page-section active">
             <h2>운영 현황 대시보드</h2>
             <p style="color: #858796; margin-bottom: 25px;">세모 재팬의 실시간 비즈니스 요약 지표입니다.</p>
@@ -107,6 +199,120 @@
             </div>
         </div>
 
+        <!-- [TAB 2] 예약 스케줄 관리 (새로 추가됨) -->
+        <div id="schedule-page" class="page-section">
+            <h2>예약 스케줄 및 수업 관리</h2>
+            <p style="color: #858796; margin-bottom: 25px;">날짜를 선택하고 선생님별 실시간 일정 확인 및 예약 배정을 수행합니다.</p>
+
+            <div class="scheduler-container">
+                <!-- 상단 영역 분할 (캘린더 & 선택 상세) -->
+                <div class="scheduler-top">
+                    <!-- 미니 캘린더 박스 -->
+                    <div class="scheduler-box">
+                        <h4 style="margin: 0 0 15px 0; color:#4e73df;">📅 미니 캘린더</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <button class="btn btn-secondary" style="padding:2px 8px;">&lt;</button>
+                            <strong>2026년 6월</strong>
+                            <button class="btn btn-secondary" style="padding:2px 8px;">&gt;</button>
+                        </div>
+                        <table class="mini-calendar">
+                            <thead>
+                                <tr>
+                                    <th style="color:#e74a3b;">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td>
+                                end
+                                <tr>
+                                    <td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td>
+                                </tr>
+                                <tr>
+                                    <td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td>
+                                </tr>
+                                <tr>
+                                    <td>28</td><td class="clickable active-day" onclick="alert('29일 선택')">29</td><td class="clickable">30</td><td></td><td></td><td></td><td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 선택 날짜/수업 상세 확인 박스 -->
+                    <div class="scheduler-box" id="schedule-detail-panel">
+                        <h4 style="margin: 0 0 10px 0; color:#4e73df;">🔍 선택된 수업 정보 및 학생 관리</h4>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>선택한 일시:</strong> <span id="selected-datetime-label">2026-06-29 (월) 10:00 ~ 11:00</span></p>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>담당 선생님:</strong> 김교사 선생님</p>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>수업 종류:</strong> <span class="badge">PRIVATE (1:1)</span></p>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>현재 예약 현황:</strong> <span style="color:#e74a3b; font-weight:bold;">1 / 1 명 (마감)</span></p>
+                        
+                        <h5 style="margin: 15px 0 5px 0;">👥 예약 확정 학생 리스트</h5>
+                        <ul style="font-size: 13px; padding-left: 20px; margin: 0; color:#5a5c69;">
+                            <li style="margin-bottom: 5px;">
+                                김철수 (chulsoo) - <span style="color:#1cc88a;">출석완료</span> 
+                                <button class="btn btn-danger" style="padding:1px 5px; font-size:11px; margin-left:10px;" onclick="alert('예약 취소 프로세스')">예약취소</button>
+                            </li>
+                        </ul>
+
+                        <div class="action-flex">
+                            <button class="btn btn-primary" onclick="openModal('reservationAddModal')">➕ 예약 추가 배정</button>
+                            <button class="btn btn-warning" onclick="openModal('classEditModal')">✏️ 수업 변경</button>
+                            <button class="btn btn-danger" onclick="confirm('이 수업을 취소/삭제하시겠습니까? (학생 티켓이 반환됩니다.)')">🗑️ 수업 삭제</button>
+                            <button class="btn btn-secondary" onclick="openModal('historyModal')">📜 변경 이력</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 하단 영역 (선생님별 타임라인 그리드) -->
+                <div class="scheduler-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="margin: 0; color:#4e73df;">⏱️ 선생님별 타임라인 (2026-06-29)</h4>
+                        <button class="btn btn-success" style="font-size:12px;" onclick="openModal('debugScheduleModal')">⚙️ 디버그: 전체 교사 스케줄 일괄 추가</button>
+                    </div>
+                    
+                    <div class="timeline-scroll">
+                        <table class="timeline-table">
+                            <thead>
+                                <tr>
+                                    <th>선생님명</th>
+                                    <th>09:00</th><th>10:00</th><th>11:00</th><th>12:00</th>
+                                    <th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>김교사</strong></td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(1)">-</td>
+                                    <td class="timeline-cell booked full" onclick="loadClassDetail(2)">[1:1 마감]</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(3)">-</td>
+                                    <td class="timeline-cell booked" onclick="loadClassDetail(4)">[그룹 2/5]</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(5)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(6)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(7)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(8)">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>이교사</strong></td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(9)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(10)">-</td>
+                                    <td class="timeline-cell booked full" onclick="loadClassDetail(11)">[듀오 마감]</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(12)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(13)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(14)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(15)">-</td>
+                                    <td class="timeline-cell" onclick="loadClassDetail(16)">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [TAB 3] 학생 회원 관리 -->
         <div id="users-page" class="page-section">
             <h2>학생 회원 관리</h2>
             <table class="data-table">
@@ -138,6 +344,7 @@
             </table>
         </div>
 
+        <!-- [TAB 4] 충전/입금 신청 관리 -->
         <div id="approvals-page" class="page-section">
             <h2>충전 및 입금 신청 관리</h2>
             <table class="data-table">
@@ -159,6 +366,7 @@
             </table>
         </div>
 
+        <!-- [TAB 5] 상품 및 티켓 관리 -->
         <div id="products-page" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="margin: 0;">상품 및 티켓 관리</h2>
@@ -199,6 +407,11 @@
 
     </div>
 
+    <!-- ==========================================================================
+       모달(Modal) 레이어 구역
+       ========================================================================== */ -->
+
+    <!-- 1. 로그인 모달 -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
@@ -220,6 +433,7 @@
         </div>
     </div>
 
+    <!-- 2. 로그아웃 모달 -->
     <div class="modal-overlay" id="logoutModal">
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal('logoutModal')">&times;</button>
@@ -232,6 +446,7 @@
         </div>
     </div>
 
+    <!-- 3. 상품 등록 모달 -->
     <div class="modal-overlay" id="productModal">
         <div class="modal-box" style="max-width: 500px;">
             <button class="modal-close" onclick="closeModal('productModal')">&times;</button>
@@ -279,7 +494,303 @@
         </div>
     </div>
 
+    <!-- 4.  관리자 강제 예약 배정 모달 -->
+    <!-- 4.스케줄 생성 및 수업 유형별 배정 설정 모달 -->
+    <div class="modal-overlay" id="reservationAddModal">
+        <div class="modal-box" style="max-width: 520px;">
+            <button class="modal-close" onclick="closeModal('reservationAddModal')">&times;</button>
+            <h3 class="modal-title">📅 오픈 스케줄 및 수업 속성 설정</h3>
+            <p style="font-size:12.5px; color:#858796; margin-top:-10px; margin-bottom:15px;">
+                선생님을 지정하고, 해당 선생님의 담당 학생 및 수업 정책을 정의,교사가 오픈한 가용 시간에 적용할 수업 유형 및 예약 규칙을 정의합니다.
+            </p>
+            
+            
+            
+            <form onsubmit="event.preventDefault(); closeModal('reservationAddModal'); alert('선택하신 선생님 및 수업 정책으로 스케줄이 등록되었습니다.');">
+                
+                <!-- 기본 날짜/시간 설정 (관리자가 직접 지정 가능) -->
+                <div style="background:#f8f9fc; padding:12px; border-radius:6px; margin-bottom:15px; border:1px solid #e3e6f0;">
+                    <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:10px;">
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">스케줄 날짜</label>
+                            <input type="date" value="2026-06-29" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;" required>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">시간 설정</label>
+                            <select style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;">
+                                <option value="09">09:00 ~ 10:00</option>
+                                <option value="10" selected>10:00 ~ 11:00</option>
+                                <option value="11">11:00 ~ 12:00</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- [핵심 추가] 1단계: 선생님 지정 및 강사 권한 보유 회원 매칭 -->
+                <div class="form-group" style="background: #eef2fa; padding: 12px; border-radius: 6px; border-left: 4px solid #4e73df;">
+                    <label style="font-weight:bold; color:#2e59d9;">👩‍🏫 담당 선생님 지정</label>
+                    <p style="font-size:11.5px; color:#5a5c69; margin:2px 0 6px 0;">가용 스케줄을 오픈할 강사 회원을 선택하세요.</p>
+                    <select id="schedule-teacher-select" onchange="filterStudentsByTeacher(this.value)" style="width:100%; padding:8px; border:1px solid #4e73df; border-radius:4px; font-weight:bold;" required>
+                        <option value="">-- 선생님 선택 --</option>
+                        <option value="kim">김교사 선생님 (일본어 비즈니스 전문)</option>
+                        <option value="lee">이교사 선생님 (JLPT 합격반 전담)</option>
+                        <option value="sato">사토 선생님 (원어민 회화 전담)</option>
+                    </select>
+                </div>
+
+                <!-- 2단계: 수업 유형 선택 -->
+                <div class="form-group">
+                    <label style="font-weight:bold;">수업 유형 선택</label>
+                    <select id="schedule-class-type" onchange="toggleSchedulerTypeFields(this.value)" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;" required>
+                        <option value="">-- 유형을 선택하세요 --</option>
+                        <option value="PRIVATE_11">🎯 1:1 개인 수업 (지정 학생 전용)</option>
+                        <option value="DUO_12">👥 1:2 듀오 수업 (고정 및 오픈 매칭)</option>
+                        <option value="GROUP">🏫 그룹 수업 (학생 주도형 정기 스케줄)</option>
+                    </select>
+                </div>
+
+                <!-- 섹션 A: 1:1 수업 선택 시 -->
+                <div id="field-private-11" style="display:none; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
+                    <div class="form-group">
+                        <label style="font-size:13px; color:#4e73df; font-weight:bold;">🔒 노출 대상 학생 지정</label>
+                        <p style="font-size:11.5px; color:#858796; margin:2px 0 8px 0;">선택된 선생님의 담당 매칭 학생만 노출됩니다.</p>
+                        <select id="private-student-list" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;">
+                            <option value="">-- 선생님을 먼저 선택해 주세요 --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 섹션 B: 1:2 수업 선택 시 -->
+                <div id="field-duo-12" style="display:none; border-left:4px solid #1cc88a; padding-left:15px; margin-top:15px;">
+                    <div class="form-group">
+                        <label style="font-size:13px; color:#1cc88a; font-weight:bold;">👥 1:2 매칭 방식 선택</label>
+                        <div style="margin:8px 0; font-size:13px;">
+                            <label style="margin-right:15px; cursor:pointer;">
+                                <input type="radio" name="duo_mode" value="manual" checked onchange="toggleDuoSubFields('manual')"> 관리자/강사 수동 지정
+                            </label>
+                            <label style="cursor:pointer;">
+                                <input type="radio" name="duo_mode" value="random" onchange="toggleDuoSubFields('random')"> 1명 고정 + 1명 랜덤 오픈
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- 1:2 수동 지정 폼 -->
+                    <div id="duo-manual-inputs">
+                        <div class="form-group" style="margin-bottom:8px;">
+                            <label style="font-size:12px;">학생 1</label>
+                            <select class="teacher-student-combo" style="width:100%; padding:6px;"><option value="">-- 선생님을 선택하세요 --</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">학생 2</label>
+                            <select class="teacher-student-combo" style="width:100%; padding:6px;"><option value="">-- 선생님을 선택하세요 --</option></select>
+                        </div>
+                    </div>
+
+                    <!-- 1:2 1명고정 + 1명랜덤 오픈 폼 -->
+                    <div id="duo-random-inputs" style="display:none;">
+                        <div class="form-group">
+                            <label style="font-size:12px; color:#e74a3b;">확정 고정 학생 (1인)</label>
+                            <select class="teacher-student-combo" style="width:100%; padding:6px; border:1px solid #e74a3b;"><option value="">-- 선생님을 선택하세요 --</option></select>
+                        </div>
+                        <p style="font-size:11.5px; color:#858796; margin-top:5px;">
+                            💡 나머지 1자리는 공석으로 오픈되어 해당 선생님의 티켓을 구매한 다른 학생이 신청 가능합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 섹션 C: 그룹 수업 선택 시 -->
+                <div id="field-group" style="display:none; border-left:4px solid #f6c23e; padding-left:15px; margin-top:15px;">
+                    <div style="background:#fff3cd; color:#664d03; padding:10px; border-radius:4px; font-size:12.5px; line-height:1.5;">
+                        <strong>🏫 학생 주도형 정기 스케줄 정책 적용</strong><br>
+                        이 선생님에게 배정된 그룹 수업용 티켓을 가진 학생들이 자유롭게 스케줄을 선택하며, 선착순 선택 시 자동으로 4주간 스케줄이 선점됩니다.
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label style="font-size:12px;">최대 수강 정원 허용 (명)</label>
+                        <input type="number" value="5" min="2" style="width:100%; padding:6px; border:1px solid #d1d3e2; border-radius:4px;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top:20px; padding:10px; font-weight:bold;">
+                    설정 및 스케줄 배정 완료
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. 수업정보 세부 속성및 학생 매칭 변경 모달 -->
+
+    <div class="modal-overlay" id="classEditModal">
+        <div class="modal-box" style="max-width: 520px;">
+            <button class="modal-close" onclick="closeModal('classEditModal')">&times;</button>
+            <h3 class="modal-title">✏️ 오픈 수업 정보 및 매칭 수정</h3>
+            <p style="font-size:12.5px; color:#858796; margin-top:-10px; margin-bottom:15px;">
+                이미 생성된 수업 스케줄의 일시를 변경하거나 배정된 학생 정보를 수정합니다.
+            </p>
+            
+            <form onsubmit="event.preventDefault(); closeModal('classEditModal'); alert('수업 스케줄 및 학생 배정 변경 사항이 저장되었습니다.');">
+                
+                <!-- 공통 영역: 일시 및 담당 교사 수정 -->
+                <div style="background:#f8f9fc; padding:15px; border-radius:6px; margin-bottom:15px; border: 1px solid #e3e6f0;">
+                    <h5 style="margin:0 0 10px 0; color:#4e73df;">🕒 일정 및 강사 변경</h5>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">수업 진행 날짜</label>
+                            <input type="date" value="2026-06-29" style="width:100%; padding:6px; border:1px solid #d1d3e2; border-radius:4px;" required>
+                        </div>
+
+
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">담당 선생님</label>
+                            <select style="width:100%; padding:6px; border:1px solid #d1d3e2; border-radius:4px;">
+                                <option value="kim" selected>김교사 선생님</option>
+                                <option value="lee">이교사 선생님</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">시작 시간</label>
+                            <input type="time" value="10:00" style="width:100%; padding:6px; border:1px solid #d1d3e2; border-radius:4px;" required>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; font-weight:bold;">종료 시간</label>
+                            <input type="time" value="11:00" style="width:100%; padding:6px; border:1px solid #d1d3e2; border-radius:4px;" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 핵심: 현재 설정된 수업 유형 분기 (조회 및 변경) -->
+                <div class="form-group">
+                    <label style="font-weight:bold;">수업 유형</label>
+                    <select id="edit-class-type" onchange="toggleEditTypeFields(this.value)" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px; background:#f8f9fc;" required>
+                        <option value="PRIVATE_11" selected>🎯 1:1 개인 수업 모드</option>
+                        <option value="DUO_12">👥 1:2 듀오 수업 모드</option>
+                        <option value="GROUP">🏫 그룹 수업 모드</option>
+                    </select>
+                </div>
+
+                <!-- [유형별 가변 섹션 1] 1:1 학생 변경 -->
+                <div id="edit-field-private" style="display:block; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
+                    <div class="form-group">
+                        <label style="font-size:13px; color:#4e73df; font-weight:bold;">🔒 전용 예약 학생 변경</label>
+                        <select style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;">
+                            <option value="10" selected>김철수 (chulsoo) [현재 예약 확정]</option>
+                            <option value="11">이영희 (younghee)</option>
+                            <option value="none">-- 지정 해제 (공석으로 전환) --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- [유형별 가변 섹션 2] 1:2 학생 매칭 변경 -->
+                <div id="edit-field-duo" style="display:none; border-left:4px solid #1cc88a; padding-left:15px; margin-top:15px;">
+                    <div class="form-group">
+                        <label style="font-size:13px; color:#1cc88a; font-weight:bold;">👥 1:2 매칭 및 대기 상태 변경</label>
+                        <div style="margin:8px 0; font-size:13px;">
+                            <label style="margin-right:15px; cursor:pointer;">
+                                <input type="radio" name="edit_duo_mode" value="manual" checked onchange="toggleEditDuoSubFields('manual')"> 양쪽 직접 배정
+                            </label>
+                            <label style="cursor:pointer;">
+                                <input type="radio" name="edit_duo_mode" value="random" onchange="toggleEditDuoSubFields('random')"> 1명 고정 + 나머지 오픈
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="edit-duo-manual-inputs">
+                        <div class="form-group" style="margin-bottom:8px;">
+                            <label style="font-size:12px;">첫 번째 학생</label>
+                            <select style="width:100%; padding:6px;"><option value="10" selected>김철수</option><option value="11">이영희</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">두 번째 학생</label>
+                            <select style="width:100%; padding:6px;"><option value="">-- 비어 있음 (추가 배정 가능) --</option><option value="11">이영희</option></select>
+                        </div>
+                    </div>
+
+                    <div id="edit-duo-random-inputs" style="display:none;">
+                        <div class="form-group">
+                            <label style="font-size:12px; color:#e74a3b;">고정 알박기 학생</label>
+                            <select style="width:100%; padding:6px; border:1px solid #e74a3b;"><option value="10">김철수</option><option value="11">이영희</option></select>
+                        </div>
+                        <div style="background:#e8f5e9; color:#2e7d32; padding:8px; border-radius:4px; font-size:11.5px; margin-top:5px;">
+                            ✨ 남은 1자리는 학생들이 앱에서 직접 실시간으로 신청할 수 있도록 오픈 상태를 유지합니다.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- [유형별 가변 섹션 3] 그룹 정원 및 연동 알림 -->
+                <div id="edit-field-group" style="display:none; border-left:4px solid #f6c23e; padding-left:15px; margin-top:15px;">
+                    <div class="form-group">
+                        <label style="font-size:13px; color:#f6c23e; font-weight:bold;">🏫 그룹 수업 정원 수정</label>
+                        <input type="number" value="5" min="1" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;">
+                    </div>
+                    <div style="background:#fff3cd; color:#664d03; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+                        ⚠️ <strong>주의:</strong> 일정을 변경하면 이 스케줄을 예약한 학생들의 <strong>4주간 패키지 예약 일정이 한꺼번에 변경</strong>되거나 자동 조정 알림이 발송됩니다.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-warning" style="width: 100%; margin-top:20px; padding:10px; font-weight:bold; color:#fff;">
+                    수업 설정 반영
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. 수업 변경 이력 모달 -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-box" style="max-width: 550px;">
+            <button class="modal-close" onclick="closeModal('historyModal')">&times;</button>
+            <h3 class="modal-title">클래스 변경 로그 및 이력</h3>
+            <div style="max-height: 300px; overflow-y: auto; font-size:13px; line-height:1.6; color:#5a5c69;">
+                <p>• <strong>2026-06-29 09:12</strong> | 최고관리자에 의해 김철수 학생 예약 매칭 완료 (티켓 소진)</p>
+                <p>• <strong>2026-06-28 14:00</strong> | 김교사 선생님에 의해 해당 시간대 세션 최초 Open 생성</p>
+            </div>
+            <button class="btn btn-secondary" style="width:100%; margin-top:15px;" onclick="closeModal('historyModal')">닫기</button>
+        </div>
+    </div>
+
+    <!-- 7. [디버그용] 전체 선생님 스케줄 일괄 추가 모달 -->
+    <div class="modal-overlay" id="debugScheduleModal">
+        <div class="modal-box" style="max-width: 450px;">
+            <button class="modal-close" onclick="closeModal('debugScheduleModal')">&times;</button>
+            <h3 class="modal-title">⚙️ 디버그용: 전체 교사 스케줄 생성</h3>
+            <p style="font-size:13px; color:#858796;">테스트 목적으로 활성화된 모든 선생님의 타임테이블 세션을 일괄 삽입합니다.</p>
+            <form onsubmit="event.preventDefault(); closeModal('debugScheduleModal'); alert('디버그: 활성 교사 전체 스케줄 벌크 인서트 완료');">
+                <div class="form-group">
+                    <label>대상 타겟 날짜</label>
+                    <input type="date" value="2026-06-29" required>
+                </div>
+                <div class="form-group">
+                    <label>오픈할 고정 시간 레이아웃 선택</label>
+                    <select>
+                        <option value="morning">오전 일괄 오픈 (09:00 ~ 12:00)</option>
+                        <option value="afternoon">오후 일괄 오픈 (13:00 ~ 18:00)</option>
+                        <option value="full">전일 오픈 (09:00 ~ 18:00)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top:10px;">교사별 세션 Bulk Insert 수행</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+
+
+	// 선생님-학생 매칭 Mock 데이터 정의
+const teacherStudentData = {
+    kim: [
+        { id: "10", name: "김철수 (chulsoo)" },
+        { id: "12", name: "박민수 (minsoo)" }
+    ],
+    lee: [
+        { id: "11", name: "이영희 (younghee)" },
+        { id: "13", name: "최재성 (jaeseong)" }
+    ],
+    sato: [
+        { id: "14", name: "다나카 (tanaka)" },
+        { id: "15", name: "스즈키 (suzuki)" }
+    ]
+};
+
         // 1. 페이지(탭) 전환 스크립트
         function switchPage(pageId, button) {
             const sections = document.querySelectorAll('.page-section');
@@ -299,6 +810,13 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('show');
+        }
+
+        // [신규] 하단 타임라인 클릭 시 상단 우측 패널에 정보 바인딩하는 Mock 함수
+        function loadClassDetail(classId) {
+            console.log("Loading Class ID:", classId);
+            // 실무 연동 시 여기서 fetch('../api/admin_class_detail.php?id=' + classId) 호출 후 우측 정보 이너 돔 변경
+            document.getElementById('selected-datetime-label').innerText = `2026-06-29 (월) 테이블 셀 인덱스 ${classId}:00 세션`;
         }
 
         // 3. 상품 종류에 따른 입력 폼 동적 제어
@@ -334,7 +852,6 @@
                 }
 
                 tbody.innerHTML = requests.map(req => {
-                    const statusClass = req.status === 'PENDING' ? 'badge-pending' : req.status === 'APPROVED' ? 'badge.success' : 'badge-danger';
                     return `
                         <tr>
                             <td>${req.request_id}</td>
@@ -499,6 +1016,90 @@
         document.addEventListener('DOMContentLoaded', () => {
             checkAdminSession();
         });
+
+
+	// 수업 대분류 선택에 따른 입력 폼 토글
+function toggleSchedulerTypeFields(type) {
+    // 모든 섹션 숨기기
+    document.getElementById('field-private-11').style.display = 'none';
+    document.getElementById('field-duo-12').style.display = 'none';
+    document.getElementById('field-group').style.display = 'none';
+
+    // 선택 유형에 맞춰 열기
+    if (type === 'PRIVATE_11') {
+        document.getElementById('field-private-11').style.display = 'block';
+    } else if (type === 'DUO_12') {
+        document.getElementById('field-duo-12').style.display = 'block';
+    } else if (type === 'GROUP') {
+        document.getElementById('field-group').style.display = 'block';
+    }
+}
+
+// 1:2 듀오 내부 라디오 버튼 분기 제어
+function toggleDuoSubFields(mode) {
+    if (mode === 'manual') {
+        document.getElementById('duo-manual-inputs').style.display = 'block';
+        document.getElementById('duo-random-inputs').style.display = 'none';
+    } else if (mode === 'random') {
+        document.getElementById('duo-manual-inputs').style.display = 'none';
+        document.getElementById('duo-random-inputs').style.display = 'block';
+    }
+}
+
+	// 수업 수정 모달 내 대분류 변경 토글
+function toggleEditTypeFields(type) {
+    document.getElementById('edit-field-private').style.display = 'none';
+    document.getElementById('edit-field-duo').style.display = 'none';
+    document.getElementById('edit-field-group').style.display = 'none';
+
+    if (type === 'PRIVATE_11') {
+        document.getElementById('edit-field-private').style.display = 'block';
+    } else if (type === 'DUO_12') {
+        document.getElementById('edit-field-duo').style.display = 'block';
+    } else if (type === 'GROUP') {
+        document.getElementById('edit-field-group').style.display = 'block';
+    }
+}
+
+// 수업 수정 모달 내 1:2 세부 라디오 버튼 제어
+function toggleEditDuoSubFields(mode) {
+    if (mode === 'manual') {
+        document.getElementById('edit-duo-manual-inputs').style.display = 'block';
+        document.getElementById('edit-duo-random-inputs').style.display = 'none';
+    } else if (mode === 'random') {
+        document.getElementById('edit-duo-manual-inputs').style.display = 'none';
+        document.getElementById('edit-duo-random-inputs').style.display = 'block';
+    }
+}
+
+	// 선생님 선택 시 호출되어 전용 학생 콤보박스를 리로드하는 함수
+function filterStudentsByTeacher(teacherId) {
+    const privateSelect = document.getElementById('private-student-list');
+    const allDuoCombos = document.querySelectorAll('.teacher-student-combo');
+    
+    // 선생님 선택이 해제된 경우 초기화
+    if (!teacherId || !teacherStudentData[teacherId]) {
+        const defaultHtml = `<option value="">-- 선생님을 먼저 선택해 주세요 --</option>`;
+        privateSelect.innerHTML = defaultHtml;
+        allDuoCombos.forEach(combo => combo.innerHTML = defaultHtml);
+        return;
+    }
+
+    // 해당 선생님의 학생 목록 추출
+    const students = teacherStudentData[teacherId];
+    let optionsHtml = `<option value="">-- 담당 학생 선택 (${students.length}명) --</option>`;
+    students.forEach(st => {
+        optionsHtml += `<option value="${st.id}">${st.name}</option>`;
+    });
+
+    // 1:1 전용 학생 목록 바인딩
+    privateSelect.innerHTML = optionsHtml;
+
+    // 1:2 전용 학생 목록 전역 바인딩
+    allDuoCombos.forEach(combo => {
+        combo.innerHTML = optionsHtml;
+    });
+}
     </script>
 </body>
 </html>
