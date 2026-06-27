@@ -3,9 +3,46 @@ require_once __DIR__ . '/db.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
+function ensureTicketProduct(PDO $pdo, int $productId): array {
+    $catalog = [
+        101 => ['title' => '1íšŒ ì²´í—˜ê¶Œ', 'price' => 40000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
+        102 => ['title' => '5íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 200000, 'class_type' => 'PRIVATE', 'total_count' => 5, 'expiry_days' => 90],
+        103 => ['title' => '10íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 380000, 'class_type' => 'PRIVATE', 'total_count' => 10, 'expiry_days' => 180],
+        201 => ['title' => 'ë“€ì˜¤ 1íšŒ ì²´í—˜ê¶Œ', 'price' => 25000, 'class_type' => 'DUO', 'total_count' => 1, 'expiry_days' => 30],
+        202 => ['title' => 'ë“€ì˜¤ 5íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 115000, 'class_type' => 'DUO', 'total_count' => 5, 'expiry_days' => 90],
+        203 => ['title' => 'ë“€ì˜¤ 10íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 210000, 'class_type' => 'DUO', 'total_count' => 10, 'expiry_days' => 180],
+        301 => ['title' => 'ê·¸ë£¹ 1íšŒ ì²´í—˜ê¶Œ', 'price' => 18000, 'class_type' => 'GROUP', 'total_count' => 1, 'expiry_days' => 30],
+        302 => ['title' => 'ê·¸ë£¹ 5íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 85000, 'class_type' => 'GROUP', 'total_count' => 5, 'expiry_days' => 90],
+        303 => ['title' => 'ê·¸ë£¹ 10íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 150000, 'class_type' => 'GROUP', 'total_count' => 10, 'expiry_days' => 180],
+        401 => ['title' => 'íŒ¨í‚¤ì§€ 1íšŒ ì²´í—˜ê¶Œ', 'price' => 60000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
+        402 => ['title' => 'íŒ¨í‚¤ì§€ 5íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 270000, 'class_type' => 'PRIVATE', 'total_count' => 5, 'expiry_days' => 90],
+        403 => ['title' => 'íŒ¨í‚¤ì§€ 10íšŒ ìˆ˜ê°•ê¶Œ', 'price' => 490000, 'class_type' => 'PRIVATE', 'total_count' => 10, 'expiry_days' => 180],
+    ];
+
+    if (!isset($catalog[$productId])) {
+        throw new InvalidArgumentException('ì§€ì›í•˜ì§€ ì•ŠëŠ” ìƒí’ˆì…ë‹ˆë‹¤.');
+    }
+
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id = ? AND is_active = 1");
+    $stmt->execute([$productId]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($product) {
+        return $product;
+    }
+
+    $meta = $catalog[$productId];
+    $stmt = $pdo->prepare("INSERT INTO products (product_id, product_type, title, price, class_type, total_count, expiry_days, is_active) VALUES (?, 'TICKET', ?, ?, ?, ?, ?, 1)");
+    $stmt->execute([$productId, $meta['title'], $meta['price'], $meta['class_type'], $meta['total_count'], $meta['expiry_days']]);
+
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id = ? AND is_active = 1");
+    $stmt->execute([$productId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => '·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù.']);
+    echo json_encode(['success' => false, 'message' => 'ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤.']);
     exit;
 }
 
@@ -14,30 +51,19 @@ $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
 
 if ($product_id <= 0) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => '»óÇ° Á¤º¸¸¦ È®ÀÎÇÒ ¼ö ¾ø½À´Ï´Ù.']);
+    echo json_encode(['success' => false, 'message' => 'ìƒí’ˆ ì •ë³´ë¥¼ í™•ì¸í•´ ì£¼ì„¸ìš”.']);
     exit;
 }
 
 try {
     $pdo = DB::getConnection();
-
-    // Æ®·£Àè¼Ç ½ÃÀÛ
     $pdo->beginTransaction();
 
-    // 1. »óÇ° Á¤º¸ Á¶È¸ (ºñ°üÀû ¶ô Á¦¿Ü, ÀĞ±â Àü¿ë)
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id = ? AND is_active = 1");
-    $stmt->execute([$product_id]);
-    $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$product) {
-        $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => 'Á¸ÀçÇÏÁö ¾Ê°Å³ª ÆÇ¸Å Áß´ÜµÈ »óÇ°ÀÔ´Ï´Ù.']);
-        exit;
-    }
+    $product = ensureTicketProduct($pdo, $product_id);
 
     if ($product['product_type'] !== 'TICKET') {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => '¼ö°­ Æ¼ÄÏ »óÇ°ÀÌ ¾Æ´Õ´Ï´Ù.']);
+        echo json_encode(['success' => false, 'message' => 'ìˆ˜ê°•ê¶Œ ìƒí’ˆì´ ì•„ë‹™ë‹ˆë‹¤.']);
         exit;
     }
 
@@ -45,14 +71,13 @@ try {
     $total_count = (int)$product['total_count'];
     $expiry_days = (int)$product['expiry_days'];
 
-    // 2. À¯Àú Á¤º¸ Á¶È¸ ¹× ÀÜ¾× È®ÀÎ (µ¿½Ã¼º ¹æÁö¸¦ À§ÇØ Çà ¶ô Àû¿ë)
     $stmt = $pdo->prepare("SELECT current_money FROM users WHERE user_id = ? FOR UPDATE");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => 'À¯Àú Á¤º¸¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.']);
+        echo json_encode(['success' => false, 'message' => 'ì‚¬ìš©ìë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.']);
         exit;
     }
 
@@ -60,45 +85,40 @@ try {
 
     if ($current_money < $price) {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => 'ÀüÀÚ¸Ó´Ï ÀÜ¾×ÀÌ ºÎÁ·ÇÕ´Ï´Ù.']);
+        echo json_encode(['success' => false, 'message' => 'ë³´ìœ  ì„¸ëª¨ê°€ ë¶€ì¡±í•©ë‹ˆë‹¤.']);
         exit;
     }
 
-    // 3. ÀÜ¾× Â÷°¨
     $new_balance = $current_money - $price;
     $stmt = $pdo->prepare("UPDATE users SET current_money = ? WHERE user_id = ?");
     $stmt->execute([$new_balance, $user_id]);
 
-    // 4. ÀüÀÚ¸Ó´Ï ÀÌ·Â ±â·Ï (balance_snapshot, target_id Æ÷ÇÔ)
     $stmt = $pdo->prepare("
         INSERT INTO wallet_histories (user_id, type, amount, balance_snapshot, target_id, description) 
         VALUES (?, 'BUY_PRODUCT', ?, ?, ?, ?)
     ");
-    $description = $product['title'] . ' ±¸¸Å';
+    $description = $product['title'] . ' êµ¬ë§¤';
     $stmt->execute([$user_id, -$price, $new_balance, $product_id, $description]);
 
-    // 5. Æ¼ÄÏ ¹ß±Ş (¸¸·áÀÏ °è»ê Àû¿ë)
     $stmt = $pdo->prepare("
         INSERT INTO user_tickets (user_id, product_id, remaining_count, status, expired_at) 
         VALUES (?, ?, ?, 'ACTIVE', DATE_ADD(NOW(), INTERVAL ? DAY))
     ");
     $stmt->execute([$user_id, $product_id, $total_count, $expiry_days]);
 
-    // Æ®·£Àè¼Ç Ä¿¹Ô
     $pdo->commit();
 
     echo json_encode([
-        'success' => true, 
-        'message' => 'Æ¼ÄÏ ±¸¸Å°¡ ¼º°øÀûÀ¸·Î ¿Ï·áµÇ¾ú½À´Ï´Ù.',
+        'success' => true,
+        'message' => 'ìˆ˜ê°•ê¶Œ êµ¬ë§¤ê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.',
         'data' => [
             'balance' => $new_balance
         ]
     ]);
-
 } catch (Exception $e) {
-    if ($pdo && $pdo->inTransaction()) {
+    if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => '½Ã½ºÅÛ ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'ì‹œìŠ¤í…œ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤: ' . $e->getMessage()]);
 }

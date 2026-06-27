@@ -1,0 +1,313 @@
+/* ==========================================
+   1. 기본 초기화 및 폰트 설정
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    background-color: #F9F6F0; /* 연한 베이지 배경 */
+    color: #4A3E3D; /* 짙은 브라운 톤 텍스트 */
+    min-height: 100vh;
+}
+
+/* ==========================================
+   2. 레이아웃: 사이드바 (Sidebar)
+   ========================================== */
+.sidebar {
+    width: 260px;
+    background-color: #4A3E3D; /* 묵직한 초콜릿 브라운 */
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex-shrink: 0;
+}
+
+    .sidebar .logo {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #D4B296; /* 부드러운 밀크티 베이지 */
+        text-align: center;
+    }
+
+    .sidebar .user-info {
+        background-color: #5C4D4C; /* 사이드바 내부 옅은 브라운 */
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .sidebar .logout-link {
+        color: #E29587; /* 톤다운된 레드/오렌지 */
+        text-decoration: none;
+        font-size: 12px;
+        display: inline-block;
+        margin-top: 5px;
+    }
+
+        .sidebar .logout-link:hover {
+            text-decoration: underline;
+        }
+
+    .sidebar .menu-btn {
+        background: none;
+        border: none;
+        color: #C7B7B5; /* 은은한 브라운 그레이 */
+        text-align: left;
+        padding: 12px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        transition: all 0.2s;
+        width: 100%;
+    }
+
+        .sidebar .menu-btn:hover,
+        .sidebar .menu-btn.active {
+            background-color: #D4B296; /* 활성화 시 베이지 배경 */
+            color: #4A3E3D; /* 활성화 시 글자는 진한 브라운 */
+        }
+
+/* ==========================================
+   3. 레이아웃: 메인 콘텐츠 & 섹션 전환
+   ========================================== */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.page-section {
+    display: none;
+}
+
+    .page-section.active {
+        display: block;
+    }
+
+h2 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #E5DEC9; /* 베이지색 구분선 */
+    color: #4A3E3D;
+}
+
+/* ==========================================
+   4. 데이터 테이블 (Data Table)
+   ========================================== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(110, 90, 75, 0.08); /* 따뜻한 느낌의 그림자 */
+    margin-bottom: 30px;
+}
+
+    .data-table th,
+    .data-table td {
+        padding: 14px 20px;
+        text-align: left;
+    }
+
+    .data-table th {
+        background-color: #F1EAE0; /* 부드러운 메인 베이지 */
+        color: #6E5A4B; /* 헤더 폰트 컬러 */
+        font-weight: 600;
+        border-bottom: 2px solid #E5DEC9;
+    }
+
+    .data-table td {
+        border-bottom: 1px solid #F1EAE0;
+        vertical-align: middle;
+    }
+
+    .data-table tr:last-child td {
+        border-bottom: none;
+    }
+
+/* ==========================================
+   5. 공통 컴포넌트: 버튼 및 배지
+   ========================================== */
+.btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 기본/확인 버튼 -> 포인트 브라운 */
+.btn-primary {
+    background-color: #6E5A4B;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: #5A493D;
+    }
+
+/* 성공/승인 버튼 -> 차분한 그린 */
+.btn-success {
+    background-color: #8E9A76;
+    color: white;
+}
+
+    .btn-success:hover {
+        background-color: #798462;
+    }
+
+/* 위험/삭제 버튼 -> 차분한 벽돌색 */
+.btn-danger {
+    background-color: #C07A6E;
+    color: white;
+}
+
+    .btn-danger:hover {
+        background-color: #A9665B;
+    }
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-pending {
+    background-color: #FFF4E0;
+    color: #B47B44;
+}
+/* 대기중: 연노란 베이지 */
+.badge-student {
+    background-color: #EBF1E5;
+    color: #697753;
+}
+/* 학생: 은은한 올리브그린 */
+
+.amount-plus {
+    color: #8E9A76;
+    font-weight: bold;
+}
+
+/* ==========================================
+   6. 입력 폼 (Form Container)
+   ========================================== */
+.form-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(110, 90, 75, 0.08);
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group label {
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #6E5A4B;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px;
+        border: 1px solid #E5DEC9;
+        border-radius: 6px;
+        font-size: 15px;
+        background-color: #FAF8F5;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #6E5A4B; /* 포커스 시 브라운 테두리 */
+        }
+
+/* ==========================================
+   7. 레이어형 모달 (Popup Window)
+   ========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(74, 62, 61, 0.4); /* 브라운 톤의 딤드 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+    .modal-overlay.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+.modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(74, 62, 61, 0.15);
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid #E5DEC9;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #C7B7B5;
+    line-height: 1;
+}
+
+    .modal-close:hover {
+        color: #6E5A4B;
+    }
+
+.modal-title {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #4A3E3D;
+    font-size: 18px;
+    font-weight: bold;
+}
