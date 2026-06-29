@@ -246,9 +246,9 @@
 						<div class="scheduler-box">
 							<h4 style="margin: 0 0 15px 0; color:#4e73df;">📅 미니 캘린더</h4>
 							<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-								<button class="btn btn-secondary" style="padding:2px 8px;">&lt;</button>
-								<strong>2026년 6월</strong>
-								<button class="btn btn-secondary" style="padding:2px 8px;">&gt;</button>
+                                <button id="mini-cal-prev" type="button" class="btn btn-secondary" style="padding:2px 8px;">&lt;</button>
+                                <strong id="mini-cal-title">2026년 6월</strong>
+                                <button id="mini-cal-next" type="button" class="btn btn-secondary" style="padding:2px 8px;">&gt;</button>
 							</div>
 							<table class="mini-calendar">
 								<thead>
@@ -262,53 +262,7 @@
 										<th>토</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td></td>
-										<td>1</td>
-										<td>2</td>
-										<td>3</td>
-										<td>4</td>
-										<td>5</td>
-										<td>6</td>
-									</tr>
-									<tr>
-										<td>7</td>
-										<td>8</td>
-										<td>9</td>
-										<td>10</td>
-										<td>11</td>
-										<td>12</td>
-										<td>13</td>
-									</tr>
-									<tr>
-										<td>14</td>
-										<td>15</td>
-										<td>16</td>
-										<td>17</td>
-										<td>18</td>
-										<td>19</td>
-										<td>20</td>
-									</tr>
-									<tr>
-										<td>21</td>
-										<td>22</td>
-										<td>23</td>
-										<td>24</td>
-										<td>25</td>
-										<td>26</td>
-										<td>27</td>
-									</tr>
-									<tr>
-										<td>28</td>
-										<td class="clickable active-day" onclick="selectScheduleDate('2026-06-29', this)">29</td>
-										<td class="clickable" onclick="selectScheduleDate('2026-06-30', this)">30</td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-								</tbody>
+                             <tbody id="mini-cal-body"></tbody>
 							</table>
 						</div>
 
@@ -590,10 +544,15 @@
 							</div>
 							<div>
 								<label style="font-size:12px; font-weight:bold;">시간 설정</label>
-								<select id="reservation-time-select" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;">
-									<option value="09">09:00 ~ 10:00</option>
-									<option value="10" selected>10:00 ~ 11:00</option>
-									<option value="11">11:00 ~ 12:00</option>
+                             <select id="reservation-time-select" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;">
+                                    <option value="09">09:00 ~ 10:00</option>
+                                    <option value="10" selected>10:00 ~ 11:00</option>
+                                    <option value="11">11:00 ~ 12:00</option>
+                                    <option value="12">12:00 ~ 13:00</option>
+                                    <option value="13">13:00 ~ 14:00</option>
+                                    <option value="14">14:00 ~ 15:00</option>
+                                    <option value="15">15:00 ~ 16:00</option>
+                                    <option value="16">16:00 ~ 17:00</option>
 								</select>
 							</div>
 						</div>
@@ -622,8 +581,8 @@
 					<!-- 섹션 A: 1:1 수업 선택 시 -->
 					<div id="field-private-11" style="display:none; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
 						<div class="form-group">
-							<label style="font-size:13px; color:#4e73df; font-weight:bold;">🔒 노출 대상 학생 지정</label>
-							<p style="font-size:11.5px; color:#858796; margin:2px 0 8px 0;">선택된 선생님의 담당 매칭 학생만 노출됩니다.</p>
+							<label style="font-size:13px; color:#4e73df; font-weight:bold;">🔒 노출 대상 학생 지정 (선택)</label>
+							<p style="font-size:11.5px; color:#858796; margin:2px 0 8px 0;">선택된 선생님의 담당 매칭 학생만 노출되며, 비워두면 오픈 슬롯으로 생성됩니다.</p>
 							<select id="private-student-list" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;">
 								<option value="">-- 선생님을 먼저 선택해 주세요 --</option>
 							</select>
@@ -642,6 +601,7 @@
 									<input type="radio" name="duo_mode" value="random" onchange="toggleDuoSubFields('random')"> 1명 고정 + 1명 랜덤 오픈
 								</label>
 							</div>
+							<p style="font-size:11.5px; color:#858796; margin:2px 0 8px 0;">담당 학생만 선택 가능하며, 모두 비워두면 듀오 오픈 슬롯으로 생성됩니다.</p>
 						</div>
 
 						<!-- 1:2 수동 지정 폼 -->
@@ -842,6 +802,8 @@
 	let selectedSlotId = null;
 	let selectedSlotData = null;
     let cachedTeachers = [];
+    let miniCalYear = new Date().getFullYear();
+    let miniCalMonth = new Date().getMonth();
 
     function renderTeacherSelectOptions(teachers) {
         const teacherSelect = document.getElementById('schedule-teacher-select');
@@ -886,6 +848,68 @@
 		const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} (${weekdays[d.getDay()]})`;
 	}
+
+    function toIsoDate(dateObj) {
+        return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+    }
+
+    function renderMiniCalendar() {
+        const title = document.getElementById('mini-cal-title');
+        const body = document.getElementById('mini-cal-body');
+        if (!title || !body) return;
+
+        title.innerText = `${miniCalYear}년 ${miniCalMonth + 1}월`;
+        body.innerHTML = '';
+
+        const firstDay = new Date(miniCalYear, miniCalMonth, 1);
+        const firstWeekday = firstDay.getDay();
+        const lastDate = new Date(miniCalYear, miniCalMonth + 1, 0).getDate();
+
+        let tr = document.createElement('tr');
+        for (let i = 0; i < firstWeekday; i++) {
+            const td = document.createElement('td');
+            td.innerHTML = '&nbsp;';
+            tr.appendChild(td);
+        }
+
+        for (let day = 1; day <= lastDate; day++) {
+            if (tr.children.length === 7) {
+                body.appendChild(tr);
+                tr = document.createElement('tr');
+            }
+
+            const td = document.createElement('td');
+            td.className = 'clickable';
+            td.innerText = String(day);
+
+            const date = new Date(miniCalYear, miniCalMonth, day);
+            const iso = toIsoDate(date);
+            if (iso === selectedScheduleDate) {
+                td.classList.add('active-day');
+            }
+            td.onclick = () => selectScheduleDate(iso, td);
+            tr.appendChild(td);
+        }
+
+        while (tr.children.length < 7) {
+            const td = document.createElement('td');
+            td.innerHTML = '&nbsp;';
+            tr.appendChild(td);
+        }
+        body.appendChild(tr);
+    }
+
+    function moveMiniCalendar(monthDelta) {
+        miniCalMonth += monthDelta;
+        if (miniCalMonth < 0) {
+            miniCalMonth = 11;
+            miniCalYear -= 1;
+        } else if (miniCalMonth > 11) {
+            miniCalMonth = 0;
+            miniCalYear += 1;
+        }
+        renderMiniCalendar();
+    }
 
 	function resetSlotDetail() {
 		selectedSlotId = null;
@@ -1034,6 +1058,11 @@
 		selectedScheduleDate = dateStr;
 		document.querySelectorAll('.mini-calendar td.active-day').forEach(td => td.classList.remove('active-day'));
 		if (cell) cell.classList.add('active-day');
+       const d = new Date(dateStr + 'T00:00:00');
+        if (!Number.isNaN(d.getTime())) {
+            miniCalYear = d.getFullYear();
+            miniCalMonth = d.getMonth();
+        }
 		loadScheduleForDate(dateStr);
 	}
 
@@ -1423,34 +1452,81 @@
 		if (timeSelect) timeSelect.value = String(hour).padStart(2, '0');
 	}
 
-	async function submitAdminReservation() {
+   function getSelectedStudentIds(classTypeRaw) {
+        const ids = [];
+        const addId = (v) => {
+            const n = parseInt(String(v || '').trim(), 10);
+            if (!Number.isNaN(n) && n > 0 && !ids.includes(String(n))) {
+                ids.push(String(n));
+            }
+        };
+
+        if (classTypeRaw === 'PRIVATE_11') {
+            addId(document.getElementById('private-student-list')?.value);
+            return ids;
+        }
+
+        if (classTypeRaw === 'DUO_12') {
+            const mode = document.querySelector('input[name="duo_mode"]:checked')?.value || 'manual';
+            if (mode === 'manual') {
+                document.querySelectorAll('#duo-manual-inputs .teacher-student-combo').forEach(select => addId(select.value));
+            } else {
+                addId(document.querySelector('#duo-random-inputs .teacher-student-combo')?.value);
+            }
+        }
+
+        return ids;
+    }
+
+    async function submitAdminReservation() {
 		try {
 			const teacher = document.getElementById('schedule-teacher-select').value;
 			const date = document.getElementById('reservation-date-input').value;
 			const timeHour = document.getElementById('reservation-time-select').value;
 			const time = `${timeHour}:00:00`;
-			const student = document.getElementById('private-student-list').value || document.querySelector('.teacher-student-combo')?.value;
 			const classTypeRaw = document.getElementById('schedule-class-type').value;
-			const classType = classTypeRaw === 'GROUP' ? 'GROUP' : 'PRIVATE';
+           const maxStudents = parseInt(document.getElementById('reservation-group-max-students')?.value || '5', 10);
+            const studentIds = getSelectedStudentIds(classTypeRaw);
 
-			if (!teacher || !date || !timeHour || !student) {
+           if (!teacher || !date || !timeHour || !classTypeRaw) {
 				alert('필수 항목을 모두 채워주세요.');
 				return;
 			}
 
+            if (classTypeRaw === 'PRIVATE_11' && studentIds.length > 1) {
+                alert('1:1 수업은 학생을 최대 1명만 지정할 수 있습니다.');
+                return;
+            }
+            if (classTypeRaw === 'DUO_12' && studentIds.length > 2) {
+                alert('듀오 수업은 학생을 최대 2명까지 지정할 수 있습니다.');
+                return;
+            }
+
 			const params = new URLSearchParams();
 			params.append('teacher_id', teacher);
-			params.append('student_id', student);
 			params.append('reserve_date', date);
 			params.append('reserve_time', time);
-			params.append('class_type', classType);
+         params.append('class_type', classTypeRaw);
+            if (classTypeRaw === 'GROUP') {
+                params.append('max_students', String(Math.max(2, maxStudents)));
+            }
+            if (studentIds.length > 0) {
+                params.append('student_ids', studentIds.join(','));
+            }
 
-			const resp = await fetch('../api/book_reservation.php', {
+           const resp = await fetch('../api/admin_slot_create.php', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
 				body: params.toString()
 			});
-			const res = await resp.json();
+            const raw = await resp.text();
+            let res;
+            try {
+                res = JSON.parse(raw);
+            } catch {
+                throw new Error(raw || '서버 응답을 해석할 수 없습니다.');
+            }
+
 			if (!resp.ok || !res.success) {
 				alert(res.message || '예약 생성 실패');
 				return;
@@ -1459,13 +1535,24 @@
 			alert(res.message || '예약 생성 완료');
 			closeModal('reservationAddModal');
 			loadScheduleForDate(date);
+           renderMiniCalendar();
 		} catch (e) {
 			console.error(e);
-			alert('예약 생성 중 오류가 발생했습니다.');
+            alert(e?.message ? `예약 생성 실패: ${e.message}` : '예약 생성 중 오류가 발생했습니다.');
 		}
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
+        const selectedDateObj = new Date(selectedScheduleDate + 'T00:00:00');
+        if (!Number.isNaN(selectedDateObj.getTime())) {
+            miniCalYear = selectedDateObj.getFullYear();
+            miniCalMonth = selectedDateObj.getMonth();
+        }
+
+        document.getElementById('mini-cal-prev')?.addEventListener('click', () => moveMiniCalendar(-1));
+        document.getElementById('mini-cal-next')?.addEventListener('click', () => moveMiniCalendar(1));
+        renderMiniCalendar();
+
 		checkAdminSession();
       loadTeachers();
 		resetSlotDetail();

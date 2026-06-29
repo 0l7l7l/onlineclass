@@ -1,4 +1,5 @@
 <?php
+<?php
 require_once __DIR__ . '/db.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
@@ -9,32 +10,22 @@ try {
 
     $sql = "
         SELECT
-            ts.id,
-            ts.teacher_id,
-            ts.start_time,
-            ts.end_time,
-            ts.lesson_type,
-            ts.theme,
-            ts.max_students,
+            c.class_id AS id,
+            c.teacher_id,
+            CONCAT(c.class_date, ' ', c.start_time) AS start_time,
+            CONCAT(c.class_date, ' ', c.end_time) AS end_time,
+            CASE
+                WHEN c.class_type IN ('GROUP', 'DUO') THEN 'GROUP_25'
+                ELSE 'PRIVATE_25'
+            END AS lesson_type,
+            c.max_capacity AS max_students,
             u.name AS teacher_name,
-            COALESCE(r.booked_count, 0) AS booked_count
-        FROM time_slots ts
-        LEFT JOIN users u ON ts.teacher_id = u.user_id
-        LEFT JOIN (
-            SELECT
-                teacher_id,
-                reserve_date,
-                reserve_time,
-                COUNT(*) AS booked_count
-            FROM reservations
-            WHERE UPPER(status) = 'CONFIRMED' OR status = '????'
-            GROUP BY teacher_id, reserve_date, reserve_time
-        ) r
-            ON r.teacher_id = ts.teacher_id
-           AND r.reserve_date = DATE(ts.start_time)
-           AND TIME(r.reserve_time) = TIME(ts.start_time)
-        WHERE DATE(ts.start_time) = ?
-        ORDER BY u.user_id, ts.start_time ASC
+            c.current_capacity AS booked_count
+        FROM classes c
+        LEFT JOIN users u ON c.teacher_id = u.user_id
+        WHERE c.class_date = ?
+          AND c.status = 'AVAILABLE'
+        ORDER BY u.user_id, c.start_time ASC
     ";
 
     $stmt = $pdo->prepare($sql);

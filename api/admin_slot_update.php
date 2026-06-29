@@ -1,4 +1,5 @@
 <?php
+<?php
 require_once __DIR__ . '/db.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
@@ -31,13 +32,18 @@ if ($slotId <= 0 || $teacherId <= 0 || !$lessonDate || !$startTime || !$endTime)
 }
 
 $maxStudents = max(1, $maxStudents);
-$lessonType = in_array($classType, ['GROUP', 'DUO_12'], true) ? 'GROUP_25' : 'PRIVATE_25';
+$mappedClassType = 'PRIVATE';
+if ($classType === 'DUO_12') {
+    $mappedClassType = 'DUO';
+} elseif ($classType === 'GROUP') {
+    $mappedClassType = 'GROUP';
+}
 
 try {
     $pdo = DB::getConnection();
     $pdo->beginTransaction();
 
-    $stmt = $pdo->prepare("SELECT id, teacher_id, start_time FROM time_slots WHERE id = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT class_id, current_capacity FROM classes WHERE class_id = ? LIMIT 1");
     $stmt->execute([$slotId]);
     $slot = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$slot) {
@@ -47,18 +53,19 @@ try {
         exit;
     }
 
-    $newStart = $lessonDate . ' ' . $startTime . ':00';
-    $newEnd = $lessonDate . ' ' . $endTime . ':00';
+    $currentCapacity = (int)$slot['current_capacity'];
+    if ($currentCapacity > $maxStudents) {
+        $pdo->rollBack();
+        http_response_code(409);
+        echo json_encode(['success' => false, 'message' => '현재 예약 인원보다 작은 정원으로 변경할 수 없습니다.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 
-    $ustmt = $pdo->prepare("UPDATE time_slots SET teacher_id = ?, start_time = ?, end_time = ?, lesson_type = ?, max_students = ?, updated_at = NOW() WHERE id = ?");
-    $ustmt->execute([$teacherId, $newStart, $newEnd, $lessonType, $maxStudents, $slotId]);
+    $normalizedStartTime = strlen($startTime) === 5 ? $startTime . ':00' : $startTime;
+    $normalizedEndTime = strlen($endTime) === 5 ? $endTime . ':00' : $endTime;
 
-    $oldTeacherId = (int)$slot['teacher_id'];
-    $oldDate = date('Y-m-d', strtotime($slot['start_time']));
-    $oldTime = date('H:i:s', strtotime($slot['start_time']));
-
-    $rstmt = $pdo->prepare("UPDATE reservations SET teacher_id = ?, reserve_date = ?, reserve_time = ?, updated_at = NOW() WHERE teacher_id = ? AND reserve_date = ? AND reserve_time = ?");
-    $rstmt->execute([$teacherId, $lessonDate, $startTime . ':00', $oldTeacherId, $oldDate, $oldTime]);
+    $ustmt = $pdo->prepare("UPDATE classes SET teacher_id = ?, class_date = ?, start_time = ?, end_time = ?, class_type = ?, max_capacity = ? WHERE class_id = ?");
+    $ustmt->execute([$teacherId, $lessonDate, $normalizedStartTime, $normalizedEndTime, $mappedClassType, $maxStudents, $slotId]);
 
     $pdo->commit();
     echo json_encode(['success' => true, 'message' => '?? ??? ???????.'], JSON_UNESCAPED_UNICODE);
