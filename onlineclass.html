@@ -2370,194 +2370,334 @@
     }
 
     function setLessonType(type, target) {
-      document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+      const container = target.closest('.lesson-type-selector');
+      if (container) {
+        container.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+      }
       target.classList.add('active');
+      currentLessonType = type;
+      selectedFlexSlotId = null;
+      renderFlexCalendar();
+      populateFlexibleSlots();
     }
 
-    // teacherSlots will be fetched from server for the logged in student
-		let teacherSlots = [];
-		let pendingBooking = null;
+    let teacherSlots = [];
+    let pendingBooking = null;
+    let currentLessonType = 'private';
+    let selectedFlexDateISO = null;
+    let selectedFlexSlotId = null;
+    let selectedGroupSlotIds = [];
 
-		function selectFlexDate(target, day) {
-			document.querySelectorAll('.cal-day').forEach(btn => btn.classList.remove('active'));
-			target.classList.add('active');
-			// repopulate flex slots for the selected date
-			populateFlexibleSlots();
-		}
+    function getSlotById(slotId) {
+      return teacherSlots.find(s => String(s.slot_id) === String(slotId));
+    }
 
-		function selectFlexTime(target, slotId) {
-			document.querySelectorAll('.time-slot-row').forEach(row => row.classList.remove('active'));
-			target.classList.add('active');
-			// store selected slot id on the element
-			target.dataset.slotId = slotId || '';
-		}
+    function formatTimeRange(startTime, endTime) {
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+      return `${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')} - ${String(end.getHours()).padStart(2, '0')}:${String(end.getMinutes()).padStart(2, '0')}`;
+    }
 
-		function confirmFlexBooking() {
-			const activeDate = document.querySelector('.cal-day.active');
-			const activeTime = document.querySelector('.time-slot-row.active');
+    function slotCategory(slot) {
+      const lessonType = (slot.lesson_type || '').toUpperCase();
+      const maxStudents = parseInt(slot.max_students || 1, 10);
+      if (lessonType === 'PRIVATE_25') return 'private';
+      if (lessonType === 'GROUP_25' && maxStudents <= 2) return 'duo';
+      return 'group';
+    }
 
-			if (!activeDate) { alert('원하시는 날짜를 선택해주세요.'); return; }
-			if (!activeTime) { alert('원하시는 예약 시간을 선택해주세요.'); return; }
+    function isSlotAvailable(slot) {
+      const maxStudents = parseInt(slot.max_students || 1, 10);
+      const bookedCount = parseInt(slot.booked_count || 0, 10);
+      return bookedCount < maxStudents;
+    }
 
-			const dateText = activeDate.innerText;
-			const timeText = activeTime.querySelector('.time-text')?.innerText || activeTime.innerText;
-			pendingBooking = {
-				type: 'FLEX',
-				reserve_date: null, // will format below
-				reserve_time: null,
-				slot_id: activeTime.dataset.slotId || null,
-				display: `${dateText} ${timeText}`
-			};
+    function renderFlexCalendar() {
+      const grid = document.querySelector('#section-flexible .calendar-grid');
+      if (!grid) return;
 
-			// attempt to build reserve_date / reserve_time from selected calendar (assumes month is July for demo)
-			const day = parseInt(activeDate.innerText, 10);
-			if (!isNaN(day)) {
-				// try year-month from today
-				const now = new Date();
-				const year = now.getFullYear();
-				const month = now.getMonth() + 1; // 1-based
-				pendingBooking.reserve_date = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-			}
+      grid.innerHTML = `
+        <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
+      `;
 
-			// reserve_time try to parse HH:mm from text like '🕒 17:30 - 17:55'
-			const m = timeText.match(/(\d{1,2}:\d{2})/);
-			if (m) pendingBooking.reserve_time = m[1] + ':00';
+      const targetCategory = currentLessonType === 'duo' ? 'duo' : 'private';
+      const availableDates = [...new Set(
+        teacherSlots
+          .filter(slot => slotCategory(slot) === targetCategory && isSlotAvailable(slot))
+          .map(slot => slot.start_time.slice(0, 10))
+      )].sort();
 
-			openReserveConfirm();
-		}
+      if (availableDates.length === 0) {
+        for (let i = 0; i < 35; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'cal-day empty';
+          grid.appendChild(cell);
+        }
+        selectedFlexDateISO = null;
+        return;
+      }
 
-		function fetchTeacherSlots() {
-			fetch('api/teacher_schedule.php').then(r=>r.json()).then(res=>{
-				if (res.success) {
-					teacherSlots = res.data || [];
-					// populate current flexible and group views
-					populateFlexibleSlots();
-					// refresh group slots for currently active day
-					const activeDayBtn = document.querySelector('.day-btn.active');
-					if (activeDayBtn) selectGroupDay(activeDayBtn.innerText.replace('요일',''), activeDayBtn);
-				} else {
-					console.warn('teacher_schedule:', res.message);
-				}
-			}).catch(e=>console.error('teacher_schedule fetch failed', e));
-		}
+      if (!selectedFlexDateISO || !availableDates.includes(selectedFlexDateISO)) {
+        selectedFlexDateISO = availableDates[0];
+      }
 
-		function populateFlexibleSlots() {
-			const list = document.getElementById('section-flexible')?.querySelector('.time-slot-list');
-			if (!list) return;
-			// if teacherSlots available, use them; otherwise keep the default static slots
-			if (teacherSlots.length === 0) return;
+      const firstDate = new Date(availableDates[0] + 'T00:00:00');
+      const firstWeekday = firstDate.getDay();
+      for (let i = 0; i < firstWeekday; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'cal-day empty';
+        grid.appendChild(emptyCell);
+      }
 
-			// clear and build items from next available slots (limit 6)
-			list.innerHTML = '';
-			const slots = teacherSlots.slice(0, 8);
-			slots.forEach(s=>{
-				const start = new Date(s.start_time);
-				const end = new Date(s.end_time);
-				const row = document.createElement('div');
-				row.className = 'time-slot-row';
-				row.onclick = () => selectFlexTime(row, s.slot_id);
-				row.dataset.slotId = s.slot_id;
-				row.innerHTML = `<div class="time-text">🕒 ${String(start.getHours()).padStart(2,'0')}:${String(start.getMinutes()).padStart(2,'0')} - ${String(end.getHours()).padStart(2,'0')}:${String(end.getMinutes()).padStart(2,'0')}</div><span class="status-badge">예약 가능</span>`;
-				list.appendChild(row);
-			});
-		}
+      availableDates.forEach(dateStr => {
+        const d = new Date(dateStr + 'T00:00:00');
+        const cell = document.createElement('div');
+        cell.className = 'cal-day';
+        if (dateStr === selectedFlexDateISO) {
+          cell.classList.add('active');
+        }
+        cell.dataset.date = dateStr;
+        cell.innerText = d.getDate();
+        cell.onclick = () => selectFlexDate(cell, dateStr);
+        grid.appendChild(cell);
+      });
+    }
 
-		function openReserveConfirm() {
-			const modal = document.getElementById('reserve-confirm-modal');
-			const info = document.getElementById('reserve-confirm-info');
-			if (!modal || !pendingBooking) return;
-			info.innerText = pendingBooking.display || '선택한 수업 정보';
-			modal.classList.remove('hidden');
-		}
+    function selectFlexDate(target, dateStr) {
+      document.querySelectorAll('#section-flexible .cal-day').forEach(btn => btn.classList.remove('active'));
+      target.classList.add('active');
+      selectedFlexDateISO = dateStr;
+      selectedFlexSlotId = null;
+      populateFlexibleSlots();
+    }
 
-		function closeReserveConfirm() {
-			const modal = document.getElementById('reserve-confirm-modal');
-			if (!modal) return;
-			modal.classList.add('hidden');
-			pendingBooking = null;
-		}
+    function selectFlexTime(target, slotId) {
+      document.querySelectorAll('#section-flexible .time-slot-row').forEach(row => row.classList.remove('active'));
+      target.classList.add('active');
+      selectedFlexSlotId = String(slotId);
+    }
 
-		async function finalizeReservation() {
-			if (!pendingBooking) return;
-			try {
-				const form = new URLSearchParams();
-				form.append('type', pendingBooking.type);
-				if (pendingBooking.reserve_date) form.append('reserve_date', pendingBooking.reserve_date);
-				if (pendingBooking.reserve_time) form.append('reserve_time', pendingBooking.reserve_time);
-				if (pendingBooking.slot_id) form.append('slot_id', pendingBooking.slot_id);
+    function confirmFlexBooking() {
+      if (!selectedFlexDateISO) {
+        alert('원하시는 날짜를 선택해주세요.');
+        return;
+      }
+      if (!selectedFlexSlotId) {
+        alert('원하시는 예약 시간을 선택해주세요.');
+        return;
+      }
 
-				const resp = await fetch('api/book_reservation.php', {
-					method: 'POST',
-					headers: {'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
-					body: form.toString()
-				});
-				const res = await resp.json();
-				if (!resp.ok || !res.success) {
-					alert(res.message || '예약 중 오류가 발생했습니다.');
-					return;
-				}
-				alert(res.message || '예약이 완료되었습니다.');
-				closeReserveConfirm();
-				// refresh mypage data
-				if (!document.getElementById('sec-mypage').classList.contains('hidden')) loadMyPageData();
-			} catch (e) {
-				console.error(e);
-				alert('예약 중 네트워크 오류가 발생했습니다.');
-			}
-		}
+      const slot = getSlotById(selectedFlexSlotId);
+      if (!slot) {
+        alert('선택한 슬롯 정보를 찾을 수 없습니다. 다시 선택해 주세요.');
+        return;
+      }
+
+      pendingBooking = {
+        bookingMode: 'FLEX',
+        slotIds: [String(slot.slot_id)],
+        classType: slotCategory(slot) === 'private' ? 'PRIVATE' : 'GROUP',
+        display: `${selectedFlexDateISO} ${formatTimeRange(slot.start_time, slot.end_time)}`
+      };
+
+      openReserveConfirm();
+    }
+
+    async function fetchTeacherSlots() {
+      try {
+        const response = await fetch('api/teacher_schedule.php');
+        const res = await response.json();
+        if (!response.ok || !res.success) {
+          console.warn('teacher_schedule:', res.message || '조회 실패');
+          teacherSlots = [];
+        } else {
+          teacherSlots = res.data || [];
+        }
+
+        renderFlexCalendar();
+        populateFlexibleSlots();
+
+        const activeDayBtn = document.querySelector('.day-btn.active');
+        if (activeDayBtn) {
+          const day = activeDayBtn.innerText.replace('요일', '');
+          selectGroupDay(day, activeDayBtn);
+        }
+      } catch (e) {
+        console.error('teacher_schedule fetch failed', e);
+      }
+    }
+
+    function populateFlexibleSlots() {
+      const list = document.querySelector('#section-flexible .time-slot-list');
+      if (!list) return;
+
+      list.innerHTML = '';
+      if (!selectedFlexDateISO) {
+        list.innerHTML = '<div style="padding:1rem; opacity:0.7;">예약 가능한 일정이 없습니다.</div>';
+        return;
+      }
+
+      const targetCategory = currentLessonType === 'duo' ? 'duo' : 'private';
+      const filtered = teacherSlots
+        .filter(slot => slot.start_time.slice(0, 10) === selectedFlexDateISO)
+        .filter(slot => slotCategory(slot) === targetCategory)
+        .filter(slot => isSlotAvailable(slot))
+        .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding:1rem; opacity:0.7;">선택한 날짜에 예약 가능한 시간이 없습니다.</div>';
+        selectedFlexSlotId = null;
+        return;
+      }
+
+      if (!selectedFlexSlotId || !filtered.some(slot => String(slot.slot_id) === String(selectedFlexSlotId))) {
+        selectedFlexSlotId = null;
+      }
+
+      filtered.forEach(slot => {
+        const row = document.createElement('div');
+        row.className = 'time-slot-row';
+        if (String(slot.slot_id) === String(selectedFlexSlotId)) {
+          row.classList.add('active');
+        }
+        row.onclick = () => selectFlexTime(row, slot.slot_id);
+        row.innerHTML = `
+          <div class="time-text">🕒 ${formatTimeRange(slot.start_time, slot.end_time)}</div>
+          <span class="status-badge">예약 가능</span>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function openReserveConfirm() {
+      const modal = document.getElementById('reserve-confirm-modal');
+      const info = document.getElementById('reserve-confirm-info');
+      if (!modal || !pendingBooking) return;
+      info.innerText = pendingBooking.display || '선택한 수업 정보';
+      modal.classList.remove('hidden');
+    }
+
+    function closeReserveConfirm() {
+      const modal = document.getElementById('reserve-confirm-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      pendingBooking = null;
+    }
+
+    async function finalizeReservation() {
+      if (!pendingBooking || !pendingBooking.slotIds || pendingBooking.slotIds.length === 0) return;
+
+      try {
+        let successCount = 0;
+
+        for (const slotId of pendingBooking.slotIds) {
+          const slot = getSlotById(slotId);
+          if (!slot) continue;
+
+          const reserveDate = slot.start_time.slice(0, 10);
+          const reserveTime = slot.start_time.slice(11, 19);
+          const classType = slotCategory(slot) === 'group' ? 'GROUP' : 'PRIVATE';
+
+          const form = new URLSearchParams();
+          form.append('slot_id', String(slotId));
+          form.append('reserve_date', reserveDate);
+          form.append('reserve_time', reserveTime);
+          form.append('class_type', classType);
+
+          const resp = await fetch('api/book_reservation.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: form.toString()
+          });
+          const res = await resp.json();
+
+          if (!resp.ok || !res.success) {
+            alert(res.message || '예약 중 오류가 발생했습니다.');
+            await fetchTeacherSlots();
+            return;
+          }
+          successCount++;
+        }
+
+        if (successCount > 0) {
+          alert(successCount === 1 ? '예약이 완료되었습니다. 마이페이지에서 확인하세요.' : `${successCount}건의 예약이 완료되었습니다. 마이페이지에서 확인하세요.`);
+          closeReserveConfirm();
+          await fetchTeacherSlots();
+          if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
+            loadMyPageData();
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        alert('예약 중 네트워크 오류가 발생했습니다.');
+      }
+    }
 
     let selectedGroupItems = [];
     const GROUP_TICKET_LIMIT = 2;
 
     function selectGroupDay(dayStr, target) {
       document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
-			target.classList.add('active');
-			document.getElementById('selected-day-title').innerText = `${dayStr}요일 상세 시간표`;
+      target.classList.add('active');
+      document.getElementById('selected-day-title').innerText = `${dayStr}요일 상세 시간표`;
 
-			// populate group slots from teacherSlots for the selected weekday
-			const groupContainer = document.getElementById('group-time-slots');
-			if (groupContainer) {
-				groupContainer.innerHTML = '';
-				if (teacherSlots && teacherSlots.length > 0) {
-					// map dayStr (월/화/수/목/금) to weekday number: 월=1..금=5
-					const map = { '월':1, '화':2, '수':3, '목':4, '금':5, '토':6, '일':0 };
-					const wanted = map[dayStr] ?? null;
-					const filtered = teacherSlots.filter(s=>{
-						const d = new Date(s.start_time);
-						return wanted === null ? false : d.getDay() === wanted;
-					});
-					if (filtered.length === 0) {
-						groupContainer.innerHTML = '<div style="padding:1rem; opacity:0.7;">해당 요일에 배정된 그룹 시간이 없습니다.</div>';
-					} else {
-						filtered.forEach(s=>{
-							const start = new Date(s.start_time);
-							const row = document.createElement('div');
-							row.className = 'group-time-row';
-							row.onclick = () => toggleGroupSlot(row, `${dayStr} ${String(start.getHours()).padStart(2,'0')}:${String(start.getMinutes()).padStart(2,'0')}반`);
-							row.innerHTML = `<div class="time-text">🎓 ${String(start.getHours()).padStart(2,'0')}:${String(start.getMinutes()).padStart(2,'0')} 반</div><span style="font-size:0.875rem; opacity:0.7;">신청 가능</span>`;
-							groupContainer.appendChild(row);
-						});
-					}
-				}
-			}
+      const map = { '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6, '일': 0 };
+      const wanted = map[dayStr] ?? null;
 
-			document.querySelectorAll('.group-time-row').forEach(row => row.classList.remove('active'));
-			syncGroupSummaryUI();
+      const groupContainer = document.getElementById('group-time-slots');
+      if (!groupContainer) return;
+
+      groupContainer.innerHTML = '';
+      const filtered = (teacherSlots || [])
+        .filter(s => slotCategory(s) === 'group')
+        .filter(s => isSlotAvailable(s))
+        .filter(s => {
+          const d = new Date(s.start_time);
+          return wanted !== null && d.getDay() === wanted;
+        })
+        .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+
+      if (filtered.length === 0) {
+        groupContainer.innerHTML = '<div style="padding:1rem; opacity:0.7;">해당 요일에 배정된 그룹 시간이 없습니다.</div>';
+      } else {
+        filtered.forEach(slot => {
+          const booked = parseInt(slot.booked_count || 0, 10);
+          const max = parseInt(slot.max_students || 1, 10);
+          const label = `${dayStr}요일 ${formatTimeRange(slot.start_time, slot.end_time)}`;
+
+          const row = document.createElement('div');
+          row.className = 'group-time-row';
+          if (selectedGroupSlotIds.includes(String(slot.slot_id))) {
+            row.classList.add('active');
+          }
+          row.onclick = () => toggleGroupSlot(row, label, slot.slot_id);
+          row.innerHTML = `
+            <div class="time-text">🎓 ${formatTimeRange(slot.start_time, slot.end_time)}</div>
+            <span style="font-size:0.875rem; opacity:0.7;">${booked}/${max} 신청중</span>
+          `;
+          groupContainer.appendChild(row);
+        });
+      }
+
+      syncGroupSummaryUI();
     }
 
-    function toggleGroupSlot(target, slotName) {
+    function toggleGroupSlot(target, slotName, slotId) {
+      const slotKey = String(slotId);
       const isAlreadyActive = target.classList.contains('active');
 
       if (isAlreadyActive) {
         target.classList.remove('active');
-        selectedGroupItems = selectedGroupItems.filter(item => item !== slotName);
+        selectedGroupSlotIds = selectedGroupSlotIds.filter(id => id !== slotKey);
+        selectedGroupItems = selectedGroupItems.filter(item => item.slotId !== slotKey);
       } else {
-        if (selectedGroupItems.length >= GROUP_TICKET_LIMIT) {
+        if (selectedGroupSlotIds.length >= GROUP_TICKET_LIMIT) {
           alert(`보유하신 그룹 티켓 기준으로 최대 ${GROUP_TICKET_LIMIT}개까지만 선택할 수 있습니다.`);
           return;
         }
         target.classList.add('active');
-        selectedGroupItems.push(slotName);
+        selectedGroupSlotIds.push(slotKey);
+        selectedGroupItems.push({ slotId: slotKey, label: slotName });
       }
       syncGroupSummaryUI();
     }
@@ -2568,30 +2708,28 @@
       const autoInfo = document.getElementById('auto-reg-info');
 
       if (selectedGroupItems.length === 0) {
-        textSpan.innerText = "없음";
-        autoInfo.style.display = "none";
+        textSpan.innerText = '없음';
+        autoInfo.style.display = 'none';
         confirmBtn.disabled = true;
       } else {
-        textSpan.innerText = selectedGroupItems.join(", ");
-        autoInfo.style.display = "inline";
+        textSpan.innerText = selectedGroupItems.map(item => item.label).join(', ');
+        autoInfo.style.display = 'inline';
         confirmBtn.disabled = false;
       }
     }
 
     function confirmGroupBooking() {
-      if (selectedGroupItems.length === 0) return;
-			// open confirm modal and set pendingBooking for group
-			pendingBooking = {
-				type: 'GROUP',
-				reserve_date: null,
-				reserve_time: null,
-				slot_id: null,
-				display: selectedGroupItems.join(', ')
-			};
-			openReserveConfirm();
+      if (selectedGroupSlotIds.length === 0) return;
+
+      pendingBooking = {
+        bookingMode: 'GROUP',
+        slotIds: [...selectedGroupSlotIds],
+        classType: 'GROUP',
+        display: selectedGroupItems.map(item => item.label).join(', ')
+      };
+      openReserveConfirm();
     }
 
-    // ================= 신규: 주차별 그룹 스케줄 전환 로직 =================
     function selectScheduleWeek(week) {
       for (let i = 1; i <= 5; i++) {
         const btn = document.getElementById('btn-week-' + i);
@@ -2605,22 +2743,5 @@
         }
       }
     }
-	</script>
 
-	<!-- 예약 확인 모달 -->
-	<div id="reserve-confirm-modal" class="modal-overlay hidden">
-		<div class="modal-content">
-			<button onclick="closeReserveConfirm()" class="modal-close">&times;</button>
-			<h3 class="modal-title">예약 확인</h3>
-			<div style="margin:0.5rem 0; text-align:center;">
-				<p id="reserve-confirm-info" style="font-weight:bold;">선택한 수업 정보</p>
-				<p style="font-size:0.9rem; color:#666;">해당 예약을 확정하면 마이페이지에서 확인할 수 있습니다.</p>
-			</div>
-			<div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
-				<button onclick="finalizeReservation()" class="btn-confirm" style="flex:1;">예약 확정</button>
-				<button onclick="closeReserveConfirm()" class="btn-transparent" style="flex:1;">취소</button>
-			</div>
-		</div>
-	</div>
-</body>
-</html>
+  </script>

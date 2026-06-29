@@ -24,12 +24,44 @@ try {
 
     $teacher_id = (int)$row['teacher_id'];
 
-    $stmt = $pdo->prepare("SELECT id AS slot_id, teacher_id, start_time, end_time, lesson_type, theme, max_students FROM time_slots WHERE teacher_id = ? AND start_time >= DATE(NOW()) ORDER BY start_time ASC LIMIT 200");
+    $sql = "
+        SELECT
+            ts.id AS slot_id,
+            ts.teacher_id,
+            ts.start_time,
+            ts.end_time,
+            ts.lesson_type,
+            ts.theme,
+            ts.max_students,
+            COALESCE(r.booked_count, 0) AS booked_count
+        FROM time_slots ts
+        LEFT JOIN (
+            SELECT
+                teacher_id,
+                reserve_date,
+                reserve_time,
+                COUNT(*) AS booked_count
+            FROM reservations
+            WHERE UPPER(status) = 'CONFIRMED' OR status = '????'
+            GROUP BY teacher_id, reserve_date, reserve_time
+        ) r
+          ON r.teacher_id = ts.teacher_id
+         AND r.reserve_date = DATE(ts.start_time)
+         AND TIME(r.reserve_time) = TIME(ts.start_time)
+        WHERE ts.teacher_id = ?
+          AND ts.start_time >= NOW()
+        ORDER BY ts.start_time ASC
+        LIMIT 300
+    ";
+
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([$teacher_id]);
     $slots = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // normalize output
     $out = array_map(function($s){
+        $max = (int)$s['max_students'];
+        $booked = (int)$s['booked_count'];
         return [
             'slot_id' => (int)$s['slot_id'],
             'teacher_id' => (int)$s['teacher_id'],
@@ -37,7 +69,9 @@ try {
             'end_time' => $s['end_time'],
             'lesson_type' => $s['lesson_type'],
             'theme' => $s['theme'],
-            'max_students' => (int)$s['max_students']
+            'max_students' => $max,
+            'booked_count' => $booked,
+            'is_full' => $booked >= $max
         ];
     }, $slots);
 

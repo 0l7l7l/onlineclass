@@ -19,10 +19,30 @@ try {
     $student_id = isset($_POST['student_id']) ? (int)$_POST['student_id'] : null;
     $teacher_id = isset($_POST['teacher_id']) ? (int)$_POST['teacher_id'] : null;
     $slot_id = isset($_POST['slot_id']) ? (int)$_POST['slot_id'] : null;
-    $reserve_date = isset($_POST['reserve_date']) ? $_POST['reserve_date'] : null;
-    $reserve_time = isset($_POST['reserve_time']) ? $_POST['reserve_time'] : null;
-    $class_type = isset($_POST['class_type']) ? strtoupper($_POST['class_type']) : null;
-    $type_param = isset($_POST['type']) ? strtoupper($_POST['type']) : null;
+    $reserve_date = isset($_POST['reserve_date']) ? trim($_POST['reserve_date']) : null;
+    $reserve_time = isset($_POST['reserve_time']) ? trim($_POST['reserve_time']) : null;
+    $class_type = isset($_POST['class_type']) ? strtoupper(trim($_POST['class_type'])) : null;
+    $type_param = isset($_POST['type']) ? strtoupper(trim($_POST['type'])) : null;
+
+    $slot = null;
+    if ($slot_id) {
+        $slotStmt = $pdo->prepare("SELECT id, teacher_id, start_time, lesson_type, max_students FROM time_slots WHERE id = ? LIMIT 1");
+        $slotStmt->execute([$slot_id]);
+        $slot = $slotStmt->fetch(PDO::FETCH_ASSOC);
+        if (!$slot) {
+            $pdo->rollBack();
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => '선택한 수업 슬롯을 찾을 수 없습니다.']);
+            exit;
+        }
+
+        if (!$reserve_date) {
+            $reserve_date = date('Y-m-d', strtotime($slot['start_time']));
+        }
+        if (!$reserve_time) {
+            $reserve_time = date('H:i:s', strtotime($slot['start_time']));
+        }
+    }
 
     $isAdminBooking = ($sessionRole === 'ADMIN' || $sessionRole === 'SUPPORTER') && $student_id && $teacher_id;
 
@@ -32,13 +52,8 @@ try {
     } else {
         $studentId = $sessionUserId;
 
-        if ($slot_id) {
-            $stmt = $pdo->prepare("SELECT teacher_id FROM time_slots WHERE id = ?");
-            $stmt->execute([$slot_id]);
-            $r = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($r) {
-                $teacherId = (int)$r['teacher_id'];
-            }
+        if ($slot) {
+            $teacherId = (int)$slot['teacher_id'];
         }
 
         if (empty($teacherId)) {
@@ -61,15 +76,31 @@ try {
     $classType = 'PRIVATE';
     if ($class_type === 'GROUP' || $type_param === 'GROUP') {
         $classType = 'GROUP';
+    } elseif ($slot && strtoupper((string)$slot['lesson_type']) === 'GROUP_25') {
+        $classType = 'GROUP';
     }
 
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE student_id = ? AND reserve_date = ? AND reserve_time = ? AND status IN ('CONFIRMED','confirmed')");
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE student_id = ? AND reserve_date = ? AND reserve_time = ? AND status IN ('CONFIRMED','confirmed','예약완료')");
     $stmt->execute([$studentId, $reserve_date, $reserve_time]);
     $cnt = (int)$stmt->fetchColumn();
     if ($cnt > 0) {
         $pdo->rollBack();
         echo json_encode(['success' => false, 'message' => '이미 동일 시간에 예약이 존재합니다.']);
         exit;
+    }
+
+    if ($slot) {
+        $capStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE teacher_id = ? AND reserve_date = ? AND reserve_time = ? AND status IN ('CONFIRMED','confirmed','예약완료')");
+        $capStmt->execute([$teacherId, $reserve_date, $reserve_time]);
+        $bookedCount = (int)$capStmt->fetchColumn();
+        $maxStudents = (int)$slot['max_students'];
+
+        if ($bookedCount >= $maxStudents) {
+            $pdo->rollBack();
+            http_response_code(409);
+            echo json_encode(['success' => false, 'message' => '해당 수업은 이미 정원이 마감되었습니다.']);
+            exit;
+        }
     }
 
     $stmt = $pdo->prepare("INSERT INTO reservations (student_id, teacher_id, class_type, reserve_date, reserve_time, status, created_at) VALUES (?, ?, ?, ?, ?, 'CONFIRMED', NOW())");
