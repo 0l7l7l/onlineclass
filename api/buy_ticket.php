@@ -5,33 +5,49 @@ header('Content-Type: application/json; charset=utf-8');
 
 function ensureTicketProduct(PDO $pdo, int $productId): array {
     $catalog = [
-        101 => ['title' => '1회 체험권', 'price' => 40000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
-        102 => ['title' => '4회 수강권', 'price' => 200000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90],
-        103 => ['title' => '8회 수강권', 'price' => 380000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180],
-        201 => ['title' => '듀오 1회 체험권', 'price' => 25000, 'class_type' => 'DUO', 'total_count' => 1, 'expiry_days' => 30],
-        202 => ['title' => '듀오 4회 수강권', 'price' => 115000, 'class_type' => 'DUO', 'total_count' => 4, 'expiry_days' => 90],
-        203 => ['title' => '듀오 8회 수강권', 'price' => 210000, 'class_type' => 'DUO', 'total_count' => 8, 'expiry_days' => 180],
-        301 => ['title' => '그룹 1회 체험권', 'price' => 18000, 'class_type' => 'GROUP', 'total_count' => 1, 'expiry_days' => 30],
-        302 => ['title' => '그룹 4회 수강권', 'price' => 85000, 'class_type' => 'GROUP', 'total_count' => 4, 'expiry_days' => 90],
-        303 => ['title' => '그룹 8회 수강권', 'price' => 150000, 'class_type' => 'GROUP', 'total_count' => 8, 'expiry_days' => 180],
-        401 => ['title' => '패키지 1회 체험권', 'price' => 60000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
-        402 => ['title' => '패키지 4회 수강권', 'price' => 270000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90],
-        403 => ['title' => '패키지 8회 수강권', 'price' => 490000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180],
+        101 => ['title' => '1회 체험권', 'price' => 4000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
+        102 => ['title' => '4회 수강권', 'price' => 20000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90],
+        103 => ['title' => '8회 수강권', 'price' => 38000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180],
+        201 => ['title' => '듀오 1회 체험권', 'price' => 2500, 'class_type' => 'DUO', 'total_count' => 1, 'expiry_days' => 30],
+        202 => ['title' => '듀오 4회 수강권', 'price' => 11500, 'class_type' => 'DUO', 'total_count' => 4, 'expiry_days' => 90],
+        203 => ['title' => '듀오 8회 수강권', 'price' => 21000, 'class_type' => 'DUO', 'total_count' => 8, 'expiry_days' => 180],
+        301 => ['title' => '그룹 1회 체험권', 'price' => 1800, 'class_type' => 'GROUP', 'total_count' => 1, 'expiry_days' => 30],
+        302 => ['title' => '그룹 4회 수강권', 'price' => 9900, 'class_type' => 'GROUP', 'total_count' => 4, 'expiry_days' => 90],
+        303 => ['title' => '그룹 8회 수강권', 'price' => 15800, 'class_type' => 'GROUP', 'total_count' => 8, 'expiry_days' => 180],
+        401 => ['title' => '패키지 1회 체험권', 'price' => 6000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
+        402 => ['title' => '패키지 4회 수강권', 'price' => 14900, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90],
+        403 => ['title' => '패키지 8회 수강권', 'price' => 49000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180],
     ];
 
     if (!isset($catalog[$productId])) {
         throw new InvalidArgumentException('지원하지 않는 상품입니다.');
     }
 
+    $meta = $catalog[$productId];
+
     $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id = ? AND is_active = 1");
     $stmt->execute([$productId]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($product) {
+        $needUpdate = ((int)$product['price'] !== (int)$meta['price'])
+            || ((int)$product['total_count'] !== (int)$meta['total_count'])
+            || ((int)$product['expiry_days'] !== (int)$meta['expiry_days'])
+            || ((string)$product['class_type'] !== (string)$meta['class_type'])
+            || ((string)$product['title'] !== (string)$meta['title']);
+
+        if ($needUpdate) {
+            $u = $pdo->prepare("UPDATE products SET title = ?, price = ?, class_type = ?, total_count = ?, expiry_days = ? WHERE product_id = ?");
+            $u->execute([$meta['title'], $meta['price'], $meta['class_type'], $meta['total_count'], $meta['expiry_days'], $productId]);
+
+            $stmt = $pdo->prepare("SELECT * FROM products WHERE product_id = ? AND is_active = 1");
+            $stmt->execute([$productId]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
         return $product;
     }
 
-    $meta = $catalog[$productId];
     $stmt = $pdo->prepare("INSERT INTO products (product_id, product_type, title, price, class_type, total_count, expiry_days, is_active) VALUES (?, 'TICKET', ?, ?, ?, ?, ?, 1)");
     $stmt->execute([$productId, $meta['title'], $meta['price'], $meta['class_type'], $meta['total_count'], $meta['expiry_days']]);
 
