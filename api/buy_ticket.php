@@ -58,7 +58,7 @@ function ensureTicketProduct(PDO $pdo, int $productId): array {
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => '로그인이 필요합니다.']);
+    echo json_encode(['success' => false, 'message' => '로그인이 필요합니다.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -67,7 +67,7 @@ $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
 
 if ($product_id <= 0) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => '상품 정보를 확인해 주세요.']);
+    echo json_encode(['success' => false, 'message' => '상품 정보를 확인해 주세요.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -79,7 +79,7 @@ try {
 
     if ($product['product_type'] !== 'TICKET') {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => '수강권 상품이 아닙니다.']);
+        echo json_encode(['success' => false, 'message' => '수강권 상품이 아닙니다.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -93,7 +93,7 @@ try {
 
     if (!$user) {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => '사용자를 찾을 수 없습니다.']);
+        echo json_encode(['success' => false, 'message' => '사용자를 찾을 수 없습니다.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -101,7 +101,7 @@ try {
 
     if ($current_money < $price) {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => '보유 세모가 부족합니다.']);
+        echo json_encode(['success' => false, 'message' => '보유 세모가 부족합니다.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -130,11 +130,12 @@ try {
         'data' => [
             'balance' => $new_balance
         ]
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => '시스템 오류가 발생했습니다: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => '시스템 오류가 발생했습니다: ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
 }
+?>

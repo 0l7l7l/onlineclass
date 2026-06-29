@@ -1,4 +1,5 @@
 <?php
+<?php
 require_once __DIR__ . '/db.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
@@ -33,21 +34,26 @@ try {
     $pdo = DB::getConnection();
     $pdo->beginTransaction();
 
-    $tplStmt = $pdo->prepare("SELECT id, teacher_id, start_time, end_time, lesson_type, max_students FROM time_slots WHERE id = ? LIMIT 1");
+    $tplStmt = $pdo->prepare("SELECT class_id, teacher_id, class_date, start_time, end_time, class_type, max_capacity FROM classes WHERE class_id = ? AND status = 'AVAILABLE' LIMIT 1");
     $findCandidatesStmt = $pdo->prepare(
-        "SELECT id, teacher_id, start_time, max_students
-         FROM time_slots
+        "SELECT class_id, teacher_id, class_date, start_time, max_capacity, current_capacity
+         FROM classes
          WHERE teacher_id = ?
-           AND lesson_type = 'GROUP_25'
-           AND DATE(start_time) >= CURDATE()
-           AND WEEKDAY(start_time) = ?
-           AND TIME(start_time) = ?
-         ORDER BY start_time ASC
+           AND class_type = 'GROUP'
+           AND class_date >= CURDATE()
+           AND WEEKDAY(class_date) = ?
+           AND start_time = ?
+           AND status = 'AVAILABLE'
+         ORDER BY class_date ASC
          LIMIT 40"
     );
-    $dupStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE student_id = ? AND reserve_date = ? AND reserve_time = ? AND status IN ('CONFIRMED','confirmed','????')");
-    $capStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE teacher_id = ? AND reserve_date = ? AND reserve_time = ? AND status IN ('CONFIRMED','confirmed','????')");
-    $insStmt = $pdo->prepare("INSERT INTO reservations (student_id, teacher_id, class_type, reserve_date, reserve_time, status, created_at) VALUES (?, ?, 'GROUP', ?, ?, 'CONFIRMED', NOW())");
+    $dupStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations r INNER JOIN classes c ON c.class_id = r.class_id WHERE r.user_id = ? AND c.class_date = ? AND c.start_time = ? AND UPPER(r.status) IN ('CONFIRMED','ATTENDED')");
+    $existClassStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE user_id = ? AND class_id = ? AND UPPER(status) IN ('CONFIRMED','ATTENDED')");
+    $ticketStmt = $pdo->prepare("SELECT ut.user_ticket_id FROM user_tickets ut INNER JOIN products p ON p.product_id = ut.product_id WHERE ut.user_id = ? AND ut.status = 'ACTIVE' AND ut.remaining_count > 0 AND ut.expired_at > NOW() AND p.class_type = 'GROUP' ORDER BY ut.expired_at ASC, ut.user_ticket_id ASC LIMIT 1");
+    $insStmt = $pdo->prepare("INSERT INTO reservations (user_id, class_id, user_ticket_id, status, reserved_at) VALUES (?, ?, ?, 'CONFIRMED', NOW())");
+    $ticketUseStmt = $pdo->prepare("UPDATE user_tickets SET remaining_count = remaining_count - 1 WHERE user_ticket_id = ? AND remaining_count > 0");
+    $ticketStatusStmt = $pdo->prepare("UPDATE user_tickets SET status = 'EXHAUSTED' WHERE user_ticket_id = ? AND remaining_count <= 0");
+    $capacityStmt = $pdo->prepare("UPDATE classes SET current_capacity = current_capacity + 1 WHERE class_id = ?");
 
     $totalBooked = 0;
     $results = [];
@@ -55,12 +61,12 @@ try {
     foreach ($slotIds as $slotId) {
         $tplStmt->execute([$slotId]);
         $tpl = $tplStmt->fetch(PDO::FETCH_ASSOC);
-        if (!$tpl || strtoupper((string)$tpl['lesson_type']) !== 'GROUP_25') {
+        if (!$tpl || strtoupper((string)$tpl['class_type']) !== 'GROUP') {
             continue;
         }
 
-        $weekday = (int)date('N', strtotime($tpl['start_time'])) - 1; // WEEKDAY: Mon=0
-        $time = date('H:i:s', strtotime($tpl['start_time']));
+        $weekday = (int)date('N', strtotime($tpl['class_date'])) - 1; // WEEKDAY: Mon=0
+        $time = $tpl['start_time'];
         $teacherId = (int)$tpl['teacher_id'];
 
         $findCandidatesStmt->execute([$teacherId, $weekday, $time]);
@@ -70,22 +76,38 @@ try {
         foreach ($candidates as $cand) {
             if ($bookedForTemplate >= $weeks) break;
 
-            $reserveDate = date('Y-m-d', strtotime($cand['start_time']));
-            $reserveTime = date('H:i:s', strtotime($cand['start_time']));
+            $reserveDate = $cand['class_date'];
+            $reserveTime = $cand['start_time'];
+            $classId = (int)$cand['class_id'];
 
             $dupStmt->execute([$studentId, $reserveDate, $reserveTime]);
             if ((int)$dupStmt->fetchColumn() > 0) {
                 continue;
             }
 
-            $capStmt->execute([$teacherId, $reserveDate, $reserveTime]);
-            $bookedCount = (int)$capStmt->fetchColumn();
-            $maxStudents = (int)$cand['max_students'];
+            $existClassStmt->execute([$studentId, $classId]);
+            if ((int)$existClassStmt->fetchColumn() > 0) {
+                continue;
+            }
+
+            $bookedCount = (int)$cand['current_capacity'];
+            $maxStudents = (int)$cand['max_capacity'];
             if ($bookedCount >= $maxStudents) {
                 continue;
             }
 
-            $insStmt->execute([$studentId, $teacherId, $reserveDate, $reserveTime]);
+            $ticketStmt->execute([$studentId]);
+            $ticket = $ticketStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$ticket) {
+                break;
+            }
+
+            $ticketId = (int)$ticket['user_ticket_id'];
+            $insStmt->execute([$studentId, $classId, $ticketId]);
+            $ticketUseStmt->execute([$ticketId]);
+            $ticketStatusStmt->execute([$ticketId]);
+            $capacityStmt->execute([$classId]);
+
             $bookedForTemplate++;
             $totalBooked++;
         }

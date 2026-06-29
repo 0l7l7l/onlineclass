@@ -23,7 +23,7 @@ if (!$id || !$password) {
 // 학생 권한 체크 함수
 function isStudentRole(?string $role): bool {
     $role = trim((string)$role);
-    return $role === '학생' || strcasecmp($role, 'student') === 0 || stripos($role, 'student') !== false;
+    return strcasecmp($role, 'STUDENT') === 0;
 }
 
 

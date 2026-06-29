@@ -1,4 +1,5 @@
 <?php
+<?php
 require_once __DIR__ . '/db.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
@@ -27,7 +28,7 @@ try {
     $pdo = DB::getConnection();
     $pdo->beginTransaction();
 
-    $stmt = $pdo->prepare("SELECT id, teacher_id, start_time FROM time_slots WHERE id = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT class_id FROM classes WHERE class_id = ? LIMIT 1");
     $stmt->execute([$slotId]);
     $slot = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -38,15 +39,11 @@ try {
         exit;
     }
 
-    $teacherId = (int)$slot['teacher_id'];
-    $reserveDate = date('Y-m-d', strtotime($slot['start_time']));
-    $reserveTime = date('H:i:s', strtotime($slot['start_time']));
-
-    $dres = $pdo->prepare("DELETE FROM reservations WHERE teacher_id = ? AND reserve_date = ? AND reserve_time = ?");
-    $dres->execute([$teacherId, $reserveDate, $reserveTime]);
+    $dres = $pdo->prepare("DELETE FROM reservations WHERE class_id = ?");
+    $dres->execute([$slotId]);
     $deletedReservations = $dres->rowCount();
 
-    $dslot = $pdo->prepare("DELETE FROM time_slots WHERE id = ?");
+    $dslot = $pdo->prepare("DELETE FROM classes WHERE class_id = ?");
     $dslot->execute([$slotId]);
 
     $pdo->commit();
