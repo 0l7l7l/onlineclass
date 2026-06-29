@@ -841,6 +841,35 @@
 	let selectedScheduleDate = new Date().toISOString().slice(0, 10);
 	let selectedSlotId = null;
 	let selectedSlotData = null;
+    let cachedTeachers = [];
+
+    function renderTeacherSelectOptions(teachers) {
+        const teacherSelect = document.getElementById('schedule-teacher-select');
+        if (!teacherSelect) return;
+
+        let opts = '<option value="">-- 선생님 선택 --</option>';
+        (teachers || []).forEach(t => {
+            opts += `<option value="${escapeHtml(String(t.user_id))}">${escapeHtml(t.name)} (${escapeHtml(t.username || '')})</option>`;
+        });
+        teacherSelect.innerHTML = opts;
+    }
+
+    async function loadTeachers() {
+        try {
+            const resp = await fetch('../api/admin_teachers.php');
+            const res = await resp.json();
+            if (!resp.ok || !res.success) {
+                return false;
+            }
+
+            cachedTeachers = Array.isArray(res.data) ? res.data : [];
+            renderTeacherSelectOptions(cachedTeachers);
+            return true;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    }
 
 	function escapeHtml(value) {
 		return String(value ?? '')
@@ -914,7 +943,7 @@
 		if (!confirm('이 수업을 취소/삭제하시겠습니까? (해당 시간 예약도 함께 삭제됩니다.)')) {
 			return;
 		}
-ㄴ
+
 		try {
 			const params = new URLSearchParams();
 			params.append('slot_id', String(selectedSlotId));
@@ -1167,6 +1196,7 @@
 
 			closeModal('loginModal');
 			setAdminUser(result.user);
+            await loadTeachers();
 			fetchApprovalRequests();
 			if (document.getElementById('schedule-page').classList.contains('active')) {
 				loadScheduleForDate(selectedScheduleDate);
@@ -1225,6 +1255,7 @@
 			const result = await response.json();
 			if (response.ok && result.success && result.user) {
 				setAdminUser(result.user);
+                await loadTeachers();
 				fetchApprovalRequests();
 			} else {
 				setAdminUser(null);
@@ -1332,14 +1363,14 @@
 				byTeacher[key].slots.push(s);
 			});
 
-			const teacherSelect = document.getElementById('schedule-teacher-select');
-			if (teacherSelect) {
-				let opts = '<option value="">-- 선생님 선택 --</option>';
-				Object.values(byTeacher).forEach(t => {
-					opts += `<option value="${t.teacher_id}">${escapeHtml(t.teacher_name)}</option>`;
-				});
-				teacherSelect.innerHTML = opts;
-			}
+           if (cachedTeachers.length === 0) {
+                const fromSlots = Object.values(byTeacher).map(t => ({
+                    user_id: t.teacher_id,
+                    name: t.teacher_name,
+                    username: ''
+                }));
+                renderTeacherSelectOptions(fromSlots);
+            }
 
 			if (Object.keys(byTeacher).length === 0) {
 				tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#858796;">해당 날짜에 오픈된 스케줄이 없습니다.</td></tr>';
@@ -1375,8 +1406,11 @@
 		loadClassDetail(slotId);
 	}
 
-	function openEmptySlot(teacherKey, hour) {
+  async function openEmptySlot(teacherKey, hour) {
 		const teacherId = parseInt(teacherKey, 10);
+       if (cachedTeachers.length === 0) {
+            await loadTeachers();
+        }
 		openModal('reservationAddModal');
 		if (!Number.isNaN(teacherId)) {
 			const teacherSelect = document.getElementById('schedule-teacher-select');
@@ -1433,6 +1467,7 @@
 
 	document.addEventListener('DOMContentLoaded', () => {
 		checkAdminSession();
+      loadTeachers();
 		resetSlotDetail();
 	});
 </script>
