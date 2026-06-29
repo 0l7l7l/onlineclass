@@ -6,17 +6,17 @@ header('Content-Type: application/json; charset=utf-8');
 function ensureTicketProduct(PDO $pdo, int $productId): array {
     $catalog = [
         101 => ['title' => '1회 체험권', 'price' => 40000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
-        102 => ['title' => '5회 수강권', 'price' => 200000, 'class_type' => 'PRIVATE', 'total_count' => 5, 'expiry_days' => 90],
-        103 => ['title' => '10회 수강권', 'price' => 380000, 'class_type' => 'PRIVATE', 'total_count' => 10, 'expiry_days' => 180],
+        102 => ['title' => '4회 수강권', 'price' => 200000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90],
+        103 => ['title' => '8회 수강권', 'price' => 380000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180],
         201 => ['title' => '듀오 1회 체험권', 'price' => 25000, 'class_type' => 'DUO', 'total_count' => 1, 'expiry_days' => 30],
-        202 => ['title' => '듀오 5회 수강권', 'price' => 115000, 'class_type' => 'DUO', 'total_count' => 5, 'expiry_days' => 90],
-        203 => ['title' => '듀오 10회 수강권', 'price' => 210000, 'class_type' => 'DUO', 'total_count' => 10, 'expiry_days' => 180],
+        202 => ['title' => '듀오 4회 수강권', 'price' => 115000, 'class_type' => 'DUO', 'total_count' => 4, 'expiry_days' => 90],
+        203 => ['title' => '듀오 8회 수강권', 'price' => 210000, 'class_type' => 'DUO', 'total_count' => 8, 'expiry_days' => 180],
         301 => ['title' => '그룹 1회 체험권', 'price' => 18000, 'class_type' => 'GROUP', 'total_count' => 1, 'expiry_days' => 30],
-        302 => ['title' => '그룹 5회 수강권', 'price' => 85000, 'class_type' => 'GROUP', 'total_count' => 5, 'expiry_days' => 90],
-        303 => ['title' => '그룹 10회 수강권', 'price' => 150000, 'class_type' => 'GROUP', 'total_count' => 10, 'expiry_days' => 180],
+        302 => ['title' => '그룹 4회 수강권', 'price' => 85000, 'class_type' => 'GROUP', 'total_count' => 4, 'expiry_days' => 90],
+        303 => ['title' => '그룹 8회 수강권', 'price' => 150000, 'class_type' => 'GROUP', 'total_count' => 8, 'expiry_days' => 180],
         401 => ['title' => '패키지 1회 체험권', 'price' => 60000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30],
-        402 => ['title' => '패키지 5회 수강권', 'price' => 270000, 'class_type' => 'PRIVATE', 'total_count' => 5, 'expiry_days' => 90],
-        403 => ['title' => '패키지 10회 수강권', 'price' => 490000, 'class_type' => 'PRIVATE', 'total_count' => 10, 'expiry_days' => 180],
+        402 => ['title' => '패키지 4회 수강권', 'price' => 270000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90],
+        403 => ['title' => '패키지 8회 수강권', 'price' => 490000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180],
     ];
 
     if (!isset($catalog[$productId])) {
