@@ -1531,7 +1531,7 @@
             <tr>
               <td class="td-bold-time">19:00 - 20:00</td>
               <td>-</td>
-              <td class="bg-highlight">[히라] な・は</td>
+              <td class="bg-highlight">[히라] 나・은</td>
               <td>-</td>
               <td>-</td>
             </tr>
@@ -1645,32 +1645,13 @@
             </div>
             <div class="calendar-grid">
               <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
-              <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
-              <div class="cal-day" onclick="selectFlexDate(this, 1)">1</div><div class="cal-day" onclick="selectFlexDate(this, 2)">2</div><div class="cal-day" onclick="selectFlexDate(this, 3)">3</div><div class="cal-day" onclick="selectFlexDate(this, 4)">4</div>
-              <div class="cal-day active" onclick="selectFlexDate(this, 5)">5</div><div class="cal-day" onclick="selectFlexDate(this, 6)">6</div><div class="cal-day" onclick="selectFlexDate(this, 7)">7</div><div class="cal-day" onclick="selectFlexDate(this, 8)">8</div>
-              <div class="cal-day" onclick="selectFlexDate(this, 9)">9</div><div class="cal-day" onclick="selectFlexDate(this, 10)">10</div><div class="cal-day" onclick="selectFlexDate(this, 11)">11</div><div class="cal-day" onclick="selectFlexDate(this, 12)">12</div>
             </div>
           </div>
 
           <div class="card">
             <h3 style="margin-bottom:20px; color: #4a423e; font-size:1.25rem;">2. 예약 가능 시간</h3>
             <div class="time-slot-list">
-              <div class="time-slot-row" onclick="selectFlexTime(this)">
-                <div class="time-text">🕒 17:30 - 17:55</div>
-                <span class="status-badge">예약 가능</span>
-              </div>
-              <div class="time-slot-row" onclick="selectFlexTime(this)">
-                <div class="time-text">🕒 18:00 - 18:25</div>
-                <span class="status-badge">예약 가능</span>
-              </div>
-              <div class="time-slot-row" onclick="selectFlexTime(this)">
-                <div class="time-text">🕒 19:00 - 19:25</div>
-                <span class="status-badge">예약 가능</span>
-              </div>
-              <div class="time-slot-row" onclick="selectFlexTime(this)">
-                <div class="time-text">🕒 19:30 - 19:55</div>
-                <span class="status-badge">예약 가능</span>
-              </div>
+              <div style="padding:1rem; opacity:0.7;">담당 선생님 스케줄을 불러오는 중입니다...</div>
             </div>
 
             <div style="text-align: right; margin-top: 1.5rem;">
@@ -1684,8 +1665,8 @@
             <b>그룹: 문자 마스터반 안내</b>
             <p>히라가나/가타카나를 완벽하게 마스터하는 정규 과정입니다.</p>
             <ul>
-              <li>그룹 티켓 <b>4장</b>: 원하는 요일 1개 선택 (4주 자동 등록)</li>
-              <li>그룹 티켓 <b>8장</b>: 원하는 요일 2개 선택 (주 2회, 4주 자동 등록)</li>
+              <li>원하는 요일 1개 선택: 4주(한 달 4회) 자동 등록</li>
+              <li>원하는 요일 2개 선택: 각 요일 4주씩 자동 등록 (한 달 8회)</li>
             </ul>
           </div>
 
@@ -1703,14 +1684,7 @@
               <p style="color:#8a817c; font-size:1rem; margin-top:5px;">원하는 수업 시간을 선택하세요 (최대 2개 반)</p>
             </div>
             <div class="group-time-list" id="group-time-slots">
-              <div class="group-time-row" onclick="toggleGroupSlot(this, '월요일 17:30반')">
-                <div class="time-text">🎓 A반: 17:30 - 19:25</div>
-                <span style="font-size:0.875rem; opacity:0.7;">2명 신청중</span>
-              </div>
-              <div class="group-time-row" onclick="toggleGroupSlot(this, '월요일 19:30반')">
-                <div class="time-text">🎓 B반: 19:30 - 21:25</div>
-                <span style="font-size:0.875rem; opacity:0.7;">0명 신청중</span>
-              </div>
+              <div style="padding:1rem; opacity:0.7;">담당 선생님 그룹 스케줄을 불러오는 중입니다...</div>
             </div>
           </div>
 
@@ -2496,7 +2470,7 @@
       pendingBooking = {
         bookingMode: 'FLEX',
         slotIds: [String(slot.slot_id)],
-        classType: slotCategory(slot) === 'private' ? 'PRIVATE' : 'GROUP',
+        classType: slotCategory(slot) === 'group' ? 'GROUP' : 'PRIVATE',
         display: `${selectedFlexDateISO} ${formatTimeRange(slot.start_time, slot.end_time)}`
       };
 
@@ -2588,8 +2562,34 @@
       if (!pendingBooking || !pendingBooking.slotIds || pendingBooking.slotIds.length === 0) return;
 
       try {
-        let successCount = 0;
+        if (pendingBooking.bookingMode === 'GROUP_PACKAGE') {
+          const form = new URLSearchParams();
+          form.append('slot_ids', pendingBooking.slotIds.join(','));
+          form.append('weeks', '4');
 
+          const resp = await fetch('api/book_group_package.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: form.toString()
+          });
+          const res = await resp.json();
+
+          if (!resp.ok || !res.success) {
+            alert(res.message || '그룹 자동 등록 중 오류가 발생했습니다.');
+            await fetchTeacherSlots();
+            return;
+          }
+
+          alert(res.message || '그룹 수업이 자동 등록되었습니다.');
+          closeReserveConfirm();
+          await fetchTeacherSlots();
+          if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
+            loadMyPageData();
+          }
+          return;
+        }
+
+        let successCount = 0;
         for (const slotId of pendingBooking.slotIds) {
           const slot = getSlotById(slotId);
           if (!slot) continue;
@@ -2648,7 +2648,7 @@
       if (!groupContainer) return;
 
       groupContainer.innerHTML = '';
-      const filtered = (teacherSlots || [])
+      const raw = (teacherSlots || [])
         .filter(s => slotCategory(s) === 'group')
         .filter(s => isSlotAvailable(s))
         .filter(s => {
@@ -2656,6 +2656,13 @@
           return wanted !== null && d.getDay() === wanted;
         })
         .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+
+      const byTime = new Map();
+      raw.forEach(slot => {
+        const key = slot.start_time.slice(11, 16);
+        if (!byTime.has(key)) byTime.set(key, slot);
+      });
+      const filtered = Array.from(byTime.values());
 
       if (filtered.length === 0) {
         groupContainer.innerHTML = '<div style="padding:1rem; opacity:0.7;">해당 요일에 배정된 그룹 시간이 없습니다.</div>';
@@ -2667,10 +2674,10 @@
 
           const row = document.createElement('div');
           row.className = 'group-time-row';
-          if (selectedGroupSlotIds.includes(String(slot.slot_id))) {
-            row.classList.add('active');
-          }
-          row.onclick = () => toggleGroupSlot(row, label, slot.slot_id);
+          const existing = selectedGroupItems.find(item => item.slotId === String(slot.slot_id));
+          if (existing) row.classList.add('active');
+
+          row.onclick = () => toggleGroupSlot(row, label, slot.slot_id, dayStr);
           row.innerHTML = `
             <div class="time-text">🎓 ${formatTimeRange(slot.start_time, slot.end_time)}</div>
             <span style="font-size:0.875rem; opacity:0.7;">${booked}/${max} 신청중</span>
@@ -2682,7 +2689,7 @@
       syncGroupSummaryUI();
     }
 
-    function toggleGroupSlot(target, slotName, slotId) {
+    function toggleGroupSlot(target, slotName, slotId, dayKey) {
       const slotKey = String(slotId);
       const isAlreadyActive = target.classList.contains('active');
 
@@ -2691,14 +2698,21 @@
         selectedGroupSlotIds = selectedGroupSlotIds.filter(id => id !== slotKey);
         selectedGroupItems = selectedGroupItems.filter(item => item.slotId !== slotKey);
       } else {
-        if (selectedGroupSlotIds.length >= GROUP_TICKET_LIMIT) {
-          alert(`보유하신 그룹 티켓 기준으로 최대 ${GROUP_TICKET_LIMIT}개까지만 선택할 수 있습니다.`);
+        const dayAlreadySelected = selectedGroupItems.some(item => item.dayKey === dayKey);
+        if (dayAlreadySelected) {
+          alert('같은 요일은 한 개 반만 선택할 수 있습니다.');
           return;
         }
+        if (selectedGroupSlotIds.length >= GROUP_TICKET_LIMIT) {
+          alert(`그룹은 최대 ${GROUP_TICKET_LIMIT}개 요일까지 선택할 수 있습니다.`);
+          return;
+        }
+
         target.classList.add('active');
         selectedGroupSlotIds.push(slotKey);
-        selectedGroupItems.push({ slotId: slotKey, label: slotName });
+        selectedGroupItems.push({ slotId: slotKey, label: slotName, dayKey });
       }
+
       syncGroupSummaryUI();
     }
 
@@ -2710,10 +2724,12 @@
       if (selectedGroupItems.length === 0) {
         textSpan.innerText = '없음';
         autoInfo.style.display = 'none';
+        autoInfo.innerText = '(4주 스케줄 자동 등록)';
         confirmBtn.disabled = true;
       } else {
         textSpan.innerText = selectedGroupItems.map(item => item.label).join(', ');
         autoInfo.style.display = 'inline';
+        autoInfo.innerText = selectedGroupItems.length === 1 ? '(4주 자동 등록: 총 4회)' : '(요일별 4주 자동 등록: 총 8회)';
         confirmBtn.disabled = false;
       }
     }
@@ -2722,26 +2738,13 @@
       if (selectedGroupSlotIds.length === 0) return;
 
       pendingBooking = {
-        bookingMode: 'GROUP',
+        bookingMode: 'GROUP_PACKAGE',
         slotIds: [...selectedGroupSlotIds],
         classType: 'GROUP',
-        display: selectedGroupItems.map(item => item.label).join(', ')
+        display: selectedGroupItems.length === 1
+          ? `${selectedGroupItems[0].label} / 4주 자동 등록(4회)`
+          : `${selectedGroupItems.map(item => item.label).join(', ')} / 각 요일 4주 자동 등록(총 8회)`
       };
       openReserveConfirm();
     }
-
-    function selectScheduleWeek(week) {
-      for (let i = 1; i <= 5; i++) {
-        const btn = document.getElementById('btn-week-' + i);
-        const tbl = document.getElementById('table-week-' + i);
-        if (i === week) {
-          if (btn) btn.classList.add('active');
-          if (tbl) tbl.classList.remove('hidden');
-        } else {
-          if (btn) btn.classList.remove('active');
-          if (tbl) tbl.classList.add('hidden');
-        }
-      }
-    }
-
   </script>
