@@ -1,2441 +1,2462 @@
-﻿﻿
-<!----------1. 개인/듀오 자유 예약: 하나의 캘린더에서 수업 타입을 선택하고 원하는 날짜, 시간을 자유롭게 고르세요.
+﻿<!--추가기능﻿-->
+<!--페이지에 랜던게임을 구현하고싶어. 문제는4지선다로 나오고 캐릭터가 문제를 내는거야. 홈페이지를보다가 우연히 캐릭터가뜨고 그캐릭터가 문제를내는거야 틀리면 다음기회에하고 나중에나타나고 맞추면 세모(포인트)를1에서 199까지얻을수있는거야. 기회는하루에한번. 만약 로그인을하지않았다면 로그인을해서 세모(포인트)가 쌓일수있도록하고싶어.-->
+<!----------수업예약 메뉴를수정,변경하고싶어. 지금더미로되어있고 예약신청((모달) 한번더확인할수있는내용)확정되면 내페이지에서 확인가능하도록하고싶어.  내담당선생님 스케줄만볼수있도록 DB로연결해줘.
+  1. 개인/듀오 자유 예약: 하나의 캘린더에서 수업 타입을 선택하고 원하는 날짜, 시간을 자유롭게 고르세요.
 2. 그룹 글자 마스터반: 히라가나/가타카나를 완벽하게 마스터하는 과정입니다.
-- 원하는 요일을 선택하면 한 달(4주) 스케줄이 자동 등록됩니다.
-- 주 2회 수업을 원하시면 두 개의 요일을 선택하여 신청하실 수 있습니다.------------->
+- 한 달4회 (주1회) 원하는 요일을 하나만선택하면 스케줄이 자동 등록됩니다. 예: 월요일선택 ->매주월요일수업고정
+- 한달8회 (주 2회) 수업을 원하시면 두 개의 요일을 선택해 신청할수있습니다.------------->
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>일본어 온라인 클래스</title>
-    <style>
-        /* ================= 전역 변수 및 초기화 ================= */
-        :root {
-            --bg-beige: #F9F6F0;
-            --main-beige: #F1EAE0;
-            --point-brown: #6E5A4B;
-            --border-color: #E5DEC9;
-            --white: #ffffff;
-            --text-dark: #333333;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>일본어 온라인 클래스</title>
+  <style>
+    /* ================= 전역 변수 및 초기화 ================= */
+    :root {
+      --bg-beige: #F9F6F0;
+      --main-beige: #F1EAE0;
+      --point-brown: #6E5A4B;
+      --border-color: #E5DEC9;
+      --white: #ffffff;
+      --text-dark: #333333;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            background-color: var(--bg-beige);
-            color: var(--point-brown);
-            font-family: 'Noto Sans KR', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    body {
+      background-color: var(--bg-beige);
+      color: var(--point-brown);
+      font-family: 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        /* 공통 유틸리티 클래스 */
-        .hidden {
-            display: none !important;
-        }
+    /* 공통 유틸리티 클래스 */
+    .hidden {
+      display: none !important;
+    }
 
-        .text-center {
-            text-align: center;
-        }
+    .text-center {
+      text-align: center;
+    }
 
-        .w-full {
-            width: 100%;
-        }
+    .w-full {
+      width: 100%;
+    }
 
-        /* =================  공통 버튼 및 카드 컴포넌트 ================= */
-        .btn-transparent {
-            background: transparent;
-            border: 2px solid var(--point-brown);
-            color: var(--point-brown);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    /* =================  공통 버튼 및 카드 컴포넌트 ================= */
+    .btn-transparent {
+      background: transparent;
+      border: 2px solid var(--point-brown);
+      color: var(--point-brown);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-            .btn-transparent:hover {
-                background: var(--point-brown);
-                color: var(--white);
-            }
+      .btn-transparent:hover {
+        background: var(--point-brown);
+        color: var(--white);
+      }
 
-        .card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            border: 1px solid var(--border-color);
-        }
+    .card {
+      background-color: var(--white);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+    }
 
-        /* ================= 레이아웃 (헤더, 사이드바, 메인) ================= */
-        header {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0.75rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 40;
-        }
+    /* ================= 레이아웃 (헤더, 사이드바, 메인) ================= */
+    header {
+      background-color: var(--white);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
 
-        .header-logo {
-            font-size: 1.125rem;
-            font-weight: bold;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-        }
+    .header-logo {
+      font-size: 1.125rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+    }
 
-        .header-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--point-brown);
-        }
+    .header-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--point-brown);
+    }
 
-        #sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.3);
-            z-index: 40;
-        }
+    #sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 40;
+    }
 
-        aside {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 16rem;
-            background-color: var(--white);
-            border-right: 1px solid var(--border-color);
-            padding: 1.5rem;
-            z-index: 50;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    aside {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 16rem;
+      background-color: var(--white);
+      border-right: 1px solid var(--border-color);
+      padding: 1.5rem;
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-            aside.active {
-                transform: translateX(0);
-            }
+      aside.active {
+        transform: translateX(0);
+      }
 
-        .sidebar-header-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
+    .sidebar-header-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
 
-        .sidebar-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .sidebar-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-        .sidebar-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--point-brown);
-        }
+    .sidebar-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--point-brown);
+    }
 
-        .menu-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            opacity: 0.4;
-            padding: 0 0.75rem;
-            margin-bottom: 0.5rem;
-            margin-top: 1rem;
-        }
+    .menu-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.4;
+      padding: 0 0.75rem;
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
 
-        .student-menu-label {
-            color: #92400e;
-            opacity: 0.6;
-        }
+    .student-menu-label {
+      color: #92400e;
+      opacity: 0.6;
+    }
 
-        .nav-btn-wrapper {
-            padding: 1rem 0.5rem 0 0.5rem;
-        }
+    .nav-btn-wrapper {
+      padding: 1rem 0.5rem 0 0.5rem;
+    }
 
-        .nav-link {
-            display: block;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            color: var(--point-brown);
-            font-weight: 500;
-            transition: all 0.2s;
-        }
+    .nav-link {
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      color: var(--point-brown);
+      font-weight: 500;
+      transition: all 0.2s;
+    }
 
-            .nav-link:hover {
-                background-color: var(--main-beige);
-            }
+      .nav-link:hover {
+        background-color: var(--main-beige);
+      }
 
-            .nav-link.active-style {
-                font-weight: bold;
-                color: #78350f;
-                background-color: #fef3c7;
-            }
+      .nav-link.active-style {
+        font-weight: bold;
+        color: #78350f;
+        background-color: #fef3c7;
+      }
 
-        .btn-logout {
-            border-color: #fca5a5;
-            color: #ef4444;
-        }
+    .btn-logout {
+      border-color: #fca5a5;
+      color: #ef4444;
+    }
 
-            .btn-logout:hover {
-                background: #ef4444;
-            }
+      .btn-logout:hover {
+        background: #ef4444;
+      }
 
-        .sidebar-footer {
-            font-size: 0.75rem;
-            opacity: 0.5;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1rem;
-        }
+    .sidebar-footer {
+      font-size: 0.75rem;
+      opacity: 0.5;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+    }
 
-        main {
-            flex: 1;
-            max-width: 80rem;
-            width: 100%;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-        }
+    main {
+      flex: 1;
+      max-width: 80rem;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
 
-        .spa-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            text-align: center;
-        }
+    .spa-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      text-align: center;
+    }
 
-        /* =================  메인 자동 슬라이더 영역 ================= */
-        #sec-main {
-            position: relative;
-            overflow: hidden;
-            min-height: 450px;
-            justify-content: center;
-        }
+    /* =================  메인 자동 슬라이더 영역 ================= */
+    #sec-main {
+      position: relative;
+      overflow: hidden;
+      min-height: 450px;
+      justify-content: center;
+    }
 
-        .slide-container {
-            position: relative;
-            width: 100%;
-            max-width: 64rem;
-            margin: 0 auto;
-        }
+    .slide-container {
+      position: relative;
+      width: 100%;
+      max-width: 64rem;
+      margin: 0 auto;
+    }
 
-        .main-slide {
-            transition: opacity 0.7s ease, transform 0.7s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+    .main-slide {
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
 
-        .slide-active {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    .slide-active {
+      opacity: 1;
+      transform: translateX(0);
+    }
 
-        .slide-inactive {
-            opacity: 0;
-            transform: translateX(32px);
-        }
+    .slide-inactive {
+      opacity: 0;
+      transform: translateX(32px);
+    }
 
-        .main-slide h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            line-height: 1.4;
-        }
+    .main-slide h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
 
-        .main-slide p {
-            font-size: 1rem;
-            opacity: 0.8;
-            line-height: 1.6;
-            max-width: 48rem;
-            margin: 0 auto;
-        }
+    .main-slide p {
+      font-size: 1rem;
+      opacity: 0.8;
+      line-height: 1.6;
+      max-width: 48rem;
+      margin: 0 auto;
+    }
 
-        .main-btn-wrap {
-            padding-top: 1rem;
-        }
+    .main-btn-wrap {
+      padding-top: 1rem;
+    }
 
-        .btn-large {
-            padding: 0.75rem 2rem;
-            font-size: 1.125rem;
-        }
+    .btn-large {
+      padding: 0.75rem 2rem;
+      font-size: 1.125rem;
+    }
 
-        /* 코스 스타일 */
-        .course-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+    /* 코스 스타일 */
+    .course-card {
+      background-color: var(--white);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
 
-        .badge-wrap {
-            text-align: center;
-        }
+    .badge-wrap {
+      text-align: center;
+    }
 
-        .badge {
-            display: inline-block;
-            background-color: #b45309;
-            color: var(--white);
-            font-size: 0.75rem;
-            padding: 0.35rem 1rem;
-            border-radius: 9999px;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
+    .badge {
+      display: inline-block;
+      background-color: #b45309;
+      color: var(--white);
+      font-size: 0.75rem;
+      padding: 0.35rem 1rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .course-card h2 {
+      font-size: 0.875rem;
+      font-weight: bold;
+      color: #92400e;
+      letter-spacing: 0.05em;
+    }
+
+    .course-card h3 {
+      font-size: 1.75rem;
+      font-weight: 900;
+      margin-top: 0.25rem;
+    }
+
+    .course-highlight-text {
+      font-weight: 600;
+      color: #4b5563;
+    }
+
+    .course-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .meta-tag {
+      font-size: 0.875rem;
+      font-weight: bold;
+      background-color: var(--main-beige);
+      padding: 0.35rem 1rem;
+      border-radius: 0.25rem;
+    }
+
+    .meta-price {
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .course-sub-btn-wrap {
+      padding-top: 0.5rem;
+    }
+
+    .btn-small {
+      font-size: 0.875rem;
+    }
+
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .dot {
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 50%;
+      background-color: #d1d5db;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+      .dot.active {
+        background-color: var(--point-brown);
+      }
+
+    /* =================  서브 섹션 스타일 ================= */
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: bold;
+      border-bottom: 2px solid var(--point-brown);
+      padding-bottom: 0.5rem;
+      margin: 0 auto;
+      display: inline-block;
+    }
+
+    .info-main-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 2rem 0;
+    }
+
+    .info-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--point-brown);
+    }
+
+    .info-desc {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #451a03;
+      margin-top: 0.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .sub-btn-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      max-width: 60rem;
+      margin: 0 auto;
+      padding-top: 1rem;
+    }
+
+      .sub-btn-grid .btn-transparent {
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        border-radius: 0.75rem;
+      }
+
+    .sub-btn-icon {
+      font-size: 1.75rem;
+    }
+
+    .sub-btn-title {
+      font-weight: bold;
+      font-size: 1.125rem;
+    }
+
+    .sub-btn-desc {
+      font-size: 0.875rem;
+      opacity: 0.7;
+      font-weight: normal;
+    }
+
+    .info-sub-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      text-align: left;
+      max-width: 60rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .sub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .sub-header-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .sub-back-btn {
+      font-size: 0.875rem;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .sub-text-wrapper {
+      font-size: 1rem;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .sub-highlight-text {
+      font-weight: 600;
+      color: #78350f;
+    }
+
+    .sub-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .sub-target-list {
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .sub-target-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+
+    .ticket-type-card {
+      background-color: var(--bg-beige);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .ticket-type-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+    }
+
+    .ticket-type-desc {
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+
+    /* 테이블 스타일 */
+    .table-responsive {
+      overflow-x: auto;
+      background-color: var(--white);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      max-width: 72rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      min-width: 600px;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.875rem;
+    }
+
+    th, td {
+      padding: 1rem 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      background-color: var(--main-beige);
+      white-space: nowrap;
+      font-size: 1rem;
+    }
+
+    .bg-highlight {
+      background-color: rgba(254, 243, 199, 0.4);
+    }
+
+    .td-bold-time {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .qa-content {
+      font-size: 1rem;
+      text-align: left;
+      max-width: 60rem;
+      margin: 0 auto;
+      width: 100%;
+      line-height: 1.6;
+    }
+
+    .qa-q {
+      font-weight: bold;
+      font-size: 1.125rem;
+    }
+
+    .qa-a {
+      margin-top: 0.5rem;
+      opacity: 0.8;
+    }
+
+    .archive-content {
+      padding: 3rem;
+      opacity: 0.4;
+      font-size: 1.125rem;
+      max-width: 60rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ================= 신규 수업 예약 스타일 ================= */
+    .reserve-layout-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      text-align: left;
+    }
+
+    .main-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border-color);
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .main-tab {
+      padding: 1rem 2rem;
+      font-weight: bold;
+      color: #8a817c;
+      cursor: pointer;
+      border-bottom: 4px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.3s ease;
+      font-size: 1.125rem;
+    }
+
+      .main-tab.active {
+        color: var(--point-brown);
+        border-bottom: 4px solid var(--point-brown);
+      }
+
+    .reserve-info-box {
+      background-color: var(--main-beige);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+      .reserve-info-box ul {
+        margin-top: 0.5rem;
+        padding-left: 1.5rem;
+        color: #555;
+      }
+
+    .flexible-booking-container, .group-booking-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .lesson-type-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .type-btn {
+      flex: 1;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      background-color: var(--white);
+      border-radius: 0.5rem;
+      font-weight: bold;
+      color: var(--text-dark);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+      .type-btn.active {
+        background-color: var(--point-brown);
+        color: var(--white);
+        border-color: var(--point-brown);
+      }
+
+    /* 그룹 예약 특화 스타일 */
+    .day-slide-list {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+
+    .day-btn {
+      flex: 1;
+      min-width: 5rem;
+      padding: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      background-color: var(--white);
+      font-weight: bold;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+      .day-btn.active {
+        background-color: var(--point-brown);
+        color: var(--white);
+        border-color: var(--point-brown);
+      }
+
+    /* 주차 선택 탭 (그룹 스케줄표용) */
+    .week-tab-list {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .cal-head {
+      font-weight: bold;
+      font-size: 0.875rem;
+      color: #8a817c;
+      padding-bottom: 0.75rem;
+    }
+
+    .cal-day {
+      padding: 0.75rem 0;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      background-color: var(--bg-beige);
+      border: 1px solid transparent;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+      .cal-day:not(.empty):hover {
+        background-color: var(--main-beige);
+      }
+
+      .cal-day.active {
+        background-color: var(--point-brown);
+        color: var(--white);
+        border-color: var(--point-brown);
+      }
+
+      .cal-day.empty {
+        background-color: transparent;
+        cursor: default;
+      }
+
+    .time-slot-list, .group-time-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .time-slot-row, .group-time-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      background-color: var(--bg-beige);
+      transition: all 0.2s;
+    }
+
+      .time-slot-row:hover, .group-time-row:hover {
+        background-color: var(--main-beige);
+      }
+
+      .time-slot-row.active, .group-time-row.active {
+        border-color: var(--point-brown);
+        background-color: var(--main-beige);
+      }
+
+    .time-text {
+      font-weight: bold;
+      color: var(--point-brown);
+      font-size: 1rem;
+    }
+
+    .status-badge {
+      font-size: 0.875rem;
+      background-color: #10b981;
+      color: white;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.25rem;
+      font-weight: bold;
+    }
+
+    .btn-confirm {
+      padding: 1rem 2rem;
+      background: var(--point-brown);
+      color: var(--white);
+      font-weight: bold;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+      .btn-confirm:hover {
+        background: #5A483B;
+      }
+
+      .btn-confirm:disabled {
+        background: #d1d5db;
+        cursor: not-allowed;
+      }
+
+    .booking-summary-bar {
+      background-color: var(--point-brown);
+      border-radius: 0.5rem;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .summary-text-wrap {
+      font-size: 1rem;
+    }
+
+    .summary-label {
+      color: #b7ada5;
+    }
+
+    .summary-value {
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .auto-reg-info {
+      color: #bfa393;
+      font-size: 0.875rem;
+      margin-left: 0.5rem;
+    }
+
+    /* 티켓 구매 메인 */
+    .ticket-main-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+    }
+
+    .ticket-main-title {
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: var(--point-brown);
+    }
+
+    .ticket-main-desc {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-top: 0.25rem;
+    }
+
+    .ticket-grid-wrap {
+      max-width: 60rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .ticket-cat-btn {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      height: 100%;
+    }
+
+    .ticket-cat-icon {
+      font-size: 2rem;
+    }
+
+    .ticket-cat-title {
+      font-size: 1.125rem;
+    }
+
+    /* 티켓 슬라이더 */
+    .ticket-slider-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+
+    .btn-circle {
+      width: 3rem;
+      height: 3rem;
+      border: 2px solid var(--point-brown);
+      background: none;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 1.25rem;
+    }
+
+      .btn-circle:hover {
+        background-color: var(--point-brown);
+        color: var(--white);
+      }
+
+    .ticket-card-box {
+      width: 100%;
+      padding: 0 1.5rem;
+    }
+
+    .ticket-card {
+      background-color: var(--bg-beige);
+      padding: 2.5rem;
+      border-radius: 0.75rem;
+      border: 2px solid var(--point-brown);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .ticket-detail-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .ticket-detail-desc {
+      font-size: 1rem;
+      opacity: 0.7;
+      line-height: 1.6;
+    }
+
+    .ticket-detail-price {
+      font-size: 1.75rem;
+      font-weight: 900;
+    }
+
+    .ticket-buy-btn {
+      background: var(--white);
+      font-size: 1rem;
+      padding: 1rem;
+    }
+
+    .slider-indicator {
+      font-size: 1rem;
+      opacity: 0.5;
+    }
+
+    /* 마이페이지 */
+    .mypage-greeting {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .mypage-role-text {
+      color: #92400e;
+      font-weight: bold;
+    }
+
+    .mypage-desc {
+      font-size: 1rem;
+      opacity: 0.75;
+      margin-top: 0.5rem;
+    }
+
+    /* 모달 오버레이 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(110, 90, 75, 0.4);
+      padding: 0 1rem;
+    }
+
+    .modal-content {
+      background-color: var(--white);
+      width: 100%;
+      max-width: 26rem;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      position: relative;
+      border: 2px solid var(--point-brown);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #9ca3af;
+    }
+
+    .modal-content h3 {
+      font-size: 1.125rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .modal-form-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .modal-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .modal-content input {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.375rem;
+      background-color: var(--bg-beige);
+      font-size: 0.85rem;
+    }
+
+    .modal-submit-btn {
+      margin-top: 0.5rem;
+    }
+
+    .modal-footer-text {
+      text-align: center;
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 0.5rem;
+    }
+
+    .modal-link-text {
+      font-weight: bold;
+      color: var(--point-brown);
+    }
+
+    /* 디버그 스위치 */
+    .debug-switch {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: var(--white);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+      .debug-switch button {
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+
+    .debug-switch-title {
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .btn-debug-guest {
+      background-color: #e5e7eb;
+    }
+
+    .btn-debug-student {
+      background-color: #fde68a;
+    }
+
+    /* 마이페이지 신규 레이아웃 등 추가 스타일 */
+    .mypage-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .mypage-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .money-balance {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .balance-label {
+      font-size: 0.875rem;
+      font-weight: bold;
+      color: #a16207;
+      letter-spacing: 0.05em;
+    }
+
+    .balance-amount {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--point-brown);
+      margin-top: 0.25rem;
+    }
+
+    .mini-stat-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mini-stat {
+      background-color: var(--white);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 0.5rem;
+    }
+
+    /* 충전 모달 특화 스타일 */
+    .bank-info-box {
+      background-color: var(--main-beige);
+      padding: 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .charge-amount-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .charge-amount-btn {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      background: var(--white);
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+      .charge-amount-btn.active {
+        background: var(--point-brown);
+        color: var(--white);
+        border-color: var(--point-brown);
+      }
+
+    /* ================= 미디어 쿼리 (데스크탑 확장) ================= */
+    @media (min-width: 768px) {
+      body {
+        flex-direction: row;
+      }
+
+      header {
+        display: none;
+      }
+
+      aside {
+        position: sticky;
+        transform: translateX(0);
+        height: 100vh;
+      }
+
+      .sidebar-close {
+        display: none;
+      }
+
+      .main-slide h1 {
+        font-size: 2.25rem;
+      }
+
+      .main-slide p {
+        font-size: 1.125rem;
+      }
+
+      .course-card {
+        padding: 4rem;
+      }
 
         .course-card h2 {
-            font-size: 0.875rem;
-            font-weight: bold;
-            color: #92400e;
-            letter-spacing: 0.05em;
+          font-size: 1rem;
         }
 
         .course-card h3 {
-            font-size: 1.75rem;
-            font-weight: 900;
-            margin-top: 0.25rem;
-        }
-
-        .course-highlight-text {
-            font-weight: 600;
-            color: #4b5563;
-        }
-
-        .course-meta {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #f3f4f6;
-        }
-
-        .meta-tag {
-            font-size: 0.875rem;
-            font-weight: bold;
-            background-color: var(--main-beige);
-            padding: 0.35rem 1rem;
-            border-radius: 0.25rem;
-        }
-
-        .meta-price {
-            font-size: 1.5rem;
-            font-weight: 900;
-        }
-
-        .course-sub-btn-wrap {
-            padding-top: 0.5rem;
-        }
-
-        .btn-small {
-            font-size: 0.875rem;
-        }
-
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
-        }
-
-        .dot {
-            width: 0.625rem;
-            height: 0.625rem;
-            border-radius: 50%;
-            background-color: #d1d5db;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-            .dot.active {
-                background-color: var(--point-brown);
-            }
-
-        /* =================  서브 섹션 스타일 ================= */
-        .section-title {
-            font-size: 1.75rem;
-            font-weight: bold;
-            border-bottom: 2px solid var(--point-brown);
-            padding-bottom: 0.5rem;
-            margin: 0 auto;
-            display: inline-block;
-        }
-
-        .info-main-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            padding: 2rem 0;
-        }
-
-        .info-title {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--point-brown);
-        }
-
-        .info-desc {
-            font-size: 1.125rem;
-            font-weight: 500;
-            color: #451a03;
-            margin-top: 0.5rem;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .grid-2x2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
-
-        .sub-btn-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            max-width: 60rem;
-            margin: 0 auto;
-            padding-top: 1rem;
-        }
-
-            .sub-btn-grid .btn-transparent {
-                padding: 2rem 1.5rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 0.75rem;
-                border-radius: 0.75rem;
-            }
-
-        .sub-btn-icon {
-            font-size: 1.75rem;
-        }
-
-        .sub-btn-title {
-            font-weight: bold;
-            font-size: 1.125rem;
-        }
-
-        .sub-btn-desc {
-            font-size: 0.875rem;
-            opacity: 0.7;
-            font-weight: normal;
-        }
-
-        .info-sub-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            text-align: left;
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .sub-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-        }
-
-        .sub-header-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-
-        .sub-back-btn {
-            font-size: 0.875rem;
-            padding: 0.25rem 0.5rem;
-        }
-
-        .sub-text-wrapper {
-            font-size: 1rem;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .sub-highlight-text {
-            font-weight: 600;
-            color: #78350f;
-        }
-
-        .sub-list {
-            list-style-type: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .sub-target-list {
-            font-size: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .sub-target-item {
-            display: flex;
-            gap: 0.5rem;
-            align-items: flex-start;
-        }
-
-        .ticket-type-card {
-            background-color: var(--bg-beige);
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .ticket-type-title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.125rem;
-        }
-
-        .ticket-type-desc {
-            font-size: 0.875rem;
-            opacity: 0.8;
-        }
-
-        /* 테이블 스타일 */
-        .table-responsive {
-            overflow-x: auto;
-            background-color: var(--white);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border-color);
-            max-width: 72rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        table {
-            width: 100%;
-            min-width: 600px;
-            border-collapse: collapse;
-            text-align: center;
-            font-size: 0.875rem;
-        }
-
-        th, td {
-            padding: 1rem 0.75rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: var(--main-beige);
-            white-space: nowrap;
-            font-size: 1rem;
-        }
-
-        .bg-highlight {
-            background-color: rgba(254, 243, 199, 0.4);
-        }
-
-        .td-bold-time {
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .qa-content {
-            font-size: 1rem;
-            text-align: left;
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-            line-height: 1.6;
-        }
-
-        .qa-q {
-            font-weight: bold;
-            font-size: 1.125rem;
-        }
-
-        .qa-a {
-            margin-top: 0.5rem;
-            opacity: 0.8;
-        }
-
-        .archive-content {
-            padding: 3rem;
-            opacity: 0.4;
-            font-size: 1.125rem;
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* ================= 신규 수업 예약 스타일 ================= */
-        .reserve-layout-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
-            text-align: left;
-        }
-
-        .main-tabs {
-            display: flex;
-            border-bottom: 2px solid var(--border-color);
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .main-tab {
-            padding: 1rem 2rem;
-            font-weight: bold;
-            color: #8a817c;
-            cursor: pointer;
-            border-bottom: 4px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.3s ease;
-            font-size: 1.125rem;
-        }
-
-            .main-tab.active {
-                color: var(--point-brown);
-                border-bottom: 4px solid var(--point-brown);
-            }
-
-        .reserve-info-box {
-            background-color: var(--main-beige);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-            .reserve-info-box ul {
-                margin-top: 0.5rem;
-                padding-left: 1.5rem;
-                color: #555;
-            }
-
-        .flexible-booking-container, .group-booking-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .lesson-type-selector {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .type-btn {
-            flex: 1;
-            padding: 1rem;
-            border: 1px solid var(--border-color);
-            background-color: var(--white);
-            border-radius: 0.5rem;
-            font-weight: bold;
-            color: var(--text-dark);
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-            .type-btn.active {
-                background-color: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-        /* 그룹 예약 특화 스타일 */
-        .day-slide-list {
-            display: flex;
-            gap: 0.75rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-        }
-
-        .day-btn {
-            flex: 1;
-            min-width: 5rem;
-            padding: 1rem 0;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            background-color: var(--white);
-            font-weight: bold;
-            cursor: pointer;
-            flex-shrink: 0;
-            font-size: 1rem;
-        }
-
-            .day-btn.active {
-                background-color: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-        /* 주차 선택 탭 (그룹 스케줄표용) */
-        .week-tab-list {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 0.5rem;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
-            text-align: center;
-        }
-
-        .cal-head {
-            font-weight: bold;
-            font-size: 0.875rem;
-            color: #8a817c;
-            padding-bottom: 0.75rem;
-        }
-
-        .cal-day {
-            padding: 0.75rem 0;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            background-color: var(--bg-beige);
-            border: 1px solid transparent;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-            .cal-day:not(.empty):hover {
-                background-color: var(--main-beige);
-            }
-
-            .cal-day.active {
-                background-color: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-            .cal-day.empty {
-                background-color: transparent;
-                cursor: default;
-            }
-
-        .time-slot-list, .group-time-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .time-slot-row, .group-time-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            background-color: var(--bg-beige);
-            transition: all 0.2s;
-        }
-
-            .time-slot-row:hover, .group-time-row:hover {
-                background-color: var(--main-beige);
-            }
-
-            .time-slot-row.active, .group-time-row.active {
-                border-color: var(--point-brown);
-                background-color: var(--main-beige);
-            }
-
-        .time-text {
-            font-weight: bold;
-            color: var(--point-brown);
-            font-size: 1rem;
-        }
-
-        .status-badge {
-            font-size: 0.875rem;
-            background-color: #10b981;
-            color: white;
-            padding: 0.35rem 0.75rem;
-            border-radius: 0.25rem;
-            font-weight: bold;
-        }
-
-        .btn-confirm {
-            padding: 1rem 2rem;
-            background: var(--point-brown);
-            color: var(--white);
-            font-weight: bold;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s;
-        }
-
-            .btn-confirm:hover {
-                background: #5A483B;
-            }
-
-            .btn-confirm:disabled {
-                background: #d1d5db;
-                cursor: not-allowed;
-            }
-
-        .booking-summary-bar {
-            background-color: var(--point-brown);
-            border-radius: 0.5rem;
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .summary-text-wrap {
-            font-size: 1rem;
-        }
-
-        .summary-label {
-            color: #b7ada5;
-        }
-
-        .summary-value {
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .auto-reg-info {
-            color: #bfa393;
-            font-size: 0.875rem;
-            margin-left: 0.5rem;
-        }
-
-        /* 티켓 구매 메인 */
-        .ticket-main-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            padding: 1.5rem 0;
-        }
-
-        .ticket-main-title {
-            font-size: 1.75rem;
-            font-weight: bold;
-            color: var(--point-brown);
-        }
-
-        .ticket-main-desc {
-            font-size: 1rem;
-            opacity: 0.8;
-            margin-top: 0.25rem;
-        }
-
-        .ticket-grid-wrap {
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .ticket-cat-btn {
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            height: 100%;
-        }
-
-        .ticket-cat-icon {
-            font-size: 2rem;
-        }
-
-        .ticket-cat-title {
-            font-size: 1.125rem;
-        }
-
-        /* 티켓 슬라이더 */
-        .ticket-slider-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 48rem;
-            margin: 0 auto;
-            padding: 2rem 0;
-        }
-
-        .btn-circle {
-            width: 3rem;
-            height: 3rem;
-            border: 2px solid var(--point-brown);
-            background: none;
-            border-radius: 50%;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            font-size: 1.25rem;
-        }
-
-            .btn-circle:hover {
-                background-color: var(--point-brown);
-                color: var(--white);
-            }
-
-        .ticket-card-box {
-            width: 100%;
-            padding: 0 1.5rem;
-        }
-
-        .ticket-card {
-            background-color: var(--bg-beige);
-            padding: 2.5rem;
-            border-radius: 0.75rem;
-            border: 2px solid var(--point-brown);
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .ticket-detail-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .ticket-detail-desc {
-            font-size: 1rem;
-            opacity: 0.7;
-            line-height: 1.6;
-        }
-
-        .ticket-detail-price {
-            font-size: 1.75rem;
-            font-weight: 900;
-        }
-
-        .ticket-buy-btn {
-            background: var(--white);
-            font-size: 1rem;
-            padding: 1rem;
-        }
-
-        .slider-indicator {
-            font-size: 1rem;
-            opacity: 0.5;
-        }
-
-        /* 마이페이지 */
-        .mypage-greeting {
-            font-weight: 600;
-            font-size: 1.25rem;
-        }
-
-        .mypage-role-text {
-            color: #92400e;
-            font-weight: bold;
-        }
-
-        .mypage-desc {
-            font-size: 1rem;
-            opacity: 0.75;
-            margin-top: 0.5rem;
-        }
-
-        /* 모달 오버레이 */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(110, 90, 75, 0.4);
-            padding: 0 1rem;
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            width: 100%;
-            max-width: 26rem;
-            padding: 1.25rem 1.5rem;
-            border-radius: 0.75rem;
-            position: relative;
-            border: 2px solid var(--point-brown);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.75rem;
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            cursor: pointer;
-            color: #9ca3af;
-        }
-
-        .modal-content h3 {
-            font-size: 1.125rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .modal-form-body {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .modal-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .modal-content input {
-            width: 100%;
-            border: 1px solid var(--border-color);
-            padding: 0.6rem 0.75rem;
-            border-radius: 0.375rem;
-            background-color: var(--bg-beige);
-            font-size: 0.85rem;
-        }
-
-        .modal-submit-btn {
-            margin-top: 0.5rem;
-        }
-
-        .modal-footer-text {
-            text-align: center;
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 0.5rem;
-        }
-
-        .modal-link-text {
-            font-weight: bold;
-            color: var(--point-brown);
-        }
-
-        /* 디버그 스위치 */
-        .debug-switch {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            background: var(--white);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-            font-size: 0.75rem;
-            z-index: 50;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-            .debug-switch button {
-                border: none;
-                padding: 0.25rem 0.5rem;
-                border-radius: 0.25rem;
-                cursor: pointer;
-            }
-
-        .debug-switch-title {
-            font-weight: bold;
-            margin-bottom: 2px;
-        }
-
-        .btn-debug-guest {
-            background-color: #e5e7eb;
-        }
-
-        .btn-debug-student {
-            background-color: #fde68a;
-        }
-
-        /* 마이페이지 신규 레이아웃 등 추가 스타일 */
-        .mypage-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: 1fr;
-            margin-bottom: 1rem;
-        }
-
-        @media (min-width: 768px) {
-            .mypage-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .money-balance {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 1.5rem;
-        }
-
-        .balance-label {
-            font-size: 0.875rem;
-            font-weight: bold;
-            color: #a16207;
-            letter-spacing: 0.05em;
-        }
-
-        .balance-amount {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--point-brown);
-            margin-top: 0.25rem;
-        }
-
-        .mini-stat-list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .mini-stat {
-            background-color: var(--white);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            gap: 0.5rem;
-        }
-
-        /* 충전 모달 특화 스타일 */
-        .bank-info-box {
-            background-color: var(--main-beige);
-            padding: 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .charge-amount-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .charge-amount-btn {
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            background: var(--white);
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-        }
-
-            .charge-amount-btn.active {
-                background: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-        /* ================= 미디어 쿼리 (데스크탑 확장) ================= */
-        @media (min-width: 768px) {
-            body {
-                flex-direction: row;
-            }
-
-            header {
-                display: none;
-            }
-
-            aside {
-                position: sticky;
-                transform: translateX(0);
-                height: 100vh;
-            }
-
-            .sidebar-close {
-                display: none;
-            }
-
-            .main-slide h1 {
-                font-size: 2.25rem;
-            }
-
-            .main-slide p {
-                font-size: 1.125rem;
-            }
-
-            .course-card {
-                padding: 4rem;
-            }
-
-                .course-card h2 {
-                    font-size: 1rem;
-                }
-
-                .course-card h3 {
-                    font-size: 2.25rem;
-                }
-
-            .course-highlight-text {
-                font-size: 1.25rem;
-            }
-
-            .meta-price {
-                font-size: 2rem;
-            }
-
-            .grid-3 {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .grid-2 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .sub-btn-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .course-meta {
-                flex-direction: row;
-                justify-content: center;
-                gap: 1.5rem;
-            }
-
-            table {
-                font-size: 1.125rem;
-            }
-        }
-    </style>
+          font-size: 2.25rem;
+        }
+
+      .course-highlight-text {
+        font-size: 1.25rem;
+      }
+
+      .meta-price {
+        font-size: 2rem;
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sub-btn-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .course-meta {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+
+      table {
+        font-size: 1.125rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="header-logo" onclick="showSection('main')">세상모든언어 | 세모일본어온라인</div>
-        <button onclick="toggleSidebar()" class="header-toggle">☰</button>
-    </header>
+  <header>
+    <div class="header-logo" onclick="showSection('main')">세상모든언어 | 세모일본어온라인</div>
+    <button onclick="toggleSidebar()" class="header-toggle">☰</button>
+  </header>
 
-    <div id="sidebar-overlay" onclick="toggleSidebar()" class="hidden"></div>
+  <div id="sidebar-overlay" onclick="toggleSidebar()" class="hidden"></div>
 
-    <aside id="sidebar">
+  <aside id="sidebar">
+    <div>
+      <div class="sidebar-header-box">
+        <div class="sidebar-title" onclick="showSection('main'); closeSidebarMobile();">일본어온라인수업</div>
+        <button onclick="toggleSidebar()" class="sidebar-close">&times;</button>
+      </div>
+
+      <nav>
+        <div id="nav-guest">
+          <p class="menu-label">MENU</p>
+          <a href="#" onclick="showSection('main'); closeSidebarMobile();" class="nav-link">메인</a>
+          <a href="#" onclick="showSection('info'); closeSidebarMobile();" class="nav-link">수업 안내</a>
+          <a href="#" onclick="showSection('schedule'); closeSidebarMobile();" class="nav-link">그룹 스케줄표</a>
+          <a href="#" onclick="showSection('qa'); closeSidebarMobile();" class="nav-link">Q&A</a>
+          <a href="#" onclick="showSection('archive'); closeSidebarMobile();" class="nav-link">자료실</a>
+          <div class="nav-btn-wrapper">
+            <button onclick="openModal('login')" class="btn-transparent w-full">로그인</button>
+          </div>
+        </div>
+
+        <div id="nav-student" class="hidden">
+          <p class="menu-label student-menu-label">STUDENT PAGE</p>
+          <a href="#" onclick="showSection('reserve'); closeSidebarMobile();" class="nav-link active-style">📅 수업 예약</a>
+          <a href="#" onclick="showSection('ticket'); closeSidebarMobile();" class="nav-link">🎫 티켓 구매</a>
+          <a href="#" onclick="showSection('mypage'); closeSidebarMobile();" class="nav-link">👤 마이페이지</a>
+          <div class="nav-btn-wrapper">
+            <button onclick="logout()" class="btn-transparent btn-logout w-full">로그아웃</button>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <p>© 2026 JP CLASS</p>
+    </div>
+  </aside>
+
+  <main>
+    <section id="sec-main" class="spa-section">
+      <div class="slide-container">
+
+
+
+        <!-- 메인 슬라이드 1 -->
+        <div class="main-slide text-center slide-active">
+          <h1>💻 전국 어디서나 1:1 홈케어<br>방구석에서 시작하는 고효율 일본어 온라인 클래스!</h1>
+          <p>무거운 책 들고 학원까지 오가는 시간, 너무 아까우셨죠? 이제 집, 카페, 회사 회의실 어디서든 노트북이나 스마트폰 하나로 일본 현지 느낌 그대로 수업을 재미있고 타이트하게 즐겨보세요!</p>
+        </div>
+
+        <!-- 메인 슬라이드 2 -->
+        <div class="main-slide text-center slide-active">
+          <h3>⏰ "내 스케줄이 곧 학원 시간표!"</h3>
+          <p>내가 원하는 날짜와 비어있는 시간을 쏙쏙 골라 마치 <strong>영화 예매하듯 간편하게 클릭하면 실시간 예약이 즉시 종료</strong>됩니다.</p>
+          <div class="main-btn-wrap">
+            <button onclick="openModal('login')" class="btn-transparent btn-large">지금 바로 시작하기</button>
+          </div>
+        </div>
+
+
+        <!-- 메인 슬라이드 3 (코스 추천) -->
+        <div class="main-slide course-card text-center slide-inactive hidden">
+          <div class="badge-wrap"><span class="badge">추천 코스</span></div>
+          <h2>COURSE 01</h2>
+          <h3>나도 문자마스터 코스</h3>
+          <p class="course-highlight-text">🎯 히라가나, 가타카나에서 번번이 좌절했던 왕초보 수강생</p>
+          <p>하루 딱 25분 화면에만 온전히 집중하세요! 직관적인 화면 공유와 풍부한 시각 자료를 통해 지루할 틈 없이 일본어 글자가 머리에 쏙쏙 박힙니다. 작심삼일 프로 포기자도 무조건 정복!</p>
+          <div class="course-meta">
+            <span class="meta-tag">25분 실시간 밀착 케어</span>
+            <span class="meta-price">99,000원</span>
+          </div>
+          <div class="course-sub-btn-wrap">
+            <button onclick="showSection('ticket')" class="btn-transparent btn-small">상세 정보 및 구매</button>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="slider-dots">
+        <button onclick="setMainSlide(0)" id="main-dot-0" class="dot active"></button>
+        <button onclick="setMainSlide(1)" id="main-dot-1" class="dot"></button>
+        <button onclick="setMainSlide(1)" id="main-dot-2" class="dot"></button>
+      </div>
+    </section>
+
+
+
+    <section id="sec-info" class="spa-section hidden">
+      <div id="info-main" class="text-center info-main-container">
         <div>
-            <div class="sidebar-header-box">
-                <div class="sidebar-title" onclick="showSection('main'); closeSidebarMobile();">일본어온라인수업</div>
-                <button onclick="toggleSidebar()" class="sidebar-close">&times;</button>
-            </div>
-
-            <nav>
-                <div id="nav-guest">
-                    <p class="menu-label">MENU</p>
-                    <a href="#" onclick="showSection('main'); closeSidebarMobile();" class="nav-link">메인</a>
-                    <a href="#" onclick="showSection('info'); closeSidebarMobile();" class="nav-link">수업 안내</a>
-                    <a href="#" onclick="showSection('schedule'); closeSidebarMobile();" class="nav-link">그룹 스케줄표</a>
-                    <a href="#" onclick="showSection('qa'); closeSidebarMobile();" class="nav-link">Q&A</a>
-                    <a href="#" onclick="showSection('archive'); closeSidebarMobile();" class="nav-link">자료실</a>
-                    <div class="nav-btn-wrapper">
-                        <button onclick="openModal('login')" class="btn-transparent w-full">로그인</button>
-                    </div>
-                </div>
-
-                <div id="nav-student" class="hidden">
-                    <p class="menu-label student-menu-label">STUDENT PAGE</p>
-                    <a href="#" onclick="showSection('reserve'); closeSidebarMobile();" class="nav-link active-style">📅 수업 예약</a>
-                    <a href="#" onclick="showSection('ticket'); closeSidebarMobile();" class="nav-link">🎫 티켓 구매</a>
-                    <a href="#" onclick="showSection('mypage'); closeSidebarMobile();" class="nav-link">👤 마이페이지</a>
-                    <div class="nav-btn-wrapper">
-                        <button onclick="logout()" class="btn-transparent btn-logout w-full">로그아웃</button>
-                    </div>
-                </div>
-            </nav>
+          <h2 class="info-title">우리는 이렇게 공부한다!</h2>
+          <p class="info-desc">우리만의 특별 레시피로 일본어 입이 드디어 트이도록! 👄</p>
         </div>
 
-        <div class="sidebar-footer">
-            <p>© 2026 JP CLASS</p>
+        <div class="sub-btn-grid">
+          <button onclick="showSubInfo('method')" class="btn-transparent">
+            <span class="sub-btn-icon">🎯</span>
+            <span class="sub-btn-title">메뉴1: 수업 방법</span>
+            <span class="sub-btn-desc">개인/듀오/그룹 맞춤형 프로세스</span>
+          </button>
+          <button onclick="showSubInfo('ticket-info')" class="btn-transparent">
+            <span class="sub-btn-icon">🎫</span>
+            <span class="sub-btn-title">메뉴2: 티켓 종류</span>
+            <span class="sub-btn-desc">3개월 PDF 열람권 포함 티켓 안내</span>
+          </button>
+          <button onclick="showSubInfo('target')" class="btn-transparent">
+            <span class="sub-btn-icon">✨</span>
+            <span class="sub-btn-title">메뉴3: 추천 대상</span>
+            <span class="sub-btn-desc">이런 분들이 들으면 효과 만점!</span>
+          </button>
         </div>
-    </aside>
+      </div>
 
-    <main>
-        <section id="sec-main" class="spa-section">
-            <div class="slide-container">
-                <!-- 메인 슬라이드 1 -->
-                <div class="main-slide text-center slide-active">
-                    <h1>💻 전국 어디서나 1:1 홈케어<br>방구석에서 시작하는 고효율 일본어 온라인 클래스!</h1>
-                    <p>무거운 책 들고 학원까지 오가는 시간, 너무 아까우셨죠? 이제 집, 카페, 회사 회의실 어디서든 노트북이나 스마트폰 하나로 일본 현지 느낌 그대로 수업을 재미있고 타이트하게 즐겨보세요!</p>
-                </div>
-
-                <!-- 메인 슬라이드 2 -->
-                <div class="main-slide text-center slide-active">
-                    <h3>⏰ "내 스케줄이 곧 학원 시간표!"</h3>
-                    <p>내가 원하는 날짜와 비어있는 시간을 쏙쏙 골라 마치 <strong>영화 예매하듯 간편하게 클릭하면 실시간 예약이 즉시 종료</strong>됩니다.</p>
-                    <div class="main-btn-wrap">
-                        <button onclick="openModal('login')" class="btn-transparent btn-large">지금 바로 시작하기</button>
-                    </div>
-                </div>
+      <div id="info-sub-method" class="info-sub-content card info-sub-panel hidden">
+        <div class="sub-header">
+          <h3 class="sub-header-title">🎯 우리만의 특별한 일본어 수업 방법</h3>
+          <button onclick="goBackToInfoMain()" class="btn-transparent sub-back-btn">← 돌아가기</button>
+        </div>
+        <div class="sub-text-wrapper">
+          <p class="sub-highlight-text">말하기 중심의 3단계 스텝</p>
+          <ul class="sub-list">
+            <li><strong>1단계:</strong> 자체 제작 PDF 교재로 오늘의 핵심 표현을 가볍게 예습합니다.</li>
+            <li><strong>2단계:</strong> 온라인 실시간 수업(1:1, 1:2)을 통해 수업을 진행합니다.</li>
+            <li><strong>3단계:</strong> 수업 종료 후 제공되는 파일과,피드백으로 교정받습니다.</li>
+          </ul>
 
 
-                <!-- 메인 슬라이드 3 (코스 추천) -->
-                <div class="main-slide course-card text-center slide-inactive hidden">
-                    <div class="badge-wrap"><span class="badge">추천 코스</span></div>
-                    <h2>COURSE 01</h2>
-                    <h3>나도 문자마스터 코스</h3>
-                    <p class="course-highlight-text">🎯 히라가나, 가타카나에서 번번이 좌절했던 왕초보 수강생</p>
-                    <p>하루 딱 25분 화면에만 온전히 집중하세요! 직관적인 화면 공유와 풍부한 시각 자료를 통해 지루할 틈 없이 일본어 글자가 머리에 쏙쏙 박힙니다. 작심삼일 프로 포기자도 무조건 정복!</p>
-                    <div class="course-meta">
-                        <span class="meta-tag">25분 실시간 밀착 케어</span>
-                        <span class="meta-price">99,000원</span>
-                    </div>
-                    <div class="course-sub-btn-wrap">
-                        <button onclick="showSection('ticket')" class="btn-transparent btn-small">상세 정보 및 구매</button>
-                    </div>
-                </div>
+          <h3>이상하게 오워지는 어이없는25분?!</h3>
+
+          <p>인간이 집중할수있는 시간 단25분을활용해 한달혹은한달반만에 세모만의특별한레시피로 내 입을 트이게한다! <strong>절대 예습하지않습니다. 필기도구도필요없습니다.</strong></p><br>
+          <p class="sub-highlight-text">일본어에 눈을뜨라 그룹수업 3단계 스텝</p>
+          <ul class="sub-list">
+            <li><strong>1단계:</strong> 수업을 신청합니다. </li>
+            <li><strong>2단계:</strong> 그냥, 보고 따라합니다. </li>
+            <li><strong>3단계:</strong> 완료입니다. 수업 종료 후 제공되는 게임으로 교정받습니다.</li>
+          </ul>
+
+          <p><strong>예습복습하지않아도,</strong>글자를 보고 바로 내뱉을수있습니다. 만약 외워지지않으면 100%환불보장합니다.</p>
+        </div>
+      </div>
+
+      <div id="info-sub-ticket-info" class="info-sub-content card info-sub-panel hidden">
+        <div class="sub-header">
+          <h3 class="sub-header-title">🎫 효율적인 수강 티켓 시스템</h3>
+          <button onclick="goBackToInfoMain()" class="btn-transparent sub-back-btn">← 돌아가기</button>
+        </div>
+        <div class="sub-text-wrapper">
+          <p class="sub-highlight-text">모든 티켓에는 'PDF 3개월 열람권'이 기본 장착!</p>
+          <div class="grid-2">
+            <div class="card ticket-type-card">
+              <h4 class="ticket-type-title">단독 수업 이용권</h4>
+              <p class="ticket-type-desc">원하는 주제를 선별하여 자유롭게 예약하고 참여하는 쿠폰형 티켓</p>
+            </div>
+            <div class="card ticket-type-card">
+              <h4 class="ticket-type-title">정기 패키지권</h4>
+              <p class="ticket-type-desc">체계적인 단계별 입트이기 트레이닝을 위한 할인 적용 패키지 티켓</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="info-sub-target" class="info-sub-content card info-sub-panel hidden">
+        <div class="sub-header">
+          <h3 class="sub-header-title">✨ 이런 분들에게 강력 추천합니다</h3>
+          <button onclick="goBackToInfoMain()" class="btn-transparent sub-back-btn">← 돌아가기</button>
+        </div>
+        <div class="sub-target-list">
+          <div class="sub-target-item"><span>✔️</span><p>유튜브나 혼자독학해봤어요. 들리기는하는데 말을못하시는분</p></div>
+          <div class="sub-target-item"><span>✔️</span><p>학원수업진도는 따라가기어렵고, 혼자서공부는 막막하신분</p></div>
+          <div class="sub-target-item"><span>✔️</span><p>문법은 대충 아는데 막상 일본인 앞에 서면 머리가 하얘지시는 분</p></div>
+          <div class="sub-target-item"><span>✔️</span><p>딱딱한 교과서 표현 말고, 요즘 일본 현지인들이 쓰는 진짜 회화를 배우고 싶으신 분</p></div>
+          <div class="sub-target-item"><span>✔️</span><p>학원 다닐 시간은 없고, 내가 원하는 시간에 스마트폰이나 PC로 편하게 매칭 수업을 듣고 싶으신 분</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 수정된 그룹 스케줄표 (주차별 탭 기능 탑재) ================= -->
+    <section id="sec-schedule" class="spa-section hidden">
+      <h2 class="section-title">그룹 스케줄표 (5주 마스터반)</h2>
+
+      <div class="card qa-content" style="margin-bottom: 1rem;">
+        <p class="qa-q">문자 마스터 및 기초 트레이닝</p>
+        <p class="qa-a">원하시는 '주차' 버튼을 클릭하면 월/화/금/토의 상세 스케줄을 확인할 수 있습니다.</p>
+      </div>
+
+      <!-- 주차 선택 버튼 영역 -->
+      <div class="week-tab-list">
+        <button class="type-btn active" id="btn-week-1" onclick="selectScheduleWeek(1)">1주차</button>
+        <button class="type-btn" id="btn-week-2" onclick="selectScheduleWeek(2)">2주차</button>
+        <button class="type-btn" id="btn-week-3" onclick="selectScheduleWeek(3)">3주차</button>
+        <button class="type-btn" id="btn-week-4" onclick="selectScheduleWeek(4)">4주차</button>
+        <button class="type-btn" id="btn-week-5" onclick="selectScheduleWeek(5)">5주차</button>
+      </div>
+
+      <div class="table-responsive">
+        <!-- 1주차 표 -->
+        <table id="table-week-1">
+          <thead>
+            <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-bold-time">10:00 - 11:00</td>
+              <td class="bg-highlight">[히라] あ・か</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">19:00 - 20:00</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] あ・か</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">20:00 - 21:00</td>
+              <td>-</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] さ・た</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 2주차 표 -->
+        <table id="table-week-2" class="hidden">
+          <thead>
+            <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-bold-time">10:00 - 11:00</td>
+              <td class="bg-highlight">[히라] さ・た</td>
+              <td>-</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] 요음</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">19:00 - 20:00</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] さ・た</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">20:00 - 21:00</td>
+              <td>-</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] な・은</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 3주차 표 -->
+        <table id="table-week-3" class="hidden">
+          <thead>
+            <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-bold-time">10:00 - 11:00</td>
+              <td class="bg-highlight">[히라] な・は</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">19:00 - 20:00</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] な・は</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">20:00 - 21:00</td>
+              <td>-</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] 활용</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 4주차 표 -->
+        <table id="table-week-4" class="hidden">
+          <thead>
+            <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-bold-time">10:00 - 11:00</td>
+              <td class="bg-highlight">[히라] ま・や</td>
+              <td>-</td>
+              <td>-</td>
+              <td class="bg-highlight">[가타] 심화</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">19:00 - 20:00</td>
+              <td>-</td>
+              <td class="bg-highlight">[히라] ま・や</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">20:00 - 21:00</td>
+              <td>-</td>
+              <td>-</td>
+              <td class="bg-highlight">[가타] 기초</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 5주차 표 -->
+        <table id="table-week-5" class="hidden">
+          <thead>
+            <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-bold-time">10:00 - 11:00</td>
+              <td class="bg-highlight">[가타] 모음</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">19:00 - 20:00</td>
+              <td>-</td>
+              <td class="bg-highlight">[가타] 총정리</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td class="td-bold-time">20:00 - 21:00</td>
+              <td>-</td>
+              <td>-</td>
+              <td class="bg-highlight">회화 응용</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sec-qa" class="spa-section hidden">
+      <h2 class="section-title">Q&A</h2>
+      <div class="card qa-content">
+        <p class="qa-q">Q. 티켓 구매 시 교재 3개월 열람 조건은 어떻게 적용되나요?</p>
+        <p class="qa-a">A. 구매일 기점으로 3개월(90일)간 전용 자료실에서 실시간 열람이 가능합니다.</p>
+      </div>
+    </section>
+
+    <section id="sec-archive" class="spa-section hidden">
+      <h2 class="section-title">자료실</h2>
+      <div class="card text-center archive-content">
+        🔒 티켓을 구매한 회원 전용 PDF 열람 공간입니다.
+      </div>
+    </section>
+
+    <!-- 예약 섹션 생략 없이 기입 -->
+    <section id="sec-reserve" class="spa-section hidden">
+      <div class="reserve-layout-container">
+
+        <div class="main-tabs">
+          <div class="main-tab active" id="tab-flexible" onclick="switchMainTab('flexible')">예약 (자유)</div>
+          <div class="main-tab" id="tab-group" onclick="switchMainTab('group')">그룹 (정규)</div>
+        </div>
+
+        <div id="section-flexible" class="flexible-booking-container">
+          <div class="reserve-info-box">
+            <b>개인/듀오 자유 예약 안내</b>
+            <p>하나의 캘린더에서 수업 타입을 선택하고 원하는 날짜, 시간을 자유롭게 고르세요.</p>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:20px; color: #4a423e; font-size:1.25rem;">1. 날짜 및 형태 선택</h3>
+            <div class="lesson-type-selector">
+              <button class="type-btn active" onclick="setLessonType('private', this)">개인 (1:1)</button>
+              <button class="type-btn" onclick="setLessonType('duo', this)">듀오 (1:2)</button>
+            </div>
+            <div class="calendar-grid">
+              <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
+              <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+              <div class="cal-day" onclick="selectFlexDate(this, 1)">1</div><div class="cal-day" onclick="selectFlexDate(this, 2)">2</div><div class="cal-day" onclick="selectFlexDate(this, 3)">3</div><div class="cal-day" onclick="selectFlexDate(this, 4)">4</div>
+              <div class="cal-day active" onclick="selectFlexDate(this, 5)">5</div><div class="cal-day" onclick="selectFlexDate(this, 6)">6</div><div class="cal-day" onclick="selectFlexDate(this, 7)">7</div><div class="cal-day" onclick="selectFlexDate(this, 8)">8</div>
+              <div class="cal-day" onclick="selectFlexDate(this, 9)">9</div><div class="cal-day" onclick="selectFlexDate(this, 10)">10</div><div class="cal-day" onclick="selectFlexDate(this, 11)">11</div><div class="cal-day" onclick="selectFlexDate(this, 12)">12</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:20px; color: #4a423e; font-size:1.25rem;">2. 예약 가능 시간</h3>
+            <div class="time-slot-list">
+              <div class="time-slot-row" onclick="selectFlexTime(this)">
+                <div class="time-text">🕒 17:30 - 17:55</div>
+                <span class="status-badge">예약 가능</span>
+              </div>
+              <div class="time-slot-row" onclick="selectFlexTime(this)">
+                <div class="time-text">🕒 18:00 - 18:25</div>
+                <span class="status-badge">예약 가능</span>
+              </div>
+              <div class="time-slot-row" onclick="selectFlexTime(this)">
+                <div class="time-text">🕒 19:00 - 19:25</div>
+                <span class="status-badge">예약 가능</span>
+              </div>
+              <div class="time-slot-row" onclick="selectFlexTime(this)">
+                <div class="time-text">🕒 19:30 - 19:55</div>
+                <span class="status-badge">예약 가능</span>
+              </div>
             </div>
 
-
-
-
-
-
-
-            <div class="slider-dots">
-                <button onclick="setMainSlide(0)" id="main-dot-0" class="dot active"></button>
-                <button onclick="setMainSlide(1)" id="main-dot-1" class="dot"></button>
-                <button onclick="setMainSlide(1)" id="main-dot-2" class="dot"></button>
+            <div style="text-align: right; margin-top: 1.5rem;">
+              <button class="btn-confirm" id="flex-submit-btn" onclick="confirmFlexBooking()">예약 신청하기</button>
             </div>
-        </section>
+          </div>
+        </div>
 
+        <div id="section-group" class="group-booking-container hidden">
+          <div class="reserve-info-box">
+            <b>그룹: 문자 마스터반 안내</b>
+            <p>히라가나/가타카나를 완벽하게 마스터하는 정규 과정입니다.</p>
+            <ul>
+              <li>그룹 티켓 <b>4장</b>: 원하는 요일 1개 선택 (4주 자동 등록)</li>
+              <li>그룹 티켓 <b>8장</b>: 원하는 요일 2개 선택 (주 2회, 4주 자동 등록)</li>
+            </ul>
+          </div>
 
+          <div class="day-slide-list" id="group-day-list">
+            <button class="day-btn active" onclick="selectGroupDay('월', this)">월요일</button>
+            <button class="day-btn" onclick="selectGroupDay('화', this)">화요일</button>
+            <button class="day-btn" onclick="selectGroupDay('수', this)">수요일</button>
+            <button class="day-btn" onclick="selectGroupDay('목', this)">목요일</button>
+            <button class="day-btn" onclick="selectGroupDay('금', this)">금요일</button>
+          </div>
 
-        <section id="sec-info" class="spa-section hidden">
-            <div id="info-main" class="text-center info-main-container">
-                <div>
-                    <h2 class="info-title">우리는 이렇게 공부한다!</h2>
-                    <p class="info-desc">우리만의 특별 레시피로 일본어 입이 드디어 트이도록! 👄</p>
-                </div>
-
-                <div class="sub-btn-grid">
-                    <button onclick="showSubInfo('method')" class="btn-transparent">
-                        <span class="sub-btn-icon">🎯</span>
-                        <span class="sub-btn-title">메뉴1: 수업 방법</span>
-                        <span class="sub-btn-desc">개인/듀오/그룹 맞춤형 프로세스</span>
-                    </button>
-                    <button onclick="showSubInfo('ticket-info')" class="btn-transparent">
-                        <span class="sub-btn-icon">🎫</span>
-                        <span class="sub-btn-title">메뉴2: 티켓 종류</span>
-                        <span class="sub-btn-desc">3개월 PDF 열람권 포함 티켓 안내</span>
-                    </button>
-                    <button onclick="showSubInfo('target')" class="btn-transparent">
-                        <span class="sub-btn-icon">✨</span>
-                        <span class="sub-btn-title">메뉴3: 추천 대상</span>
-                        <span class="sub-btn-desc">이런 분들이 들으면 효과 만점!</span>
-                    </button>
-                </div>
+          <div class="card day-detail-panel">
+            <div id="day-detail-header" style="margin-bottom: 1.5rem;">
+              <h3 id="selected-day-title" style="color: #4a423e; font-size:1.25rem;">월요일 상세 시간표</h3>
+              <p style="color:#8a817c; font-size:1rem; margin-top:5px;">원하는 수업 시간을 선택하세요 (최대 2개 반)</p>
             </div>
-
-            <div id="info-sub-method" class="info-sub-content card info-sub-panel hidden">
-                <div class="sub-header">
-                    <h3 class="sub-header-title">🎯 우리만의 특별한 일본어 수업 방법</h3>
-                    <button onclick="goBackToInfoMain()" class="btn-transparent sub-back-btn">← 돌아가기</button>
-                </div>
-                <div class="sub-text-wrapper">
-                    <p class="sub-highlight-text">말하기 중심의 3단계 스텝</p>
-                    <ul class="sub-list">
-                        <li><strong>1단계:</strong> 자체 제작 PDF 교재로 핵심 표현을 가볍게 예습합니다.</li>
-                        <li><strong>2단계:</strong> 온라인 실시간 수업(1:1, 1:2, 그룹)을 통해 무한 복습 대화를 진행합니다.</li>
-                        <li><strong>3단계:</strong> 수업 종료 후 제공되는 피드백 노트로 교정받습니다.</li>
-                    </ul>
-                </div>
+            <div class="group-time-list" id="group-time-slots">
+              <div class="group-time-row" onclick="toggleGroupSlot(this, '월요일 17:30반')">
+                <div class="time-text">🎓 A반: 17:30 - 19:25</div>
+                <span style="font-size:0.875rem; opacity:0.7;">2명 신청중</span>
+              </div>
+              <div class="group-time-row" onclick="toggleGroupSlot(this, '월요일 19:30반')">
+                <div class="time-text">🎓 B반: 19:30 - 21:25</div>
+                <span style="font-size:0.875rem; opacity:0.7;">0명 신청중</span>
+              </div>
             </div>
+          </div>
 
-            <div id="info-sub-ticket-info" class="info-sub-content card info-sub-panel hidden">
-                <div class="sub-header">
-                    <h3 class="sub-header-title">🎫 효율적인 수강 티켓 시스템</h3>
-                    <button onclick="goBackToInfoMain()" class="btn-transparent sub-back-btn">← 돌아가기</button>
-                </div>
-                <div class="sub-text-wrapper">
-                    <p class="sub-highlight-text">모든 티켓에는 'PDF 3개월 열람권'이 기본 장착!</p>
-                    <div class="grid-2">
-                        <div class="card ticket-type-card">
-                            <h4 class="ticket-type-title">단독 수업 이용권</h4>
-                            <p class="ticket-type-desc">원하는 주제를 선별하여 자유롭게 예약하고 참여하는 쿠폰형 티켓</p>
-                        </div>
-                        <div class="card ticket-type-card">
-                            <h4 class="ticket-type-title">정기 패키지권</h4>
-                            <p class="ticket-type-desc">체계적인 단계별 입트이기 트레이닝을 위한 할인 적용 패키지</p>
-                        </div>
-                    </div>
-                </div>
+          <div class="booking-summary-bar">
+            <div class="summary-text-wrap">
+              <span class="summary-label">선택된 수업:</span>
+              <span class="summary-value" id="selected-groups-text">없음</span>
+              <span class="auto-reg-info" id="auto-reg-info" style="display:none;">(4주 스케줄 자동 등록)</span>
             </div>
+            <button class="btn-confirm" id="group-submit-btn" disabled onclick="confirmGroupBooking()" style="background:var(--white); color:var(--point-brown);">패키지 일괄 등록</button>
+          </div>
+        </div>
 
-            <div id="info-sub-target" class="info-sub-content card info-sub-panel hidden">
-                <div class="sub-header">
-                    <h3 class="sub-header-title">✨ 이런 분들에게 강력 추천합니다</h3>
-                    <button onclick="goBackToInfoMain()" class="btn-transparent sub-back-btn">← 돌아가기</button>
-                </div>
-                <div class="sub-target-list">
-                    <div class="sub-target-item"><span>✔️</span><p>문법은 대충 아는데 막상 일본인 앞에 서면 머리가 하얘지시는 분</p></div>
-                    <div class="sub-target-item"><span>✔️</span><p>딱딱한 교과서 표현 말고, 요즘 일본 현지인들이 쓰는 진짜 회화를 배우고 싶으신 분</p></div>
-                    <div class="sub-target-item"><span>✔️</span><p>학원 다닐 시간은 없고, 내가 원하는 시간에 스마트폰이나 PC로 편하게 매칭 수업을 듣고 싶으신 분</p></div>
-                </div>
+      </div>
+    </section>
+
+    <!-- 티켓/마이페이지 동일하게 기입 -->
+    <section id="sec-ticket" class="spa-section hidden">
+      <div id="ticket-main" class="text-center ticket-main-container">
+        <div>
+          <h2 class="ticket-main-title">수강 티켓 구매 안내</h2>
+          <p class="ticket-main-desc">모든 티켓에는 전용 학습 PDF 3개월 열람권이 포함되어 있습니다.</p>
+        </div>
+
+        <div class="grid-2x2 ticket-grid-wrap">
+          <button onclick="showTicketSub('personal')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">🙋‍♂️</span><span class="ticket-cat-title">개인(1:1)</span></button>
+          <button onclick="showTicketSub('duo')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">👥</span><span class="ticket-cat-title">듀오(1:2)</span></button>
+          <button onclick="showTicketSub('group')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">🏫</span><span class="ticket-cat-title">그룹(1:N)</span></button>
+          <button onclick="showTicketSub('package')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">🎁</span><span class="ticket-cat-title">할인 패키지</span></button>
+        </div>
+      </div>
+
+      <div id="ticket-sub-container" class="card ticket-sub-panel hidden">
+        <div class="sub-header">
+          <h3 id="ticket-sub-title" class="sub-header-title">티켓 라벨</h3>
+          <button onclick="goBackToTicketMain()" class="btn-transparent sub-back-btn">← 목록으로</button>
+        </div>
+
+        <div class="ticket-slider-wrapper">
+          <button onclick="moveSlider(-1)" class="btn-circle">&lt;</button>
+          <div class="ticket-card-box">
+            <div class="ticket-card text-center">
+              <div class="badge-wrap"><span class="badge badge-light">Light</span></div>
+              <h4 id="card-title-0" class="ticket-detail-title">1회 체험권</h4>
+              <p class="ticket-detail-desc">부담 없이 분위기를 파악하고<br>나에게 맞는지 경험해보는 맛보기 티켓</p>
+              <p id="card-price-0" class="ticket-detail-price">35,000원</p>
+              <button type="button" class="btn-transparent w-full ticket-buy-btn">세모로 구매하기</button>
             </div>
-        </section>
-
-        <!-- ================= 수정된 그룹 스케줄표 (주차별 탭 기능 탑재) ================= -->
-        <section id="sec-schedule" class="spa-section hidden">
-            <h2 class="section-title">그룹 스케줄표 (5주 마스터반)</h2>
-
-            <div class="card qa-content" style="margin-bottom: 1rem;">
-                <p class="qa-q">문자 마스터 및 기초 트레이닝</p>
-                <p class="qa-a">원하시는 '주차' 버튼을 클릭하면 월/화/금/토의 상세 스케줄을 확인할 수 있습니다.</p>
+            <div class="ticket-card text-center hidden">
+              <div class="badge-wrap"><span class="badge badge-light">Best</span></div>
+              <h4 id="card-title-1" class="ticket-detail-title">5회 수강권</h4>
+              <p class="ticket-detail-desc">단기 목표를 세우고 확실하게<br>기초 회화의 틀을 잡는 정석 코스</p>
+              <p id="card-price-1" class="ticket-detail-price">160,000원</p>
+              <button type="button" class="btn-transparent w-full ticket-buy-btn">세모로 구매하기</button>
             </div>
-
-            <!-- 주차 선택 버튼 영역 -->
-            <div class="week-tab-list">
-                <button class="type-btn active" id="btn-week-1" onclick="selectScheduleWeek(1)">1주차</button>
-                <button class="type-btn" id="btn-week-2" onclick="selectScheduleWeek(2)">2주차</button>
-                <button class="type-btn" id="btn-week-3" onclick="selectScheduleWeek(3)">3주차</button>
-                <button class="type-btn" id="btn-week-4" onclick="selectScheduleWeek(4)">4주차</button>
-                <button class="type-btn" id="btn-week-5" onclick="selectScheduleWeek(5)">5주차</button>
+            <div class="ticket-card text-center hidden">
+              <div class="badge-wrap"><span class="badge badge-light">Premium</span></div>
+              <h4 id="card-title-2" class="ticket-detail-title">10회 수강권</h4>
+              <p class="ticket-detail-desc">비즈니스, 프리토킹까지<br>원어민처럼 입을 트이게 하는 마스터 코스</p>
+              <p id="card-price-2" class="ticket-detail-price">300,000원</p>
+              <button type="button" class="btn-transparent w-full ticket-buy-btn">세모로 구매하기</button>
             </div>
+          </div>
+          <button onclick="moveSlider(1)" class="btn-circle">&gt;</button>
+        </div>
+        <div class="text-center slider-indicator" id="slider-indicator">1 / 3</div>
+      </div>
+    </section>
 
-            <div class="table-responsive">
-                <!-- 1주차 표 -->
-                <table id="table-week-1">
-                    <thead>
-                        <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="td-bold-time">10:00 - 11:00</td>
-                            <td class="bg-highlight">[히라] あ・か</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">19:00 - 20:00</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] あ・か</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">20:00 - 21:00</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] さ・た</td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <section id="sec-mypage" class="spa-section hidden">
+      <h2 class="section-title">마이페이지</h2>
 
-                <!-- 2주차 표 -->
-                <table id="table-week-2" class="hidden">
-                    <thead>
-                        <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="td-bold-time">10:00 - 11:00</td>
-                            <td class="bg-highlight">[히라] さ・た</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] 요음</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">19:00 - 20:00</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] さ・た</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">20:00 - 21:00</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] な・은</td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
+      <div class="mypage-grid">
+        <div class="card money-balance">
+          <div>
+            <p class="balance-label">SEMO MONEY</p>
+            <p class="balance-amount"><span id="semo-balance">0</span> 세모</p>
+            <p style="font-size: 0.75rem; opacity: 0.75; margin-top: 0.35rem;">티켓 구매와 수업 결제에 사용할 수 있는 전자머니입니다.</p>
+          </div>
+          <button onclick="openChargeModal()" class="btn-transparent w-full" style="padding: 0.75rem;">세모 충전하기</button>
+        </div>
 
-                <!-- 3주차 표 -->
-                <table id="table-week-3" class="hidden">
-                    <thead>
-                        <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="td-bold-time">10:00 - 11:00</td>
-                            <td class="bg-highlight">[히라] な・は</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">19:00 - 20:00</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] な・は</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">20:00 - 21:00</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] 활용</td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="card" style="font-size: 0.875rem; display: flex; flex-direction: column; justify-content: center;">
+          <p style="font-weight: 600; font-size: 1.125rem;">환영합니다, <span style="color: #92400e; font-weight: bold;"><span id="mypage-name">사용자</span>(<span id="mypage-role">Role</span>)</span>님!</p>
+          <p style="font-size: 0.75rem; opacity: 0.75; margin-top: 0.5rem; line-height: 1.6;">구매하신 수업 티켓 정보 및 3개월 교재 열람 상태를 점검할 수 있습니다.</p>
+        </div>
+      </div>
 
-                <!-- 4주차 표 -->
-                <table id="table-week-4" class="hidden">
-                    <thead>
-                        <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="td-bold-time">10:00 - 11:00</td>
-                            <td class="bg-highlight">[히라] ま・や</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[가타] 심화</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">19:00 - 20:00</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[히라] ま・や</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">20:00 - 21:00</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[가타] 기초</td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
+      <div class="mini-stat-list">
+        <div class="mini-stat">
+          <span style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">보유 티켓</span>
+          <strong style="font-size: 1.25rem;"><span id="mypage-ticket-count">0</span>장</strong>
+        </div>
+        <div class="mini-stat">
+          <span style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">교재 열람</span>
+          <strong style="font-size: 1.25rem;"><span id="mypage-pdf-days">0</span>일 남음</strong>
+        </div>
+        <div class="mini-stat">
+          <span style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">다음 수업</span>
+          <strong style="font-size: 1.25rem;" id="mypage-next-class">없음</strong>
+        </div>
+      </div>
 
-                <!-- 5주차 표 -->
-                <table id="table-week-5" class="hidden">
-                    <thead>
-                        <tr><th>시간</th><th>월요일</th><th>화요일</th><th>금요일</th><th>토요일</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="td-bold-time">10:00 - 11:00</td>
-                            <td class="bg-highlight">[가타] 모음</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">19:00 - 20:00</td>
-                            <td>-</td>
-                            <td class="bg-highlight">[가타] 총정리</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td class="td-bold-time">20:00 - 21:00</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td class="bg-highlight">회화 응용</td>
-                            <td>-</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+      <div class="card">
+        <div class="sub-header" style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <h3 style="font-size: 1.125rem;">최근 세모 충전 신청</h3>
+          <span style="font-size: 0.75rem; opacity: 0.65;">무통장입금 확인 후 반영</span>
+        </div>
+        <div class="table-responsive" style="margin-top: 1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>신청일</th>
+                <th>금액</th>
+                <th>입금자명</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody id="charge-history-body">
+              <tr>
+                <td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
 
-        <section id="sec-qa" class="spa-section hidden">
-            <h2 class="section-title">Q&A</h2>
-            <div class="card qa-content">
-                <p class="qa-q">Q. 티켓 구매 시 교재 3개월 열람 조건은 어떻게 적용되나요?</p>
-                <p class="qa-a">A. 구매일 기점으로 3개월(90일)간 전용 자료실에서 실시간 열람이 가능합니다.</p>
-            </div>
-        </section>
+  <div class="debug-switch">
+    <p class="debug-switch-title">💡 확인용 스위치</p>
+    <button onclick="setRole('guest')" class="btn-debug-guest">비로그인</button>
+    <button onclick="setRole('student')" class="btn-debug-student">학생 로그인</button>
+  </div>
 
-        <section id="sec-archive" class="spa-section hidden">
-            <h2 class="section-title">자료실</h2>
-            <div class="card text-center archive-content">
-                🔒 티켓을 구매한 회원 전용 PDF 열람 공간입니다.
-            </div>
-        </section>
-
-        <!-- 예약 섹션 생략 없이 기입 -->
-        <section id="sec-reserve" class="spa-section hidden">
-            <div class="reserve-layout-container">
-
-                <div class="main-tabs">
-                    <div class="main-tab active" id="tab-flexible" onclick="switchMainTab('flexible')">예약 (자유)</div>
-                    <div class="main-tab" id="tab-group" onclick="switchMainTab('group')">그룹 (정규)</div>
-                </div>
-
-                <div id="section-flexible" class="flexible-booking-container">
-                    <div class="reserve-info-box">
-                        <b>개인/듀오 자유 예약 안내</b>
-                        <p>하나의 캘린더에서 수업 타입을 선택하고 원하는 날짜, 시간을 자유롭게 고르세요.</p>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="margin-bottom:20px; color: #4a423e; font-size:1.25rem;">1. 날짜 및 형태 선택</h3>
-                        <div class="lesson-type-selector">
-                            <button class="type-btn active" onclick="setLessonType('private', this)">개인 (1:1)</button>
-                            <button class="type-btn" onclick="setLessonType('duo', this)">듀오 (1:2)</button>
-                        </div>
-                        <div class="calendar-grid">
-                            <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
-                            <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
-                            <div class="cal-day" onclick="selectFlexDate(this, 1)">1</div><div class="cal-day" onclick="selectFlexDate(this, 2)">2</div><div class="cal-day" onclick="selectFlexDate(this, 3)">3</div><div class="cal-day" onclick="selectFlexDate(this, 4)">4</div>
-                            <div class="cal-day active" onclick="selectFlexDate(this, 5)">5</div><div class="cal-day" onclick="selectFlexDate(this, 6)">6</div><div class="cal-day" onclick="selectFlexDate(this, 7)">7</div><div class="cal-day" onclick="selectFlexDate(this, 8)">8</div>
-                            <div class="cal-day" onclick="selectFlexDate(this, 9)">9</div><div class="cal-day" onclick="selectFlexDate(this, 10)">10</div><div class="cal-day" onclick="selectFlexDate(this, 11)">11</div><div class="cal-day" onclick="selectFlexDate(this, 12)">12</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="margin-bottom:20px; color: #4a423e; font-size:1.25rem;">2. 예약 가능 시간</h3>
-                        <div class="time-slot-list">
-                            <div class="time-slot-row" onclick="selectFlexTime(this)">
-                                <div class="time-text">🕒 17:30 - 17:55</div>
-                                <span class="status-badge">예약 가능</span>
-                            </div>
-                            <div class="time-slot-row" onclick="selectFlexTime(this)">
-                                <div class="time-text">🕒 18:00 - 18:25</div>
-                                <span class="status-badge">예약 가능</span>
-                            </div>
-                            <div class="time-slot-row" onclick="selectFlexTime(this)">
-                                <div class="time-text">🕒 19:00 - 19:25</div>
-                                <span class="status-badge">예약 가능</span>
-                            </div>
-                            <div class="time-slot-row" onclick="selectFlexTime(this)">
-                                <div class="time-text">🕒 19:30 - 19:55</div>
-                                <span class="status-badge">예약 가능</span>
-                            </div>
-                        </div>
-
-                        <div style="text-align: right; margin-top: 1.5rem;">
-                            <button class="btn-confirm" id="flex-submit-btn" onclick="confirmFlexBooking()">예약 신청하기</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="section-group" class="group-booking-container hidden">
-                    <div class="reserve-info-box">
-                        <b>그룹: 문자 마스터반 안내</b>
-                        <p>히라가나/가타카나를 완벽하게 마스터하는 정규 과정입니다.</p>
-                        <ul>
-                            <li>그룹 티켓 <b>4장</b>: 원하는 요일 1개 선택 (4주 자동 등록)</li>
-                            <li>그룹 티켓 <b>8장</b>: 원하는 요일 2개 선택 (주 2회, 4주 자동 등록)</li>
-                        </ul>
-                    </div>
-
-                    <div class="day-slide-list" id="group-day-list">
-                        <button class="day-btn active" onclick="selectGroupDay('월', this)">월요일</button>
-                        <button class="day-btn" onclick="selectGroupDay('화', this)">화요일</button>
-                        <button class="day-btn" onclick="selectGroupDay('수', this)">수요일</button>
-                        <button class="day-btn" onclick="selectGroupDay('목', this)">목요일</button>
-                        <button class="day-btn" onclick="selectGroupDay('금', this)">금요일</button>
-                    </div>
-
-                    <div class="card day-detail-panel">
-                        <div id="day-detail-header" style="margin-bottom: 1.5rem;">
-                            <h3 id="selected-day-title" style="color: #4a423e; font-size:1.25rem;">월요일 상세 시간표</h3>
-                            <p style="color:#8a817c; font-size:1rem; margin-top:5px;">원하는 수업 시간을 선택하세요 (최대 2개 반)</p>
-                        </div>
-                        <div class="group-time-list" id="group-time-slots">
-                            <div class="group-time-row" onclick="toggleGroupSlot(this, '월요일 17:30반')">
-                                <div class="time-text">🎓 A반: 17:30 - 19:25</div>
-                                <span style="font-size:0.875rem; opacity:0.7;">2명 신청중</span>
-                            </div>
-                            <div class="group-time-row" onclick="toggleGroupSlot(this, '월요일 19:30반')">
-                                <div class="time-text">🎓 B반: 19:30 - 21:25</div>
-                                <span style="font-size:0.875rem; opacity:0.7;">0명 신청중</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="booking-summary-bar">
-                        <div class="summary-text-wrap">
-                            <span class="summary-label">선택된 수업:</span>
-                            <span class="summary-value" id="selected-groups-text">없음</span>
-                            <span class="auto-reg-info" id="auto-reg-info" style="display:none;">(4주 스케줄 자동 등록)</span>
-                        </div>
-                        <button class="btn-confirm" id="group-submit-btn" disabled onclick="confirmGroupBooking()" style="background:var(--white); color:var(--point-brown);">패키지 일괄 등록</button>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- 티켓/마이페이지 동일하게 기입 -->
-        <section id="sec-ticket" class="spa-section hidden">
-            <div id="ticket-main" class="text-center ticket-main-container">
-                <div>
-                    <h2 class="ticket-main-title">수강 티켓 구매 안내</h2>
-                    <p class="ticket-main-desc">모든 티켓에는 전용 학습 PDF 3개월 열람권이 포함되어 있습니다.</p>
-                </div>
-
-                <div class="grid-2x2 ticket-grid-wrap">
-                    <button onclick="showTicketSub('personal')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">🙋‍♂️</span><span class="ticket-cat-title">개인(1:1)</span></button>
-                    <button onclick="showTicketSub('duo')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">👥</span><span class="ticket-cat-title">듀오(1:2)</span></button>
-                    <button onclick="showTicketSub('group')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">🏫</span><span class="ticket-cat-title">그룹(1:N)</span></button>
-                    <button onclick="showTicketSub('package')" class="btn-transparent ticket-cat-btn"><span class="ticket-cat-icon">🎁</span><span class="ticket-cat-title">할인 패키지</span></button>
-                </div>
-            </div>
-
-            <div id="ticket-sub-container" class="card ticket-sub-panel hidden">
-                <div class="sub-header">
-                    <h3 id="ticket-sub-title" class="sub-header-title">티켓 라벨</h3>
-                    <button onclick="goBackToTicketMain()" class="btn-transparent sub-back-btn">← 목록으로</button>
-                </div>
-
-                <div class="ticket-slider-wrapper">
-                    <button onclick="moveSlider(-1)" class="btn-circle">&lt;</button>
-                    <div class="ticket-card-box">
-                        <div class="ticket-card text-center">
-                            <div class="badge-wrap"><span class="badge badge-light">Light</span></div>
-                            <h4 id="card-title-0" class="ticket-detail-title">1회 체험권</h4>
-                            <p class="ticket-detail-desc">부담 없이 분위기를 파악하고<br>나에게 맞는지 경험해보는 맛보기 티켓</p>
-                            <p id="card-price-0" class="ticket-detail-price">35,000원</p>
-                            <button type="button" class="btn-transparent w-full ticket-buy-btn">세모로 구매하기</button>
-                        </div>
-                        <div class="ticket-card text-center hidden">
-                            <div class="badge-wrap"><span class="badge badge-light">Best</span></div>
-                            <h4 id="card-title-1" class="ticket-detail-title">5회 수강권</h4>
-                            <p class="ticket-detail-desc">단기 목표를 세우고 확실하게<br>기초 회화의 틀을 잡는 정석 코스</p>
-                            <p id="card-price-1" class="ticket-detail-price">160,000원</p>
-                            <button type="button" class="btn-transparent w-full ticket-buy-btn">세모로 구매하기</button>
-                        </div>
-                        <div class="ticket-card text-center hidden">
-                            <div class="badge-wrap"><span class="badge badge-light">Premium</span></div>
-                            <h4 id="card-title-2" class="ticket-detail-title">10회 수강권</h4>
-                            <p class="ticket-detail-desc">비즈니스, 프리토킹까지<br>원어민처럼 입을 트이게 하는 마스터 코스</p>
-                            <p id="card-price-2" class="ticket-detail-price">300,000원</p>
-                            <button type="button" class="btn-transparent w-full ticket-buy-btn">세모로 구매하기</button>
-                        </div>
-                    </div>
-                    <button onclick="moveSlider(1)" class="btn-circle">&gt;</button>
-                </div>
-                <div class="text-center slider-indicator" id="slider-indicator">1 / 3</div>
-            </div>
-        </section>
-
-        <section id="sec-mypage" class="spa-section hidden">
-            <h2 class="section-title">마이페이지</h2>
-
-            <div class="mypage-grid">
-                <div class="card money-balance">
-                    <div>
-                        <p class="balance-label">SEMO MONEY</p>
-                        <p class="balance-amount"><span id="semo-balance">0</span> 세모</p>
-                        <p style="font-size: 0.75rem; opacity: 0.75; margin-top: 0.35rem;">티켓 구매와 수업 결제에 사용할 수 있는 전자머니입니다.</p>
-                    </div>
-                    <button onclick="openChargeModal()" class="btn-transparent w-full" style="padding: 0.75rem;">세모 충전하기</button>
-                </div>
-
-                <div class="card" style="font-size: 0.875rem; display: flex; flex-direction: column; justify-content: center;">
-                    <p style="font-weight: 600; font-size: 1.125rem;">환영합니다, <span style="color: #92400e; font-weight: bold;"><span id="mypage-name">사용자</span>(<span id="mypage-role">Role</span>)</span>님!</p>
-                    <p style="font-size: 0.75rem; opacity: 0.75; margin-top: 0.5rem; line-height: 1.6;">구매하신 수업 티켓 정보 및 3개월 교재 열람 상태를 점검할 수 있습니다.</p>
-                </div>
-            </div>
-
-            <div class="mini-stat-list">
-                <div class="mini-stat">
-                    <span style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">보유 티켓</span>
-                    <strong style="font-size: 1.25rem;"><span id="mypage-ticket-count">0</span>장</strong>
-                </div>
-                <div class="mini-stat">
-                    <span style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">교재 열람</span>
-                    <strong style="font-size: 1.25rem;"><span id="mypage-pdf-days">0</span>일 남음</strong>
-                </div>
-                <div class="mini-stat">
-                    <span style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">다음 수업</span>
-                    <strong style="font-size: 1.25rem;" id="mypage-next-class">없음</strong>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="sub-header" style="display:flex; justify-content:space-between; align-items:flex-end;">
-                    <h3 style="font-size: 1.125rem;">최근 세모 충전 신청</h3>
-                    <span style="font-size: 0.75rem; opacity: 0.65;">무통장입금 확인 후 반영</span>
-                </div>
-                <div class="table-responsive" style="margin-top: 1rem;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>신청일</th>
-                                <th>금액</th>
-                                <th>입금자명</th>
-                                <th>상태</th>
-                            </tr>
-                        </thead>
-                        <tbody id="charge-history-body">
-                            <tr>
-                                <td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <div class="debug-switch">
-        <p class="debug-switch-title">💡 확인용 스위치</p>
-        <button onclick="setRole('guest')" class="btn-debug-guest">비로그인</button>
-        <button onclick="setRole('student')" class="btn-debug-student">학생 로그인</button>
+  <div id="auth-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button onclick="closeModal()" class="modal-close">&times;</button>
+      <div id="form-login" class="modal-form-body">
+        <h3 class="modal-title">LOGIN</h3>
+        <div class="form-group">
+          <label class="modal-label">아이디</label><input type="text" id="login-id" placeholder="아이디 입력">
+        </div>
+        <div class="form-group">
+          <label class="modal-label">비밀번호</label><input type="password" id="login-password" placeholder="••••••••">
+        </div>
+        <button onclick="login()" class="btn-transparent w-full modal-submit-btn">로그인하기</button>
+        <p class="modal-footer-text">계정이 없으신가요? <a href="#" onclick="toggleAuthForm('signup')" class="modal-link-text">회원가입</a></p>
+      </div>
+      <div id="form-signup" class="modal-form-body hidden">
+        <h3 class="modal-title">SIGN UP</h3>
+        <div class="form-group">
+          <label class="modal-label">아이디 지정</label>
+          <input type="text" placeholder="아이디">
+        </div>
+        <div class="form-group">
+          <label class="modal-label">비밀번호</label>
+          <input type="password" placeholder="••••••••">
+        </div>
+        <button onclick="alert('회원가입 완료!'); toggleAuthForm('login');" class="btn-transparent w-full modal-submit-btn">가입 완료</button>
+        <p class="modal-footer-text">이미 계정이 있으신가요? <a href="#" onclick="toggleAuthForm('login')" class="modal-link-text">로그인</a></p>
+      </div>
     </div>
+  </div>
 
-    <div id="auth-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button onclick="closeModal()" class="modal-close">&times;</button>
-            <div id="form-login" class="modal-form-body">
-                <h3 class="modal-title">LOGIN</h3>
-                <div class="form-group">
-                    <label class="modal-label">아이디</label><input type="text" id="login-id" placeholder="아이디 입력">
-                </div>
-                <div class="form-group">
-                    <label class="modal-label">비밀번호</label><input type="password" id="login-password" placeholder="••••••••">
-                </div>
-                <button onclick="login()" class="btn-transparent w-full modal-submit-btn">로그인하기</button>
-                <p class="modal-footer-text">계정이 없으신가요? <a href="#" onclick="toggleAuthForm('signup')" class="modal-link-text">회원가입</a></p>
-            </div>
-            <div id="form-signup" class="modal-form-body hidden">
-                <h3 class="modal-title">SIGN UP</h3>
-                <div class="form-group">
-                    <label class="modal-label">아이디 지정</label>
-                    <input type="text" placeholder="아이디">
-                </div>
-                <div class="form-group">
-                    <label class="modal-label">비밀번호</label>
-                    <input type="password" placeholder="••••••••">
-                </div>
-                <button onclick="alert('회원가입 완료!'); toggleAuthForm('login');" class="btn-transparent w-full modal-submit-btn">가입 완료</button>
-                <p class="modal-footer-text">이미 계정이 있으신가요? <a href="#" onclick="toggleAuthForm('login')" class="modal-link-text">로그인</a></p>
-            </div>
+  <!-- 세모 머니 충전 모달 -->
+  <div id="charge-modal" class="modal-overlay hidden">
+    <div class="modal-content" style="position: relative;">
+      <button onclick="closeChargeModal()" class="modal-close">&times;</button>
+      <h3 style="font-size: 1.125rem; font-weight: bold; text-align: center; margin-bottom: 0.75rem; letter-spacing: 0.05em;">세모 충전 신청</h3>
+      <div class="modal-form-body">
+        <div class="bank-info-box">
+          <p><strong>무통장입금 계좌</strong></p>
+          <p>국민은행 123456-00-123456</p>
+          <p>예금주: 세상모든언어</p>
         </div>
-    </div>
 
-    <!-- 세모 머니 충전 모달 -->
-    <div id="charge-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="position: relative;">
-            <button onclick="closeChargeModal()" class="modal-close">&times;</button>
-            <h3 style="font-size: 1.125rem; font-weight: bold; text-align: center; margin-bottom: 0.75rem; letter-spacing: 0.05em;">세모 충전 신청</h3>
-            <div class="modal-form-body">
-                <div class="bank-info-box">
-                    <p><strong>무통장입금 계좌</strong></p>
-                    <p>국민은행 123456-00-123456</p>
-                    <p>예금주: 세상모든언어</p>
-                </div>
-
-                <div class="form-group">
-                    <label style="font-size: 0.75rem; font-weight: 600;">충전 금액 (세모)</label>
-                    <div class="charge-amount-grid">
-                        <button type="button" onclick="selectChargeAmount(30000, this)" class="charge-amount-btn">30,000</button>
-                        <button type="button" onclick="selectChargeAmount(50000, this)" class="charge-amount-btn">50,000</button>
-                        <button type="button" onclick="selectChargeAmount(100000, this)" class="charge-amount-btn">100,000</button>
-                        <button type="button" onclick="selectChargeAmount(200000, this)" class="charge-amount-btn">200,000</button>
-                    </div>
-                    <input type="number" id="charge-amount" min="10000" step="1000" placeholder="직접 입력: 10,000 세모 이상"
-                           style="width: 100%; border: 1px solid var(--border-color); padding: 0.6rem 0.75rem; border-radius: 0.375rem; background-color: var(--bg-beige); font-size: 0.85rem;"
-                           oninput="document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'))">
-                </div>
-
-                <div class="form-group" style="margin-top:0.75rem;">
-                    <label style="font-size: 0.75rem; font-weight: 600;">입금자명</label>
-                    <input type="text" id="depositor-name" placeholder="실제 입금자명을 입력해 주세요"
-                           style="width: 100%; border: 1px solid var(--border-color); padding: 0.6rem 0.75rem; border-radius: 0.375rem; background-color: var(--bg-beige); font-size: 0.85rem;">
-                </div>
-
-                <button onclick="submitChargeRequest()" class="btn-transparent w-full" style="margin-top:0.75rem;">충전 신청하기</button>
-                <p class="modal-footer-text text-center">입금 확인 후 관리자 승인으로 세모가 반영됩니다.</p>
-            </div>
+        <!--세모 : 10세모 = 100원기준-->
+        <div class="form-group">
+          <label style="font-size: 0.75rem; font-weight: 600;">충전 금액 (세모)</label>
+          <div class="charge-amount-grid">
+            <button type="button" onclick="selectChargeAmount(30000, this)" class="charge-amount-btn">3,000</button>
+            <button type="button" onclick="selectChargeAmount(50000, this)" class="charge-amount-btn">5,000</button>
+            <button type="button" onclick="selectChargeAmount(100000, this)" class="charge-amount-btn">10,000</button>
+            <button type="button" onclick="selectChargeAmount(200000, this)" class="charge-amount-btn">20,000</button>
+          </div>
+          <input type="number" id="charge-amount" min="10000" step="1000" placeholder="직접 입력: 1,000 세모 이상"
+                 style="width: 100%; border: 1px solid var(--border-color); padding: 0.6rem 0.75rem; border-radius: 0.375rem; background-color: var(--bg-beige); font-size: 0.85rem;"
+                 oninput="document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'))">
         </div>
-    </div>
 
-    <div id="ticket-purchase-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="position: relative;">
-            <button onclick="closeTicketPurchaseModal()" class="modal-close">&times;</button>
-            <h3 style="font-size: 1.125rem; font-weight: bold; text-align: center; margin-bottom: 0.75rem; letter-spacing: 0.05em;">수강권 구매</h3>
-            <div class="modal-form-body">
-                <div class="bank-info-box">
-                    <p><strong>세모 머니 결제</strong></p>
-                    <p id="ticket-purchase-desc">선택한 수강권을 세모 머니로 결제합니다.</p>
-                </div>
-
-                <div class="card" style="padding: 1rem;">
-                    <p style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">선택 상품</p>
-                    <p id="ticket-purchase-title" style="font-size: 1.05rem; font-weight: 700; color: var(--point-brown); margin-top: 0.25rem;">-</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">
-                        <span style="font-size: 0.875rem; opacity: 0.75;">결제 금액</span>
-                        <strong id="ticket-purchase-price" style="font-size: 1.05rem; color: var(--point-brown);">0 세모</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-                        <span style="font-size: 0.875rem; opacity: 0.75;">보유 세모</span>
-                        <strong id="ticket-purchase-balance" style="font-size: 1rem;">0 세모</strong>
-                    </div>
-                    <div style="margin-top: 0.75rem; font-size: 0.8rem; color: #b45309;" id="ticket-purchase-available">구매 가능 여부를 확인합니다.</div>
-                </div>
-
-                <button onclick="confirmTicketPurchase()" class="btn-transparent w-full modal-submit-btn">세모로 결제하기</button>
-                <p class="modal-footer-text text-center">구매 후 잔액은 즉시 차감되고, 마이페이지에서 바로 확인할 수 있습니다.</p>
-            </div>
+        <div class="form-group" style="margin-top:0.75rem;">
+          <label style="font-size: 0.75rem; font-weight: 600;">입금자명</label>
+          <input type="text" id="depositor-name" placeholder="실제 입금자명을 입력해 주세요"
+                 style="width: 100%; border: 1px solid var(--border-color); padding: 0.6rem 0.75rem; border-radius: 0.375rem; background-color: var(--bg-beige); font-size: 0.85rem;">
         </div>
+
+        <button onclick="submitChargeRequest()" class="btn-transparent w-full" style="margin-top:0.75rem;">충전 신청하기</button>
+        <p class="modal-footer-text text-center">입금 확인 후 관리자 승인으로 세모가 반영됩니다.</p>
+      </div>
     </div>
+  </div>
 
-    <script>
-        /* 자바스크립트는 기존 로직 100% 동일하게 유지 */
-        let currentMainSlide = 0;
-        const totalMainSlides = 2;
-        let mainSlideInterval;
+  <div id="ticket-purchase-modal" class="modal-overlay hidden">
+    <div class="modal-content" style="position: relative;">
+      <button onclick="closeTicketPurchaseModal()" class="modal-close">&times;</button>
+      <h3 style="font-size: 1.125rem; font-weight: bold; text-align: center; margin-bottom: 0.75rem; letter-spacing: 0.05em;">수강권 구매</h3>
+      <div class="modal-form-body">
+        <div class="bank-info-box">
+          <p><strong>세모 머니 결제</strong></p>
+          <p id="ticket-purchase-desc">선택한 수강권을 세모 머니로 결제합니다.</p>
+        </div>
 
-        function updateMainSlide() {
-            const slides = document.querySelectorAll('.main-slide');
-            slides.forEach((slide, index) => {
-                const dot = document.getElementById(`main-dot-${index}`);
-                if (index === currentMainSlide) {
-                    slide.classList.remove('hidden');
-                    setTimeout(() => {
-                        slide.classList.remove('slide-inactive');
-                        slide.classList.add('slide-active');
-                    }, 50);
-                    if (dot) dot.classList.add('active');
-                } else {
-                    slide.classList.remove('slide-active');
-                    slide.classList.add('slide-inactive');
-                    slide.classList.add('hidden');
-                    if (dot) dot.classList.remove('active');
-                }
+        <div class="card" style="padding: 1rem;">
+          <p style="font-size: 0.75rem; opacity: 0.7; font-weight: bold;">선택 상품</p>
+          <p id="ticket-purchase-title" style="font-size: 1.05rem; font-weight: 700; color: var(--point-brown); margin-top: 0.25rem;">-</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">
+            <span style="font-size: 0.875rem; opacity: 0.75;">결제 금액</span>
+            <strong id="ticket-purchase-price" style="font-size: 1.05rem; color: var(--point-brown);">0 세모</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+            <span style="font-size: 0.875rem; opacity: 0.75;">보유 세모</span>
+            <strong id="ticket-purchase-balance" style="font-size: 1rem;">0 세모</strong>
+          </div>
+          <div style="margin-top: 0.75rem; font-size: 0.8rem; color: #b45309;" id="ticket-purchase-available">구매 가능 여부를 확인합니다.</div>
+        </div>
+
+        <button onclick="confirmTicketPurchase()" class="btn-transparent w-full modal-submit-btn">세모로 결제하기</button>
+        <p class="modal-footer-text text-center">구매 후 잔액은 즉시 차감되고, 마이페이지에서 바로 확인할 수 있습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    let currentMainSlide = 0;
+    const totalMainSlides = 2;
+    let mainSlideInterval;
+
+    function updateMainSlide() {
+      const slides = document.querySelectorAll('.main-slide');
+      slides.forEach((slide, index) => {
+        const dot = document.getElementById(`main-dot-${index}`);
+        if (index === currentMainSlide) {
+          slide.classList.remove('hidden');
+          setTimeout(() => {
+            slide.classList.remove('slide-inactive');
+            slide.classList.add('slide-active');
+          }, 50);
+          if (dot) dot.classList.add('active');
+        } else {
+          slide.classList.remove('slide-active');
+          slide.classList.add('slide-inactive');
+          slide.classList.add('hidden');
+          if (dot) dot.classList.remove('active');
+        }
+      });
+    }
+
+    function nextMainSlide() {
+      currentMainSlide = (currentMainSlide + 1) % totalMainSlides;
+      updateMainSlide();
+    }
+    function setMainSlide(index) {
+      currentMainSlide = index;
+      updateMainSlide();
+      resetMainInterval();
+    }
+    function startMainInterval() { mainSlideInterval = setInterval(nextMainSlide, 4000); }
+    function resetMainInterval() { clearInterval(mainSlideInterval); startMainInterval(); }
+
+    window.addEventListener('DOMContentLoaded', () => { startMainInterval(); });
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        overlay.classList.add('hidden');
+      } else {
+        sidebar.classList.add('active');
+        overlay.classList.remove('hidden');
+      }
+    }
+    function closeSidebarMobile() {
+      if (window.innerWidth < 768) {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('sidebar-overlay').classList.add('hidden');
+      }
+    }
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.spa-section');
+      sections.forEach(sec => sec.classList.add('hidden'));
+      const target = document.getElementById(`sec-${sectionId}`);
+      if (target) target.classList.remove('hidden');
+
+      if (sectionId === 'mypage') {
+        loadMyPageData();
+      }
+    }
+
+    async function loadMyPageData() {
+      try {
+        const response = await fetch('api/mypage.php');
+        const result = await response.json();
+
+        if (result.success) {
+          const data = result.data;
+          document.getElementById('semo-balance').innerText = data.money.toLocaleString();
+          document.getElementById('mypage-name').innerText = data.name;
+          document.getElementById('mypage-role').innerText = data.role;
+          document.getElementById('mypage-ticket-count').innerText = data.tickets;
+          document.getElementById('mypage-pdf-days').innerText = data.pdf_days;
+          document.getElementById('mypage-next-class').innerText = data.next_class;
+
+          const tbody = document.getElementById('charge-history-body');
+          tbody.innerHTML = '';
+          if (data.histories && data.histories.length > 0) {
+            data.histories.forEach(h => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                                                  <td>${h.created_at.split(' ')[0]}</td>
+                                                  <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount).toLocaleString()}</td>
+                                                  <td>본인</td>
+                                                  <td><span style="font-size:0.75rem; background:#f3f4f6; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">대기중</span></td>
+                                              `;
+              tbody.appendChild(tr);
             });
+          } else {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td></tr>';
+          }
+        }
+      } catch (error) {
+        console.error("마이페이지 데이터 로드 실패", error);
+      }
+    }
+
+    // 충전 모달 로직
+    function openChargeModal() {
+      document.getElementById('charge-modal').classList.remove('hidden');
+    }
+
+    function closeChargeModal() {
+      document.getElementById('charge-modal').classList.add('hidden');
+      document.getElementById('charge-amount').value = '';
+      document.getElementById('depositor-name').value = '';
+      document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+    }
+
+    function selectChargeAmount(amount, btnElement) {
+      document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      document.getElementById('charge-amount').value = amount;
+    }
+
+    async function submitChargeRequest() {
+      const amount = document.getElementById('charge-amount').value;
+      const name = document.getElementById('depositor-name').value;
+
+      if (!amount || amount < 10000) {
+        alert("최소 10,00 세모 이상 충전하실 수 있습니다.");
+        return;
+      }
+      if (!name.trim()) {
+        alert("입금자명을 입력해 주세요.");
+        return;
+      }
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append('amount', amount);
+        formData.append('depositor_name', name);
+
+        const response = await fetch('api/charge_request.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+          body: formData.toString()
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          alert(result.message || '충전 신청 중 오류가 발생했습니다.');
+          return;
         }
 
-        function nextMainSlide() {
-            currentMainSlide = (currentMainSlide + 1) % totalMainSlides;
-            updateMainSlide();
+        alert(result.message);
+        closeChargeModal();
+        if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
+          loadMyPageData();
         }
-        function setMainSlide(index) {
-            currentMainSlide = index;
-            updateMainSlide();
-            resetMainInterval();
-        }
-        function startMainInterval() { mainSlideInterval = setInterval(nextMainSlide, 4000); }
-        function resetMainInterval() { clearInterval(mainSlideInterval); startMainInterval(); }
+      } catch (error) {
+        console.error(error);
+        alert('충전 신청 중 네트워크 오류가 발생했습니다.');
+      }
+    }
 
-        window.addEventListener('DOMContentLoaded', () => { startMainInterval(); });
+    function openModal(type) { closeSidebarMobile(); document.getElementById('auth-modal').classList.remove('hidden'); toggleAuthForm(type); }
+    function closeModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+    function toggleAuthForm(type) {
+      if (type === 'login') {
+        document.getElementById('form-login').classList.remove('hidden');
+        document.getElementById('form-signup').classList.add('hidden');
+      } else {
+        document.getElementById('form-login').classList.add('hidden');
+        document.getElementById('form-signup').classList.remove('hidden');
+      }
+    }
+    function setRole(role) {
+      const navGuest = document.getElementById('nav-guest');
+      const navStudent = document.getElementById('nav-student');
+      if (role === 'student') {
+        navGuest.classList.add('hidden');
+        navStudent.classList.remove('hidden');
+        showSection('reserve');
+        loadMyPageData();
+      } else {
+        navGuest.classList.remove('hidden');
+        navStudent.classList.add('hidden');
+        showSection('main');
+      }
+    }
+    async function login() {
+      const idInput = document.getElementById('login-id').value;
+      const passwordInput = document.getElementById('login-password').value;
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            if (sidebar.classList.contains('active')) {
-                sidebar.classList.remove('active');
-                overlay.classList.add('hidden');
-            } else {
-                sidebar.classList.add('active');
-                overlay.classList.remove('hidden');
-            }
-        }
-        function closeSidebarMobile() {
-            if (window.innerWidth < 768) {
-                document.getElementById('sidebar').classList.remove('active');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
-            }
-        }
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('.spa-section');
-            sections.forEach(sec => sec.classList.add('hidden'));
-            const target = document.getElementById(`sec-${sectionId}`);
-            if (target) target.classList.remove('hidden');
+      if (!idInput || !passwordInput) {
+        alert('아이디와 비밀번호를 입력해 주세요.');
+        return;
+      }
 
-            if (sectionId === 'mypage') {
-                loadMyPageData();
-            }
-        }
+      const formData = new URLSearchParams();
+      formData.append('id', idInput);
+      formData.append('password', passwordInput);
+      formData.append('type', 'STUDENT');
 
-        async function loadMyPageData() {
-            try {
-                const response = await fetch('api/mypage.php');
-                const result = await response.json();
+      try {
+        const response = await fetch('api/login.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+          body: formData.toString()
+        });
+        const result = await response.json();
 
-                if (result.success) {
-                    const data = result.data;
-                    document.getElementById('semo-balance').innerText = data.money.toLocaleString();
-                    document.getElementById('mypage-name').innerText = data.name;
-                    document.getElementById('mypage-role').innerText = data.role;
-                    document.getElementById('mypage-ticket-count').innerText = data.tickets;
-                    document.getElementById('mypage-pdf-days').innerText = data.pdf_days;
-                    document.getElementById('mypage-next-class').innerText = data.next_class;
-
-                    const tbody = document.getElementById('charge-history-body');
-                    tbody.innerHTML = '';
-                    if (data.histories && data.histories.length > 0) {
-                        data.histories.forEach(h => {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                        <td>${h.created_at.split(' ')[0]}</td>
-                                        <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount).toLocaleString()}</td>
-                                        <td>본인</td>
-                                        <td><span style="font-size:0.75rem; background:#f3f4f6; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">대기중</span></td>
-                                    `;
-                            tbody.appendChild(tr);
-                        });
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td></tr>';
-                    }
-                }
-            } catch (error) {
-                console.error("마이페이지 데이터 로드 실패", error);
-            }
+        if (!response.ok || !result.success) {
+          alert(result.message || '로그인에 실패했습니다.');
+          return;
         }
 
-        // 충전 모달 로직
-        function openChargeModal() {
-            document.getElementById('charge-modal').classList.remove('hidden');
+        closeModal();
+        setRole('student');
+        alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);
+      } catch (error) {
+        alert('로그인 중 오류가 발생했습니다.');
+      }
+    }
+    function logout() { setRole('guest'); alert('로그아웃 되었습니다.'); }
+
+    function showSubInfo(subId) {
+      document.getElementById('info-main').classList.add('hidden');
+      const subContents = document.querySelectorAll('.info-sub-content');
+      subContents.forEach(content => content.classList.add('hidden'));
+      document.getElementById(`info-sub-${subId}`).classList.remove('hidden');
+    }
+    function goBackToInfoMain() {
+      document.querySelectorAll('.info-sub-content').forEach(content => content.classList.add('hidden'));
+      document.getElementById('info-main').classList.remove('hidden');
+    }
+    //세모 : 1,000원 = 100세모
+    let currentCardIndex = 0; const totalCards = 3;
+    let selectedTicketPurchase = null;
+    const ticketData = {
+      personal: {
+        title: "🙋‍♂️ 개인(1:1) 수업 티켓",
+        products: [
+          { id: 101, key: 'personal_1', title: '1회 체험권', price: 4000, badge: 'Light', desc: '부담 없이 분위기를 파악하고<br>나에게 맞는지 경험해보는 맛보기 티켓' },
+          { id: 102, key: 'personal_4', title: '4회 수강권', price: 20000, badge: 'Best', desc: '장기 목표를 세우고 확실하게<br>기초 회화의 틀을 잡는 정석 코스 3개월이면,정말 입이트인다!' },
+          { id: 103, key: 'personal_8', title: '8회 수강권', price: 38000, badge: 'Premium', desc: '좀더빠르게 일상생활, 프리토킹까지<br>원어민처럼 입을 트이게 하는 마스터 코스' }
+        ]
+      },
+      duo: {
+        title: "👥 듀오(1:2) 수업 티켓",
+        products: [
+          { id: 201, key: 'duo_1', title: '1회 체험권', price: 2500, badge: 'Light', desc: '듀오 수업을 부담 없이 경험해보는 티켓' },
+          { id: 202, key: 'duo_4', title: '4회 수강권', price: 11500, badge: 'Best', desc: '3개월로 여행준비끝! 친구와 함께 꾸준히 배우는 실전형 코스!' },
+          { id: 203, key: 'duo_8', title: '8회 수강권', price: 21000, badge: 'Premium', desc: '지속적인 회화 루틴을 만드는 프리미엄 패키지' }
+        ]
+      },
+      group: {
+        title: "🏫 그룹(1:N) 수업 티켓",
+        products: [
+          //{ id: 301, key: 'group_1', title: '1회 체험권', price: 18000, badge: 'Light', desc: '그룹 수업 분위기를 먼저 경험해보는 티켓' },
+          { id: 302, key: 'group_0', title: '이벤트', price: 0, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님이나 서포터에게 개인수업1회 무료로받자! *소진시조기마감될수있습니다.' },
+          { id: 302, key: 'group_4', title: '4회 수강권', price: 9900, badge: 'Best', desc: '1개월반이면뚝딱. 일본어글자완전마스터반!히라가나?가타카나?다들어와.바로말할수있게해줄게.' },
+          { id: 303, key: 'group_8', title: '8회 수강권', price: 15800, badge: 'Premium', desc: '단기간에계획적이고빠르게.글자마스터반1개월형 할인형 패키지' }
+        ]
+      },
+      package: {
+        title: "🎁 특별 할인 패키지",
+        products: [
+          //{ id: 401, key: 'package_1', title: '1회 체험권', price: 60000, badge: 'Light', desc: '패키지 할인 혜택으로 가볍게 시작하는 티켓' },
+
+          { id: 402, key: 'package_4', title: '그룹4회+개인1회', price: 14900, badge: 'Best', desc: '그룹으로공부하고 1:1로실력키우자! 수강권을 묶은 효율적인 패키지' },
+          //{ id: 402, key: 'package_4', title: '4회 수강권', price: 270000, badge: 'Best', desc: '다양한 수강권을 묶은 효율적인 패키지' },
+          //{ id: 403, key: 'package_8', title: '8회 수강권', price: 490000, badge: 'Premium', desc: '가장 강력한 할인과 혜택을 누리는 패키지' }
+        ]
+      }
+    };
+
+    function isStudentLoggedIn() {
+      return document.getElementById('nav-student').classList.contains('hidden') === false;
+    }
+
+    function getCurrentSemoBalance() {
+      const balanceText = document.getElementById('semo-balance').innerText || '0';
+      return parseInt(balanceText.replace(/[^0-9]/g, ''), 10) || 0;
+    }
+
+    function showTicketSub(menuKey) {
+      const data = ticketData[menuKey];
+      if (!data) return;
+
+      document.getElementById('ticket-main').classList.add('hidden');
+      document.getElementById('ticket-sub-container').classList.remove('hidden');
+      document.getElementById('ticket-sub-title').innerText = data.title;
+
+      data.products.forEach((product, index) => {
+        const titleEl = document.getElementById(`card-title-${index}`);
+        const priceEl = document.getElementById(`card-price-${index}`);
+        const badgeEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.badge-light');
+        const descEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-detail-desc');
+        const buttonEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-buy-btn');
+
+        if (titleEl) titleEl.innerText = product.title;
+        if (priceEl) priceEl.innerText = `${product.price.toLocaleString()}원`;
+        if (badgeEl) badgeEl.innerText = product.badge;
+        if (descEl) descEl.innerHTML = product.desc;
+        if (buttonEl) buttonEl.onclick = () => openTicketPurchaseModal(menuKey, index);
+      });
+
+      currentCardIndex = 0;
+      updateCardVisibility();
+    }
+
+    function openTicketPurchaseModal(menuKey, productIndex) {
+      if (!isStudentLoggedIn()) {
+        alert('로그인이 필요한 기능입니다.');
+        openModal('login');
+        return;
+      }
+
+      const product = ticketData[menuKey]?.products?.[productIndex];
+      if (!product) return;
+
+      selectedTicketPurchase = { menuKey, productIndex, productId: product.id };
+
+      document.getElementById('ticket-purchase-title').innerText = product.title;
+      document.getElementById('ticket-purchase-desc').innerText = `${product.title}를 세모 머니로 결제합니다.`;
+      document.getElementById('ticket-purchase-price').innerText = `${product.price.toLocaleString()} 세모`;
+      document.getElementById('ticket-purchase-balance').innerText = `${getCurrentSemoBalance().toLocaleString()} 세모`;
+
+      const balance = getCurrentSemoBalance();
+      const availableText = balance >= product.price ? '구매 가능' : '보유 세모가 부족합니다.';
+      const availableColor = balance >= product.price ? '#b45309' : '#b91c1c';
+      const availableEl = document.getElementById('ticket-purchase-available');
+      availableEl.innerText = availableText;
+      availableEl.style.color = availableColor;
+
+      document.getElementById('ticket-purchase-modal').classList.remove('hidden');
+    }
+
+    function closeTicketPurchaseModal() {
+      document.getElementById('ticket-purchase-modal').classList.add('hidden');
+      selectedTicketPurchase = null;
+    }
+
+    async function confirmTicketPurchase() {
+      if (!selectedTicketPurchase) return;
+
+      const product = ticketData[selectedTicketPurchase.menuKey]?.products?.[selectedTicketPurchase.productIndex];
+      if (!product) return;
+
+      const balance = getCurrentSemoBalance();
+      if (balance < product.price) {
+        alert('보유 세모가 부족합니다. 충전 후 다시 시도해 주세요.');
+        return;
+      }
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append('product_id', selectedTicketPurchase.productId);
+
+        const response = await fetch('api/buy_ticket.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+          body: formData.toString()
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          alert(result.message || '수강권 구매 중 오류가 발생했습니다.');
+          return;
         }
 
-        function closeChargeModal() {
-            document.getElementById('charge-modal').classList.add('hidden');
-            document.getElementById('charge-amount').value = '';
-            document.getElementById('depositor-name').value = '';
-            document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+        alert(`${product.title} 구매가 완료되었습니다.`);
+        closeTicketPurchaseModal();
+        await loadMyPageData();
+      } catch (error) {
+        console.error(error);
+        alert('수강권 구매 중 네트워크 오류가 발생했습니다.');
+      }
+    }
+
+    function goBackToTicketMain() {
+      document.getElementById('ticket-sub-container').classList.add('hidden');
+      document.getElementById('ticket-main').classList.remove('hidden');
+    }
+    function moveSlider(direction) {
+      currentCardIndex += direction;
+      if (currentCardIndex < 0) currentCardIndex = totalCards - 1;
+      if (currentCardIndex >= totalCards) currentCardIndex = 0;
+      updateCardVisibility();
+    }
+    function updateCardVisibility() {
+      const cards = document.querySelectorAll('.ticket-card');
+      cards.forEach((card, index) => {
+        if (index === currentCardIndex) card.classList.remove('hidden');
+        else card.classList.add('hidden');
+      });
+      document.getElementById('slider-indicator').innerText = `${currentCardIndex + 1} / ${totalCards}`;
+    }
+
+    function switchMainTab(type) {
+      const tabFlexible = document.getElementById('tab-flexible');
+      const tabGroup = document.getElementById('tab-group');
+      const secFlexible = document.getElementById('section-flexible');
+      const secGroup = document.getElementById('section-group');
+
+      if (type === 'flexible') {
+        tabFlexible.classList.add('active');
+        tabGroup.classList.remove('active');
+        secFlexible.classList.remove('hidden');
+        secGroup.classList.add('hidden');
+      } else {
+        tabFlexible.classList.remove('active');
+        tabGroup.classList.add('active');
+        secFlexible.classList.add('hidden');
+        secGroup.classList.remove('hidden');
+      }
+    }
+
+    function setLessonType(type, target) {
+      document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+      target.classList.add('active');
+    }
+
+    function selectFlexDate(target, day) {
+      document.querySelectorAll('.cal-day').forEach(btn => btn.classList.remove('active'));
+      target.classList.add('active');
+    }
+
+    function selectFlexTime(target) {
+      document.querySelectorAll('.time-slot-row').forEach(row => row.classList.remove('active'));
+      target.classList.add('active');
+    }
+
+    function confirmFlexBooking() {
+      const activeDate = document.querySelector('.cal-day.active');
+      const activeTime = document.querySelector('.time-slot-row.active');
+
+      if (!activeDate) { alert('원하시는 날짜를 선택해주세요.'); return; }
+      if (!activeTime) { alert('원하시는 예약 시간을 선택해주세요.'); return; }
+
+      alert(`[자유 예약 신청 완료]\n날짜: 7월 ${activeDate.innerText}일\n추후 마이페이지에서 상세 내역을 확인할 수 있습니다.`);
+    }
+
+    let selectedGroupItems = [];
+    const GROUP_TICKET_LIMIT = 2;
+
+    function selectGroupDay(dayStr, target) {
+      document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+      target.classList.add('active');
+      document.getElementById('selected-day-title').innerText = `${dayStr}요일 상세 시간표`;
+
+      document.querySelectorAll('.group-time-row').forEach(row => row.classList.remove('active'));
+      syncGroupSummaryUI();
+    }
+
+    function toggleGroupSlot(target, slotName) {
+      const isAlreadyActive = target.classList.contains('active');
+
+      if (isAlreadyActive) {
+        target.classList.remove('active');
+        selectedGroupItems = selectedGroupItems.filter(item => item !== slotName);
+      } else {
+        if (selectedGroupItems.length >= GROUP_TICKET_LIMIT) {
+          alert(`보유하신 그룹 티켓 기준으로 최대 ${GROUP_TICKET_LIMIT}개까지만 선택할 수 있습니다.`);
+          return;
         }
+        target.classList.add('active');
+        selectedGroupItems.push(slotName);
+      }
+      syncGroupSummaryUI();
+    }
 
-        function selectChargeAmount(amount, btnElement) {
-            document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-            document.getElementById('charge-amount').value = amount;
+    function syncGroupSummaryUI() {
+      const confirmBtn = document.getElementById('group-submit-btn');
+      const textSpan = document.getElementById('selected-groups-text');
+      const autoInfo = document.getElementById('auto-reg-info');
+
+      if (selectedGroupItems.length === 0) {
+        textSpan.innerText = "없음";
+        autoInfo.style.display = "none";
+        confirmBtn.disabled = true;
+      } else {
+        textSpan.innerText = selectedGroupItems.join(", ");
+        autoInfo.style.display = "inline";
+        confirmBtn.disabled = false;
+      }
+    }
+
+    function confirmGroupBooking() {
+      if (selectedGroupItems.length === 0) return;
+      alert(`[정규 그룹 신청 완료]\n신청한 클래스: ${selectedGroupItems.join(', ')}\n해당 요일로 4주 스케줄이 자동 확정되었습니다.`);
+
+      selectedGroupItems = [];
+      document.querySelectorAll('.group-time-row').forEach(row => row.classList.remove('active'));
+      syncGroupSummaryUI();
+    }
+
+    // ================= 신규: 주차별 그룹 스케줄 전환 로직 =================
+    function selectScheduleWeek(week) {
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById('btn-week-' + i);
+        const tbl = document.getElementById('table-week-' + i);
+        if (i === week) {
+          if (btn) btn.classList.add('active');
+          if (tbl) tbl.classList.remove('hidden');
+        } else {
+          if (btn) btn.classList.remove('active');
+          if (tbl) tbl.classList.add('hidden');
         }
-
-        async function submitChargeRequest() {
-            const amount = document.getElementById('charge-amount').value;
-            const name = document.getElementById('depositor-name').value;
-
-            if (!amount || amount < 10000) {
-                alert("최소 10,000 세모 이상 충전하실 수 있습니다.");
-                return;
-            }
-            if (!name.trim()) {
-                alert("입금자명을 입력해 주세요.");
-                return;
-            }
-
-            try {
-                const formData = new URLSearchParams();
-                formData.append('amount', amount);
-                formData.append('depositor_name', name);
-
-                const response = await fetch('api/charge_request.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                    },
-                    body: formData.toString()
-                });
-
-                const result = await response.json();
-                if (!response.ok || !result.success) {
-                    alert(result.message || '충전 신청 중 오류가 발생했습니다.');
-                    return;
-                }
-
-                alert(result.message);
-                closeChargeModal();
-                if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
-                    loadMyPageData();
-                }
-            } catch (error) {
-                console.error(error);
-                alert('충전 신청 중 네트워크 오류가 발생했습니다.');
-            }
-        }
-
-        function openModal(type) { closeSidebarMobile(); document.getElementById('auth-modal').classList.remove('hidden'); toggleAuthForm(type); }
-        function closeModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-        function toggleAuthForm(type) {
-            if (type === 'login') {
-                document.getElementById('form-login').classList.remove('hidden');
-                document.getElementById('form-signup').classList.add('hidden');
-            } else {
-                document.getElementById('form-login').classList.add('hidden');
-                document.getElementById('form-signup').classList.remove('hidden');
-            }
-        }
-        function setRole(role) {
-            const navGuest = document.getElementById('nav-guest');
-            const navStudent = document.getElementById('nav-student');
-            if (role === 'student') {
-                navGuest.classList.add('hidden');
-                navStudent.classList.remove('hidden');
-                showSection('reserve');
-                loadMyPageData();
-            } else {
-                navGuest.classList.remove('hidden');
-                navStudent.classList.add('hidden');
-                showSection('main');
-            }
-        }
-        async function login() {
-            const idInput = document.getElementById('login-id').value;
-            const passwordInput = document.getElementById('login-password').value;
-
-            if (!idInput || !passwordInput) {
-                alert('아이디와 비밀번호를 입력해 주세요.');
-                return;
-            }
-
-            const formData = new URLSearchParams();
-            formData.append('id', idInput);
-            formData.append('password', passwordInput);
-
-            try {
-                const response = await fetch('api/login.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                    },
-                    body: formData.toString()
-                });
-                const result = await response.json();
-
-                if (!response.ok || !result.success) {
-                    alert(result.message || '로그인에 실패했습니다.');
-                    return;
-                }
-
-                closeModal();
-                setRole('student');
-                alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);
-            } catch (error) {
-                alert('로그인 중 오류가 발생했습니다.');
-            }
-        }
-        function logout() { setRole('guest'); alert('로그아웃 되었습니다.'); }
-
-        function showSubInfo(subId) {
-            document.getElementById('info-main').classList.add('hidden');
-            const subContents = document.querySelectorAll('.info-sub-content');
-            subContents.forEach(content => content.classList.add('hidden'));
-            document.getElementById(`info-sub-${subId}`).classList.remove('hidden');
-        }
-        function goBackToInfoMain() {
-            document.querySelectorAll('.info-sub-content').forEach(content => content.classList.add('hidden'));
-            document.getElementById('info-main').classList.remove('hidden');
-        }
-
-        let currentCardIndex = 0; const totalCards = 3;
-        let selectedTicketPurchase = null;
-        const ticketData = {
-            personal: {
-                title: "🙋‍♂️ 개인(1:1) 수업 티켓",
-                products: [
-                    { id: 101, key: 'personal_1', title: '1회 체험권', price: 40000, badge: 'Light', desc: '부담 없이 분위기를 파악하고<br>나에게 맞는지 경험해보는 맛보기 티켓' },
-                    { id: 102, key: 'personal_5', title: '5회 수강권', price: 200000, badge: 'Best', desc: '단기 목표를 세우고 확실하게<br>기초 회화의 틀을 잡는 정석 코스' },
-                    { id: 103, key: 'personal_10', title: '10회 수강권', price: 380000, badge: 'Premium', desc: '비즈니스, 프리토킹까지<br>원어민처럼 입을 트이게 하는 마스터 코스' }
-                ]
-            },
-            duo: {
-                title: "👥 듀오(1:2) 수업 티켓",
-                products: [
-                    { id: 201, key: 'duo_1', title: '1회 체험권', price: 25000, badge: 'Light', desc: '듀오 수업을 부담 없이 경험해보는 티켓' },
-                    { id: 202, key: 'duo_5', title: '5회 수강권', price: 115000, badge: 'Best', desc: '친구와 함께 꾸준히 배우는 실전형 코스' },
-                    { id: 203, key: 'duo_10', title: '10회 수강권', price: 210000, badge: 'Premium', desc: '지속적인 회화 루틴을 만드는 프리미엄 패키지' }
-                ]
-            },
-            group: {
-                title: "🏫 그룹(1:N) 수업 티켓",
-                products: [
-                    { id: 301, key: 'group_1', title: '1회 체험권', price: 18000, badge: 'Light', desc: '그룹 수업 분위기를 먼저 경험해보는 티켓' },
-                    { id: 302, key: 'group_5', title: '5회 수강권', price: 85000, badge: 'Best', desc: '다른 수강생과 함께 성장하는 실전형 패키지' },
-                    { id: 303, key: 'group_10', title: '10회 수강권', price: 150000, badge: 'Premium', desc: '장기간 그룹 수업을 이어가는 할인형 패키지' }
-                ]
-            },
-            package: {
-                title: "🎁 특별 할인 패키지",
-                products: [
-                    { id: 401, key: 'package_1', title: '1회 체험권', price: 60000, badge: 'Light', desc: '패키지 할인 혜택으로 가볍게 시작하는 티켓' },
-                    { id: 402, key: 'package_5', title: '5회 수강권', price: 270000, badge: 'Best', desc: '다양한 수강권을 묶은 효율적인 패키지' },
-                    { id: 403, key: 'package_10', title: '10회 수강권', price: 490000, badge: 'Premium', desc: '가장 강력한 할인과 혜택을 누리는 패키지' }
-                ]
-            }
-        };
-
-        function isStudentLoggedIn() {
-            return document.getElementById('nav-student').classList.contains('hidden') === false;
-        }
-
-        function getCurrentSemoBalance() {
-            const balanceText = document.getElementById('semo-balance').innerText || '0';
-            return parseInt(balanceText.replace(/[^0-9]/g, ''), 10) || 0;
-        }
-
-        function showTicketSub(menuKey) {
-            const data = ticketData[menuKey];
-            if (!data) return;
-
-            document.getElementById('ticket-main').classList.add('hidden');
-            document.getElementById('ticket-sub-container').classList.remove('hidden');
-            document.getElementById('ticket-sub-title').innerText = data.title;
-
-            data.products.forEach((product, index) => {
-                const titleEl = document.getElementById(`card-title-${index}`);
-                const priceEl = document.getElementById(`card-price-${index}`);
-                const badgeEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.badge-light');
-                const descEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-detail-desc');
-                const buttonEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-buy-btn');
-
-                if (titleEl) titleEl.innerText = product.title;
-                if (priceEl) priceEl.innerText = `${product.price.toLocaleString()}원`;
-                if (badgeEl) badgeEl.innerText = product.badge;
-                if (descEl) descEl.innerHTML = product.desc;
-                if (buttonEl) buttonEl.onclick = () => openTicketPurchaseModal(menuKey, index);
-            });
-
-            currentCardIndex = 0;
-            updateCardVisibility();
-        }
-
-        function openTicketPurchaseModal(menuKey, productIndex) {
-            if (!isStudentLoggedIn()) {
-                alert('로그인이 필요한 기능입니다.');
-                openModal('login');
-                return;
-            }
-
-            const product = ticketData[menuKey]?.products?.[productIndex];
-            if (!product) return;
-
-            selectedTicketPurchase = { menuKey, productIndex, productId: product.id };
-
-            document.getElementById('ticket-purchase-title').innerText = product.title;
-            document.getElementById('ticket-purchase-desc').innerText = `${product.title}를 세모 머니로 결제합니다.`;
-            document.getElementById('ticket-purchase-price').innerText = `${product.price.toLocaleString()} 세모`;
-            document.getElementById('ticket-purchase-balance').innerText = `${getCurrentSemoBalance().toLocaleString()} 세모`;
-
-            const balance = getCurrentSemoBalance();
-            const availableText = balance >= product.price ? '구매 가능' : '보유 세모가 부족합니다.';
-            const availableColor = balance >= product.price ? '#b45309' : '#b91c1c';
-            const availableEl = document.getElementById('ticket-purchase-available');
-            availableEl.innerText = availableText;
-            availableEl.style.color = availableColor;
-
-            document.getElementById('ticket-purchase-modal').classList.remove('hidden');
-        }
-
-        function closeTicketPurchaseModal() {
-            document.getElementById('ticket-purchase-modal').classList.add('hidden');
-            selectedTicketPurchase = null;
-        }
-
-        async function confirmTicketPurchase() {
-            if (!selectedTicketPurchase) return;
-
-            const product = ticketData[selectedTicketPurchase.menuKey]?.products?.[selectedTicketPurchase.productIndex];
-            if (!product) return;
-
-            const balance = getCurrentSemoBalance();
-            if (balance < product.price) {
-                alert('보유 세모가 부족합니다. 충전 후 다시 시도해 주세요.');
-                return;
-            }
-
-            try {
-                const formData = new URLSearchParams();
-                formData.append('product_id', selectedTicketPurchase.productId);
-
-                const response = await fetch('api/buy_ticket.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                    },
-                    body: formData.toString()
-                });
-
-                const result = await response.json();
-                if (!response.ok || !result.success) {
-                    alert(result.message || '수강권 구매 중 오류가 발생했습니다.');
-                    return;
-                }
-
-                alert(`${product.title} 구매가 완료되었습니다.`);
-                closeTicketPurchaseModal();
-                await loadMyPageData();
-            } catch (error) {
-                console.error(error);
-                alert('수강권 구매 중 네트워크 오류가 발생했습니다.');
-            }
-        }
-
-        function goBackToTicketMain() {
-            document.getElementById('ticket-sub-container').classList.add('hidden');
-            document.getElementById('ticket-main').classList.remove('hidden');
-        }
-        function moveSlider(direction) {
-            currentCardIndex += direction;
-            if (currentCardIndex < 0) currentCardIndex = totalCards - 1;
-            if (currentCardIndex >= totalCards) currentCardIndex = 0;
-            updateCardVisibility();
-        }
-        function updateCardVisibility() {
-            const cards = document.querySelectorAll('.ticket-card');
-            cards.forEach((card, index) => {
-                if (index === currentCardIndex) card.classList.remove('hidden');
-                else card.classList.add('hidden');
-            });
-            document.getElementById('slider-indicator').innerText = `${currentCardIndex + 1} / ${totalCards}`;
-        }
-
-        function switchMainTab(type) {
-            const tabFlexible = document.getElementById('tab-flexible');
-            const tabGroup = document.getElementById('tab-group');
-            const secFlexible = document.getElementById('section-flexible');
-            const secGroup = document.getElementById('section-group');
-
-            if (type === 'flexible') {
-                tabFlexible.classList.add('active');
-                tabGroup.classList.remove('active');
-                secFlexible.classList.remove('hidden');
-                secGroup.classList.add('hidden');
-            } else {
-                tabFlexible.classList.remove('active');
-                tabGroup.classList.add('active');
-                secFlexible.classList.add('hidden');
-                secGroup.classList.remove('hidden');
-            }
-        }
-
-        function setLessonType(type, target) {
-            document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
-            target.classList.add('active');
-        }
-
-        function selectFlexDate(target, day) {
-            document.querySelectorAll('.cal-day').forEach(btn => btn.classList.remove('active'));
-            target.classList.add('active');
-        }
-
-        function selectFlexTime(target) {
-            document.querySelectorAll('.time-slot-row').forEach(row => row.classList.remove('active'));
-            target.classList.add('active');
-        }
-
-        function confirmFlexBooking() {
-            const activeDate = document.querySelector('.cal-day.active');
-            const activeTime = document.querySelector('.time-slot-row.active');
-
-            if (!activeDate) { alert('원하시는 날짜를 선택해주세요.'); return; }
-            if (!activeTime) { alert('원하시는 예약 시간을 선택해주세요.'); return; }
-
-            alert(`[자유 예약 신청 완료]\n날짜: 7월 ${activeDate.innerText}일\n추후 마이페이지에서 상세 내역을 확인할 수 있습니다.`);
-        }
-
-        let selectedGroupItems = [];
-        const GROUP_TICKET_LIMIT = 2;
-
-        function selectGroupDay(dayStr, target) {
-            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
-            target.classList.add('active');
-            document.getElementById('selected-day-title').innerText = `${dayStr}요일 상세 시간표`;
-
-            document.querySelectorAll('.group-time-row').forEach(row => row.classList.remove('active'));
-            syncGroupSummaryUI();
-        }
-
-        function toggleGroupSlot(target, slotName) {
-            const isAlreadyActive = target.classList.contains('active');
-
-            if (isAlreadyActive) {
-                target.classList.remove('active');
-                selectedGroupItems = selectedGroupItems.filter(item => item !== slotName);
-            } else {
-                if (selectedGroupItems.length >= GROUP_TICKET_LIMIT) {
-                    alert(`보유하신 그룹 티켓 기준으로 최대 ${GROUP_TICKET_LIMIT}개까지만 선택할 수 있습니다.`);
-                    return;
-                }
-                target.classList.add('active');
-                selectedGroupItems.push(slotName);
-            }
-            syncGroupSummaryUI();
-        }
-
-        function syncGroupSummaryUI() {
-            const confirmBtn = document.getElementById('group-submit-btn');
-            const textSpan = document.getElementById('selected-groups-text');
-            const autoInfo = document.getElementById('auto-reg-info');
-
-            if (selectedGroupItems.length === 0) {
-                textSpan.innerText = "없음";
-                autoInfo.style.display = "none";
-                confirmBtn.disabled = true;
-            } else {
-                textSpan.innerText = selectedGroupItems.join(", ");
-                autoInfo.style.display = "inline";
-                confirmBtn.disabled = false;
-            }
-        }
-
-        function confirmGroupBooking() {
-            if (selectedGroupItems.length === 0) return;
-            alert(`[정규 그룹 신청 완료]\n신청한 클래스: ${selectedGroupItems.join(', ')}\n해당 요일로 4주 스케줄이 자동 확정되었습니다.`);
-
-            selectedGroupItems = [];
-            document.querySelectorAll('.group-time-row').forEach(row => row.classList.remove('active'));
-            syncGroupSummaryUI();
-        }
-
-        // ================= 신규: 주차별 그룹 스케줄 전환 로직 =================
-        function selectScheduleWeek(week) {
-            for (let i = 1; i <= 5; i++) {
-                const btn = document.getElementById('btn-week-' + i);
-                const tbl = document.getElementById('table-week-' + i);
-                if (i === week) {
-                    if (btn) btn.classList.add('active');
-                    if (tbl) tbl.classList.remove('hidden');
-                } else {
-                    if (btn) btn.classList.remove('active');
-                    if (tbl) tbl.classList.add('hidden');
-                }
-            }
-        }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
