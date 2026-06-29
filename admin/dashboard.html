@@ -184,7 +184,7 @@
 					<a href="#" id="logout-link" class="logout-link" onclick="openModal('logoutModal'); return false;">로그아웃</a>
 				</div>
 				<div id="user-logged-out" style="display: none;">
-					<로그인이 필요합니다.>
+					<p>로그인이 필요합니다.</p>
 						<br><br>
 						<button class="btn btn-primary" onclick="openModal('loginModal')">로그인하기</button>
 				</div>
@@ -1109,6 +1109,26 @@
 		}
 	}
 
+	function tryParseApiJson(raw) {
+		const text = String(raw || '').trim();
+		if (!text) return null;
+		try {
+			return JSON.parse(text);
+		} catch (_) {
+			const first = text.indexOf('{');
+			const last = text.lastIndexOf('}');
+			if (first >= 0 && last > first) {
+				const sliced = text.slice(first, last + 1);
+				try {
+					return JSON.parse(sliced);
+				} catch (_) {
+					return null;
+				}
+			}
+			return null;
+		}
+	}
+
 	function toggleProductFields(type) {
 		const ticketFields = document.getElementById('ticket-only-fields');
 		ticketFields.style.display = type === 'TICKET' ? 'block' : 'none';
@@ -1520,11 +1540,11 @@
 				body: params.toString()
 			});
             const raw = await resp.text();
-            let res;
-            try {
-                res = JSON.parse(raw);
-            } catch {
-                throw new Error(raw || '서버 응답을 해석할 수 없습니다.');
+            const res = tryParseApiJson(raw);
+            if (!res) {
+                console.error('admin_slot_create raw response:', raw);
+                const snippet = String(raw || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 180);
+                throw new Error(snippet || '서버 응답을 해석할 수 없습니다.');
             }
 
 			if (!resp.ok || !res.success) {
