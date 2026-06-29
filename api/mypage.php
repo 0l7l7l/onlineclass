@@ -5,7 +5,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => '로그인이 필요합니다.']);
+    echo json_encode(['success' => false, 'message' => '로그인이 필요합니다.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -91,9 +91,9 @@ try {
             'next_class' => $next_class_text,
             'histories' => $histories
         ]
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => '시스템 에러가 발생했습니다.']);
+    echo json_encode(['success' => false, 'message' => '시스템 에러가 발생했습니다.'], JSON_UNESCAPED_UNICODE);
 }

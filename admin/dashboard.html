@@ -1033,6 +1033,7 @@
 			const end = new Date(slot.end_time);
 			const timeRange = `${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')} ~ ${String(end.getHours()).padStart(2, '0')}:${String(end.getMinutes()).padStart(2, '0')}`;
 
+
 			document.getElementById('selected-datetime-label').innerText = `${formatKoreanDateLabel(selectedScheduleDate)} ${timeRange}`;
 			document.getElementById('selected-teacher-label').innerText = slot.teacher_name || '-';
 			document.getElementById('selected-class-type-label').innerText = slot.lesson_type || '-';
@@ -1435,5 +1436,5 @@
 		resetSlotDetail();
 	});
 </script>
-	</body>
+</body>
 </html>
