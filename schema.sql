@@ -155,3 +155,21 @@ CREATE TABLE `reservations` (
 
 CREATE INDEX idx_reservations_user_id ON `reservations`(`user_id`);
 CREATE INDEX idx_reservations_class_id ON `reservations`(`class_id`);
+
+
+-- 9. 쿠폰 관리 테이블 (coupons)<나중에추가예정/아직추가안함>
+-- 기능: 외부 판매(선물하기 등)로 생성된 쿠폰 번호를 관리하고, 유저가 마이페이지에서 등록할 때 사용 처리합니다.
+CREATE TABLE `coupons` (
+    `coupon_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '쿠폰 고유 번호',
+    `coupon_code` VARCHAR(50) NOT NULL UNIQUE COMMENT '유저가 입력할 난수 형태의 쿠폰 번호',
+    `product_id` INT NOT NULL COMMENT '쿠폰 등록 시 지급할 연관 상품 ID',
+    `status` ENUM('READY', 'USED', 'EXPIRED') DEFAULT 'READY' COMMENT '쿠폰 상태 (사용가능, 사용완료, 만료됨)',
+    `user_id` INT NULL COMMENT '쿠폰을 등록한 학생 유저 ID (USED 상태일 때만 입력)',
+    `generated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '쿠폰 번호 생성 일시',
+    `used_at` TIMESTAMP NULL DEFAULT NULL COMMENT '유저가 쿠폰을 실제 등록한 일시',
+    `expired_at` DATETIME NOT NULL COMMENT '쿠폰 등록 제한 만료일 (이 기한 전에 등록해야 함)',
+    FOREIGN KEY (`product_id`) REFERENCES `products`(`product_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ 
+CREATE INDEX idx_coupons_code ON `coupons`(`coupon_code`);
