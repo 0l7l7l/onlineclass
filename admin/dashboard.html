@@ -1,4 +1,4 @@
-<!--명함만들기 QR코드 ->회원가입하면 포인트받을수있어-->
+<!--명함만들기 QR코드 ->회원가입하면 포인트받을수있어-->	
 <!--추가기능-->
 
 <!--티켓을 추가하면 onlineclass.html에 연동되어서 보여지도록하고싶어.-->
@@ -35,213 +35,6 @@
 				gap: 20px;
 				margin-bottom: 30px;
 			}
-
-			// --- DB 연동: 관리자용 스케줄 로드 및 예약 생성 ---
-			async function loadScheduleForDate(dateStr) {
-				try {
-					const resp = await fetch('../api/all_time_slots.php?date=' + encodeURIComponent(dateStr));
-					const res = await resp.json();
-					const tbody = document.querySelector('.timeline-table tbody');
-					if (!res.success) {
-						tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#e74a3b;">스케줄을 불러오지 못했습니다.</td></tr>';
-						return;
-					}
-
-					const slots = res.data || [];
-					const byTeacher = {};
-					slots.forEach(s => {
-						const tid = s.teacher_id ? String(s.teacher_id) : ('t_' + (s.teacher_name||'unknown'));
-						if (!byTeacher[tid]) byTeacher[tid] = { teacher_id: s.teacher_id, teacher_name: s.teacher_name || ('교사 ' + s.teacher_id), slots: [] };
-						byTeacher[tid].slots.push(s);
-					});
-
-					// populate teacher select
-					const teacherSelect = document.getElementById('schedule-teacher-select');
-					if (teacherSelect) {
-						let opts = '<option value="">-- 선생님 선택 --</option>';
-						Object.keys(byTeacher).forEach(k => {
-							const t = byTeacher[k];
-							opts += `<option value="${t.teacher_id}">${t.teacher_name}</option>`;
-						});
-						teacherSelect.innerHTML = opts;
-					}
-
-					let html = '';
-					Object.keys(byTeacher).forEach(key => {
-						const t = byTeacher[key];
-						html += '<tr><td><strong>' + (t.teacher_name || '무명') + '</strong></td>';
-						for (let h = 9; h <= 16; h++) {
-							const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
-							if (slotAtHour) {
-								html += `<td class="timeline-cell booked" onclick="openSlotDetail(${slotAtHour.id})">${slotAtHour.lesson_type || ''}<br>${(new Date(slotAtHour.start_time)).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</td>`;
-							} else {
-								html += `<td class="timeline-cell" onclick="openEmptySlot('${key}', ${h})">-</td>`;
-							}
-						}
-						html += '</tr>';
-					});
-
-					tbody.innerHTML = html || '<tr><td colspan="9" style="text-align:center; color:#858796;">해당 날짜에 오픈된 스케줄이 없습니다.</td></tr>';
-				} catch (e) {
-					console.error(e);
-				}
-			}
-
-			function openSlotDetail(slotId) {
-				loadClassDetail(slotId);
-				openModal('classEditModal');
-			}
-
-			function openEmptySlot(teacherKey, hour) {
-				let teacherId = null;
-				if (!String(teacherKey).startsWith('t_')) teacherId = parseInt(teacherKey, 10);
-				document.getElementById('reservationAddModal').classList.add('show');
-				if (teacherId) {
-					document.getElementById('schedule-teacher-select').value = teacherId;
-					filterStudentsByTeacher(document.getElementById('schedule-teacher-select').value);
-				}
-				const dateInput = document.querySelector('#reservationAddModal input[type="date"]');
-				if (dateInput) dateInput.value = (new Date()).toISOString().slice(0,10);
-				const selectTime = document.querySelector('#reservationAddModal select');
-				if (selectTime) selectTime.value = String(hour).padStart(2,'0');
-			}
-
-			async function submitAdminReservation() {
-				try {
-					const form = document.getElementById('reservation-add-form');
-					const teacher = document.getElementById('schedule-teacher-select').value;
-					const date = form.querySelector('input[type="date"]').value;
-					const time = form.querySelector('select').value + ':00:00';
-					const student = document.getElementById('private-student-list').value || document.querySelector('.teacher-student-combo')?.value;
-					if (!teacher || !date || !time || !student) { alert('필수 항목을 모두 채워주세요.'); return; }
-					const params = new URLSearchParams();
-					params.append('teacher_id', teacher);
-					params.append('student_id', student);
-					params.append('reserve_date', date);
-					params.append('reserve_time', time);
-					params.append('class_type', document.getElementById('schedule-class-type').value || 'PRIVATE');
-					const resp = await fetch('../api/admin_book_reservation.php', { method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}, body: params.toString() });
-					const res = await resp.json();
-					if (!resp.ok || !res.success) { alert(res.message || '예약 생성 실패'); return; }
-					alert(res.message || '예약 생성 완료');
-					closeModal('reservationAddModal');
-					loadScheduleForDate(date);
-				} catch (e) {
-					console.error(e);
-					alert('예약 생성 중 오류가 발생했습니다.');
-				}
-			}
-
-			// Load all time slots for a date and render timeline table
-			async function loadScheduleForDate(dateStr) {
-				try {
-					const resp = await fetch('../api/all_time_slots.php?date=' + encodeURIComponent(dateStr));
-					const res = await resp.json();
-					const tbody = document.querySelector('.timeline-table tbody');
-					if (!res.success) {
-						tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#e74a3b;">스케줄을 불러오지 못했습니다.</td></tr>';
-						return;
-					}
-
-					const slots = res.data || [];
-					// group by teacher
-					const byTeacher = {};
-					slots.forEach(s => {
-						const t = s.teacher_id || ('t' + (s.teacher_name||'unknown'));
-						if (!byTeacher[t]) byTeacher[t] = { teacher_name: s.teacher_name || ('교사 ' + s.teacher_id), slots: [] };
-						byTeacher[t].slots.push(s);
-					});
-
-					let html = '';
-         // populate teacher select for admin reservation modal
-					const teacherSelect = document.getElementById('schedule-teacher-select');
-					if (teacherSelect) {
-						let opts = '<option value="">-- 선생님 선택 --</option>';
-					}
-					Object.keys(byTeacher).forEach(key => {
-						const t = byTeacher[key];
-           if (teacherSelect) {
-							// key might be numeric or prefixed; try to extract numeric id
-							let teacherId = key;
-							if (String(key).startsWith('t')) teacherId = '';
-							opts += `<option value="${teacherId}">${t.teacher_name || '무명'}</option>`;
-						}
-						html += '<tr><td><strong>' + (t.teacher_name || '무명') + '</strong></td>';
-						// hours columns 09..16
-						for (let h = 9; h <= 16; h++) {
-							const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
-							if (slotAtHour) {
-								html += `<td class="timeline-cell booked" onclick="openSlotDetail(${slotAtHour['id']})">${slotAtHour.lesson_type || ''}<br>${(new Date(slotAtHour.start_time)).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</td>`;
-							} else {
-								html += `<td class="timeline-cell" onclick="openEmptySlot('${key}', ${h})">-</td>`;
-							}
-						}
-						html += '</tr>';
-					});
-
-					tbody.innerHTML = html || '<tr><td colspan="9" style="text-align:center; color:#858796;">해당 날짜에 오픈된 스케줄이 없습니다.</td></tr>';
-				} catch (e) {
-					console.error(e);
-				}
-			}
-
-			function openSlotDetail(slotId) {
-				// implement detail loader or reuse loadClassDetail
-				loadClassDetail(slotId);
-				openModal('classEditModal');
-			}
-
-			function openEmptySlot(teacherKey, hour) {
-				// teacherKey might be teacher_id or constructed key; try to extract id digits
-				let teacherId = null;
-				if (String(teacherKey).startsWith('t')) {
-					// unknown id
-					teacherId = null;
-				} else {
-					teacherId = parseInt(teacherKey, 10);
-				}
-				// prefill reservation add modal
-				document.getElementById('reservationAddModal').classList.add('show');
-				if (teacherId) {
-					document.getElementById('schedule-teacher-select').value = teacherId;
-					filterStudentsByTeacher(document.getElementById('schedule-teacher-select').value);
-				}
-				// set date/time inputs inside modal
-				const dateInput = document.querySelector('#reservationAddModal input[type="date"]');
-				if (dateInput) dateInput.value = document.querySelector('.timeline-table thead th:nth-child(2)').dataset.date || dateInput.value;
-				const selectTime = document.querySelector('#reservationAddModal select');
-				if (selectTime) selectTime.value = String(hour).padStart(2,'0');
-			}
-
-			async function submitAdminReservation() {
-				try {
-					const form = document.getElementById('reservation-add-form');
-					const teacher = document.getElementById('schedule-teacher-select').value;
-					const date = form.querySelector('input[type="date"]').value;
-					const time = form.querySelector('select').value + ':00:00';
-					const student = document.getElementById('private-student-list').value || document.querySelector('.teacher-student-combo')?.value;
-					if (!teacher || !date || !time || !student) { alert('필수 항목을 모두 채워주세요.'); return; }
-					const params = new URLSearchParams();
-					params.append('teacher_id', teacher);
-					params.append('student_id', student);
-					params.append('reserve_date', date);
-					params.append('reserve_time', time);
-					params.append('class_type', document.getElementById('schedule-class-type').value || 'PRIVATE');
-					const resp = await fetch('../api/admin_book_reservation.php', { method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}, body: params.toString() });
-					const res = await resp.json();
-					if (!resp.ok || !res.success) { alert(res.message || '예약 생성 실패'); return; }
-					alert(res.message || '예약 생성 완료');
-					closeModal('reservationAddModal');
-					// reload schedule view
-					const hdr = document.querySelector('.timeline-table thead');
-					let dateStr = document.querySelector('.timeline-table thead th:nth-child(2)')?.dataset.date || new Date().toISOString().slice(0,10);
-					loadScheduleForDate(dateStr);
-				} catch (e) {
-					console.error(e);
-					alert('예약 생성 중 오류가 발생했습니다.');
-				}
-			}
-
 
 			.card {
 				background: #fff;
@@ -1390,6 +1183,214 @@
 				allDuoCombos.forEach(combo => {
 					combo.innerHTML = optionsHtml;
 				});
+			}
+
+
+			//예약 
+			/*			// --- DB 연동: 관리자용 스케줄 로드 및 예약 생성 ---*/
+			async function loadScheduleForDate(dateStr) {
+				try {
+					const resp = await fetch('../api/all_time_slots.php?date=' + encodeURIComponent(dateStr));
+					const res = await resp.json();
+					const tbody = document.querySelector('.timeline-table tbody');
+					if (!res.success) {
+						tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#e74a3b;">스케줄을 불러오지 못했습니다.</td></tr>';
+						return;
+					}
+
+					const slots = res.data || [];
+					const byTeacher = {};
+					slots.forEach(s => {
+						const tid = s.teacher_id ? String(s.teacher_id) : ('t_' + (s.teacher_name || 'unknown'));
+						if (!byTeacher[tid]) byTeacher[tid] = { teacher_id: s.teacher_id, teacher_name: s.teacher_name || ('교사 ' + s.teacher_id), slots: [] };
+						byTeacher[tid].slots.push(s);
+					});
+
+					// populate teacher select
+					const teacherSelect = document.getElementById('schedule-teacher-select');
+					if (teacherSelect) {
+						let opts = '<option value="">-- 선생님 선택 --</option>';
+						Object.keys(byTeacher).forEach(k => {
+							const t = byTeacher[k];
+							opts += `<option value="${t.teacher_id}">${t.teacher_name}</option>`;
+						});
+						teacherSelect.innerHTML = opts;
+					}
+
+					let html = '';
+					Object.keys(byTeacher).forEach(key => {
+						const t = byTeacher[key];
+						html += '<tr><td><strong>' + (t.teacher_name || '무명') + '</strong></td>';
+						for (let h = 9; h <= 16; h++) {
+							const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
+							if (slotAtHour) {
+								html += `<td class="timeline-cell booked" onclick="openSlotDetail(${slotAtHour.id})">${slotAtHour.lesson_type || ''}<br>${(new Date(slotAtHour.start_time)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>`;
+							} else {
+								html += `<td class="timeline-cell" onclick="openEmptySlot('${key}', ${h})">-</td>`;
+							}
+						}
+						html += '</tr>';
+					});
+
+					tbody.innerHTML = html || '<tr><td colspan="9" style="text-align:center; color:#858796;">해당 날짜에 오픈된 스케줄이 없습니다.</td></tr>';
+				} catch (e) {
+					console.error(e);
+				}
+			}
+
+			function openSlotDetail(slotId) {
+				loadClassDetail(slotId);
+				openModal('classEditModal');
+			}
+
+			function openEmptySlot(teacherKey, hour) {
+				let teacherId = null;
+				if (!String(teacherKey).startsWith('t_')) teacherId = parseInt(teacherKey, 10);
+				document.getElementById('reservationAddModal').classList.add('show');
+				if (teacherId) {
+					document.getElementById('schedule-teacher-select').value = teacherId;
+					filterStudentsByTeacher(document.getElementById('schedule-teacher-select').value);
+				}
+				const dateInput = document.querySelector('#reservationAddModal input[type="date"]');
+				if (dateInput) dateInput.value = (new Date()).toISOString().slice(0, 10);
+				const selectTime = document.querySelector('#reservationAddModal select');
+				if (selectTime) selectTime.value = String(hour).padStart(2, '0');
+			}
+
+			async function submitAdminReservation() {
+				try {
+					const form = document.getElementById('reservation-add-form');
+					const teacher = document.getElementById('schedule-teacher-select').value;
+					const date = form.querySelector('input[type="date"]').value;
+					const time = form.querySelector('select').value + ':00:00';
+					const student = document.getElementById('private-student-list').value || document.querySelector('.teacher-student-combo')?.value;
+					if (!teacher || !date || !time || !student) { alert('필수 항목을 모두 채워주세요.'); return; }
+					const params = new URLSearchParams();
+					params.append('teacher_id', teacher);
+					params.append('student_id', student);
+					params.append('reserve_date', date);
+					params.append('reserve_time', time);
+					params.append('class_type', document.getElementById('schedule-class-type').value || 'PRIVATE');
+					const resp = await fetch('../api/book_reservation.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body: params.toString() });
+					const res = await resp.json();
+					if (!resp.ok || !res.success) { alert(res.message || '예약 생성 실패'); return; }
+					alert(res.message || '예약 생성 완료');
+					closeModal('reservationAddModal');
+					loadScheduleForDate(date);
+				} catch (e) {
+					console.error(e);
+					alert('예약 생성 중 오류가 발생했습니다.');
+				}
+			}
+
+			// Load all time slots for a date and render timeline table
+			async function loadScheduleForDate(dateStr) {
+				try {
+					const resp = await fetch('../api/all_time_slots.php?date=' + encodeURIComponent(dateStr));
+					const res = await resp.json();
+					const tbody = document.querySelector('.timeline-table tbody');
+					if (!res.success) {
+						tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#e74a3b;">스케줄을 불러오지 못했습니다.</td></tr>';
+						return;
+					}
+
+					const slots = res.data || [];
+					// group by teacher
+					const byTeacher = {};
+					slots.forEach(s => {
+						const t = s.teacher_id || ('t' + (s.teacher_name || 'unknown'));
+						if (!byTeacher[t]) byTeacher[t] = { teacher_name: s.teacher_name || ('교사 ' + s.teacher_id), slots: [] };
+						byTeacher[t].slots.push(s);
+					});
+
+					let html = '';
+					// populate teacher select for admin reservation modal
+					const teacherSelect = document.getElementById('schedule-teacher-select');
+					if (teacherSelect) {
+						let opts = '<option value="">-- 선생님 선택 --</option>';
+					}
+					Object.keys(byTeacher).forEach(key => {
+						const t = byTeacher[key];
+						if (teacherSelect) {
+							// key might be numeric or prefixed; try to extract numeric id
+							let teacherId = key;
+							if (String(key).startsWith('t')) teacherId = '';
+							opts += `<option value="${teacherId}">${t.teacher_name || '무명'}</option>`;
+						}
+						html += '<tr><td><strong>' + (t.teacher_name || '무명') + '</strong></td>';
+						// hours columns 09..16
+						for (let h = 9; h <= 16; h++) {
+							const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
+							if (slotAtHour) {
+								html += `<td class="timeline-cell booked" onclick="openSlotDetail(${slotAtHour['id']})">${slotAtHour.lesson_type || ''}<br>${(new Date(slotAtHour.start_time)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>`;
+							} else {
+								html += `<td class="timeline-cell" onclick="openEmptySlot('${key}', ${h})">-</td>`;
+							}
+						}
+						html += '</tr>';
+					});
+
+					tbody.innerHTML = html || '<tr><td colspan="9" style="text-align:center; color:#858796;">해당 날짜에 오픈된 스케줄이 없습니다.</td></tr>';
+				} catch (e) {
+					console.error(e);
+				}
+			}
+
+			function openSlotDetail(slotId) {
+				// implement detail loader or reuse loadClassDetail
+				loadClassDetail(slotId);
+				openModal('classEditModal');
+			}
+
+			function openEmptySlot(teacherKey, hour) {
+				// teacherKey might be teacher_id or constructed key; try to extract id digits
+				let teacherId = null;
+				if (String(teacherKey).startsWith('t')) {
+					// unknown id
+					teacherId = null;
+				} else {
+					teacherId = parseInt(teacherKey, 10);
+				}
+				// prefill reservation add modal
+				document.getElementById('reservationAddModal').classList.add('show');
+				if (teacherId) {
+					document.getElementById('schedule-teacher-select').value = teacherId;
+					filterStudentsByTeacher(document.getElementById('schedule-teacher-select').value);
+				}
+				// set date/time inputs inside modal
+				const dateInput = document.querySelector('#reservationAddModal input[type="date"]');
+				if (dateInput) dateInput.value = document.querySelector('.timeline-table thead th:nth-child(2)').dataset.date || dateInput.value;
+				const selectTime = document.querySelector('#reservationAddModal select');
+				if (selectTime) selectTime.value = String(hour).padStart(2, '0');
+			}
+
+			async function submitAdminReservation() {
+				try {
+					const form = document.getElementById('reservation-add-form');
+					const teacher = document.getElementById('schedule-teacher-select').value;
+					const date = form.querySelector('input[type="date"]').value;
+					const time = form.querySelector('select').value + ':00:00';
+					const student = document.getElementById('private-student-list').value || document.querySelector('.teacher-student-combo')?.value;
+					if (!teacher || !date || !time || !student) { alert('필수 항목을 모두 채워주세요.'); return; }
+					const params = new URLSearchParams();
+					params.append('teacher_id', teacher);
+					params.append('student_id', student);
+					params.append('reserve_date', date);
+					params.append('reserve_time', time);
+					params.append('class_type', document.getElementById('schedule-class-type').value || 'PRIVATE');
+					const resp = await fetch('../api/book_reservation.php', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body: params.toString() });
+					const res = await resp.json();
+					if (!resp.ok || !res.success) { alert(res.message || '예약 생성 실패'); return; }
+					alert(res.message || '예약 생성 완료');
+					closeModal('reservationAddModal');
+					// reload schedule view
+					const hdr = document.querySelector('.timeline-table thead');
+					let dateStr = document.querySelector('.timeline-table thead th:nth-child(2)')?.dataset.date || new Date().toISOString().slice(0, 10);
+					loadScheduleForDate(dateStr);
+				} catch (e) {
+					console.error(e);
+					alert('예약 생성 중 오류가 발생했습니다.');
+				}
 			}
 		</script>
 	</body>
