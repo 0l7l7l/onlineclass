@@ -18,7 +18,7 @@ try {
     $stmt->execute([$user_id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row || empty($row['teacher_id'])) {
-        echo json_encode(['success' => false, 'message' => '담당 선생님이 지정되지 않았습니다.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => '담큱E선생님이 지정되햨E않았습니다.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -70,7 +70,7 @@ try {
     exit;
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['success'=>false, 'message'=>'서버 오류: '.$e->getMessage()], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success'=>false, 'message'=>'서퉩E오톩E '.$e->getMessage()], JSON_UNESCAPED_UNICODE);
     exit;
 }
 ?>
