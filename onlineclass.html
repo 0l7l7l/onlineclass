@@ -2141,12 +2141,15 @@
 
                 closeModal();
                 setRole('student');
-                alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);
-            } catch (error) {
-                alert('로그인 중 오류가 발생했습니다.');
-            }
-        }
-        function logout() { setRole('guest'); alert('로그아웃 되었습니다.'); }
+                alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);} catch (error) {alert('로그인 중 오류가 발생했습니다.');}}
+
+        async function logout() {try {const response = await fetch('api/logout.php', {method: 'POST',headers: { 'Content-Type': 'application/json' }});
+
+                const result = await response.json().catch(() => null);
+                if (!response.ok || !result || !result.success) {alert((result && result.message) || '로그아웃 중 오류가 발생했습니다.'); return; }
+
+                setRole('guest');
+                alert('로그아웃 되었습니다.');} catch (error) {console.error(error); alert('로그아웃 중 네트워크 오류가 발생했습니다.');}}
 
         function showSubInfo(subId) {
             document.getElementById('info-main').classList.add('hidden');
