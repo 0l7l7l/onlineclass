@@ -76,7 +76,7 @@ try {
             if ((int)$matchStmt->fetchColumn() <= 0) {
                 $pdo->rollBack();
                 http_response_code(409);
-                echo json_encode(['success' => false, 'message' => '선택한 선생님의 담당 학생만 지정할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => false, 'message' => '선택한 선생님의 담큱E학생만 지정할 펯E있습니다.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
         }
@@ -98,7 +98,7 @@ try {
         if ($currentCapacity > $maxStudents) {
             $pdo->rollBack();
             http_response_code(409);
-            echo json_encode(['success' => false, 'message' => '현재 예약 인원보다 작은 정원으로는 변경할 수 없습니다.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['success' => false, 'message' => '현픸E예푳E인원보다 작은 정원으로는 변경할 펯E없습니다.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
     } else {
@@ -123,14 +123,14 @@ try {
             if ((int)$conflictStudentStmt->fetchColumn() > 0) {
                 $pdo->rollBack();
                 http_response_code(409);
-                echo json_encode(['success' => false, 'message' => '학생 시간표가 겹쳐 예약할 수 없습니다.'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => false, 'message' => '학생 시간표가 겹쳐 예약할 펯E없습니다.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
 
             if ($currentCapacity >= $maxStudents) {
                 $pdo->rollBack();
                 http_response_code(409);
-                echo json_encode(['success' => false, 'message' => '정원이 가득 찼습니다.'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => false, 'message' => '정원이 가탛E찼습니다.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
 
@@ -144,7 +144,7 @@ try {
             if (!$ticket) {
                 $pdo->rollBack();
                 http_response_code(409);
-                echo json_encode(['success' => false, 'message' => '학생의 사용 가능한 수강권이 없습니다.'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => false, 'message' => '학생의 사퓖E가능한 수강권이 없습니다.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
 
@@ -162,7 +162,7 @@ try {
     $pdo->commit();
     echo json_encode([
         'success' => true,
-        'message' => '수업이 등록되었습니다.',
+        'message' => '수업이 따遝되었습니다.',
         'data' => [
             'slot_id' => $slotId,
             'created_reservations' => $createdReservations
@@ -174,6 +174,6 @@ try {
         $pdo->rollBack();
     }
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => '시스템 오류: ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => false, 'message' => '시스템 오톩E ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
     exit;
 }
