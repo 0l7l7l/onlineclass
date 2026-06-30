@@ -157,8 +157,27 @@ SQL);
     $pdo->exec("CREATE INDEX `idx_classes_teacher_date` ON `classes`(`teacher_id`, `class_date`);");
 
     // ==========================================
-    // 8. reservations
-    // - 학생의 수업 예약 및 매칭 정보
+    // 8. class_targets
+    // - PRIVATE/DUO 수업의 지정 학생 매핑
+    // - PRIVATE: 최대 1명, DUO: 최대 2명(비즈니스 로직에서 제한)
+    // ==========================================
+    $pdo->exec(<<<SQL
+CREATE TABLE IF NOT EXISTS `class_targets` (
+    `class_target_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '수업 대상 매핑 고유 번호',
+    `class_id` INT NOT NULL COMMENT '대상 지정할 수업 ID',
+    `user_id` INT NOT NULL COMMENT '지정 학생 유저 ID',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '지정 일시',
+    UNIQUE KEY `uq_class_targets_class_user` (`class_id`, `user_id`),
+    FOREIGN KEY (`class_id`) REFERENCES `classes`(`class_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+SQL);
+
+    $pdo->exec("CREATE INDEX `idx_class_targets_class_id` ON `class_targets`(`class_id`);");
+    $pdo->exec("CREATE INDEX `idx_class_targets_user_id` ON `class_targets`(`user_id`);");
+
+    // ==========================================
+    // 9. reservations - 학생의 수업 예약 및 매칭 정보
     // ==========================================
     $pdo->exec(<<<SQL
 CREATE TABLE IF NOT EXISTS `reservations` (
@@ -178,8 +197,7 @@ SQL);
     $pdo->exec("CREATE INDEX `idx_reservations_class_id` ON `reservations`(`class_id`);");
 
     // ==========================================
-    // 9. coupons
-    // - 쿠폰 번호 관리 및 사용 처리
+    // 10. coupons 아직DB없음 추가예정
     // ==========================================
     $pdo->exec(<<<SQL
 CREATE TABLE IF NOT EXISTS `coupons` (
@@ -198,16 +216,10 @@ SQL);
 
     $pdo->exec("CREATE INDEX `idx_coupons_code` ON `coupons`(`coupon_code`);");
 
-    echo json_encode([
-        'success' => true,
-        'message' => 'SQL 기준 테이블 생성/확인 완료.'
-    ], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => true, 'message' => 'SQL 기준 테이블 생성/확인 완료.'], JSON_UNESCAPED_UNICODE);
     exit;
 } catch (Throwable $e) {
     http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
     exit;
 }

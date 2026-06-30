@@ -15,13 +15,13 @@ $depositor_name = isset($_POST['depositor_name']) ? trim($_POST['depositor_name'
 
 if ($amount < 1000) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'ÃÖ¼Ò 1,000 ¼¼¸ð ÀÌ»ó ÃæÀüÇÏ½Ç ¼ö ÀÖ½À´Ï´Ù.'], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => false, 'message' => 'ÃÖ¼Ò 1,000 ¼¼¸EÀÌ»EÃæÀEÏ½Ç ¼EÀÖ½À´Ï´Ù.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
 if ($depositor_name === '') {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'ÀÔ±ÝÀÚ¸íÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.'], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => false, 'message' => 'ÀÔ±ÝÀÚ¸úÜ» ÀÔ·ÂÇØ ÁÖ¼¼¿E'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -36,7 +36,7 @@ try {
     if (!$user) {
         $pdo->rollBack();
         http_response_code(404);
-        echo json_encode(['success' => false, 'message' => '»ç¿ëÀÚ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => '»ç¿EÚ¸¦ Ã£À» ¼E¾ø½À´Ï´Ù.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -47,13 +47,13 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'ÃæÀü ½ÅÃ»ÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù. ÀÔ±Ý È®ÀÎ ÈÄ ÀÚµ¿À¸·Î ¹Ý¿µµË´Ï´Ù.'
+        'message' => 'ÃæÀE½ÅÃ»ÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù. ÀÔ±Ý È®ÀÎ ÈÄ ÀÚµ¿À¸·Î ¹Ý¿µµË´Ï´Ù.'
     ], JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'ÃæÀü ½ÅÃ» Áß ¿À·ù°¡ ¹ß»ýÇß½À´Ï´Ù.'], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => false, 'message' => 'ÃæÀE½ÅÃ» Áß ¿À·ù°¡ ¹ß»ýÇß½À´Ï´Ù.'], JSON_UNESCAPED_UNICODE);
 }
 ?>
