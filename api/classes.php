@@ -51,7 +51,6 @@ function parseTargetUserIds(array $source): array
         }
     }
 
-    // 개별 필드도 허용
     foreach (['target_user_id', 'target_user_id_1', 'target_user_id_2'] as $key) {
         if (isset($source[$key])) {
             $n = (int)$source[$key];
@@ -96,6 +95,97 @@ function saveClassTargets(PDO $pdo, int $classId, array $targetUserIds): void
     foreach ($targetUserIds as $uid) {
         $ins->execute([$classId, $uid]);
     }
+}
+
+function getClassCapacityLimit(array $class): int
+{
+    $type = strtoupper((string)($class['class_type'] ?? 'PRIVATE'));
+    if ($type === 'PRIVATE') return 1;
+    if ($type === 'DUO') return 2;
+    return max(1, (int)($class['max_capacity'] ?? 1));
+}
+
+function isAdminFreeTicket(PDO $pdo, int $userTicketId): bool
+{
+    if ($userTicketId <= 0) return false;
+
+    $stmt = $pdo->prepare("\n        SELECT p.title\n        FROM user_tickets ut\n        JOIN products p ON p.product_id = ut.product_id\n        WHERE ut.user_ticket_id = ?\n        LIMIT 1\n    ");
+    $stmt->execute([$userTicketId]);
+    $title = (string)($stmt->fetchColumn() ?: '');
+    return strpos($title, '[ADMIN_FREE]') === 0;
+}
+
+function refreshClassCurrentCapacity(PDO $pdo, int $classId): void
+{
+    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE class_id = ? AND status = 'CONFIRMED'");
+    $countStmt->execute([$classId]);
+    $cnt = (int)$countStmt->fetchColumn();
+
+    $upd = $pdo->prepare("UPDATE classes SET current_capacity = ? WHERE class_id = ?");
+    $upd->execute([$cnt, $classId]);
+}
+
+function findUsableTicketId(PDO $pdo, int $studentId, string $classType): int
+{
+    $stmt = $pdo->prepare("\n        SELECT ut.user_ticket_id\n        FROM user_tickets ut\n        JOIN products p ON p.product_id = ut.product_id\n        WHERE ut.user_id = ?\n          AND ut.status = 'ACTIVE'\n          AND ut.remaining_count > 0\n          AND ut.expired_at > NOW()\n          AND p.product_type = 'TICKET'\n          AND p.class_type = ?\n          AND p.is_active = 1\n        ORDER BY ut.expired_at ASC, ut.user_ticket_id ASC\n        LIMIT 1\n    ");
+    $stmt->execute([$studentId, $classType]);
+    return (int)($stmt->fetchColumn() ?: 0);
+}
+
+function ensureAdminFreeTicketId(PDO $pdo, int $studentId, string $classType): int
+{
+    $title = '[ADMIN_FREE] ' . $classType;
+
+    $productStmt = $pdo->prepare("SELECT product_id FROM products WHERE product_type = 'TICKET' AND title = ? LIMIT 1");
+    $productStmt->execute([$title]);
+    $productId = (int)($productStmt->fetchColumn() ?: 0);
+
+    if ($productId <= 0) {
+        $insProduct = $pdo->prepare("\n            INSERT INTO products (product_type, title, price, class_type, total_count, expiry_days, is_active)\n            VALUES ('TICKET', ?, 0, ?, 0, 3650, 0)\n        ");
+        $insProduct->execute([$title, $classType]);
+        $productId = (int)$pdo->lastInsertId();
+    }
+
+    $insTicket = $pdo->prepare("\n        INSERT INTO user_tickets (user_id, product_id, remaining_count, status, expired_at)\n        VALUES (?, ?, 0, 'EXHAUSTED', DATE_ADD(NOW(), INTERVAL 10 YEAR))\n    ");
+    $insTicket->execute([$studentId, $productId]);
+
+    return (int)$pdo->lastInsertId();
+}
+
+function consumeTicketCount(PDO $pdo, int $userTicketId): void
+{
+    $upd = $pdo->prepare("\n        UPDATE user_tickets\n        SET remaining_count = CASE WHEN remaining_count > 0 THEN remaining_count - 1 ELSE 0 END\n        WHERE user_ticket_id = ?\n    ");
+    $upd->execute([$userTicketId]);
+
+    $mark = $pdo->prepare("\n        UPDATE user_tickets\n        SET status = 'EXHAUSTED'\n        WHERE user_ticket_id = ? AND remaining_count <= 0 AND status = 'ACTIVE'\n    ");
+    $mark->execute([$userTicketId]);
+}
+
+function restoreTicketCount(PDO $pdo, int $userTicketId): void
+{
+    if ($userTicketId <= 0) return;
+    if (isAdminFreeTicket($pdo, $userTicketId)) return;
+
+    $upd = $pdo->prepare("\n        UPDATE user_tickets\n        SET remaining_count = remaining_count + 1,\n            status = CASE WHEN expired_at > NOW() THEN 'ACTIVE' ELSE status END\n        WHERE user_ticket_id = ?\n    ");
+    $upd->execute([$userTicketId]);
+}
+
+function assertStudentEligibility(PDO $pdo, array $class, int $studentId): array
+{
+    $stmt = $pdo->prepare("\n        SELECT user_id, name, username, role, teacher_id, deleted_at\n        FROM users\n        WHERE user_id = ?\n        LIMIT 1\n    ");
+    $stmt->execute([$studentId]);
+    $student = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$student || strtoupper((string)$student['role']) !== 'STUDENT' || $student['deleted_at'] !== null) {
+        throw new RuntimeException('유효한 학생을 찾을 수 없습니다.');
+    }
+
+    $classType = strtoupper((string)($class['class_type'] ?? 'PRIVATE'));
+    if ($classType !== 'GROUP' && (int)$student['teacher_id'] !== (int)$class['teacher_id']) {
+        throw new RuntimeException('이 수업에는 담당 학생만 배정할 수 있습니다.');
+    }
+
+    return $student;
 }
 
 try {
@@ -291,6 +381,55 @@ try {
             exit;
         }
 
+        if ($action === 'search_students') {
+            $classId = isset($_GET['class_id']) ? (int)$_GET['class_id'] : 0;
+            $q = trim((string)($_GET['q'] ?? ''));
+
+            if ($classId <= 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'class_id가 필요합니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            $classStmt = $pdo->prepare("\n                SELECT class_id, teacher_id, class_type\n                FROM classes\n                WHERE class_id = ? AND deleted_at IS NULL\n                LIMIT 1\n            ");
+            $classStmt->execute([$classId]);
+            $class = $classStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$class) {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'message' => '수업을 찾을 수 없습니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            $sql = "\n                SELECT u.user_id, u.name, u.username,\n                       EXISTS(\n                           SELECT 1\n                           FROM reservations r\n                           WHERE r.class_id = ?\n                             AND r.user_id = u.user_id\n                             AND r.status = 'CONFIRMED'\n                       ) AS already_reserved\n                FROM users u\n                WHERE u.role = 'STUDENT'\n                  AND u.deleted_at IS NULL\n            ";
+            $params = [$classId];
+
+            if (strtoupper((string)$class['class_type']) !== 'GROUP') {
+                $sql .= " AND u.teacher_id = ?";
+                $params[] = (int)$class['teacher_id'];
+            }
+
+            if ($q !== '') {
+                $sql .= " AND (u.name LIKE ? OR u.username LIKE ?)";
+                $like = '%' . $q . '%';
+                $params[] = $like;
+                $params[] = $like;
+            }
+
+            $sql .= " ORDER BY u.name ASC LIMIT 100";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($rows as &$r) {
+                $r['user_id'] = (int)$r['user_id'];
+                $r['already_reserved'] = ((int)$r['already_reserved']) > 0;
+            }
+            unset($r);
+
+            echo json_encode(['success' => true, 'data' => $rows], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
         // ------- 수업 상세 조회 (기존) -------
         if ($action === 'detail') {
             $classId = isset($_GET['class_id']) ? (int)$_GET['class_id'] : (isset($_GET['slot_id']) ? (int)$_GET['slot_id'] : 0);
@@ -325,13 +464,26 @@ try {
             $targetStmt->execute([$classId]);
             $targets = $targetStmt->fetchAll(PDO::FETCH_ASSOC);
 
+            $reservationStmt = $pdo->prepare("\n                SELECT\n                    r.reservation_id,\n                    r.user_id AS student_id,\n                    u.name AS student_name,\n                    u.username AS student_username,\n                    r.user_ticket_id,\n                    CASE\n                        WHEN p.title LIKE '[ADMIN_FREE]%' THEN 'FREE'\n                        ELSE 'USE'\n                    END AS ticket_mode\n                FROM reservations r\n                JOIN users u ON u.user_id = r.user_id\n                LEFT JOIN user_tickets ut ON ut.user_ticket_id = r.user_ticket_id\n                LEFT JOIN products p ON p.product_id = ut.product_id\n                WHERE r.class_id = ?\n                  AND r.status = 'CONFIRMED'\n                ORDER BY r.reserved_at ASC, r.reservation_id ASC\n            ");
+            $reservationStmt->execute([$classId]);
+            $reservations = $reservationStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($reservations as &$rv) {
+                $rv['reservation_id'] = (int)$rv['reservation_id'];
+                $rv['student_id'] = (int)$rv['student_id'];
+                $rv['user_ticket_id'] = (int)$rv['user_ticket_id'];
+            }
+            unset($rv);
+
             $class['target_user_ids'] = array_map(static fn($t) => (int)$t['user_id'], $targets);
+            $class['current_capacity'] = count($reservations);
 
             echo json_encode([
                 'success' => true,
                 'data' => [
                     'class' => $class,
                     'targets' => $targets,
+                    'reservations' => $reservations,
                 ]
             ], JSON_UNESCAPED_UNICODE);
             exit;
@@ -509,6 +661,176 @@ try {
                 'class_id' => $classId,
                 'old_teacher_id' => (int)$classData['teacher_id'],
                 'new_teacher_id' => $newTeacherId
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($action === 'assign_student') {
+            $classId = isset($_POST['class_id']) ? (int)$_POST['class_id'] : 0;
+            $studentId = isset($_POST['student_id']) ? (int)$_POST['student_id'] : 0;
+            $ticketMode = strtoupper(trim((string)($_POST['ticket_mode'] ?? 'USE')));
+
+            if ($classId <= 0 || $studentId <= 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'class_id, student_id가 필요합니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            if (!in_array($ticketMode, ['USE', 'FREE'], true)) {
+                $ticketMode = 'USE';
+            }
+
+            $pdo->beginTransaction();
+
+            $classStmt = $pdo->prepare("\n                SELECT class_id, teacher_id, class_type, max_capacity, status\n                FROM classes\n                WHERE class_id = ? AND deleted_at IS NULL\n                LIMIT 1 FOR UPDATE\n            ");
+            $classStmt->execute([$classId]);
+            $class = $classStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$class) {
+                throw new RuntimeException('수업을 찾을 수 없습니다.');
+            }
+
+            assertStudentEligibility($pdo, $class, $studentId);
+
+            $dupStmt = $pdo->prepare("\n                SELECT reservation_id\n                FROM reservations\n                WHERE class_id = ? AND user_id = ? AND status = 'CONFIRMED'\n                LIMIT 1\n            ");
+            $dupStmt->execute([$classId, $studentId]);
+            if ($dupStmt->fetch()) {
+                throw new RuntimeException('이미 예약된 학생입니다.');
+            }
+
+            $cntStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE class_id = ? AND status = 'CONFIRMED'");
+            $cntStmt->execute([$classId]);
+            $reservedCount = (int)$cntStmt->fetchColumn();
+            if ($reservedCount >= getClassCapacityLimit($class)) {
+                throw new RuntimeException('정원이 가득 찼습니다. 학생을 추가할 수 없습니다.');
+            }
+
+            $classType = strtoupper((string)$class['class_type']);
+            if ($ticketMode === 'USE') {
+                $userTicketId = findUsableTicketId($pdo, $studentId, $classType);
+                if ($userTicketId <= 0) {
+                    throw new RuntimeException('사용 가능한 티켓이 없습니다.');
+                }
+            } else {
+                $userTicketId = ensureAdminFreeTicketId($pdo, $studentId, $classType);
+            }
+
+            $ins = $pdo->prepare("\n                INSERT INTO reservations (user_id, class_id, user_ticket_id, status)\n                VALUES (?, ?, ?, 'CONFIRMED')\n            ");
+            $ins->execute([$studentId, $classId, $userTicketId]);
+
+            if ($ticketMode === 'USE') {
+                consumeTicketCount($pdo, $userTicketId);
+            }
+
+            refreshClassCurrentCapacity($pdo, $classId);
+            $pdo->commit();
+
+            echo json_encode([
+                'success' => true,
+                'message' => '학생이 수업에 등록되었습니다.',
+                'reservation_id' => (int)$pdo->lastInsertId()
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($action === 'change_student') {
+            $classId = isset($_POST['class_id']) ? (int)$_POST['class_id'] : 0;
+            $reservationId = isset($_POST['reservation_id']) ? (int)$_POST['reservation_id'] : 0;
+            $newStudentId = isset($_POST['student_id']) ? (int)$_POST['student_id'] : 0;
+            $ticketMode = strtoupper(trim((string)($_POST['ticket_mode'] ?? 'USE')));
+
+            if ($classId <= 0 || $reservationId <= 0 || $newStudentId <= 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'class_id, reservation_id, student_id가 필요합니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            if (!in_array($ticketMode, ['USE', 'FREE'], true)) {
+                $ticketMode = 'USE';
+            }
+
+            $pdo->beginTransaction();
+
+            $classStmt = $pdo->prepare("\n                SELECT class_id, teacher_id, class_type, max_capacity\n                FROM classes\n                WHERE class_id = ? AND deleted_at IS NULL\n                LIMIT 1 FOR UPDATE\n            ");
+            $classStmt->execute([$classId]);
+            $class = $classStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$class) {
+                throw new RuntimeException('수업을 찾을 수 없습니다.');
+            }
+
+            $resStmt = $pdo->prepare("\n                SELECT reservation_id, user_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND status = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
+            $resStmt->execute([$reservationId, $classId]);
+            $oldReservation = $resStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$oldReservation) {
+                throw new RuntimeException('변경할 예약을 찾을 수 없습니다.');
+            }
+
+            assertStudentEligibility($pdo, $class, $newStudentId);
+
+            $dupStmt = $pdo->prepare("\n                SELECT reservation_id\n                FROM reservations\n                WHERE class_id = ? AND user_id = ? AND status = 'CONFIRMED' AND reservation_id <> ?\n                LIMIT 1\n            ");
+            $dupStmt->execute([$classId, $newStudentId, $reservationId]);
+            if ($dupStmt->fetch()) {
+                throw new RuntimeException('이미 예약된 학생입니다.');
+            }
+
+            $classType = strtoupper((string)$class['class_type']);
+            if ($ticketMode === 'USE') {
+                $newUserTicketId = findUsableTicketId($pdo, $newStudentId, $classType);
+                if ($newUserTicketId <= 0) {
+                    throw new RuntimeException('새 학생의 사용 가능한 티켓이 없습니다.');
+                }
+            } else {
+                $newUserTicketId = ensureAdminFreeTicketId($pdo, $newStudentId, $classType);
+            }
+
+            $upd = $pdo->prepare("\n                UPDATE reservations\n                SET user_id = ?, user_ticket_id = ?, reserved_at = CURRENT_TIMESTAMP\n                WHERE reservation_id = ?\n            ");
+            $upd->execute([$newStudentId, $newUserTicketId, $reservationId]);
+
+            if ($ticketMode === 'USE') {
+                consumeTicketCount($pdo, $newUserTicketId);
+            }
+
+            restoreTicketCount($pdo, (int)$oldReservation['user_ticket_id']);
+            refreshClassCurrentCapacity($pdo, $classId);
+            $pdo->commit();
+
+            echo json_encode([
+                'success' => true,
+                'message' => '예약 학생이 변경되었습니다. (기존 학생 티켓은 자동 복구)'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($action === 'remove_student') {
+            $classId = isset($_POST['class_id']) ? (int)$_POST['class_id'] : 0;
+            $reservationId = isset($_POST['reservation_id']) ? (int)$_POST['reservation_id'] : 0;
+            $restoreTicket = strtoupper(trim((string)($_POST['restore_ticket'] ?? 'Y'))) === 'Y';
+
+            if ($classId <= 0 || $reservationId <= 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'class_id, reservation_id가 필요합니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            $pdo->beginTransaction();
+
+            $resStmt = $pdo->prepare("\n                SELECT reservation_id, class_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND status = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
+            $resStmt->execute([$reservationId, $classId]);
+            $reservation = $resStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$reservation) {
+                throw new RuntimeException('삭제할 예약을 찾을 수 없습니다.');
+            }
+
+            $upd = $pdo->prepare("UPDATE reservations SET status = 'STUDENT_CANCELLED' WHERE reservation_id = ?");
+            $upd->execute([$reservationId]);
+
+            if ($restoreTicket) {
+                restoreTicketCount($pdo, (int)$reservation['user_ticket_id']);
+            }
+
+            refreshClassCurrentCapacity($pdo, $classId);
+            $pdo->commit();
+
+            echo json_encode([
+                'success' => true,
+                'message' => $restoreTicket ? '학생 예약이 취소되고 티켓이 복구되었습니다.' : '학생 예약이 취소되었습니다.'
             ], JSON_UNESCAPED_UNICODE);
             exit;
         }
