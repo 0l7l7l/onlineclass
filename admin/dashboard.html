@@ -528,7 +528,7 @@
 			<button class="modal-close" onclick="closeModal('reservationAddModal')">&times;</button>
 			<h3 class="modal-title">📅 오픈 스케줄 및 수업 속성 설정</h3>
 			<p style="font-size:12.5px; color:#858796; margin-top:-10px; margin-bottom:15px;">
-				선생님을 지정하고, 해당 선생님의 담당 학생 및 수업 정책을 정의,교사가 오픈한 가용 시간에 적용할 수업 유형 및 예약 규칙을 정의합니다.
+       선생님별 수업 가능 슬롯을 생성합니다. 학생 예약/티켓 차감은 학생 페이지에서 처리됩니다.
 			</p>
 
 
@@ -537,32 +537,26 @@
 
 				<!-- 기본 날짜/시간 설정 (관리자가 직접 지정 가능) -->
 				<div style="background:#f8f9fc; padding:12px; border-radius:6px; margin-bottom:15px; border:1px solid #e3e6f0;">
-					<div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:10px;">
+         <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:10px;">
 						<div>
 							<label style="font-size:12px; font-weight:bold;">스케줄 날짜</label>
 							<input type="date" id="reservation-date-input" value="2026-06-29" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;" required>
 						</div>
 						<div>
-							<label style="font-size:12px; font-weight:bold;">시간 설정</label>
-							<select id="reservation-time-select" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;">
-								<option value="09">09:00 ~ 10:00</option>
-								<option value="10" selected>10:00 ~ 11:00</option>
-								<option value="11">11:00 ~ 12:00</option>
-								<option value="12">12:00 ~ 13:00</option>
-								<option value="13">13:00 ~ 14:00</option>
-								<option value="14">14:00 ~ 15:00</option>
-								<option value="15">15:00 ~ 16:00</option>
-								<option value="16">16:00 ~ 17:00</option>
-							</select>
+              <label style="font-size:12px; font-weight:bold;">시간 설정</label>
+							<div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+								<input type="time" id="reservation-start-time" value="10:00" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;" required>
+								<input type="time" id="reservation-end-time" value="11:00" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;" required>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<!--  1단계: 선생님 지정 및 강사 권한 보유 회원 매칭 -->
-				<div class="form-group" style="background: #eef2fa; padding: 12px; border-radius: 6px; border-left: 4px solid #4e73df;">
+        <!-- 1단계: 선생님 지정 -->
+        <div class="form-group" style="background: #eef2fa; padding: 12px; border-radius: 6px; border-left: 4px solid #4e73df;">
 					<label style="font-weight:bold; color:#2e59d9;">👩‍🏫 담당 선생님 지정</label>
-					<p style="font-size:11.5px; color:#5a5c69; margin:2px 0 6px 0;">가용 스케줄을 오픈할 강사 회원을 선택하세요.</p>
-					<select id="schedule-teacher-select" onchange="filterStudentsByTeacher(this.value)" style="width:100%; padding:8px; border:1px solid #4e73df; border-radius:4px; font-weight:bold;" required>
+         <p style="font-size:11.5px; color:#5a5c69; margin:2px 0 6px 0;">스케줄을 생성할 강사 회원을 선택하세요.</p>
+					<select id="schedule-teacher-select" style="width:100%; padding:8px; border:1px solid #4e73df; border-radius:4px; font-weight:bold;" required>
 						<option value="">-- 선생님 선택 --</option>
 					</select>
 				</div>
@@ -572,59 +566,21 @@
 					<label style="font-weight:bold;">수업 유형 선택</label>
 					<select id="schedule-class-type" onchange="toggleSchedulerTypeFields(this.value)" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;" required>
 						<option value="">-- 유형을 선택하세요 --</option>
-						<option value="PRIVATE_11">🎯 1:1 개인 수업 (지정 학생 전용)</option>
-						<option value="DUO_12">👥 1:2 듀오 수업 (고정 및 오픈 매칭)</option>
-						<option value="GROUP">🏫 그룹 수업 (학생 주도형 정기 스케줄)</option>
+           <option value="PRIVATE_11">🎯 1:1 개인 수업</option>
+						<option value="DUO_12">👥 1:2 듀오 수업</option>
+						<option value="GROUP">🏫 그룹 수업</option>
 					</select>
 				</div>
 
-				<!-- 섹션 A: 1:1 수업 선택 시 -->
-				<div id="field-private-11" style="display:none; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
-					<div class="form-group">
-						<label style="font-size:13px; color:#4e73df; font-weight:bold;">🔒 노출 대상 학생 지정 (선택)</label>
-						<p style="font-size:11.5px; color:#858796; margin:2px 0 8px 0;">선택된 선생님의 담당 매칭 학생만 노출되며, 비워두면 오픈 슬롯으로 생성됩니다.</p>
-						<select id="private-student-list" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;">
-							<option value="">-- 선생님을 먼저 선택해 주세요 --</option>
-						</select>
+        <div id="field-private-11" style="display:none; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
+					<div style="background:#eef2fa; color:#2e59d9; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+						개인수업 슬롯은 저장 후 해당 선생님의 담당 학생에게만 자동 노출됩니다.
 					</div>
 				</div>
 
-				<!-- 섹션 B: 1:2 수업 선택 시 -->
 				<div id="field-duo-12" style="display:none; border-left:4px solid #1cc88a; padding-left:15px; margin-top:15px;">
-					<div class="form-group">
-						<label style="font-size:13px; color:#1cc88a; font-weight:bold;">👥 1:2 매칭 방식 선택</label>
-						<div style="margin:8px 0; font-size:13px;">
-							<label style="margin-right:15px; cursor:pointer;">
-								<input type="radio" name="duo_mode" value="manual" checked onchange="toggleDuoSubFields('manual')"> 관리자/강사 수동 지정
-							</label>
-							<label style="cursor:pointer;">
-								<input type="radio" name="duo_mode" value="random" onchange="toggleDuoSubFields('random')"> 1명 고정 + 1명 랜덤 오픈
-							</label>
-						</div>
-						<p style="font-size:11.5px; color:#858796; margin:2px 0 8px 0;">담당 학생만 선택 가능하며, 모두 비워두면 듀오 오픈 슬롯으로 생성됩니다.</p>
-					</div>
-
-					<!-- 1:2 수동 지정 폼 -->
-					<div id="duo-manual-inputs">
-						<div class="form-group" style="margin-bottom:8px;">
-							<label style="font-size:12px;">학생 1</label>
-							<select class="teacher-student-combo" style="width:100%; padding:6px;"><option value="">-- 선생님을 선택하세요 --</option></select>
-						</div>
-						<div class="form-group">
-							<label style="font-size:12px;">학생 2</label>
-							<select class="teacher-student-combo" style="width:100%; padding:6px;"><option value="">-- 선생님을 선택하세요 --</option></select>
-						</div>
-					</div>
-
-					<!-- 1:2 1명고정 + 1명랜덤 오픈 폼 -->
-					<div id="duo-random-inputs" style="display:none;">
-						<div class="form-group">
-							<label style="font-size:12px; color:#e74a3b;">확정 고정 학생 (1인)</label>
-							<select class="teacher-student-combo" style="width:100%; padding:6px; border:1px solid #e74a3b;"><option value="">-- 선생님을 선택하세요 --</option></select>
-						</div>
-						<p style="font-size:11.5px; color:#858796; margin-top:5px;">
-							💡 나머지 1자리는 공석으로 오픈되어 해당 선생님의 티켓을 구매한 다른 학생이 신청 가능합니다.
-						</p>
+					<div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+						듀오수업 슬롯은 저장 후 해당 선생님의 담당 학생에게만 자동 노출됩니다.
 					</div>
 				</div>
 
@@ -634,9 +590,9 @@
 					선생님이 부득이하게 쉬게되었을경우 다른선생님이 대체될수있도록 선생님변경가능기능을추가한다
 					그룹수업은 현재로서 25분 글자마스터(가타카나),(히라가나)두개만존재한다.-->
 				<div id="field-group" style="display:none; border-left:4px solid #f6c23e; padding-left:15px; margin-top:15px;">
-					<div style="background:#fff3cd; color:#664d03; padding:10px; border-radius:4px; font-size:12.5px; line-height:1.5;">
-						<strong>🏫 학생 주도형 정기 스케줄 정책 적용</strong><br>
-						그룹 수업용 티켓을 가진 학생들이 스케줄에 주1회나 주2회를 자유롭게 선택하며, 선택 시 자동으로 4주/8주간 스케줄이 고정선점됩니다.
+          <div style="background:#fff3cd; color:#664d03; padding:10px; border-radius:4px; font-size:12.5px; line-height:1.5;">
+						<strong>🏫 그룹 수업 노출 정책</strong><br>
+						그룹 수업은 담당선생님과 관계없이 그룹 티켓 보유 학생 전체에게 노출됩니다.
 					</div>
 					<div class="form-group" style="margin-top:10px;">
 						<label style="font-size:12px;">최대 수강 정원 허용 (명)</label>
@@ -651,14 +607,14 @@
 		</div>
 	</div>
 
-	<!-- 5. 수업정보 세부 속성및 학생 매칭 변경 모달 -->
+ <!-- 5. 수업정보 세부 속성 변경 모달 -->
 
 	<div class="modal-overlay" id="classEditModal">
 		<div class="modal-box" style="max-width: 520px;">
 			<button class="modal-close" onclick="closeModal('classEditModal')">&times;</button>
-			<h3 class="modal-title">✏️ 오픈 수업 정보 및 매칭 수정</h3>
+      <h3 class="modal-title">✏️ 오픈 수업 정보 수정</h3>
 			<p style="font-size:12.5px; color:#858796; margin-top:-10px; margin-bottom:15px;">
-				이미 생성된 수업 스케줄의 일시를 변경하거나 배정된 학생 정보를 수정합니다.
+        이미 생성된 수업 스케줄의 일시, 담당 강사, 수업 유형을 수정합니다.
 			</p>
 
 			<form id="class-edit-form" onsubmit="event.preventDefault(); submitSlotUpdate();">
@@ -698,51 +654,16 @@
 					</select>
 				</div>
 
-				<!-- [유형별 가변 섹션 1] 1:1 학생 변경 -->
+        <!-- [유형별 안내 섹션] 관리자 스케줄 전용 -->
 				<div id="edit-field-private" style="display:block; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
-					<div class="form-group">
-						<label style="font-size:13px; color:#4e73df; font-weight:bold;">🔒 전용 예약 학생 변경</label>
-						<select style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;">
-							<option value="10" selected>김철수 (chulsoo) [현재 예약 확정]</option>
-							<option value="11">이영희 (younghee)</option>
-							<option value="none">-- 지정 해제 (공석으로 전환) --</option>
-						</select>
+          <div style="background:#eef2fa; color:#2e59d9; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+						개인수업은 슬롯만 수정됩니다. 학생 예약은 onlineclass.html에서 처리됩니다.
 					</div>
 				</div>
 
-				<!-- [유형별 가변 섹션 2] 1:2 학생 매칭 변경 -->
 				<div id="edit-field-duo" style="display:none; border-left:4px solid #1cc88a; padding-left:15px; margin-top:15px;">
-					<div class="form-group">
-						<label style="font-size:13px; color:#1cc88a; font-weight:bold;">👥 1:2 매칭 및 대기 상태 변경</label>
-						<div style="margin:8px 0; font-size:13px;">
-							<label style="margin-right:15px; cursor:pointer;">
-								<input type="radio" name="edit_duo_mode" value="manual" checked onchange="toggleEditDuoSubFields('manual')"> 양쪽 직접 배정
-							</label>
-							<label style="cursor:pointer;">
-								<input type="radio" name="edit_duo_mode" value="random" onchange="toggleEditDuoSubFields('random')"> 1명 고정 + 나머지 오픈
-							</label>
-						</div>
-					</div>
-
-					<div id="edit-duo-manual-inputs">
-						<div class="form-group" style="margin-bottom:8px;">
-							<label style="font-size:12px;">첫 번째 학생</label>
-							<select style="width:100%; padding:6px;"><option value="10" selected>김철수</option><option value="11">이영희</option></select>
-						</div>
-						<div class="form-group">
-							<label style="font-size:12px;">두 번째 학생</label>
-							<select style="width:100%; padding:6px;"><option value="">-- 비어 있음 (추가 배정 가능) --</option><option value="11">이영희</option></select>
-						</div>
-					</div>
-
-					<div id="edit-duo-random-inputs" style="display:none;">
-						<div class="form-group">
-							<label style="font-size:12px; color:#e74a3b;">고정 알박기 학생</label>
-							<select style="width:100%; padding:6px; border:1px solid #e74a3b;"><option value="10">김철수</option><option value="11">이영희</option></select>
-						</div>
-						<div style="background:#e8f5e9; color:#2e7d32; padding:8px; border-radius:4px; font-size:11.5px; margin-top:5px;">
-							✨ 남은 1자리는 학생들이 앱에서 직접 실시간으로 신청할 수 있도록 오픈 상태를 유지합니다.
-						</div>
+          <div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+						듀오수업은 슬롯 정보만 수정됩니다. 학생 매칭/예약은 onlineclass.html에서 처리됩니다.
 					</div>
 				</div>
 
@@ -1089,18 +1010,13 @@
 		}
 
 		function toggleSchedulerTypeFields(type) {
-			document.getElementById('field-private-11').style.display = 'none';
+     document.getElementById('field-private-11').style.display = 'none';
 			document.getElementById('field-duo-12').style.display = 'none';
 			document.getElementById('field-group').style.display = 'none';
 
 			if (type === 'PRIVATE_11') document.getElementById('field-private-11').style.display = 'block';
 			else if (type === 'DUO_12') document.getElementById('field-duo-12').style.display = 'block';
 			else if (type === 'GROUP') document.getElementById('field-group').style.display = 'block';
-		}
-
-		function toggleDuoSubFields(mode) {
-			document.getElementById('duo-manual-inputs').style.display = mode === 'manual' ? 'block' : 'none';
-			document.getElementById('duo-random-inputs').style.display = mode === 'random' ? 'block' : 'none';
 		}
 
 		function toggleEditTypeFields(type) {
@@ -1111,46 +1027,6 @@
 			if (type === 'PRIVATE_11') document.getElementById('edit-field-private').style.display = 'block';
 			else if (type === 'DUO_12') document.getElementById('edit-field-duo').style.display = 'block';
 			else if (type === 'GROUP') document.getElementById('edit-field-group').style.display = 'block';
-		}
-
-		function toggleEditDuoSubFields(mode) {
-			document.getElementById('edit-duo-manual-inputs').style.display = mode === 'manual' ? 'block' : 'none';
-			document.getElementById('edit-duo-random-inputs').style.display = mode === 'random' ? 'block' : 'none';
-		}
-
-		async function filterStudentsByTeacher(teacherId) {
-			const privateSelect = document.getElementById('private-student-list');
-			const allDuoCombos = document.querySelectorAll('.teacher-student-combo');
-			const defaultHtml = `<option value="">-- 선생님을 먼저 선택해 주세요 --</option>`;
-
-			if (!teacherId) {
-				privateSelect.innerHTML = defaultHtml;
-				allDuoCombos.forEach(combo => combo.innerHTML = defaultHtml);
-				return;
-			}
-
-			try {
-				const resp = await fetch('../api/classes.php?action=get_students&teacher_id=' + encodeURIComponent(teacherId));
-				const res = await resp.json();
-				if (!resp.ok || !res.success) {
-					privateSelect.innerHTML = `<option value="">학생 목록 조회 실패</option>`;
-					allDuoCombos.forEach(combo => combo.innerHTML = `<option value="">학생 목록 조회 실패</option>`);
-					return;
-				}
-
-				const students = res.data || [];
-				let optionsHtml = `<option value="">-- 담당 학생 선택 (${students.length}명) --</option>`;
-				students.forEach(st => {
-					optionsHtml += `<option value="${st.user_id}">${escapeHtml(st.name)} (${escapeHtml(st.username)})</option>`;
-				});
-
-				privateSelect.innerHTML = optionsHtml;
-				allDuoCombos.forEach(combo => combo.innerHTML = optionsHtml);
-			} catch (e) {
-				console.error(e);
-				privateSelect.innerHTML = `<option value="">학생 목록 조회 실패</option>`;
-				allDuoCombos.forEach(combo => combo.innerHTML = `<option value="">학생 목록 조회 실패</option>`);
-			}
 		}
 
 		async function loadScheduleForDate(dateStr) {
@@ -1256,7 +1132,7 @@
 
 				const list = document.getElementById('selected-student-list');
 				if (targets.length === 0) {
-					list.innerHTML = '<li style="margin-bottom: 5px;">지정 학생이 없습니다(담당 학생 노출).</li>';
+         list.innerHTML = '<li style="margin-bottom: 5px;">현재 예약된 학생이 없습니다.</li>';
 				} else {
 					list.innerHTML = targets.map(st => `<li style="margin-bottom: 5px;">${escapeHtml(st.name)} (${escapeHtml(st.username)})</li>`).join('');
 				}
@@ -1279,71 +1155,37 @@
 			if (!Number.isNaN(teacherId)) {
 				const teacherSelect = document.getElementById('schedule-teacher-select');
 				teacherSelect.value = teacherId;
-				filterStudentsByTeacher(teacherSelect.value);
 			}
 
 			const dateInput = document.getElementById('reservation-date-input');
 			if (dateInput) dateInput.value = selectedScheduleDate;
 
-			const timeSelect = document.getElementById('reservation-time-select');
-			if (timeSelect) timeSelect.value = String(hour).padStart(2, '0');
-		}
-
-		function getSelectedStudentIds(classTypeRaw) {
-			const ids = [];
-			const addId = (v) => {
-				const n = parseInt(String(v || '').trim(), 10);
-				if (!Number.isNaN(n) && n > 0 && !ids.includes(String(n))) ids.push(String(n));
-			};
-
-			if (classTypeRaw === 'PRIVATE_11') {
-				addId(document.getElementById('private-student-list')?.value);
-				return ids;
-			}
-
-			if (classTypeRaw === 'DUO_12') {
-				const mode = document.querySelector('input[name="duo_mode"]:checked')?.value || 'manual';
-				if (mode === 'manual') {
-					document.querySelectorAll('#duo-manual-inputs .teacher-student-combo').forEach(select => addId(select.value));
-				} else {
-					addId(document.querySelector('#duo-random-inputs .teacher-student-combo')?.value);
-				}
-			}
-			return ids;
-		}
-
-		function addMinutesToHHMMSS(hh, mm = '00', ss = '00', minutesToAdd = 25) {
-			const base = new Date(`2000-01-01T${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`);
-			base.setMinutes(base.getMinutes() + minutesToAdd);
-			return `${String(base.getHours()).padStart(2, '0')}:${String(base.getMinutes()).padStart(2, '0')}:${String(base.getSeconds()).padStart(2, '0')}`;
+      const startTimeInput = document.getElementById('reservation-start-time');
+			const endTimeInput = document.getElementById('reservation-end-time');
+			if (startTimeInput) startTimeInput.value = `${String(hour).padStart(2, '0')}:00`;
+			if (endTimeInput) endTimeInput.value = `${String(hour + 1).padStart(2, '0')}:00`;
 		}
 
 		async function submitAdminReservation() {
 			try {
 				const teacher = document.getElementById('schedule-teacher-select').value;
 				const date = document.getElementById('reservation-date-input').value;
-				const timeHour = document.getElementById('reservation-time-select').value;
+        const startTimeValue = document.getElementById('reservation-start-time').value;
+				const endTimeValue = document.getElementById('reservation-end-time').value;
 				const classTypeRaw = document.getElementById('schedule-class-type').value;
 				const maxStudents = parseInt(document.getElementById('reservation-group-max-students')?.value || '5', 10);
-				const studentIds = getSelectedStudentIds(classTypeRaw);
 
-				if (!teacher || !date || !timeHour || !classTypeRaw) {
+        if (!teacher || !date || !startTimeValue || !endTimeValue || !classTypeRaw) {
 					alert('필수 항목을 모두 채워주세요.');
 					return;
 				}
-
-				if (classTypeRaw === 'PRIVATE_11' && studentIds.length > 1) {
-					alert('1:1 수업은 학생을 최대 1명만 지정할 수 있습니다.');
-					return;
-				}
-				if (classTypeRaw === 'DUO_12' && studentIds.length > 2) {
-					alert('듀오 수업은 학생을 최대 2명까지 지정할 수 있습니다.');
+				if (startTimeValue >= endTimeValue) {
+					alert('종료 시간은 시작 시간보다 늦어야 합니다.');
 					return;
 				}
 
-				const hh = String(timeHour).padStart(2, '0');
-				const startTime = `${hh}:00:00`;
-				const endTime = addMinutesToHHMMSS(hh, '00', '00', 25);
+       const startTime = `${startTimeValue}:00`;
+				const endTime = `${endTimeValue}:00`;
 
 				const params = new URLSearchParams();
 				params.append('action', 'create');
@@ -1353,7 +1195,6 @@
 				params.append('end_time', endTime);
 				params.append('class_type', classTypeRaw);
 				params.append('max_capacity', String(classTypeRaw === 'GROUP' ? Math.max(2, maxStudents) : (classTypeRaw === 'DUO_12' ? 2 : 1)));
-				if (studentIds.length > 0) params.append('target_user_ids', studentIds.join(','));
 
 				const resp = await fetch('../api/classes.php', {
 					method: 'POST',
@@ -1370,22 +1211,21 @@
 					return;
 				}
 
-				const createdClassId = Number(res.class_id || 0);
-if (createdClassId > 0) {
-	selectedSlotId = createdClassId;
-	pendingAutoSelectClassId = createdClassId;
-}
+       const createdClassId = Number(res.class_id || 0);
+				if (createdClassId > 0) {
+					selectedSlotId = createdClassId;
+				}
 
-alert(res.message || '예약 생성 완료');
-closeModal('reservationAddModal');
+				alert(res.message || '예약 생성 완료');
+				closeModal('reservationAddModal');
 
-await loadScheduleForDate(date);
+				await loadScheduleForDate(date);
 
-if (createdClassId > 0) {
-	await loadClassDetail(createdClassId);
-}
+				if (createdClassId > 0) {
+					await loadClassDetail(createdClassId);
+				}
 
-renderMiniCalendar();
+				renderMiniCalendar();
 			} catch (e) {
 				console.error(e);
 				alert(e?.message ? `예약 생성 실패: ${e.message}` : '예약 생성 중 오류가 발생했습니다.');
@@ -1660,15 +1500,10 @@ renderMiniCalendar();
 			const teacherSelect = document.getElementById('schedule-teacher-select');
 			if (teacherSelect) teacherSelect.value = '';
 
-			const privateSelect = document.getElementById('private-student-list');
-			if (privateSelect) privateSelect.innerHTML = '<option value="">-- 선생님을 먼저 선택해 주세요 --</option>';
-
-			document.querySelectorAll('.teacher-student-combo').forEach(el => {
-				el.innerHTML = '<option value="">-- 선생님을 선택하세요 --</option>';
-			});
-
-			const timeSelect = document.getElementById('reservation-time-select');
-			if (timeSelect) timeSelect.value = '10';
+      const startTimeInput = document.getElementById('reservation-start-time');
+			const endTimeInput = document.getElementById('reservation-end-time');
+			if (startTimeInput) startTimeInput.value = '10:00';
+			if (endTimeInput) endTimeInput.value = '11:00';
 
 			openModal('reservationAddModal');
 }
