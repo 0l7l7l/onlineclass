@@ -278,19 +278,9 @@
 						<ul id="selected-student-list" style="font-size: 13px; padding-left: 20px; margin: 0; color:#5a5c69;">
 							<li style="margin-bottom: 5px;">선택된 수업이 없습니다.</li>
 						</ul>
-						<p style="font-size:12px; color:#858796; margin-top:8px;">선택된 학생: <span id="selected-managed-student">-</span></p>
-
-						<div class="action-flex" style="margin-top: 8px; flex-wrap: wrap;">
-							<button class="btn btn-success" id="manage-add-student-btn" onclick="openStudentSearchModal('add')" disabled>➕ 학생 추가</button>
-							<button class="btn btn-warning" id="manage-change-student-btn" onclick="openStudentSearchModal('change')" disabled>🔁 학생 변경</button>
-							<button class="btn btn-danger" id="manage-delete-student-btn" onclick="openStudentDeleteModal()" disabled>➖ 학생 삭제</button>
-						</div>
-
 						<div class="action-flex">
-							<button class="btn btn-primary" onclick="openCreateClassModal()">➕ 예약 추가 배정</button>
-							<button class="btn btn-warning" onclick="openClassEditModal()">✏️ 수업 변경</button>
-							<button class="btn btn-danger" onclick="deleteSelectedSlot()">🗑️ 수업 삭제</button>
-							<button class="btn btn-secondary" onclick="openModal('historyModal')">📜 변경 이력</button>
+              <button class="btn btn-primary" id="open-student-manage-btn" onclick="openStudentManageModal()" disabled>👥 학생 관리</button>
+							<button class="btn btn-secondary" id="open-class-manage-btn" onclick="openClassManageModal()" disabled>🧰 수업 관리</button>
 						</div>
 					</div>
 				</div>
@@ -299,7 +289,10 @@
 				<div class="scheduler-box">
 					<div style="display: flex; justify-content: space-between; align-items: center;">
 						<h4 style="margin: 0; color:#4e73df;" id="schedule-timeline-title">⏱️ 선생님별 타임라인</h4>
-						<button class="btn btn-success" style="font-size:12px;" onclick="openModal('debugScheduleModal')">⚙️ 디버그: 전체 교사 스케줄 일괄 추가</button>
+            <div style="display:flex; gap:8px;">
+							<button class="btn btn-primary" style="font-size:12px;" onclick="openCreateClassModal()">+ 예약 추가</button>
+							<button class="btn btn-success" style="font-size:12px;" onclick="openModal('debugScheduleModal')">⚙️ 디버그: 전체 교사 스케줄 일괄 추가</button>
+						</div>
 					</div>
 
 					<div class="timeline-scroll">
@@ -729,7 +722,39 @@
 		</div>
 	</div>
 
-	<!-- 8. 학생 검색/배정 모달 -->
+	<!-- 8. 학생 관리 모달 -->
+	<div class="modal-overlay" id="studentManageModal">
+		<div class="modal-box" style="max-width: 620px;">
+			<button class="modal-close" onclick="closeModal('studentManageModal')">&times;</button>
+			<h3 class="modal-title">학생 관리</h3>
+			<div style="background:#f8f9fc; border:1px solid #e3e6f0; border-radius:6px; padding:10px; margin-bottom:10px;">
+				<div style="font-size:13px; color:#4e73df; font-weight:bold; margin-bottom:6px;">예약 학생</div>
+				<ul id="student-manage-list" style="max-height:180px; overflow:auto; margin:0; padding-left:18px; font-size:13px; color:#5a5c69;">
+					<li>선택된 수업이 없습니다.</li>
+				</ul>
+			</div>
+			<div class="action-flex" style="margin-top:0; flex-wrap:wrap;">
+				<button type="button" class="btn btn-success" id="student-manage-add-btn" onclick="openStudentSearchModal('add')">➕ 학생 추가</button>
+				<button type="button" class="btn btn-warning" id="student-manage-change-btn" onclick="openStudentSearchModal('change')" disabled>🔁 학생 변경</button>
+				<button type="button" class="btn btn-danger" id="student-manage-delete-btn" onclick="openStudentDeleteModal()" disabled>➖ 예약 취소</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 9. 수업 관리 모달 -->
+	<div class="modal-overlay" id="classManageModal">
+		<div class="modal-box" style="max-width: 460px;">
+			<button class="modal-close" onclick="closeModal('classManageModal')">&times;</button>
+			<h3 class="modal-title">수업 관리</h3>
+			<div class="action-flex" style="flex-direction:column;">
+				<button type="button" class="btn btn-warning" onclick="openClassEditFromManage()">✏️ 수업 수정</button>
+				<button type="button" class="btn btn-danger" onclick="deleteClassFromManage()">🗑️ 수업 삭제</button>
+				<button type="button" class="btn btn-secondary" onclick="openHistoryFromManage()">📜 변경 이력</button>
+			</div>
+		</div>
+	</div>
+
+ <!-- 10. 학생 검색/배정 모달 -->
 	<div class="modal-overlay" id="studentSearchModal">
 		<div class="modal-box" style="max-width: 620px;">
 			<button class="modal-close" onclick="closeModal('studentSearchModal')">&times;</button>
@@ -768,7 +793,7 @@
 		</div>
 	</div>
 
-	<!-- 9. 학생 삭제 모달 -->
+  <!-- 11. 학생 삭제 모달 -->
 	<div class="modal-overlay" id="studentDeleteModal">
 		<div class="modal-box" style="max-width: 460px;">
 			<button class="modal-close" onclick="closeModal('studentDeleteModal')">&times;</button>
@@ -935,7 +960,6 @@
 			document.getElementById('selected-class-type-label').innerText = '-';
 			document.getElementById('selected-reservation-status').innerText = '-';
 			document.getElementById('selected-student-list').innerHTML = '<li style="margin-bottom: 5px;">선택된 수업이 없습니다.</li>';
-     document.getElementById('selected-managed-student').innerText = '-';
 			updateStudentManageButtons();
 		}
 
@@ -947,9 +971,14 @@
 		}
 
 		function updateStudentManageButtons() {
-			const addBtn = document.getElementById('manage-add-student-btn');
-			const changeBtn = document.getElementById('manage-change-student-btn');
-			const deleteBtn = document.getElementById('manage-delete-student-btn');
+     const studentManageBtn = document.getElementById('open-student-manage-btn');
+			const classManageBtn = document.getElementById('open-class-manage-btn');
+			if (studentManageBtn) studentManageBtn.disabled = !selectedSlotData || !selectedSlotId;
+			if (classManageBtn) classManageBtn.disabled = !selectedSlotData || !selectedSlotId;
+
+			const addBtn = document.getElementById('student-manage-add-btn');
+			const changeBtn = document.getElementById('student-manage-change-btn');
+			const deleteBtn = document.getElementById('student-manage-delete-btn');
 			if (!addBtn || !changeBtn || !deleteBtn) return;
 
 			if (!selectedSlotData || !selectedSlotId) {
@@ -976,22 +1005,86 @@
 			deleteBtn.disabled = !hasSelectedReservation;
 		}
 
-		function selectReservationRow(reservationId) {
+    function selectReservationRow(reservationId) {
 			const reservations = Array.isArray(selectedSlotData?.reservations) ? selectedSlotData.reservations : [];
 			selectedReservationRow = reservations.find(r => Number(r.reservation_id) === Number(reservationId)) || null;
-			document.querySelectorAll('#selected-student-list li[data-reservation-id]').forEach(li => {
+     document.querySelectorAll('#student-manage-list li[data-reservation-id]').forEach(li => {
 				li.style.background = '';
 				li.style.borderRadius = '';
 				li.style.padding = '';
 			});
-			const activeLi = document.querySelector(`#selected-student-list li[data-reservation-id="${reservationId}"]`);
+     const activeLi = document.querySelector(`#student-manage-list li[data-reservation-id="${reservationId}"]`);
 			if (activeLi) {
 				activeLi.style.background = '#eef2fa';
 				activeLi.style.borderRadius = '4px';
 				activeLi.style.padding = '4px 6px';
 			}
-			document.getElementById('selected-managed-student').innerText = selectedReservationRow ? `${selectedReservationRow.student_name} (${selectedReservationRow.student_username})` : '-';
 			updateStudentManageButtons();
+		}
+
+		function renderStudentManageList() {
+			const list = document.getElementById('student-manage-list');
+			if (!list) return;
+
+			const reservations = Array.isArray(selectedSlotData?.reservations) ? selectedSlotData.reservations : [];
+			if (!selectedSlotData || !selectedSlotId) {
+				list.innerHTML = '<li>선택된 수업이 없습니다.</li>';
+				selectedReservationRow = null;
+				updateStudentManageButtons();
+				return;
+			}
+
+			if (reservations.length === 0) {
+				list.innerHTML = '<li>현재 예약된 학생이 없습니다.</li>';
+				selectedReservationRow = null;
+				updateStudentManageButtons();
+				return;
+			}
+
+			list.innerHTML = reservations.map(r => `<li data-reservation-id="${r.reservation_id}" onclick="selectReservationRow(${r.reservation_id})" style="margin-bottom:5px; cursor:pointer;">${escapeHtml(r.student_name)} (${escapeHtml(r.student_username)}) ${r.ticket_mode === 'FREE' ? '<span style="color:#e67e22;">[무료]</span>' : ''}</li>`).join('');
+
+			if (!selectedReservationRow || !reservations.some(r => Number(r.reservation_id) === Number(selectedReservationRow.reservation_id))) {
+				selectedReservationRow = null;
+			}
+
+			if (selectedReservationRow) {
+				selectReservationRow(selectedReservationRow.reservation_id);
+			} else {
+				updateStudentManageButtons();
+			}
+		}
+
+		function openStudentManageModal() {
+			if (!selectedSlotId || !selectedSlotData) {
+				alert('먼저 수업 슬롯을 선택해 주세요.');
+				return;
+			}
+      selectedReservationRow = null;
+			renderStudentManageList();
+			openModal('studentManageModal');
+		}
+
+		function openClassManageModal() {
+			if (!selectedSlotId || !selectedSlotData) {
+				alert('먼저 수업 슬롯을 선택해 주세요.');
+				return;
+			}
+			openModal('classManageModal');
+		}
+
+		function openClassEditFromManage() {
+			closeModal('classManageModal');
+			openClassEditModal();
+		}
+
+		function deleteClassFromManage() {
+			closeModal('classManageModal');
+			deleteSelectedSlot();
+		}
+
+		function openHistoryFromManage() {
+			closeModal('classManageModal');
+			openModal('historyModal');
 		}
 
 		function toLegacySlotShape(c) {
@@ -1263,15 +1356,9 @@
        if (reservations.length === 0) {
 					list.innerHTML = '<li style="margin-bottom: 5px;">현재 예약된 학생이 없습니다.</li>';
 				} else {
-          list.innerHTML = reservations.map(r => `<li data-reservation-id="${r.reservation_id}" onclick="selectReservationRow(${r.reservation_id})" style="margin-bottom:5px; cursor:pointer;">${escapeHtml(r.student_name)} (${escapeHtml(r.student_username)}) ${r.ticket_mode === 'FREE' ? '<span style="color:#e67e22;">[무료]</span>' : ''}</li>`).join('');
+         list.innerHTML = reservations.map(r => `<li style="margin-bottom:5px;">${escapeHtml(r.student_name)} (${escapeHtml(r.student_username)}) ${r.ticket_mode === 'FREE' ? '<span style="color:#e67e22;">[무료]</span>' : ''}</li>`).join('');
 				}
-
-				if (selectedReservationRow) {
-					selectReservationRow(selectedReservationRow.reservation_id);
-				} else {
-					document.getElementById('selected-managed-student').innerText = '-';
-					updateStudentManageButtons();
-				}
+				updateStudentManageButtons();
 			} catch (error) {
 				console.error(error);
 				alert('수업 상세 정보 조회 중 오류가 발생했습니다.');
@@ -1408,6 +1495,7 @@
 				alert(res.message || '처리 완료');
 				await loadScheduleForDate(selectedScheduleDate);
         await loadClassDetail(classId);
+       renderStudentManageList();
 			} catch (e) {
 				console.error(e);
 				alert('학생 배정 처리 중 오류가 발생했습니다.');
@@ -1451,6 +1539,7 @@
 				alert(res.message || '삭제 완료');
 				await loadScheduleForDate(selectedScheduleDate);
         await loadClassDetail(classId);
+       renderStudentManageList();
 			} catch (e) {
 				console.error(e);
 				alert('학생 삭제 처리 중 오류가 발생했습니다.');
