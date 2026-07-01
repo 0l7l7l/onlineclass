@@ -216,7 +216,7 @@ try {
     // ========================================
     // 권한 관련 공통 체크
     // ========================================
-        $userId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+    $userId = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
     $role = strtoupper(trim((string)($_SESSION['user_role'] ?? '')));
 
     // ========================================
@@ -880,6 +880,11 @@ try {
                 echo json_encode(['success' => false, 'message' => '날짜/시간은 필수입니다.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
+            if ($startTime >= $endTime) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => '종료 시간은 시작 시간보다 늦어야 합니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
 
             if ($maxCapacity <= 0) {
                 $maxCapacity = $classType === 'PRIVATE' ? 1 : ($classType === 'DUO' ? 2 : 5);
@@ -964,6 +969,20 @@ try {
 
             if ($teacherId <= 0) {
         $teacherId = (int)$old['teacher_id'];
+    }
+    if ($classDate === '') {
+        $classDate = (string)$old['class_date'];
+    }
+    if ($startTime === '') {
+        $startTime = (string)$old['start_time'];
+    }
+    if ($endTime === '') {
+        $endTime = (string)$old['end_time'];
+    }
+    if ($startTime >= $endTime) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => '종료 시간은 시작 시간보다 늦어야 합니다.'], JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
     if ($maxCapacity <= 0) {
@@ -1060,37 +1079,33 @@ try {
                 exit;
             }
 
-             // ✅ 변경 전 정보 조회
-    $oldStmt = $pdo->prepare("SELECT * FROM classes WHERE class_id = ? AND deleted_at IS NULL");
-    $oldStmt->execute([$classId]);
-    $oldData = $oldStmt->fetch(PDO::FETCH_ASSOC);
-
+            $oldStmt = $pdo->prepare("SELECT * FROM classes WHERE class_id = ? AND deleted_at IS NULL");
+            $oldStmt->execute([$classId]);
+            $oldData = $oldStmt->fetch(PDO::FETCH_ASSOC);
 
             $stmt = $pdo->prepare("UPDATE classes SET deleted_at = CURRENT_TIMESTAMP, status = 'CANCELLED' WHERE class_id = ?");
             $stmt->execute([$classId]);
 
-             // ✅ 변경 이력 기록
-    if ($oldData) {
-        $oldValue = [
-            'teacher_id' => (int)$oldData['teacher_id'],
-            'class_type' => $oldData['class_type'],
-            'class_date' => $oldData['class_date'],
-            'start_time' => $oldData['start_time'],
-            'end_time' => $oldData['end_time'],
-            'status' => 'AVAILABLE'
-        ];
-         logClassChange($pdo, $classId, 'DELETE', $userId, $oldValue, null, '수업이 취소/삭제되었습니다.');
-    }
+            if ($oldData) {
+                $oldValue = [
+                    'teacher_id' => (int)$oldData['teacher_id'],
+                    'class_type' => $oldData['class_type'],
+                    'class_date' => $oldData['class_date'],
+                    'start_time' => $oldData['start_time'],
+                    'end_time' => $oldData['end_time'],
+                    'status' => 'AVAILABLE'
+                ];
+                logClassChange($pdo, $classId, 'DELETE', $userId, $oldValue, null, '수업이 취소/삭제되었습니다.');
+            }
 
             echo json_encode(['success' => true, 'message' => '수업이 취소/삭제되었습니다.'], JSON_UNESCAPED_UNICODE);
             exit;
-        
+        }
     }
 
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => '잘못된 요청입니다.'], JSON_UNESCAPED_UNICODE);
     exit;
-}
 } catch (Throwable $e) {
     if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
         $pdo->rollBack();

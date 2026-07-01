@@ -810,6 +810,7 @@
 		let editingSlotId = null;
 		let editingSlotData = null;
 		let cachedTeachers = [];
+		let cachedSlotsById = {};
 		let miniCalYear = new Date().getFullYear();
 		let miniCalMonth = new Date().getMonth();
 		let selectedReservationRow = null;
@@ -978,6 +979,14 @@
 			modal.style.zIndex = '';
 		}
 
+		function forceModalVisible(modal, zIndex = 1000) {
+			modal.style.display = 'flex';
+			modal.style.visibility = 'visible';
+			modal.style.opacity = '1';
+			modal.style.pointerEvents = 'auto';
+			modal.style.zIndex = String(zIndex);
+		}
+
 		function openModal(modalId, options = {}) {
 			const modal = document.getElementById(modalId);
 			if (!modal) {
@@ -990,7 +999,9 @@
 			modal.classList.add('show');
 			if (stack) {
 				const openCount = document.querySelectorAll('.modal-overlay.show').length;
-				modal.style.zIndex = String(1000 + openCount);
+				forceModalVisible(modal, 1000 + openCount);
+			} else {
+				forceModalVisible(modal);
 			}
 			return true;
 		}
@@ -1040,8 +1051,8 @@
 			const classEditBtn = document.getElementById('open-class-edit-btn');
 			const classManageBtn = document.getElementById('open-class-manage-btn');
 			if (studentManageBtn) studentManageBtn.disabled = !selectedSlotData || !selectedSlotId;
-			if (classEditBtn) classEditBtn.disabled = !selectedSlotData || !selectedSlotId;
-			if (classManageBtn) classManageBtn.disabled = !selectedSlotData || !selectedSlotId;
+			if (classEditBtn) classEditBtn.disabled = !selectedSlotId;
+			if (classManageBtn) classManageBtn.disabled = !selectedSlotId;
 
 			const addBtn = document.getElementById('student-manage-add-btn');
 			const changeBtn = document.getElementById('student-manage-change-btn');
@@ -1129,7 +1140,7 @@
 
 			openModal('studentManageModal');
 			try {
-				if (!selectedSlotData) {
+				if (!selectedSlotData || !selectedSlotData.detail_loaded) {
 					await loadClassDetail(selectedSlotId);
 				}
 				if (!selectedSlotData) {
@@ -1138,10 +1149,19 @@
 				}
 				selectedReservationRow = null;
 				renderStudentManageList();
+				if (!selectedSlotData.detail_loaded) {
+					const list = document.getElementById('student-manage-list');
+					if (list) {
+						list.innerHTML = '<li style="color:#e74a3b;">예약 학생 상세 정보를 불러오지 못했습니다. DB/API 연결을 확인해 주세요.</li>';
+					}
+				}
 			} catch (e) {
 				console.error(e);
-				closeModal('studentManageModal');
-				alert('학생 관리 화면을 여는 중 오류가 발생했습니다.');
+				renderStudentManageList();
+				const list = document.getElementById('student-manage-list');
+				if (list) {
+					list.innerHTML = '<li style="color:#e74a3b;">예약 학생 상세 정보를 불러오지 못했습니다. DB/API 연결을 확인해 주세요.</li>';
+				}
 			}
 		}
 
@@ -1185,7 +1205,8 @@
 				end_time: `${c.class_date}T${c.end_time}`,
 				max_students: maxStudents,
 				booked_count: Number(c.booked_count ?? c.current_capacity ?? 0),
-				target_user_ids: Array.isArray(c.target_user_ids) ? c.target_user_ids : []
+				target_user_ids: Array.isArray(c.target_user_ids) ? c.target_user_ids : [],
+				detail_loaded: false
 			};
 		}
 
@@ -1208,6 +1229,7 @@
 			slot.reservations = reservations;
 			slot.max_students = getSlotCapacityByType({ class_type: slot.class_type, max_students: slot.max_students });
 			slot.booked_count = reservations.length;
+			slot.detail_loaded = true;
 			return slot;
 		}
 
@@ -1232,9 +1254,14 @@
 			const editTeacherSelect = document.getElementById('edit-teacher-select');
 			if (editTeacherSelect) {
 				const teachers = Array.isArray(cachedTeachers) ? cachedTeachers : [];
-				editTeacherSelect.innerHTML = teachers.length > 0
+				const currentTeacherId = String(slot.teacher_id || '');
+				let teacherOptions = teachers.length > 0
 					? teachers.map(t => `<option value="${escapeHtml(String(t.user_id))}">${escapeHtml(t.name)} (${escapeHtml(t.username || '')})</option>`).join('')
-					: `<option value="${escapeHtml(String(slot.teacher_id || ''))}">${escapeHtml(slot.teacher_name || '현재 선생님')}</option>`;
+					: '';
+				if (currentTeacherId && !teachers.some(t => String(t.user_id) === currentTeacherId)) {
+					teacherOptions = `<option value="${escapeHtml(currentTeacherId)}">${escapeHtml(slot.teacher_name || '현재 선생님')}</option>` + teacherOptions;
+				}
+				editTeacherSelect.innerHTML = teacherOptions || `<option value="${escapeHtml(currentTeacherId)}">${escapeHtml(slot.teacher_name || '현재 선생님')}</option>`;
 				editTeacherSelect.value = String(slot.teacher_id || '');
 			}
 
@@ -1250,13 +1277,13 @@
 		}
 
 		async function openClassEditModal() {
-			if (!selectedSlotId) {
+			const classId = Number(selectedSlotId || selectedSlotData?.id || 0);
+			if (!classId) {
 				alert('먼저 타임라인에서 수업 슬롯을 선택해 주세요.');
 				return;
 			}
-			const classId = Number(selectedSlotId);
-			editingSlotId = classId;
-			editingSlotData = null;
+			selectedSlotId = classId;
+			const fallbackSlot = selectedSlotData || cachedSlotsById[String(classId)] || null;
 			const status = document.getElementById('class-edit-status');
 			const submitBtn = document.getElementById('class-edit-submit-btn');
 			if (status) {
@@ -1264,15 +1291,24 @@
 				status.style.color = '#5a5c69';
 				status.textContent = '선택한 수업 정보를 불러오는 중입니다...';
 			}
+			if (!openModal('classEditModal')) return;
+			editingSlotId = classId;
+			editingSlotData = fallbackSlot;
 			if (submitBtn) submitBtn.disabled = true;
-			openModal('classEditModal');
+			if (fallbackSlot) {
+				fillClassEditForm(fallbackSlot);
+				if (submitBtn) submitBtn.disabled = false;
+			}
 			try {
 				if (cachedTeachers.length === 0) {
 					await loadTeachers();
+					if (fallbackSlot) fillClassEditForm(fallbackSlot);
 				}
 				const slot = await fetchClassDetailData(classId);
 				if (editingSlotId !== classId) return;
 				editingSlotData = slot;
+				selectedSlotData = slot;
+				cachedSlotsById[String(slot.id)] = slot;
 				fillClassEditForm(slot);
 				if (submitBtn) submitBtn.disabled = false;
 			} catch (e) {
@@ -1280,10 +1316,14 @@
 				if (status) {
 					status.style.background = '#fdecea';
 					status.style.color = '#b91c1c';
-					status.textContent = e.message || '수업 수정 정보를 불러오지 못했습니다.';
+					status.textContent = fallbackSlot
+						? `${e.message || '상세 정보를 불러오지 못했습니다.'} 현재 화면의 기본 정보로 수정할 수 있습니다.`
+						: (e.message || '수업 수정 정보를 불러오지 못했습니다.');
 				}
-				if (submitBtn) submitBtn.disabled = true;
-				alert(e.message || '수업 수정 정보를 불러오는 중 오류가 발생했습니다.');
+				if (submitBtn) {
+					submitBtn.disabled = !fallbackSlot;
+				}
+				if (!fallbackSlot) alert(e.message || '수업 수정 정보를 불러오는 중 오류가 발생했습니다.');
 			}
 		}
 
@@ -1453,6 +1493,13 @@
 				}
 
 				const slots = (res.data || []).map(toLegacySlotShape);
+				cachedSlotsById = {};
+				slots.forEach(slot => {
+					if (slot.id) {
+						slot.reservations = Array.isArray(slot.reservations) ? slot.reservations : [];
+						cachedSlotsById[String(slot.id)] = slot;
+					}
+				});
 				const timelineHours = getTimelineHours(slots);
 				renderTimelineHeader(timelineHours);
 				const byTeacher = {};
@@ -1530,6 +1577,13 @@
 			}
 		}
 
+		function showSlotDetailError(message) {
+			const list = document.getElementById('selected-student-list');
+			if (list) {
+				list.innerHTML = `<li style="margin-bottom:5px; color:#e74a3b;">${escapeHtml(message)}</li>`;
+			}
+		}
+
 		async function loadClassDetail(slotId) {
 			const requestSeq = ++selectedSlotRequestSeq;
 			try {
@@ -1537,6 +1591,7 @@
 				if (requestSeq !== selectedSlotRequestSeq || Number(slot.id) !== Number(selectedSlotId)) return null;
 
 				selectedSlotData = slot;
+				cachedSlotsById[String(slot.id)] = slot;
 				selectedReservationRow = Array.isArray(slot.reservations) && slot.reservations.length > 0 ? slot.reservations[0] : null;
 				renderSelectedSlotDetail(slot);
 				updateStudentManageButtons();
@@ -1544,8 +1599,25 @@
 			} catch (error) {
 				console.error(error);
 				if (requestSeq === selectedSlotRequestSeq) {
-					alert(error.message || '수업 상세 정보 조회 중 오류가 발생했습니다.');
-					resetSlotDetail();
+					const fallbackSlot = cachedSlotsById[String(slotId)];
+					if (fallbackSlot) {
+						selectedSlotId = Number(slotId);
+						selectedSlotData = fallbackSlot;
+						selectedReservationRow = null;
+						renderSelectedSlotDetail(fallbackSlot);
+						showSlotDetailError(error.message || '수업 상세 정보 조회 중 오류가 발생했습니다.');
+						updateStudentManageButtons();
+					} else {
+						selectedSlotId = Number(slotId);
+						selectedSlotData = null;
+						selectedReservationRow = null;
+						document.getElementById('selected-datetime-label').innerText = `수업 #${slotId}`;
+						document.getElementById('selected-teacher-label').innerText = '-';
+						document.getElementById('selected-class-type-label').innerText = '-';
+						document.getElementById('selected-reservation-status').innerText = '-';
+						showSlotDetailError(error.message || '수업 상세 정보 조회 중 오류가 발생했습니다.');
+						updateStudentManageButtons();
+					}
 				}
 				return null;
 			}
@@ -1553,8 +1625,10 @@
 
 		function openSlotDetail(slotId) {
 			selectedSlotId = Number(slotId);
-			selectedSlotData = null;
+			const fallbackSlot = cachedSlotsById[String(slotId)] || null;
+			selectedSlotData = fallbackSlot;
 			selectedReservationRow = null;
+			if (fallbackSlot) renderSelectedSlotDetail(fallbackSlot);
 			updateStudentManageButtons();
 			loadClassDetail(slotId);
 		}
