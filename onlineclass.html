@@ -4,7 +4,7 @@
 2. 그룹 글자 마스터반: 히라가나/가타카나를 완벽하게 마스터하는 과정입니다.
 - 한 달4회 (주1회) 원하는 요일을 하나만선택하면 스케줄이 자동 등록됩니다. 예: 월요일선택 ->매주월요일수업고정
 - 한달8회 (주 2회) 수업을 원하시면 두 개의 요일을 선택해 신청할수있습니다.------------->
-<!--페이지에 랜던게임을 구현하고싶어. 문제는4지선다로 나오고 캐릭터가 문제를 내는거야. 홈페이지를보다가 우연히 캐릭터가뜬고 그캐릭터가 문제를내는거야 틀리면 다음기회에하고 나중에나타나고 맞추면 세모(포인트)를1에서 199까지얻을수있는거야. 기회는하루에한번. 만약 로그인을하지않았다면 로그인을해서 세모(포인트)가 쌓일수있도록하고싶어.-->
+<!--페이지에 랜던게임을 구현하고싶어. 문제는4지선다로 나오고 캐릭터가 문제를 내는거야. 홈페이지를 보다 우연히 캐릭터가 뜬고 그 캐릭터가 문제를 내는거야 틀리면 다음기회에 하고 나중에 나타나고 맞추면 세모(포인트)를 1에서 199까지얻을수있는거야. 기회는 하루에한번. 만약 로그인을 하지 않았다면 로그인을 해서 세모(포인트)가 쌓일수있도록 하고싶어.-->
 <!--티켓정보가 옆으로 안넘어가져-->
 
 <!--티켓충전시 상단에 진짜 금액표시추가해줘-->
@@ -2021,7 +2021,10 @@
         function startMainInterval() { mainSlideInterval = setInterval(nextMainSlide, 4000); }
         function resetMainInterval() { clearInterval(mainSlideInterval); startMainInterval(); }
 
-        window.addEventListener('DOMContentLoaded', () => { startMainInterval(); });
+        window.addEventListener('DOMContentLoaded', () => {
+            startMainInterval();
+            checkStudentSession();
+        });
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -2175,6 +2178,22 @@
                 showSection('main');
             }
         }
+        async function checkStudentSession() {
+            try {
+                const response = await fetch('api/login.php?action=session&type=STUDENT');
+                const result = await response.json();
+
+                if (!response.ok || !result.success || !result.user) {
+                    setRole('guest');
+                    return;
+                }
+
+                setRole('student');
+            } catch (error) {
+                console.error('학생 세션 확인 실패', error);
+                setRole('guest');
+            }
+        }
         async function login() {
             const idInput = document.getElementById('login-id').value;
             const passwordInput = document.getElementById('login-password').value;
@@ -2206,15 +2225,29 @@
 
                 closeModal();
                 setRole('student');
-                alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);} catch (error) {alert('로그인 중 오류가 발생했습니다.');}}
+                alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);
+            } catch (error) {
+                alert('로그인 중 오류가 발생했습니다.');
+            }
+        }
 
-        async function logout() {try {const response = await fetch('api/logout.php', {method: 'POST',headers: { 'Content-Type': 'application/json' }});
+        async function logout() {
+            try {
+                const response = await fetch('api/logout.php', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
 
                 const result = await response.json().catch(() => null);
-                if (!response.ok || !result || !result.success) {alert((result && result.message) || '로그아웃 중 오류가 발생했습니다.'); return; }
+                if (!response.ok || !result || !result.success) {
+                    alert((result && result.message) || '로그아웃 중 오류가 발생했습니다.');
+                    return;
+                }
 
                 setRole('guest');
-                alert('로그아웃 되었습니다.');} catch (error) {console.error(error); alert('로그아웃 중 네트워크 오류가 발생했습니다.');}}
+                alert('로그아웃 되었습니다.');
+            } catch (error) {
+                console.error(error);
+                alert('로그아웃 중 네트워크 오류가 발생했습니다.');
+            }
+        }
 
         function showSubInfo(subId) {
             document.getElementById('info-main').classList.add('hidden');

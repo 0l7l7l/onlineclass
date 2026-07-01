@@ -1570,7 +1570,7 @@ renderMiniCalendar();
 
 		async function checkAdminSession() {
 			try {
-				const response = await fetch('../api/admin_session.php');
+				const response = await fetch('../api/login.php?action=session&type=ADMIN');
 				const result = await response.json();
 				if (response.ok && result.success && result.user) {
 					setAdminUser(result.user);
