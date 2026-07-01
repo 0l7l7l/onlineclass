@@ -1,5 +1,3 @@
-﻿api\admin_teachers.php
-````````php
 <?php
 require_once __DIR__ . '/db.php';
 session_start();

@@ -138,7 +138,24 @@ CREATE TABLE `classes` (
 CREATE INDEX idx_classes_teacher_date ON `classes`(`teacher_id`, `class_date`);
 
 
--- 7. 예약 및 매칭 테이블 (reservations)
+-- 7. 수업 대상 지정 테이블 (class_targets)
+-- 기능: PRIVATE/DUO 수업을 특정 담당 학생에게만 노출해야 할 때 대상 학생을 지정합니다.
+-- 대상이 없는 PRIVATE/DUO 수업은 해당 선생님의 담당 학생 전체에게 노출됩니다.
+CREATE TABLE `class_targets` (
+    `class_target_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '수업 대상 매핑 고유 번호',
+    `class_id` INT NOT NULL COMMENT '대상 지정할 수업 ID',
+    `user_id` INT NOT NULL COMMENT '지정 학생 유저 ID',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '지정 일시',
+    UNIQUE KEY `uq_class_targets_class_user` (`class_id`, `user_id`),
+    FOREIGN KEY (`class_id`) REFERENCES `classes`(`class_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_class_targets_class_id ON `class_targets`(`class_id`);
+CREATE INDEX idx_class_targets_user_id ON `class_targets`(`user_id`);
+
+
+-- 8. 예약 및 매칭 테이블 (reservations)
 -- 기능: 학생이 특정 수업(class_id)을 듣기 위해 보유 중인 티켓(user_ticket_id)을 사용하여 매칭된 예약 내역입니다.
 -- 특징: 수업 참석, 취소 등의 상태 정보(status)를 관리하며, 출석 확인 및 정산 데이터로 사용됩니다.
 CREATE TABLE `reservations` (
@@ -157,7 +174,26 @@ CREATE INDEX idx_reservations_user_id ON `reservations`(`user_id`);
 CREATE INDEX idx_reservations_class_id ON `reservations`(`class_id`);
 
 
--- 9. 쿠폰 관리 테이블 (coupons)<나중에추가예정/아직추가안함>
+-- 9. 수업 변경 이력 테이블 (class_change_logs)
+-- 기능: 관리자/선생님이 수업 스케줄을 생성, 수정, 삭제한 기록을 저장합니다.
+CREATE TABLE `class_change_logs` (
+    `log_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '변경 이력 고유 번호',
+    `class_id` INT NOT NULL COMMENT '변경된 수업 ID',
+    `action` ENUM('CREATE', 'UPDATE', 'DELETE', 'TEACHER_CHANGE') NOT NULL COMMENT '변경 액션',
+    `changed_by` INT NULL COMMENT '변경한 사용자 ID (관리자/선생님)',
+    `old_value` JSON NULL COMMENT '변경 전 수업 정보 (JSON)',
+    `new_value` JSON NULL COMMENT '변경 후 수업 정보 (JSON)',
+    `description` VARCHAR(255) NULL COMMENT '변경 내용 요약',
+    `changed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '변경 일시',
+    FOREIGN KEY (`class_id`) REFERENCES `classes`(`class_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`changed_by`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_class_change_logs_class_id ON `class_change_logs`(`class_id`);
+CREATE INDEX idx_class_change_logs_changed_at ON `class_change_logs`(`changed_at`);
+
+
+-- 10. 쿠폰 관리 테이블 (coupons)<나중에추가예정/아직추가안함>
 -- 기능: 외부 판매(선물하기 등)로 생성된 쿠폰 번호를 관리하고, 유저가 마이페이지에서 등록할 때 사용 처리합니다.
 CREATE TABLE `coupons` (
     `coupon_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '쿠폰 고유 번호',

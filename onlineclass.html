@@ -1983,6 +1983,21 @@
         </div>
     </div>
 
+    <div id="reserve-confirm-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="position: relative;">
+            <button onclick="closeReserveConfirm()" class="modal-close">&times;</button>
+            <h3 style="font-size: 1.125rem; font-weight: bold; text-align: center; margin-bottom: 0.75rem;">예약 확인</h3>
+            <div class="modal-form-body">
+                <div class="bank-info-box">
+                    <p><strong>선택한 수업</strong></p>
+                    <p id="reserve-confirm-info">선택한 수업 정보</p>
+                </div>
+                <p class="modal-footer-text text-center">예약 확정 시 보유 티켓 1회가 차감됩니다.</p>
+                <button onclick="finalizeReservation()" class="btn-transparent w-full modal-submit-btn">예약 확정하기</button>
+            </div>
+        </div>
+    </div>
+
     <script>
 
         let currentMainSlide = 0;
@@ -2039,6 +2054,15 @@
             }
         }
 
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             startMainInterval();
             checkStudentSession();
@@ -2075,11 +2099,19 @@
         async function loadMyPageData() {
             try {
                 const response = await fetch('api/mypage.php');
-                const result = await response.json();
+                const raw = await response.text();
+                const result = tryParseApiJson(raw);
+
+                if (!response.ok || !result || !result.success) {
+                    console.error('mypage response:', raw);
+                    alert((result && result.message) || '마이페이지 정보를 불러오지 못했습니다.');
+                    return;
+                }
 
                 if (result.success) {
                     const data = result.data;
-                    document.getElementById('semo-balance').innerText = data.money.toLocaleString();
+                    const money = parseInt(data.money || 0, 10);
+                    document.getElementById('semo-balance').innerText = money.toLocaleString();
                     document.getElementById('mypage-name').innerText = data.name;
                     document.getElementById('mypage-role').innerText = data.role;
                     document.getElementById('mypage-ticket-count').innerText = data.tickets;
@@ -2091,12 +2123,14 @@
                     if (data.histories && data.histories.length > 0) {
                         data.histories.forEach(h => {
                             const tr = document.createElement('tr');
+                            const statusText = h.status === 'APPROVED' ? '승인완료' : (h.status === 'REJECTED' ? '거절' : '대기중');
+                            const statusColor = h.status === 'APPROVED' ? '#166534' : (h.status === 'REJECTED' ? '#b91c1c' : '#92400e');
                             tr.innerHTML = `
-                                                        <td>${h.created_at.split(' ')[0]}</td>
-                                                        <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount).toLocaleString()}</td>
-                                                        <td>본인</td>
-                                                        <td><span style="font-size:0.75rem; background:#f3f4f6; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">대기중</span></td>
-                                                    `;
+                                <td>${String(h.created_at || '').split(' ')[0]}</td>
+                                <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount || 0, 10).toLocaleString()}</td>
+                                <td>${escapeHtml(h.depositor_name || '-')}</td>
+                                <td><span style="font-size:0.75rem; background:#f3f4f6; color:${statusColor}; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">${statusText}</span></td>
+                            `;
                             tbody.appendChild(tr);
                         });
                     } else {
@@ -2516,8 +2550,8 @@
         function slotCategory(slot) {
             const lessonType = (slot.lesson_type || '').toUpperCase();
             const maxStudents = parseInt(slot.max_students || 1, 10);
-            if (lessonType === 'PRIVATE_25') return 'private';
-            if (lessonType === 'GROUP_25' && maxStudents <= 2) return 'duo';
+            if (lessonType === 'PRIVATE' || lessonType === 'PRIVATE_11' || lessonType === 'PRIVATE_25') return 'private';
+            if (lessonType === 'DUO' || lessonType === 'DUO_12' || (lessonType === 'GROUP_25' && maxStudents <= 2)) return 'duo';
             return 'group';
         }
 
@@ -2611,7 +2645,7 @@
             pendingBooking = {
                 bookingMode: 'FLEX',
                 slotIds: [String(slot.slot_id)],
-                classType: slotCategory(slot) === 'group' ? 'GROUP' : 'PRIVATE',
+                classType: slotCategory(slot) === 'duo' ? 'DUO' : (slotCategory(slot) === 'group' ? 'GROUP' : 'PRIVATE'),
                 display: `${selectedFlexDateISO} ${formatTimeRange(slot.start_time, slot.end_time)}`
             };
 
@@ -2713,10 +2747,12 @@
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
                         body: form.toString()
                     });
-                    const res = await resp.json();
+                    const raw = await resp.text();
+                    const res = tryParseApiJson(raw);
 
-                    if (!resp.ok || !res.success) {
-                        alert(res.message || '그룹 자동 등록 중 오류가 발생했습니다.');
+                    if (!resp.ok || !res || !res.success) {
+                        console.error('book_group_package response:', raw);
+                        alert((res && res.message) || '그룹 자동 등록 중 오류가 발생했습니다.');
                         await fetchTeacherSlots();
                         return;
                     }
@@ -2737,10 +2773,12 @@
 
                     const reserveDate = slot.start_time.slice(0, 10);
                     const reserveTime = slot.start_time.slice(11, 19);
-                    const classType = slotCategory(slot) === 'group' ? 'GROUP' : 'PRIVATE';
+                    const category = slotCategory(slot);
+                    const classType = category === 'duo' ? 'DUO' : (category === 'group' ? 'GROUP' : 'PRIVATE');
 
                     const form = new URLSearchParams();
                     form.append('slot_id', String(slotId));
+                    form.append('class_id', String(slotId));
                     form.append('reserve_date', reserveDate);
                     form.append('reserve_time', reserveTime);
                     form.append('class_type', classType);

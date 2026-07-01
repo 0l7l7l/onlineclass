@@ -556,12 +556,10 @@
         <div class="form-group" style="background: #eef2fa; padding: 12px; border-radius: 6px; border-left: 4px solid #4e73df;">
 					<label style="font-weight:bold; color:#2e59d9;">👩‍🏫 담당 선생님 지정</label>
          <p style="font-size:11.5px; color:#5a5c69; margin:2px 0 6px 0;">스케줄을 생성할 강사 회원을 선택하세요.</p>
-					<select id="schedule-teacher-select" style="width:100%; padding:8px; border:1px solid #4e73df; border-radius:4px; font-weight:bold;" required>
-						<option value="">-- 선생님 선택 --</option>
-					</select>
-				</div>
-
-				<!-- 2단계: 수업 유형 선택 -->
+				<select id="schedule-teacher-select" style="width:100%; padding:8px; border:1px solid #4e73df; border-radius:4px; font-weight:bold;" required disabled>
+					<option value="">-- 선생님 선택 --</option>
+				</select>
+				<div id="schedule-teacher-error" style="margin-top:8px; color:#d93f3f; font-size:12px; display:none;"></div>
 				<div class="form-group">
 					<label style="font-weight:bold;">수업 유형 선택</label>
 					<select id="schedule-class-type" onchange="toggleSchedulerTypeFields(this.value)" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;" required>
@@ -863,26 +861,41 @@
 
 		function renderTeacherSelectOptions(teachers) {
 			const teacherSelect = document.getElementById('schedule-teacher-select');
+			const errorDiv = document.getElementById('schedule-teacher-error');
 			if (!teacherSelect) return;
 
-			let opts = '<option value="">-- 선생님 선택 --</option>';
-			(teachers || []).forEach(t => {
-				opts += `<option value="${escapeHtml(String(t.user_id))}">${escapeHtml(t.name)} (${escapeHtml(t.username || '')})</option>`;
-			});
+			const teacherList = Array.isArray(teachers) ? teachers : [];
+			const hasTeachers = teacherList.length > 0;
+			let opts = `<option value="">${hasTeachers ? '-- 선생님 선택 --' : '-- 등록된 선생님이 없습니다. 관리자 회원을 확인하세요 --'}</option>`;
+			if (hasTeachers) {
+				teacherList.forEach(t => {
+					opts += `<option value="${escapeHtml(String(t.user_id))}">${escapeHtml(t.name)} (${escapeHtml(t.username || '')})</option>`;
+				});
+			}
 			teacherSelect.innerHTML = opts;
+			teacherSelect.disabled = !hasTeachers;
+			if (errorDiv) {
+				errorDiv.style.display = hasTeachers ? 'none' : 'block';
+				errorDiv.textContent = hasTeachers ? '' : '관리자 권한으로 로그인했지만 선생님 데이터가 없습니다. TEACHER 역할을 가진 계정을 확인하세요.';
+			}
 		}
-
 		async function loadTeachers() {
 			try {
-				const resp = await fetch('../api/admin_teachers.php');
-				const res = await resp.json();
-				if (!resp.ok || !res.success) return false;
+				const resp = await fetch('../api/admin_teachers.php', { credentials: 'same-origin' });
+				const raw = await resp.text();
+				const res = tryParseApiJson(raw);
+				if (!resp.ok || !res || !res.success) {
+					console.error('Failed to load teachers:', resp.status, res || raw);
+					renderTeacherSelectOptions([]);
+					return false;
+				}
 
 				cachedTeachers = Array.isArray(res.data) ? res.data : [];
 				renderTeacherSelectOptions(cachedTeachers);
 				return true;
 			} catch (e) {
-				console.error(e);
+				console.error('Error loading teacher list:', e);
+				renderTeacherSelectOptions([]);
 				return false;
 			}
 		}
@@ -944,11 +957,23 @@
 		}
 
 		function openModal(modalId) {
-			document.getElementById(modalId).classList.add('show');
+			const modal = document.getElementById(modalId);
+			if (!modal) {
+				console.error(`Modal not found: ${modalId}`);
+				return false;
+			}
+			modal.classList.add('show');
+			return true;
 		}
 
 		function closeModal(modalId) {
-			document.getElementById(modalId).classList.remove('show');
+			const modal = document.getElementById(modalId);
+			if (!modal) return;
+			modal.classList.remove('show');
+		}
+
+		function closeAllModals() {
+			document.querySelectorAll('.modal-overlay.show').forEach(modal => modal.classList.remove('show'));
 		}
 
 		function resetSlotDetail() {
@@ -1054,14 +1079,30 @@
 			}
 		}
 
-		function openStudentManageModal() {
-			if (!selectedSlotId || !selectedSlotData) {
+		async function openStudentManageModal() {
+			if (!selectedSlotId) {
 				alert('먼저 수업 슬롯을 선택해 주세요.');
 				return;
 			}
-      selectedReservationRow = null;
-			renderStudentManageList();
-			openModal('studentManageModal');
+
+			if (!selectedSlotData) {
+				await loadClassDetail(selectedSlotId);
+			}
+
+			if (!selectedSlotData) {
+				alert('수업 상세 정보를 불러온 뒤 다시 시도해 주세요.');
+				return;
+			}
+
+			try {
+				selectedReservationRow = null;
+				renderStudentManageList();
+				openModal('studentManageModal');
+			} catch (e) {
+				console.error(e);
+				closeModal('studentManageModal');
+				alert('학생 관리 화면을 여는 중 오류가 발생했습니다.');
+			}
 		}
 
 		function openClassManageModal() {
@@ -1089,7 +1130,8 @@
 
 		function toLegacySlotShape(c) {
 			const classType = String(c.class_type || 'PRIVATE').toUpperCase();
-			const lessonType = classType === 'GROUP' || classType === 'DUO' ? 'GROUP_25' : 'PRIVATE_25';
+			const lessonType = classType === 'GROUP' ? 'GROUP_25' : (classType === 'DUO' ? 'DUO_12' : 'PRIVATE_25');
+			const maxStudents = classType === 'PRIVATE' ? 1 : (classType === 'DUO' ? 2 : Number(c.max_capacity || 1));
 			return {
 				id: Number(c.class_id),
 				teacher_id: Number(c.teacher_id),
@@ -1098,16 +1140,16 @@
 				lesson_type: lessonType,
 				start_time: `${c.class_date}T${c.start_time}`,
 				end_time: `${c.class_date}T${c.end_time}`,
-				max_students: Number(c.max_capacity || 1),
-				booked_count: Number(c.current_capacity || 0),
+				max_students: maxStudents,
+				booked_count: Number(c.booked_count ?? c.current_capacity ?? 0),
 				target_user_ids: Array.isArray(c.target_user_ids) ? c.target_user_ids : []
 			};
 		}
 
 		function getEditClassType(slot) {
 			if (!slot) return 'PRIVATE_11';
-			if (slot.lesson_type === 'GROUP_25' && Number(slot.max_students) <= 2) return 'DUO_12';
-			if (slot.lesson_type === 'GROUP_25') return 'GROUP';
+			if (slot.class_type === 'DUO' || slot.lesson_type === 'DUO_12') return 'DUO_12';
+			if (slot.class_type === 'GROUP' || slot.lesson_type === 'GROUP_25') return 'GROUP';
 			return 'PRIVATE_11';
 		}
 
@@ -1863,9 +1905,20 @@
 			document.getElementById('mini-cal-next')?.addEventListener('click', () => moveMiniCalendar(1));
 			renderMiniCalendar();
 
+			// 관리자 세션 확인 후에만 선생님 목록을 불러옵니다.
 			checkAdminSession();
-			loadTeachers();
+			renderTeacherSelectOptions([]);
 			resetSlotDetail();
+
+			document.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape') closeAllModals();
+			});
+
+			document.querySelectorAll('.modal-overlay').forEach(modal => {
+				modal.addEventListener('click', (event) => {
+					if (event.target === modal) closeModal(modal.id);
+				});
+			});
 		});
 			function openCreateClassModal() {
 			const dateInput = document.getElementById('reservation-date-input');

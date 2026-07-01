@@ -1,5 +1,6 @@
 ﻿<?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/schema_helpers.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
@@ -11,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 
 try {
     $pdo = DB::getConnection();
+    ensureClassScheduleSupportTables($pdo);
     $user_id = (int)$_SESSION['user_id'];
 
     // 학생의 담당 선생님 조회
@@ -37,6 +39,7 @@ try {
             FROM classes c
             WHERE c.teacher_id = ?
               AND c.class_type IN ('PRIVATE', 'DUO', 'PRIVATE_11', 'DUO_12')
+              AND c.status = 'AVAILABLE'
               AND c.deleted_at IS NULL
               AND CONCAT(c.class_date, ' ', c.start_time) >= NOW()
               AND (
@@ -64,6 +67,7 @@ try {
             c.current_capacity AS booked_count
         FROM classes c
         WHERE c.class_type = 'GROUP'
+          AND c.status = 'AVAILABLE'
           AND c.deleted_at IS NULL
           AND CONCAT(c.class_date, ' ', c.start_time) >= NOW()
         ORDER BY c.class_date ASC, c.start_time ASC

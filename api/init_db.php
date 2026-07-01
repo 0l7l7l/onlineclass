@@ -197,7 +197,28 @@ SQL);
     $pdo->exec("CREATE INDEX `idx_reservations_class_id` ON `reservations`(`class_id`);");
 
     // ==========================================
-    // 10. coupons 아직DB없음 추가예정
+    // 10. class_change_logs - 수업 변경 이력 저장
+    // ==========================================
+    $pdo->exec(<<<SQL
+CREATE TABLE IF NOT EXISTS `class_change_logs` (
+    `log_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '변경 이력 고유 번호',
+    `class_id` INT NOT NULL COMMENT '변경된 수업 ID',
+    `action` ENUM('CREATE', 'UPDATE', 'DELETE', 'TEACHER_CHANGE') NOT NULL COMMENT '변경 액션',
+    `changed_by` INT NULL COMMENT '변경한 사용자 ID (관리자/선생님)',
+    `old_value` JSON NULL COMMENT '변경 전 수업 정보 (JSON)',
+    `new_value` JSON NULL COMMENT '변경 후 수업 정보 (JSON)',
+    `description` VARCHAR(255) NULL COMMENT '변경 내용 요약',
+    `changed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '변경 일시',
+    FOREIGN KEY (`class_id`) REFERENCES `classes`(`class_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`changed_by`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+SQL);
+
+    $pdo->exec("CREATE INDEX `idx_class_change_logs_class_id` ON `class_change_logs`(`class_id`);");
+    $pdo->exec("CREATE INDEX `idx_class_change_logs_changed_at` ON `class_change_logs`(`changed_at`);");
+
+    // ==========================================
+    // 11. coupons 아직DB없음 추가예정
     // ==========================================
     $pdo->exec(<<<SQL
 CREATE TABLE IF NOT EXISTS `coupons` (
@@ -215,36 +236,6 @@ CREATE TABLE IF NOT EXISTS `coupons` (
 SQL);
 
     $pdo->exec("CREATE INDEX `idx_coupons_code` ON `coupons`(`coupon_code`);");
-
-    echo json_encode(['success' => true, 'message' => 'SQL 기준 테이블 생성/확인 완료.'], JSON_UNESCAPED_UNICODE);
-    exit;
-} catch (Throwable $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-
- // ==========================================
-    // 11. class_change_logs - 수업 변경 이력 저장
-    // ==========================================
-    $pdo->exec(<<<SQL
-CREATE TABLE IF NOT EXISTS `class_change_logs` (
-    `log_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '변경 이력 고유 번호',
-    `class_id` INT NOT NULL COMMENT '변경된 수업 ID',
-    `action` ENUM('CREATE', 'UPDATE', 'DELETE', 'TEACHER_CHANGE') NOT NULL COMMENT '변경 액션',
-    `changed_by` INT NOT NULL COMMENT '변경한 사용자 ID (관리자/선생님)',
-    `old_value` JSON NULL COMMENT '변경 전 수업 정보 (JSON)',
-    `new_value` JSON NULL COMMENT '변경 후 수업 정보 (JSON)',
-    `description` VARCHAR(255) NULL COMMENT '변경 내용 요약',
-    `changed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '변경 일시',
-    FOREIGN KEY (`class_id`) REFERENCES `classes`(`class_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`changed_by`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-SQL);
-
-    $pdo->exec("CREATE INDEX `idx_class_change_logs_class_id` ON `class_change_logs`(`class_id`);");
-    $pdo->exec("CREATE INDEX `idx_class_change_logs_changed_at` ON `class_change_logs`(`changed_at`);");
 
     echo json_encode(['success' => true, 'message' => 'SQL 기준 테이블 생성/확인 완료.'], JSON_UNESCAPED_UNICODE);
     exit;

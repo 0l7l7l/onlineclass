@@ -1,5 +1,8 @@
 ﻿<?php
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/schema_helpers.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
@@ -125,6 +128,22 @@ function refreshClassCurrentCapacity(PDO $pdo, int $classId): void
     $upd->execute([$cnt, $classId]);
 }
 
+function logClassChange(PDO $pdo, int $classId, string $action, int $changedBy, ?array $oldValue = null, ?array $newValue = null, ?string $description = null): void
+{
+    $stmt = $pdo->prepare("
+        INSERT INTO class_change_logs (class_id, action, changed_by, old_value, new_value, description)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $classId,
+        $action,
+        $changedBy,
+        $oldValue ? json_encode($oldValue, JSON_UNESCAPED_UNICODE) : null,
+        $newValue ? json_encode($newValue, JSON_UNESCAPED_UNICODE) : null,
+        $description
+    ]);
+}
+
 function findUsableTicketId(PDO $pdo, int $studentId, string $classType): int
 {
     $stmt = $pdo->prepare("\n        SELECT ut.user_ticket_id\n        FROM user_tickets ut\n        JOIN products p ON p.product_id = ut.product_id\n        WHERE ut.user_id = ?\n          AND ut.status = 'ACTIVE'\n          AND ut.remaining_count > 0\n          AND ut.expired_at > NOW()\n          AND p.product_type = 'TICKET'\n          AND p.class_type = ?\n          AND p.is_active = 1\n        ORDER BY ut.expired_at ASC, ut.user_ticket_id ASC\n        LIMIT 1\n    ");
@@ -190,6 +209,7 @@ function assertStudentEligibility(PDO $pdo, array $class, int $studentId): array
 
 try {
     $pdo = DB::getConnection();
+    ensureClassScheduleSupportTables($pdo);
     $method = $_SERVER['REQUEST_METHOD'];
     $action = isset($_REQUEST['action']) ? trim((string)$_REQUEST['action']) : '';
 
@@ -464,7 +484,7 @@ try {
             $targetStmt->execute([$classId]);
             $targets = $targetStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $reservationStmt = $pdo->prepare("\n                SELECT\n                    r.reservation_id,\n                    r.user_id AS student_id,\n                    u.name AS student_name,\n                    u.username AS student_username,\n                    r.user_ticket_id,\n                    CASE\n                        WHEN p.title LIKE '[ADMIN_FREE]%' THEN 'FREE'\n                        ELSE 'USE'\n                    END AS ticket_mode\n                FROM reservations r\n                JOIN users u ON u.user_id = r.user_id\n                LEFT JOIN user_tickets ut ON ut.user_ticket_id = r.user_ticket_id\n                LEFT JOIN products p ON p.product_id = ut.product_id\n                WHERE r.class_id = ?\n                  AND r.status = 'CONFIRMED'\n                ORDER BY r.reserved_at ASC, r.reservation_id ASC\n            ");
+            $reservationStmt = $pdo->prepare("\n                SELECT\n                    r.reservation_id,\n                    r.user_id AS student_id,\n                    u.name AS student_name,\n                    u.username AS student_username,\n                    r.user_ticket_id,\n                    CASE\n                        WHEN p.title LIKE '[ADMIN_FREE]%' THEN 'FREE'\n                        ELSE 'USE'\n                    END AS ticket_mode\n                FROM reservations r\n                JOIN users u ON u.user_id = r.user_id\n                LEFT JOIN user_tickets ut ON ut.user_ticket_id = r.user_ticket_id\n                LEFT JOIN products p ON p.product_id = ut.product_id\n                WHERE r.class_id = ?\n                  AND UPPER(TRIM(r.status)) = 'CONFIRMED'\n                ORDER BY r.reserved_at ASC, r.reservation_id ASC\n            ");
             $reservationStmt->execute([$classId]);
             $reservations = $reservationStmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -497,11 +517,13 @@ try {
             SELECT
                 c.*,
                 u.name AS teacher_name,
-                COUNT(ct.class_target_id) AS target_count,
+                COUNT(DISTINCT ct.class_target_id) AS target_count,
+                COUNT(DISTINCT CASE WHEN UPPER(TRIM(r.status)) = 'CONFIRMED' THEN r.reservation_id END) AS booked_count,
                 GROUP_CONCAT(ct.user_id ORDER BY ct.user_id SEPARATOR ',') AS target_user_ids_csv
             FROM classes c
             LEFT JOIN users u ON c.teacher_id = u.user_id
             LEFT JOIN class_targets ct ON ct.class_id = c.class_id
+            LEFT JOIN reservations r ON r.class_id = c.class_id
             WHERE c.deleted_at IS NULL
         ";
         $params = [];
@@ -836,25 +858,6 @@ try {
         }
 
         // ========================================
-// 변경 이력 기록 헬퍼 함수 (상단에 추가)
-// ========================================
-function logClassChange(PDO $pdo, int $classId, string $action, int $changedBy, ?array $oldValue = null, ?array $newValue = null, ?string $description = null): void
-{
-    $stmt = $pdo->prepare("
-        INSERT INTO class_change_logs (class_id, action, changed_by, old_value, new_value, description)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ");
-    $stmt->execute([
-        $classId,
-        $action,
-        $changedBy,
-        $oldValue ? json_encode($oldValue, JSON_UNESCAPED_UNICODE) : null,
-        $newValue ? json_encode($newValue, JSON_UNESCAPED_UNICODE) : null,
-        $description
-    ]);
-}
-
-        // ========================================
         // [수업 생성 시 변경 이력 기록]
         // ========================================
         if ($action === 'create') {
@@ -1071,6 +1074,8 @@ function logClassChange(PDO $pdo, int $classId, string $action, int $changedBy, 
 
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => '잘못된 요청입니다.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 } catch (Throwable $e) {
     if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
         $pdo->rollBack();
