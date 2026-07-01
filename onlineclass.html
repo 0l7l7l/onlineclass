@@ -2020,6 +2020,24 @@
         }
         function startMainInterval() { mainSlideInterval = setInterval(nextMainSlide, 4000); }
         function resetMainInterval() { clearInterval(mainSlideInterval); startMainInterval(); }
+        function tryParseApiJson(raw) {
+            const text = String(raw || '').trim();
+            if (!text) return null;
+            try {
+                return JSON.parse(text);
+            } catch (_) {
+                const first = text.indexOf('{');
+                const last = text.lastIndexOf('}');
+                if (first >= 0 && last > first) {
+                    try {
+                        return JSON.parse(text.slice(first, last + 1));
+                    } catch (_) {
+                        return null;
+                    }
+                }
+                return null;
+            }
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             startMainInterval();
@@ -2181,9 +2199,10 @@
         async function checkStudentSession() {
             try {
                 const response = await fetch('api/login.php?action=session&type=STUDENT');
-                const result = await response.json();
+                const raw = await response.text();
+                const result = tryParseApiJson(raw);
 
-                if (!response.ok || !result.success || !result.user) {
+                if (!response.ok || !result || !result.success || !result.user) {
                     setRole('guest');
                     return;
                 }
@@ -2216,7 +2235,14 @@
                     },
                     body: formData.toString()
                 });
-                const result = await response.json();
+                const raw = await response.text();
+                const result = tryParseApiJson(raw);
+
+                if (!result) {
+                    console.error('student login raw response:', raw);
+                    alert('로그인 응답 형식이 올바르지 않습니다.');
+                    return;
+                }
 
                 if (!response.ok || !result.success) {
                     alert(result.message || '로그인에 실패했습니다.');

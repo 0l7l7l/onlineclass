@@ -1194,18 +1194,18 @@
 				Object.keys(byTeacher).forEach(key => {
 					const t = byTeacher[key];
 					html += `<tr><td><strong>${escapeHtml(t.teacher_name)}</strong></td>`;
-					for (let h = 9; h <= 16; h++) {
-						const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
-						if (slotAtHour) {
-							const bookedCount = parseInt(slotAtHour.booked_count || 0, 10);
-							const maxStudents = parseInt(slotAtHour.max_students || 1, 10);
-							const fullClass = bookedCount >= maxStudents;
-							html += `<td class="timeline-cell booked ${fullClass ? 'full' : ''}" onclick="openSlotDetail(${slotAtHour.id})">${escapeHtml(slotAtHour.lesson_type || '')}<br>[${bookedCount}/${maxStudents}]</td>`;
-						} else {
-							html += `<td class="timeline-cell" onclick="openEmptySlot('${escapeHtml(String(t.teacher_id || key))}', ${h})">-</td>`;
-						}
-					}
-					html += '</tr>';
+for (let h = 9; h <= 16; h++) {
+	const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
+	if (slotAtHour) {
+		const bookedCount = parseInt(slotAtHour.booked_count || 0, 10);
+		const maxStudents = parseInt(slotAtHour.max_students || 1, 10);
+		const fullClass = bookedCount >= maxStudents;
+		html += `<td class="timeline-cell booked ${fullClass ? 'full' : ''}" onclick="openSlotDetail(${slotAtHour.id})">${escapeHtml(slotAtHour.lesson_type || '')}<br>[${bookedCount}/${maxStudents}]</td>`;
+	} else {
+		html += `<td class="timeline-cell" onclick="openEmptySlot('${escapeHtml(String(t.teacher_id || key))}', ${h})">-</td>`;
+	}
+}
+html += '</tr>';
 				});
 
 				tbody.innerHTML = html;
@@ -1506,7 +1506,14 @@ renderMiniCalendar();
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
 					body: formData.toString()
 				});
-				const result = await response.json();
+				const raw = await response.text();
+				const result = tryParseApiJson(raw);
+
+				if (!result) {
+					console.error('admin login raw response:', raw);
+					alert('로그인 응답 형식이 올바르지 않습니다.');
+					return;
+				}
 
 				if (!response.ok || !result.success) {
 					alert(result.message || '로그인에 실패했습니다.');
@@ -1571,8 +1578,9 @@ renderMiniCalendar();
 		async function checkAdminSession() {
 			try {
 				const response = await fetch('../api/login.php?action=session&type=ADMIN');
-				const result = await response.json();
-				if (response.ok && result.success && result.user) {
+				const raw = await response.text();
+				const result = tryParseApiJson(raw);
+				if (response.ok && result && result.success && result.user) {
 					setAdminUser(result.user);
 					await loadTeachers();
 					fetchApprovalRequests();
