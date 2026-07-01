@@ -722,6 +722,28 @@
             text-align: center;
         }
 
+        .flex-calendar-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .flex-calendar-title {
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .flex-calendar-nav {
+            width: 2.25rem;
+            height: 2.25rem;
+            border: 1px solid var(--border-color);
+            background: var(--white);
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
         .cal-head {
             font-weight: bold;
             font-size: 0.875rem;
@@ -739,7 +761,24 @@
             font-weight: 500;
         }
 
-            .cal-day:not(.empty):hover {
+            .cal-day.available {
+                background-color: #fff7d6;
+                border-color: #ead89b;
+                color: var(--point-brown);
+                font-weight: 800;
+            }
+
+            .cal-day.available::after {
+                content: '';
+                display: block;
+                width: 0.35rem;
+                height: 0.35rem;
+                margin: 0.25rem auto 0;
+                border-radius: 999px;
+                background: var(--point-brown);
+            }
+
+            .cal-day.available:hover {
                 background-color: var(--main-beige);
             }
 
@@ -751,6 +790,11 @@
 
             .cal-day.empty {
                 background-color: transparent;
+                cursor: default;
+            }
+
+            .cal-day.disabled {
+                opacity: 0.35;
                 cursor: default;
             }
 
@@ -1704,6 +1748,11 @@
                 <button class="type-btn active" onclick="setLessonType('private', this)">개인 (1:1)</button>
                 <button class="type-btn" onclick="setLessonType('duo', this)">듀오 (1:2)</button>
               </div>
+              <div class="flex-calendar-toolbar">
+                <button type="button" class="flex-calendar-nav" onclick="moveFlexCalendar(-1)">&lt;</button>
+                <div class="flex-calendar-title" id="flex-calendar-title">-</div>
+                <button type="button" class="flex-calendar-nav" onclick="moveFlexCalendar(1)">&gt;</button>
+              </div>
               <div class="calendar-grid">
                 <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
               </div>
@@ -2525,7 +2574,9 @@
             }
             target.classList.add('active');
             currentLessonType = type;
+            selectedFlexDateISO = null;
             selectedFlexSlotId = null;
+            syncFlexCalendarMonthToAvailability();
             renderFlexCalendar();
             populateFlexibleSlots();
         }
@@ -2536,6 +2587,9 @@
         let selectedFlexDateISO = null;
         let selectedFlexSlotId = null;
         let selectedGroupSlotIds = [];
+        const flexToday = new Date();
+        let flexCalYear = flexToday.getFullYear();
+        let flexCalMonth = flexToday.getMonth();
 
         function getSlotById(slotId) {
             return teacherSlots.find(s => String(s.slot_id) === String(slotId));
@@ -2561,55 +2615,83 @@
             return booked < maxStudents;
         }
 
+        function getAvailableFlexDates() {
+            const targetCategory = currentLessonType === 'duo' ? 'duo' : 'private';
+            return [...new Set(
+                teacherSlots
+                    .filter(slot => slotCategory(slot) === targetCategory && isSlotAvailable(slot))
+                    .map(slot => slot.start_time.slice(0, 10))
+            )].sort();
+        }
+
+        function syncFlexCalendarMonthToAvailability() {
+            const availableDates = getAvailableFlexDates();
+            if (availableDates.length === 0) return;
+
+            if (selectedFlexDateISO && availableDates.includes(selectedFlexDateISO)) {
+                const selectedDate = new Date(selectedFlexDateISO + 'T00:00:00');
+                flexCalYear = selectedDate.getFullYear();
+                flexCalMonth = selectedDate.getMonth();
+                return;
+            }
+
+            const firstAvailable = new Date(availableDates[0] + 'T00:00:00');
+            flexCalYear = firstAvailable.getFullYear();
+            flexCalMonth = firstAvailable.getMonth();
+        }
+
+        function moveFlexCalendar(monthDelta) {
+            flexCalMonth += monthDelta;
+            if (flexCalMonth < 0) {
+                flexCalMonth = 11;
+                flexCalYear -= 1;
+            } else if (flexCalMonth > 11) {
+                flexCalMonth = 0;
+                flexCalYear += 1;
+            }
+            selectedFlexDateISO = null;
+            selectedFlexSlotId = null;
+            renderFlexCalendar();
+            populateFlexibleSlots();
+        }
+
         function renderFlexCalendar() {
             const grid = document.querySelector('#section-flexible .calendar-grid');
             if (!grid) return;
+
+            const title = document.getElementById('flex-calendar-title');
+            if (title) title.innerText = `${flexCalYear}년 ${flexCalMonth + 1}월`;
 
             grid.innerHTML = `
             <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
           `;
 
-            const targetCategory = currentLessonType === 'duo' ? 'duo' : 'private';
-            const availableDates = [...new Set(
-                teacherSlots
-                    .filter(slot => slotCategory(slot) === targetCategory && isSlotAvailable(slot))
-                    .map(slot => slot.start_time.slice(0, 10))
-            )].sort();
-
-            if (availableDates.length === 0) {
-                for (let i = 0; i < 35; i++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'cal-day empty';
-                    grid.appendChild(cell);
-                }
-                selectedFlexDateISO = null;
-                return;
-            }
-
-            if (!selectedFlexDateISO || !availableDates.includes(selectedFlexDateISO)) {
-                selectedFlexDateISO = availableDates[0];
-            }
-
-            const firstDate = new Date(availableDates[0] + 'T00:00:00');
+            const availableDates = new Set(getAvailableFlexDates());
+            const firstDate = new Date(flexCalYear, flexCalMonth, 1);
             const firstWeekday = firstDate.getDay();
+            const lastDate = new Date(flexCalYear, flexCalMonth + 1, 0).getDate();
+
             for (let i = 0; i < firstWeekday; i++) {
                 const emptyCell = document.createElement('div');
                 emptyCell.className = 'cal-day empty';
                 grid.appendChild(emptyCell);
             }
 
-            availableDates.forEach(dateStr => {
-                const d = new Date(dateStr + 'T00:00:00');
+            for (let day = 1; day <= lastDate; day++) {
+                const dateStr = `${flexCalYear}-${String(flexCalMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isAvailable = availableDates.has(dateStr);
                 const cell = document.createElement('div');
-                cell.className = 'cal-day';
+                cell.className = isAvailable ? 'cal-day available' : 'cal-day disabled';
                 if (dateStr === selectedFlexDateISO) {
                     cell.classList.add('active');
                 }
                 cell.dataset.date = dateStr;
-                cell.innerText = d.getDate();
-                cell.onclick = () => selectFlexDate(cell, dateStr);
+                cell.innerText = day;
+                if (isAvailable) {
+                    cell.onclick = () => selectFlexDate(cell, dateStr);
+                }
                 grid.appendChild(cell);
-            });
+            }
         }
 
         function selectFlexDate(target, dateStr) {
@@ -2663,6 +2745,9 @@
                     teacherSlots = res.data || [];
                 }
 
+                selectedFlexDateISO = null;
+                selectedFlexSlotId = null;
+                syncFlexCalendarMonthToAvailability();
                 renderFlexCalendar();
                 populateFlexibleSlots();
 
@@ -2682,7 +2767,10 @@
 
             list.innerHTML = '';
             if (!selectedFlexDateISO) {
-                list.innerHTML = '<div style="padding:1rem; opacity:0.7;">예약 가능한 일정이 없습니다.</div>';
+                const availableDates = getAvailableFlexDates();
+                list.innerHTML = availableDates.length === 0
+                    ? '<div style="padding:1rem; opacity:0.7;">예약 가능한 일정이 없습니다.</div>'
+                    : '<div style="padding:1rem; opacity:0.7;">예약할 날짜를 먼저 선택해 주세요.</div>';
                 return;
             }
 

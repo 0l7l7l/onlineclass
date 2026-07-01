@@ -120,7 +120,7 @@ function isAdminFreeTicket(PDO $pdo, int $userTicketId): bool
 
 function refreshClassCurrentCapacity(PDO $pdo, int $classId): void
 {
-    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE class_id = ? AND status = 'CONFIRMED'");
+    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'");
     $countStmt->execute([$classId]);
     $cnt = (int)$countStmt->fetchColumn();
 
@@ -420,7 +420,7 @@ try {
                 exit;
             }
 
-            $sql = "\n                SELECT u.user_id, u.name, u.username,\n                       EXISTS(\n                           SELECT 1\n                           FROM reservations r\n                           WHERE r.class_id = ?\n                             AND r.user_id = u.user_id\n                             AND r.status = 'CONFIRMED'\n                       ) AS already_reserved\n                FROM users u\n                WHERE u.role = 'STUDENT'\n                  AND u.deleted_at IS NULL\n            ";
+            $sql = "\n                SELECT u.user_id, u.name, u.username,\n                       EXISTS(\n                           SELECT 1\n                           FROM reservations r\n                           WHERE r.class_id = ?\n                             AND r.user_id = u.user_id\n                             AND UPPER(TRIM(r.status)) = 'CONFIRMED'\n                       ) AS already_reserved\n                FROM users u\n                WHERE u.role = 'STUDENT'\n                  AND u.deleted_at IS NULL\n            ";
             $params = [$classId];
 
             if (strtoupper((string)$class['class_type']) !== 'GROUP') {
@@ -712,13 +712,13 @@ try {
 
             assertStudentEligibility($pdo, $class, $studentId);
 
-            $dupStmt = $pdo->prepare("\n                SELECT reservation_id\n                FROM reservations\n                WHERE class_id = ? AND user_id = ? AND status = 'CONFIRMED'\n                LIMIT 1\n            ");
+            $dupStmt = $pdo->prepare("\n                SELECT reservation_id\n                FROM reservations\n                WHERE class_id = ? AND user_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'\n                LIMIT 1\n            ");
             $dupStmt->execute([$classId, $studentId]);
             if ($dupStmt->fetch()) {
                 throw new RuntimeException('이미 예약된 학생입니다.');
             }
 
-            $cntStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE class_id = ? AND status = 'CONFIRMED'");
+            $cntStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'");
             $cntStmt->execute([$classId]);
             $reservedCount = (int)$cntStmt->fetchColumn();
             if ($reservedCount >= getClassCapacityLimit($class)) {
@@ -777,7 +777,7 @@ try {
                 throw new RuntimeException('수업을 찾을 수 없습니다.');
             }
 
-            $resStmt = $pdo->prepare("\n                SELECT reservation_id, user_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND status = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
+            $resStmt = $pdo->prepare("\n                SELECT reservation_id, user_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
             $resStmt->execute([$reservationId, $classId]);
             $oldReservation = $resStmt->fetch(PDO::FETCH_ASSOC);
             if (!$oldReservation) {
@@ -786,7 +786,7 @@ try {
 
             assertStudentEligibility($pdo, $class, $newStudentId);
 
-            $dupStmt = $pdo->prepare("\n                SELECT reservation_id\n                FROM reservations\n                WHERE class_id = ? AND user_id = ? AND status = 'CONFIRMED' AND reservation_id <> ?\n                LIMIT 1\n            ");
+            $dupStmt = $pdo->prepare("\n                SELECT reservation_id\n                FROM reservations\n                WHERE class_id = ? AND user_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED' AND reservation_id <> ?\n                LIMIT 1\n            ");
             $dupStmt->execute([$classId, $newStudentId, $reservationId]);
             if ($dupStmt->fetch()) {
                 throw new RuntimeException('이미 예약된 학생입니다.');
@@ -833,7 +833,7 @@ try {
 
             $pdo->beginTransaction();
 
-            $resStmt = $pdo->prepare("\n                SELECT reservation_id, class_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND status = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
+            $resStmt = $pdo->prepare("\n                SELECT reservation_id, class_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
             $resStmt->execute([$reservationId, $classId]);
             $reservation = $resStmt->fetch(PDO::FETCH_ASSOC);
             if (!$reservation) {
@@ -969,11 +969,25 @@ try {
     if ($maxCapacity <= 0) {
         $maxCapacity = $classType === 'PRIVATE' ? 1 : ($classType === 'DUO' ? 2 : 5);
     }
+    if ($classType === 'PRIVATE') {
+        $maxCapacity = 1;
+    } elseif ($classType === 'DUO') {
+        $maxCapacity = 2;
+    }
 
     $targetError = validateTargetsByClassType($classType, $targetUserIds);
     if ($targetError !== null) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => $targetError], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $reservedStmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'");
+    $reservedStmt->execute([$classId]);
+    $reservedCount = (int)$reservedStmt->fetchColumn();
+    if ($reservedCount > max(1, $maxCapacity)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => '현재 예약 인원보다 작은 정원/수업 유형으로 변경할 수 없습니다.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -1016,6 +1030,7 @@ try {
     if ($oldValue['start_time'] !== $newValue['start_time']) $changes[] = '시작시간 변경';
     if ($oldValue['end_time'] !== $newValue['end_time']) $changes[] = '종료시간 변경';
     if ($oldValue['max_capacity'] !== $newValue['max_capacity']) $changes[] = '정원 변경';
+    if ($oldValue['class_type'] !== $newValue['class_type']) $changes[] = '수업유형 변경';
     
     logClassChange($pdo, $classId, 'UPDATE', $userId, $oldValue, $newValue, implode(', ', $changes));
 

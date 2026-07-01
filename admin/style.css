@@ -262,18 +262,22 @@ h2 {
     width: 100%;
     height: 100%;
     background: rgba(74, 62, 61, 0.4); /* 브라운 톤의 딤드 배경 */
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     visibility: hidden;
     opacity: 0;
-    transition: all 0.3s ease;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
     .modal-overlay.show {
+        display: flex;
         visibility: visible;
         opacity: 1;
+        pointer-events: auto;
+        z-index: 1000;
     }
 
 .modal-box {
