@@ -280,7 +280,7 @@
 						</ul>
 
 						<div class="action-flex">
-							<button class="btn btn-primary" onclick="openModal('reservationAddModal')">➕ 예약 추가 배정</button>
+							<button class="btn btn-primary" onclick="openCreateClassModal()">➕ 예약 추가 배정</button>
 							<button class="btn btn-warning" onclick="openClassEditModal()">✏️ 수업 변경</button>
 							<button class="btn btn-danger" onclick="deleteSelectedSlot()">🗑️ 수업 삭제</button>
 							<button class="btn btn-secondary" onclick="openModal('historyModal')">📜 변경 이력</button>
@@ -630,7 +630,7 @@
 
 				<!-- 섹션 C: 그룹 수업 선택 시 -->
 				<!--관리자가선생님 스케줄(추가)을관리할수있다. 선택하고만들수있도록한다.
-				학생들에게는 그룹수업스케줄이 담당선생 상관없이 (그룹)티켓구매(소지)한 모든회원에게 보일수있도록한다.
+				학생들에게는 그룹수업스케줄이 담당선생 상관없이 (그룹)티켓구매(소지)한 모든회원에게 보일수있도록 한다.
 					선생님이 부득이하게 쉬게되었을경우 다른선생님이 대체될수있도록 선생님변경가능기능을추가한다
 					그룹수업은 현재로서 25분 글자마스터(가타카나),(히라가나)두개만존재한다.-->
 				<div id="field-group" style="display:none; border-left:4px solid #f6c23e; padding-left:15px; margin-top:15px;">
@@ -777,7 +777,7 @@
 		</div>
 	</div>
 
-	<!-- 7. [디버그용] 전체 선생님 스케줄 일괄 추가 모달 -->
+	<!-- 7. 전체 선생님 스케줄 일괄 추가 모달 -->
 	<div class="modal-overlay" id="debugScheduleModal">
 		<div class="modal-box" style="max-width: 450px;">
 			<button class="modal-close" onclick="closeModal('debugScheduleModal')">&times;</button>
@@ -1172,6 +1172,8 @@
 
 				const slots = (res.data || []).map(toLegacySlotShape);
 				const byTeacher = {};
+
+				// ① API로 받은 슬롯이 있는 선생님 먼저 등록
 				slots.forEach(s => {
 					const key = String(s.teacher_id || ('t_' + (s.teacher_name || 'unknown')));
 					if (!byTeacher[key]) {
@@ -1180,13 +1182,21 @@
 					byTeacher[key].slots.push(s);
 				});
 
-				if (cachedTeachers.length === 0) {
+				// ② 스케줄이 없는 선생님도 cachedTeachers에서 빈 행으로 추가
+				if (cachedTeachers.length > 0) {
+					cachedTeachers.forEach(t => {
+						const key = String(t.user_id);
+						if (!byTeacher[key]) {
+							byTeacher[key] = { teacher_id: t.user_id, teacher_name: t.name, slots: [] };
+						}
+					});
+				} else {
 					const fromSlots = Object.values(byTeacher).map(t => ({ user_id: t.teacher_id, name: t.teacher_name, username: '' }));
 					renderTeacherSelectOptions(fromSlots);
 				}
 
 				if (Object.keys(byTeacher).length === 0) {
-					tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#858796;">해당 날짜에 오픈된 스케줄이 없습니다.</td></tr>';
+					tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#858796; padding:20px;">등록된 선생님이 없습니다. <button class="btn btn-primary" style="margin-left:10px; font-size:12px;" onclick="openCreateClassModal()">➕ 새 수업 추가</button></td></tr>`;
 					return;
 				}
 
@@ -1194,18 +1204,18 @@
 				Object.keys(byTeacher).forEach(key => {
 					const t = byTeacher[key];
 					html += `<tr><td><strong>${escapeHtml(t.teacher_name)}</strong></td>`;
-for (let h = 9; h <= 16; h++) {
-	const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
-	if (slotAtHour) {
-		const bookedCount = parseInt(slotAtHour.booked_count || 0, 10);
-		const maxStudents = parseInt(slotAtHour.max_students || 1, 10);
-		const fullClass = bookedCount >= maxStudents;
-		html += `<td class="timeline-cell booked ${fullClass ? 'full' : ''}" onclick="openSlotDetail(${slotAtHour.id})">${escapeHtml(slotAtHour.lesson_type || '')}<br>[${bookedCount}/${maxStudents}]</td>`;
-	} else {
-		html += `<td class="timeline-cell" onclick="openEmptySlot('${escapeHtml(String(t.teacher_id || key))}', ${h})">-</td>`;
-	}
-}
-html += '</tr>';
+					for (let h = 9; h <= 16; h++) {
+						const slotAtHour = t.slots.find(s => new Date(s.start_time).getHours() === h);
+						if (slotAtHour) {
+							const bookedCount = parseInt(slotAtHour.booked_count || 0, 10);
+							const maxStudents = parseInt(slotAtHour.max_students || 1, 10);
+							const fullClass = bookedCount >= maxStudents;
+							html += `<td class="timeline-cell booked ${fullClass ? 'full' : ''}" onclick="openSlotDetail(${slotAtHour.id})">${escapeHtml(slotAtHour.lesson_type || '')}<br>[${bookedCount}/${maxStudents}]</td>`;
+						} else {
+							html += `<td class="timeline-cell" onclick="openEmptySlot('${escapeHtml(String(t.teacher_id || key))}', ${h})">-</td>`;
+						}
+					}
+					html += '</tr>';
 				});
 
 				tbody.innerHTML = html;
@@ -1404,7 +1414,7 @@ renderMiniCalendar();
 					return;
 				}
 
-				// [추가] 홈 카드 요약 데이터 반영 (summary가 있으면)
+				// 홈 카드 요약 데이터 반영 (summary가 있으면)
 				const summary = result.summary || {};
 				const monthCard = document.getElementById('month-total-amount');
 				const yearCard = document.getElementById('year-total-amount');
@@ -1638,20 +1648,27 @@ renderMiniCalendar();
 			resetSlotDetail();
 		});
 			function openCreateClassModal() {
-		const dateInput = document.getElementById('reservation-date-input');
+			const dateInput = document.getElementById('reservation-date-input');
 			if (dateInput) dateInput.value = selectedScheduleDate;
 
 			const classType = document.getElementById('schedule-class-type');
 			if (classType) {
 				classType.value = '';
-			toggleSchedulerTypeFields('');
-		}
+				toggleSchedulerTypeFields('');
+			}
 
 			const teacherSelect = document.getElementById('schedule-teacher-select');
 			if (teacherSelect) teacherSelect.value = '';
 
+			const privateSelect = document.getElementById('private-student-list');
+			if (privateSelect) privateSelect.innerHTML = '<option value="">-- 선생님을 먼저 선택해 주세요 --</option>';
+
+			document.querySelectorAll('.teacher-student-combo').forEach(el => {
+				el.innerHTML = '<option value="">-- 선생님을 선택하세요 --</option>';
+			});
+
 			const timeSelect = document.getElementById('reservation-time-select');
-			if (timeSelect && !timeSelect.value) timeSelect.value = '10';
+			if (timeSelect) timeSelect.value = '10';
 
 			openModal('reservationAddModal');
 }
