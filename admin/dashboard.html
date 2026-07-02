@@ -1031,7 +1031,9 @@
      const studentManageBtn = document.getElementById('open-student-manage-btn');
 			const classEditBtn = document.getElementById('open-class-edit-btn');
 			const classManageBtn = document.getElementById('open-class-manage-btn');
-			if (studentManageBtn) studentManageBtn.disabled = !selectedSlotData || !selectedSlotId;
+     // Main action buttons should be enabled when there is a selected slot id.
+			// Do not require full detail data to be loaded (buttons can open modals and load details asynchronously).
+			if (studentManageBtn) studentManageBtn.disabled = !selectedSlotId;
 			if (classEditBtn) classEditBtn.disabled = !selectedSlotId;
 			if (classManageBtn) classManageBtn.disabled = !selectedSlotId;
 
@@ -1459,13 +1461,14 @@
 		}
 
 		async function loadScheduleForDate(dateStr) {
-			selectedScheduleDate = dateStr;
-			const tbody = document.querySelector('.timeline-table tbody');
-			document.getElementById('schedule-timeline-title').innerText = `⏱️ 선생님별 타임라인 (${dateStr})`;
-			resetSlotDetail();
+   selectedScheduleDate = dateStr;
+		const tbody = document.querySelector('.timeline-table tbody');
+		document.getElementById('schedule-timeline-title').innerText = `⏱️ 선생님별 타임라인 (${dateStr})`;
+		// Preserve current selection across timeline refreshes. Do not clear selection here:
+		const previousSelectedSlotId = selectedSlotId;
 
-			const reservationDateInput = document.getElementById('reservation-date-input');
-			if (reservationDateInput) reservationDateInput.value = dateStr;
+		const reservationDateInput = document.getElementById('reservation-date-input');
+		if (reservationDateInput) reservationDateInput.value = dateStr;
 
 			try {
 				const resp = await fetch('../api/classes.php?date=' + encodeURIComponent(dateStr));
@@ -1477,14 +1480,25 @@
 					return;
 				}
 
-				const slots = (res.data || []).map(toLegacySlotShape);
-				cachedSlotsById = {};
+      const slots = (res.data || []).map(toLegacySlotShape);
+			cachedSlotsById = {};
 				slots.forEach(slot => {
 					if (slot.id) {
 						slot.reservations = Array.isArray(slot.reservations) ? slot.reservations : [];
 						cachedSlotsById[String(slot.id)] = slot;
 					}
 				});
+
+			// After rebuilding timeline data, restore previous selection if that slot still exists.
+			if (previousSelectedSlotId && cachedSlotsById[String(previousSelectedSlotId)]) {
+				selectedSlotId = Number(previousSelectedSlotId);
+				selectedSlotData = cachedSlotsById[String(previousSelectedSlotId)];
+				renderSelectedSlotDetail(selectedSlotData);
+				updateStudentManageButtons();
+			} else {
+				// No previous selection available in new data -> reset
+				resetSlotDetail();
+			}
 				const timelineHours = getTimelineHours(slots);
 				renderTimelineHeader(timelineHours);
 				const byTeacher = {};
