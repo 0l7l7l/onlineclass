@@ -207,15 +207,15 @@
 			<div class="dashboard-cards">
 				<div class="card">
 					<div class="card-title">💸 당월 총 입금액 (7월)</div>
-					<div class="card-value"id="month-total-amount">200,000 원</div>
+					<div class="card-value" id="month-total-amount">200,000 원</div>
 				</div>
 				<div class="card success">
 					<div class="card-title">📈 올해 누적 금액 (2026)</div>
-					<div class="card-value"id="year-total-amount">2,400,000 원</div>
+					<div class="card-value" id="year-total-amount">2,400,000 원</div>
 				</div>
 				<div class="card info">
 					<div class="card-title">🎓 전체 등록 학생 수</div>
-					<div class="card-value"id="total-student-count">520 명</div>
+					<div class="card-value" id="total-student-count">520 명</div>
 				</div>
 				<div class="card warning">
 					<div class="card-title">⏳ 대기 중인 승인 건수</div>
@@ -278,7 +278,7 @@
 							<li style="margin-bottom: 5px;">선택된 수업이 없습니다.</li>
 						</ul>
 						<div class="action-flex">
-              <button type="button" class="btn btn-primary" id="open-student-manage-btn" onclick="openStudentManageModal(); return false;" disabled>👥 학생 관리</button>
+							<button type="button" class="btn btn-primary" id="open-student-manage-btn" onclick="openStudentManageModal(); return false;" disabled>👥 학생 관리</button>
 							<button type="button" class="btn btn-warning" id="open-class-edit-btn" onclick="openClassEditModal(); return false;" disabled>✏️ 수업 수정</button>
 							<button type="button" class="btn btn-secondary" id="open-class-manage-btn" onclick="openClassManageModal(); return false;" disabled>🧰 수업 관리</button>
 						</div>
@@ -289,7 +289,7 @@
 				<div class="scheduler-box">
 					<div style="display: flex; justify-content: space-between; align-items: center;">
 						<h4 style="margin: 0; color:#4e73df;" id="schedule-timeline-title">⏱️ 선생님별 타임라인</h4>
-            <div style="display:flex; gap:8px;">
+						<div style="display:flex; gap:8px;">
 							<button class="btn btn-primary" style="font-size:12px;" onclick="openCreateClassModal()">+ 예약 추가</button>
 							<button class="btn btn-success" style="font-size:12px;" onclick="openModal('debugScheduleModal')">⚙️ 디버그: 전체 교사 스케줄 일괄 추가</button>
 						</div>
@@ -301,7 +301,7 @@
 								<tr id="timeline-head-row"></tr>
 							</thead>
 							<tbody>
-                <tr>
+								<tr>
 									<td colspan="10" style="text-align:center; color:#858796; padding:20px;">스케줄을 불러오는 중입니다.</td>
 								</tr>
 							</tbody>
@@ -324,11 +324,11 @@
 						<th>관리</th>
 					</tr>
 				</thead>
-     <tbody id="users-body">
-				<tr>
-					<td colspan="5" style="text-align:center; color:#858796; padding: 2rem 0;">로딩 중...</td>
-				</tr>
-			</tbody>
+				<tbody id="users-body">
+					<tr>
+						<td colspan="5" style="text-align:center; color:#858796; padding: 2rem 0;">로딩 중...</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 
@@ -338,21 +338,21 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-         <th>신청번호</th>
-					<th>신청자</th>
-					<th>신청일자</th>
-					<th>요청 금액</th>
-					<th>결제 수단</th>
-					<th>처리일자</th>
-					<th>상태</th>
-					<th>승인 처리</th>
+						<th>신청번호</th>
+						<th>신청자</th>
+						<th>신청일자</th>
+						<th>요청 금액</th>
+						<th>결제 수단</th>
+						<th>처리일자</th>
+						<th>상태</th>
+						<th>승인 처리</th>
 					</tr>
 				</thead>
-     <tbody id="approvals-body">
-				<tr>
-					<td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">로딩 중...</td>
-				</tr>
-			</tbody>
+				<tbody id="approvals-body">
+					<tr>
+						<td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">로딩 중...</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 
@@ -490,7 +490,7 @@
 			<button class="modal-close" onclick="closeModal('reservationAddModal')">&times;</button>
 			<h3 class="modal-title">📅 오픈 스케줄 및 수업 속성 설정</h3>
 			<p style="font-size:12.5px; color:#858796; margin-top:-10px; margin-bottom:15px;">
-       선생님별 수업 가능 슬롯을 생성합니다. 학생 예약/티켓 차감은 학생 페이지에서 처리됩니다.
+				선생님별 수업 가능 슬롯을 생성합니다. 학생 예약/티켓 차감은 학생 페이지에서 처리됩니다.
 			</p>
 
 
@@ -499,13 +499,13 @@
 
 				<!-- 기본 날짜/시간 설정 (관리자가 직접 지정 가능) -->
 				<div style="background:#f8f9fc; padding:12px; border-radius:6px; margin-bottom:15px; border:1px solid #e3e6f0;">
-         <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:10px;">
+					<div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:10px;">
 						<div>
 							<label style="font-size:12px; font-weight:bold;">스케줄 날짜</label>
 							<input type="date" id="reservation-date-input" value="2026-06-29" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;" required>
 						</div>
 						<div>
-              <label style="font-size:12px; font-weight:bold;">시간 설정</label>
+							<label style="font-size:12px; font-weight:bold;">시간 설정</label>
 							<div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
 								<input type="time" id="reservation-start-time" value="10:00" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;" required>
 								<input type="time" id="reservation-end-time" value="11:00" style="width:100%; padding:5px; border:1px solid #d1d3e2; border-radius:4px;" required>
@@ -514,7 +514,7 @@
 					</div>
 				</div>
 
-        <!-- 1단계: 선생님 지정 -->
+				<!-- 1단계: 선생님 지정 -->
 				<div class="form-group" style="background: #eef2fa; padding: 12px; border-radius: 6px; border-left: 4px solid #4e73df;">
 					<label style="font-weight:bold; color:#2e59d9;">👩‍🏫 담당 선생님 지정</label>
 					<p style="font-size:11.5px; color:#5a5c69; margin:2px 0 6px 0;">스케줄을 생성할 강사 회원을 선택하세요.</p>
@@ -550,7 +550,7 @@
 					선생님이 부득이하게 쉬게되었을경우 다른선생님이 대체될수있도록 선생님변경가능기능을추가한다
 					그룹수업은 현재로서 25분 글자마스터(가타카나),(히라가나)두개만존재한다.-->
 				<div id="field-group" style="display:none; border-left:4px solid #f6c23e; padding-left:15px; margin-top:15px;">
-          <div style="background:#fff3cd; color:#664d03; padding:10px; border-radius:4px; font-size:12.5px; line-height:1.5;">
+					<div style="background:#fff3cd; color:#664d03; padding:10px; border-radius:4px; font-size:12.5px; line-height:1.5;">
 						<strong>🏫 그룹 수업 노출 정책</strong><br>
 						그룹 수업은 담당선생님과 관계없이 그룹 티켓 보유 학생 전체에게 노출됩니다.
 					</div>
@@ -567,14 +567,14 @@
 		</div>
 	</div>
 
- <!-- 5. 수업정보 세부 속성 변경 모달 -->
+	<!-- 5. 수업정보 세부 속성 변경 모달 -->
 
 	<div class="modal-overlay" id="classEditModal">
 		<div class="modal-box" style="max-width: 520px;">
 			<button class="modal-close" onclick="closeModal('classEditModal')">&times;</button>
-      <h3 class="modal-title">✏️ 오픈 수업 정보 수정</h3>
+			<h3 class="modal-title">✏️ 오픈 수업 정보 수정</h3>
 			<p style="font-size:12.5px; color:#858796; margin-top:-10px; margin-bottom:15px;">
-        이미 생성된 수업 스케줄의 일시, 담당 강사, 수업 유형을 수정합니다.
+				이미 생성된 수업 스케줄의 일시, 담당 강사, 수업 유형을 수정합니다.
 			</p>
 			<div id="class-edit-status" style="background:#eef2fa; color:#2e59d9; padding:10px; border-radius:4px; font-size:12px; line-height:1.5; margin-bottom:12px;">
 				타임라인에서 선택한 수업 정보를 불러옵니다.
@@ -617,15 +617,15 @@
 					</select>
 				</div>
 
-        <!-- [유형별 안내 섹션] 관리자 스케줄 전용 -->
+				<!-- [유형별 안내 섹션] 관리자 스케줄 전용 -->
 				<div id="edit-field-private" style="display:block; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
-          <div style="background:#eef2fa; color:#2e59d9; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+					<div style="background:#eef2fa; color:#2e59d9; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
 						개인수업은 슬롯만 수정됩니다. 학생 예약은 onlineclass.html에서 처리됩니다.
 					</div>
 				</div>
 
 				<div id="edit-field-duo" style="display:none; border-left:4px solid #1cc88a; padding-left:15px; margin-top:15px;">
-          <div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+					<div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
 						듀오수업은 슬롯 정보만 수정됩니다. 학생 매칭/예약은 onlineclass.html에서 처리됩니다.
 					</div>
 				</div>
@@ -717,8 +717,8 @@
 		</div>
 	</div>
 
- <!-- 10. 학생 검색/배정 모달 -->
-	<div class="modal-overlay" id="studentSearchModal">
+	<!-- 10. 학생 검색/배정 모달 -->
+	<!--<div class="modal-overlay" id="studentSearchModal">
 		<div class="modal-box" style="max-width: 620px;">
 			<button class="modal-close" onclick="closeModal('studentSearchModal')">&times;</button>
 			<h3 class="modal-title" id="student-search-title">학생 추가</h3>
@@ -754,10 +754,10 @@
 				<button type="button" class="btn btn-primary" onclick="submitManageStudentAction()" id="student-search-submit-btn">예약</button>
 			</div>
 		</div>
-	</div>
+	</div>-->
 
-  <!-- 11. 학생 삭제 모달 -->
-	<div class="modal-overlay" id="studentDeleteModal">
+	<!-- 11. 학생 삭제 모달 -->
+	<!--<div class="modal-overlay" id="studentDeleteModal">
 		<div class="modal-box" style="max-width: 460px;">
 			<button class="modal-close" onclick="closeModal('studentDeleteModal')">&times;</button>
 			<h3 class="modal-title">예약 학생 삭제</h3>
@@ -770,6 +770,101 @@
 				<button type="button" class="btn btn-secondary" onclick="closeModal('studentDeleteModal')">취소</button>
 				<button type="button" class="btn btn-danger" onclick="submitDeleteStudentReservation()">삭제</button>
 			</div>
+		</div>
+	</div>-->
+
+
+	<!-- 회원 정보 조회/수정 모달 -->
+	<div class="modal-overlay" id="userInfoModal">
+		<div class="modal-box" style="max-width: 640px;">
+			<button class="modal-close" onclick="closeModal('userInfoModal')">&times;</button>
+			<h3 class="modal-title">회원 정보</h3>
+
+			<form id="user-info-form" onsubmit="event.preventDefault(); submitUserInfoUpdate();">
+				<input type="hidden" id="ui-user-id">
+
+				<div style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+					<div style="width:84px; height:84px; background:#f0f0f0; border-radius:6px; overflow:hidden; display:flex; align-items:center; justify-content:center;" id="ui-avatar-wrap">
+						<img id="ui-avatar-img" src="" alt="avatar" style="width:100%; height:100%; object-fit:cover; display:none;">
+						<span id="ui-avatar-placeholder" style="color:#858796;">No Image</span>
+					</div>
+					<div style="flex:1;">
+						<div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+							<strong id="ui-name-display" style="font-size:16px;"></strong>
+							<small id="ui-username-display" style="color:#858796;"></small>
+						</div>
+						<div style="font-size:13px; color:#5a5c69;" id="ui-meta-display"></div>
+					</div>
+				</div>
+
+				<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+					<div class="form-group">
+						<label>이름</label>
+						<input type="text" id="ui-name" required>
+					</div>
+					<div class="form-group">
+						<label>아이디</label>
+						<input type="text" id="ui-username" disabled>
+					</div>
+				</div>
+
+				<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+					<div class="form-group">
+						<label>이메일</label>
+						<input type="email" id="ui-email">
+					</div>
+					<div class="form-group">
+						<label>전화번호</label>
+						<input type="text" id="ui-phone">
+					</div>
+				</div>
+
+				<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+					<div class="form-group">
+						<label>역할</label>
+						<select id="ui-role">
+							<option value="STUDENT">STUDENT</option>
+							<option value="TEACHER">TEACHER</option>
+							<option value="SUPPORTER">SUPPORTER</option>
+							<option value="ADMIN">ADMIN</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>상태</label>
+						<select id="ui-status">
+							<option value="ACTIVE">활성</option>
+							<option value="SUSPENDED">정지</option>
+						</select>
+					</div>
+				</div>
+
+				<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+					<div class="form-group">
+						<label>보유 전자머니</label>
+						<input type="number" id="ui-money" min="0" step="1">
+					</div>
+					<div class="form-group">
+						<label>담당 선생님</label>
+						<select id="ui-assigned-teacher">
+							<option value="">-- 없음 --</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group" style="margin-top:8px;">
+					<label>관리 메모 (관리자 전용)</label>
+					<textarea id="ui-admin-note" rows="3" style="width:100%;"></textarea>
+				</div>
+
+				<div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+					<button type="button" class="btn btn-danger" onclick="deleteUserFromModal()">계정 삭제</button>
+					<button type="button" class="btn btn-secondary" onclick="resetUserPasswordFromModal()">비밀번호 초기화</button>
+					<button type="button" class="btn btn-secondary" onclick="closeModal('userInfoModal')">취소</button>
+					<button type="submit" class="btn btn-primary">저장</button>
+				</div>
+			</form>
+
+			<div id="ui-activity-log" style="margin-top:12px; font-size:13px; color:#5a5c69; max-height:160px; overflow:auto;"></div>
 		</div>
 	</div>
 
@@ -1018,7 +1113,7 @@
 			selectedSlotRequestSeq++;
 			selectedSlotId = null;
 			selectedSlotData = null;
-      selectedReservationRow = null;
+			selectedReservationRow = null;
 			document.getElementById('selected-datetime-label').innerText = '슬롯을 선택해 주세요.';
 			document.getElementById('selected-teacher-label').innerText = '-';
 			document.getElementById('selected-class-type-label').innerText = '-';
@@ -1035,10 +1130,10 @@
 		}
 
 		function updateStudentManageButtons() {
-     const studentManageBtn = document.getElementById('open-student-manage-btn');
+			const studentManageBtn = document.getElementById('open-student-manage-btn');
 			const classEditBtn = document.getElementById('open-class-edit-btn');
 			const classManageBtn = document.getElementById('open-class-manage-btn');
-     // Main action buttons should be enabled when there is a selected slot id.
+			// Main action buttons should be enabled when there is a selected slot id.
 			// Do not require full detail data to be loaded (buttons can open modals and load details asynchronously).
 			if (studentManageBtn) studentManageBtn.disabled = !selectedSlotId;
 			if (classEditBtn) classEditBtn.disabled = !selectedSlotId;
@@ -1073,15 +1168,15 @@
 			deleteBtn.disabled = !hasSelectedReservation;
 		}
 
-    function selectReservationRow(reservationId) {
+		function selectReservationRow(reservationId) {
 			const reservations = Array.isArray(selectedSlotData?.reservations) ? selectedSlotData.reservations : [];
 			selectedReservationRow = reservations.find(r => Number(r.reservation_id) === Number(reservationId)) || null;
-     document.querySelectorAll('#student-manage-list li[data-reservation-id]').forEach(li => {
+			document.querySelectorAll('#student-manage-list li[data-reservation-id]').forEach(li => {
 				li.style.background = '';
 				li.style.borderRadius = '';
 				li.style.padding = '';
 			});
-     const activeLi = document.querySelector(`#student-manage-list li[data-reservation-id="${reservationId}"]`);
+			const activeLi = document.querySelector(`#student-manage-list li[data-reservation-id="${reservationId}"]`);
 			if (activeLi) {
 				activeLi.style.background = '#eef2fa';
 				activeLi.style.borderRadius = '4px';
@@ -1155,7 +1250,7 @@
 			}
 		}
 
-    async function openClassManageModal() {
+		async function openClassManageModal() {
 			if (!selectedSlotId) {
 				alert('먼저 수업 슬롯을 선택해 주세요.');
 				return;
@@ -1448,7 +1543,7 @@
 		}
 
 		function toggleSchedulerTypeFields(type) {
-     document.getElementById('field-private-11').style.display = 'none';
+			document.getElementById('field-private-11').style.display = 'none';
 			document.getElementById('field-duo-12').style.display = 'none';
 			document.getElementById('field-group').style.display = 'none';
 
@@ -1468,14 +1563,14 @@
 		}
 
 		async function loadScheduleForDate(dateStr) {
-   selectedScheduleDate = dateStr;
-		const tbody = document.querySelector('.timeline-table tbody');
-		document.getElementById('schedule-timeline-title').innerText = `⏱️ 선생님별 타임라인 (${dateStr})`;
-		// Preserve current selection across timeline refreshes. Do not clear selection here:
-		const previousSelectedSlotId = selectedSlotId;
+			selectedScheduleDate = dateStr;
+			const tbody = document.querySelector('.timeline-table tbody');
+			document.getElementById('schedule-timeline-title').innerText = `⏱️ 선생님별 타임라인 (${dateStr})`;
+			// Preserve current selection across timeline refreshes. Do not clear selection here:
+			const previousSelectedSlotId = selectedSlotId;
 
-		const reservationDateInput = document.getElementById('reservation-date-input');
-		if (reservationDateInput) reservationDateInput.value = dateStr;
+			const reservationDateInput = document.getElementById('reservation-date-input');
+			if (reservationDateInput) reservationDateInput.value = dateStr;
 
 			try {
 				const resp = await fetch('../api/classes.php?date=' + encodeURIComponent(dateStr));
@@ -1487,8 +1582,8 @@
 					return;
 				}
 
-      const slots = (res.data || []).map(toLegacySlotShape);
-			cachedSlotsById = {};
+				const slots = (res.data || []).map(toLegacySlotShape);
+				cachedSlotsById = {};
 				slots.forEach(slot => {
 					if (slot.id) {
 						slot.reservations = Array.isArray(slot.reservations) ? slot.reservations : [];
@@ -1496,16 +1591,16 @@
 					}
 				});
 
-			// After rebuilding timeline data, restore previous selection if that slot still exists.
-			if (previousSelectedSlotId && cachedSlotsById[String(previousSelectedSlotId)]) {
-				selectedSlotId = Number(previousSelectedSlotId);
-				selectedSlotData = cachedSlotsById[String(previousSelectedSlotId)];
-				renderSelectedSlotDetail(selectedSlotData);
-				updateStudentManageButtons();
-			} else {
-				// No previous selection available in new data -> reset
-				resetSlotDetail();
-			}
+				// After rebuilding timeline data, restore previous selection if that slot still exists.
+				if (previousSelectedSlotId && cachedSlotsById[String(previousSelectedSlotId)]) {
+					selectedSlotId = Number(previousSelectedSlotId);
+					selectedSlotData = cachedSlotsById[String(previousSelectedSlotId)];
+					renderSelectedSlotDetail(selectedSlotData);
+					updateStudentManageButtons();
+				} else {
+					// No previous selection available in new data -> reset
+					resetSlotDetail();
+				}
 				const timelineHours = getTimelineHours(slots);
 				renderTimelineHeader(timelineHours);
 				const byTeacher = {};
@@ -1590,7 +1685,7 @@
 			}
 		}
 
-    async function loadClassDetail(slotId) {
+		async function loadClassDetail(slotId) {
 			const requestedSlotId = Number(slotId);
 			if (!requestedSlotId) return null;
 
@@ -1697,12 +1792,12 @@
 				}
 
 				tbody.innerHTML = rows.map(st => `
-					<tr>
-						<td style="text-align:center;"><input type="radio" name="student-search-pick" value="${st.user_id}" data-name="${escapeHtml(st.name)}" data-username="${escapeHtml(st.username)}" onchange="pickStudentCandidateFromInput(this)" ${st.already_reserved ? 'disabled' : ''}></td>
-						<td>${escapeHtml(st.name)} ${st.already_reserved ? '<span style="color:#e74a3b; font-size:11px;">(이미 예약됨)</span>' : ''}</td>
-						<td>${escapeHtml(st.username)}</td>
-					</tr>
-				`).join('');
+						<tr>
+							<td style="text-align:center;"><input type="radio" name="student-search-pick" value="${st.user_id}" data-name="${escapeHtml(st.name)}" data-username="${escapeHtml(st.username)}" onchange="pickStudentCandidateFromInput(this)" ${st.already_reserved ? 'disabled' : ''}></td>
+							<td>${escapeHtml(st.name)} ${st.already_reserved ? '<span style="color:#e74a3b; font-size:11px;">(이미 예약됨)</span>' : ''}</td>
+							<td>${escapeHtml(st.username)}</td>
+						</tr>
+					`).join('');
 			} catch (e) {
 				console.error(e);
 				tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#e74a3b;">학생 조회 중 오류가 발생했습니다.</td></tr>';
@@ -1742,7 +1837,7 @@
 
 		async function submitManageStudentAction() {
 			if (!selectedSlotId || !selectedSlotData) return;
-     const classId = selectedSlotId;
+			const classId = selectedSlotId;
 			if (!pendingStudentCandidateId) {
 				alert('학생을 선택해 주세요.');
 				return;
@@ -1757,7 +1852,7 @@
 			try {
 				const form = new URLSearchParams();
 				form.append('action', manageStudentMode === 'change' ? 'change_student' : 'assign_student');
-        form.append('class_id', String(classId));
+				form.append('class_id', String(classId));
 				form.append('student_id', String(pendingStudentCandidateId));
 				form.append('ticket_mode', ticketMode);
 				if (manageStudentMode === 'change') {
@@ -1780,8 +1875,8 @@
 				closeModal('studentSearchModal');
 				alert(res.message || '처리 완료');
 				await loadScheduleForDate(selectedScheduleDate);
-        await loadClassDetail(classId);
-       renderStudentManageList();
+				await loadClassDetail(classId);
+				renderStudentManageList();
 			} catch (e) {
 				console.error(e);
 				alert('학생 배정 처리 중 오류가 발생했습니다.');
@@ -1799,14 +1894,14 @@
 
 		async function submitDeleteStudentReservation() {
 			if (!selectedSlotId || !selectedReservationRow) return;
-     const classId = selectedSlotId;
+			const classId = selectedSlotId;
 			const restore = document.querySelector('input[name="manage-restore-ticket"]:checked')?.value === 'Y' ? 'Y' : 'N';
 			if (!confirm('선택한 학생 예약을 삭제하시겠습니까?')) return;
 
 			try {
 				const form = new URLSearchParams();
 				form.append('action', 'remove_student');
-        form.append('class_id', String(classId));
+				form.append('class_id', String(classId));
 				form.append('reservation_id', String(selectedReservationRow.reservation_id));
 				form.append('restore_ticket', restore);
 
@@ -1826,8 +1921,8 @@
 				closeModal('studentDeleteModal');
 				alert(res.message || '삭제 완료');
 				await loadScheduleForDate(selectedScheduleDate);
-        await loadClassDetail(classId);
-       renderStudentManageList();
+				await loadClassDetail(classId);
+				renderStudentManageList();
 			} catch (e) {
 				console.error(e);
 				alert('학생 삭제 처리 중 오류가 발생했습니다.');
@@ -1838,12 +1933,12 @@
 			try {
 				const teacher = document.getElementById('schedule-teacher-select').value;
 				const date = document.getElementById('reservation-date-input').value;
-        const startTimeValue = document.getElementById('reservation-start-time').value;
+				const startTimeValue = document.getElementById('reservation-start-time').value;
 				const endTimeValue = document.getElementById('reservation-end-time').value;
 				const classTypeRaw = document.getElementById('schedule-class-type').value;
 				const maxStudents = parseInt(document.getElementById('reservation-group-max-students')?.value || '5', 10);
 
-        if (!teacher || !date || !startTimeValue || !endTimeValue || !classTypeRaw) {
+				if (!teacher || !date || !startTimeValue || !endTimeValue || !classTypeRaw) {
 					alert('필수 항목을 모두 채워주세요.');
 					return;
 				}
@@ -1852,7 +1947,7 @@
 					return;
 				}
 
-       const startTime = `${startTimeValue}:00`;
+				const startTime = `${startTimeValue}:00`;
 				const endTime = `${endTimeValue}:00`;
 
 				const params = new URLSearchParams();
@@ -1879,7 +1974,7 @@
 					return;
 				}
 
-       const createdClassId = Number(res.class_id || 0);
+				const createdClassId = Number(res.class_id || 0);
 				if (createdClassId > 0) {
 					selectedSlotId = createdClassId;
 				}
@@ -1908,8 +2003,8 @@
 				const tbody = document.getElementById('approvals-body');
 				const pendingCount = document.getElementById('pending-count');
 
-      if (!response.ok || !result.success) {
-				tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#e74a3b;">${result.message || '승인 요청을 불러오지 못했습니다.'}</td></tr>`;
+				if (!response.ok || !result.success) {
+					tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#e74a3b;">${result.message || '승인 요청을 불러오지 못했습니다.'}</td></tr>`;
 					pendingCount.innerText = '0 건';
 
 					// 홈 카드도 실패 시 0 처리
@@ -1938,36 +2033,36 @@
 				pendingCount.innerText = `${Number(summary.pending_count ?? pendingRequests.length).toLocaleString()} 건`;
 
 				if (requests.length === 0) {
-         tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">승인 대기 요청이 없습니다.</td></tr>';
+					tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">승인 대기 요청이 없습니다.</td></tr>';
 					return;
 				}
 
-      // 기존 테이블 렌더링 유지 (신청일, 처리일을 표시)
-			tbody.innerHTML = requests.map(req => {
-				const reqDate = formatDateTime(req.requested_at || req.request_date || req.created_at || req.request_at || req.requested_on);
-				const processedDate = formatDateTime(req.processed_at || req.processed_date || req.updated_at || req.handled_at || req.processed_on);
-				return `
-				<tr>
-					<td>${escapeHtml(String(req.request_id || ''))}</td>
-					<td>${escapeHtml(req.user_name)} (${escapeHtml(req.username)})</td>
-					<td>${reqDate}</td>
-					<td class="amount-plus">+ ${parseInt(req.amount, 10).toLocaleString()} 원</td>
-					<td>${escapeHtml(req.payment_method)}${req.depositor_name ? ' (' + escapeHtml(req.depositor_name) + ')' : ''}</td>
-					<td>${processedDate}</td>
-					<td><span class="badge ${req.status === 'PENDING' ? 'badge-pending' : req.status === 'APPROVED' ? 'badge success' : 'badge-danger'}">${escapeHtml(req.status)}</span></td>
-					<td>
-						${req.status === 'PENDING'
+				// 기존 테이블 렌더링 유지 (신청일, 처리일을 표시)
+				tbody.innerHTML = requests.map(req => {
+					const reqDate = formatDateTime(req.requested_at || req.request_date || req.created_at || req.request_at || req.requested_on);
+					const processedDate = formatDateTime(req.processed_at || req.processed_date || req.updated_at || req.handled_at || req.processed_on);
+					return `
+					<tr>
+						<td>${escapeHtml(String(req.request_id || ''))}</td>
+						<td>${escapeHtml(req.user_name)} (${escapeHtml(req.username)})</td>
+						<td>${reqDate}</td>
+						<td class="amount-plus">+ ${parseInt(req.amount, 10).toLocaleString()} 원</td>
+						<td>${escapeHtml(req.payment_method)}${req.depositor_name ? ' (' + escapeHtml(req.depositor_name) + ')' : ''}</td>
+						<td>${processedDate}</td>
+						<td><span class="badge ${req.status === 'PENDING' ? 'badge-pending' : req.status === 'APPROVED' ? 'badge success' : 'badge-danger'}">${escapeHtml(req.status)}</span></td>
+						<td>
+							${req.status === 'PENDING'
 							? `<button class="btn btn-success" onclick="handleApproval(${req.request_id}, 'APPROVE')">승인</button> <button class="btn btn-danger" onclick="handleApproval(${req.request_id}, 'REJECT')">거절</button>`
 							: '<span style="color:#858796;">처리완료</span>'}
-					</td>
-				</tr>`;
-			}).join('');
-            } catch (error) {
-								const tbody = document.getElementById('approvals-body');
-								tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#e74a3b;">서버 접속에 실패했습니다.</td></tr>';
-								document.getElementById('pending-count').innerText = '0 건';
-								console.error(error);
-						}
+						</td>
+					</tr>`;
+				}).join('');
+			} catch (error) {
+				const tbody = document.getElementById('approvals-body');
+				tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#e74a3b;">서버 접속에 실패했습니다.</td></tr>';
+				document.getElementById('pending-count').innerText = '0 건';
+				console.error(error);
+			}
 		}
 
 		async function handleApproval(requestId, action) {
@@ -2071,8 +2166,8 @@
 				closeModal('loginModal');
 				setAdminUser(result.user);
 				await loadTeachers();
-      fetchApprovalRequests();
-			fetchAdminUsers();
+				fetchApprovalRequests();
+				fetchAdminUsers();
 				if (document.getElementById('schedule-page').classList.contains('active')) {
 					loadScheduleForDate(selectedScheduleDate);
 				}
@@ -2091,8 +2186,8 @@
 					return;
 				}
 				setAdminUser(null);
-                const tbody = document.getElementById('approvals-body');
-								tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">로그인이 필요합니다.</td></tr>';
+				const tbody = document.getElementById('approvals-body');
+				tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">로그인이 필요합니다.</td></tr>';
 				document.getElementById('pending-count').innerText = '0 건';
 				closeModal('logoutModal');
 			} catch (error) {
@@ -2132,12 +2227,12 @@
 				if (response.ok && result && result.success && result.user) {
 					setAdminUser(result.user);
 					await loadTeachers();
-        fetchApprovalRequests();
-				fetchAdminUsers();
+					fetchApprovalRequests();
+					fetchAdminUsers();
 				} else {
-                    setAdminUser(null);
-										const tbody = document.getElementById('approvals-body');
-										tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">로그인이 필요합니다.</td></tr>';
+					setAdminUser(null);
+					const tbody = document.getElementById('approvals-body');
+					tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#858796; padding: 2rem 0;">로그인이 필요합니다.</td></tr>';
 				}
 			} catch (error) {
 				console.error(error);
@@ -2203,7 +2298,7 @@
 				});
 			});
 		});
-			function openCreateClassModal() {
+		function openCreateClassModal() {
 			const dateInput = document.getElementById('reservation-date-input');
 			if (dateInput) dateInput.value = selectedScheduleDate;
 
@@ -2216,15 +2311,15 @@
 			const teacherSelect = document.getElementById('schedule-teacher-select');
 			if (teacherSelect) teacherSelect.value = '';
 
-      const startTimeInput = document.getElementById('reservation-start-time');
+			const startTimeInput = document.getElementById('reservation-start-time');
 			const endTimeInput = document.getElementById('reservation-end-time');
 			if (startTimeInput) startTimeInput.value = '10:00';
 			if (endTimeInput) endTimeInput.value = '11:00';
 
 			openModal('reservationAddModal');
-}
+		}
 
-//유저목록추가
+		//유저목록추가
 		async function fetchAdminUsers() {
 			try {
 				const resp = await fetch('../api/admin_users.php');
@@ -2246,14 +2341,14 @@
 
 
 				tbody.innerHTML = rows.map(u => `
-          <tr>
-            <td>${u.user_id}</td>
-            <td>${escapeHtml(u.name)} (${escapeHtml(u.username)})</td>
-            <td><span class="badge">${escapeHtml(u.role)}</span></td>
-            <td>${Number(u.current_money || 0).toLocaleString()} 원</td>
-            <td><button class="btn btn-primary" onclick="alert('사용자 상세보기: ${escapeHtml(u.user_id)}')">상세보기</button></td>
-          </tr>
-        `).join('');
+						<tr>
+							<td>${u.user_id}</td>
+							<td>${escapeHtml(u.name)} (${escapeHtml(u.username)})</td>
+							<td><span class="badge">${escapeHtml(u.role)}</span></td>
+							<td>${Number(u.current_money || 0).toLocaleString()} 원</td>
+							<td><button class="btn btn-primary" onclick="alert('사용자 상세보기: ${escapeHtml(u.user_id)}')">상세보기</button></td>
+						</tr>
+					`).join('');
 			} catch (e) {
 				console.error(e);
 				const tbody = document.getElementById('users-body');
@@ -2261,6 +2356,168 @@
 			}
 		}
 
+
+		// 사용자 상세 불러오기 및 수정 (대시보드 기존 helper 재사용)
+		async function openUserInfoModal(userId) {
+			openModal('userInfoModal');
+			document.getElementById('ui-user-id').value = userId || '';
+			// 초기화
+			document.getElementById('ui-avatar-img').style.display = 'none';
+			document.getElementById('ui-avatar-placeholder').style.display = 'inline';
+			document.getElementById('ui-activity-log').innerHTML = '불러오는 중...';
+
+			try {
+				const resp = await fetch('../api/admin_users.php?action=detail&user_id=' + encodeURIComponent(userId));
+				const raw = await resp.text();
+				const res = tryParseApiJson(raw);
+				if (!resp.ok || !res || !res.success) {
+					alert(res?.message || '회원 정보를 불러오지 못했습니다.');
+					closeModal('userInfoModal');
+					return;
+				}
+
+				const u = res.data || {};
+				document.getElementById('ui-name').value = u.name || '';
+				document.getElementById('ui-username').value = u.username || '';
+				document.getElementById('ui-email').value = u.email || '';
+				document.getElementById('ui-phone').value = u.phone || '';
+				document.getElementById('ui-role').value = u.role || 'STUDENT';
+				document.getElementById('ui-status').value = u.status || 'ACTIVE';
+				document.getElementById('ui-money').value = Number(u.current_money || 0);
+				document.getElementById('ui-admin-note').value = u.admin_note || '';
+
+				// 요약 표시
+				document.getElementById('ui-name-display').innerText = u.name || '-';
+				document.getElementById('ui-username-display').innerText = u.username ? `(${u.username})` : '';
+				document.getElementById('ui-meta-display').innerText = `가입: ${u.registered_at || '-'} · 마지막 로그인: ${u.last_login_at || '-'}`;
+
+				// 아바타
+				if (u.avatar_url) {
+					const img = document.getElementById('ui-avatar-img');
+					img.src = u.avatar_url;
+					img.style.display = 'block';
+					document.getElementById('ui-avatar-placeholder').style.display = 'none';
+				}
+
+				// 담당 선생님 옵션 (cachedTeachers 존재하면 재활용)
+				const teacherSelect = document.getElementById('ui-assigned-teacher');
+				teacherSelect.innerHTML = '<option value="">-- 없음 --</option>';
+				(cachedTeachers || []).forEach(t => {
+					const opt = document.createElement('option');
+					opt.value = String(t.user_id || '');
+					opt.textContent = `${t.name} (${t.username || ''})`;
+					teacherSelect.appendChild(opt);
+				});
+				teacherSelect.value = String(u.assigned_teacher_id || '');
+
+				// 활동 로그
+				let logsHtml = '';
+				if (Array.isArray(res.data?.logs) && res.data.logs.length > 0) {
+					logsHtml = res.data.logs.map(l => `<div style="padding:6px 0; border-bottom:1px solid #f0f0f0;">${escapeHtml(l.when || '')} · ${escapeHtml(l.what || '')}</div>`).join('');
+				} else {
+					logsHtml = '<div style="color:#858796; padding:6px 0;">최근 활동 기록이 없습니다.</div>';
+				}
+				document.getElementById('ui-activity-log').innerHTML = logsHtml;
+			} catch (e) {
+				console.error(e);
+				alert('회원 정보 조회 중 오류가 발생했습니다.');
+				closeModal('userInfoModal');
+			}
+		}
+
+		async function submitUserInfoUpdate() {
+			const userId = document.getElementById('ui-user-id').value;
+			if (!userId) { alert('유효한 회원을 선택해 주세요.'); return; }
+
+			if (!confirm('회원 정보를 저장하시겠습니까?')) return;
+
+			try {
+				const params = new URLSearchParams();
+				params.append('action', 'update');
+				params.append('user_id', String(userId));
+				params.append('name', document.getElementById('ui-name').value.trim());
+				params.append('email', document.getElementById('ui-email').value.trim());
+				params.append('phone', document.getElementById('ui-phone').value.trim());
+				params.append('role', document.getElementById('ui-role').value);
+				params.append('status', document.getElementById('ui-status').value);
+				params.append('current_money', String(Number(document.getElementById('ui-money').value || 0)));
+				params.append('assigned_teacher_id', document.getElementById('ui-assigned-teacher').value || '');
+				params.append('admin_note', document.getElementById('ui-admin-note').value || '');
+
+				const resp = await fetch('../api/admin_users.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+					body: params.toString()
+				});
+				const raw = await resp.text();
+				const res = tryParseApiJson(raw);
+				if (!resp.ok || !res || !res.success) {
+					alert(res?.message || '저장에 실패했습니다.');
+					return;
+				}
+
+				alert(res.message || '저장되었습니다.');
+				closeModal('userInfoModal');
+				fetchAdminUsers(); // 목록 갱신
+			} catch (e) {
+				console.error(e);
+				alert('저장 중 오류가 발생했습니다.');
+			}
+		}
+
+		async function deleteUserFromModal() {
+			const userId = document.getElementById('ui-user-id').value;
+			if (!userId) return;
+			if (!confirm('해당 계정을 삭제하시겠습니까? (복구 불가)')) return;
+			try {
+				const params = new URLSearchParams();
+				params.append('action', 'delete');
+				params.append('user_id', String(userId));
+				const resp = await fetch('../api/admin_users.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+					body: params.toString()
+				});
+				const raw = await resp.text();
+				const res = tryParseApiJson(raw);
+				if (!resp.ok || !res || !res.success) {
+					alert(res?.message || '삭제에 실패했습니다.');
+					return;
+				}
+				alert(res.message || '삭제 완료');
+				closeModal('userInfoModal');
+				fetchAdminUsers();
+			} catch (e) {
+				console.error(e);
+				alert('삭제 중 오류가 발생했습니다.');
+			}
+		}
+
+		async function resetUserPasswordFromModal() {
+			const userId = document.getElementById('ui-user-id').value;
+			if (!userId) return;
+			if (!confirm('선택한 사용자의 비밀번호를 초기화하시겠습니까?')) return;
+			try {
+				const params = new URLSearchParams();
+				params.append('action', 'reset_password');
+				params.append('user_id', String(userId));
+				const resp = await fetch('../api/admin_users.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+					body: params.toString()
+				});
+				const raw = await resp.text();
+				const res = tryParseApiJson(raw);
+				if (!resp.ok || !res || !res.success) {
+					alert(res?.message || '비밀번호 초기화 실패');
+					return;
+				}
+				alert(res.message || '비밀번호가 초기화되었습니다. (임시 비밀번호 발급)');
+			} catch (e) {
+				console.error(e);
+				alert('비밀번호 초기화 중 오류가 발생했습니다.');
+			}
+		}
 	</script>
 </body>
 </html>
