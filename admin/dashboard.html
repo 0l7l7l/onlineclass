@@ -302,27 +302,8 @@
 								<tr id="timeline-head-row"></tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td><strong>김교사</strong></td>
-									<td class="timeline-cell" onclick="loadClassDetail(1)">-</td>
-									<td class="timeline-cell booked full" onclick="loadClassDetail(2)">[1:1 마감]</td>
-									<td class="timeline-cell" onclick="loadClassDetail(3)">-</td>
-									<td class="timeline-cell booked" onclick="loadClassDetail(4)">[그룹 2/5]</td>
-									<td class="timeline-cell" onclick="loadClassDetail(5)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(6)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(7)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(8)">-</td>
-								</tr>
-								<tr>
-									<td><strong>이교사</strong></td>
-									<td class="timeline-cell" onclick="loadClassDetail(9)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(10)">-</td>
-									<td class="timeline-cell booked full" onclick="loadClassDetail(11)">[듀오 마감]</td>
-									<td class="timeline-cell" onclick="loadClassDetail(12)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(13)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(14)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(15)">-</td>
-									<td class="timeline-cell" onclick="loadClassDetail(16)">-</td>
+                <tr>
+									<td colspan="10" style="text-align:center; color:#858796; padding:20px;">스케줄을 불러오는 중입니다.</td>
 								</tr>
 							</tbody>
 						</table>
@@ -512,7 +493,7 @@
 		</div>
 	</div>
 
-	<!-- 4.  관리자 강제 예약 배정 모달 -->
+	<!-- 관리자 강제 예약 배정 모달 -->
 	<!-- 4.스케줄 생성 및 수업 유형별 배정 설정 모달 -->
 	<div class="modal-overlay" id="reservationAddModal">
 		<div class="modal-box" style="max-width: 520px;">
@@ -544,38 +525,38 @@
 				</div>
 
         <!-- 1단계: 선생님 지정 -->
-        <div class="form-group" style="background: #eef2fa; padding: 12px; border-radius: 6px; border-left: 4px solid #4e73df;">
+				<div class="form-group" style="background: #eef2fa; padding: 12px; border-radius: 6px; border-left: 4px solid #4e73df;">
 					<label style="font-weight:bold; color:#2e59d9;">👩‍🏫 담당 선생님 지정</label>
-         <p style="font-size:11.5px; color:#5a5c69; margin:2px 0 6px 0;">스케줄을 생성할 강사 회원을 선택하세요.</p>
-				<select id="schedule-teacher-select" style="width:100%; padding:8px; border:1px solid #4e73df; border-radius:4px; font-weight:bold;" required disabled>
-					<option value="">-- 선생님 선택 --</option>
-				</select>
-				<div id="schedule-teacher-error" style="margin-top:8px; color:#d93f3f; font-size:12px; display:none;"></div>
-				<div class="form-group">
-					<label style="font-weight:bold;">수업 유형 선택</label>
-					<select id="schedule-class-type" onchange="toggleSchedulerTypeFields(this.value)" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;" required>
-						<option value="">-- 유형을 선택하세요 --</option>
-           <option value="PRIVATE_11">🎯 1:1 개인 수업</option>
-						<option value="DUO_12">👥 1:2 듀오 수업</option>
-						<option value="GROUP">🏫 그룹 수업</option>
+					<p style="font-size:11.5px; color:#5a5c69; margin:2px 0 6px 0;">스케줄을 생성할 강사 회원을 선택하세요.</p>
+					<select id="schedule-teacher-select" style="width:100%; padding:8px; border:1px solid #4e73df; border-radius:4px; font-weight:bold;" required disabled>
+						<option value="">-- 선생님 선택 --</option>
 					</select>
-				</div>
-
-        <div id="field-private-11" style="display:none; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
-					<div style="background:#eef2fa; color:#2e59d9; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
-						개인수업 슬롯은 저장 후 해당 선생님의 담당 학생에게만 자동 노출됩니다.
+					<div id="schedule-teacher-error" style="margin-top:8px; color:#d93f3f; font-size:12px; display:none;"></div>
+					<div class="form-group">
+						<label style="font-weight:bold;">수업 유형 선택</label>
+						<select id="schedule-class-type" onchange="toggleSchedulerTypeFields(this.value)" style="width:100%; padding:8px; border:1px solid #d1d3e2; border-radius:4px;" required>
+							<option value="">-- 유형을 선택하세요 --</option>
+							<option value="PRIVATE_11">🎯 1:1 개인 수업</option>
+							<option value="DUO_12">👥 1:2 듀오 수업</option>
+							<option value="GROUP">🏫 그룹 수업</option>
+						</select>
 					</div>
-				</div>
 
-				<div id="field-duo-12" style="display:none; border-left:4px solid #1cc88a; padding-left:15px; margin-top:15px;">
-					<div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
-						듀오수업 슬롯은 저장 후 해당 선생님의 담당 학생에게만 자동 노출됩니다.
+					<div id="field-private-11" style="display:none; border-left:4px solid #4e73df; padding-left:15px; margin-top:15px;">
+						<div style="background:#eef2fa; color:#2e59d9; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+							개인수업 슬롯은 저장 후 해당 선생님의 담당 학생에게만 자동 노출됩니다.
+						</div>
+					</div>
+
+					<div id="field-duo-12" style="display:none; border-left:4px solid #1cc88a; padding-left:15px; margin-top:15px;">
+						<div style="background:#e8f5e9; color:#2e7d32; padding:10px; border-radius:4px; font-size:12px; line-height:1.5;">
+							듀오수업 슬롯은 저장 후 해당 선생님의 담당 학생에게만 자동 노출됩니다.
+						</div>
 					</div>
 				</div>
 
 				<!-- 섹션 C: 그룹 수업 선택 시 -->
-				<!--관리자가선생님 스케줄(추가)을관리할수있다. 선택하고만들수있도록한다.
-				학생들에게는 그룹수업스케줄이 담당선생 상관없이 (그룹)티켓구매(소지)한 모든회원에게 보일수있도록 한다.
+				<!--학생들에게는 그룹수업스케줄이 담당선생 상관없이 (그룹)티켓구매(소지)한 모든회원에게 보일수있도록 한다.
 					선생님이 부득이하게 쉬게되었을경우 다른선생님이 대체될수있도록 선생님변경가능기능을추가한다
 					그룹수업은 현재로서 25분 글자마스터(가타카나),(히라가나)두개만존재한다.-->
 				<div id="field-group" style="display:none; border-left:4px solid #f6c23e; padding-left:15px; margin-top:15px;">
@@ -1165,13 +1146,17 @@
 			}
 		}
 
-		async function openClassManageModal() {
+    async function openClassManageModal() {
 			if (!selectedSlotId) {
 				alert('먼저 수업 슬롯을 선택해 주세요.');
 				return;
 			}
-			if (!selectedSlotData) {
-				await loadClassDetail(selectedSlotId);
+			if (!selectedSlotData || !selectedSlotData.detail_loaded) {
+				try {
+					await loadClassDetail(selectedSlotId);
+				} catch (e) {
+					console.error(e);
+				}
 			}
 			openModal('classManageModal');
 		}
@@ -1584,10 +1569,22 @@
 			}
 		}
 
-		async function loadClassDetail(slotId) {
+    async function loadClassDetail(slotId) {
+			const requestedSlotId = Number(slotId);
+			if (!requestedSlotId) return null;
+
+			selectedSlotId = requestedSlotId;
+			const fallbackSlot = cachedSlotsById[String(requestedSlotId)] || null;
+			if (fallbackSlot && (!selectedSlotData || Number(selectedSlotData.id) !== requestedSlotId)) {
+				selectedSlotData = fallbackSlot;
+				selectedReservationRow = null;
+				renderSelectedSlotDetail(fallbackSlot);
+				updateStudentManageButtons();
+			}
+
 			const requestSeq = ++selectedSlotRequestSeq;
 			try {
-				const slot = await fetchClassDetailData(slotId);
+				const slot = await fetchClassDetailData(requestedSlotId);
 				if (requestSeq !== selectedSlotRequestSeq || Number(slot.id) !== Number(selectedSlotId)) return null;
 
 				selectedSlotData = slot;
@@ -1599,19 +1596,16 @@
 			} catch (error) {
 				console.error(error);
 				if (requestSeq === selectedSlotRequestSeq) {
-					const fallbackSlot = cachedSlotsById[String(slotId)];
 					if (fallbackSlot) {
-						selectedSlotId = Number(slotId);
 						selectedSlotData = fallbackSlot;
 						selectedReservationRow = null;
 						renderSelectedSlotDetail(fallbackSlot);
 						showSlotDetailError(error.message || '수업 상세 정보 조회 중 오류가 발생했습니다.');
 						updateStudentManageButtons();
 					} else {
-						selectedSlotId = Number(slotId);
 						selectedSlotData = null;
 						selectedReservationRow = null;
-						document.getElementById('selected-datetime-label').innerText = `수업 #${slotId}`;
+						document.getElementById('selected-datetime-label').innerText = `수업 #${requestedSlotId}`;
 						document.getElementById('selected-teacher-label').innerText = '-';
 						document.getElementById('selected-class-type-label').innerText = '-';
 						document.getElementById('selected-reservation-status').innerText = '-';
@@ -1647,7 +1641,7 @@
 			const dateInput = document.getElementById('reservation-date-input');
 			if (dateInput) dateInput.value = selectedScheduleDate;
 
-      const startTimeInput = document.getElementById('reservation-start-time');
+			const startTimeInput = document.getElementById('reservation-start-time');
 			const endTimeInput = document.getElementById('reservation-end-time');
 			if (startTimeInput) startTimeInput.value = `${String(hour).padStart(2, '0')}:00`;
 			if (endTimeInput) endTimeInput.value = `${String(hour + 1).padStart(2, '0')}:00`;
