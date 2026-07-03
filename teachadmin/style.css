@@ -16,8 +16,10 @@
        --card-color: #ffffff;
          
     /* 포인트 컬러 (테두리와 문자 색상용) */
-       --primary-color: #4f46e5;
-       --success-color: #10b981;
+       --primary-color: #f97316;
+       --primary-soft: #fff7ed;
+       --primary-border: #fed7aa;
+       --success-color: #f97316;
        --text-color: #1e293b;
          /* 선명한 텍스트 */
        --text-light: #64748b;
@@ -25,7 +27,7 @@
          
     /* 테두리를 조금 더 선명하고 깔끔하게 조정 */
        --border-color: #cbd5e1;
-         --border-light: #e2e8f0;
+       --border-light: #e2e8f0;
 }
 
 
@@ -343,12 +345,253 @@ body {
 
 
 
-    .schedule-form input[type="date"] {
+    .schedule-form input,
+    .schedule-form select {
            padding: 0.5rem;
            border: 1px solid var(--border-color);
            border-radius: 0.375rem;
            color: var(--text-color);
+           background-color: #fff;
     }
+
+    .schedule-form input:focus,
+    .schedule-form select:focus {
+           border-color: var(--primary-color);
+           outline: none;
+    }
+
+.schedule-workspace {
+       display: grid;
+       grid-template-columns: 300px minmax(0, 1fr);
+       gap: 1rem;
+       align-items: start;
+}
+
+.schedule-calendar-card,
+.schedule-list-card {
+       border-radius: 0.5rem;
+}
+
+.schedule-calendar-header,
+.schedule-panel-header {
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       gap: 0.75rem;
+}
+
+.icon-btn {
+       width: 34px;
+       height: 34px;
+       border-radius: 0.375rem;
+       border: 1px solid var(--border-light);
+       background: #fff;
+       color: var(--primary-color);
+       cursor: pointer;
+}
+
+.icon-btn:hover {
+       background-color: var(--primary-soft);
+       border-color: var(--primary-border);
+}
+
+.schedule-calendar-grid {
+       display: grid;
+       grid-template-columns: repeat(7, minmax(0, 1fr));
+       gap: 0.35rem;
+       margin-top: 1rem;
+}
+
+.calendar-day-name {
+       color: var(--text-light);
+       font-size: 0.75rem;
+       text-align: center;
+       padding: 0.25rem 0;
+}
+
+.calendar-day {
+       position: relative;
+       min-height: 34px;
+       border: 1px solid transparent;
+       border-radius: 0.375rem;
+       background: transparent;
+       color: var(--text-color);
+       cursor: pointer;
+}
+
+.calendar-day:hover {
+       background-color: var(--primary-soft);
+       color: var(--primary-color);
+}
+
+.calendar-day.selected {
+       background-color: var(--primary-color);
+       color: #fff;
+       font-weight: 700;
+}
+
+.calendar-day.has-schedule::after {
+       content: "";
+       position: absolute;
+       left: 50%;
+       bottom: 4px;
+       width: 4px;
+       height: 4px;
+       border-radius: 50%;
+       background: var(--primary-color);
+       transform: translateX(-50%);
+}
+
+.calendar-day.selected.has-schedule::after {
+       background: #fff;
+}
+
+.calendar-empty {
+       min-height: 34px;
+}
+
+.panel-subtitle {
+       margin-top: 0.25rem;
+       color: var(--text-light);
+       font-size: 0.85rem;
+}
+
+.schedule-open-panel {
+       padding: 1rem;
+       border: 1px solid var(--border-light);
+       border-radius: 0.5rem;
+       background-color: #fffaf5;
+       margin-bottom: 1rem;
+}
+
+.form-row {
+       display: grid;
+       grid-template-columns: repeat(2, minmax(0, 1fr));
+       gap: 0.75rem;
+}
+
+.form-field {
+       display: flex;
+       flex-direction: column;
+       gap: 0.35rem;
+}
+
+.form-field label {
+       color: var(--text-light);
+       font-size: 0.8rem;
+       font-weight: 700;
+}
+
+.schedule-list-header,
+.teacher-schedule-item {
+       display: grid;
+       grid-template-columns: 1.1fr 1fr 0.8fr 0.9fr;
+       gap: 0.75rem;
+       align-items: center;
+}
+
+.schedule-list-header {
+       color: var(--text-light);
+       font-size: 0.75rem;
+       font-weight: 700;
+       padding: 0 0.75rem 0.5rem;
+       border-bottom: 1px solid var(--border-light);
+}
+
+.teacher-schedule-list {
+       display: flex;
+       flex-direction: column;
+       gap: 0.5rem;
+       margin-top: 0.5rem;
+}
+
+.teacher-schedule-item {
+       padding: 0.85rem 0.75rem;
+       border: 1px solid var(--border-light);
+       border-radius: 0.5rem;
+       background-color: #fff;
+}
+
+.teacher-schedule-item:hover {
+       border-color: var(--primary-border);
+       background-color: #fffaf5;
+}
+
+.schedule-time {
+       color: var(--primary-color);
+       font-weight: 800;
+}
+
+.type-pill,
+.capacity-pill,
+.state-pill {
+       display: inline-flex;
+       align-items: center;
+       justify-content: center;
+       width: fit-content;
+       min-width: 56px;
+       padding: 0.25rem 0.55rem;
+       border-radius: 999px;
+       font-size: 0.75rem;
+       font-weight: 700;
+       border: 1px solid var(--primary-border);
+       color: var(--primary-color);
+       background-color: var(--primary-soft);
+}
+
+.state-pill.closed {
+       border-color: #e5e7eb;
+       background-color: #f8fafc;
+       color: var(--text-light);
+}
+
+.schedule-state-actions {
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       gap: 0.5rem;
+}
+
+.schedule-delete-btn {
+       border: 1px solid #fecaca;
+       color: #dc2626;
+       background: #fff;
+       border-radius: 0.375rem;
+       padding: 0.25rem 0.5rem;
+       font-size: 0.75rem;
+       font-weight: 700;
+       cursor: pointer;
+}
+
+.schedule-delete-btn:hover:not(:disabled) {
+       background-color: #fef2f2;
+}
+
+.schedule-delete-btn:disabled {
+       border-color: var(--border-light);
+       color: #cbd5e1;
+       cursor: not-allowed;
+}
+
+.empty-state {
+       padding: 2rem 1rem;
+       color: var(--text-light);
+       text-align: center;
+}
+
+@media (max-width: 900px) {
+       .schedule-workspace {
+              grid-template-columns: 1fr;
+       }
+}
+
+@media (max-width: 640px) {
+       .form-row,
+       .schedule-list-header,
+       .teacher-schedule-item {
+              grid-template-columns: 1fr;
+       }
+}
 
 
 
