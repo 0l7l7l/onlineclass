@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강사 대시보드 - 일본어 온라인 수업</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-weight/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- [추가] 로그인 화면 -->
+    <div id="login-container" class="auth-container">
+        <div class="login-box">
+            <h2>선생님 로그인</h2>
+            <p>일본어 온라인 클래스 관리 시스템</p>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="아이디" required>
+                <input type="password" id="password" placeholder="비밀번호" required>
+                <button type="submit">로그인</button>
+            </form>
+            
+            <!-- 개발자용 로그인 버튼 -->
+            <button type="button" id="dev-login-btn" class="dev-btn">개발자용 로그인 (프리패스)</button>
+            
+            <p id="login-error" class="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- [수정] 대시보드 메인 화면 (초기에 hidden 클래스로 숨김) -->
+    <div id="dashboard-container" class="dashboard-container hidden">
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>JapaClass</h2>
+                <span>강사용 페이지</span>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active"><i class="fas fa-home"></i> 홈 / 개요</a>
+                <a href="#" class="menu-item"><i class="fas fa-calendar-alt"></i> 스케줄 등록</a>
+                <a href="#" class="menu-item"><i class="fas fa-user-friends"></i> 예약된 수업</a>
+                <a href="#" class="menu-item"><i class="fas fa-wallet"></i> 티켓 및 정산</a>
+                <!-- 로그아웃 버튼 추가 (테스트용) -->
+                <a href="#" id="logout-btn" class="menu-item" style="margin-top: auto; color: #f87171;"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+            </nav>
+        </aside>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-msg">안녕하세요, <strong>김선생님</strong> 반가워요!</div>
+                <div class="profile">
+                    <span class="status-badge">수업 가능</span>
+                    <img src="https://via.placeholder.com/40" alt="프로필" class="profile-img">
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- 상단 카드 섹션 -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <h3>이번 주 예약</h3>
+                        <p class="stat-value">12건</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>열린 스케줄</h3>
+                        <p class="stat-value">24개</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>소진된 티켓 (당월)</h3>
+                        <p class="stat-value">48장</p>
+                    </div>
+                </section>
+
+                <!-- 메인 대시보드 그리드 -->
+                <div class="dashboard-grid">
+                    <section class="card current-reservations">
+                        <div class="card-header">
+                            <h3>확정된 수업 목록</h3>
+                        </div>
+                        <ul class="reservation-list">
+                            <li class="reservation-item">
+                                <div class="time">14:00 ~ 14:50</div>
+                                <div class="student-info">
+                                    <span class="name">타나카 사토시</span>
+                                    <span class="lesson-type">비즈니스 회화 (티켓 1장 소진)</span>
+                                </div>
+                                <button class="btn btn-primary">수업 입장</button>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="card schedule-manager">
+                        <div class="card-header">
+                            <h3>수업 가능 스케줄 오픈</h3>
+                        </div>
+                        <div class="schedule-form">
+                            <label for="date-select">날짜 선택</label>
+                            <input type="date" id="date-select">
+                            <label for="time-select">시간 선택</label>
+                            <div class="time-checkboxes">
+                                <label><input type="checkbox"> 09:00</label>
+                                <label><input type="checkbox"> 10:00</label>
+                                <label><input type="checkbox"> 14:00</label>
+                            </div>
+                            <button class="btn btn-success">스케줄 열기</button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 스크립트 연결 -->
+    <script src="app.js"></script>
+<script>
+
+
+// ==========================================
+// 1. DOM 요소 가져오기 (화면 전환용)
+// ==========================================
+const loginContainer = document.getElementById('login-container');
+const dashboardContainer = document.getElementById('dashboard-container');
+const loginForm = document.getElementById('login-form');
+const devLoginBtn = document.getElementById('dev-login-btn');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+
+// 임시 강사 계정 정보
+const TEACHER_ID = "teacher123";
+const TEACHER_PW = "password123";
+
+// 로그인 성공 시 화면 전환 함수
+function handleLoginSuccess() {
+    loginError.textContent = ""; 
+    loginContainer.classList.add('hidden'); // 로그인창 숨기기
+    dashboardContainer.classList.remove('hidden'); // 대시보드 보이기
+    
+    // 대시보드가 열린 후, 내부 버튼들의 이벤트를 활성화합니다.
+    initDashboardEvents();
+}
+
+// ==========================================
+// 2. 인증(로그인/로그아웃) 이벤트 리스너
+// ==========================================
+
+// 일반 로그인 폼 제출
+if (loginForm) {
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // 페이지 새로고침 방지
+        const usernameInput = document.getElementById('username').value;
+        const passwordInput = document.getElementById('password').value;
+
+        if (usernameInput === TEACHER_ID && passwordInput === TEACHER_PW) {
+            handleLoginSuccess();
+        } else {
+            loginError.textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
+        }
+    });
+}
+
+// 개발자용 프리패스 버튼
+if (devLoginBtn) {
+    devLoginBtn.addEventListener('click', function() {
+        handleLoginSuccess();
+    });
+}
+
+// 로그아웃 버튼
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        dashboardContainer.classList.add('hidden');
+        loginContainer.classList.remove('hidden');
+        loginForm.reset(); // 입력창 초기화
+    });
+}
+
+
+// ==========================================
+// 3. 대시보드 내부 버튼 기능 구현 (여기가 작동 안 하던 부분!)
+// ==========================================
+function initDashboardEvents() {
+    
+    // [A] 수업 입장 버튼들 기능 연결
+    const enterLessonButtons = document.querySelectorAll('.reservation-item .btn-primary');
+    enterLessonButtons.forEach((button) => {
+        // 기존에 이벤트가 중복 등록되는 것을 방지하기 위해 한 번만 등록
+        button.onclick = function() {
+            const studentName = this.parentElement.querySelector('.name').textContent;
+            alert(`${studentName} 학생과의 일본어 수업 강의실(Zoom 등)로 이동합니다.`);
+            // 여기에 실제 화상 수업 링크로 이동하는 코드를 넣으시면 됩니다.
+            // window.open('수업링크');
+        };
+    });
+
+    // [B] 스케줄 오픈 버튼 기능 연결
+    const openScheduleBtn = document.querySelector('.schedule-manager .btn-success');
+    if (openScheduleBtn) {
+        openScheduleBtn.onclick = function() {
+            const dateInput = document.getElementById('date-select').value;
+            const checkedTimes = document.querySelectorAll('.time-checkboxes input[type="checkbox"]:checked');
+            
+            if (!dateInput) {
+                alert('날짜를 선택해 주세요!');
+                return;
+            }
+            if (checkedTimes.length === 0) {
+                alert('오픈할 시간을 최소 하나 이상 선택해 주세요!');
+                return;
+            }
+
+            // 선택된 시간들 추출
+            let selectedTimes = [];
+            checkedTimes.forEach(cb => {
+                // 체크박스 부모 라벨의 텍스트(시간)를 가져옴
+                selectedTimes.push(cb.parentElement.textContent.trim());
+            });
+
+            alert(`[스케줄 오픈 완료]\n날짜: ${dateInput}\n시간: ${selectedTimes.join(', ')}\n\n이제 학생들이 티켓을 사용하여 예약할 수 있습니다.`);
+            
+            // 등록 후 체크박스 초기화
+            checkedTimes.forEach(cb => cb.checked = false);
+        };
+    }
+}
+</script>
+</body>
+</html>
