@@ -509,7 +509,7 @@ try {
             exit;
         }
 
-        // ------- 수업 목록 조회 (기존) -------
+        // ------- 수업 목록 조회 (기존, but with student visibility filter) -------
         $date = isset($_GET['date']) ? trim((string)$_GET['date']) : '';
         $teacherId = isset($_GET['teacher_id']) ? (int)$_GET['teacher_id'] : 0;
 
@@ -527,6 +527,22 @@ try {
             WHERE c.deleted_at IS NULL
         ";
         $params = [];
+
+        // If the requester is a student, restrict visibility:
+        // - GROUP: visible to all
+        // - or class_targets contains the student
+        // - or class.teacher_id equals student's teacher_id (teacher's own students)
+        if ($role === 'STUDENT' && $userId > 0) {
+            // get student's teacher_id
+            $stuStmt = $pdo->prepare("SELECT teacher_id FROM users WHERE user_id = ? LIMIT 1");
+            $stuStmt->execute([$userId]);
+            $stuRow = $stuStmt->fetch(PDO::FETCH_ASSOC);
+            $studentTeacherId = $stuRow ? (int)$stuRow['teacher_id'] : 0;
+
+            $sql .= " AND (UPPER(c.class_type) = 'GROUP' OR EXISTS (SELECT 1 FROM class_targets xct WHERE xct.class_id = c.class_id AND xct.user_id = ?) OR c.teacher_id = ?)";
+            $params[] = $userId;
+            $params[] = $studentTeacherId;
+        }
 
         if ($date !== '') {
             $sql .= " AND c.class_date = ?";
@@ -934,7 +950,6 @@ try {
         // ========================================
         // [수업 수정 시 변경 이력 기록]
         // ========================================
-
         if ($action === 'update') {
             $classId = isset($_POST['class_id']) ? (int)$_POST['class_id'] : (isset($_POST['slot_id']) ? (int)$_POST['slot_id'] : 0);
             $teacherId = isset($_POST['teacher_id']) ? (int)$_POST['teacher_id'] : 0;
@@ -1054,7 +1069,6 @@ try {
     logClassChange($pdo, $classId, 'UPDATE', $userId, $oldValue, $newValue, implode(', ', $changes));
 
 
-
             $pdo->commit();
 
             echo json_encode([
@@ -1069,7 +1083,6 @@ try {
         // ========================================
         // [수업 삭제 시 변경 이력 기록]
         // ========================================
-
         if ($action === 'delete') {
             $classId = isset($_POST['class_id']) ? (int)$_POST['class_id'] : (isset($_POST['slot_id']) ? (int)$_POST['slot_id'] : 0);
 

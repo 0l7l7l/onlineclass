@@ -6,6 +6,11 @@
 	<title>강사 대시보드 - 일본어 온라인 수업</title>
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<style>
+		/* 최소 스타일 보완 (프로덕션에서는 style.css에 통합) */
+		.select-students { max-height:200px; overflow:auto; border:1px solid #e5e7eb; padding:8px; border-radius:4px; }
+		.student-item { display:flex; align-items:center; gap:8px; padding:6px 4px; border-bottom:1px solid #f3f4f6; }
+	</style>
 </head>
 <body>
 
@@ -37,6 +42,7 @@
 				<a href="#" class="menu-item active" data-target="content-home"><i class="fas fa-home"></i> 홈 / 개요</a>
 				<a href="#" class="menu-item" data-target="content-schedule"><i class="fas fa-calendar-alt"></i> 스케줄 등록</a>
 				<a href="#" class="menu-item" data-target="content-reservations"><i class="fas fa-user-friends"></i> 예약된 수업</a>
+				<a href="#" class="menu-item" data-target="content-students"><i class="fas fa-users"></i> 학생 관리</a>
 				<a href="#" class="menu-item" data-target="content-settlement"><i class="fas fa-wallet"></i> 티켓 및 정산</a>
 
 				<a href="#" id="logout-btn" class="menu-item" style="margin-top: auto; color: #f87171;"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
@@ -87,15 +93,42 @@
 							<h3>수업 가능 스케줄 오픈</h3>
 						</div>
 						<div class="schedule-form">
-							<label for="date-select">날짜 선택</label>
-							<input type="date" id="date-select">
-							<label for="time-select">시간 선택</label>
-							<div class="time-checkboxes">
-								<label><input type="checkbox"> 09:00</label>
-								<label><input type="checkbox"> 10:00</label>
-								<label><input type="checkbox"> 14:00</label>
+							<label for="class-date">날짜 선택</label>
+							<input type="date" id="class-date">
+
+							<div style="display:flex; gap:8px; margin-top:8px;">
+								<div style="flex:1;">
+									<label for="start-time">시작 시간</label>
+									<input type="time" id="start-time">
+								</div>
+								<div style="flex:1;">
+									<label for="end-time">종료 시간</label>
+									<input type="time" id="end-time">
+								</div>
 							</div>
-							<button type="button" id="btn-open-schedule" class="btn btn-success">스케줄 열기</button>
+
+							<label for="class-type" style="margin-top:8px;">수업 유형</label>
+							<select id="class-type">
+								<option value="PRIVATE">개인(1:1)</option>
+								<option value="DUO">듀오(1:2)</option>
+								<option value="GROUP">그룹(공개)</option>
+							</select>
+
+							<!-- student targets UI는 주석 처리(학생 쪽에서 담당 선생님 필터링으로 처리하므로 클라이언트 선택은 제거) -->
+							<!--
+							<div id="student-targets-box" style="margin-top:8px; display:none;">
+								<label>지정 학생 선택 (본인의 담당 학생만 표시)</label>
+								<div style="display:flex; gap:8px; margin:6px 0;">
+									<input type="text" id="student-picker-search" placeholder="이름 또는 아이디로 필터" style="flex:1; padding:6px;">
+									<button id="btn-refresh-student-list" class="btn">새로고침</button>
+								</div>
+								<div id="student-list" class="select-students">로딩 중...</div>
+								<p style="font-size:12px; color:#6b7280;">PRIVATE은 한 명, DUO는 최대 두 명을 선택하세요.</p>
+							</div>
+							-->
+
+							<button type="button" id="btn-open-schedule" class="btn btn-success" style="margin-top:12px;">스케줄 열기</button>
+							<p id="open-schedule-error" class="error-msg" style="margin-top:8px;"></p>
 						</div>
 					</section>
 				</div>
@@ -117,6 +150,41 @@
 								<button type="button" class="btn btn-primary btn-enter-lesson">수업 입장</button>
 							</li>
 						</ul>
+					</section>
+				</div>
+
+				<!-- 학생관리 탭 -->
+				<div id="content-students" class="tab-content hidden">
+					<section class="card">
+						<div class="card-header">
+							<h3>내가 담당하는 학생</h3>
+						</div>
+
+						<div class="card-body">
+							<div style="display:flex; gap:8px; align-items:center; margin-bottom:12px;">
+								<input type="text" id="student-search" placeholder="이름 또는 아이디로 검색" style="flex:1; padding:8px;">
+								<button id="btn-refresh-students" class="btn">새로고침</button>
+							</div>
+
+							<div class="table-responsive">
+								<table id="students-table" class="table" style="width:100%; border-collapse:collapse;">
+									<thead>
+										<tr>
+											<th style="text-align:left; padding:8px;">ID</th>
+											<th style="text-align:left; padding:8px;">이름</th>
+											<th style="text-align:left; padding:8px;">아이디</th>
+											<th style="text-align:right; padding:8px;">잔액(세모)</th>
+											<th style="text-align:left; padding:8px;">가입일</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr><td colspan="5" style="padding:12px; text-align:center; color:#666;">학생이 없습니다.</td></tr>
+									</tbody>
+								</table>
+							</div>
+
+							<p id="students-error" class="error-msg" style="margin-top:10px;"></p>
+						</div>
 					</section>
 				</div>
 
@@ -153,13 +221,29 @@
 		const logoutBtn = document.getElementById('logout-btn');
 		const teacherNameElem = document.getElementById('teacher-name');
 
+		// 학생관리 관련 요소
+		const studentsTableBody = document.querySelector('#students-table tbody');
+		const studentsError = document.getElementById('students-error');
+		const studentSearch = document.getElementById('student-search');
+		const btnRefreshStudents = document.getElementById('btn-refresh-students');
 
-		// 임시 강사 계정 정보
-		const TEACHER_ID = "teacher";
-		const TEACHER_PW = "0000";
+		// 스케줄 오픈 관련 요소
+		const classDateInput = document.getElementById('class-date');
+		const startTimeInput = document.getElementById('start-time');
+		const endTimeInput = document.getElementById('end-time');
+		const classTypeSelect = document.getElementById('class-type');
+		// student-target 관련 DOM 및 핸들러는 전부 주석 처리하여 기능 제거
+		// const studentTargetsBox = document.getElementById('student-targets-box');
+		// const studentListElem = document.getElementById('student-list');
+		// const studentPickerSearch = document.getElementById('student-picker-search');
+		// const btnRefreshStudentList = document.getElementById('btn-refresh-student-list');
+
+		// 현재 로그인된 강사 ID 저장
+		let currentTeacherId = null;
+		let currentStudents = [];
 
 		// 로그인 성공 시 처리
-		function handleLoginSuccess(userName) {
+		function handleLoginSuccess(userName, userId) {
 			loginError.textContent = "";
 			loginContainer.classList.add('hidden');
 			dashboardContainer.classList.remove('hidden');
@@ -167,9 +251,223 @@
 			if (userName) {
 				teacherNameElem.textContent = userName;
 			}
+			if (userId) {
+				currentTeacherId = userId;
+				loadMyStudents(currentTeacherId);
+			}
 
 			// 로그인하면 항상 첫 번째 탭('홈 / 개요')이 보이도록 초기화
 			switchTab('content-home');
+		}
+
+		// ==========================================
+		// 학생 목록을 서버에서 불러와 테이블에 렌더링
+		// ==========================================
+		async function loadMyStudents(teacherId) {
+			studentsError.textContent = '';
+			if (!teacherId) {
+				renderStudents([]);
+				return;
+			}
+
+			try {
+				const res = await fetch(`/api/classes.php?action=get_students&teacher_id=${encodeURIComponent(teacherId)}`, { credentials: 'same-origin' });
+				const data = await res.json();
+				if (data && data.success && Array.isArray(data.data)) {
+					currentStudents = data.data;
+					renderStudents(currentStudents);
+					// student-picker UI 제거로 인해 renderStudentPicker 호출은 주석 처리
+					// renderStudentPicker(currentStudents);
+				} else {
+					currentStudents = [];
+					renderStudents([]);
+					// renderStudentPicker([]);
+					studentsError.textContent = data && data.message ? data.message : '학생 목록을 불러오지 못했습니다.';
+				}
+			} catch (err) {
+				currentStudents = [];
+				renderStudents([]);
+				// renderStudentPicker([]);
+				studentsError.textContent = '서버와 통신할 수 없습니다.';
+				console.error(err);
+			}
+		}
+
+		function renderStudents(students) {
+			// 기본 비어있음 처리
+			if (!students || students.length === 0) {
+				studentsTableBody.innerHTML = '<tr><td colspan="5" style="padding:12px; text-align:center; color:#666;">학생이 없습니다.</td></tr>';
+				return;
+			}
+
+			const q = (studentSearch && studentSearch.value) ? studentSearch.value.trim().toLowerCase() : '';
+			const filtered = students.filter(s => {
+				if (!q) return true;
+				return (s.name && s.name.toLowerCase().includes(q)) || (s.username && s.username.toLowerCase().includes(q));
+			});
+
+			if (filtered.length === 0) {
+				studentsTableBody.innerHTML = '<tr><td colspan="5" style="padding:12px; text-align:center; color:#666;">검색 결과가 없습니다.</td></tr>';
+				return;
+			}
+
+			studentsTableBody.innerHTML = filtered.map(s => {
+				const id = s.user_id ?? '';
+				const name = s.name ?? '';
+				const username = s.username ?? '';
+				const money = typeof s.current_money === 'number' ? s.current_money : parseInt(s.current_money || 0, 10);
+				const created = s.created_at ?? '';
+				return `<tr>
+					<td style="padding:8px;">${id}</td>
+					<td style="padding:8px;">${escapeHtml(name)}</td>
+					<td style="padding:8px;">${escapeHtml(username)}</td>
+					<td style="padding:8px; text-align:right;">${numberWithCommas(money)}</td>
+					<td style="padding:8px;">${created}</td>
+				</tr>`;
+			}).join('');
+		}
+
+		// student-picker UI 및 함수들은 모두 제거(주석 처리)
+		/*
+		function renderStudentPicker(students) {
+			if (!studentListElem) return;
+			if (!students || students.length === 0) {
+				studentListElem.innerHTML = '<div style="padding:8px; color:#666;">담당 학생이 없습니다.</div>';
+				return;
+			}
+			const q = (studentPickerSearch && studentPickerSearch.value) ? studentPickerSearch.value.trim().toLowerCase() : '';
+			const filtered = students.filter(s => {
+				if (!q) return true;
+				return (s.name && s.name.toLowerCase().includes(q)) || (s.username && s.username.toLowerCase().includes(q));
+			});
+			if (filtered.length === 0) {
+				studentListElem.innerHTML = '<div style="padding:8px; color:#666;">검색 결과가 없습니다.</div>';
+				return;
+			}
+			studentListElem.innerHTML = filtered.map(s => {
+				return `<div class="student-item"><label style="width:100%"><input type="checkbox" class="student-picker-checkbox" data-id="${s.user_id}"> <strong>${escapeHtml(s.name)}</strong> <small style="color:#6b7280">(${escapeHtml(s.username)})</small></label></div>`;
+			}).join('');
+		}
+		*/
+
+		// 간단한 헬퍼들
+		function numberWithCommas(x) {
+			if (x === null || x === undefined) return '';
+			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+		function escapeHtml(str) {
+			if (!str) return '';
+			return String(str)
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;');
+		}
+
+		// 검색 입력 이벤트
+		if (studentSearch) {
+			studentSearch.addEventListener('input', function () {
+				renderStudents(currentStudents);
+			});
+		}
+		if (btnRefreshStudents) {
+			btnRefreshStudents.addEventListener('click', function () {
+				if (currentTeacherId) loadMyStudents(currentTeacherId);
+			});
+		}
+
+		// 스케줄 오픈 UI 동작: student-target 관련 동작 제거
+		if (classTypeSelect) {
+			classTypeSelect.addEventListener('change', function () {
+				const type = classTypeSelect.value;
+				openScheduleError.textContent = '';
+				// studentTargetsBox 토글 및 관련 UI는 주석 처리됨
+				// if (type === 'GROUP') {
+				// 	studentTargetsBox.style.display = 'none';
+				// } else {
+				// 	studentTargetsBox.style.display = 'block';
+				// 	if (currentStudents.length === 0 && currentTeacherId) {
+				// 		loadMyStudents(currentTeacherId);
+				// 	} else {
+				// 		renderStudentPicker(currentStudents);
+				// 	}
+				// }
+			});
+		}
+		/*
+		if (studentPickerSearch) {
+			studentPickerSearch.addEventListener('input', function () {
+				renderStudentPicker(currentStudents);
+			});
+		}
+		if (btnRefreshStudentList) {
+			btnRefreshStudentList.addEventListener('click', function () {
+				if (currentTeacherId) loadMyStudents(currentTeacherId);
+			});
+		}
+		*/
+
+		// 스케줄 생성 요청 - student selection 요구 로직 제거
+		if (btnOpenSchedule) {
+			btnOpenSchedule.addEventListener('click', async function () {
+				openScheduleError.textContent = '';
+
+				const date = classDateInput.value;
+				const start = startTimeInput.value;
+				const end = endTimeInput.value;
+				const type = classTypeSelect.value;
+
+				if (!date) {
+					openScheduleError.textContent = '날짜를 선택해 주세요.';
+					return;
+				}
+				if (!start || !end) {
+					openScheduleError.textContent = '시작/종료 시간을 입력해 주세요.';
+					return;
+				}
+				if (start >= end) {
+					openScheduleError.textContent = '종료 시간은 시작 시간보다 늦어야 합니다.';
+					return;
+				}
+
+				// student-picker가 제거되었으므로 클라이언트에서 지정학생 검사/전송을 하지 않음.
+				const selectedIds = []; // 항상 빈 배열 전송 (서버에서 필요시 처리)
+
+				// 요청 전송
+				try {
+					const fd = new FormData();
+					fd.append('action', 'create');
+					fd.append('teacher_id', currentTeacherId);
+					fd.append('class_type', type);
+					fd.append('class_date', date);
+					fd.append('start_time', start);
+					fd.append('end_time', end);
+					// selectedIds 비어있음: target_user_ids 전송 생략
+
+					const res = await fetch('/api/classes.php?action=create', {
+						method: 'POST',
+						body: fd,
+						credentials: 'same-origin'
+					});
+					const data = await res.json();
+					if (data && data.success) {
+						alert('스케줄이 등록되었습니다.');
+						// 초기화
+						classDateInput.value = '';
+						startTimeInput.value = '';
+						endTimeInput.value = '';
+						classTypeSelect.value = 'PRIVATE';
+						// studentTargetsBox는 제거되어 있으므로 토글 없음
+						if (currentTeacherId) loadMyStudents(currentTeacherId);
+					} else {
+						openScheduleError.textContent = data && data.message ? data.message : '스케줄 등록에 실패했습니다.';
+					}
+				} catch (err) {
+					openScheduleError.textContent = '서버와 통신할 수 없습니다.';
+					console.error(err);
+				}
+			});
 		}
 
 		// ==========================================
@@ -180,7 +478,7 @@
 				const res = await fetch('/api/login.php?action=session&type=TEACHER', { credentials: 'same-origin' });
 				const data = await res.json();
 				if (data && data.success && data.user && data.user.role === 'TEACHER') {
-					handleLoginSuccess(data.user.name);
+					handleLoginSuccess(data.user.name, data.user.user_id);
 				}
 			} catch (err) {
 				// 무시: 비로그인 상태면 로그인 화면 표시
@@ -218,7 +516,7 @@
 					const data = await res.json();
 
 					if (data && data.success && data.user && data.user.role === 'TEACHER') {
-						handleLoginSuccess(data.user.name);
+						handleLoginSuccess(data.user.name, data.user.user_id);
 					} else {
 						loginError.textContent = data && data.message ? data.message : '로그인에 실패했습니다.';
 					}
@@ -233,7 +531,7 @@
 		if (devLoginBtn) {
 			devLoginBtn.addEventListener('click', function () {
 				// 개발 편의로 바로 대시보드로 이동 (실환경에서는 제거 권장)
-				handleLoginSuccess('개발자');
+				handleLoginSuccess('개발자', null);
 			});
 		}
 
@@ -247,6 +545,8 @@
 					// 실패해도 클라이언트 세션 정리
 					console.error(err);
 				}
+				currentTeacherId = null;
+				currentStudents = [];
 				dashboardContainer.classList.add('hidden');
 				loginContainer.classList.remove('hidden');
 				loginForm.reset();
@@ -259,27 +559,21 @@
 		const menuItems = document.querySelectorAll('.menu-item[data-target]');
 		const tabContents = document.querySelectorAll('.tab-content');
 
-
-
 		function switchTab(targetId) {
-			// 1. 모든 화면 숨기기
 			tabContents.forEach(content => content.classList.add('hidden'));
-			// 2. 선택한 화면만 보이기
 			const activeContent = document.getElementById(targetId);
 			if (activeContent) activeContent.classList.remove('hidden');
 
-
-
-			// 3. 모든 메뉴에서 active 스타일 제거
 			menuItems.forEach(item => item.classList.remove('active'));
-			// 4. 현재 클릭된 메뉴에만 active 스타일 부여
 			const activeMenu = document.querySelector(`.menu-item[data-target="${targetId}"]`);
 			if (activeMenu) activeMenu.classList.add('active');
+
+			// 학생관리 탭으로 전환 시 목록 새로고침
+			if (targetId === 'content-students' && currentTeacherId) {
+				loadMyStudents(currentTeacherId);
+			}
 		}
 
-
-
-		// 사이드바 메뉴 클릭 시 화면 전환 이벤트 연결
 		menuItems.forEach(item => {
 			item.addEventListener('click', function (event) {
 				event.preventDefault();
@@ -299,36 +593,10 @@
 			}
 		});
 
-
-
-		// [B] 스케줄 오픈 버튼
 		document.addEventListener('DOMContentLoaded', function () {
 			const openScheduleBtn = document.getElementById('btn-open-schedule');
 			if (openScheduleBtn) {
-				openScheduleBtn.addEventListener('click', function () {
-					const dateInput = document.getElementById('date-select').value;
-					const checkedTimes = document.querySelectorAll('.time-checkboxes input[type="checkbox"]:checked');
-
-					if (!dateInput) {
-						alert('날짜를 선택해 주세요!');
-						return;
-					}
-					if (checkedTimes.length === 0) {
-						alert('오픈할 시간을 최소 하나 이상 선택해 주세요!');
-						return;
-					}
-
-					let selectedTimes = [];
-					checkedTimes.forEach(cb => {
-						selectedTimes.push(cb.parentElement.textContent.trim());
-					});
-
-					alert(`[스케줄 오픈 완료]\n날짜: ${dateInput}\n시간: ${selectedTimes.join(', ')}\n\n이제 학생들이 티켓을 사용하여 예약할 수 있습니다.`);
-
-					// 초기화
-					checkedTimes.forEach(cb => cb.checked = false);
-					document.getElementById('date-select').value = '';
-				});
+				// 기존 동작은 스케줄 오픈 핸들러로 대체됨
 			}
 		});
 
