@@ -248,9 +248,16 @@ try {
                 FROM users
                 WHERE role = 'TEACHER'
                   AND deleted_at IS NULL
-                ORDER BY name ASC
             ";
-            $stmt = $pdo->query($sql);
+            $params = [];
+            if ($role === 'TEACHER') {
+                $sql .= " AND user_id = ?";
+                $params[] = $userId;
+            }
+            $sql .= " ORDER BY name ASC";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
             $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($teachers as &$teacher) {
@@ -285,6 +292,12 @@ try {
             if ($teacherId <= 0) {
                 http_response_code(400);
                 echo json_encode(['success' => false, 'message' => 'teacher_id가 필요합니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            if ($role === 'TEACHER' && $teacherId !== $userId) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => '본인 학생만 조회할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
 
@@ -336,6 +349,12 @@ try {
             if ($teacherId <= 0) {
                 http_response_code(400);
                 echo json_encode(['success' => false, 'message' => 'teacher_id가 필요합니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            if ($role === 'TEACHER' && $teacherId !== $userId) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => '본인 정보만 조회할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
 
@@ -420,6 +439,12 @@ try {
                 exit;
             }
 
+            if ($role === 'TEACHER' && (int)$class['teacher_id'] !== $userId) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => '본인 수업의 학생만 조회할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
             $sql = "\n                SELECT u.user_id, u.name, u.username,\n                       EXISTS(\n                           SELECT 1\n                           FROM reservations r\n                           WHERE r.class_id = ?\n                             AND r.user_id = u.user_id\n                             AND UPPER(TRIM(r.status)) = 'CONFIRMED'\n                       ) AS already_reserved\n                FROM users u\n                WHERE u.role = 'STUDENT'\n                  AND u.deleted_at IS NULL\n            ";
             $params = [$classId];
 
@@ -474,6 +499,12 @@ try {
                 exit;
             }
 
+            if ($role === 'TEACHER' && (int)$class['teacher_id'] !== $userId) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => '본인 수업만 조회할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
             $targetStmt = $pdo->prepare("
                 SELECT ct.user_id, u.name, u.username
                 FROM class_targets ct
@@ -512,6 +543,15 @@ try {
         // ------- 수업 목록 조회 (기존, but with student visibility filter) -------
         $date = isset($_GET['date']) ? trim((string)$_GET['date']) : '';
         $teacherId = isset($_GET['teacher_id']) ? (int)$_GET['teacher_id'] : 0;
+
+        if ($role === 'TEACHER') {
+            if ($teacherId > 0 && $teacherId !== $userId) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => '본인 수업만 조회할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $teacherId = $userId;
+        }
 
         $sql = "
             SELECT
@@ -598,6 +638,12 @@ try {
         if ($action === 'change_teacher') {
             $studentId = isset($_POST['student_id']) ? (int)$_POST['student_id'] : 0;
             $newTeacherId = isset($_POST['new_teacher_id']) ? (int)$_POST['new_teacher_id'] : 0;
+
+            if ($role === 'TEACHER') {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => '선생님 권한으로 담당 선생님 변경은 할 수 없습니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
 
             if ($studentId <= 0 || $newTeacherId <= 0) {
                 http_response_code(400);
@@ -726,6 +772,10 @@ try {
                 throw new RuntimeException('수업을 찾을 수 없습니다.');
             }
 
+            if ($role === 'TEACHER' && (int)$class['teacher_id'] !== $userId) {
+                throw new RuntimeException('본인 수업에만 학생을 배정할 수 있습니다.');
+            }
+
             assertStudentEligibility($pdo, $class, $studentId);
 
             $dupStmt = $pdo->prepare("\n                SELECT reservation_id\n                FROM reservations\n                WHERE class_id = ? AND user_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'\n                LIMIT 1\n            ");
@@ -793,6 +843,10 @@ try {
                 throw new RuntimeException('수업을 찾을 수 없습니다.');
             }
 
+            if ($role === 'TEACHER' && (int)$class['teacher_id'] !== $userId) {
+                throw new RuntimeException('본인 수업의 예약만 변경할 수 있습니다.');
+            }
+
             $resStmt = $pdo->prepare("\n                SELECT reservation_id, user_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
             $resStmt->execute([$reservationId, $classId]);
             $oldReservation = $resStmt->fetch(PDO::FETCH_ASSOC);
@@ -848,6 +902,16 @@ try {
             }
 
             $pdo->beginTransaction();
+
+            $classOwnStmt = $pdo->prepare("SELECT teacher_id FROM classes WHERE class_id = ? AND deleted_at IS NULL LIMIT 1 FOR UPDATE");
+            $classOwnStmt->execute([$classId]);
+            $classOwn = $classOwnStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$classOwn) {
+                throw new RuntimeException('수업을 찾을 수 없습니다.');
+            }
+            if ($role === 'TEACHER' && (int)$classOwn['teacher_id'] !== $userId) {
+                throw new RuntimeException('본인 수업의 예약만 삭제할 수 있습니다.');
+            }
 
             $resStmt = $pdo->prepare("\n                SELECT reservation_id, class_id, user_ticket_id\n                FROM reservations\n                WHERE reservation_id = ? AND class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'\n                LIMIT 1 FOR UPDATE\n            ");
             $resStmt->execute([$reservationId, $classId]);
@@ -982,6 +1046,15 @@ try {
                 exit;
             }
 
+            if ($role === 'TEACHER') {
+                if ($teacherId > 0 && $teacherId !== $userId) {
+                    http_response_code(403);
+                    echo json_encode(['success' => false, 'message' => '선생님 계정은 본인 수업의 담당 선생님을 변경할 수 없습니다.'], JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
+                $teacherId = $userId;
+            }
+
             if ($teacherId <= 0) {
         $teacherId = (int)$old['teacher_id'];
     }
@@ -1095,6 +1168,12 @@ try {
             $oldStmt = $pdo->prepare("SELECT * FROM classes WHERE class_id = ? AND deleted_at IS NULL");
             $oldStmt->execute([$classId]);
             $oldData = $oldStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($role === 'TEACHER' && (!$oldData || (int)$oldData['teacher_id'] !== $userId)) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => '본인 수업만 삭제할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
 
             $stmt = $pdo->prepare("UPDATE classes SET deleted_at = CURRENT_TIMESTAMP, status = 'CANCELLED' WHERE class_id = ?");
             $stmt->execute([$classId]);
