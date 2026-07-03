@@ -96,8 +96,8 @@ if (!$id || !$password) {
 try {
     $pdo = DB::getConnection();
 
-    // username 기준으로 사용자 1건 조회
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ? LIMIT 1');
+    // username 기준으로 활성 사용자 1건 조회
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ? AND deleted_at IS NULL LIMIT 1');
     $stmt->execute([$id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

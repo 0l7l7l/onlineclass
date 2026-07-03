@@ -25,7 +25,6 @@
 				<input type="password" id="password" name="password" placeholder="비밀번호" required>
 				<button type="submit">로그인</button>
 			</form>
-			<button type="button" id="dev-login-btn" class="dev-btn">개발자용 로그인</button>
 			<p id="login-error" class="error-msg"></p>
 		</div>
 	</div>
@@ -216,10 +215,23 @@
 		const loginContainer = document.getElementById('login-container');
 		const dashboardContainer = document.getElementById('dashboard-container');
 		const loginForm = document.getElementById('login-form');
-		const devLoginBtn = document.getElementById('dev-login-btn');
 		const loginError = document.getElementById('login-error');
 		const logoutBtn = document.getElementById('logout-btn');
 		const teacherNameElem = document.getElementById('teacher-name');
+		const apiBaseUrl = new URL('../api/', window.location.href);
+
+		function apiUrl(path) {
+			return new URL(path, apiBaseUrl).toString();
+		}
+
+		async function readJsonResponse(res) {
+			const text = await res.text();
+			try {
+				return text ? JSON.parse(text) : {};
+			} catch (err) {
+				throw new Error('서버 응답을 읽을 수 없습니다. API 경로 또는 PHP 오류를 확인해 주세요.');
+			}
+		}
 
 		// 학생관리 관련 요소
 		const studentsTableBody = document.querySelector('#students-table tbody');
@@ -273,8 +285,8 @@
 			}
 
 			try {
-				const res = await fetch(`/api/classes.php?action=get_students&teacher_id=${encodeURIComponent(teacherId)}`, { credentials: 'same-origin' });
-				const data = await res.json();
+				const res = await fetch(apiUrl(`classes.php?action=get_students&teacher_id=${encodeURIComponent(teacherId)}`), { credentials: 'same-origin' });
+				const data = await readJsonResponse(res);
 				if (data && data.success && Array.isArray(data.data)) {
 					currentStudents = data.data;
 					renderStudents(currentStudents);
@@ -290,7 +302,7 @@
 				currentStudents = [];
 				renderStudents([]);
 				// renderStudentPicker([]);
-				studentsError.textContent = '서버와 통신할 수 없습니다.';
+				studentsError.textContent = err.message || '서버와 통신할 수 없습니다.';
 				console.error(err);
 			}
 		}
@@ -447,12 +459,12 @@
 					fd.append('end_time', end);
 					// selectedIds 비어있음: target_user_ids 전송 생략
 
-					const res = await fetch('/api/classes.php?action=create', {
+					const res = await fetch(apiUrl('classes.php?action=create'), {
 						method: 'POST',
 						body: fd,
 						credentials: 'same-origin'
 					});
-					const data = await res.json();
+					const data = await readJsonResponse(res);
 					if (data && data.success) {
 						alert('스케줄이 등록되었습니다.');
 						// 초기화
@@ -466,7 +478,7 @@
 						openScheduleError.textContent = data && data.message ? data.message : '스케줄 등록에 실패했습니다.';
 					}
 				} catch (err) {
-					openScheduleError.textContent = '서버와 통신할 수 없습니다.';
+					openScheduleError.textContent = err.message || '서버와 통신할 수 없습니다.';
 					console.error(err);
 				}
 			});
@@ -477,8 +489,8 @@
 		// ==========================================
 		async function checkSession() {
 			try {
-				const res = await fetch('/api/login.php?action=session&type=TEACHER', { credentials: 'same-origin' });
-				const data = await res.json();
+				const res = await fetch(apiUrl('login.php?action=session&type=TEACHER'), { credentials: 'same-origin' });
+				const data = await readJsonResponse(res);
 				if (data && data.success && data.user && data.user.role === 'TEACHER') {
 					handleLoginSuccess(data.user.name, data.user.user_id);
 				}
@@ -510,30 +522,22 @@
 					formData.append('password', password);
 					formData.append('type', 'TEACHER');
 
-					const res = await fetch('/api/login.php', {
+					const res = await fetch(apiUrl('login.php'), {
 						method: 'POST',
 						body: formData,
 						credentials: 'same-origin'
 					});
-					const data = await res.json();
+					const data = await readJsonResponse(res);
 
 					if (data && data.success && data.user && data.user.role === 'TEACHER') {
 						handleLoginSuccess(data.user.name, data.user.user_id);
 					} else {
-						loginError.textContent = data && data.message ? data.message : '로그인에 실패했습니다.';
+						loginError.textContent = data && data.message ? data.message : '선생님 계정으로만 로그인할 수 있습니다.';
 					}
 				} catch (err) {
-					loginError.textContent = '서버와 통신할 수 없습니다.';
+					loginError.textContent = err.message || '서버와 통신할 수 없습니다.';
 					console.error(err);
 				}
-			});
-		}
-
-		// 개발자용 로그인 버튼 (개발 편의, 서버 검증 우회)
-		if (devLoginBtn) {
-			devLoginBtn.addEventListener('click', function () {
-				// 개발 편의로 바로 대시보드로 이동 (실환경에서는 제거 권장)
-				handleLoginSuccess('개발자', null);
 			});
 		}
 
@@ -542,7 +546,7 @@
 			logoutBtn.addEventListener('click', async function (event) {
 				event.preventDefault();
 				try {
-					await fetch('/api/logout.php', { method: 'POST', credentials: 'same-origin' });
+					await fetch(apiUrl('logout.php'), { method: 'POST', credentials: 'same-origin' });
 				} catch (err) {
 					// 실패해도 클라이언트 세션 정리
 					console.error(err);
