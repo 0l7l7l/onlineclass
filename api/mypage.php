@@ -82,10 +82,12 @@ try {
 
     $stmt = $pdo->prepare("
         SELECT
+            ut.user_ticket_id,
             ut.product_id,
             ut.remaining_count,
             ut.expired_at,
             ut.status,
+            ut.per_week,
             COALESCE(p.title, CONCAT('상품 #', ut.product_id)) AS title,
             COALESCE(p.class_type, '-') AS class_type,
             COALESCE(p.total_count, ut.remaining_count) AS total_count
@@ -95,7 +97,7 @@ try {
           AND ut.status = 'ACTIVE'
           AND ut.remaining_count > 0
           AND ut.expired_at > NOW()
-        ORDER BY ut.expired_at ASC, ut.product_id ASC
+        ORDER BY ut.expired_at ASC, ut.user_ticket_id ASC
     ");
     $stmt->execute([$userId]);
     $ticketItems = $stmt->fetchAll(PDO::FETCH_ASSOC);

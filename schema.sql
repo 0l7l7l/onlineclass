@@ -22,6 +22,17 @@ CREATE TABLE `users` (
     FOREIGN KEY (`supporter_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--추가해야할것들
+
+ALTER TABLE `users`
+    ADD COLUMN `phone_number` VARCHAR(20) NULL COMMENT '휴대폰 번호',
+    add COLUMN `email` VARCHAR(100) NULL COMMENT '이메일 주소',
+  ADD COLUMN `consent_version` VARCHAR(32) NULL COMMENT '약관·개인정보 동의 버전',
+  ADD COLUMN `consent_at` DATETIME NULL COMMENT '동의 일시',
+  ADD COLUMN `consent_ip` VARCHAR(45) NULL COMMENT '동의 당시 요청자 IP';
+
+-------------------------------------------------------------
+
 -- users 테이블 성능 최적화를 위한 인덱스 추가
 CREATE INDEX idx_users_teacher_id ON `users`(`teacher_id`);
 CREATE INDEX idx_users_supporter_id ON `users`(`supporter_id`);

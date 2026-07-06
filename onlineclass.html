@@ -1294,6 +1294,47 @@
                 font-size: 1.125rem;
             }
         }
+/*        마이페에지접기*/
+
+			.collapsible-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				cursor: pointer;
+				padding: 0.75rem 1rem;
+				border-bottom: 1px solid var(--border-color);
+				background: linear-gradient(0deg, rgba(0,0,0,0.02), transparent);
+			}
+
+			.collapsible-title {
+				font-weight: 700;
+				color: var(--point-brown);
+			}
+
+			.collapsible-arrow {
+				transition: transform 0.25s ease;
+				font-size: 1.125rem;
+				color: #8a817c;
+			}
+
+				.collapsible-arrow.rotated {
+					transform: rotate(90deg);
+					color: var(--point-brown);
+				}
+
+			.collapsible-content {
+				padding: 0.75rem 0;
+			}
+
+			.mini-action-btn {
+				padding: 0.25rem 0.5rem;
+				border-radius: 0.375rem;
+				border: 1px solid var(--border-color);
+				background: var(--white);
+				cursor: pointer;
+				font-size: 0.85rem;
+			}
+
     </style>
 </head>
 <body>
@@ -2079,28 +2120,82 @@
       </div>
 
       <div class="card">
-        <div class="sub-header" style="display:flex; justify-content:space-between; align-items:flex-end;">
-          <h3 style="font-size: 1.125rem;">최근 세모 충전 신청</h3>
-          <span style="font-size: 0.75rem; opacity: 0.65;">무통장입금 확인 후 반영</span>
+        <div class="collapsible-header" onclick="toggleCollapse('charge-section')">
+          <div class="collapsible-title">최근 세모 충전 신청</div>
+          <div>
+            <button class="mini-action-btn" onclick="event.stopPropagation(); showChargeHelp()">충전 안내</button>
+            <span id="charge-arrow" class="collapsible-arrow">▶</span>
+          </div>
         </div>
-        <div class="table-responsive" style="margin-top: 1rem;">
-          <table>
-            <thead>
-              <tr>
-                <th>신청일</th>
-                <th>금액</th>
-                <th>입금자명</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody id="charge-history-body">
-              <tr>
-                <td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">아직 충전 신청 내역이 없습니다.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div id="charge-section" class="collapsible-content hidden">
+          <div class="table-responsive" style="margin-top: 0.5rem;">
+            <table>
+              <thead>
+                <tr>
+                  <th>신청일</th>
+                  <th>금액</th>
+                  <th>입금자명</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody id="charge-history-body-collapsible">
+                <tr>
+                  <td colspan="4" class="text-center" style="font-size:0.875rem; opacity:0.65; padding:2rem 0;">아직 충전 신청 내역이 없습니다.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+
+      <!-- 예약 이력 collapsible 추가 (전체 이력) -->
+      <div class="card" style="margin-top:1rem;">
+        <div class="collapsible-header" onclick="toggleCollapse('reservation-section')">
+          <div class="collapsible-title">수업 예약 내역 (전체)</div>
+          <div><span id="reservation-arrow" class="collapsible-arrow">▶</span></div>
+        </div>
+        <div id="reservation-section" class="collapsible-content hidden">
+          <div class="table-responsive" style="margin-top:0.5rem;">
+            <table>
+              <thead>
+                <tr>
+                  <th>예약일</th>
+                  <th>수업일</th>
+                  <th>시간</th>
+                  <th>유형</th>
+                  <th>강사</th>
+                  <th>상태</th>
+                  <th>액션</th>
+                </tr>
+              </thead>
+              <tbody id="reservation-history-body">
+                <tr>
+                  <td colspan="7" class="text-center" style="font-size:0.875rem; opacity:0.65; padding:2rem 0;">예약 내역을 불러오려면 클릭하세요.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 다음수업 모달 (간단) -->
+      <div id="next-class-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width:28rem;">
+          <button onclick="closeNextClassModal()" class="modal-close">&times;</button>
+          <h3 style="text-align:center; font-weight:700; margin-bottom:0.5rem;">다음 수업</h3>
+          <div id="next-class-content" style="padding:0.5rem 0;">
+            <p id="nc-class-info" style="font-weight:700; color:var(--point-brown);"></p>
+            <p id="nc-teacher" style="opacity:0.8;"></p>
+            <p id="nc-status" style="opacity:0.8;"></p>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
+            <button class="btn-transparent w-full" id="nc-go-to-reservation" onclick="goToReservationDetail()">상세보기</button>
+            <button class="btn-transparent w-full" id="nc-cancel-btn" onclick="cancelNextReservation()">예약취소</button>
+          </div>
+        </div>
+      </div>
+
+
     </section>
   </main>
 
@@ -2127,14 +2222,47 @@
       </div>
       <div id="form-signup" class="modal-form-body hidden">
         <h3 class="modal-title">SIGN UP</h3>
-        <div class="form-group">
-          <label class="modal-label">아이디 지정</label>
-          <input type="text" placeholder="아이디">
-        </div>
-        <div class="form-group">
-          <label class="modal-label">비밀번호</label>
-          <input type="password" placeholder="••••••••">
-        </div>
+
+          <div class="form-group">
+            <label class="modal-label">아이디</label>
+            <input type="text" id="signup-username" placeholder="아이디 (영문/숫자)" />
+          </div>
+
+          <div class="form-group">
+            <label class="modal-label">이메일</label>
+            <input type="email" id="signup-email" placeholder="example@domain.com" />
+          </div>
+
+          <div class="form-group">
+            <label class="modal-label">이름</label>
+            <input type="text" id="signup-name" placeholder="실명" />
+          </div>
+
+          <div class="form-group">
+            <label class="modal-label">비밀번호</label>
+            <input type="password" id="signup-password" placeholder="••••••••" />
+          </div>
+
+          <div class="form-group">
+            <label class="modal-label">비밀번호 확인</label>
+            <input type="password" id="signup-password-confirm" placeholder="비밀번호 확인" />
+          </div>
+
+          <div class="form-group">
+            <label class="modal-label">휴대전화 (선택)</label>
+            <input type="tel" id="signup-phone" placeholder="010-1234-5678" />
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+            <input type="checkbox" id="signup-agree" />
+            <label for="signup-agree" style="font-size:0.85rem;">약관 및 개인정보 수집·이용에 동의합니다. <a href="/terms.html" class="modal-link-text">자세히 보기</a></label>
+          </div>
+
+          <!-- CAPTCHA 자리(옵션) -->
+          <div id="signup-captcha" style="margin-top:0.5rem;"></div>
+
+
+
         <button onclick="alert('회원가입 완료!'); toggleAuthForm('login');" class="btn-transparent w-full modal-submit-btn">가입 완료</button>
         <p class="modal-footer-text">이미 계정이 있으신가요? <a href="#" onclick="toggleAuthForm('login')" class="modal-link-text">로그인</a></p>
       </div>
@@ -2595,23 +2723,23 @@
           { id: 203, key: 'duo_8', title: '8회 수강권', price: 21000, badge: 'Premium', desc: '지속적인 회화 루틴을 만드는 프리미엄 패키지' }
         ]
       },
-      group: {
-        title: "🏫 그룹(1:N) 수업 티켓",
-        products: [
-          //{ id: 301, key: 'group_1', title: '1회 체험권', price: 18000, badge: 'Light', desc: '그룹 수업 분위기를 먼저 경험해보는 티켓' },
-          { id: 301, key: 'group_1', title: '이벤트', price: 15800, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님이나 서포터에게 개인수업1회 무료로받자! *소진시조기마감될수있습니다.' },
-          { id: 302, key: 'group_4', title: '4회 수강권', price: 9900, badge: 'Best', desc: '1개월반이면뚝딱. 일본어글자완전마스터반!히라가나?가타카나?다들어와.바로말할수있게해줄게.' },
-          { id: 303, key: 'group_8', title: '8회 수강권', price: 15800, badge: 'Premium', desc: '단기간에계획적이고빠르게.글자마스터반1개월형 할인형 패키지' }
-        ]
-      },
+			// === ticketData.group 상품 메타 추가 (기존 ticketData 블록 내 group 항목 교체) ===
+			group: {
+				title: "🏫 그룹(1:N) 수업 티켓",
+				products: [
+					{ id: 301, key: 'group_1', title: '이벤트', price: 15800, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님이나 서포터에게 개인수업1회 무료로받자! *소진시조기마감될수있습니다.', per_week: 1, total_sessions: 5 }, // per_week: 주당 횟수
+					{ id: 302, key: 'group_4', title: '4회 수강권', price: 9900, badge: 'Best', desc: '1개월반이면뚝딱. 일본어글자완전마스터반!히라가나?가타카나?다들어와.바로말할수있게해줄게.', per_week: 1, total_sessions: 4 },
+					{ id: 303, key: 'group_8', title: '8회 수강권', price: 15800, badge: 'Premium', desc: '단기간에계획적이고빠르게.글자마스터반1개월형 할인형 패키지', per_week: 2, total_sessions: 8 }
+				]
+			},
       package: {
         title: "🎁 특별 할인 패키지",
         products: [
           //{ id: 401, key: 'package_1', title: '1회 체험권', price: 60000, badge: 'Light', desc: '패키지 할인 혜택으로 가볍게 시작하는 티켓' },
 
-          { id: 401, key: 'package_1', title: '그룹4회+개인1회', price: 14900, badge: 'Best', desc: '그룹으로공부하고 1:1로실력키우자! 수강권을 묶은 효율적인 패키지' },
+          { id: 401, key: 'package_1', title: '그룹4회+개인1회', price: 15800, badge: 'Best', desc: '그룹으로공부하고 1:1로실력키우자! 수강권을 묶은 효율적인 패키지' },
           //{ id: 402, key: 'package_4', title: '4회 수강권', price: 270000, badge: 'Best', desc: '다양한 수강권을 묶은 효율적인 패키지' },
-          { id: 403, key: 'package_8', title: '8회 수강권', price: 490000, badge: 'Premium', desc: '가장 강력한 할인과 혜택을 누리는 패키지' }
+          { id: 403, key: 'package_8', title: '8회 수강권', price: 49000, badge: 'Premium', desc: '가장 강력한 할인과 혜택을 누리는 패키지' }
         ]
       }
     };
@@ -2678,60 +2806,95 @@
 
 
 
-    function showTicketSub(menuKey) {
-      const data = ticketData[menuKey];
-      if (!data) return;
+		// --- 헬퍼: 사용자가 이미 특정 product_id 를 보유했는지 확인 ---
+		function userHasProduct(productId) {
+			if (!Array.isArray(myTicketItems)) return false;
+			return myTicketItems.some(item => {
+				// 서버에서 반환하는 필드명은 product_id 입니다.
+				const pid = parseInt(item.product_id || item.productId || 0, 10);
+				return pid === productId;
+			});
+		}
 
-      document.getElementById('ticket-main').classList.add('hidden');
-      document.getElementById('ticket-sub-container').classList.remove('hidden');
-      document.getElementById('ticket-sub-title').innerText = data.title;
+		// 기존 showTicketSub 함수 내부에서 제품을 화면에 반영하는 부분을 찾으세요.
+		// 아래는 showTicketSub 에서 각 product에 대해 버튼을 셋업하는 기존 코드와 교체하거나 병합할 수 있는 안전한 로직입니다.
+		function showTicketSub(menuKey) {
+			const data = ticketData[menuKey];
+			if (!data) return;
 
-      totalCards = data.products.length;
-      currentCardIndex = 0;
+			document.getElementById('ticket-main').classList.add('hidden');
+			document.getElementById('ticket-sub-container').classList.remove('hidden');
+			document.getElementById('ticket-sub-title').innerText = data.title;
 
-      data.products.forEach((product, index) => {
-        const titleEl = document.getElementById(`card-title-${index}`);
-        const priceEl = document.getElementById(`card-price-${index}`);
-        const badgeEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.badge-light');
-        const descEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-detail-desc');
-        const buttonEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-buy-btn');
+			totalCards = data.products.length;
+			currentCardIndex = 0;
 
-        if (titleEl) titleEl.innerText = product.title;
-        if (priceEl) priceEl.innerText = `${(product.price * 10).toLocaleString()}원`;
-        if (badgeEl) badgeEl.innerText = product.badge;
-        if (descEl) descEl.innerHTML = product.desc;
-        if (buttonEl) buttonEl.onclick = () => openTicketPurchaseModal(menuKey, index);
-      });
+			data.products.forEach((product, index) => {
+				const titleEl = document.getElementById(`card-title-${index}`);
+				const priceEl = document.getElementById(`card-price-${index}`);
+				const badgeEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.badge-light');
+				const descEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-detail-desc');
+				const buttonEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-buy-btn');
 
-      updateCardVisibility();
-    }
+				if (titleEl) titleEl.innerText = product.title;
+				if (priceEl) priceEl.innerText = `${(product.price * 10).toLocaleString()}원`; // 기존 표기 유지
+				if (badgeEl) badgeEl.innerText = product.badge;
+				if (descEl) descEl.innerHTML = product.desc;
 
-    function openTicketPurchaseModal(menuKey, productIndex) {
-      if (!isStudentLoggedIn()) {
-        alert('로그인이 필요한 기능입니다.');
-        openModal('login');
-        return;
-      }
+				if (buttonEl) {
+					// 무료 체험권(가격 0)이고 이미 발급된 경우: 버튼 숨기거나 비활성화
+					if (parseInt(product.price, 10) === 0 && userHasProduct(product.id)) {
+						buttonEl.disabled = true;
+						buttonEl.innerText = '발급 완료';
+						buttonEl.classList.add('btn-disabled');
+						buttonEl.onclick = null;
+						// 스타일로 숨기려면: buttonEl.style.display = 'none';
+					} else {
+						buttonEl.disabled = false;
+						buttonEl.innerText = product.price === 0 ? '무료로 발급받기' : '세모로 구매하기';
+						buttonEl.onclick = () => openTicketPurchaseModal(menuKey, index);
+						buttonEl.classList.remove('btn-disabled');
+						buttonEl.style.display = '';
+					}
+				}
+			});
 
-      const product = ticketData[menuKey]?.products?.[productIndex];
-      if (!product) return;
+			updateCardVisibility();
+		}
 
-      selectedTicketPurchase = { menuKey, productIndex, productId: product.id };
+		// openTicketPurchaseModal에서도 서버중복검사를 보조로 한 번 더 확인
+		function openTicketPurchaseModal(menuKey, productIndex) {
+			if (!isStudentLoggedIn()) {
+				alert('로그인이 필요한 기능입니다.');
+				openModal('login');
+				return;
+			}
 
-      document.getElementById('ticket-purchase-title').innerText = product.title;
-      document.getElementById('ticket-purchase-desc').innerText = `${product.title}를 세모 머니로 결제합니다.`;
-      document.getElementById('ticket-purchase-price').innerText = `${product.price.toLocaleString()} 세모`;
-      document.getElementById('ticket-purchase-balance').innerText = `${getCurrentSemoBalance().toLocaleString()} 세모`;
+			const product = ticketData[menuKey]?.products?.[productIndex];
+			if (!product) return;
 
-      const balance = getCurrentSemoBalance();
-      const availableText = balance >= product.price ? '구매 가능' : '보유 세모가 부족합니다.';
-      const availableColor = balance >= product.price ? '#b45309' : '#b91c1c';
-      const availableEl = document.getElementById('ticket-purchase-available');
-      availableEl.innerText = availableText;
-      availableEl.style.color = availableColor;
+			// 무료 티켓인데 이미 발급된 경우 방지
+			if (parseInt(product.price, 10) === 0 && userHasProduct(product.id)) {
+				alert('이미 무료 체험권을 발급받으셨습니다.');
+				return;
+			}
 
-      document.getElementById('ticket-purchase-modal').classList.remove('hidden');
-    }
+			selectedTicketPurchase = { menuKey, productIndex, productId: product.id };
+
+			document.getElementById('ticket-purchase-title').innerText = product.title;
+			document.getElementById('ticket-purchase-desc').innerText = `${product.title}를 세모 머니로 결제합니다.`;
+			document.getElementById('ticket-purchase-price').innerText = `${product.price.toLocaleString()} 세모`;
+			document.getElementById('ticket-purchase-balance').innerText = `${getCurrentSemoBalance().toLocaleString()} 세모`;
+
+			const balance = getCurrentSemoBalance();
+			const availableText = balance >= product.price ? '구매 가능' : '보유 세모가 부족합니다.';
+			const availableColor = balance >= product.price ? '#b45309' : '#b91c1c';
+			const availableEl = document.getElementById('ticket-purchase-available');
+			availableEl.innerText = availableText;
+			availableEl.style.color = availableColor;
+
+			document.getElementById('ticket-purchase-modal').classList.remove('hidden');
+		}
 
     function closeTicketPurchaseModal() {
       document.getElementById('ticket-purchase-modal').classList.add('hidden');
@@ -2776,6 +2939,9 @@
         alert('수강권 구매 중 네트워크 오류가 발생했습니다.');
       }
     }
+
+
+
 
     function goBackToTicketMain() {
       document.getElementById('ticket-sub-container').classList.add('hidden');
@@ -3096,38 +3262,46 @@
       openReserveConfirm();
     }
 
-    async function finalizeReservation() {
-      if (!pendingBooking || !pendingBooking.slotIds || pendingBooking.slotIds.length === 0) return;
+		// === 그룹 예약 확정 시 ticket_id 전송 (book_group_package 호출부 수정) ===
+		async function finalizeReservation() {
+			if (!pendingBooking || !pendingBooking.slotIds || pendingBooking.slotIds.length === 0) return;
 
-      try {
-        if (pendingBooking.bookingMode === 'GROUP_PACKAGE') {
-          const form = new URLSearchParams();
-          form.append('slot_ids', pendingBooking.slotIds.join(','));
-          form.append('weeks', String(pendingBooking.weeks || 4));
+			try {
+				if (pendingBooking.bookingMode === 'GROUP_PACKAGE') {
+					const groupTicket = getAvailableGroupTicket();
+					if (!groupTicket) {
+						alert('사용 가능한 그룹 티켓이 없습니다.');
+						return;
+					}
 
-          const resp = await fetch('api/book_group_package.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-            body: form.toString()
-          });
-          const raw = await resp.text();
-          const res = tryParseApiJson(raw);
+					const form = new URLSearchParams();
+					form.append('slot_ids', pendingBooking.slotIds.join(','));
+					form.append('weeks', String(pendingBooking.weeks || 4));
+					form.append('ticket_id', String(groupTicket.id || groupTicket.ticket_id || '')); // 서버에서 기대하는 필드명과 맞추세요
 
-          if (!resp.ok || !res || !res.success) {
-            console.error('book_group_package response:', raw);
-            alert((res && res.message) || '그룹 자동 등록 중 오류가 발생했습니다.');
-            await fetchTeacherSlots();
-            return;
-          }
+					const resp = await fetch('api/book_group_package.php', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+						body: form.toString()
+					});
+					const raw = await resp.text();
+					const res = tryParseApiJson(raw);
 
-          alert(res.message || '그룹 수업이 자동 등록되었습니다.');
-          closeReserveConfirm();
-          await fetchTeacherSlots();
-          if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
-            loadMyPageData();
-          }
-          return;
-        }
+					if (!resp.ok || !res || !res.success) {
+						console.error('book_group_package response:', raw);
+						alert((res && res.message) || '그룹 자동 등록 중 오류가 발생했습니다.');
+						await fetchTeacherSlots();
+						return;
+					}
+
+					alert(res.message || '그룹 수업이 자동 등록되었습니다.');
+					closeReserveConfirm();
+					await fetchTeacherSlots();
+					if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
+						loadMyPageData();
+					}
+					return;
+				}
 
         let successCount = 0;
         for (const slotId of pendingBooking.slotIds) {
@@ -3231,32 +3405,66 @@
       syncGroupSummaryUI();
     }
 
-    function toggleGroupSlot(target, slotName, slotId, dayKey) {
-      const slotKey = String(slotId);
-      const isAlreadyActive = target.classList.contains('active');
+		function getAvailableGroupTicket() {
+			// myTicketItems는 loadMyPageData()에서 채워짐
+			if (!Array.isArray(myTicketItems)) return null;
+			// 우선순위: 만료 임박하지 않고 잔여갯수(remain) > 0 인 티켓
+			const candidates = myTicketItems
+				.filter(t => String((t.class_type || '')).toUpperCase() === 'GROUP' && parseInt(t.remaining_count || 0, 10) > 0)
+				.sort((a, b) => {
+					const aRemain = parseInt(a.remaining_count || 0, 10);
+					const bRemain = parseInt(b.remaining_count || 0, 10);
+					return bRemain - aRemain; // 잔여 많은 것 우선
+				});
+			return candidates.length ? candidates[0] : null;
+		}
 
-      if (isAlreadyActive) {
-        target.classList.remove('active');
-        selectedGroupSlotIds = selectedGroupSlotIds.filter(id => id !== slotKey);
-        selectedGroupItems = selectedGroupItems.filter(item => item.slotId !== slotKey);
-      } else {
-        const dayAlreadySelected = selectedGroupItems.some(item => item.dayKey === dayKey);
-        if (dayAlreadySelected) {
-          alert('같은 요일은 한 개 반만 선택할 수 있습니다.');
-          return;
-        }
-        if (selectedGroupSlotIds.length >= GROUP_TICKET_LIMIT) {
-          alert(`그룹은 최대 ${GROUP_TICKET_LIMIT}개 요일까지 선택할 수 있습니다.`);
-          return;
-        }
+		// === 그룹 선택 토글에서 티켓 허용수 검사 적용 (기존 toggleGroupSlot 대체 또는 내부에 아래 로직 통합) ===
+		function toggleGroupSlot(target, slotName, slotId, dayKey) {
+			const slotKey = String(slotId);
+			const isAlreadyActive = target.classList.contains('active');
 
-        target.classList.add('active');
-        selectedGroupSlotIds.push(slotKey);
-        selectedGroupItems.push({ slotId: slotKey, label: slotName, dayKey });
-      }
+			// 티켓 검사
+			const groupTicket = getAvailableGroupTicket();
+			if (!groupTicket) {
+				// 티켓 없으면 구매 유도
+				if (confirm('그룹 수업 티켓이 없습니다. 지금 구매하시겠습니까?')) {
+					showTicketSub('group');
+					// 탭 이동 후 구매 유도(추가 UI 개선 가능)
+				}
+				return;
+			}
 
-      syncGroupSummaryUI();
-    }
+			const perWeekAllowed = parseInt(groupTicket.per_week || 1, 10); // 주당 허용 요일 수(1 또는 2)
+			const currentlySelectedDays = selectedGroupItems.length;
+
+			if (isAlreadyActive) {
+				// 선택 해제
+				target.classList.remove('active');
+				selectedGroupSlotIds = selectedGroupSlotIds.filter(id => id !== slotKey);
+				selectedGroupItems = selectedGroupItems.filter(item => item.slotId !== slotKey);
+			} else {
+				// 같은 요일 중복 방지(기존 로직 유지)
+				const dayAlreadySelected = selectedGroupItems.some(item => item.dayKey === dayKey);
+				if (dayAlreadySelected) {
+					alert('같은 요일은 한 개 반만 선택할 수 있습니다.');
+					return;
+				}
+
+				// perWeekAllowed 제한 검사
+				if (currentlySelectedDays >= perWeekAllowed) {
+					alert(`이 티켓은 주 ${perWeekAllowed}회까지 선택 가능합니다.`);
+					return;
+				}
+
+				// 허용 범위 내에서 선택
+				target.classList.add('active');
+				selectedGroupSlotIds.push(slotKey);
+				selectedGroupItems.push({ slotId: slotKey, label: slotName, dayKey });
+			}
+
+			syncGroupSummaryUI();
+		}
 
     function syncGroupSummaryUI() {
       const confirmBtn = document.getElementById('group-submit-btn');
@@ -3290,6 +3498,174 @@
       openReserveConfirm();
     }
 
+
+		function toggleCollapse(id) {
+			const el = document.getElementById(id);
+			if (!el) return;
+			const arrow = document.getElementById(id === 'charge-section' ? 'charge-arrow' : 'reservation-arrow');
+			if (el.classList.contains('hidden')) {
+				el.classList.remove('hidden');
+				if (arrow) arrow.classList.add('rotated');
+				// 로드가 필요한 경우 데이터 로드
+				if (id === 'reservation-section') loadReservationHistory();
+				if (id === 'charge-section') { /* loadMyPageData already populates charge table; ensure mapped */ }
+			} else {
+				el.classList.add('hidden');
+				if (arrow) arrow.classList.remove('rotated');
+			}
+		}
+
+		// 간단한 도움 / 안내
+		function showChargeHelp() {
+			alert('무통장 입금은 입금 확인 후 반영됩니다. 문의는 서포터에게 연락하세요.');
+		}
+
+		// 예약 이력 로드 및 렌더
+		let reservationCache = null;
+		async function loadReservationHistory(force = false) {
+			if (reservationCache && !force) {
+				renderReservationHistory(reservationCache);
+				return;
+			}
+			try {
+				const resp = await fetch('api/reservations.php');
+				const json = await resp.json();
+				if (!resp.ok || !json.success) {
+					console.warn('reservations fetch failed', json);
+					document.getElementById('reservation-history-body').innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0;">예약 정보를 불러올 수 없습니다.</td></tr>';
+					return;
+				}
+				reservationCache = json.data || [];
+				renderReservationHistory(reservationCache);
+			} catch (e) {
+				console.error(e);
+				document.getElementById('reservation-history-body').innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0;">네트워크 오류가 발생했습니다.</td></tr>';
+			}
+		}
+
+		function renderReservationHistory(list) {
+			const tbody = document.getElementById('reservation-history-body');
+			tbody.innerHTML = '';
+			if (!Array.isArray(list) || list.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0; opacity:0.65;">예약 내역이 없습니다.</td></tr>';
+				return;
+			}
+			list.forEach(r => {
+				const classDate = r.class_date || '-';
+				const start = (r.start_time || '').slice(0, 5) || '-';
+				const type = (r.class_type || '-');
+				const teacher = r.teacher_name || '-';
+				const status = (r.status || '-');
+				const reservedAt = (r.reserved_at || '').split(' ')[0] || '-';
+				const canCancel = status === 'CONFIRMED';
+				const tr = document.createElement('tr');
+				tr.innerHTML = `
+      <td>${escapeHtml(reservedAt)}</td>
+      <td>${escapeHtml(classDate)}</td>
+      <td>${escapeHtml(start)}</td>
+      <td>${escapeHtml(type)}</td>
+      <td>${escapeHtml(teacher)}</td>
+      <td>${escapeHtml(status)}</td>
+      <td>
+        <button class="mini-action-btn" onclick="openReservationDetail(${parseInt(r.reservation_id || 0, 10)})">상세</button>
+        ${canCancel ? `<button class="mini-action-btn" onclick="cancelReservation(${parseInt(r.reservation_id || 0, 10)})" style="margin-left:6px;">취소</button>` : ''}
+      </td>
+    `;
+				tbody.appendChild(tr);
+			});
+		}
+
+		// 상세 보기 / 다음수업 관련 함수
+		let currentNextReservationId = null;
+		async function openNextClassModal() {
+			try {
+				const resp = await fetch('api/reservations.php');
+				const json = await resp.json();
+				if (!resp.ok || !json.success) {
+					alert('다음 수업 정보를 불러올 수 없습니다.');
+					return;
+				}
+				const now = new Date();
+				const upcoming = (json.data || []).filter(r => {
+					const dt = new Date((r.class_date || '') + 'T' + (r.start_time || '').slice(0, 8));
+					return dt >= now && r.status === 'CONFIRMED';
+				}).sort((a, b) => new Date(a.class_date + 'T' + a.start_time) - new Date(b.class_date + 'T' + b.start_time));
+				if (!upcoming.length) {
+					alert('예정된 다음 수업이 없습니다.');
+					return;
+				}
+				const next = upcoming[0];
+				currentNextReservationId = parseInt(next.reservation_id || 0, 10);
+				document.getElementById('nc-class-info').innerText = `${next.class_date} ${(next.start_time || '').slice(0, 5)} — ${next.class_type || ''}`;
+				document.getElementById('nc-teacher').innerText = `강사: ${next.teacher_name || '-'}`;
+				document.getElementById('nc-status').innerText = `상태: ${next.status || '-'}`;
+				// show modal
+				document.getElementById('next-class-modal').classList.remove('hidden');
+			} catch (e) {
+				console.error(e);
+				alert('다음 수업 정보를 불러오는 중 오류가 발생했습니다.');
+			}
+		}
+		function closeNextClassModal() { document.getElementById('next-class-modal').classList.add('hidden'); }
+		function goToReservationDetail() {
+			closeNextClassModal();
+			toggleCollapse('reservation-section');
+			loadReservationHistory(true);
+			// scroll to reservation list
+			setTimeout(() => {
+				document.getElementById('reservation-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}, 200);
+		}
+		async function cancelNextReservation() {
+			if (!currentNextReservationId) {
+				alert('취소할 예약이 없습니다.');
+				return;
+			}
+			if (!confirm('다음 수업을 취소하시겠습니까?')) return;
+			await cancelReservation(currentNextReservationId);
+			closeNextClassModal();
+		}
+
+		// 예약 취소
+		async function cancelReservation(reservationId) {
+			try {
+				const form = new URLSearchParams();
+				form.append('action', 'cancel');
+				form.append('reservation_id', String(reservationId));
+				const resp = await fetch('api/reservations.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+					body: form.toString()
+				});
+				const json = await resp.json();
+				if (!resp.ok || !json.success) {
+					alert(json && json.message ? json.message : '예약 취소 중 오류가 발생했습니다.');
+					return;
+				}
+				alert('예약이 취소되었습니다.');
+				// 갱신
+				reservationCache = null;
+				loadReservationHistory(true);
+				await loadMyPageData();
+			} catch (e) {
+				console.error(e);
+				alert('예약 취소 중 네트워크 오류가 발생했습니다.');
+			}
+		}
+
+		// 예약 상세 보기 간단 구현 (추후 확장)
+		function openReservationDetail(reservationId) {
+			// 현재는 상세로 스크롤 및 강조 처리
+			toggleCollapse('reservation-section');
+			loadReservationHistory(true);
+			setTimeout(() => {
+				const el = Array.from(document.querySelectorAll('#reservation-history-body tr'))
+					.find(tr => tr.innerHTML.includes(`reservation_id="${reservationId}"`) || tr.innerHTML.includes(`openReservationDetail(${reservationId})`));
+				if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}, 300);
+		}
+
+
     //글자마스터반 1주차부터4주차 시간표 //
 
     function selectScheduleWeek(week) {
@@ -3307,6 +3683,65 @@
       if (selectedTable) selectedTable.classList.remove('hidden');
       if (selectedBtn) selectedBtn.classList.add('active');
     }
+
+
+    //가입
+
+		// 클라이언트 검증 + 가입 요청
+		async function submitSignup() {
+			const username = (document.getElementById('signup-username').value || '').trim();
+			const email = (document.getElementById('signup-email').value || '').trim();
+			const name = (document.getElementById('signup-name').value || '').trim();
+			const password = document.getElementById('signup-password').value || '';
+			const passwordConfirm = document.getElementById('signup-password-confirm').value || '';
+			const phone = (document.getElementById('signup-phone').value || '').trim();
+			const agree = document.getElementById('signup-agree').checked;
+
+			if (!username || !email || !name || !password || !passwordConfirm) {
+				alert('모든 필수 항목을 입력해 주세요.');
+				return;
+			}
+			if (password !== passwordConfirm) {
+				alert('비밀번호가 일치하지 않습니다.');
+				return;
+			}
+			if (!agree) {
+				alert('약관에 동의해야 회원가입이 가능합니다.');
+				return;
+			}
+			// 간단한 비밀번호 정책 (예시)
+			if (password.length < 8) {
+				alert('비밀번호는 최소 8자 이상이어야 합니다.');
+				return;
+			}
+
+			try {
+				const form = new URLSearchParams();
+				form.append('username', username);
+				form.append('email', email);
+				form.append('name', name);
+				form.append('password', password);
+				form.append('phone', phone);
+				form.append('agree', agree ? '1' : '0'); // 서버에 동의 여부 전달
+
+				const resp = await fetch('api/signup.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+					body: form.toString()
+				});
+				const result = await resp.json().catch(() => null);
+				if (!resp.ok || !result || !result.success) {
+					alert(result && result.message ? result.message : '회원가입 중 오류가 발생했습니다.');
+					return;
+				}
+
+				alert('회원가입이 완료되었습니다. 이메일 인증 후 로그인 해 주세요.');
+				toggleAuthForm('login');
+			} catch (e) {
+				console.error(e);
+				alert('회원가입 요청 중 오류가 발생했습니다.');
+			}
+		}
   </script>
 
 </body>
