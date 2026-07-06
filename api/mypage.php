@@ -80,6 +80,28 @@ try {
     $stmt->execute([$userId]);
     $histories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    $stmt = $pdo->prepare("
+        SELECT
+            ut.user_ticket_id,
+            ut.product_id,
+            ut.remaining_count,
+            ut.expired_at,
+            ut.status,
+            ut.per_week,
+            COALESCE(p.title, CONCAT('상품 #', ut.product_id)) AS title,
+            COALESCE(p.class_type, '-') AS class_type,
+            COALESCE(p.total_count, ut.remaining_count) AS total_count
+        FROM user_tickets ut
+        LEFT JOIN products p ON p.product_id = ut.product_id
+        WHERE ut.user_id = ?
+          AND ut.status = 'ACTIVE'
+          AND ut.remaining_count > 0
+          AND ut.expired_at > NOW()
+        ORDER BY ut.expired_at ASC, ut.user_ticket_id ASC
+    ");
+    $stmt->execute([$userId]);
+    $ticketItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     echo json_encode([
         'success' => true,
         'data' => [
@@ -89,7 +111,8 @@ try {
             'tickets' => $tickets,
             'pdf_days' => $pdfDays,
             'next_class' => $nextClassText,
-            'histories' => $histories
+            'histories' => $histories,
+            'ticket_items' => $ticketItems
         ]
     ], JSON_UNESCAPED_UNICODE);
     exit;

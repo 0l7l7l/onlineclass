@@ -24,6 +24,7 @@ function parseSlotIds(string $raw): array
 
 function fetchGroupPackageSlots(PDO $pdo, int $baseSlotId, int $weeks): array
 {
+    // 기존 로직 유지 (FOR UPDATE 포함)
     $baseStmt = $pdo->prepare("
         SELECT class_id, class_date, start_time
         FROM classes
@@ -40,7 +41,7 @@ function fetchGroupPackageSlots(PDO $pdo, int $baseSlotId, int $weeks): array
     }
 
     $slotStmt = $pdo->prepare("
-        SELECT class_id, teacher_id, class_type, class_date, start_time, end_time, max_capacity, status
+        SELECT class_id, teacher_id, class_type, class_date, start_time, end_time, max_capacity, current_capacity, status
         FROM classes
         WHERE class_type = 'GROUP'
           AND status = 'AVAILABLE'
@@ -90,6 +91,9 @@ try {
         exit;
     }
 
+    $selectedTicketId = isset($_POST['ticket_id']) ? (int)$_POST['ticket_id'] : null;
+    $distinctDaysSelected = count($slotIds); // 클라이언트에서 요일별로 전달된 base slotId 개수로 간주
+
     $pdo->beginTransaction();
 
     $studentStmt = $pdo->prepare("
@@ -104,6 +108,7 @@ try {
         throw new RuntimeException('학생 계정으로 로그인해야 예약할 수 있습니다.');
     }
 
+    // slots 집합 획득 (중복 제거)
     $allSlots = [];
     foreach ($slotIds as $slotId) {
         foreach (fetchGroupPackageSlots($pdo, $slotId, $weeks) as $slot) {
@@ -113,6 +118,7 @@ try {
     $allSlots = array_values($allSlots);
     $neededCount = count($allSlots);
 
+    // 과거 시각/중복/정원 체크 (기존 로직)
     foreach ($allSlots as $slot) {
         if (strtotime($slot['class_date'] . ' ' . $slot['start_time']) < time()) {
             throw new RuntimeException('이미 지난 그룹 수업은 예약할 수 없습니다.');
@@ -144,6 +150,73 @@ try {
         }
     }
 
+    // 특정 티켓으로 예약하려는 경우: 해당 user_ticket 을 잠그고 per_week/remaining 검증
+    if ($selectedTicketId) {
+        $ticketLock = $pdo->prepare("
+            SELECT ut.user_ticket_id, ut.remaining_count, ut.per_week, p.class_type
+            FROM user_tickets ut
+            LEFT JOIN products p ON p.product_id = ut.product_id
+            WHERE ut.user_ticket_id = ? AND ut.user_id = ? AND ut.status = 'ACTIVE'
+            FOR UPDATE
+        ");
+        $ticketLock->execute([$selectedTicketId, $userId]);
+        $ut = $ticketLock->fetch(PDO::FETCH_ASSOC);
+        if (!$ut) {
+            throw new RuntimeException('해당 티켓을 찾을 수 없거나 사용 불가합니다.');
+        }
+        if (strtoupper((string)$ut['class_type'] ?? 'GROUP') !== 'GROUP' && intval($ut['class_type'] ?? 0) !== 0) {
+            // class_type 체크는 products 에 의존하므로 필요시 확장
+        }
+
+        // 주당 허용 요일(per_week) 검사: 선택한 요일(기초 slotIds 개수) 이 티켓의 per_week 보다 크면 거부
+        $ticketPerWeek = (int)($ut['per_week'] ?? 0);
+        if ($ticketPerWeek > 0 && $distinctDaysSelected > $ticketPerWeek) {
+            throw new RuntimeException("선택하신 티켓은 주 {$ticketPerWeek}회까지만 예약 가능합니다. 선택한 요일 수: {$distinctDaysSelected}");
+        }
+
+        // 남은 회차가 충분한지 검사
+        if ((int)$ut['remaining_count'] < $neededCount) {
+            throw new RuntimeException("선택한 티켓의 남은 회차가 부족합니다. 필요: {$neededCount}, 보유: " . intval($ut['remaining_count']));
+        }
+
+        // 이제 해당 티켓만 소진하면서 reservations 생성
+        $insert = $pdo->prepare("
+            INSERT INTO reservations (user_id, class_id, user_ticket_id, status)
+            VALUES (?, ?, ?, 'CONFIRMED')
+        ");
+        $consume = $pdo->prepare("
+            UPDATE user_tickets
+            SET remaining_count = remaining_count - 1
+            WHERE user_ticket_id = ? AND remaining_count > 0
+        ");
+        $mark = $pdo->prepare("
+            UPDATE user_tickets
+            SET status = 'EXHAUSTED'
+            WHERE user_ticket_id = ? AND remaining_count <= 0
+        ");
+        $capacity = $pdo->prepare("
+            UPDATE classes
+            SET current_capacity = (
+                SELECT COUNT(*) FROM reservations WHERE class_id = ? AND UPPER(TRIM(status)) = 'CONFIRMED'
+            )
+            WHERE class_id = ?
+        ");
+
+        $created = 0;
+        foreach ($allSlots as $slot) {
+            $insert->execute([$userId, (int)$slot['class_id'], $selectedTicketId]);
+            $consume->execute([$selectedTicketId]);
+            $mark->execute([$selectedTicketId]);
+            $capacity->execute([(int)$slot['class_id'], (int)$slot['class_id']]);
+            $created++;
+        }
+
+        $pdo->commit();
+        echo json_encode(['success' => true, 'message' => "{$created}건의 그룹 수업 예약이 완료되었습니다.", 'reserved_count' => $created], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // 기존 로직: 여러 티켓을 섞어 필요한 만큼 소진
     $ticketStmt = $pdo->prepare("
         SELECT ut.user_ticket_id, ut.remaining_count
         FROM user_tickets ut
@@ -232,4 +305,15 @@ try {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+// ticketLock 부분 직후에 삽입
+$ticketLock->execute([$selectedTicketId, $userId]);
+$ut = $ticketLock->fetch(PDO::FETCH_ASSOC);
+if (!$ut) {
+    throw new RuntimeException('해당 티켓을 찾을 수 없거나 사용 불가합니다.');
+}
+// products.class_type 이 GROUP 인지 검사 (클래스 타입이 GROUP 이 아니면 거부)
+if (strtoupper(trim($ut['class_type'] ?? '')) !== 'GROUP') {
+    throw new RuntimeException('선택한 티켓은 그룹 수업용 티켓이 아닙니다. 그룹 패키지 전용 티켓을 사용해 주세요.');
 }
