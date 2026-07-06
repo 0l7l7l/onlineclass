@@ -3,12 +3,14 @@
 require_once 'db.php';
 
 $selected_month = isset($_GET['month']) ? $_GET['month'] : date('Y-m');
+$month_start_label = date('Y.m.d', strtotime($selected_month . '-01'));
+$month_end_label = date('Y.m.d', strtotime($selected_month . '-01 +1 month -1 day'));
 
 try {
     // 1. 대시보드 요약 통계 산출용 통계 쿼리
     $stmtSummary = $pdo->prepare("
         SELECT 
-            SUM(CASE WHEN s.status IN ('completed', 'canceled', 'no_show') THEN IFNULL(NULLIF(s.fee_applied, 0), u.lesson_fee) ELSE 0 END) as total_revenue,
+            SUM(CASE WHEN s.status IN ('completed', 'canceled') THEN IFNULL(NULLIF(s.fee_applied, 0), u.lesson_fee) ELSE 0 END) as total_revenue,
             SUM(CASE WHEN s.status = 'completed' THEN 1 ELSE 0 END) as complete_count,
             SUM(CASE WHEN s.status IN ('canceled', 'no_show') THEN 1 ELSE 0 END) as penalty_count
         FROM schedules s
@@ -23,9 +25,10 @@ try {
         SELECT 
             u.name,
             u.lesson_fee AS base_fee,
+            GROUP_CONCAT(DISTINCT DATE_FORMAT(s.lesson_date, '%m/%d') ORDER BY s.lesson_date ASC SEPARATOR ', ') AS lesson_dates,
             SUM(CASE WHEN s.status = 'completed' THEN 1 ELSE 0 END) AS completed_lessons,
             SUM(CASE WHEN s.status IN ('canceled', 'no_show') THEN 1 ELSE 0 END) AS penalty_lessons,
-            SUM(CASE WHEN s.status IN ('completed', 'canceled', 'no_show') THEN IFNULL(NULLIF(s.fee_applied, 0), u.lesson_fee) ELSE 0 END) AS total_fee
+            SUM(CASE WHEN s.status IN ('completed', 'canceled') THEN IFNULL(NULLIF(s.fee_applied, 0), u.lesson_fee) ELSE 0 END) AS total_fee
         FROM Users u
         JOIN schedules s ON u.user_id = s.user_id
         WHERE DATE_FORMAT(s.lesson_date, '%Y-%m') = :selected_month
@@ -84,6 +87,13 @@ try {
         tbody tr:last-child td{border-bottom:none}
         .count-badge{background:#eef2ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-weight:700}
         .price-text{font-weight:800; color:#111827}
+        .detail-btn{padding:6px 10px; border-radius:6px; border:1px solid var(--border); background:#fff; color:#4b5563; font-size:12px; font-weight:700; cursor:pointer}
+        .detail-btn:hover{border-color:var(--accent); color:var(--accent); background:#eef2ff}
+        .detail-row{display:none}
+        .detail-row.is-open{display:table-row}
+        .detail-row td{padding:0 12px 12px; background:#fbfdff}
+        .lesson-date-panel{border:1px solid var(--border); border-radius:6px; background:#fff; padding:10px 12px; color:#4b5563; line-height:1.6}
+        .lesson-date-title{display:block; color:#111827; font-size:12px; font-weight:700; margin-bottom:4px}
 
         /* Print styles for A4 */
         @page { size: A4; margin: 10mm }
@@ -91,6 +101,8 @@ try {
             body{background:white; margin:0}
             .page{box-shadow:none;border-radius:0;padding:12mm; margin:0}
             .filter-zone, .btn{display:none}
+            .detail-btn{display:none}
+            .detail-row{display:table-row}
             thead{display:table-header-group} /* try to repeat header */
             tbody{display:table-row-group}
             .summary-grid{page-break-inside:avoid}
@@ -111,7 +123,7 @@ try {
     <div class="header-container">
         <div class="title-zone">
             <h1>월말 정산 내역 및 보고</h1>
-            <p>사장님 제출용 월간 수업료 정산 통계 페이지입니다.</p>
+            <p>사장님 제출용 월간 수업료 정산 통계 페이지입니다. (<?php echo $month_start_label; ?> ~ <?php echo $month_end_label; ?>)</p>
         </div>
         
         <div class="filter-zone">
@@ -170,19 +182,37 @@ try {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($student_reports as $report): ?>
+                <?php foreach ($student_reports as $index => $report): ?>
                 <tr>
                     <td><strong><?php echo htmlspecialchars($report['name']); ?></strong></td>
                     <td><?php echo number_format($report['base_fee']); ?> 엔</td>
                     <td><span class="count-badge"><?php echo $report['completed_lessons']; ?>회</span></td>
                     <td><span style="color:#ca8a04; font-weight:600;"><?php echo $report['penalty_lessons']; ?>건</span></td>
                     <td><span class="price-text"><?php echo number_format($report['total_fee']); ?> 엔</span></td>
-                    <td><span style="color: #6b7280; font-size: 13px;">정산 포함</span></td>
+                    <td><button type="button" class="detail-btn" data-detail-target="lessonDates<?php echo $index; ?>">자세히보기</button></td>
+                </tr>
+                <tr class="detail-row" id="lessonDates<?php echo $index; ?>">
+                    <td colspan="6">
+                        <div class="lesson-date-panel">
+                            <span class="lesson-date-title"><?php echo htmlspecialchars($report['name']); ?> 수업 날짜</span>
+                            <?php echo htmlspecialchars($report['lesson_dates'] ?? '-'); ?>
+                        </div>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
     </div>
+    <script>
+        document.querySelectorAll('.detail-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var target = document.getElementById(button.getAttribute('data-detail-target'));
+                if (!target) return;
+                var isOpen = target.classList.toggle('is-open');
+                button.textContent = isOpen ? '닫기' : '자세히보기';
+            });
+        });
+    </script>
 </body>
 </html>

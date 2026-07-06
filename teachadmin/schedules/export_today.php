@@ -12,7 +12,10 @@ try {
             s.lesson_time,
             u.name AS student_name,
             s.status,
-            IFNULL(NULLIF(s.fee_applied, 0), u.lesson_fee) AS fee,
+            CASE
+                WHEN s.status = 'no_show' THEN 0
+                ELSE IFNULL(NULLIF(s.fee_applied, 0), u.lesson_fee)
+            END AS fee,
             s.progress
         FROM schedules s
         JOIN Users u ON s.user_id = u.user_id
@@ -44,7 +47,7 @@ try {
             $is_settled = '정산 포함 (수수료 규정반영)';
         } else if ($row['status'] === 'no_show') {
             $status_text = '🔴 무단 노쇼';
-            $is_settled = '정산 포함 (100% 청구)';
+            $is_settled = '정산 제외';
         }
 
         fputcsv($output, [
