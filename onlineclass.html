@@ -2280,6 +2280,10 @@
           <p>우리은행 1002-950-691836</p>
           <p>예금주: (유지은)세상모든언어</p>
         </div>
+        <!-- 실결제금액 표시 (세모 -> 원) -->
+        <div id="charge-real-amount" style="font-weight:700; text-align:center; margin-bottom:0.5rem; color:var(--point-brown);">
+          결제 금액: 0원
+        </div>
 
         <!--세모 : 10세모 = 100원기준-->
         <div class="form-group">
@@ -2291,9 +2295,12 @@
             <button type="button" onclick="selectChargeAmount(20000, this)" class="charge-amount-btn">200,000원</button>
           </div>
           <input type="number" id="charge-amount" min="1000" step="100" placeholder="직접 입력: 1,000 세모 이상"
-                 style="width: 100%; border: 1px solid var(--border-color); padding: 0.6rem 0.75rem; border-radius: 0.375rem; background-color: var(--bg-beige); font-size: 0.85rem;"
-                 oninput="document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'))">
+                 style="width: 100%; border: 1px solid var(--border-color); padding: 0.6rem 0.75rem; border-radius: 0.375rem; background-color: var(--bg-beige); font-size: 0.85rem;" oninput="onChargeAmountInput(this.value)">
+
         </div>
+
+       
+
 
         <div class="form-group" style="margin-top:0.75rem;">
           <label style="font-size: 0.75rem; font-weight: 600;">입금자명</label>
@@ -2525,66 +2532,103 @@
       }
     }
 
-    // 충전 모달 로직
-    function openChargeModal() {
-      document.getElementById('charge-modal').classList.remove('hidden');
+     //충전 모달 로직
+		//const originalOpenChargeModal = openChargeModal;
+		//function openChargeModal() {
+		//	originalOpenChargeModal();
+		//	const val = parseInt(document.getElementById('charge-amount').value || 0, 10) || 0;
+		//	updateChargeRealAmount(val);
+		//}
+    // 세모 -> 원 변환 및 표시 유틸
+		function formatWon(amount) {
+			return Number(amount || 0).toLocaleString('ko-KR') + '원';
+		}
+
+		// 세모 값을 받아 원으로 변환해 모달 상단에 표시
+		function updateChargeRealAmount(semoValue) {
+			const semo = parseInt(semoValue || 0, 10) || 0;
+			const won = semo * 10; // 1세모 = 10원
+			const el = document.getElementById('charge-real-amount');
+			if (el) el.innerText = `결제 금액: ${formatWon(won)}`;
+		}
+
+		// input 직접 입력시 호출 (버튼 active 제거 + 표시 갱신)
+		function onChargeAmountInput(value) {
+			document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+			document.getElementById('charge-amount').value = value;
+			updateChargeRealAmount(value);
+		}
+
+		// 버튼 클릭으로 금액 선택 시 (기존 selectChargeAmount를 이걸로 교체)
+		function selectChargeAmount(amount, btnElement) {
+			document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+			if (btnElement) btnElement.classList.add('active');
+			document.getElementById('charge-amount').value = amount;
+			updateChargeRealAmount(amount);
     }
+		//충전 모달 로직
+		function openChargeModal() {
+			const modal = document.getElementById('charge-modal');
+			if (!modal) return;
+			// 현재 입력값으로 초기 표시
+			const val = parseInt(document.getElementById('charge-amount').value || 0, 10) || 0;
+			updateChargeRealAmount(val);
+			modal.classList.remove('hidden');
+		}
 
-    function closeChargeModal() {
-      document.getElementById('charge-modal').classList.add('hidden');
-      document.getElementById('charge-amount').value = '';
-      document.getElementById('depositor-name').value = '';
-      document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
-    }
+	
 
-    function selectChargeAmount(amount, btnElement) {
-      document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
-      btnElement.classList.add('active');
-      document.getElementById('charge-amount').value = amount;
-    }
+		function closeChargeModal() {
+			const modal = document.getElementById('charge-modal');
+			if (modal) modal.classList.add('hidden');
+			document.getElementById('charge-amount').value = '';
+			document.getElementById('depositor-name').value = '';
+			document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+			updateChargeRealAmount(0);
+		}
 
-    async function submitChargeRequest() {
-      const amount = document.getElementById('charge-amount').value;
-      const name = document.getElementById('depositor-name').value;
+   
 
-      if (!amount || amount < 1000) {
-        alert("최소 1,000 세모 이상 충전하실 수 있습니다.");
-        return;
-      }
-      if (!name.trim()) {
-        alert("입금자명을 입력해 주세요.");
-        return;
-      }
+		async function submitChargeRequest() {
+			const amount = parseInt(document.getElementById('charge-amount').value || 0, 10);
+			const name = (document.getElementById('depositor-name').value || '').trim();
 
-      try {
-        const formData = new URLSearchParams();
-        formData.append('amount', amount);
-        formData.append('depositor_name', name);
+			if (!amount || amount < 1000) {
+				alert("최소 1,000 세모 이상 충전하실 수 있습니다.");
+				return;
+			}
+			if (!name) {
+				alert("입금자명을 입력해 주세요.");
+				return;
+			}
 
-        const response = await fetch('api/charge_request.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          },
-          body: formData.toString()
-        });
+			try {
+				const formData = new URLSearchParams();
+				formData.append('amount', String(amount));
+				formData.append('depositor_name', name);
 
-        const result = await response.json();
-        if (!response.ok || !result.success) {
-          alert(result.message || '충전 신청 중 오류가 발생했습니다.');
-          return;
-        }
+				const response = await fetch('api/charge_request.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+					body: formData.toString()
+				});
+				const result = await response.json().catch(() => null);
 
-        alert(result.message);
-        closeChargeModal();
-        if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
-          loadMyPageData();
-        }
-      } catch (error) {
-        console.error(error);
-        alert('충전 신청 중 네트워크 오류가 발생했습니다.');
-      }
-    }
+				if (!response.ok || !result || !result.success) {
+					alert((result && result.message) || '충전 신청 중 오류가 발생했습니다.');
+					return;
+				}
+
+				alert(result.message);
+				closeChargeModal();
+				if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
+					await loadMyPageData();
+				}
+			} catch (err) {
+				console.error(err);
+				alert('충전 신청 중 네트워크 오류가 발생했습니다.');
+			}
+		}
 
     function openModal(type) { closeSidebarMobile(); document.getElementById('auth-modal').classList.remove('hidden'); toggleAuthForm(type); }
     function closeModal() { document.getElementById('auth-modal').classList.add('hidden'); }
