@@ -2508,7 +2508,8 @@
           document.getElementById('mypage-next-class').innerText = data.next_class;
 					myTicketItems = Array.isArray(data.ticket_items) ? data.ticket_items : [];//추가
 
-          const tbody = document.getElementById('charge-history-body');
+          const tbody = document.getElementById('charge-history-body-collapsible') || document.getElementById('charge-history-body');
+          if (!tbody) return;
           tbody.innerHTML = '';
           if (data.histories && data.histories.length > 0) {
             data.histories.forEach(h => {

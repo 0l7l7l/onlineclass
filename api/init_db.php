@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `products` (
     `class_type` ENUM('PRIVATE', 'DUO', 'GROUP') NULL COMMENT '티켓일 경우 수업 유형',
     `total_count` INT NULL COMMENT '티켓일 경우 제공되는 총 수강 횟수',
     `expiry_days` INT NOT NULL COMMENT '유효 기간 (티켓 보유일수 또는 디지털 콘텐츠 제한 일수)',
+    `per_week` INT NOT NULL DEFAULT 0 COMMENT '그룹 티켓 주당 예약 가능 횟수',
     `is_active` TINYINT(1) DEFAULT 1 COMMENT '소프트 삭제용 판매 여부 (1: 판매중, 0: 판매중단)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SQL);
@@ -107,6 +108,7 @@ CREATE TABLE IF NOT EXISTS `user_tickets` (
     `remaining_count` INT NOT NULL COMMENT '현재 남은 수업 예약 가능 횟수',
     `status` ENUM('ACTIVE', 'EXPIRED', 'EXHAUSTED') NOT NULL COMMENT '티켓 상태',
     `expired_at` DATETIME NOT NULL COMMENT '티켓 사용 제한 만료일',
+    `per_week` INT NOT NULL DEFAULT 0 COMMENT '구매 시점의 주당 예약 가능 횟수',
     `purchased_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '티켓 구매 일시',
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`product_id`) REFERENCES `products`(`product_id`)

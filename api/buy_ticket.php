@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/schema_helpers.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
@@ -76,6 +77,7 @@ if ($product_id <= 0) {
 
 try {
     $pdo = DB::getConnection();
+    ensureTicketPerWeekColumns($pdo);
     $pdo->beginTransaction();
 
     $product = ensureTicketProduct($pdo, $product_id);

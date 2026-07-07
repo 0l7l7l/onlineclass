@@ -29,3 +29,50 @@ CREATE TABLE IF NOT EXISTS `class_change_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SQL);
 }
+
+function tableColumnExists(PDO $pdo, string $tableName, string $columnName): bool
+{
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = ?
+          AND COLUMN_NAME = ?
+    ");
+    $stmt->execute([$tableName, $columnName]);
+    return (int)$stmt->fetchColumn() > 0;
+}
+
+function ensureTicketPerWeekColumns(PDO $pdo): void
+{
+    if (!tableColumnExists($pdo, 'products', 'per_week')) {
+        $pdo->exec("ALTER TABLE `products` ADD COLUMN `per_week` INT NOT NULL DEFAULT 0 COMMENT '그룹 티켓 주당 예약 가능 횟수' AFTER `expiry_days`");
+    }
+
+    if (!tableColumnExists($pdo, 'user_tickets', 'per_week')) {
+        $pdo->exec("ALTER TABLE `user_tickets` ADD COLUMN `per_week` INT NOT NULL DEFAULT 0 COMMENT '구매 시점의 주당 예약 가능 횟수' AFTER `expired_at`");
+    }
+}
+
+function ensureUserSignupColumns(PDO $pdo): void
+{
+    if (!tableColumnExists($pdo, 'users', 'phone_number')) {
+        $pdo->exec("ALTER TABLE `users` ADD COLUMN `phone_number` VARCHAR(20) NULL COMMENT '휴대폰 번호' AFTER `current_money`");
+    }
+
+    if (!tableColumnExists($pdo, 'users', 'email')) {
+        $pdo->exec("ALTER TABLE `users` ADD COLUMN `email` VARCHAR(100) NULL COMMENT '이메일 주소' AFTER `phone_number`");
+    }
+
+    if (!tableColumnExists($pdo, 'users', 'consent_version')) {
+        $pdo->exec("ALTER TABLE `users` ADD COLUMN `consent_version` VARCHAR(32) NULL COMMENT '약관·개인정보 동의 버전' AFTER `email`");
+    }
+
+    if (!tableColumnExists($pdo, 'users', 'consent_at')) {
+        $pdo->exec("ALTER TABLE `users` ADD COLUMN `consent_at` DATETIME NULL COMMENT '동의 일시' AFTER `consent_version`");
+    }
+
+    if (!tableColumnExists($pdo, 'users', 'consent_ip')) {
+        $pdo->exec("ALTER TABLE `users` ADD COLUMN `consent_ip` VARCHAR(45) NULL COMMENT '동의 당시 요청자 IP' AFTER `consent_at`");
+    }
+}

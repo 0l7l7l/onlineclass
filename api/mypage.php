@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/schema_helpers.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
@@ -11,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 
 try {
     $pdo = DB::getConnection();
+    ensureTicketPerWeekColumns($pdo);
     $userId = (int)$_SESSION['user_id'];
 
     $stmt = $pdo->prepare("

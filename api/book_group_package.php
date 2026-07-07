@@ -77,6 +77,7 @@ try {
 
     $pdo = DB::getConnection();
     ensureClassScheduleSupportTables($pdo);
+    ensureTicketPerWeekColumns($pdo);
 
     $userId = (int)$_SESSION['user_id'];
     $slotIds = parseSlotIds((string)($_POST['slot_ids'] ?? ''));

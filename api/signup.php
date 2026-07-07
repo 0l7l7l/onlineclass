@@ -1,5 +1,6 @@
 ﻿<?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/schema_helpers.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
@@ -22,35 +23,50 @@ if (!$username || !$email || !$name || !$password) bad('필수 항목을 모두 
 
 if (!$agree) bad('약관 및 개인정보 처리방침에 동의해야 회원가입이 가능합니다.');
 
+if (!preg_match('/^[A-Za-z0-9_]{4,50}$/', $username)) {
+    bad('아이디는 영문, 숫자, 밑줄(_) 4~50자로 입력해 주세요.');
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    bad('이메일 형식이 올바르지 않습니다.');
+}
+
 if (strlen($password) < 8) bad('비밀번호는 최소 8자 이상이어야 합니다.');
 
 try {
     $pdo = DB::getConnection();
-    // 중복 검사
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR username = ?");
-    $stmt->execute([$username, $username]);
-    // (간단 버전) 이메일/아이디 중복 체크 각각
+    ensureUserSignupColumns($pdo);
+
     $stmt = $pdo->prepare("SELECT user_id FROM users WHERE username = ? LIMIT 1");
     $stmt->execute([$username]);
     if ($stmt->fetch()) bad('이미 사용중인 아이디입니다.');
 
-    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE username = ? LIMIT 1");
-    // (실서비스: 이메일 중복도 체크)
-    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE username = ? OR username = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ? LIMIT 1");
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) bad('이미 가입된 이메일입니다.');
 
-    // 비밀번호 해시
     $hash = password_hash($password, PASSWORD_DEFAULT);
-
-    // consent_version은 약관/개인정보 페이지의 버전(v1.0)로 고정하거나 동적으로 관리
     $consent_version = 'v1.0';
-
     $ip = $_SERVER['REMOTE_ADDR'] ?? null;
 
     $ins = $pdo->prepare("
-        INSERT INTO users (username, password, name, role, teacher_id, current_money, created_at, consent_version, consent_at, consent_ip)
-        VALUES (?, ?, ?, 'STUDENT', NULL, 0, NOW(), ?, NOW(), ?)
+        INSERT INTO users (
+            username,
+            password,
+            name,
+            role,
+            teacher_id,
+            current_money,
+            phone_number,
+            email,
+            created_at,
+            consent_version,
+            consent_at,
+            consent_ip
+        )
+        VALUES (?, ?, ?, 'STUDENT', NULL, 0, ?, ?, NOW(), ?, NOW(), ?)
     ");
-    $ins->execute([$username, $hash, $name, $consent_version, $ip]);
+    $ins->execute([$username, $hash, $name, ($phone !== '' ? $phone : null), $email, $consent_version, $ip]);
 
     echo json_encode(['success' => true, 'message' => '회원가입이 완료되었습니다.'], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {

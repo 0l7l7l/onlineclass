@@ -1,0 +1,2147 @@
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>가타카나 학습 교재 (아행 통합본)</title>
+    <style>
+        /* [인쇄 설정] A4 가로 용지 규격 (인쇄할 때만 작동) */
+        @page {
+            size: 297mm 210mm;
+            margin: 0;
+        }
+
+        /* [기본 스타일] 화면(컴퓨터)과 인쇄 공통 */
+        body {
+            margin: 0;
+            padding: 40px 0; /* 화면에서 볼 때 책장 사이 여백 확보 */
+            font-family: 'Helvetica Neue', Arial, 'Malgun Gothic', sans-serif;
+            background-color: #f0f2f5; /* 화면 배경을 편안하고 입체감 있게 */
+            -webkit-print-color-adjust: exact;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 50px; /* 각 책(A4 2페이지 세트) 간의 간격 */
+            min-height: 100vh;
+        }
+
+        /* 전체를 감싸는 컨테이너: 컴퓨터 화면에서는 A4 가로 황금 비율 유지 */
+        .book-container {
+            width: 100%;
+            max-width: 1200px; 
+            aspect-ratio: 297 / 210; 
+            box-sizing: border-box;
+            display: flex;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+        }
+        
+        /* 왼쪽 면(1쪽)과 오른쪽 면(2쪽) 비율 분할 */
+        .book-page {
+            width: 50%; 
+            height: 100%;
+            box-sizing: border-box;
+            padding: 5% 4%; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background: #ffffff;
+        }
+        
+        /* 가운데 접지선 (책 느낌 구현) */
+        .left-page {
+            border-right: 1px dashed #ccc;
+        }
+        
+        /* 상단 타이틀 구역 */
+        .header {
+            border-bottom: 3px double #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: #222;
+        }
+        .header .page-num {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        /* 글자 학습 테이블 구역 */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            flex-grow: 1;
+            table-layout: fixed; /* 셀 크기가 고정되어 글자가 밖으로 안 삐져나감 */
+        }
+        .content-table th, .content-table td {
+            border: 1px solid #aaa;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .table-head {
+            background-color: #f5f5f5;
+            height: 40px;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+        .char-row {
+            height: calc((100% - 40px) / 5); /* 테이블 높이를 딱 5등분하여 조화롭게 배치 */
+        }
+        .main-char {
+            font-size: 2.2rem; /* 삐져나가지 않는 안전한 폰트 사이즈 조정 */
+            font-weight: bold;
+            font-family: 'Yu Gothic', 'MS Gothic', sans-serif;
+            width: 15%;
+            background-color: #fafafa;
+        }
+        .info-cell {
+            width: 30%;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            text-align: left;
+            padding: 6px 8px;
+            box-sizing: border-box;
+        }
+        .info-cell .pron {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 2px;
+        }
+        .info-cell .tip {
+            font-size: 0.75rem;
+            color: #27ae60;
+            font-style: italic;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .info-cell .word {
+            color: #555;
+            border-top: 1px dashed #ddd;
+            padding-top: 4px;
+            font-size: 0.8rem;
+        }
+        
+        /* 쓰기 연습 칸 공통 */
+        .practice-cell {
+            font-family: 'Yu Gothic', 'MS Gothic', sans-serif;
+            font-size: 2.0rem; /* 칸 크기에 딱 맞는 최적화된 글자 크기 */
+            position: relative;
+            width: 13.75%;
+            height: 100%;
+            display: table-cell;
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+        }
+        .guide-line {
+            background-image: 
+                linear-gradient(to right, #ddd 1px, transparent 1px),
+                linear-gradient(to bottom, #ddd 1px, transparent 1px);
+            background-position: center;
+            background-size: 100% 100%, 100% 100%;
+            background-repeat: no-repeat;
+        }
+        .trace { color: #ddd; }
+        .blank { color: transparent; }
+        
+        /* 읽기 연습 구역 */
+        .reading-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .reading-intro {
+            font-size: 0.9rem;
+            color: #444;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-left: 4px solid #e74c3c; /* 가타카나는 포인트 색상을 변경하여 구분감 제공 */
+        }
+        .reading-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            flex-grow: 1;
+        }
+        .reading-box {
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Yu Gothic', 'MS Gothic', sans-serif;
+            font-size: 1.5rem; /* 긴 단어가 와도 박스가 깨지지 않게 크기 조정 */
+            font-weight: 500;
+            letter-spacing: 1px;
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            min-height: 45px; /* 박스 높이가 찌그러지지 않게 최소 높이 보장 */
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        
+        /* 하단 푸터 */
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #999;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+
+        /* [인쇄 전용 미디어 쿼리] 인쇄할 때는 여러 장의 A4 페이지로 매끄럽게 분할되도록 설정 */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .book-container {
+                width: 297mm;
+                height: 210mm;
+                max-width: none;
+                box-shadow: none;
+                page-break-after: always; /* 각 책 마다 페이지 넘김 */
+            }
+            .book-container:last-child {
+                page-break-after: avoid;
+            }
+            .reading-box {
+                height: 20mm; /* 인쇄 시 안정적인 카드 크기 고정 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================== -->
+    <!--    제 1권 : [ア행] 학습 세트 (Page 01 ~ 02)   -->
+    <!-- ========================================== -->
+    <div class="book-container">
+        
+        <!-- 왼쪽 면 [1쪽]: 아행 쓰기 학습 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>가타카나 [ア행] 쓰기 학습</h1>
+                <div class="page-num">Page 01</div>
+            </div>
+
+            <table class="content-table">
+                <thead>
+                    <tr class="table-head">
+                        <th style="width: 15%;">글자</th>
+                        <th style="width: 30%;">발음 및 어휘</th>
+                        <th>따라쓰기 1</th>
+                        <th>따라쓰기 2</th>
+                        <th>자가진단 1</th>
+                        <th>자가진단 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ア -->
+                    <tr class="char-row">
+                        <td class="main-char">ア</td>
+                        <td class="info-cell">
+                            <div class="pron">[a] 아</div>
+                            <div class="tip">히라가나 'あ'와 발음이 같습니다.</div>
+                            <div class="word">① <b>ア메리카</b> (미국)<br>② <b>アイス</b> (아이스)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ア</td>
+                        <td class="practice-cell guide-line trace">ア</td>
+                        <td class="practice-cell guide-line blank">ア</td>
+                        <td class="practice-cell guide-line blank">ア</td>
+                    </tr>
+                    <!-- イ -->
+                    <tr class="char-row">
+                        <td class="main-char">イ</td>
+                        <td class="info-cell">
+                            <div class="pron">[i] 이</div>
+                            <div class="tip">히라가나 'い'와 발음이 같습니다.</div>
+                            <div class="word">① <b>インク</b> (잉크)<br>② <b>イラスト</b> (일러스트)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">イ</td>
+                        <td class="practice-cell guide-line trace">イ</td>
+                        <td class="practice-cell guide-line blank">イ</td>
+                        <td class="practice-cell guide-line blank">イ</td>
+                    </tr>
+                    <!-- ウ -->
+                    <tr class="char-row">
+                        <td class="main-char">ウ</td>
+                        <td class="info-cell">
+                            <div class="pron">[u] 우</div>
+                            <div class="tip">히라가나 'う'와 발음이 같습니다.</div>
+                            <div class="word">① <b>ウイスキー</b> (위스키)<br>② <b>ウエ이터</b> (웨이터)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ウ</td>
+                        <td class="practice-cell guide-line trace">ウ</td>
+                        <td class="practice-cell guide-line blank">ウ</td>
+                        <td class="practice-cell guide-line blank">ウ</td>
+                    </tr>
+                    <!-- エ -->
+                    <tr class="char-row">
+                        <td class="main-char">エ</td>
+                        <td class="info-cell">
+                            <div class="pron">[e] 에</div>
+                            <div class="tip">히라가나 'え'와 발음이 같습니다.</div>
+                            <div class="word">① <b>エアコン</b> (에어컨)<br>② <b>에코</b> (친환경)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">エ</td>
+                        <td class="practice-cell guide-line trace">エ</td>
+                        <td class="practice-cell guide-line blank">エ</td>
+                        <td class="practice-cell guide-line blank">エ</td>
+                    </tr>
+                    <!-- オ -->
+                    <tr class="char-row">
+                        <td class="main-char">オ</td>
+                        <td class="info-cell">
+                            <div class="pron">[o] 오</div>
+                            <div class="tip">히라가나 'お'와 발음이 같습니다.</div>
+                            <div class="word">① <b>オレンジ</b> (오렌지)<br>② <b>오르간</b> (오르간)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">オ</td>
+                        <td class="practice-cell guide-line trace">オ</td>
+                        <td class="practice-cell guide-line blank">オ</td>
+                        <td class="practice-cell guide-line blank">オ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+        
+        <!-- 오른쪽 면 [2쪽]: 단어 읽기 연습 -->
+        <div class="book-page">
+            <div class="header">
+                <h1>가타카나 [ア행] 읽기 연습</h1>
+                <div class="page-num">Page 02</div>
+            </div>
+
+            <div class="reading-container">
+                <div class="reading-intro">
+                    <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                    앞에서 배운 <b>ア・イ・ウ・エ・オ</b> 다섯 글자로만 이루어진 조합입니다. 모양을 구별하며 정확하게 읽어보세요!
+                </div>
+
+                <!-- 읽기 카드 격자 배치 -->
+                <div class="reading-grid">
+                    <div class="reading-box">アイ</div>
+                    <div class="reading-box">オイ</div>
+                    <div class="reading-box">アオイ</div>
+                    
+                    <div class="reading-box">イイエ</div>
+                    <div class="reading-box">ウエ</div>
+                    <div class="reading-box">アウ</div>
+                    
+                    <div class="reading-box">イエ</div>
+                    <div class="reading-box">イウ</div>
+                    <div class="reading-box">アイウ</div>
+                    
+                    <div class="reading-box">エ</div>
+                    <div class="reading-box">アエ</div>
+                    <div class="reading-box">オウ</div>
+                    
+                    <div class="reading-box">イイ</div>
+                    <div class="reading-box">オオイ</div>
+                    <div class="reading-box">ウエオ</div>
+                    
+                    <div class="reading-box">イオ</div>
+                    <div class="reading-box">アイウエオ</div>
+                    <div class="reading-box">オエオ</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                본 교재의 무단복사를 금지합니다.
+            </div>
+        </div>
+
+    </div>
+
+
+<!-- ========================================== -->
+    <!--    제 2권 : [カ행] 학습 세트 (Page 03 ~ 04)   -->
+    <!-- ========================================== -->
+    <div class="book-container">
+        
+        <!-- 왼쪽 면 [3쪽]: 카행 쓰기 학습 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>가타카나 [カ행] 쓰기 학습</h1>
+                <div class="page-num">Page 03</div>
+            </div>
+
+            <table class="content-table">
+                <thead>
+                    <tr class="table-head">
+                        <th style="width: 15%;">글자</th>
+                        <th style="width: 30%;">발음 및 어휘</th>
+                        <th>따라쓰기 1</th>
+                        <th>따라쓰기 2</th>
+                        <th>자가진단 1</th>
+                        <th>자가진단 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- カ -->
+                    <tr class="char-row">
+                        <td class="main-char">カ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ka] 카</div>
+                            <div class="tip">히라가나 'か'에서 점이 빠진 모양입니다.</div>
+                            <div class="word">① <b>カメラ</b> (카메라)<br>② <b>カレー</b> (카레)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">カ</td>
+                        <td class="practice-cell guide-line trace">カ</td>
+                        <td class="practice-cell guide-line blank">カ</td>
+                        <td class="practice-cell guide-line blank">カ</td>
+                    </tr>
+                    <!-- キ -->
+                    <tr class="char-row">
+                        <td class="main-char">キ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ki] 키</div>
+                            <div class="tip">히라가나 'き'의 윗부분과 비슷합니다.</div>
+                            <div class="word">① <b>ギター</b> (기타/키타)<br>② <b>ケーキ</b> (케이크/케-키)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">キ</td>
+                        <td class="practice-cell guide-line trace">キ</td>
+                        <td class="practice-cell guide-line blank">キ</td>
+                        <td class="practice-cell guide-line blank">キ</td>
+                    </tr>
+                    <!-- ク -->
+                    <tr class="char-row">
+                        <td class="main-char">ク</td>
+                        <td class="info-cell">
+                            <div class="pron">[ku] 쿠</div>
+                            <div class="tip">획이 왼쪽 아래로 부드럽게 꺾입니다.</div>
+                            <div class="word">① <b>クラス</b> (반/클래스)<br>② <b>クッキー</b> (쿠키)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ク</td>
+                        <td class="practice-cell guide-line trace">ク</td>
+                        <td class="practice-cell guide-line blank">ク</td>
+                        <td class="practice-cell guide-line blank">ク</td>
+                    </tr>
+                    <!-- ケ -->
+                    <tr class="char-row">
+                        <td class="main-char">ケ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ke] 케</div>
+                            <div class="tip">'ク(쿠)'와 헷갈리지 않게 주의하세요.</div>
+                            <div class="word">① <b>ケース</b> (케이스)<br>② <b>ケニア</b> (케냐)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ケ</td>
+                        <td class="practice-cell guide-line trace">ケ</td>
+                        <td class="practice-cell guide-line blank">ケ</td>
+                        <td class="practice-cell guide-line blank">ケ</td>
+                    </tr>
+                    <!-- コ -->
+                    <tr class="char-row">
+                        <td class="main-char">コ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ko] 코</div>
+                            <div class="tip">ㄷ을 뒤집어 놓은 사각형 모양입니다.</div>
+                            <div class="word">① <b>コーヒー</b> (커피/코-히-)<br>② <b>ココア</b> (코코아)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">コ</td>
+                        <td class="practice-cell guide-line trace">コ</td>
+                        <td class="practice-cell guide-line blank">コ</td>
+                        <td class="practice-cell guide-line blank">コ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+        
+        <!-- 오른쪽 면 [4쪽]: 단어 읽기 연습 -->
+        <div class="book-page">
+            <div class="header">
+                <h1>가타카나 [カ행] 읽기 연습</h1>
+                <div class="page-num">Page 04</div>
+            </div>
+
+            <div class="reading-container">
+                <div class="reading-intro">
+                    <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                    1권에서 배운 <b>ア행(ア・イ・ウ・エ・オ)</b>과 이번에 배운 <b>カ행(カ・キ・ク・ケ・コ)</b> 글자들의 조합입니다. 아는 단어가 있는지 확인해 보세요!
+                </div>
+
+                <!-- 읽기 카드 격자 배치 (ア행 + カ행 조합 조합 단어) -->
+                <div class="reading-grid">
+                    <div class="reading-box">イカ</div>
+                    <div class="reading-box">カキ</div>
+                    <div class="reading-box">ココア</div>
+                    
+                    <div class="reading-box">キク</div>
+                    <div class="reading-box">コエ</div>
+                    <div class="reading-box">ケキ</div>
+                    
+                    <div class="reading-box">カク</div>
+                    <div class="reading-box">オカ</div>
+                    <div class="reading-box">アキ</div>
+                    
+                    <div class="reading-box">ケコ</div>
+                    <div class="reading-box">ウカ</div>
+                    <div class="reading-box">コイ</div>
+                    
+                    <div class="reading-box">キオ쿠</div>
+                    <div class="reading-box">カイク</div>
+                    <div class="reading-box">コカ</div>
+                    
+                    <div class="reading-box">クウキ</div>
+                    <div class="reading-box">オオキイ</div>
+                    <div class="reading-box">カキクケコ</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                본 교재의 무단복사를 금지합니다.
+            </div>
+        </div>
+
+    </div>
+
+
+<!-- ========================================== -->
+    <!--    제 3권 : [サ행] 학습 세트 (Page 05 ~ 06)   -->
+    <!-- ========================================== -->
+    <div class="book-container">
+        
+        <!-- 왼쪽 면 [5쪽]: 사행 쓰기 학습 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>가타카나 [サ행] 쓰기 학습</h1>
+                <div class="page-num">Page 05</div>
+            </div>
+
+            <table class="content-table">
+                <thead>
+                    <tr class="table-head">
+                        <th style="width: 15%;">글자</th>
+                        <th style="width: 30%;">발음 및 어휘</th>
+                        <th>따라쓰기 1</th>
+                        <th>따라쓰기 2</th>
+                        <th>자가진단 1</th>
+                        <th>자가진단 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- サ -->
+                    <tr class="char-row">
+                        <td class="main-char">サ</td>
+                        <td class="info-cell">
+                            <div class="pron">[sa] 사</div>
+                            <div class="tip">히라가나 'さ'의 각진 버전입니다.</div>
+                            <div class="word">① <b>サラダ</b> (샐러드)<br>② <b>サイン</b> (사인)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">サ</td>
+                        <td class="practice-cell guide-line trace">サ</td>
+                        <td class="practice-cell guide-line blank">サ</td>
+                        <td class="practice-cell guide-line blank">サ</td>
+                    </tr>
+                    <!-- シ -->
+                    <tr class="char-row">
+                        <td class="main-char">シ</td>
+                        <td class="info-cell">
+                            <div class="pron">[shi] 시</div>
+                            <div class="tip">★아래에서 위로 빗겨 올려 씁니다.</div>
+                            <div class="word">① <b>시소</b> (시소)<br>② <b>시티</b> (도시/시티)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">シ</td>
+                        <td class="practice-cell guide-line trace">シ</td>
+                        <td class="practice-cell guide-line blank">シ</td>
+                        <td class="practice-cell guide-line blank">シ</td>
+                    </tr>
+                    <!-- ス -->
+                    <tr class="char-row">
+                        <td class="main-char">ス</td>
+                        <td class="info-cell">
+                            <div class="pron">[su] 스</div>
+                            <div class="tip">한자 '석 삼(三)'의 마지막 느낌과 닮았습니다.</div>
+                            <div class="word">① <b>スキー</b> (스키)<br>② <b>스프</b> (스프)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ス</td>
+                        <td class="practice-cell guide-line trace">ス</td>
+                        <td class="practice-cell guide-line blank">ス</td>
+                        <td class="practice-cell guide-line blank">ス</td>
+                    </tr>
+                    <!-- セ -->
+                    <tr class="char-row">
+                        <td class="main-char">セ</td>
+                        <td class="info-cell">
+                            <div class="pron">[se] 세</div>
+                            <div class="tip">히라가나 'せ'와 꼴이 매우 비슷합니다.</div>
+                            <div class="word">① <b>센터</b> (센터)<br>② <b>세부</b> (세부 섬)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">セ</td>
+                        <td class="practice-cell guide-line trace">セ</td>
+                        <td class="practice-cell guide-line blank">セ</td>
+                        <td class="practice-cell guide-line blank">セ</td>
+                    </tr>
+                    <!-- ソ -->
+                    <tr class="char-row">
+                        <td class="main-char">ソ</td>
+                        <td class="info-cell">
+                            <div class="pron">[so] 소</div>
+                            <div class="tip">★위에서 아래로 내리꽂듯 씁니다.</div>
+                            <div class="word">① <b>소파</b> (소파)<br>② <b>소스</b> (소스)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ソ</td>
+                        <td class="practice-cell guide-line trace">ソ</td>
+                        <td class="practice-cell guide-line blank">ソ</td>
+                        <td class="practice-cell guide-line blank">ソ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+        
+        <!-- 오른쪽 면 [6쪽]: 단어 읽기 연습 -->
+        <div class="book-page">
+            <div class="header">
+                <h1>가타카나 [サ행] 읽기 연습</h1>
+                <div class="page-num">Page 06</div>
+            </div>
+
+            <div class="reading-container">
+                <div class="reading-intro">
+                    <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                    지금까지 배운 <b>ア행, カ행, サ행</b> 글자들만 조합한 단어입니다. 특히 <b>シ(시)</b>와 <b>ソ(소)</b>의 모양을 눈으로 잘 구별해 보세요!
+                </div>
+
+                <!-- 읽기 카드 격자 배치 (ア + カ + サ 조합 단어) -->
+                <div class="reading-grid">
+                    <div class="reading-box">カサ</div>
+                    <div class="reading-box">우시</div>
+                    <div class="reading-box">シス</div>
+                    
+                    <div class="reading-box">ソコ</div>
+                    <div class="reading-box">アサ</div>
+                    <div class="reading-box">이스</div>
+                    
+                    <div class="reading-box">シカ</div>
+                    <div class="reading-box">オセロ</div>
+                    <div class="reading-box">ソス</div>
+                    
+                    <div class="reading-box">キサ</div>
+                    <div class="reading-box">スケ</div>
+                    <div class="reading-box">コソコソ</div>
+                    
+                    <div class="reading-box">サ이카</div>
+                    <div class="reading-box">エクサ</div>
+                    <div class="reading-box">オカ시</div>
+                    
+                    <div class="reading-box">サシスセソ</div>
+                    <div class="reading-box">シソ</div>
+                    <div class="reading-box">アカイカ</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                본 교재의 무단복사를 금지합니다.
+            </div>
+        </div>
+
+    </div>
+
+<!-- ========================================== -->
+        <!--     제 3권 : [サ행] 팁 페이지 (Page 07)        -->
+        <!-- ========================================== -->
+        <!-- 오른쪽 면 또는 다음 장 [7쪽]: 팁 & 체크 포인트 -->
+        <div class="book-page right-page">
+            <div class="header">
+                <h1>💡 이번 행의 핵심 체크 포인트!</h1>
+                <div class="page-num">Page 07</div>
+            </div>
+
+            <div class="tip-container" style="padding: 20px; line-height: 1.8;">
+                
+                <!-- 꿀팁 1: 시(シ)와 소(ソ) 완벽 구별법 -->
+                <div class="tip-section" style="background-color: #f9f9f9; border-left: 5px solid #ff9800; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #e65100; font-size: 1.2rem;">👀 모양이 너무 비슷해요! [シ] vs [ソ]</h3>
+                    <p style="margin-bottom: 10px; font-size: 0.95rem;">
+                        가타카나 학습에서 아이들이 가장 많이 헷갈려하는 마의 구간입니다. 획이 시작되는 <b>위치</b>와 <b>방향</b>을 시각적으로 기억하도록 도와주세요!
+                    </p>
+                    <table style="width: 100%; border-collapse: collapse; text-align: center; background-color: #fff; margin-top: 10px;">
+                        <tr style="background-color: #f1f8ff;">
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 50%;"><b>シ (시)</b></th>
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 50%;"><b>ソ (소)</b></th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px; border: 1px solid #ddd; font-size: 2rem; font-weight: bold; color: #0288d1;">シ</td>
+                            <td style="padding: 15px; border: 1px solid #ddd; font-size: 2rem; font-weight: bold; color: #43a047;">ソ</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; text-align: left; vertical-align: top;">
+                                🎯 <b>포인트:</b> 점 두 개가 <b>세로</b>로 나란히 서 있어요.<br>
+                                ✍️ <b>쓰기 꿀팁:</b> <u>밑에서 위로</u> 슥~ 올려 그리는 느낌! (히라가나 'し'의 둥근 아래쪽 느낌과 연결)
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; text-align: left; vertical-align: top;">
+                                🎯 <b>포인트:</b> 점 한 개가 <b>가로</b>(왼쪽 위)에 있어요.<br>
+                                ✍️ <b>쓰기 꿀팁:</b> <u>위에서 아래로</u> 탁! 찍어 내리는 느낌! (영어 'Y'의 윗부분이나 깔때기 모양과 연결)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 꿀팁 2: 부모님 가이드 -->
+                <div class="tip-section" style="background-color: #fff8e1; border-left: 5px solid #ffb300; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #f57f17; font-size: 1.2rem;">👨‍🏫 지도자 & 부모님을 위한 매칭 가이드</h3>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
+                        <li style="margin-bottom: 8px;">아이에게 글자를 알려주실 때 손가락으로 공중에 크게 <b>허공 쓰기(Air Writing)</b>를 하며 방향을 몸으로 익히게 해주면 효과가 배가 됩니다.</li>
+                        <li style="margin-bottom: 8px;"><b>"시(シ)는 신나게 위로 슝~ 올라가고, 소(ソ)는 소나기처럼 위에서 아래로 뚝 떨어진다!"</b>처럼 재미있는 말놀이(연상법)를 곁들여 주시면 훨씬 잘 기억합니다.</li>
+                        <li>6쪽 읽기 연습에서 <span style="background-color: #fff; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-weight: bold;">シス(시스)</span>, <span style="background-color: #fff; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-weight: bold;">ソ스(소스)</span>, <span style="background-color: #fff; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-weight: bold;">シソ(시소)</span>처럼 두 글자가 섞여 있는 단어를 집중적으로 짚어보며 퀴즈를 내주세요!</li>
+                    </ul>
+                </div>
+
+                <!-- 다음 단계 예고 -->
+                <div class="next-preview" style="text-align: center; margin-top: 30px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px;">
+                    <span style="font-size: 1.1rem; font-weight: bold; color: #333;">🎉 사행 정복 완료! 다음 장으로 넘어가 볼까요?</span>
+                    <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem;">다음 장에서는 비슷하게 생긴 복병, <b>[タ행]의 ツ(츠)</b>가 기다리고 있으니 방심은 금물!</p>
+                </div>
+
+            </div>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+
+
+<!-- ========================================== -->
+    <!--    제 3권 : [タ행] 학습 세트 (Page 09 ~ 10)   -->
+    <!-- ========================================== -->
+    <div class="book-container">
+        
+        <!-- 왼쪽 면 [9쪽]: 타행 쓰기 학습 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>가타카나 [タ행] 쓰기 학습</h1>
+                <div class="page-num">Page 09</div>
+            </div>
+
+            <table class="content-table">
+                <thead>
+                    <tr class="table-head">
+                        <th style="width: 15%;">글자</th>
+                        <th style="width: 30%;">발음 및 어휘</th>
+                        <th>따라쓰기 1</th>
+                        <th>따라쓰기 2</th>
+                        <th>자가진단 1</th>
+                        <th>자가진단 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- タ -->
+                    <tr class="char-row">
+                        <td class="main-char">タ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ta] 타</div>
+                            <div class="tip">한자 '많을 다(多)'의 윗부분이나 '저녁 석(夕)'과 닮았어요.</div>
+                            <div class="word">① <b>タクシー</b> (택시)<br>② <b>タオル</b> (타월/수건)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">タ</td>
+                        <td class="practice-cell guide-line trace">タ</td>
+                        <td class="practice-cell guide-line blank">タ</td>
+                        <td class="practice-cell guide-line blank">タ</td>
+                    </tr>
+                    <!-- チ -->
+                    <tr class="char-row">
+                        <td class="main-char">チ</td>
+                        <td class="info-cell">
+                            <div class="pron">[chi] 치</div>
+                            <div class="tip">숫자 '千(천)' 또는 한글 '치'와 모양이 비슷합니다.</div>
+                            <div class="word">① <b>チーム</b> (팀)<br>② <b>チーズ</b> (치즈)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">チ</td>
+                        <td class="practice-cell guide-line trace">チ</td>
+                        <td class="practice-cell guide-line blank">チ</td>
+                        <td class="practice-cell guide-line blank">チ</td>
+                    </tr>
+                    <!-- ツ -->
+                    <tr class="char-row">
+                        <td class="main-char">ツ</td>
+                        <td class="info-cell">
+                            <div class="pron">[tsu] 츠</div>
+                            <div class="tip">★위에서 아래로 세로로 내리씁니다. (시/소 주의!)</div>
+                            <div class="word">① <b>ツアー</b> (투어/여행)<br>② <b>Tシャツ</b> (T셔츠)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ツ</td>
+                        <td class="practice-cell guide-line trace">ツ</td>
+                        <td class="practice-cell guide-line blank">ツ</td>
+                        <td class="practice-cell guide-line blank">ツ</td>
+                    </tr>
+                    <!-- テ -->
+                    <tr class="char-row">
+                        <td class="main-char">テ</td>
+                        <td class="info-cell">
+                            <div class="pron">[te] 테</div>
+                            <div class="tip">한자 '장인 공(工)' 위에 선 하나가 더 있는 모양이에요.</div>
+                            <div class="word">① <b>テスト</b> (테스트)<br>② <b>テレビ</b> (텔레비전)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">テ</td>
+                        <td class="practice-cell guide-line trace">テ</td>
+                        <td class="practice-cell guide-line blank">テ</td>
+                        <td class="practice-cell guide-line blank">テ</td>
+                    </tr>
+                    <!-- ト -->
+                    <tr class="char-row">
+                        <td class="main-char">ト</td>
+                        <td class="info-cell">
+                            <div class="pron">[to] 토</div>
+                            <div class="tip">한자 '점 복(卜)' 자와 똑같이 생겼습니다.</div>
+                            <div class="word">① <b>토마토</b> (토마토)<br>② <b>노트</b> (노트)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ト</td>
+                        <td class="practice-cell guide-line trace">ト</td>
+                        <td class="practice-cell guide-line blank">ト</td>
+                        <td class="practice-cell guide-line blank">ト</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+        
+        <!-- 오른쪽 면 [10쪽]: 단어 읽기 연습 -->
+        <div class="book-page">
+            <div class="header">
+                <h1>가타카나 [タ행] 읽기 연습</h1>
+                <div class="page-num">Page 10</div>
+            </div>
+
+            <div class="reading-container">
+                <div class="reading-intro">
+                    <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                    지금까지 배운 <b>ア행, カ행, サ행, タ행</b> 글자들로 만든 단어입니다. 특히 비슷하게 생긴 <b>シ(시) / 소(ソ) / 츠(ツ)</b>를 완벽하게 구별해 봐요!
+                </div>
+
+                <!-- 읽기 카드 격자 배치 (누적 조합 단어) -->
+                <div class="reading-grid">
+                    <div class="reading-box">ウタ</div>
+                    <div class="reading-box">タコ</div>
+                    <div class="reading-box">クツ</div>
+                    
+                    <div class="reading-box">チカ</div>
+                    <div class="reading-box">ソト</div>
+                    <div class="reading-box">テテ</div>
+                    
+                    <div class="reading-box">タイツ</div>
+                    <div class="reading-box">チチ</div>
+                    <div class="reading-box">トチ</div>
+                    
+                    <div class="reading-box">シテ</div>
+                    <div class="reading-box">テツ</div>
+                    <div class="reading-box">アタカ</div>
+                    
+                    <div class="reading-box">カタカナ</div>
+                    <div class="reading-box">ツイタ</div>
+                    <div class="reading-box">シソト</div>
+                    
+                    <div class="reading-box">タチツテト</div>
+                    <div class="reading-box">シーツ</div>
+                    <div class="reading-box">ソツ</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                본 교재의 무단복사를 금지합니다.
+            </div>
+        </div>
+
+    </div>
+
+<!-- ========================================== -->
+        <!--     제 3권 : [タ행] 팁 페이지 (Page 11)        -->
+        <!-- ========================================== -->
+        <!-- 왼쪽 면 또는 다음 장 [11쪽]: 팁 & 체크 포인트 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>💡 이번 행의 핵심 체크 포인트!</h1>
+                <div class="page-num">Page 11</div>
+            </div>
+
+            <div class="tip-container" style="padding: 20px; line-height: 1.8;">
+                
+                <!-- 꿀팁 1: 가타카나 최대 난관 삼총사 완벽 구별법 -->
+                <div class="tip-section" style="background-color: #f9f9f9; border-left: 5px solid #00bcd4; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #00838f; font-size: 1.2rem;">🚨 가타카나 최대 난관! [シ] [ソ] [ツ] 3형제 구별하기</h3>
+                    <p style="margin-bottom: 15px; font-size: 0.95rem;">
+                        드디어 올 것이 왔습니다! 새로 배운 <b>츠(ツ)</b>가 등장하면서 앞서 배운 <b>시(シ)</b>, <b>소(ソ)</b>와 함께 아이들의 눈을 어지럽히기 시작합니다. <br>
+                        글자가 만들어지는 <b>'선이 흐르는 방향'</b>을 기준으로 묶어서 기억하면 절대 헷갈리지 않아요!
+                    </p>
+
+                    <!-- 삼총사 대조 테이블 -->
+                    <table style="width: 100%; border-collapse: collapse; text-align: center; background-color: #fff;">
+                        <tr style="background-color: #f1f8ff;">
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 33.3%;"><b>横(가로)의 팀 : 시 [シ]</b></th>
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 33.3%;"><b>縦(세로)의 팀 : 츠 [ツ]</b></th>
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 33.3%;"><b>縦(세로)의 팀 : 소 [ソ]</b></th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px; border: 1px solid #ddd; font-size: 2.2rem; font-weight: bold; color: #0288d1;">シ</td>
+                            <td style="padding: 15px; border: 1px solid #ddd; font-size: 2.2rem; font-weight: bold; color: #e65100;">ツ</td>
+                            <td style="padding: 15px; border: 1px solid #ddd; font-size: 2.2rem; font-weight: bold; color: #43a047;">ソ</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-size: 0.85rem; text-align: left; vertical-align: top;">
+                                🎯 <b>점 위치:</b> 왼쪽 벽에 <b>세로</b>로 나란히!<br>
+                                ✍️ <b>획 방향:</b> 왼쪽 <u>밑에서 위로</u> 슥~ 올려요.<br>
+                                <span style="color:#0288d1;"><b>💡 히라가나 'し'처럼 밑바닥이 평평한 느낌!</b></span>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-size: 0.85rem; text-align: left; vertical-align: top;">
+                                🎯 <b>점 위치:</b> 천장에 <b>가로</b>로 나란히!<br>
+                                ✍️ <b>획 방향:</b> 오른쪽 <u>위에서 아래로</u> 슥~ 내려요.<br>
+                                <span style="color:#e65100;"><b>💡 히라가나 'つ'처럼 오른쪽 벽이 막힌 느낌!</b></span>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-size: 0.85rem; text-align: left; vertical-align: top;">
+                                🎯 <b>점 위치:</b> 왼쪽 위에 점이 <b>콕!</b> 하나<br>
+                                ✍️ <b>획 방향:</b> 오른쪽 <u>위에서 아래로</u> 탕! 내려요.<br>
+                                <span style="color:#43a047;"><b>💡 '츠(ツ)'에서 왼쪽에 있던 점 하나가 도망친 모양!</b></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 꿀팁 2: 엄마표/선생님표 말놀이 힌트 -->
+                <div class="tip-section" style="background-color: #efebe9; border-left: 5px solid #795548; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #4e342e; font-size: 1.2rem;">🗣️ 아이가 바로 알아듣는 마법의 3줄 말놀이</h3>
+                    <p style="margin: 0 0 10px 0; font-size: 0.95rem;">글자를 짚을 때 이 대사를 리듬감 있게 외쳐주시면 효과 만점입니다!</p>
+                    <blockquote style="margin: 0; padding: 10px 15px; background-color: #fff; border-radius: 4px; font-size: 0.9rem; color: #333; border: 1px solid #d7ccc8;">
+                        1. <b>"시(シ)는 신나게 아래에서 위로 슝~!"</b> (발을 걷어차듯)<br>
+                        2. <b>"츠(ツ)는 비가 위에서 아래로 주르륵~!"</b> (빗줄기 3개처럼)<br>
+                        3. <b>"소(ソ)는 소나기가 위에서 아래로 뚝!"</b> (굵은 빗줄기 2개처럼)
+                    </blockquote>
+                </div>
+
+                <!-- 꿀팁 3: 부모님을 위한 확인 사살 퀴즈 가이드 -->
+                <div class="tip-section" style="background-color: #e8f5e9; border-left: 5px solid #4caf50; padding: 15px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #2e7d32; font-size: 1.2rem;">🔍 10쪽 읽기 연습에서 아이와 함께할 스페셜 퀴즈</h3>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
+                        <li style="margin-bottom: 8px;">10쪽의 맨 마지막 줄에 있는 <span style="background-color: #fff; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-weight: bold;">시츠(シツ)</span>와 <span style="background-color: #fff; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-weight: bold;">소츠(ソツ)</span>를 아이가 머뭇거리지 않고 읽어내는지 꼭 봐주세요!</li>
+                        <li>손가락으로 글자를 가린 채 점의 위치만 슬쩍 보여주고, <b>"점이 옆으로 누웠을까, 위에 달렸을까?"</b> 게임을 하면 아이가 글자의 구조를 더 명확히 보게 됩니다.</li>
+                    </ul>
+                </div>
+
+                <!-- 다음 단계 예고 -->
+                <div class="next-preview" style="text-align: center; margin-top: 30px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px;">
+                    <span style="font-size: 1.1rem; font-weight: bold; color: #333;">🔥 가타카나 최고의 고비를 무사히 넘겼습니다!</span>
+                    <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem;">이 세 글자만 구별할 줄 알면 가타카나의 70%는 끝난 셈이에요. 다음 장부터는 탄탄대로! <b>[ナ행]</b>으로 가볼까요?</p>
+                </div>
+
+            </div>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+<!-- ========================================== -->
+    <!--    제 3권 : [ナ행] 학습 세트 (Page 13 ~ 14)   -->
+    <!-- ========================================== -->
+    <div class="book-container">
+        
+        <!-- 왼쪽 면 [13쪽]: 나행 쓰기 학습 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>가타카나 [ナ행] 쓰기 학습</h1>
+                <div class="page-num">Page 13</div>
+            </div>
+
+            <table class="content-table">
+                <thead>
+                    <tr class="table-head">
+                        <th style="width: 15%;">글자</th>
+                        <th style="width: 30%;">발음 및 어휘</th>
+                        <th>따라쓰기 1</th>
+                        <th>따라쓰기 2</th>
+                        <th>자가진단 1</th>
+                        <th>자가진단 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ナ -->
+                    <tr class="char-row">
+                        <td class="main-char">ナ</td>
+                        <td class="info-cell">
+                            <div class="pron">[na] 나</div>
+                            <div class="tip">한자 '위 상(上)'을 뒤집어 놓은 듯한 십자가 모양이에요.</div>
+                            <div class="word">① <b>ナイフ</b> (나이프/칼)<br>② <b>나이토</b> (밤/나이트)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ナ</td>
+                        <td class="practice-cell guide-line trace">ナ</td>
+                        <td class="practice-cell guide-line blank">ナ</td>
+                        <td class="practice-cell guide-line blank">ナ</td>
+                    </tr>
+                    <!-- ニ -->
+                    <tr class="char-row">
+                        <td class="main-char">ニ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ni] 니</div>
+                            <div class="tip">한자 '두 이(二)' 자와 완전히 똑같이 생겼어요!</div>
+                            <div class="word">① <b>뉴스</b> (뉴스)<br>② <b>니트</b> (니트/스웨터)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ニ</td>
+                        <td class="practice-cell guide-line trace">ニ</td>
+                        <td class="practice-cell guide-line blank">ニ</td>
+                        <td class="practice-cell guide-line blank">ニ</td>
+                    </tr>
+                    <!-- ヌ -->
+                    <tr class="char-row">
+                        <td class="main-char">ヌ</td>
+                        <td class="info-cell">
+                            <div class="pron">[nu] 누</div>
+                            <div class="tip">앞서 배운 '스(ス)'의 등 뒤에 칼을 슥 꽂은 모양이에요.</div>
+                            <div class="word">① <b>누드</b> (누드)<br>② <b>타누키</b> (너구리 인형 등)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ヌ</td>
+                        <td class="practice-cell guide-line trace">ヌ</td>
+                        <td class="practice-cell guide-line blank">ヌ</td>
+                        <td class="practice-cell guide-line blank">ヌ</td>
+                    </tr>
+                    <!-- ネ -->
+                    <tr class="char-row">
+                        <td class="main-char">ネ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ne] 네</div>
+                            <div class="tip">한자 '보일 시(示)'의 변형이나 옷걸이 모양을 닮았어요.</div>
+                            <div class="word">① <b>넥타이</b> (넥타이)<br>② <b>네일</b> (네일아트)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ネ</td>
+                        <td class="practice-cell guide-line trace">ネ</td>
+                        <td class="practice-cell guide-line blank">ネ</td>
+                        <td class="practice-cell guide-line blank">ネ</td>
+                    </tr>
+                    <!-- ノ -->
+                    <tr class="char-row">
+                        <td class="main-char">ノ</td>
+                        <td class="info-cell">
+                            <div class="pron">[no] 노</div>
+                            <div class="tip">오른쪽 위에서 왼쪽 아래로 미끄럼틀을 타듯 슥 내려요.</div>
+                            <div class="word">① <b>노트</b> (노트)<br>② <b>노크</b> (노크)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ノ</td>
+                        <td class="practice-cell guide-line trace">ノ</td>
+                        <td class="practice-cell guide-line blank">ノ</td>
+                        <td class="practice-cell guide-line blank">ノ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+        
+        <!-- 오른쪽 면 [14쪽]: 단어 읽기 연습 -->
+        <div class="book-page">
+            <div class="header">
+                <h1>가타카나 [ナ행] 읽기 연습</h1>
+                <div class="page-num">Page 14</div>
+            </div>
+
+            <div class="reading-container">
+                <div class="reading-intro">
+                    <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                    기존에 배웠던 글자들에 오늘 배운 <b>ナ행</b>을 더해 만든 단어들입니다. 비슷하게 생긴 <b>ヌ(누)</b>와 <b>ス(스)</b>의 차이점도 눈으로 확인해 보세요!
+                </div>
+
+                <!-- 읽기 카드 격자 배치 (누적 조합 단어) -->
+                <div class="reading-grid">
+                    <div class="reading-box">나쓰</div>
+                    <div class="reading-box">카니</div>
+                    <div class="reading-box">이누</div>
+                    
+                    <div class="reading-box">네코</div>
+                    <div class="reading-box">노토</div>
+                    <div class="reading-box">나타</div>
+                    
+                    <div class="reading-box">쿠니</div>
+                    <div class="reading-box">누스</div>
+                    <div class="reading-box">키네</div>
+                    
+                    <div class="reading-box">키노코</div>
+                    <div class="reading-box">사카나</div>
+                    <div class="reading-box">아나타</div>
+                    
+                    <div class="reading-box">테니스</div>
+                    <div class="reading-box">치카테츠</div>
+                    <div class="reading-box">나니카</div>
+                    
+                    <div class="reading-box">나니누네노</div>
+                    <div class="reading-box">시누</div>
+                    <div class="reading-box">소노</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                본 교재의 무단복사를 금지합니다.
+            </div>
+        </div>
+
+    </div>
+
+<!-- ========================================== -->
+        <!--     제 3권 : [ナ행] 팁 페이지 (Page 15)        -->
+        <!-- ========================================== -->
+        <!-- 왼쪽 면 또는 다음 장 [15쪽]: 팁 & 체크 포인트 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>💡 이번 행의 핵심 체크 포인트!</h1>
+                <div class="page-num">Page 15</div>
+            </div>
+
+            <div class="tip-container" style="padding: 20px; line-height: 1.8;">
+                
+                <!-- 꿀팁 1: 스(ス)와 누(ヌ) 구별하기 -->
+                <div class="tip-section" style="background-color: #f9f9f9; border-left: 5px solid #9c27b0; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #4a148c; font-size: 1.2rem;">🔍 헷갈림 방지! [ス]에 획 하나 더하면 [ヌ]?</h3>
+                    <p style="margin-bottom: 10px; font-size: 0.95rem;">
+                        나행의 복병은 바로 <b>누(ヌ)</b>입니다. 사행에서 배웠던 <b>스(ス)</b>와 몸통 모양이 아주 비슷해서 아이들이 깜빡 속기 쉬워요.
+                    </p>
+                    <table style="width: 100%; border-collapse: collapse; text-align: center; background-color: #fff; margin-top: 10px;">
+                        <tr style="background-color: #fbf5ff;">
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 50%;"><b>ス (스)</b></th>
+                            <th style="padding: 10px; border: 1px solid #ddd; width: 50%;"><b>ヌ (누)</b></th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px; border: 1px solid #ddd; font-size: 2rem; font-weight: bold; color: #1565c0;">ス</td>
+                            <td style="padding: 15px; border: 1px solid #ddd; font-size: 2rem; font-weight: bold; color: #7b1fa2;">ヌ</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; text-align: left; vertical-align: top;">
+                                🎯 <b>특징:</b> 삐침 끝에 아무것도 없이 깔끔해요.<br>
+                                ✍️ <b>연상법:</b> 등산용 스틱이나 미끄럼틀 다리처럼 깔끔한 모양!
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; text-align: left; vertical-align: top;">
+                                🎯 <b>특징:</b> 오른쪽 대각선 획에 <b>오른쪽으로 나가는 작은 삐침</b>이 탈출해 있어요.<br>
+                                ✍️ <b>연상법:</b> '스(ス)'라는 친구가 <u><b>누</b>(ヌ)군가에게 한 대 톡 맞아서</u> 혹이 난 모양!
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 꿀팁 2: 한자와 똑같은 보너스 글자들 -->
+                <div class="tip-section" style="background-color: #e3f2fd; border-left: 5px solid #2196f3; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #0d47a1; font-size: 1.2rem;">🎁 한자를 알면 거저먹는 보너스 글자! [ニ] & [ノ]</h3>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
+                        <li style="margin-bottom: 8px;"><b>니(ニ)</b>는 숫자 <b>'두 이(二)'</b> 자와 100% 똑같이 생겼습니다. 아이에게 "숫자 2랑 똑같이 생긴 건 발음도 '니'야!" 하고 연결해 주면 단 1초 만에 외웁니다.</li>
+                        <li><b>노(ノ)</b>는 한자 <b>'삐침 별(丿)'</b>이자 우리말 삐침 선 하나만 그으면 끝납니다. "위에서 아래로 미끄럼틀 노~오랗게 타고 내려오자!" 하고 슥 그어보게 해주세요.</li>
+                    </ul>
+                </div>
+
+                <!-- 꿀팁 3: 엄마표 지도법 -->
+                <div class="tip-section" style="background-color: #fff3e0; border-left: 5px solid #ff9800; padding: 15px; border-radius: 4px;">
+                    <h3 style="margin-top: 0; color: #e65100; font-size: 1.2rem;">👨‍👩‍👧‍👦 14쪽 단어장에서 이 단어를 주목해 주세요!</h3>
+                    <p style="margin: 0 0 10px 0; font-size: 0.95rem;">나행의 핵심은 글자의 모양 변별력을 키우는 것입니다.</p>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: #444;">
+                        <li style="margin-bottom: 5px;">일부러 <b>누(ヌ)</b>와 <b>스(ス)</b>를 연달아 붙여놓은 단어 <span style="font-weight: bold; color: #7b1fa2;">'누스(ヌス)'</span>를 읽을 때, 아이가 두 글자의 '혹(오른쪽 삐침)'의 유무를 잘 구별하는지 칭찬과 함께 체크해 주세요!</li>
+                        <li><span style="font-weight: bold; color: #1b5e20;">'니(ニ)'</span>와 <span style="font-weight: bold; color: #b71c1c;">'토(ト)'</span>처럼 한자와 닮은 글자들은 아이가 자신감을 얻기 좋으니 큰 소리로 읽을 때 아낌없이 호응해 주시면 좋습니다.</li>
+                    </ul>
+                </div>
+
+                <!-- 다음 단계 예고 -->
+                <div class="next-preview" style="text-align: center; margin-top: 30px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px;">
+                    <span style="font-size: 1.1rem; font-weight: bold; color: #333;">✨ 이제 가타카나의 절반을 지나왔습니다!</span>
+                    <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem;">탄탄하게 기초를 다진 우리 아이, 다음 장인 <b>[ハ행(하행)]</b>에서는 어떤 재미있는 글자들이 기다릴까요? 출발!</p>
+                </div>
+
+            </div>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+
+<!-- ========================================== -->
+    <!--    제 3권 : [ハ행] 학습 세트 (Page 17 ~ 18)   -->
+    <!-- ========================================== -->
+    <div class="book-container">
+        
+        <!-- 왼쪽 면 [17쪽]: 하행 쓰기 학습 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>가타카나 [ハ행] 쓰기 학습</h1>
+                <div class="page-num">Page 17</div>
+            </div>
+
+            <table class="content-table">
+                <thead>
+                    <tr class="table-head">
+                        <th style="width: 15%;">글자</th>
+                        <th style="width: 30%;">발음 및 어휘</th>
+                        <th>따라쓰기 1</th>
+                        <th>따라쓰기 2</th>
+                        <th>자가진단 1</th>
+                        <th>자가진단 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ハ -->
+                    <tr class="char-row">
+                        <td class="main-char">ハ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ha] 하</div>
+                            <div class="tip">한자 '여덟 팔(八)' 자와 똑같이 생겼어요!</div>
+                            <div class="word">① <b>ハム</b> (햄)<br>② <b>ハ와이</b> (하와이)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ハ</td>
+                        <td class="practice-cell guide-line trace">ハ</td>
+                        <td class="practice-cell guide-line blank">ハ</td>
+                        <td class="practice-cell guide-line blank">ハ</td>
+                    </tr>
+                    <!-- ヒ -->
+                    <tr class="char-row">
+                        <td class="main-char">ヒ</td>
+                        <td class="info-cell">
+                            <div class="pron">[hi] 히</div>
+                            <div class="tip">한글 'ㅋ' 또는 '匕(비)' 자와 모양이 비슷해요.</div>
+                            <div class="word">① <b>히어로</b> (영웅)<br>② <b>코히</b> (커피)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ヒ</td>
+                        <td class="practice-cell guide-line trace">ヒ</td>
+                        <td class="practice-cell guide-line blank">ヒ</td>
+                        <td class="practice-cell guide-line blank">ヒ</td>
+                    </tr>
+                    <!-- フ -->
+                    <tr class="char-row">
+                        <td class="main-char">フ</td>
+                        <td class="info-cell">
+                            <div class="pron">[fu] 후</div>
+                            <div class="tip">한글 'ㄱ' 모양에서 아래를 살짝 굴려줍니다.</div>
+                            <div class="word">① <b>후라후프</b> (훌라후프)<br>② <b>포쿠</b> (포크)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">フ</td>
+                        <td class="practice-cell guide-line trace">フ</td>
+                        <td class="practice-cell guide-line blank">フ</td>
+                        <td class="practice-cell guide-line blank">フ</td>
+                    </tr>
+                    <!-- ヘ -->
+                    <tr class="char-row">
+                        <td class="main-char">ヘ</td>
+                        <td class="info-cell">
+                            <div class="pron">[he] 헤</div>
+                            <div class="tip">★보너스! 히라가나 'へ'와 완전히 똑같이 생겼어요.</div>
+                            <div class="word">① <b>헤어</b> (머리카락)<br>② <b>헬멧</b> (헬멧)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ヘ</td>
+                        <td class="practice-cell guide-line trace">ヘ</td>
+                        <td class="practice-cell guide-line blank">ヘ</td>
+                        <td class="practice-cell guide-line blank">ヘ</td>
+                    </tr>
+                    <!-- ホ -->
+                    <tr class="char-row">
+                        <td class="main-char">ホ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ho] 호</div>
+                            <div class="tip">한자 '나무 목(木)' 자와 비슷하지만 윗부분이 달라요.</div>
+                            <div class="word">① <b>호테루</b> (호텔)<br>② <b>호무</b> (홈/홈페이지)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ホ</td>
+                        <td class="practice-cell guide-line trace">ホ</td>
+                        <td class="practice-cell guide-line blank">ホ</td>
+                        <td class="practice-cell guide-line blank">ホ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+        
+        <!-- 오른쪽 면 [18쪽]: 단어 읽기 연습 -->
+        <div class="book-page">
+            <div class="header">
+                <h1>가타카나 [ハ행] 읽기 연습</h1>
+                <div class="page-num">Page 18</div>
+            </div>
+
+            <div class="reading-container">
+                <div class="reading-intro">
+                    <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                    기존 글자들에 <b>ハ행</b>이 더해져 더욱 재미있는 낱말이 완성되었습니다. 한글이나 한자와 닮은 모양들을 떠올리며 신나게 읽어볼까요?
+                </div>
+
+                <!-- 읽기 카드 격자 배치 (누적 조합 단어) -->
+                <div class="reading-grid">
+                    <div class="reading-box">하치</div>
+                    <div class="reading-box">히토</div>
+                    <div class="reading-box">후후</div>
+                    
+                    <div class="reading-box">헤소</div>
+                    <div class="reading-box">호시</div>
+                    <div class="reading-box">나하</div>
+                    
+                    <div class="reading-box">아히루</div>
+                    <div class="reading-box">후카</div>
+                    <div class="reading-box">코히</div>
+                    
+                    <div class="reading-box">치하야</div>
+                    <div class="reading-box">나이후</div>
+                    <div class="reading-box">호토코</div>
+                    
+                    <div class="reading-box">카타하</div>
+                    <div class="reading-box">헤토헤토</div>
+                    <div class="reading-box">사쿠라하</div>
+                    
+                    <div class="reading-box">하히후헤호</div>
+                    <div class="reading-box">소호</div>
+                    <div class="reading-box">후츠</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                본 교재의 무단복사를 금지합니다.
+            </div>
+        </div>
+
+    </div>
+
+<!-- ========================================== -->
+    <!--    제 3권 : [ハ행] 학습 세트 (Page 17 ~ 18)   -->
+    <!-- ========================================== -->
+    <div class="book-container">
+        
+        <!-- 왼쪽 면 [17쪽]: 하행 쓰기 학습 -->
+        <div class="book-page left-page">
+            <div class="header">
+                <h1>가타카나 [ハ행] 쓰기 학습</h1>
+                <div class="page-num">Page 17</div>
+            </div>
+
+            <table class="content-table">
+                <thead>
+                    <tr class="table-head">
+                        <th style="width: 15%;">글자</th>
+                        <th style="width: 30%;">발음 및 어휘</th>
+                        <th>따라쓰기 1</th>
+                        <th>따라쓰기 2</th>
+                        <th>자가진단 1</th>
+                        <th>자가진단 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ハ -->
+                    <tr class="char-row">
+                        <td class="main-char">ハ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ha] 하</div>
+                            <div class="tip">한자 '여덟 팔(八)' 자와 똑같이 생겼어요!</div>
+                            <div class="word">① <b>ハム</b> (햄)<br>② <b>ハ와이</b> (하와이)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ハ</td>
+                        <td class="practice-cell guide-line trace">ハ</td>
+                        <td class="practice-cell guide-line blank">ハ</td>
+                        <td class="practice-cell guide-line blank">ハ</td>
+                    </tr>
+                    <!-- ヒ -->
+                    <tr class="char-row">
+                        <td class="main-char">ヒ</td>
+                        <td class="info-cell">
+                            <div class="pron">[hi] 히</div>
+                            <div class="tip">한글 'ㅋ' 또는 '匕(비)' 자와 모양이 비슷해요.</div>
+                            <div class="word">① <b>히어로</b> (영웅)<br>② <b>코히</b> (커피)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ヒ</td>
+                        <td class="practice-cell guide-line trace">ヒ</td>
+                        <td class="practice-cell guide-line blank">ヒ</td>
+                        <td class="practice-cell guide-line blank">ヒ</td>
+                    </tr>
+                    <!-- フ -->
+                    <tr class="char-row">
+                        <td class="main-char">フ</td>
+                        <td class="info-cell">
+                            <div class="pron">[fu] 후</div>
+                            <div class="tip">한글 'ㄱ' 모양에서 아래를 살짝 굴려줍니다.</div>
+                            <div class="word">① <b>후라후프</b> (훌라후프)<br>② <b>포쿠</b> (포크)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">フ</td>
+                        <td class="practice-cell guide-line trace">フ</td>
+                        <td class="practice-cell guide-line blank">フ</td>
+                        <td class="practice-cell guide-line blank">フ</td>
+                    </tr>
+                    <!-- ヘ -->
+                    <tr class="char-row">
+                        <td class="main-char">ヘ</td>
+                        <td class="info-cell">
+                            <div class="pron">[he] 헤</div>
+                            <div class="tip">★보너스! 히라가나 'へ'와 완전히 똑같이 생겼어요.</div>
+                            <div class="word">① <b>헤어</b> (머리카락)<br>② <b>헬멧</b> (헬멧)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ヘ</td>
+                        <td class="practice-cell guide-line trace">ヘ</td>
+                        <td class="practice-cell guide-line blank">ヘ</td>
+                        <td class="practice-cell guide-line blank">ヘ</td>
+                    </tr>
+                    <!-- ホ -->
+                    <tr class="char-row">
+                        <td class="main-char">ホ</td>
+                        <td class="info-cell">
+                            <div class="pron">[ho] 호</div>
+                            <div class="tip">한자 '나무 목(木)' 자와 비슷하지만 윗부분이 달라요.</div>
+                            <div class="word">① <b>호테루</b> (호텔)<br>② <b>호무</b> (홈/홈페이지)</div>
+                        </td>
+                        <td class="practice-cell guide-line trace">ホ</td>
+                        <td class="practice-cell guide-line trace">ホ</td>
+                        <td class="practice-cell guide-line blank">ホ</td>
+                        <td class="practice-cell guide-line blank">ホ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="footer">
+                © 세상모든언어 '세모' 가타카나
+            </div>
+        </div>
+        
+        <!-- 오른쪽 면 [18쪽]: 단어 읽기 연습 -->
+        <div class="book-page">
+            <div class="header">
+                <h1>가타카나 [ハ행] 읽기 연습</h1>
+                <div class="page-num">Page 18</div>
+            </div>
+
+            <div class="reading-container">
+                <div class="reading-intro">
+                    <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                    기존 글자들에 <b>ハ행</b>이 더해져 더욱 재미있는 낱말이 완성되었습니다. 가타카나를 보고 직접 소리 내어 읽어볼까요?
+                </div>
+
+                <!-- 읽기 카드 격자 배치 (가타카나로 변경 완료) -->
+                <div class="reading-grid">
+                    <div class="reading-box">ハチ<br><small>(하치)</small></div>
+                    <div class="reading-box">ヒト<br><small>(히토)</small></div>
+                    <div class="reading-box">フフ<br><small>(후후)</small></div>
+                    
+                    <div class="reading-box">ヘソ<br><small>(헤소)</small></div>
+                    <div class="reading-box">ホシ<br><small>(호시)</small></div>
+                    <div class="reading-box">ナハ<br><small>(나하)</small></div>
+                    
+                    <div class="reading-box">アヒル<br><small>(아히루)</small></div>
+                    <div class="reading-box">フカ<br><small>(후카)</small></div>
+                    <div class="reading-box">コヒ<br><small>(코히)</small></div>
+                    
+                    <div class="reading-box">チハヤ<br><small>(치하야)</small></div>
+                    <div class="reading-box">ナイフ<br><small>(나이후)</small></div>
+                    <div class="reading-box">ホトコ<br><small>(호토코)</small></div>
+                    
+                    <div class="reading-box">カタハ<br><small>(카타하)</small></div>
+                    <div class="reading-box">ヘトヘト<br><small>(헤토헤토)</small></div>
+                    <div class="reading-box">サクラハ<br><small>(사쿠라하)</small></div>
+                    
+                    <div class="reading-box">ハヒフヘホ<br><small>(하히후헤호)</small></div>
+                    <div class="reading-box">ソホ<br><small>(소호)</small></div>
+                    <div class="reading-box">フツ<br><small>(후츠)</small></div>
+                </div>
+            </div>
+
+            <div class="footer">
+                본 교재의 무단복사를 금지합니다.
+            </div>
+        </div>
+
+    </div>
+
+<!-- ========================================== -->
+<!--    제 3권 : [マ행] 학습 세트 (Page 19 ~ 20)   -->
+<!-- ========================================== -->
+<div class="book-container">
+    
+    <!-- 왼쪽 면 [19쪽]: 마행 쓰기 학습 -->
+    <div class="book-page left-page">
+        <div class="header">
+            <h1>가타카나 [マ행] 쓰기 학습</h1>
+            <div class="page-num">Page 19</div>
+        </div>
+
+        <table class="content-table">
+            <thead>
+                <tr class="table-head">
+                    <th style="width: 15%;">글자</th>
+                    <th style="width: 30%;">발음 및 어휘</th>
+                    <th>따라쓰기 1</th>
+                    <th>따라쓰기 2</th>
+                    <th>자가진단 1</th>
+                    <th>자가진단 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- マ -->
+                <tr class="char-row">
+                    <td class="main-char">マ</td>
+                    <td class="info-cell">
+                        <div class="pron">[ma] 마</div>
+                        <div class="tip">한글 '마'에서 자음 'ㅁ'의 윗부분 각도와 비슷해요.</div>
+                        <div class="word">① <b>マスク</b> (마스크)<br>② <b>スマホ</b> (스마트폰)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">マ</td>
+                    <td class="practice-cell guide-line trace">マ</td>
+                    <td class="practice-cell guide-line blank">マ</td>
+                    <td class="practice-cell guide-line blank">マ</td>
+                </tr>
+                <!-- ミ -->
+                <tr class="char-row">
+                    <td class="main-char">ミ</td>
+                    <td class="info-cell">
+                        <div class="pron">[mi] 미</div>
+                        <div class="tip">오른쪽 아래로 비스듬히 내리는 획 3개(삼수변)입니다.</div>
+                        <div class="word">① <b>ミルク</b> (우유)<br>② <b>미라</b> (미라)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ミ</td>
+                    <td class="practice-cell guide-line trace">ミ</td>
+                    <td class="practice-cell guide-line blank">ミ</td>
+                    <td class="practice-cell guide-line blank">ミ</td>
+                </tr>
+                <!-- ム -->
+                <tr class="char-row">
+                    <td class="main-char">ム</td>
+                    <td class="info-cell">
+                        <div class="pron">[mu] 무</div>
+                        <div class="tip">한자 '사사 사(私)'의 오른쪽 부분(厶)과 같아요.</div>
+                        <div class="word">① <b>하무</b> (햄)<br>② <b>팀</b> (팀)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ム</td>
+                    <td class="practice-cell guide-line trace">ム</td>
+                    <td class="practice-cell guide-line blank">ム</td>
+                    <td class="practice-cell guide-line blank">ム</td>
+                </tr>
+                <!-- メ -->
+                <tr class="char-row">
+                    <td class="main-char">メ</td>
+                    <td class="info-cell">
+                        <div class="pron">[me] 메</div>
+                        <div class="tip">'나 가타카나(ナ)'에서 윗지붕이 탈출한 모양이에요.</div>
+                        <div class="word">① <b>메론</b> (멜론)<br>② <b>라멘</b> (라면)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">メ</td>
+                    <td class="practice-cell guide-line trace">メ</td>
+                    <td class="practice-cell guide-line blank">メ</td>
+                    <td class="practice-cell guide-line blank">メ</td>
+                </tr>
+                <!-- モ -->
+                <tr class="char-row">
+                    <td class="main-char">モ</td>
+                    <td class="info-cell">
+                        <div class="pron">[mo] 모</div>
+                        <div class="tip">히라가나 'も'와 비슷하지만 꺾임이 직선적이에요!</div>
+                        <div class="word">① <b>모니타</b> (모니터)<br>② <b>호무</b> (홈페이지)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">モ</td>
+                    <td class="practice-cell guide-line trace">モ</td>
+                    <td class="practice-cell guide-line blank">モ</td>
+                    <td class="practice-cell guide-line blank">モ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            © 세상모든언어 '세모' 가타카나
+        </div>
+    </div>
+    
+    <!-- 오른쪽 면 [20쪽]: 단어 읽기 연습 -->
+    <div class="book-page">
+        <div class="header">
+            <h1>가타카나 [마행] 읽기 연습</h1>
+            <div class="page-num">Page 20</div>
+        </div>
+
+        <div class="reading-container">
+            <div class="reading-intro">
+                <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                기존 글자들에 <b>マ행</b>이 더해져 더욱 풍성한 낱말이 완성되었습니다. 가타카나를 보고 직접 소리 내어 읽어볼까요?
+            </div>
+
+            <!-- 읽기 카드 격자 배치 -->
+            <div class="reading-grid">
+                <div class="reading-box">マ메<br><small>(마메)</small></div>
+                <div class="reading-box">미미<br><small>(미미)</small></div>
+                <div class="reading-box">무시<br><small>(무시)</small></div>
+                
+                <div class="reading-box">우메<br><small>(우메)</small></div>
+                <div class="reading-box">쿠모<br><small>(쿠모)</small></div>
+                <div class="reading-box">시마<br><small>(시마)</small></div>
+                
+                <div class="reading-box">카미<br><small>(카미)</small></div>
+                <div class="reading-box">하무<br><small>(하무)</small></div>
+                <div class="reading-box">메카<br><small>(메카)</small></div>
+                
+                <div class="reading-box">토마토<br><small>(토마토)</small></div>
+                <div class="reading-box">치미<br><small>(치미)</small></div>
+                <div class="reading-box">ヒモ<br><small>(히모)</small></div>
+                
+                <div class="reading-box">アタマ</div>
+                <div class="reading-box">モシモシ</div>
+                <div class="reading-box">하사미</div>
+                
+                <div class="reading-box">マミムメモ<br></div>
+                <div class="reading-box">コモリ</div>
+                <div class="reading-box">メソド</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            본 교재의 무단복사를 금지합니다.
+        </div>
+    </div>
+
+</div>
+
+<!-- ========================================== -->
+<!--  제 3권 : [マ행] 학습 세트 (Page 19 ~ 20)   -->
+<!-- ========================================== -->
+<div class="book-container">
+    
+    <!-- 왼쪽 면 [19쪽]: 마행 쓰기 학습 -->
+    <div class="book-page left-page">
+        <div class="header">
+            <h1>가타카나 [マ행] 쓰기 학습</h1>
+            <div class="page-num">Page 19</div>
+        </div>
+
+        <table class="content-table">
+            <thead>
+                <tr class="table-head">
+                    <th style="width: 15%;">글자</th>
+                    <th style="width: 30%;">발음 및 어휘</th>
+                    <th>따라쓰기 1</th>
+                    <th>따라쓰기 2</th>
+                    <th>자가진단 1</th>
+                    <th>자가진단 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- マ -->
+                <tr class="char-row">
+                    <td class="main-char">マ</td>
+                    <td class="info-cell">
+                        <div class="pron">[ma] 마</div>
+                        <div class="tip">한글 '마'에서 자음 'ㅁ'의 윗부분 각도와 비슷해요.</div>
+                        <div class="word">① <b>マスク</b> (마스크)<br>② <b>スマホ</b> (스마트폰)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">マ</td>
+                    <td class="practice-cell guide-line trace">マ</td>
+                    <td class="practice-cell guide-line blank">マ</td>
+                    <td class="practice-cell guide-line blank">マ</td>
+                </tr>
+                <!-- ミ -->
+                <tr class="char-row">
+                    <td class="main-char">ミ</td>
+                    <td class="info-cell">
+                        <div class="pron">[mi] 미</div>
+                        <div class="tip">오른쪽 아래로 비스듬히 내리는 획 3개(삼수변)입니다.</div>
+                        <div class="word">① <b>ミルク</b> (우유)<br>② <b>ミイラ</b> (미라)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ミ</td>
+                    <td class="practice-cell guide-line trace">ミ</td>
+                    <td class="practice-cell guide-line blank">ミ</td>
+                    <td class="practice-cell guide-line blank">ミ</td>
+                </tr>
+                <!-- ム -->
+                <tr class="char-row">
+                    <td class="main-char">ム</td>
+                    <td class="info-cell">
+                        <div class="pron">[mu] 무</div>
+                        <div class="tip">한자 '사사 사(私)'의 오른쪽 부분(厶)과 같아요.</div>
+                        <div class="word">① <b>ハム</b> (햄)<br>② <b>チーム</b> (팀)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ム</td>
+                    <td class="practice-cell guide-line trace">ム</td>
+                    <td class="practice-cell guide-line blank">ム</td>
+                    <td class="practice-cell guide-line blank">ム</td>
+                </tr>
+                <!-- メ -->
+                <tr class="char-row">
+                    <td class="main-char">メ</td>
+                    <td class="info-cell">
+                        <div class="pron">[me] 메</div>
+                        <div class="tip">'나 가타카나(ナ)'에서 윗지붕이 탈출한 모양이에요.</div>
+                        <div class="word">① <b>メロン</b> (멜론)<br>② <b>ラーメン</b> (라면)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">メ</td>
+                    <td class="practice-cell guide-line trace">メ</td>
+                    <td class="practice-cell guide-line blank">メ</td>
+                    <td class="practice-cell guide-line blank">メ</td>
+                </tr>
+                <!-- モ -->
+                <tr class="char-row">
+                    <td class="main-char">モ</td>
+                    <td class="info-cell">
+                        <div class="pron">[mo] 모</div>
+                        <div class="tip">히라가나 'も'와 비슷하지만 꺾임이 직선적이에요!</div>
+                        <div class="word">① <b>モニター</b> (모니터)<br>② <b>ホームページ</b> (홈페이지)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">モ</td>
+                    <td class="practice-cell guide-line trace">モ</td>
+                    <td class="practice-cell guide-line blank">モ</td>
+                    <td class="practice-cell guide-line blank">モ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            © 세상모든언어 '세모' 가타카나
+        </div>
+    </div>
+    
+    <!-- 오른쪽 면 [20쪽]: 단어 읽기 연습 -->
+    <div class="book-page">
+        <div class="header">
+            <h1>가타카나 [마행] 읽기 연습</h1>
+            <div class="page-num">Page 20</div>
+        </div>
+
+        <div class="reading-container">
+            <div class="reading-intro">
+                <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                기존 글자들에 <b>マ행</b>이 더해져 더욱 풍성한 낱말이 완성되었습니다. 가타카나를 보고 직접 소리 내어 읽어볼까요?
+            </div>
+
+            <!-- 읽기 카드 격자 배치 -->
+            <div class="reading-grid">
+                <div class="reading-box">マメ<br><small>(마메)</small></div>
+                <div class="reading-box">ミミ<br><small>(미미)</small></div>
+                <div class="reading-box">ムシ<br><small>(무시)</small></div>
+                
+                <div class="reading-box">ウメ<br><small>(우메)</small></div>
+                <div class="reading-box">クモ<br><small>(쿠모)</small></div>
+                <div class="reading-box">シマ<br><small>(시마)</small></div>
+                
+                <div class="reading-box">カミ<br><small>(카미)</small></div>
+                <div class="reading-box">ハム<br><small>(하무)</small></div>
+                <div class="reading-box">メカ<br><small>(메카)</small></div>
+                
+                <div class="reading-box">トマト<br><small>(토마토)</small></div>
+                <div class="reading-box">チミ<br><small>(치미)</small></div>
+                <div class="reading-box">ヒモ<br><small>(히모)</small></div>
+                
+                <div class="reading-box">アタマ<br><small>(아타마)</small></div>
+                <div class="reading-box">モシモシ<br><small>(모시모시)</small></div>
+                <div class="reading-box">ハサミ<br><small>(하사미)</small></div>
+                
+                <div class="reading-box">マミムメモ<br><small>(마미무메모)</small></div>
+                <div class="reading-box">コモリ<br><small>(코모리)</small></div>
+                <div class="reading-box">メソッド<br><small>(메소도)</small></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            본 교재의 무단복사를 금지합니다.
+        </div>
+    </div>
+
+</div>
+
+<!-- ========================================== -->
+<!--  제 3권 : [ヤ행] 학습 세트 (Page 21 ~ 22)   -->
+<!-- ========================================== -->
+<div class="book-container">
+    
+    <!-- 왼쪽 면 [21쪽]: 야행 쓰기 학습 -->
+    <div class="book-page left-page">
+        <div class="header">
+            <h1>가타카나 [ヤ행] 쓰기 학습</h1>
+            <div class="page-num">Page 21</div>
+        </div>
+
+        <table class="content-table">
+            <thead>
+                <tr class="table-head">
+                    <th style="width: 15%;">글자</th>
+                    <th style="width: 30%;">발음 및 어휘</th>
+                    <th>따라쓰기 1</th>
+                    <th>따라쓰기 2</th>
+                    <th>자가진단 1</th>
+                    <th>자가진단 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ヤ -->
+                <tr class="char-row">
+                    <td class="main-char">ヤ</td>
+                    <td class="info-cell">
+                        <div class="pron">[ya] 야</div>
+                        <div class="tip">히라가나 'や'와 닮았지만, 오른쪽 위의 점이 없고 획이 꺾여요.</div>
+                        <div class="word">① <b>ヤサイ</b> (야채)<br>② <b>タイヤ</b> (타이어)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ヤ</td>
+                    <td class="practice-cell guide-line trace">ヤ</td>
+                    <td class="practice-cell guide-line blank">ヤ</td>
+                    <td class="practice-cell guide-line blank">ヤ</td>
+                </tr>
+                <!-- ユ -->
+                <tr class="char-row">
+                    <td class="main-char">ユ</td>
+                    <td class="info-cell">
+                        <div class="pron">[yu] 유</div>
+                        <div class="tip">한글 '그'를 쓰듯이 첫 획을 긋고, 아래에 가로줄을 그어줘요.</div>
+                        <div class="word">① <b>ユニ폼</b> (유니폼)<br>② <b>유니트</b> (유닛)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ユ</td>
+                    <td class="practice-cell guide-line trace">ユ</td>
+                    <td class="practice-cell guide-line blank">ユ</td>
+                    <td class="practice-cell guide-line blank">ユ</td>
+                </tr>
+                <!-- ヨ -->
+                <tr class="char-row">
+                    <td class="main-char">ヨ</td>
+                    <td class="info-cell">
+                        <div class="pron">[yo] 요</div>
+                        <div class="tip">한글 '트'를 뒤집어 놓은 모양, 혹은 사다리꼴 모양과 비슷해요.</div>
+                        <div class="word">① <b>ヨガ</b> (요가)<br>② <b>ヨーグルト</b> (요구르트)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ヨ</td>
+                    <td class="practice-cell guide-line trace">ヨ</td>
+                    <td class="practice-cell guide-line blank">ヨ</td>
+                    <td class="practice-cell guide-line blank">ヨ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            © 세상모든언어 '세모' 가타카나
+        </div>
+    </div>
+    
+    <!-- 오른쪽 면 [22쪽]: 단어 읽기 연습 -->
+    <div class="book-page">
+        <div class="header">
+            <h1>가타카나 [야행] 읽기 연습</h1>
+            <div class="page-num">Page 22</div>
+        </div>
+
+        <div class="reading-container">
+            <div class="reading-intro">
+                <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                기존 글자들에 <b>ヤ행</b>이 더해져 더욱 풍성한 낱말이 완성되었습니다. 가타카나를 보고 직접 소리 내어 읽어볼까요?
+            </div>
+
+            <!-- 읽기 카드 격자 배치 -->
+            <div class="reading-grid">
+                <div class="reading-box">ヤマ<br><small>(야마)</small></div>
+                <div class="reading-box">ユキ<br><small>(유키)</small></div>
+                <div class="reading-box">ヨ루<br><small>(요루)</small></div>
+                
+                <div class="reading-box">ヘヤ<br><small>(헤야)</small></div>
+                <div class="reading-box">マユ<br><small>(마유)</small></div>
+                <div class="reading-box">ヒヨコ<br><small>(히요코)</small></div>
+                
+                <div class="reading-box">ダイヤ<br><small>(다이야)</small></div>
+                <div class="reading-box">ユズ<br><small>(유즈)</small></div>
+                <div class="reading-box">ヨット<br><small>(요토)</small></div>
+                
+                <div class="reading-box">タイヤ<br><small>(타이야)</small></div>
+                <div class="reading-box">ユニュウ<br><small>(유뉴우)</small></div>
+                <div class="reading-box">ヨコク<br><small>(요코쿠)</small></div>
+                
+                <div class="reading-box">ナゴ야<br><small>(나고야)</small></div>
+                <div class="reading-box">ユ니폼<br><small>(유니호오무)</small></div>
+                <div class="reading-box">ヨガ<br><small>(요가)</small></div>
+                
+                <div class="reading-box">ヤユヨ<br><small>(야유요)</small></div>
+                <div class="reading-box">マヨネーズ<br><small>(마요네에즈)</small></div>
+                <div class="reading-box">ユーザー<br><small>(유우자아)</small></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            본 교재의 무단복사를 금지합니다.
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!--  제 3권 : [ラ행] 학습 세트 (Page 23 ~ 24)   -->
+<!-- ========================================== -->
+<div class="book-container">
+    
+    <!-- 왼쪽 면 [23쪽]: 라행 쓰기 학습 -->
+    <div class="book-page left-page">
+        <div class="header">
+            <h1>가타카나 [ラ행] 쓰기 학습</h1>
+            <div class="page-num">Page 23</div>
+        </div>
+
+        <table class="content-table">
+            <thead>
+                <tr class="table-head">
+                    <th style="width: 15%;">글자</th>
+                    <th style="width: 30%;">발음 및 어휘</th>
+                    <th>따라쓰기 1</th>
+                    <th>따라쓰기 2</th>
+                    <th>자가진단 1</th>
+                    <th>자가진단 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ラ -->
+                <tr class="char-row">
+                    <td class="main-char">ラ</td>
+                    <td class="info-cell">
+                        <div class="pron">[ra] 라</div>
+                        <div class="tip">가타카나 'フ' 위에 가로줄(一)을 하나 얹은 모양이에요.</div>
+                        <div class="word">① <b>ラジオ</b> (라디오)<br>② <b>ラーメン</b> (라면)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ラ</td>
+                    <td class="practice-cell guide-line trace">ラ</td>
+                    <td class="practice-cell guide-line blank">ラ</td>
+                    <td class="practice-cell guide-line blank">ラ</td>
+                </tr>
+                <!-- リ -->
+                <tr class="char-row">
+                    <td class="main-char">リ</td>
+                    <td class="info-cell">
+                        <div class="pron">[ri] 리</div>
+                        <div class="tip">히라가나 'り'와 거의 같지만, 꺾임 없이 곧게 뻗어줍니다.</div>
+                        <div class="word">① <b>リン고</b> (사과/링고)<br>② <b>リボン</b> (리본)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">リ</td>
+                    <td class="practice-cell guide-line trace">リ</td>
+                    <td class="practice-cell guide-line blank">リ</td>
+                    <td class="practice-cell guide-line blank">リ</td>
+                </tr>
+                <!-- ル -->
+                <tr class="char-row">
+                    <td class="main-char">ル</td>
+                    <td class="info-cell">
+                        <div class="pron">[ru] 루</div>
+                        <div class="tip">한글 '느' 모양에서 오른쪽 획을 길게 아래로 뻗어 내려요.</div>
+                        <div class="word">① <b>ルール</b> (규칙/룰)<br>② <b>호텔</b> (호텔/호테루)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ル</td>
+                    <td class="practice-cell guide-line trace">ル</td>
+                    <td class="practice-cell guide-line blank">ル</td>
+                    <td class="practice-cell guide-line blank">ル</td>
+                </tr>
+                <!-- レ -->
+                <tr class="char-row">
+                    <td class="main-char">レ</td>
+                    <td class="info-cell">
+                        <div class="pron">[re] 레</div>
+                        <div class="tip">가타카나 'ル'의 오른쪽 획만 떼어놓은 듯한 모양이에요.</div>
+                        <div class="word">① <b>레몬</b> (레몬)<br>② <b>레드</b> (레드)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">レ</td>
+                    <td class="practice-cell guide-line trace">レ</td>
+                    <td class="practice-cell guide-line blank">レ</td>
+                    <td class="practice-cell guide-line blank">レ</td>
+                </tr>
+                <!-- ロ -->
+                <tr class="char-row">
+                    <td class="main-char">ロ</td>
+                    <td class="info-cell">
+                        <div class="pron">[ro] 로</div>
+                        <div class="tip">한자의 '입 구(口)' 자 또는 네모(ㅁ) 모양과 똑같아요.</div>
+                        <div class="word">① <b>로봇</b> (로봇)<br>② <b>로켓</b> (로켓)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ロ</td>
+                    <td class="practice-cell guide-line trace">ロ</td>
+                    <td class="practice-cell guide-line blank">ロ</td>
+                    <td class="practice-cell guide-line blank">ロ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            © 세상모든언어 '세모' 가타카나
+        </div>
+    </div>
+    
+    <!-- 오른쪽 면 [24쪽]: 단어 읽기 연습 -->
+    <div class="book-page">
+        <div class="header">
+            <h1>가타카나 [라행] 읽기 연습</h1>
+            <div class="page-num">Page 24</div>
+        </div>
+
+        <div class="reading-container">
+            <div class="reading-intro">
+                <strong>★ 큰 소리로 따라 읽어보세요!</strong><br>
+                기존 글자들에 <b>ラ행</b>이 더해져 외래어 표현이 훨씬 풍성해졌습니다. 가타카나를 보고 직접 소리 내어 읽어볼까요?
+            </div>
+
+            <!-- 읽기 카드 격자 배치 -->
+            <div class="reading-grid">
+                <div class="reading-box">라디오<br><small>(라지오)</small></div>
+                <div class="reading-box">리본<br><small>(리본)</small></div>
+                <div class="reading-box">룰<br><small>(루우루)</small></div>
+                
+                <div class="reading-box">레몬<br><small>(레몬)</small></div>
+                <div class="reading-box">로봇<br><small>(로봇토)</small></div>
+                <div class="reading-box">클래스<br><small>(쿠라스)</small></div>
+                
+                <div class="reading-box">고릴라<br><small>(고리라)</small></div>
+                <div class="reading-box">슬리퍼<br><small>(스리파아)</small></div>
+                <div class="reading-box">메론<br><small>(메론)</small></div>
+                
+                <div class="reading-box">콜라<br><small>(코오라)</small></div>
+                <div class="reading-box">트럭<br><small>(토랏쿠)</small></div>
+                <div class="reading-box">캘린더<br><small>(카렌다아)</small></div>
+                
+                <div class="reading-box">클럽<br><small>(쿠라부)</small></div>
+                <div class="reading-box">일러스트<br><small>(이라스토)</small></div>
+                <div class="reading-box">초콜릿<br><small>(쵸코레이토)</small></div>
+                
+                <div class="reading-box">라리루레로<br><small>(라리루레로)</small></div>
+                <div class="reading-box">레스토랑<br><small>(레스토란)</small></div>
+                <div class="reading-box">라일락<br><small>(라이랏쿠)</small></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            본 교재의 무단복사를 금지합니다.
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!--  제 3권 : [ワ행·ン] 학습 세트 (Page 25 ~ 26)  -->
+<!-- ========================================== -->
+<div class="book-container">
+    
+    <!-- 왼쪽 면 [25쪽]: 와행 및 ン 쓰기 학습 -->
+    <div class="book-page left-page">
+        <div class="header">
+            <h1>가타카나 [ワ행·ン] 쓰기 학습</h1>
+            <div class="page-num">Page 25</div>
+        </div>
+
+        <table class="content-table">
+            <thead>
+                <tr class="table-head">
+                    <th style="width: 15%;">글자</th>
+                    <th style="width: 30%;">발음 및 어휘</th>
+                    <th>따라쓰기 1</th>
+                    <th>따라쓰기 2</th>
+                    <th>자가진단 1</th>
+                    <th>자가진단 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ワ -->
+                <tr class="char-row">
+                    <td class="main-char">ワ</td>
+                    <td class="info-cell">
+                        <div class="pron">[wa] 와</div>
+                        <div class="tip">가타카나 'フ'와 비슷하지만, 왼쪽 세로획이 먼저 들어갑니다. (우와) 모양을 기억하세요!</div>
+                        <div class="word">① <b>와인</b> (와인)<br>② <b>와이셔츠</b> (와이샤츠)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ワ</td>
+                    <td class="practice-cell guide-line trace">ワ</td>
+                    <td class="practice-cell guide-line blank">ワ</td>
+                    <td class="practice-cell guide-line blank">ワ</td>
+                </tr>
+                <!-- ヲ -->
+                <tr class="char-row">
+                    <td class="main-char">ヲ</td>
+                    <td class="info-cell">
+                        <div class="pron">[wo] 오</div>
+                        <div class="tip">가로줄 두 개를 긋고, 오른쪽 위에서 왼쪽 아래로 빗금을 그어줍니다. 조사로만 쓰여요.</div>
+                        <div class="word">① <b>책을</b> (혼오)<br>② <b>노래를</b> (우타오)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ヲ</td>
+                    <td class="practice-cell guide-line trace">ヲ</td>
+                    <td class="practice-cell guide-line blank">ヲ</td>
+                    <td class="practice-cell guide-line blank">ヲ</td>
+                </tr>
+                <!-- ン -->
+                <tr class="char-row">
+                    <td class="main-char">ン</td>
+                    <td class="info-cell">
+                        <div class="pron">[n] 응(받침)</div>
+                        <div class="tip"><b>★중요:</b> 왼쪽 아래에서 오른쪽 위로 빗금을 올려 씁니다. 'ソ(소)'와 획의 방향이 달라요!</div>
+                        <div class="word">① <b>펜</b> (펜)<br>② <b>레몬</b> (레몬)</div>
+                    </td>
+                    <td class="practice-cell guide-line trace">ン</td>
+                    <td class="practice-cell guide-line trace">ン</td>
+                    <td class="practice-cell guide-line blank">ン</td>
+                    <td class="practice-cell guide-line blank">ン</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            © 세상모든언어 '세모' 가타카나
+        </div>
+    </div>
+    
+    <!-- 오른쪽 면 [26쪽]: 단어 읽기 연습 (최종) -->
+    <div class="book-page">
+        <div class="header">
+            <h1>가타카나 [와행·ン] 읽기 연습</h1>
+            <div class="page-num">Page 26</div>
+        </div>
+
+        <div class="reading-container">
+            <div class="reading-intro">
+                <strong>★ 드디어 가타카나 마스터! 큰 소리로 읽어봐요!</strong><br>
+                마지막 <b>ワ, ヲ, ン</b>까지 모두 배웠습니다! 받침 역할을 하는 'ン'의 발음에 주의하며 단어들을 읽어봅시다.
+            </div>
+
+            <!-- 읽기 카드 격자 배치 -->
+            <div class="reading-grid">
+                <div class="reading-box">와인<br><small>(와인)</small></div>
+                <div class="reading-box">팬<br><small>(팬)</small></div>
+                <div class="reading-box">엔진<br><small>(엔진)</small></div>
+                
+                <div class="reading-box">와이셔츠<br><small>(와이샤츠)</small></div>
+                <div class="reading-box">샌드위치<br><small>(산도잇치)</small></div>
+                <div class="reading-box">인터넷<br><small>(인타아네토)</small></div>
+                
+                <div class="reading-box">원피스<br><small>(완피이스)</small></div>
+                <div class="reading-box">멜론<br><small>(메론)</small></div>
+                <div class="reading-box">디자인<br><small>(디자인)</small></div>
+                
+                <div class="reading-box">와플<br><small>(와프루)</small></div>
+                <div class="reading-box">망고<br><small>(만고오)</small></div>
+                <div class="reading-box">프린터<br><small>(푸린타아)</small></div>
+                
+                <div class="reading-box">워터<br><small>(워오타아)</small></div>
+                <div class="reading-box">찬스<br><small>(챤스)</small></div>
+                <div class="reading-box">카운터<br><small>(카운타아)</small></div>
+                
+                <div class="reading-box">와오응<br><small>(와오온)</small></div>
+                <div class="reading-box">카레라이스<br><small>(카레에라이스)</small></div>
+                <div class="reading-box">마라톤<br><small>(마라소온)</small></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            본 교재의 무단복사를 금지합니다.
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>
+
+

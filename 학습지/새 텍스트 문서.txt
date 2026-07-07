@@ -1,0 +1,255 @@
+<style>
+    /* ==========================================================================
+       [인쇄 설정] A4 가로 용지 규격 (인쇄할 때만 작동)
+       ========================================================================== */
+    @page {
+        size: 297mm 210mm;
+        margin: 0;
+    }
+
+    /* ==========================================================================
+       [기본 스타일] 화면(컴퓨터)과 인쇄 공통
+       ========================================================================== */
+    body {
+        margin: 0;
+        padding: 60px 0; /* 화면 여백을 넓혀 여유로운 무드 연출 */
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Malgun Gothic", sans-serif;
+        background-color: #f8f9fa; /* 미니멀한 옅은 그레이 배경 */
+        -webkit-print-color-adjust: exact;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 60px;
+        min-height: 100vh;
+        letter-spacing: -0.02em; /* 세련된 서체를 위한 자간 조정 */
+    }
+
+    /* 전체를 감싸는 컨테이너: 은은한 섀도우와 라운드로 고급스럽게 */
+    .book-container {
+        width: 100%;
+        max-width: 1120px; /* 미세하게 줄여 밀도감 향상 */
+        aspect-ratio: 297 / 210; 
+        box-sizing: border-box;
+        display: flex;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); 
+    }
+    
+    /* 왼쪽 면(1쪽)과 오른쪽 면(2쪽) 비율 분할 */
+    .book-page {
+        width: 50%; 
+        height: 100%;
+        box-sizing: border-box;
+        padding: 6% 5%; /* 내부 여백을 더 넓혀 시각적 안정감 확보 */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        background: #ffffff;
+    }
+    
+    /* 가운데 접지선 (미니멀하고 현대적인 흐린 선으로 변경) */
+    .left-page {
+        border-right: 1px solid #f1f3f5;
+    }
+    
+    /* 상단 타이틀 구역 */
+    .header {
+        border-bottom: 2px solid #111111; /* 두 줄 선을 모던한 원라인으로 변경 */
+        padding-bottom: 12px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .header h1 {
+        margin: 0;
+        font-size: 1.4rem; /* 과하게 크지 않고 단정하게조정 */
+        font-weight: 700;
+        color: #111111;
+    }
+    .header .page-num {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #868e96;
+        font-family: 'Helvetica Neue', sans-serif;
+    }
+    
+    /* 글자 학습 테이블 구역 */
+    .content-table {
+        width: 100%;
+        border-collapse: collapse;
+        flex-grow: 1;
+        table-layout: fixed;
+    }
+    /* 투박한 외곽 테두리를 없애고 가로줄 중심의 미니멀 스타일로 변형 */
+    .content-table th, .content-table td {
+        border: none;
+        border-bottom: 1px solid #e9ecef;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table-head {
+        border-bottom: 1.5px solid #111111 !important; /* 헤더 아래 강한 라인 포커스 */
+        height: 44px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #495057;
+    }
+    .char-row {
+        height: calc((100% - 44px) / 5);
+    }
+    .char-row:last-child td {
+        border-bottom: 1px solid #111111; /* 테이블 가장 하단 마감 */
+    }
+    .main-char {
+        font-size: 2rem;
+        font-weight: 700;
+        font-family: "SF Pro JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+        width: 15%;
+        color: #111111;
+    }
+    .info-cell {
+        width: 32%;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        text-align: left;
+        padding: 12px 10px;
+        box-sizing: border-box;
+    }
+    .info-cell .pron {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #ff4d28; /* 세련된 토마토 오렌지 레드 */
+        margin-bottom: 4px;
+    }
+    .info-cell .tip {
+        font-size: 0.72rem;
+        color: #868e96; /* 기존 초록색 초보자 느낌에서 감성적인 미디엄 그레이로 변경 */
+        font-style: normal; /* 이탤릭체를 제외하여 타이포그래피 정리 */
+        margin-bottom: 6px;
+    }
+    .info-cell .word {
+        color: #343a40;
+        border-top: 1px solid #f1f3f5;
+        padding-top: 6px;
+        font-size: 0.78rem;
+    }
+    .info-cell .word b {
+        color: #ff4d28; /* 단어 내 가타카나 강조 색상 통일 */
+    }
+    
+    /* 쓰기 연습 칸 공통 */
+    .practice-cell {
+        font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+        font-size: 1.8rem;
+        position: relative;
+        width: 13.25%;
+        height: 100%;
+        display: table-cell;
+        vertical-align: middle;
+        border-right: 1px dashed #e9ecef; /* 격자 느낌을 주는 은은한 대시선 */
+    }
+    .practice-cell:last-child {
+        border-right: none;
+    }
+    /* 정중앙 십자 가이드라인을 백그라운드로 얇게 처리 */
+    .guide-line {
+        background-image: 
+            linear-gradient(to right, #f1f3f5 1px, transparent 1px),
+            linear-gradient(to bottom, #f1f3f5 1px, transparent 1px);
+        background-position: center;
+        background-size: 100% 100%, 100% 100%;
+        background-repeat: no-repeat;
+    }
+    .trace { color: #dee2e6; font-weight: 300; } /* 따라쓰기 연한 회색 */
+    .blank { color: transparent; }
+    
+    /* 읽기 연습 구역 */
+    .reading-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .reading-intro {
+        font-size: 0.85rem;
+        color: #495057;
+        margin-bottom: 24px;
+        line-height: 1.6;
+        background-color: #f8f9fa;
+        padding: 14px 18px;
+        border-left: 3px solid #ff4d28; /* 포인트 컬러 통일 */
+        border-radius: 0 6px 6px 0;
+    }
+    .reading-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        flex-grow: 1;
+    }
+    /* 투박한 외곽선 상자를 없애고 소프트한 플랫 카드로 변경 */
+    .reading-box {
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column; /* 세로 배열로 폰트 크기 밸런스 조정 */
+        justify-content: center;
+        align-items: center;
+        font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #111111;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        min-height: 52px;
+        padding: 8px;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+    }
+    .reading-box small {
+        font-size: 0.75rem;
+        font-weight: 400;
+        color: #868e96;
+        margin-top: 4px;
+        letter-spacing: 0;
+    }
+    
+    /* 하단 푸터 */
+    .footer {
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #adb5bd;
+        border-top: 1px solid #f1f3f5;
+        padding-top: 14px;
+        margin-top: 20px;
+    }
+
+    /* ==========================================================================
+       [인쇄 전용 미디어 쿼리]
+       ========================================================================== */
+    @media print {
+        body {
+            background-color: #ffffff;
+            padding: 0;
+        }
+        .book-container {
+            width: 297mm;
+            height: 210mm;
+            max-width: none;
+            box-shadow: none;
+            border-radius: 0;
+            page-break-after: always;
+        }
+        .book-container:last-child {
+            page-break-after: avoid;
+        }
+        .reading-box {
+            height: 22mm;
+        }
+    }
+</style>
