@@ -91,7 +91,13 @@ try {
         exit;
     }
 
-    $selectedTicketId = isset($_POST['ticket_id']) ? (int)$_POST['ticket_id'] : null;
+    $ticketIdRaw = isset($_POST['ticket_id']) ? trim((string)$_POST['ticket_id']) : '';
+    $selectedTicketId = $ticketIdRaw !== '' ? (int)$ticketIdRaw : 0;
+    if ($selectedTicketId <= 0) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => '사용할 그룹 티켓 정보를 확인하지 못했습니다. 다시 시도해 주세요.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
     $distinctDaysSelected = count($slotIds); // 클라이언트에서 요일별로 전달된 base slotId 개수로 간주
 
     $pdo->beginTransaction();

@@ -3,9 +3,10 @@ require_once __DIR__ . '/db.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-function ensureTicketProduct(PDO $pdo, int $productId): array {
+function ensureTicketProduct(PDO $pdo, int $productId): array
+{
     $catalog = [
-        101 => ['title' => '1회 체험권', 'price' => 4000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
+        101 => ['title' => '1회 체험권', 'price' => 4500, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
         102 => ['title' => '4회 수강권', 'price' => 20000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90, 'per_week' => 0],
         103 => ['title' => '8회 수강권', 'price' => 38000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 0],
         201 => ['title' => '듀오 1회 체험권', 'price' => 2500, 'class_type' => 'DUO', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
@@ -14,15 +15,16 @@ function ensureTicketProduct(PDO $pdo, int $productId): array {
         301 => ['title' => '그룹 이벤트', 'price' => 15800, 'class_type' => 'GROUP', 'total_count' => 5, 'expiry_days' => 90, 'per_week' => 1],
         302 => ['title' => '그룹 4회 수강권', 'price' => 9900, 'class_type' => 'GROUP', 'total_count' => 4, 'expiry_days' => 90, 'per_week' => 1],
         303 => ['title' => '그룹 8회 수강권', 'price' => 15800, 'class_type' => 'GROUP', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 2],
-        // 무료 그룹 체험권: 한 계정당 1회만 허용 (만료 30일)
-        304 => ['title' => '그룹 1회 체험권(무료)', 'price' => 0, 'class_type' => 'GROUP', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
-        401 => ['title' => '패키지 1회 체험권', 'price' => 6000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
+        304 => ['title' => '그룹 1회 체험권(무료)', 'price' => 0, 'class_type' => 'GROUP', 'total_count' => 1, 'expiry_days' => 7, 'per_week' => 0],
+
+        // 패키지 상품(결제 전용): 실제 사용 티켓은 구매 시 101 + 302로 분리 발급
+        401 => ['title' => '특별할인 패키지(개인1+그룹4)', 'price' => 15800, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
         402 => ['title' => '패키지 4회 수강권', 'price' => 14900, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90, 'per_week' => 0],
-        403 => ['title' => '패키지 8회 수강권', 'price' => 49000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 0],
+        //403 => ['title' => '패키지 8회 수강권', 'price' => 49000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 0],
     ];
 
     if (!isset($catalog[$productId])) {
-        throw new InvalidArgumentException('지원하지 않는 상품입니다.');
+        throw new InvalidArgumentException('지원하지 않는 티켓입니다.');
     }
 
     $meta = $catalog[$productId];
@@ -70,7 +72,7 @@ $product_id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
 
 if ($product_id <= 0) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => '상품 정보를 확인해 주세요.'], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => false, 'message' => '티켓 정보를 확인해 주세요.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -82,13 +84,11 @@ try {
 
     if ($product['product_type'] !== 'TICKET') {
         $pdo->rollBack();
-        echo json_encode(['success' => false, 'message' => '수강권 상품이 아닙니다.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => '수강권 티켓이 아닙니다.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     $price = (int)$product['price'];
-    $total_count = (int)$product['total_count'];
-    $expiry_days = (int)$product['expiry_days'];
 
     // 무료 상품(가격 0)인 경우, 한 계정당 1회 제한 검사 (서버 최종 검증)
     if ($price === 0) {
@@ -125,32 +125,70 @@ try {
         $stmt = $pdo->prepare("UPDATE users SET current_money = ? WHERE user_id = ?");
         $stmt->execute([$new_balance, $user_id]);
     } else {
-        // 무료 상품: 잔액 변동 없음
         $new_balance = $current_money;
     }
 
     // 지출/구매 이력 로깅
     $amountRecord = $price > 0 ? -$price : 0;
-    $description = $price > 0 ? ($product['title'] . ' 구매') : ($product['title'] . ' 무료 체험권 발급');
+    $description = $price > 0 ? ($product['title'] . ' 구매') : ($product['title'] . ' 무료 체험티켓 발급');
     $stmt = $pdo->prepare("
         INSERT INTO wallet_histories (user_id, type, amount, balance_snapshot, target_id, description) 
         VALUES (?, 'BUY_PRODUCT', ?, ?, ?, ?)
     ");
     $stmt->execute([$user_id, $amountRecord, $new_balance, $product_id, $description]);
 
-    // user_tickets 에 삽입 (만료일 포함)
-    $stmt = $pdo->prepare("
+    $ticketInsert = $pdo->prepare("
         INSERT INTO user_tickets (user_id, product_id, remaining_count, status, expired_at, per_week) 
         VALUES (?, ?, ?, 'ACTIVE', DATE_ADD(NOW(), INTERVAL ? DAY), ?)
     ");
-    $per_week = (int)($product['per_week'] ?? 0);
-    $stmt->execute([$user_id, $product_id, $total_count, $expiry_days, $per_week]);
+
+    //  특별할인패키지(401) => 개인1(101) + 그룹4(302) 분리 발급
+    if ($product_id === 401) {
+        $privateProduct = ensureTicketProduct($pdo, 101);
+        $groupProduct = ensureTicketProduct($pdo, 302);
+
+        $ticketInsert->execute([
+            $user_id,
+            101,
+            (int)$privateProduct['total_count'],
+            (int)$privateProduct['expiry_days'],
+            (int)($privateProduct['per_week'] ?? 0)
+        ]);
+
+        $ticketInsert->execute([
+            $user_id,
+            302,
+            (int)$groupProduct['total_count'],
+            (int)$groupProduct['expiry_days'],
+            (int)($groupProduct['per_week'] ?? 0)
+        ]);
+
+        $pdo->commit();
+
+        echo json_encode([
+            'success' => true,
+            'message' => '특별할인 패키지 구매 완료: 개인 1회 + 그룹 4회 티켓이 발급되었습니다.',
+            'data' => [
+                'balance' => $new_balance
+            ]
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // 기본 단일 티켓 발급
+    $ticketInsert->execute([
+        $user_id,
+        $product_id,
+        (int)$product['total_count'],
+        (int)$product['expiry_days'],
+        (int)($product['per_week'] ?? 0)
+    ]);
 
     $pdo->commit();
 
     echo json_encode([
         'success' => true,
-        'message' => ($price === 0 ? '무료 체험권이 발급되었습니다.' : '수강권 구매가 완료되었습니다.'),
+        'message' => ($price === 0 ? '무료 체험티켓이 발급되었습니다.' : '수강권티켓 구매가 완료되었습니다.'),
         'data' => [
             'balance' => $new_balance
         ]
