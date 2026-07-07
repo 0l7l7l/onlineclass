@@ -97,7 +97,7 @@ try {
         $already = (int)$checkStmt->fetchColumn();
         if ($already > 0) {
             $pdo->rollBack();
-            echo json_encode(['success' => false, 'message' => '이 무료 체험권은 계정당 1회만 사용할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['success' => false, 'message' => '이 무료 체험티켓은 계정당 1회만 사용할 수 있습니다.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
     }

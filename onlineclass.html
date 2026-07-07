@@ -1,13 +1,5 @@
 ﻿<!--추가기능﻿-->
-<!----------수업예약 메뉴를수정,변경하고싶어. 지금더미로되어있고 예약신청((모달) 한번더확인할수있는내용)확정되면 내페이지에서 확인가능하도록하고싶어.  내담당선생님 스케줄만볼수있도록 DB로연결해줘.
-  1. 개인/듀오 자유 예약: 하나의 캘린더에서 수업 타입을 선택하고 원하는 날짜, 시간을 자유롭게 고르세요.
-2. 그룹 글자 마스터반: 히라가나/가타카나를 완벽하게 마스터하는 과정입니다.
-- 한 달4회 (주1회) 원하는 요일을 하나만선택하면 스케줄이 자동 등록됩니다. 예: 월요일선택 ->매주월요일수업고정
-- 한달8회 (주 2회) 수업을 원하시면 두 개의 요일을 선택해 신청할수있습니다.------------->
-<!--페이지에 랜던게임을 구현하고싶어. 문제는4지선다로 나오고 캐릭터가 문제를 내는거야. 홈페이지를 보다 우연히 캐릭터가 뜬고 그 캐릭터가 문제를 내는거야 틀리면 다음기회에 하고 나중에 나타나고 맞추면 세모(포인트)를 1에서 199까지얻을수있는거야. 기회는 하루에한번. 만약 로그인을 하지 않았다면 로그인을 해서 세모(포인트)가 쌓일수있도록 하고싶어.-->
-<!--티켓정보가 옆으로 안넘어가져-->
-
-<!--티켓충전시 상단에 진짜 금액표시추가해줘-->
+<!--페이지에 랜던게임을 구현하고싶어. 문제는4지선다로 나오고 캐릭터가 문제를 내는거야. 홈페이지를 보다 우연히 캐릭터가 뜬고 그 캐릭터가 문제를 내는거야 틀리면 다음기회에 하고 나중에 나타나고 맞추면 세모(포인트)를 1에서 99까지얻을수있는거야. 기회는 하루에한번. 만약 로그인을 하지 않았다면 로그인을 해서 세모(포인트)가 쌓일수있도록 하고싶어.-->
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -2178,7 +2170,7 @@
         </div>
       </div>
 
-      <!-- 다음수업 모달 (간단) -->
+      <!-- 다음수업 모달  -->
       <div id="next-class-modal" class="modal-overlay hidden">
         <div class="modal-content" style="max-width:28rem;">
           <button onclick="closeNextClassModal()" class="modal-close">&times;</button>
@@ -2223,47 +2215,48 @@
       <div id="form-signup" class="modal-form-body hidden">
         <h3 class="modal-title">SIGN UP</h3>
 
-          <div class="form-group">
-            <label class="modal-label">아이디</label>
-            <input type="text" id="signup-username" placeholder="아이디 (영문/숫자)" />
-          </div>
+        <div class="form-group">
+          <label class="modal-label">아이디</label>
+          <input type="text" id="signup-username" placeholder="아이디 (영문/숫자)" />
+        </div>
 
-          <div class="form-group">
-            <label class="modal-label">이메일</label>
-            <input type="email" id="signup-email" placeholder="example@domain.com" />
-          </div>
+        <div class="form-group">
+          <label class="modal-label">이메일</label>
+          <input type="email" id="signup-email" placeholder="example@domain.com" />
+        </div>
 
-          <div class="form-group">
-            <label class="modal-label">이름</label>
-            <input type="text" id="signup-name" placeholder="실명" />
-          </div>
+        <div class="form-group">
+          <label class="modal-label">이름</label>
+          <input type="text" id="signup-name" placeholder="실명" />
+        </div>
 
-          <div class="form-group">
-            <label class="modal-label">비밀번호</label>
-            <input type="password" id="signup-password" placeholder="••••••••" />
-          </div>
+        <div class="form-group">
+          <label class="modal-label">비밀번호</label>
+          <input type="password" id="signup-password" placeholder="••••••••" />
+        </div>
 
-          <div class="form-group">
-            <label class="modal-label">비밀번호 확인</label>
-            <input type="password" id="signup-password-confirm" placeholder="비밀번호 확인" />
-          </div>
+        <div class="form-group">
+          <label class="modal-label">비밀번호 확인</label>
+          <input type="password" id="signup-password-confirm" placeholder="비밀번호 확인" />
+        </div>
 
-          <div class="form-group">
-            <label class="modal-label">휴대전화 (선택)</label>
-            <input type="tel" id="signup-phone" placeholder="010-1234-5678" />
-          </div>
+        <div class="form-group">
+          <label class="modal-label">휴대전화 (선택)</label>
+          <input type="tel" id="signup-phone" placeholder="010-1234-5678" />
+        </div>
 
-          <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-            <input type="checkbox" id="signup-agree" />
-            <label for="signup-agree" style="font-size:0.85rem;">약관 및 개인정보 수집·이용에 동의합니다. <a href="/terms.html" class="modal-link-text">자세히 보기</a></label>
-          </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+          <input type="checkbox" id="signup-agree" />
+          <label for="signup-agree" style="font-size:0.85rem;">약관 및 개인정보 수집·이용에 동의합니다. <a href="/terms.html" class="modal-link-text">자세히 보기</a></label>
+        </div>
 
-          <!-- CAPTCHA 자리(옵션) -->
-          <div id="signup-captcha" style="margin-top:0.5rem;"></div>
+        <!-- CAPTCHA 자리(옵션) -->
+        <div id="signup-captcha" style="margin-top:0.5rem;"></div>
 
 
 
-        <button onclick="alert('회원가입 완료!'); toggleAuthForm('login');" class="btn-transparent w-full modal-submit-btn">가입 완료</button>
+        <!--<button onclick="alert('회원가입 완료!'); toggleAuthForm('login');" class="btn-transparent w-full modal-submit-btn">가입 완료</button>-->
+        <button onclick="submitSignup()" class="btn-transparent w-full modal-submit-btn">가입 완료</button>
         <p class="modal-footer-text">이미 계정이 있으신가요? <a href="#" onclick="toggleAuthForm('login')" class="modal-link-text">로그인</a></p>
       </div>
     </div>
@@ -2770,7 +2763,9 @@
 			// === ticketData.group 상품 메타 추가 (기존 ticketData 블록 내 group 항목 교체) ===
 			group: {
 				title: "🏫 그룹(1:N) 수업 티켓",
-				products: [
+        products: [
+
+					{ id: 304, key: 'group_0', title: '그룹 1회 체험권', price: 0, badge: ' ', desc: '수업이어떻게진행되는지 경험해보자!' },
 					{ id: 301, key: 'group_1', title: '이벤트', price: 15800, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님이나 서포터에게 개인수업1회 무료로받자! *소진시조기마감될수있습니다.', per_week: 1, total_sessions: 5 }, // per_week: 주당 횟수
 					{ id: 302, key: 'group_4', title: '4회 수강권', price: 9900, badge: 'Best', desc: '1개월반이면뚝딱. 일본어글자완전마스터반!히라가나?가타카나?다들어와.바로말할수있게해줄게.', per_week: 1, total_sessions: 4 },
 					{ id: 303, key: 'group_8', title: '8회 수강권', price: 15800, badge: 'Premium', desc: '단기간에계획적이고빠르게.글자마스터반1개월형 할인형 패키지', per_week: 2, total_sessions: 8 }
@@ -2781,6 +2776,7 @@
         products: [
           //{ id: 401, key: 'package_1', title: '1회 체험권', price: 60000, badge: 'Light', desc: '패키지 할인 혜택으로 가볍게 시작하는 티켓' },
 
+					{ id: 304, key: 'package_1', title: '그룹 1회 체험권', price:  0, badge: 'Best', desc: '수업이어떻게진행되는지 경험해보자!' },
           { id: 401, key: 'package_1', title: '그룹4회+개인1회', price: 15800, badge: 'Best', desc: '그룹으로공부하고 1:1로실력키우자! 수강권을 묶은 효율적인 패키지' },
           //{ id: 402, key: 'package_4', title: '4회 수강권', price: 270000, badge: 'Best', desc: '다양한 수강권을 묶은 효율적인 패키지' },
           { id: 403, key: 'package_8', title: '8회 수강권', price: 49000, badge: 'Premium', desc: '가장 강력한 할인과 혜택을 누리는 패키지' }

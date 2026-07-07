@@ -23,6 +23,11 @@ CREATE TABLE IF NOT EXISTS `users` (
     `current_money` INT DEFAULT 0 COMMENT '유저가 보유한 현재 전자머니 잔액',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '가입 일시',
     `deleted_at` TIMESTAMP NULL DEFAULT NULL COMMENT '소프트 삭제용 탈퇴 일시',
+    `phone_number` VARCHAR(20) NULL COMMENT '휴대폰 번호',
+    `email` VARCHAR(100) NULL COMMENT '이메일 주소',
+    `consent_version` VARCHAR(32) NULL COMMENT '약관·개인정보 동의 버전',
+    `consent_at` DATETIME NULL COMMENT '동의 일시',
+    `consent_ip` VARCHAR(45) NULL COMMENT '동의 당시 요청자 IP',
     FOREIGN KEY (`teacher_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL,
     FOREIGN KEY (`supporter_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
