@@ -92,7 +92,13 @@ try {
         exit;
     }
 
-    $selectedTicketId = isset($_POST['ticket_id']) ? (int)$_POST['ticket_id'] : null;
+    $ticketIdRaw = isset($_POST['ticket_id']) ? trim((string)$_POST['ticket_id']) : '';
+    $selectedTicketId = $ticketIdRaw !== '' ? (int)$ticketIdRaw : 0;
+    if ($selectedTicketId <= 0) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => '사용할 그룹 티켓 정보를 확인하지 못했습니다. 다시 시도해 주세요.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
     $distinctDaysSelected = count($slotIds); // 클라이언트에서 요일별로 전달된 base slotId 개수로 간주
 
     $pdo->beginTransaction();
@@ -167,6 +173,11 @@ try {
         }
         if (strtoupper((string)$ut['class_type'] ?? 'GROUP') !== 'GROUP' && intval($ut['class_type'] ?? 0) !== 0) {
             // class_type 체크는 products 에 의존하므로 필요시 확장
+        }
+        
+        // products.class_type 이 GROUP 인지 검사 (클래스 타입이 GROUP 이 아니면 거부)
+        if (strtoupper(trim($ut['class_type'] ?? '')) !== 'GROUP') {
+            throw new RuntimeException('선택한 티켓은 그룹 수업용 티켓이 아닙니다. 그룹 패키지 전용 티켓을 사용해 주세요.');
         }
 
         // 주당 허용 요일(per_week) 검사: 선택한 요일(기초 slotIds 개수) 이 티켓의 per_week 보다 크면 거부
@@ -308,13 +319,3 @@ try {
     exit;
 }
 
-// ticketLock 부분 직후에 삽입
-$ticketLock->execute([$selectedTicketId, $userId]);
-$ut = $ticketLock->fetch(PDO::FETCH_ASSOC);
-if (!$ut) {
-    throw new RuntimeException('해당 티켓을 찾을 수 없거나 사용 불가합니다.');
-}
-// products.class_type 이 GROUP 인지 검사 (클래스 타입이 GROUP 이 아니면 거부)
-if (strtoupper(trim($ut['class_type'] ?? '')) !== 'GROUP') {
-    throw new RuntimeException('선택한 티켓은 그룹 수업용 티켓이 아닙니다. 그룹 패키지 전용 티켓을 사용해 주세요.');
-}

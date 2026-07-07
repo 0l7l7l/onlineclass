@@ -1,0 +1,3016 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>나만의 자료실</title>
+	<style>
+		/* 기본 스타일 초기화 */
+
+				 * {
+						box-sizing: border-box;
+						margin: 0;
+						padding: 0;
+						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+		}
+
+				body {
+						display: flex;
+						flex-direction: row; /* 데스크톱에서는 좌우 배치 */
+			height: 100vh;
+						color: #333;
+						background-color: #fcfcfc;
+						overflow: hidden; /* 전체 화면 스크롤 방지 및 내부 스크롤 유도 */
+
+		}
+
+				 /* ---------------------------------- */ /* 좌측 사이드바 (메뉴) 스타일 */ /* ---------------------------------- */ .sidebar {
+						width: 260px;
+						background-color: #ffffff;
+						border-right: 1px solid #e0e0e0;
+						padding: 20px;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						transition: width 0.3s ease, padding 0.3s ease, border 0.3s ease, transform 0.3s ease;
+						flex-shrink: 0;
+						height: 100vh;
+						z-index: 1200;
+
+		}
+
+				body.sidebar-collapsed .sidebar {
+						width: 0;
+						padding: 0;
+						border-right: 0;
+						overflow: hidden; /* 접혔을 때 내부 내용 강제 숨김 */
+
+		}
+
+					body.sidebar-collapsed .sidebar > * {
+							opacity: 0;
+							pointer-events: none;
+
+			}
+
+				 .sidebar h2 {
+						font-size: 1.2rem;
+						margin-bottom: 20px;
+						padding-bottom: 10px;
+						border-bottom: 2px solid #333;
+						color: #111;
+
+		}
+
+				 .lang-section {
+						margin-bottom: 15px;
+
+		}
+
+				 /* 대분류 (언어) */ .lang-btn {
+						width: 100%;
+						background: none;
+						border: 1px solid #78699288;
+						color: #9282b8;
+						padding: 10px 15px;
+						text-align: left;
+						font-size: 1rem;
+						font-weight: bold;
+						cursor: pointer;
+						border-radius: 4px;
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+
+		}
+
+					 .lang-btn::after {
+							content: '▼';
+							font-size: 0.8rem;
+							transition: transform 0.2s;
+
+			}
+
+				 .lang-section.active .lang-btn::after {
+						transform: rotate(180deg);
+
+		}
+
+				 /* 중분류 컨테이너 */ .sub-menu {
+						display: none;
+						padding-left: 10px;
+						margin-top: 5px;
+
+		}
+
+				 .lang-section.active .sub-menu {
+						display: block;
+
+		}
+
+				 /* 중분류 버튼 (문법, 단어) */ .nav-item {
+						display: block;
+						width: 100%;
+						background: none;
+						border: 1px solid #555555;
+						color: #555555;
+						padding: 10px 12px;
+						margin-top: 6px;
+						text-align: left;
+						font-size: 0.9rem;
+						cursor: pointer;
+						border-radius: 4px;
+						transition: all 0.2s ease;
+
+		}
+
+					 .nav-item:hover, .nav-item.active {
+							border: 1px solid #ff5722 !important;
+							color: #ff5722 !important;
+							background-color: rgba(255, 87, 34, 0.05) !important;
+							font-weight: bold;
+
+			}
+
+				 .sidebar-footer {
+						padding-top: 15px;
+						border-top: 1px solid #e0e0e0;
+
+		}
+
+				 .auth-btn {
+						width: 100%;
+						padding: 10px;
+						background: none;
+						border: 1px solid #555;
+						color: #555;
+						font-weight: bold;
+						cursor: pointer;
+						border-radius: 4px;
+
+		}
+
+				 /* ---------------------------------- */ /* 우측 콘텐츠 영역 스타일 */ /* ---------------------------------- */ .content-area {
+						flex: 1;
+						padding: 40px;
+						overflow-y: auto;
+						transition: padding-left 0.3s ease;
+
+		}
+
+				 /* 데스크탑 메뉴가 접혔을 때 본문 왼쪽 여백 최소화 */ body.sidebar-collapsed .content-area {
+						padding-left: 40px;
+
+		}
+
+				 .content-box {
+						background-color: #ffffff;
+						padding: 30px;
+						border-radius: 8px;
+						border: 1px solid #e0e0e0;
+						min-height: 80vh;
+
+		}
+
+				 .content-header-flex {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						margin-bottom: 10px;
+
+		}
+
+				 .category-path {
+						font-size: 0.9rem;
+						color: #888;
+						margin-bottom: 20px;
+
+		}
+
+				 /* 전역 메뉴 토글 버튼 위치 고정 */ .sidebar-toggle-btn {
+						position: relative;
+						display: inline-flex;
+						align-items: center;
+						gap: 6px;
+						margin-bottom: 20px;
+						padding: 8px 16px;
+						border: 1px solid #777;
+						background: #fff;
+						color: #333;
+						border-radius: 6px;
+						cursor: pointer;
+						font-size: 0.9rem;
+						font-weight: 500;
+						box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+						transition: left 0.3s ease;
+						z-index: 1300; /* 모바일에서 사이드바 위에 뜨도록 조정 */
+
+		}
+
+					 .sidebar-toggle-btn:hover {
+							border-color: #695d80;
+							color: #6f6f9b;
+							background-color: #f0f7ff;
+
+			}
+
+				body.sidebar-collapsed .sidebar-toggle-btn {
+						left: 12px;
+
+		}
+
+				 /* 모바일 오버레이 배경 */ .sidebar-overlay {
+						position: fixed;
+						inset: 0;
+						background: rgba(0, 0, 0, 0.4);
+						z-index: 1100;
+						opacity: 0;
+						visibility: hidden;
+						transition: opacity 0.3s ease, visibility 0.3s ease;
+
+		}
+
+				 /* 🌟 누락되었던 소분류 테마별 상단 탭 버튼 스타일 복구 및 강화 */ .theme-btn-container {
+						display: flex;
+						flex-wrap: wrap;
+						gap: 10px;
+						margin: 20px 0;
+
+		}
+
+				 .theme-tab-btn {
+						background: none;
+						border: 1px solid #9690ec;
+						color: #5a4b85;
+						padding: 8px 16px;
+						font-size: 0.85rem;
+						font-weight: 500;
+						cursor: pointer;
+						border-radius: 20px; /* 둥근 모양의 깔끔한 탭 형태 */
+			transition: all 0.2s ease;
+
+		}
+
+					 .theme-tab-btn:hover, .theme-tab-btn.active {
+							background-color: #7779e2 !important;
+							color: #ffffff !important;
+
+			}
+
+				 /* 글쓰기 버튼 */ .write-btn {
+						background: none;
+						cursor: pointer;
+						border-radius: 4px;
+						transition: all 0.2s;
+						display: inline-flex;
+						align-items: center;
+						gap: 5px;
+						border: 1px solid #2e7d32;
+						color: #2e7d32;
+						padding: 8px 16px;
+						font-size: 0.9rem;
+						font-weight: bold;
+
+		}
+
+					 .write-btn:hover {
+							background-color: #2e7d32;
+							color: #fff;
+
+			}
+
+				 /* 목록 카드 디자인 */ .data-list {
+						margin-top: 15px;
+						display: flex;
+						flex-direction: column;
+						gap: 15px;
+
+		}
+
+				 .data-card-btn {
+						width: 100%;
+						background: #ffffff;
+						border: 1px solid #cccccc;
+						border-radius: 6px;
+						padding: 20px;
+						text-align: left;
+						cursor: pointer;
+						transition: all 0.2s ease;
+
+		}
+
+					 .data-card-btn:hover {
+							border-color: #ff5722;
+							box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+			}
+
+					 .data-card-btn strong {
+							display: block;
+							font-size: 1.2rem;
+							color: #111;
+							margin-bottom: 6px;
+
+			}
+
+					 .data-card-btn p {
+							color: #666;
+							font-size: 0.95rem;
+							line-height: 1.5;
+
+			}
+
+				 /* 광고 슬라이더 */ .ad-slider-wrapper {
+						position: relative;
+						width: 100%;
+						height: 500px;
+						margin-top: 30px;
+						border: 1px solid #e0e0e0;
+						border-radius: 8px;
+						overflow: hidden;
+
+		}
+
+				 .ad-slides {
+						display: flex;
+						width: 300%;
+						height: 100%;
+						transition: transform 0.5s ease-in-out;
+
+		}
+
+				 .ad-slide {
+						width: 100%;
+						height: 100%;
+						display: flex;
+						align-items: center;
+						padding: 40px;
+						box-sizing: border-box;
+
+		}
+
+					 .ad-slide h2 {
+							font-size: 1.4rem;
+							color: #222;
+							margin-bottom: 8px;
+
+			}
+
+					 .ad-slide p {
+							font-size: 1rem;
+							color: #666;
+
+			}
+
+				 .slide-btn {
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						background: rgba(255, 255, 255, 0.7);
+						border: 1px solid #777;
+						color: #333;
+						width: 35px;
+						height: 35px;
+						border-radius: 50%;
+						cursor: pointer;
+						font-size: 1rem;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						transition: all 0.2s;
+
+		}
+
+					 .slide-btn:hover {
+							border-color: #0066cc;
+							color: #0066cc;
+							background: #fff;
+
+			}
+
+				 .prev-btn {
+			left: 15px;
+		}
+
+				 .next-btn {
+			right: 15px;
+		}
+
+				 /* 모달 관련 */ .modal-overlay {
+						position: fixed;
+						top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+						background-color: rgba(0, 0, 0, 0.4);
+						display: flex;
+			justify-content: center;
+			align-items: center;
+						z-index: 2000;
+						visibility: hidden;
+			opacity: 0;
+						transition: all 0.3s;
+
+		}
+
+					 .modal-overlay.show {
+							visibility: visible;
+							opacity: 1;
+
+			}
+
+				 .modal-content {
+						background-color: #ffffff;
+						padding: 30px;
+						border-radius: 8px;
+						width: 340px;
+
+		}
+
+					 .modal-content h3 {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+
+					 .modal-content input {
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 12px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+
+				 .modal-btn-wrap {
+			display: flex;
+			gap: 8px;
+		}
+
+				 .modal-btn {
+			flex: 1;
+			padding: 10px;
+			background: none;
+			border-radius: 4px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+				 .content-box {
+						word-break: keep-all;
+						overflow-wrap: anywhere;
+
+		}
+
+				 /* 상세 정보 뷰 */ .detail-content {
+						margin-top: 20px;
+						background: #fafafa;
+						padding: 20px;
+						border-radius: 6px;
+						border: 1px solid #eee;
+
+		}
+
+				 .example-box {
+						margin-top: 15px;
+						background: #fff;
+						padding: 15px;
+						border-left: 4px solid #ff5722;
+
+		}
+
+				 .back-btn {
+						background: none;
+						border: 1px solid #777;
+						padding: 8px 16px;
+						border-radius: 4px;
+						cursor: pointer;
+						margin-bottom: 15px;
+
+		}
+
+				 /* =========================================            Responsive (Tablet / Mobile)            ========================================= */ @media (max-width: 1024px) {
+						body
+
+		{
+			height: auto;
+			min-height: 100vh;
+		}
+
+					 .sidebar {
+			width: 220px;
+			padding: 16px;
+		}
+
+					 .content-area {
+			padding: 24px;
+		}
+
+					 .content-box {
+			padding: 20px;
+			min-height: auto;
+		}
+
+					 .ad-slider-wrapper {
+			height: 360px;
+		}
+
+					 .ad-slide {
+			padding: 24px;
+		}
+
+						 .ad-slide h2 {
+				font-size: 1.2rem;
+			}
+
+						 .ad-slide p {
+				font-size: 0.95rem;
+			}
+
+
+		}
+
+				 @media (max-width: 768px) {
+						body
+
+		{
+							flex-direction: column;
+							height: auto;
+							position: relative;
+							overflow: auto;
+							min-height: 100vh;
+
+		}
+
+					 .sidebar {
+							position: fixed;
+							top: 0;
+			left: 0;
+							width: 260px;
+			height: 100vh;
+							transform: translateX(-100%);
+							transition: transform 0.3s ease;
+							padding-top: 70px !important;
+							box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+
+		}
+
+					body.sidebar-open .sidebar {
+			transform: translateX(0);
+		}
+
+					body.sidebar-open .sidebar-overlay {
+			opacity: 1;
+			visibility: visible;
+		}
+
+					 .content-area {
+							padding: 16px;
+							width: 100%;
+							overflow: visible;
+							padding-top: 60px;
+
+		}
+
+					 .sidebar-toggle-btn {
+							position: fixed;
+							left: 16px !important;
+							top: 16px;
+							margin-bottom: 0;
+							z-index: 1300;
+
+		}
+
+					body.sidebar-open .sidebar-toggle-btn {
+							left: 195px !important;
+							border-color: #ff5722;
+							color: #ff5722;
+							background: #fff;
+
+		}
+
+					 .content-box {
+			padding: 14px;
+			border-radius: 6px;
+			min-height: auto;
+		}
+
+					 .category-path {
+			font-size: 0.82rem;
+			margin-bottom: 10px;
+		}
+
+					 .auth-btn, .lang-btn, .nav-item {
+			min-height: 42px;
+		}
+
+					 /* 모바일 환경 상단 테마 탭 가로 스크롤 레이아웃 정리 */ .theme-btn-container {
+							flex-wrap: nowrap;
+							overflow-x: auto;
+							-webkit-overflow-scrolling: touch;
+							padding-bottom: 8px;
+							gap: 8px;
+
+		}
+
+					 .theme-tab-btn {
+							flex: 0 0 auto;
+							white-space: nowrap;
+							padding: 6px 14px;
+							font-size: 0.8rem;
+
+		}
+
+					 .ad-slider-wrapper {
+			height: 230px;
+			margin-top: 16px;
+		}
+
+					 .ad-slide {
+			padding: 16px;
+		}
+
+						 .ad-slide h2 {
+				font-size: 1rem;
+			}
+
+						 .ad-slide p {
+				font-size: 0.86rem;
+			}
+
+					 .slide-btn {
+			width: 30px;
+			height: 30px;
+			font-size: 0.9rem;
+		}
+
+
+		}
+
+	</style>
+</head>
+<body>
+
+	<nav class="sidebar">
+		<div class="sidebar-menu-wrap">
+			<h2>Semo 자료실</h2>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">일본어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('ja', 'grammar')"> 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('ja', 'words')"> 단어 자료실</button>
+				</div>
+			</div>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">한국어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('ko', 'grammar')"> 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('ko', 'words')">단어 자료실</button>
+				</div>
+			</div>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">중국어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('zh', 'grammar')">📚 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('zh', 'words')">✏️ 단어 자료실</button>
+				</div>
+			</div>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">영어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('en', 'grammar')"> 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('en', 'words')">단어 자료실</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="sidebar-footer">
+			<button id="sidebar-auth-btn" class="auth-btn" onclick="handleAuthClick()"> 로그인</button>
+		</div>
+	</nav>
+
+	<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+	<main class="content-area">
+		<div class="content-box">
+			<div id="dynamic-content">
+
+				<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+
+				<h1>메뉴를 선택해주세요</h1>
+				<div class="category-path">좌측 메뉴에서 학습할 카테고리를 선택하세요.</div>
+
+				<div class="ad-slider-wrapper">
+					<div class="ad-slides" id="adSlides">
+						<div class="ad-slide" style="background-color: #f0f7ff;">
+							<div>
+								<h2>🚀 일본어 언어 마스터 패키지</h2>
+								<p>일본어, 기초부터 비즈니스까지 한 번에 끝내기!</p>
+							</div>
+						</div>
+						<div class="ad-slide" style="background-color: #fff0f5;">
+							<div>
+								<h2>📚 원어민 1:1 화상 회화 20% 할인</h2>
+								<p>지금 가입하면 첫 달 무료 수강권 증정 쿠폰 발급</p>
+							</div>
+						</div>
+						<div class="ad-slide" style="background-color: #f5fff0;">
+							<div>
+								<h2>📝 글자 마스터반 개시</h2>
+								<p>매일 25분 투자로 히라가나 정복하는 비법</p>
+							</div>
+						</div>
+					</div>
+					<button class="slide-btn prev-btn" onclick="moveSlide(-1)">❮</button>
+					<button class="slide-btn next-btn" onclick="moveSlide(1)">❯</button>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<div class="modal-overlay" id="loginModal">
+		<div class="modal-content">
+			<h3> 로그인</h3>
+			<p>로그인을 하시면 게시물이 작성됩니다.</p>
+			<input type="text" id="teacher-id" placeholder="아이디 (admin)">
+			<input type="password" id="teacher-pw" placeholder="비밀번호 (1234)">
+			<div class="modal-btn-wrap">
+				<button class="modal-btn" style="border:1px solid #0066cc; color:#0066cc;" onclick="tryLogin()">로그인</button>
+				<button class="modal-btn" style="border:1px solid #777; color:#777;" onclick="closeModal()">닫기</button>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		/* 🌟 유연하고 깔끔하게 확장된 데이터베이스 구조 */
+		let database = {
+			ja: {
+				name: "일본어",
+				// 소분류 테마 정의 리스트
+				themes: {
+					grammar: ["전체", "초급문법", "중급문법", "일상생활", "반말표현", "응용표현"],
+					words: ["전체", "가족", "숫자/날짜", "물건/장소", "비즈니스"]
+				},
+				// 실제 게시글 데이터 (theme 속성으로 구별)
+				data: {
+					grammar: [
+						{
+							id: "ja_g_1", theme: "초급문법",
+							title: "~です (~입니다)",
+							summary: "명사 뒤에 붙는 가장 기초적인 단정 문형",
+							detail: "일본어 공부의 시작이 되는 문형입니다.",
+							example: "私は学生です。(나는 학생입니다.)",
+
+						},
+						{
+							id: "ja_g_2", theme: "초급문법",
+							title: "AはB (A은/는B)",
+							summary: "설명해주세요.",
+							detail: "일본어 공부의 시작이 되는 문형입니다.",
+							example: "私は韓国人です。(저는 한국사랍이에요.)"
+						},
+						{
+							id: "ja_g_3", theme: "초급문법",
+							title: "AとB (A하고B)",
+							summary: "명사 와명사를 연결해주는 문법입니다.",
+							detail: "일본어 공부의 시작이 되는 문형입니다.",
+							example: "韓国と日本。(한국하고 일본)"
+						},
+						{
+							id: "ja_g_4", theme: "반말표현",
+							title: "~ だ (~야/다)",
+							summary: "친구 사이에 쓰는 친근한 단정 표현",
+							detail: " です의 반말체로, 격식 없는 대화에서 씁니다.",
+							example: "これ, 俺の本だ。(이거, 내 책이야.)"
+						},
+						{
+							id: "ja_g_5", theme: "일상생활",
+							title: "~てください (~해주세요)",
+							summary: "부탁이나 지시를 할 때 쓰는 필수 표현",
+							detail: "동사의 て형에 결합하여 상대에게 요청합니다.",
+							example: "ちょっと待ってください。(잠깐만 기다려주세요.)"
+						}
+					],
+					words: [
+						{
+							id: "ja_w_1", theme: "가족",
+							title: "家族 (かぞく)",
+							summary: "가족을 뜻하는 기본 단어",
+							detail: "일반적인 가족 명사입니다.",
+							example: " 私の家族はお母さんとお父さんがいます。(제 가족은 어머니하고,아버지가 있습니다.)"
+						}
+					]
+				}
+			},
+			ko: {
+				name: "한국어",
+				themes: { grammar: ["전체", "초급", "중급", "일상", "높임말"], words: ["전체", "기초어휘", "정치/경제"] },
+				data: {
+					grammar: [
+						{
+							id: "ko_g_1", theme: "일상생활",
+							title: "명사+예요,이에요.",
+							summary: "내소개나 설명 할 때 쓰는 필수 표현",
+							detail: "명사의 어간의받침유무에따라 결합합니다. <br>예:<br>받침있음 + 이에요. <br>받침없음 + 예요",
+							example: "<br> 학생 이에요.<br>의사예요."
+						}
+					],
+					words: [
+						{
+							id: "ko_w_1", theme: "가족",
+							title: "가족",
+							summary: "가족을 뜻하는 기본 단어",
+							detail: "어머니, 아버지, 할머니, 할아버지, 남편, 아내, 언니/누나 , 오빠/형 ,(여/남)동생 , 강아지, 고양이",
+							example: " 일반적인 가족 명사입니다."
+						}
+					]
+				}
+			},
+			"zh": {
+				"name": "중국어",
+				"themes": {
+					"grammar": ["전체", "기초어순", "기초회화문법", "문법"],
+					"words": ["전체", "나라", "직업", "가족", "숫자", "물건", "탈것", "여행"]
+				},
+				"data": {
+					"grammar": [
+						{
+							"id": "zh_g_1",
+							"theme": "기초어순",
+							"title": "[A 是 B] A는 B이다 (지정/단정)",
+							"summary": "가장 기본이 되는 명사 연결 문법으로, 'A=B'임을 나타낼 때 사용합니다.",
+							"detail": "중국어의 가장 기본적인 어순인 [주어 + 동사 + 목적어] 구조입니다. '是(shì)'는 영어의 be동사처럼 '~이다'라는 뜻을 가집니다. 부정을 할 때는 是 앞에 '不(bù)'를 붙여 '不是(~이 아니다)'라고 표현하며, 문장 끝에 '吗(ma)'를 붙이면 의문문이 됩니다.",
+							"example": "<br>我是韩国人。(wǒ shì hán guó rén) — 저는 한국인입니다.<br>他是我的朋友。(tā shì wǒ de péng you) — 그는 제 친구입니다.<br>这是什么？(zhè shì shén me) — 이것은 무엇입니까?<br>那是我的手机。(nà shì wǒ de shǒu jī) — 저것은 제 휴대폰입니다.<br>今天是星期一。(jīn tiān shì xīng qī yī) — 오늘은 월요일입니다.<br>我不是老师。(wǒ bú shì lǎo shī) — 저는 선생님이 아닙니다.<br>昨天不是休息日。(zuó tiān bú  shì xiū rì) — 어제는 휴일이 아니었습니다.<br>你是哪国人？(nǐ shì nǎ guó rén) — 당신은 어느 나라 사람입니까?<br>这不是我的钱。(zhè bú shì wǒ de qián) — 이것은 제 돈이 아닙니다.<br>你是学生吗？(nǐ shì xué sheng ma) — 당신은 학생입니까?"
+						},
+						{
+							"id": "zh_g_2",
+							"theme": "기초회화문법",
+							"title": "[주어 + 형용사] 형용사문 (是 쓰지 않기)",
+							"summary": "주어의 상태나 성질을 나타낼 때 사용하며, '是'를 쓰지 않는 것이 핵심입니다.",
+							"detail": "중국어에서 형용사가 서술어가 될 때는 원칙적으로 '是(shì)'를 사용하지 않습니다. 대신 형용사 앞에 부사 '很(hěn, 매우)'을 습관적으로 붙여 문장을 완성합니다. 이때 '很'은 특별히 아주 강조하는 의미라기보다는 문장의 균형을 맞춰주는 역할을 합니다. 부정문에서는 '很'을 빼고 '不'를 넣습니다.",
+							"example": "<br>今天很热。(jīn tiān hěn rè) — 오늘 날씨가 더워요.<br>很高兴。(wǒ hěn gāo xìng) — 저는 기쁩니다.<br>汉语很难吗？(hàn yǔ hěn nán ma) — 중국어는 어렵나요?<br>汉语不难。(hàn yǔ bù nán) — 중국어는 어렵지 않아요.<br>这里的菜很好吃。(zhè lǐ de cài hěn hǎo chī) — 여기 요리 맛있어요.<br>衣服很贵。(yī fu hěn guì) — 옷이 비쌉니다.<br>那个东西很便宜。(nà ge dōng xi hěn pián yi) — 저것은 저렴합니다.<br>我最近很忙。(wǒ zuì jìn hěn máng) — 저 요즘 많이 바빠요.<br>身体很好。(shēn tǐ hěn hǎo) — 건강해요.<br>这个不太好。(zhè ge bú tài hǎo) — 이것은 별로 안 좋아요."
+						},
+						{
+							"id": "zh_g_3",
+							"theme": "기초회화문법",
+							"title": "[A 有 B] A는 B가 있다 (소유와 존재)",
+							"summary": "사람이 물건을 가지고 있거나, 특정 장소에 무언가가 존재함을 나타냅니다.",
+							"detail": "소유(~을 가지고 있다)나 존재(~에 ~이 있다)를 나타내는 동사 '有(yǒu)'를 사용하는 문법입니다. 주의할 점은, 중국어에서 '有'의 부정을 만들 때는 절대로 '不'를 쓰지 않고 반드시 '没(méi)'를 사용해 '没有(méi yǒu)'로 표현해야 합니다.",
+							"example": "<br>我有钱。(wǒ yǒu qián) — 저 돈 있어요.<br>我没有时间。(wǒ méi yǒu shí jiān) — 저 시간 없어요.<br>你有弟弟吗？(nǐ yǒu dì di ma) — 남동생 있어요?<br> Avent我有 一个姐姐。(wǒ yǒu yí ge jiě jie) — 저는 누나가 한 명 있어요.<br>桌子上有电脑。(zhuō zi shang yǒu diàn nǎo) — 책상 위에 컴퓨터가 있어요.<br>车里没有人。(chē lǐ méi yǒu rén) — 차 안에 사람이 없어요.<br>有什么问题？(nǐ yǒu shén me wèn tí) — 무슨 질문이 있으신가요?<br>我有张地图。(wǒ yǒu zhāng dì tú) — 저 지도 한 장 있어요.<br>银行附近有超市。(yín háng fù jìn yǒu chāo  shì) — 은행 근처에 마트가 있어요.<br>他没有车。(tā méi yǒu chē) — 그는 차가 없어요."
+						},
+						{
+							"id": "zh_g_4",
+							"theme": "기초어순",
+							"title": "[在 + 장소] ~에 있다 / ~에서 (존재 및 장소)",
+							"summary": "사람이나 물건의 위치를 나타내거나, 행동이 일어나는 장소를 나타낼 때 사용합니다.",
+							"detail": "'在(zài)'는 두 가지 역할을 합니다. 뒤에 장소만 오면 '~에 있다'라는 동사가 되고, 뒤에 [장소 + 동사]가 이어지면 '~에서 (무엇을) 하다'라는 개사(전치사) 역할을 합니다. 동작이 일어나는 장소는 반드시 동사 앞에 위치해야 합니다.",
+							"example": "<br>我在家。(wǒ zài jiā) — 저 집에 있어요.<br>洗手间在哪儿？(xǐ shǒu jiān zài nǎr) — 화장실이 어디에 있나요?<br>妈妈在厨房。(mā ma zài chú fáng) — 어머니는 주방에 계십니다.<br>老师不在学校。(lǎo  shī bú zài xué xiào) — 선생님은 학교에 안 계십니다.<br>我在咖啡厅等你。(wǒ zài kā fēi tīng děng nǐ) — 나 카페에서 너 기다릴게.<br>我们在北京学习。(wǒ men zài běi jīng xué xí) — 우리는 베이징에서 공부해요.<br>他在公司上班。(tā zài gōng sī shàng bān) — 그는 회사에서 일합니다.<br>你在哪儿吃饭？(nǐ zài nǎr chī fàn) — 너 어디서 밥 먹어?<br>我在商店买衣服。(wǒ zài shāng diàn mǎi yī fu) — 저는 상점에서 옷을 사요.<br>爸爸在客厅看电视。(bà ba zài kè tīng kàn diàn shì) — 아버지는 거실에서 TV를 보십니다."
+						},
+						{
+							"id": "zh_g_5",
+							"theme": "문법",
+							"title": "[想 + 동사] ~하고 싶다 (소망 표현)",
+							"summary": "자신이 하고 싶은 주관적인 소망이나 바람을 표현할 때 사용합니다.",
+							"detail": "'想(xiǎng)'은 동사 앞에 붙어 '~하고 싶다'라는 의미를 더해주는 능원동사(조동사)입니다. 본동사 바로 앞에 위치하며, '~하고 싶지 않다'라는 거절이나 부정의 의미를 나타낼 때는 想 앞에 '不'를 붙여 '不想(bù xiǎng)'으로 표현합니다.",
+							"example": "<br>我想吃中国菜。(wǒ xiǎng chī zhōng guó cài) — 저 중국 요리 먹고 싶어요.<br>你想去哪儿？(nǐ xiǎng qù nǎr) — 너 어디 가고 싶어?<br>我想买这个。(wǒ xiǎng mǎi zhè ge) — 저 이거 사고 싶어요.<br>不想去上班。(wǒ bù xiǎng qù shàng bān) — 저 출근하기 싫어요.<br>你想喝什么？(nǐ xiǎng hē shén me) — 뭐 마시고 싶어?<br>我想回家睡觉。(wǒ xiǎng huí jiā shuì jiào) — 집 고 싶고 자고 싶어요.<br>我想见你。(wǒ xiǎng jiàn nǐ) — 너를 만나고 싶어.<br>你想看电影吗？(nǐ xiǎng kàn diàn yǐng ma) — 영화 보고 싶니?<br>我想学太极拳。(wǒ xiǎng xué tài jí quán) — 태극권을 배우고 싶어요.<br>不想说话。(wǒ bù xiǎng shuō huà) — 말하고 싶지 않아요."
+						},
+						{
+							"id": "zh_g_6",
+							"theme": "기초어순",
+							"title": "[去 + 장소 + 동사] ~하러 가다 (연동문)",
+							"summary": "특정 장소에 방문하여 어떤 목적의 행동을 할 때 순서대로 표현합니다.",
+							"detail": "한 문장에 동사가 연속으로 두 개 이상 나오는 문장을 '연동문'이라고 합니다. 중국어는 시간의 흐름이나 행위의 순서대로 동사를 배열하기 때문에, 장소에 먼저 '가고(去)' 그 뒤에 '행동(목적)'을 하는 순서로 단어를 배치합니다.",
+							"example": "<br>我去中国旅游。(wǒ qù zhōng guó lǚ yóu) — 나 중국으로 여행 가.<br>我们去饭馆吃饭吧。(wǒ men qù fàn guǎn chī fàn ba) — 우리 식당에 밥 먹으러 가자.<br>他去书店买书了。(tā qù shū diàn mǎi shū le) — 그는 서점에 책 사러 갔어.<br>你去北京干什么？(nǐ qù běi jīng gàn shén me) — 너 베이징에 뭐 하러 가?<br>我去银行取钱。(wǒ qù yín háng qǔ qián) — 저 은행에 돈 찾으러 가요.<br>下午我去超市买水果。(xià wǔ wǒ qù chāo shì mǎi shuǐ guǒ) — 오후에 마트에 과일 사러 가요.<br>你去不去邮局？(nǐ qù bú qù yóu jú) — 너 우체국 가니 안 가니?监听<br>我去医院看医生。(wǒ qù yī yuàn kàn yī shēng) — 나 병원에 진찰받으러 가.<br>姐姐去韩国留学。(jiě jie qù hán guó liú xué) — 누나는 한국으로 유학 가요.<br>我们去唱歌吧。(wǒ men qù chàng gē ba) — 우리 노래 부르러 가자."
+						},
+						{
+							"id": "zh_g_7",
+							"theme": "문법",
+							"title": "[동사 + 了 / 문장 끝 + 了] 완료 및 변화",
+							"summary": "동작이 끝났음을 나타내거나 상태의 새로운 변화가 생겼음을 나타냅니다.",
+							"detail": "'了(le)'는 중국어 회화에서 가장 빈번하게 사용되는 어기조사 및 동태조사입니다. 동사 바로 뒤에 붙으면 주로 '동작의 완료(과거처럼 해석)'를 나타내고, 문장 맨 끝에 붙으면 '상황의 변화(새롭게 발생한 사실)'나 '감탄의 어조'를 타나냅니다.",
+							"example": "<br>我吃饭了。(wǒ chī fàn le) — 나 밥 먹었어.<br>知道了。(zhī dào le) — 알겠습니다.(알게 되었다)<br>太贵了！(tài guì le) — 너무 비싸요!<br>下雨了。(xià yǔ le) — 비가 오기 시작했어.(변화)<br>他去学校了。(tā qù xué xiào le) — 그는 학교에 갔어.<br>我买了一杯咖啡。(wǒ mǎi le yì bēi kā fēi) — 나 커피 한 잔 샀어.<br>已经十二点了。(yǐ jīng shí èr diǎn le) — 벌써 12시야.<br>我懂了。(wǒ dǒng le) — 이해했어요.<br>你喝了几杯？(nǐ hē le jǐ bēi) — 너 몇 잔 마셨어?<br>我丢了钱包。(wǒ diū le qián bāo) — 저 지갑을 잃어버렸어요."
+						},
+						{
+							"id": "zh_g_8",
+							"theme": "문법",
+							"title": "[会/能/可以 + 동사] 할 수 있다 (능력/가능/허가)",
+							"summary": "'할 수 있다'를 상황과 뉘앙스에 따라 3가지 조동사로 나누어 사용합니다.",
+							"detail": "중국어는 능력의 성격에 따라 조동사를 구분합니다. '会(huì)'는 학습을 통해 방법이나 기술을 터득해 할 줄 알 때, '能(néng)'은 개인적 능력이나 외부 조건상 가능할 때, '可以(kě yǐ)'는 규정상 허가되거나 객관적으로 가능할 때 동사 앞에 붙여 사용합니다.",
+							"example": "<br>我会说汉语。(wǒ huì shuō hàn yǔ) — 저 중국어 말할 줄 알아요.(배워서 가능)<br>不会开车。(wǒ bú huì kāi chē) — 저 운전할 줄 몰라요.<br>这里可以抽烟吗？(zhè lǐ kě yǐ chōu yān ma) — 여기 담배 피워도 되나요?(허가)<br>你可以坐这里。(nǐ kě yǐ zuò zhè lǐ) — 여기 앉으셔도 됩니다.<br>我今天能来。(wǒ jīn tiān néng lái) — 나 오늘 올 수 있어.(상황 가능)<br>你能帮我吗？(nǐ néng bāng wǒ ma) — 나 좀 도와줄 수 있어?<br>不能喝酒。(wǒ bù néng hē jiǔ) — 저 술 못 마셔요.(건강/운전 등의 이유)<br>爷爷会写汉字。(yé ye huì xiě hàn zì) — 할아버지는 한자를 쓰실 줄 안다.<br>换钱可以在银行换。(huàn qián kě yǐ zài yín háng huàn) — 환전은 은행에서 하실 수 있습니다.<br>我会做饭。(wǒ huì zuò fàn) — 저 요리할 줄 알아요."
+						},
+						{
+							"id": "zh_g_9",
+							"theme": "기초어순",
+							"title": "[의문사 활용] 의문문 만들기 (누구/무엇/언제/어디)",
+							"summary": "어순의 변화 없이 궁금한 대상의 자리에 의문사만 대입해 질문합니다.",
+							"detail": "영어처럼 의문문일 때 동사와 주어의 위치를 바꾸는 도치 문법이 없습니다. 평서문 어순을 그대로 유지한 상태에서, 내가 물어보고 싶어 하는 정보의 위치에 '谁(누구)', '什么(무엇)', '哪儿(어디)', '什么时候(언제)' 등의 의문사를 그대로 집어넣기만 하면 의문문이 완성됩니다.",
+							"example": "<br>你是谁？(nǐ  shì shéi) — 당신은 누구십니까?<br>这是什么肉？(zhè shì shén me ròu) — 이것은 무슨 고기인가요?<br>医院在哪儿？(yī yuàn zài nǎr) — 병원이 어디에 있습니까?<br>你什么时候走？(nǐ shén me shí hou zǒu) — 너 언제 가?<br>这个多少钱？(zhè ge duō shǎo qián) — 이거 얼마예요?<br>你有几个苹果？(nǐ  yǒu jǐ ge píng guǒ) — 너 사과 몇 개 있어?<br>你怎么去公司？(nǐ zěn me qù gōng sī) — 너 회사 어떻게 가?<br>这件衣服怎么样？(zhè jiàn yī fu zěn me yàng) — 이 옷 어때요?<br>为什么不去？(wèi shén me bú qù) — 왜 안 가요?<br>你多大了？(nǐ duō dà le) — 나이가 어떻게 되세요?"
+						},
+						{
+							"id": "zh_g_10",
+							"theme": "기초회화문법",
+							"title": "[请 / ~吧] 청유와 제안 (부탁하기, 제안하기)",
+							"summary": "상대방에게 정중하게 행동을 권하거나, 무언가를 같이 하자고 요청할 때 씁니다.",
+							"detail": "상대방에게 무언가를 정중하게 권유하거나 부탁할 때는 동사 앞에 '请(qǐng, 부디/제발)'을 붙이고, '~합시다', '~해요'와 같이 부드러운 제안 및 청유를 유도할 때는 문장 맨 끝에 조사 '吧(ba)'를 붙여 표현합니다. '别~了' 구조는 '~하지 마라'는 금지를 뜻합니다.",
+							"example": "<br>请坐。(qǐng zuò) — 앉으세요.<br>请进。(qǐng jìn) — 들어오세요.<br>请喝茶。(qǐng hē chá) — 차 드세요.<br>请等一下。(qǐng děng yí xià) — 잠시만 기다려주세요.<br>请再说一遍。(qǐng zài shuō yí biàn) — 다시 한번 말씀해 주세요.<br>我们走吧。(wǒ men zǒu ba) — 우리 가자.<br>吃饭吧。(chī fàn ba) — 밥 먹자.<br>别哭了。(bié kū le) — 울지 마.<br>请不要拍照。(qǐng bú yào pāi zhào) — 사진 찍지 말아 주세요.<br>祝你生日快乐！(zhù nǐ shēng rì kuài lè) — 생일 축하해!"
+						},
+						{
+							"id": "zh_g_11", "theme": "문법",
+							"title": "[A 比 B + 형용사] 비교문 (A가 B보다 ~하다)", "summary": "두 가지 대상을 비교하여 상태나 성질의 차이를 나타낼 때 사용합니다.", "detail": "중국어의 가장 대표적인 비교문 구조입니다. '~보다'에 해당하는 '比(bǐ)'를 사용하여 [A + 比 + B + 형용사] 순서로 배열합니다. 주의할 점은 비교문 내부에는 '很(hěn)'이나 '非常(fēi cháng)' 같은 일반 부사를 형용사 앞에 쓸 수 없다는 점입니다.", "example": "<br>今天比昨天冷。(jīn tiān bǐ zuó tiān lěng) — 오늘이 어제보다 추워요.<br>他比我高。(tā bǐ wǒ gāo) — 그가 나보다 키가 커요.<br>这件比那件贵。(zhè jiàn bǐ nà jiàn guì) — 이 옷이 저 옷보다 비쌉니다.<br>苹果比西瓜便宜。(píng guǒ bǐ xī guā pián yi) — 사과가 수박보다 싸요.<br>汉语比英语有意思。(hàn yǔ bǐ yīng yǔ yǒu yì si) — 중국어가 영어보다 재미있어요.<br>我比他喜欢运动。(wǒ bǐ tā xǐ huan yùn dòng) — 내가 그보다 운동을 더 좋아해요.<br>哥哥比我大两岁。(gē ge bǐ wǒ dà liǎng suì) — 형이 나보다 두 살 많아요.<br>飞机比火车快。(fēi jī bǐ huǒ chē kuài) — 비행기가 기차보다 빨라요.<br>做饭比洗碗累。(zuò fàn bǐ xǐ wǎn lèi) — 요리하는 게 설거지하는 것보다 힘들어요.<br>韩国的比中国的冷。(hán guó de bǐ zhōng guó de lěng) — 한국의 날씨가 중국보다 추워요."
+						},
+						{
+							"id": "zh_g_12", "theme": "기초회화문법",
+							"title": "[正在 + 동사 + 呢] 현재 진행형 (~하는 중이다)", "summary": "말하는 순간에 어떤 동작이나 행동이 진행되고 있음을 나타냅니다.", "detail": "현재 진행을 표현할 때는 동사 앞에 '正在(zhèng zài)' 또는 '正', '在'를 붙이고, 문장 끝에 어기조사 '呢(ne)'를 함께 사용합니다. '正在'와 '呢'는 세트로 자주 쓰이지만, 둘 중 하나만 사용해도 진행의 의미를 전달할 수 있습니다.", "example": "<br>我正在吃饭呢。(wǒ zhèng zài chī fàn ne) — 나 지금 밥 먹는 중이야.<br>他正在睡觉呢。(tā zhèng zài shuì jiào ne) — 그는 지금 자고 있어요.<br>妹妹正在看书呢。(mèi mei zhèng zài kàn shū ne) — 여동생은 지금 책을 읽고 있어.<br>我们正在开会呢。(wǒ men zhèng zài kāi huì ne) — 저희는 지금 회의 중입니다.<br>外面正在下雨呢。(wài mian zhèng zài xià yǔ ne) — 밖에 지금 비가 내리는 중이야.<br>你在做什么呢？(nǐ zài zuò shén me ne) — 너 지금 뭐 하고 있어?<br>我正在给妈妈打电话呢。(wǒ zhèng zài gěi mā ma dǎ diàn huà ne) — 나 지금 엄마한테 전화하는 중이야.<br>老师正在讲课呢。(lǎo shī zhèng zài jiǎng kè ne) — 선생님께서 수업하시는 중입니다.<br>他们正在唱歌呢。(tā men zhèng zài chàng gē ne) — 그들은 지금 노래를 부르고 있어요.<br>我正在准备考试呢。(wǒ zhèng zài zhǔn bèi kǎo shì ne) — 나 지금 시험 준비하는 중이야."
+						},
+						{
+							"id": "zh_g_13", "theme": "기초어순",
+							"title": "[동사 + 시간의 길이] 시량보어 (얼마 동안 ~하다)", "summary": "어떤 동작이나 상태가 지속된 '시간의 양(길이)'을 나타낼 때 사용합니다.", "detail": "중국어에서 '몇 시'를 나타내는 시점은 동사 앞에 오지만, '몇 시간 동안' 같은 시간의 양(시량)은 반드시 [동사 + 시량사] 형태로 동사의 뒤에 위치합니다. 만약 목적어가 함께 온다면 [동사 + 목적어 + 동사 + 시량] 혹은 [동사 + 시량 + 的 + 목적어] 구조를 씁니다.", "example": "<br>我等了一个小时。(wǒ děng le yí ge xiǎo shí) — 나 한 시간 동안 기다렸어.<br>他学了三年汉语。(tā xué le sān nián hàn yǔ) — 그는 3년 동안 중국어를 배웠어.<br>我每天睡八个小时。(wǒ měi tiān shuì bā ge xiǎo shí) — 나는 매일 8시간 동안 잔다.<br>我们聊了二十分钟。(wǒ men liáo le èr shí fēn zhōng) — 우리 20분 동안 얘기 나눴어.<br>他在北京住了五天。(tā zài běi jīng zhù le wǔ tiān) — 그는 베이징에서 5일 동안 머물렀어.<br>你看了多长时间？(nǐ kàn le duō cháng shí jiān) — 너 얼마 동안 봤어?<br>我看了一下午电视。(wǒ kàn le yí xià wǔ diàn shì) — 나 오후 내내 TV를 봤어.<br>她休息了十分钟。(tā xiū xi le shí fēn zhōng) — 그녀는 10분 동안 휴식을 취했다.<br>这个工作要做多久？(zhè ge gōng zuò yào zuò duō jiǔ) — 이 일은 얼마 동안 해야 하나요?<br>我打算去中国旅行两个星期。(wǒ dǎ suàn qù zhōng guó lǚ xíng liǎng ge xīng qī) — 나는 2주 동안 중국 여행을 갈 계획이다."
+						},
+						{
+							"id": "zh_g_14", "theme": "기초회화문법",
+							"title": "[A 跟 B 一样] 동등 비교 (A는 B와 같다)", "summary": "두 대상의 성질, 상태, 외양이 서로 같음을 표현할 때 사용합니다.", "detail": "'~와/과'를 뜻하는 '跟(gēn)'과 '같다'를 뜻하는 '一样(yí yàng)'을 조합하여 [A跟B一样] 구조를 만듭니다. 뒤에 형용사를 붙이면 '~만큼 (형용사)하다'라는 뜻이 되며, 부정할 때는 一样 앞에 '不'를 붙여 '不一样(다르다)'으로 표현합니다.", "example": "<br>我的手机跟你的手机一样。(wǒ de shǒu jī gēn nǐ de shǒu jī yí yàng) — 내 휴대폰은 네 것과 같아.<br>他跟哥哥一样高。(tā gēn gē ge yí yàng gāo) — 그는 형만큼 키가 크다.<br>今天的 weather/天气跟昨天一样。(jīn tiān de tiān qì gēn zuó tiān yí yàng) — 오늘 날씨는 어제와 같다.<br>这件衣服跟那件不一样。(zhè jiàn yī fu gēn nài jiàn bù yí yàng) — 이 옷은 저 옷과 달라요.(부정)<br>我和你的想法一样。(wǒ hé nǐ de xiǎng fǎ yí yàng) — 나도 너와 생각이 같아. (跟 대신 和 사용 가능)<br>这里的菜跟韩国菜一样好吃。(zhè lǐ de cài gēn hán guó cài yí yàng hǎo chī) — 여기 요리는 한국 요리만큼 맛있어요.<br>汉语跟英语 family/一样难吗？(hàn yǔ gēn yīng yǔ yí yàng nán ma) — 중국어는 영어만큼 어렵나요?<br>他的爱好跟我一样。(tā de ài hào gēn wǒ yí yàng) — 그의 취미는 나와 같다.<br>这个包跟那个包价格一样。(zhè ge bāo gēn nà ge bāo jià gé yí yàng) — 이 가방은 저 가방과 가격이 같다.<br>我们的目标不一样。(wǒ men de mù biāo bù yí yàng) — 우리의 목표는 다릅니다."
+						},
+						{
+							"id": "zh_g_15", "theme": "문법",
+							"title": "[동사 + 过了] 경험 표현 (~해 본 적이 있다)", "summary": "과거에 어떤 일을 겪었거나 경험해 본 사실이 있음을 나타냅니다.", "detail": "동사 바로 뒤에 조사 '过(guo)'를 붙여 경험을 나타냅니다. 주로 과거 완료를 나타내는 '了'와 헷갈리기 쉬운데, '过'는 과거에 일어났던 '경험 여부' 자체에 초점을 둡니다. 경험이 없음을 나타내는 부정문은 동사 앞에 '没(没有)'를 쓰고 끝에 '过'를 유지합니다.", "example": "<br>我去过中国。(wǒ qù guo zhōng guó) — 나 중국에 가 본 적이 있어.<br>我没吃过北京烤鸭。(wǒ méi chī guo běi jīng kǎo yā) — 나 베이징 카오야 안 먹어 봤어.(부정)<br>你听过这首歌吗？(nǐ tīng guo zhè shǒu gē ma) — 너 이 노래 들어본 적 있니?<br>我看过这部电影。(wǒ kàn guo zhè bù diàn yǐng) — 나 이 영화 본 적 있어.<br>他学过一点儿汉语。(tā xué guo yì diǎnr hàn yǔ) — 그는 중국어를 조금 배워본 적이 있다.<br>我见过那个人。(wǒ jiàn guo nà ge rén) — 나 저 사람 만난(본) 적 있어.<br>你坐过飞机吗？(nǐ zuò guo fēi jī ma) — 너 비행기 타 본 적 있어?<br>我没去过那家餐厅。(wǒ méi qù guo nà jiā cān tīng) — 나 그 레스토랑 안 가봤어.<br>我们以前谈过这个问题。(wǒ men yǐ qián tán guo zhè ge wèn tí) — 우리 이전에 이 문제에 대해 이야기해 본 적 있잖아.<br>你吃过中国菜 吗？(nǐ chī guo zhōng guó cài ma) — 중국 요리 먹어본 적 있나요?"
+						},
+						{
+							"id": "zh_g_16", "theme": "기초회화문법",
+							"title": "[就 / 才] 부사 활용 (벌써, 일찍이 / 겨우, 이제야)", "summary": "시간이 생각보다 빠르거나 늦음을 나타낼 때 강조 부사로 사용합니다.", "detail": "'就(jiù)'는 발생이 '예상보다 빠르고, 순조롭고, 일찍' 일어났음을 강조하고, '才(cái)'는 발생이 '예상보다 늦고, 어렵고, 이제야 겨우' 일어났음을 나타냅니다. '就'가 쓰인 문장 끝에는 주로 '了'가 함께 오지만, '才'가 쓰인 문장에는 '了'를 쓰지 않습니다.", "example": "<br>他八点就来公司了。(tā bā diǎn jiù lái gōng sī le) — 그는 (일찍이) 8시부터 회사에 왔어.<br>他九点才来公司。(tā jiǔ diǎn cái lái gōng sī) — 그는 (늦게야) 9시가 되어서야 회사에 왔어.<br>我三分钟就做完了。(wǒ sān fēn zhōng jiù zuò wán le) — 나 3분 만에 금방 다 끝냈어.<br>作业我做了三个小时才做完。(zuò yè wǒ zuò le sān ge xiǎo shí cái zuò wán) — 숙제를 3시간이나 걸려서야 겨우 다 끝냈어.<br>我早就知道了。(wǒ zǎo jiù zhī dào le) — 나 진작부터 알고 있었어.<br>你怎么现在才来？(nǐ zěn me xiàn zài cái lái) — 너 왜 이제야 오는 거야?<br>他一年前就结婚了。(tā yì nián qián jiù jié hūn le) — 그는 벌써 1년 전에 결혼했어.<br>现在才五点，再睡会儿吧。(xiàn zài cái wǔ diǎn, zài shuì huìr ba) — 이제 겨우 5시니까 좀 더 자.<br>我一到家就给你打电话。(wǒ yí dào jiā jiù gěi nǐ dǎ diàn huà) — 나 집에 도착하자마자 바로 너한테 전화할게.<br>花了这么多钱才买到。(huā le zhè me duō qián cái mǎi dào) — 돈을 이렇게 많이 쓰고서야 겨우 샀네."
+						},
+						{
+							"id": "zh_g_17", "theme": "문법",
+							"title": "[동사 + 결과보어] 행동의 결과 표현 (~하다 -> 결과가 어떠하다)", "summary": "동작을 행한 결과가 어떻게 마무리되었는지 구체적으로 설명합니다.", "detail": "중국어는 '먹다(吃)'라는 행동과 '배부르다(饱)'라는 결과를 합쳐 '吃饱(chī bǎo, 먹어서 배부르다)'처럼 표현합니다. 동사 바로 뒤에 결과보어(完-끝내다, 见-지각하다, 对-맞다, 错-틀리다 등)를 붙여 하나의 단어처럼 사용합니다.", "example": "<br>我听懂 class/了。(wǒ tīng dǒng le) — 나 (들어서) 이해했어.<br>作业我做完了。(zuò yè wǒ zuò wán le) — 숙제 (해서) 다 끝냈어.<br>我看见他了。(wǒ kàn jiàn tā le) — 나 그 사람 (봐서) 찾았어 / 눈에 보였어.<br>你说对了。(nǐ shuō duì le) — 네 말이 맞아. (말한 결과가 맞다)<br>我买错衣服了。(wǒ mǎi cuò yī fu le) — 나 옷 잘못 샀어. (사고 보니 틀렸다)<br>我没听见你说的话。(wǒ méi tīng jiàn nǐ shuō de huà) — 나 네가 한 말 못 들었어. (부정은 没)<br>字写错了。(zì xiě cuò le) — 글자가 틀렸어. (써진 결과가 틀림)<br>钱包找到了吗？(qián bāo zhǎo dào le ma) — 지갑 찾았니? (찾는 행동이 목적에 도달함)<br>我已经准备好了。(wǒ yǐ jīng zhǔn bèi hǎo le) — 나 벌써 준비 다 됐어. (준비가 좋게 완료됨)<br>这杯水喝完了。(zhè bēi shuǐ hē wán le) — 이 물 다 마셨어."
+						},
+						{
+							"id": "zh_g_18", "theme": "기초어순",
+							"title": "[从 + A + 到 + B] 시간/장소의 범위 (A부터 B까지)", "summary": "시간이나 공간의 출발점과 도착점을 지정할 때 사용합니다.", "detail": "출발을 나타내는 전치사 '从(cóng)'과 도달을 나타내는 '到(dào)'를 결합한 문법입니다. 공간적 거리(예: 집에서 회사까지)나 시간적 범위(예: 9시부터 6시까지) 모두에 사용할 수 있으며 보통 문장의 동사 앞에 배치됩니다.", "example": "<br>从我家到公司很远。(cóng wǒ jiā dào gōng sī hěn yuǎn) — 우리 집에서 회사까지는 매우 멀어요.<br>从星期一到星期五上班。(cóng xīng qī yī dào xīng qī wǔ shàng bān) — 월요일부터 금요일까지 출근해요.<br>从九点到六点工作。(cóng jiǔ diǎn dào liù diǎn gōng zuò) — 9시부터 6시까지 일합니다.<br>从韩国到中国坐飞机要两个小时。(cóng hán guó dào zhōng guó zuò fēi jī yào liǎng ge xiǎo shí) — 한국에서 중국까지 비행기로 2시간 걸려요.<br>从今天开始努力学习。(cóng jīn tiān kāi shǐ nǔ lì xué xí) — 오늘부터 열심히 공부하기 시작할 거야.<br>你从哪儿到哪儿？(nǐ cóng nǎr dào nǎr) — 너 어디서부터 어디까지 가?<br>从第一页到第十页。(cóng dì yī yè dào dì shí yè) — 첫 페이지부터 10페이지까지.<br>从现在到明天都休息。(cóng xiàn zài dào míng tiān dōu xiū xi) — 지금부터 내일까지 쭉 쉽니다.<br>从头到尾我都知道。(cóng tóu dào wěi wǒ dōu zhī dào) — 처음부터 끝까지 난 다 알고 있어.<br>从这儿到地铁站怎么走？(cóng zhèr dào dì tiě zhàn zěn me zǒu) — 여기서부터 지하철역까지 어떻게 가나요?"
+						},
+						{
+							"id": "zh_g_19", "theme": "기초회화문법",
+							"title": "[虽然 A，但是 B] 양보 접속사 (비록 A이지만, 그러나 B하다)", "summary": "앞 절의 사실을 인정하면서도, 뒤 절에서 반전이나 상반된 내용을 반박할 때 씁니다.", "detail": "회화에서 문장과 문장을 매끄럽게 연결해 주는 필수 접속사입니다. 앞 문장에 '虽然(suī rán)', 뒷 문장에 '但是(dàn shì)' 혹은 '可是(kě shì)'를 세트로 배치합니다. 한국어와 달리 중국어는 문장 중간에 두 접속사를 모두 써 주는 것이 자연스럽습니다.", "example": "<br>虽然汉语很难，但是很有意思。(suī rán hàn yǔ hěn nán, dàn shì hěn yǒu yì si) — 비록 중국어는 어렵지만, 그러나 매우 재미있어요.<br>虽然外面下雨，但是不冷。(suī rán wài mian xià yǔ, dàn shì bù lěng) — 비록 밖에 비가 오지만, 춥지는 않아요.<br>虽然这件衣服很贵，但是质量很好。(suī rán zhè jiàn yī fu hěn guì, dàn shì zhì liàng hěn hǎo) — 이 옷이 비싸긴 하지만, 품질이 아주 좋아요.<br>虽然我很忙，但是一定会去。(suī rán wǒ hěn máng, dàn shì yí dìng huì qù) — 내가 비록 바쁘지만, 꼭 갈게.<br>虽然他是中国人， tetapi/하지만 汉语不好。(suī rán tā shì zhōng guó rén, dàn shì hàn yǔ bù hǎo) — 그는 비록 중국인이지만 중국어를 잘 못해요.<br>虽然菜有点儿辣，但是很好吃。(suī rán cài yǒu diǎnr là, dàn shì hěn hǎo chī) — 요리가 좀 맵긴 하지만 맛있어요.<br>虽然他年纪小，하지만 很懂事。(suī rán tā nián jì xiǎo, dàn shì hěn dǒng shì) — 비록 그는 나이가 적지만 철이 들었다.<br>虽然身体累，但是心情很好。(suī rán shēn tǐ lèi, dàn  shì xīn qíng hěn hǎo) — 몸은 피곤하지만 기분은 좋습니다.<br>虽然不便宜，但是我想买。(suī rán bù pián yi, dàn shì wǒ xiǎng mǎi) — 저렴하진 않지만, 난 사고 싶어.<br>虽然我们第一次见面，但是觉得很亲切。(suī rán wǒ men dì yī cì jiàn miàn, dàn shì jué de hěn qīn qiè) — 비록 우리가 처음 만났지만, 매우 친근하게 느껴져요."
+						},
+						{
+							"id": "zh_g_20", "theme": "문법",
+							"title": "[동사 + 一下] 어조 완화 (좀 ~해 보다, 한번 ~하다)", "summary": "동사 뒤에 붙여 동작이 짧게 일어남을 나타내거나 말의 어조를 부드럽게 만듭니다.", "detail": "중국인들은 명령이나 부탁을 할 때 동사만 달랑 쓰면 무례하게 느끼기 때문에, 동사 뒤에 '一下(yí xià)'를 붙여 '좀 ~해 보다'라는 뉘앙스를 줍니다. 동작을 가볍게 시도해 보거나, 상대방에게 부드럽게 권유할 때 일상회화 필수품입니다.", "example": "<br>你看一下这个。(nǐ kàn yí xià zhè ge) — 이것 좀 한번 봐봐.<br>请等一下。(qǐng děng yí xià) — 잠시만 좀 기다려 주세요.<br>我问一下老师。(wǒ wèn yí xià lǎo shī) — 내가 선생님께 좀 물어볼게.<br>我介绍一下我的朋友。(wǒ jiè shào yí xià wǒ de péng you) — 제 친구를 좀 소개해 드릴게요.<br>我们可以休息一下吗？(wǒ men kě yǐ xiū xi yí xià ma) — 우리 잠시 좀 쉴 수 있을까요?<br>你试一下这件衣服。(nǐ shì yí xià zhè jiàn yī fu) — 이 옷 한번 입어(시도해) 봐.<br>我想想一下。(wǒ xiǎng yí xià) — 나 생각 좀 한번 해볼게.<br>请帮一下我。(qǐng bāng yí xià wǒ) — 나 좀 도와주세요.<br>你听一下这首歌。(nǐ tīng yí xià zhè shǒu gē) — 이 노래 좀 한번 들어봐.<br>我要准备一下行李。(wǒ yào zhǔn bèi yí xià xíng li) — 나 짐 준비 좀 해야 해."
+						},
+						{
+							"id": "zh_g_21", "theme": "문법", "title": "[如果 A，就 B] 가정문 (만약 A라면, 곧 B하다)", "summary": "특정 상황을 가정하고, 그 조건에 따른 결과를 나타낼 때 사용합니다.", "detail": "가정을 나타내는 접속사 '如果(rú guǒ)'와 그에 따른 결과를 긴밀하게 연결해 주는 부사 '就(jiù)'를 세트로 사용하는 구조입니다. 회화에서는 '如果'를 생략하고 문장 끝에 '~的话(de huà)'를 붙여 표현하기도 합니다.", "example": "<br>如果下雨，我们就不치去。(rú guǒ xià yǔ, wǒ men jiù bú qù) — 만약 비가 오면, 우리는 안 갈 거야.<br>如果你有时间, 就来我家吧。(nǐ rú guǒ yǒu shí jiān, jiù lái wǒ jiā ba) — 너 만약 시간 있으면 우리 집에 와.<br>如果你想买，就买吧。(rú guǒ nǐ xiǎng mǎi, jiù mǎi ba) — 네가 만약 사고 싶다면 사.<br>如果没有钱，就不能买车。(rú guǒ méi yǒu qián, jiù bù néng mǎi chē) — 만약 돈이 없으면 차를 살 수 없어.<br>如果你不舒服，就去医院吧。(rú guǒ nǐ bù shū fu, jiù qù yī yuàn ba) — 너 만약 몸이 안 좋으면 병원에 가 봐.<br>如果有问题，就问我。(rú guǒ yǒu wèn tí, jiù wèn wǒ) — 만약 질문이 있으면 나에게 물어봐.<br>如果明天天气好，就去爬山。(rú guǒ míng tiān tiān qì hǎo, jiù qù pá shān) — 만약 내일 날씨가 좋으면 등산 가자.<br>如果累了，就休息一下。(rú guǒ lèi le, jiù xiū xi yí xià) — 만약 피곤하면 좀 쉬어.<br>如果你去，我也去。(rú guǒ nǐ qù, wǒ yě qù) — 만약 네가 가면 나도 갈게.<br>如果不努力，就学不好。(rú guǒ bù nǔ lì, jiù xué bù hǎo) — 만약 노력하지 않으면 잘 배울 수 없어."
+						},
+						{
+							"id": "zh_g_22", "theme": "기초회화문법", "title": "[因为 A，所以 B] 인과관계 (A 때문에, 그래서 B하다)", "summary": "어떤 일에 대한 원인과 그로 인해 발생한 결과를 명확히 밝힐 때 사용합니다.", "detail": "이유를 나타내는 '因为(yīn wèi)'와 결과를 나타내는 '所以(suǒ yǐ)'가 호응하는 대표적인 접속사 문법입니다. 한국어는 '~때문에'만 주로 쓰지만, 중국어는 '因为'와 '所以'를 한 문장에 다 써주는 것이 훨씬 자연스럽습니다.", "example": "<br>因为今天很忙，所以没有时间。(yīn wèi jìn tiān hěn máng, suǒ yǐ méi yǒu shí jiān) — 오늘 너무 바빠서 그래서 시간이 없어요.<br>因为下雨，所以我们没去。(yīn wèi xià yǔ, suǒ yǐ wǒ men méi qù) — 비가 와서 그래서 우리는 안 갔어요.<br>因为汉语很难，所以每天学习。(yīn wèi hàn yǔ hěn nán, suǒ yǐ měi tiān xué xí) — 중국어가 어려워서 그래서 매일 공부해요.<br>因为不舒服，所以去医院了。(yīn wèi bù shū fu, suǒ yǐ qù yī yuàn le) — 몸이 아파서 그래서 병원에 갔어요.<br>因为太贵了，所以我没买。(yīn wèi tài guì le, suǒ yǐ wǒ méi mǎi) — 너무 비싸서 그래서 안 샀어요.<br>因为他是韩国人，所以会说韩语。(yīn wèi tā shì hán guó rén, suǒ yǐ huì shuō hán guó yǔ) — 그는 한국인이라서 그래서 한국어를 할 줄 알아요.<br>因为堵车，所以迟到了。(yīn wèi dǔ chē, suǒ yǐ chí dào le) — 차가 막혀서 그래서 늦었습니다.<br>因为很好吃，所以吃了很多。(yīn wèi hěn hǎo chī, suǒ yǐ chī le hěn duō) — 너무 맛있어서 그래서 많이 먹었어요.<br>因为他生病了，所以没来公司。(yīn wèi tā shēng bìng le, suǒ yǐ méi lái gōng sī) — 그는 병이 나서 그래서 회사에 안 왔어요.<br>因为很累，所以想早点儿睡觉。(yīn wèi hěn lèi, suǒ yǐ xiǎng zǎo diǎnr shuì jiào) — 너무 피곤해서 그래서 좀 일찍 자고 싶어요."
+						},
+						{
+							"id": "zh_g_23", "theme": "문법", "title": "[A 把 B + 동사 + 결과] 把문 (A가 B를 ~하다/처치문)", "summary": "목적어를 동사 앞으로 당겨와서, 그 목적어를 어떻게 '처치'했는지 강조합니다.", "detail": "중국어 회화의 꽃이라고 불리는 문법입니다. 일반적인 [주어+동사+목적어] 어순과 달리, 목적어 앞에 '把(bǎ)'를 붙여 동사 앞으로 끌고 옵니다. 대상을 옮기거나, 부수거나, 없애는 등 대상에 구체적인 변화를 주었을 때 주로 사용합니다.", "example": "<br>我把咖啡喝了。(wǒ bǎ kā fēi hē le) — 나 커피 (다) 마셔 버렸어.<br>请把门关上。(qǐng bǎ mén guān shàng) — 문 좀 닫아 주세요.<br>他把作业做完了。(tā bǎ zuò yè zuò wán le) — 그는 숙제를 다 끝냈어요.<br>我把钱包丢了。(wǒ bǎ qián bāo diū le) — 나 지갑을 잃어버렸어.<br>请把电脑打开。(qǐng bǎ diàn nǎo dǎ kāi) — 컴퓨터 좀 켜 주세요.<br>不要把这事告诉他。(bú yào bǎ zhè shì gào su tā) — 이 일을 그에게 말하지 마세요.<br>我把手机放在桌子上了。(wǒ bǎ shǒu jī fàng zài zhuō zi shang le) — 나 휴대폰 책상 위에 올려두었어.<br>把这些东西拿走吧。(bǎ zhè xiē dōng xi ná zǒu ba) — 이 물건들 치워(가져가) 주세요.<br>请把名字写在这里。(qǐng bǎ míng zi xiě zài zhè lǐ) — 이름을 여기에 적어주세요.<br>他把那本书看完了。(tā bǎ nà běn shū kàn wán le) — 그는 그 책을 다 읽었어요."
+						},
+						{
+							"id": "zh_g_24", "theme": "문법", "title": "[A 被 B + 동사] 被문 (A가 B에게 ~당하다/피동문)", "summary": "주어가 다른 대상에 의해 어떠한 행동이나 피해를 입었음을 나타냅니다.", "detail": "당하는 대상인 주어를 맨 앞에 두고, 피해를 준 행위자 앞에 '被(bèi)'를 붙여 피동을 표현합니다. 일상 회화에서는 '被' 대신 '叫(jiào)'나 '让(ràng)'을 쓰기도 합니다. 주로 원치 않는 부정적인 상황이나 피해를 입었을 때 자주 쓰입니다.", "example": "<br>我的手机被偷了。(wǒ de shǒu jī bèi tōu le) — 내 휴대폰 도둑맞았어(도난당했어).<br>妹妹被妈妈 기분/骂了。(mèi mei bèi mā ma mà le) — 여동생은 엄마에게 혼이 났다.<br>面包被弟弟 吃了。(miàn bāo bèi dì di chī le) — 빵이 남동생에게 먹혀버렸다(남동생이 먹었다).<br>他 javascript/被公司 해고/解雇了。(tā bèi gōng sī jiě gù le) — 그는 회사로부터 해고당했다.<br>电脑被我弄坏了。(diàn nǎo bèi wǒ nòng huài le) — 컴퓨터가 나에 의해 고장 났다(내가 고장 냈다).<br>那只 狗被车 撞了。(nà zhī gǒu bèi chē zhuàng le) — 저 개가 차에 치였다.<br>钱包被我丢在车上了。(qián bāo bèi wǒ diū zài chē shàng le) — 지갑을 차에 두고 내려버렸다.<br>他的话被大家听见了。(tā de huà bèi dà jiā tīng jiàn le) — 그의 말이 모두에게 들렸다.<br>衣服被雨淋湿了。(yī fu bèi yǔ lín shī le) — 옷이 비에 젖었다.<br>那个秘密被发现了。(nà ge mì mì bèi fā xiàn le) — 그 비밀이 탄로 났다(발견당했다)."
+						},
+						{
+							"id": "zh_g_25", "theme": "기초어순", "title": "[동사 + 得 + 형용사] 상태보어 (행동의 상태가 어떠하다)", "summary": "이미 일어난 행동이나 고정된 습관의 '정도나 상태'가 어떠한지 평가하고 묘사합니다.", "detail": "동사 뒤에 구조조사 '得(de)'를 다리처럼 연결하고 그 뒤에 구체적인 상태를 나타내는 형용사를 붙입니다. 예를 들어 '말하다'라는 행동을 '잘한다'라고 평가하고 싶을 때 [说 + 得 + 很好] 구조를 취합니다.", "example": "<br>他汉语说得很好。(tā hàn yǔ shuō de hěn hǎo) — 그는 중국어를 아주 잘해요 (말하는 상태가 좋다).<br>你今天来得很早。(nǐ jīn tiān lái de hěn zǎo) — 너 오늘 아주 일찍 왔구나.<br>妹妹跑得很快。(mèi mei pǎo de hěn kuài) — 여동생은 달리기 유창하게/가 매우 빠르다.<br>我每天睡得很 晚。(wǒ měi tiān shuì de hěn wǎn) — 나는 매일 잠을 아주 늦게 잔다.<br>这首歌他 唱得怎么样？(zhè shǒu gē tā chàng de zěn me yàng) — 이 노래 그 사람 부르는 거 어때요?<br>他字写得非常漂亮。(tā zì xiě de fēi cháng piào liang) — 그는 글씨를 아주 예쁘게 쓴다.<br>我今天吃得太饱了。(wǒ jìn tiān chī de tài bǎo le) — 나 오늘 너무 배부르게 먹었어.<br>起得太晚了，要迟到了。(qǐ de tài wǎn le, yào chí dào le) — 너무 늦게 일어났어, 늦겠다.<br>他高兴得跳了起来。(tā gāo xìng de tiào le qǐ lái) — 그는 너무 기뻐서 펄쩍 뛰었다.(정도의 강조)<br>别走得那么快，等我一下。(bié zǒu de nà me kuài, děng wǒ yí xià) — 그렇게 빨리 걷지 마, 나 좀 기다려줘."
+						},
+						{
+							"id": "zh_g_26", "theme": "기초회화문법", "title": "[一边 A，一边 B] 동시 진행 (A 하면서 B 하다)", "summary": "동일한 시간에 두 가지 행동을 동시에 행하고 있음을 나타냅니다.", "detail": "한 사람이 두 가지 동작을 나란히 함께 할 때 사용하며, 동사 앞에 각각 '一边(yì biān)'을 붙여 줍니다. 회화에서는 '一边'의 '一'를 생략하고 '边A边B' 형태로 더 많이 말합니다.", "example": "<br>我们一边吃饭，一边聊天吧。(wǒ men yì biān chī fàn, yì biān liáo tiān ba) — 우리 밥 먹으면서 얘기 나누자.<br>他喜欢一边听音乐，一边做作业。(tā xǐ huan yì biān tīng yīn yuè, yì biān zuò zuò yè) — 그는 음악을 들으면서 숙제하는 것을 좋아해.<br>别一边开车，一边 玩手机。(bié yì biān kāi chē, yì biān wán shǒu jī) — 운전하면서 휴대폰 보지 마세요.<br>我常常一边喝咖啡，一边看书。(wǒ cháng cháng yì biān hē kā fēi, yì biān kàn shū) — 나는 자주 커피를 마시면서 책을 읽는다.<br>妈妈一边做饭，一边 唱歌。(mā ma yì biān zuò fàn, yì biān chàng gē) — 엄마는 요리를 하면서 노래를 부르신다.<br>我们 边走边说吧。(wǒ men biān zǒu biān shuō ba) — 우리 걸어가면서 얘기하자. (一 생략형)<br>他边看电视边笑。(tā biān kàn diàn shì biān xiào) — 그는 TV를 보면서 웃는다.<br>不要边吃饭边说话。(bú yào biān chī fàn biān shuō huà) — 밥 먹으면서 말하지 마라.<br>姐姐一边洗澡，一边听歌。(jiě jie yì biān xǐ zǎo, yì biān tīng gē) — 누나는 샤워하면서 노래를 듣는다.<br>有些学生一边学习，一边工作。(yǒu xiē xué sheng yì biān xué xí, yì biān gōng zuò) — 어떤 학생들은 공부를 하면서 일을 한다."
+						},
+						{
+							"id": "zh_g_27", "theme": "기초회화문법", "title": "[除了 A，都/还 B] 제외와 추가 (~를 제외하고)", "summary": "특정 대상을 제외한 전체를 말하거나, 특정 대상 외에 다른 것을 추가할 때 씁니다.", "detail": "'除了(chú le)' 뒤에 오는 대상을 빼놓을 때 쓰는 문법입니다. 뒷문장에 '都(dōu, 모두)'가 오면 'A를 제외한 모두가 B하다'라는 뜻이 되고, '还(hái, 아직/더)'이나 '也(yě)'가 오면 'A 외에도 추가로 B도 있다'라는 뜻이 됩니다.", "example": "<br>除了他，我们都去了。(chú le tā, wǒ men dōu qù le) — 그를 제외하고 우리는 모두 갔어요.<br>除了星期日，我每天都上班。(chú le xīng qī rì, wǒ měi tiān dōu shàng bān) — 일요일을 제외하고 전 매일 출근해요.<br>除了苹果，我别的 水果都不喜欢。(chú le píng guǒ, wǒ bié de shuǐ guǒ dōu bù xǐ huan) — 사과를 빼고 난 다른 과일은 다 안 좋아해.<br>这里除了我，没有别人。(zhè lǐ chú le wǒ, méi yǒu bié rén) — 여기 나 말고는 아무도 없어.<br>除了汉语，他还会说英语。(chú le hàn yǔ, tā hái huì shuō yīng yǔ) — 중국어 외에 그는 영어도 할 줄 알아요. (추가)<br>除了咖啡，我还点了一个蛋糕。(chú le kā fēi, wǒ hái diǎn le yí ge dàn gāo) — 커피 말고도 케이크 하나 더 주문했어요.<br>除了听音乐，你还有什么爱好？(chú le tīng yīn yuè, nǐ hái yǒu shén me ài hào) — 음악 듣는 것 말고 또 무슨 취미가 있니?<br>那家店除了贵，没有别的问题。(nà jiā diàn chú le guì, méi yǒu bié de wèn tí) — 그 가게는 비싼 거 빼면 다른 문제는 없어.<br>除了我，大家都 知道了。(chú le wǒ, dà jiā dōu zhī dào le) — 나만 빼고 모두가 이미 알고 있었어.<br>除了星期六，那天都可以。(chú le xīng qī liù, nǎ tiān dōu kě yǐ) — 토요일 빼고는 아무 날이나 다 괜찮아요."
+						},
+						{
+							"id": "zh_g_28", "theme": "문법", "title": "[是 ... 的] 강조 구문 (이미 일어난 과거의 세부사항 강조)", "summary": "이미 과거에 발생한 일의 '시간, 장소, 방식, 행위자'를 콕 집어 강조합니다.", "detail": "과거의 '사건 자체'가 아니라, 그것이 '언제, 어디서, 어떻게, 누구와' 일어났는지 그 세부 정보를 강조하는 특수 문법입니다. 강조하고 싶은 단어 바로 앞에 '是(shì)'를 두고 문장 맨 끝에 '的(de)'를 붇힙니다. 회화에서 '是'는 자주 생략됩니다.", "example": "<br>我是昨天到的。(wǒ shì zuó tiān dào de) — 난 '어제' 도착한 거야. (시간 강조)<br>他是坐飞机来的。(tā shì zuò fēi jī lái de) — 그는 '비행기를 타고' 온 거야. (교통수단 강조)<br>这件衣服是在百货商店买的。(zhè jiàn yī fu shì zài bǎi huò shāng diàn mǎi de) — 이 옷 '백화점에서' 산 거야. (장소 강조)<br>这笔钱是他给我的。(zhè bǐ qián shì tā gěi wǒ de) — 이 돈 '그 사람이' 나한테 준 거야. (인물 강조)<br>我们是怎么认识的？(wǒ men shì zěn me rèn shi de) — 우리 '어떻게' 알게 된 사이였지? (방식 의문)<br>你是什么时候回国的？(nǐ shì shén me shí hou huí guó de) — 너 '언제' 귀국한 거야?<br>机票是在网上买的。(jī piào shì zài wǎng shàng mǎi de) — 비행기 표 '인터넷에서' 예매한 거야.<br>我是一个人来的。(wǒ shì yí ge rén lái de) — 나 '혼자서' 온 거야.<br>他不是故意做的。(tā bú shì gù yì zuò de) — 그가 '일부러' 그런 건 아니야. (부정형)<br>这句话是谁说的？(zhè jù huà shì shéi shuō de) — 이 말 '누가' 한 거야?"
+						},
+						{
+							"id": "zh_g_29", "theme": "기초회화문법", "title": "[越 A 越 B] 점층 표현 (A 할수록 더 B 하다)", "summary": "어떤 조건이나 상황의 정도가 심해질수록 결과 역시 비례하여 심해짐을 나타냅니다.", "detail": "'越(yuè)'를 두 번 사용하여 앞의 동사나 형용사의 변화에 따라 뒤의 상태가 더 고조됨을 뜻합니다. 만약 주어의 행동에 따라 더 무언가를 원하게 될 때는 '越...越喜欢/想' 같은 형태로 감정을 나타내기도 합니다.", "example": "<br>汉语越学越有意思。(hàn yǔ yuè xué yuè yǒu yì si) — 중국어는 배울수록 더 재미있어집니다.<br>风越刮越大。(fēng yuè guā yuè dà) — 바람이 불수록 점점 더 세게 분다.<br>这道菜越吃越辣。(zhè dào cài yuè chī yuè là) — 이 요리는 먹을수록 더 맵네.<br>外面的雨越下越大了。(wài mian de yǔ yuè xià yuè dà le) — 밖의 비가 내릴수록 점점 더 거세지네.<br>他的汉语说得越来越流利了。(tā de hàn yǔ shuō de yuè lái yuè liú lì le) — 그의 중국어 실력이 갈수록 유창해져요. (越来越는 부사처럼 쓰임)<br>我想买的东西越来越多。(wǒ xiǎng mǎi de dōng xi yuè lái yuè duō) — 사고 싶은 물건이 갈수록 많아지네.<br>那个人越看越帅。(nà ge rén yuè kàn yuè shuài) — 저 사람은 볼수록 더 잘생겼어.<br>时间越长越难忘。(shí jiān yuè cháng yuè nán wàng) — 시간이 길어질수록 더 잊기 힘들어 진다.<br>天气 越来越热了。(tiān qì yuè lái yuè rè le) — 날씨가 갈수록 더워지네요.<br>衣服越贵质量越好 吗？(yī fu yuè guì zhì liàng yuè hǎo ma) — 옷이 비쌀수록 품질이 더 좋나요?"
+						},
+						{
+							"id": "zh_g_30", "theme": "문법", "title": "[先 A，然后 B] 순차 접속사 (먼저 A 하고, 그다음에 B 하다)", "summary": "어떤 행동이나 절차를 순서대로 차근차근 진행할 때 사용하는 나열 접속사입니다.", "detail": "일의 우선순위를 정할 때 매우 요긴한 표현입니다. 먼저 할 일 앞에 부사 '先(xiān)'을 배치하고, 그다음 행동 문장 머리에 '然后(rán hòu)' 혹은 '再(zài)'를 넣어 시간의 흐름을 매끄럽게 연결합니다.", "example": "<br>我先吃饭，然后洗澡。(wǒ xiān chī fàn, rán hòu xǐ zǎo) — 나 먼저 밥 먹고, 그다음에 씻을게.<br>请先填这张表，然后再等一下。(qǐng xiān tián zhè zhāng biǎo, rán hòu zài děng yí xià) — 먼저 이 양식을 작성해 주시고, 그다음에 잠시 기다려주세요.<br>我们先去咖啡厅，然后再去电影院。(wǒ men xiān qù kā fēi tīng, rán hòu zài qù diàn yǐng yuàn) — 우리 먼저 카페에 가고, 그다음에 영화관 가자.<br>你先回房间，然后我去找你。(nǐ xiān huí fáng jiān, rán hòu wǒ qù zhǎo nǐ) — 너 먼저 방으로 돌아가 있으면, 그다음에 내가 너 찾으러 갈게.<br>先洗手，然后才能吃饭。(xiān xǐ shǒu, rán hòu cái néng chī fàn) — 먼저 손을 씻어야, 그다음에 밥을 먹을 수 있어.<br>这个问题我们要先讨论，然后决定。(zhè ge wèn tí wǒ men yào xiān tǎo lùn, rán hòu jué dìng) — 이 문제는 우리가 먼저 토론을 하고, 그다음에 결정해야 합니다.<br>我先去银行取钱，然后去买东西。(wǒ xiān qù yín háng qǔ qián, rán hòu qù mǎi dōng xi) — 나 먼저 은행에서 돈 좀 찾고, 그다음에 물건 사러 갈 거야.<br>把字先看清楚，然后写。(bǎ zì xiān kàn qīng chu, rán hòu xiě) — 글자를 먼저 똑바로 보고, 그다음에 쓰세요.<br>先坐地铁，然后换乘公交车。(xiān zuò dì tiě, rán hòu huàn chéng gōng jiāo chē) — 먼저 지하철을 타고, 그다음에 버스로 환승하세요.<br>我们先休息十分钟，然后再继续工作。(wǒ men xiān xiū xi shí fēn zhōng, rán hòu zài jì xù gōng zuò) — 우리 먼저 10분 쉬고, 그다음에 계속 일합시다."
+						},
+						{
+							"id": "zh_g_31", "theme": "기초회화문법", "title": "[为了 A，B] 목적 표현 (A를 위해서 B하다)", "summary": "어떤 목적을 달성하기 위해 특정한 행동을 함을 나타냅니다.", "detail": "'~을 위하여'라는 뜻의 전치사 '为了(wèi le)'를 문장 맨 앞에 두고 목적을 명시한 뒤, 그 뒤에 그 목적을 이루기 위한 구체적인 행동(B)을 배열합니다. 대상(명사)뿐만 아니라 행동(동사구)도 목적으로 올 수 있습니다.", "example": "<br>为了身体健康, 我每天运动。(wèi le shēn tǐ jiàn kāng, wǒ měi tiān yùn dòng) — 건강을 위해서 저는 매일 운동합니다.<br>为了去中国留学，他努力学习汉语。(wèi le qù zhōng guó liú xué, tā nǔ lì xué xí hàn yǔ) — 중국 유학을 가기 위해서 그는 열심히 중국어를 공부해요.<br>为了买房子，我一直在存钱。(wèi le mǎi fáng zi, wǒ yì zhí zài cún qián) — 집을 사기 위해서 저는 계속 저금하고 있어요.<br>为了家人的幸福，爸爸工作很辛苦。(wèi le jiā rén de xìng fú, bà ba gōng zuò hěn xīn kǔ) — 가족의 행복을 위해서 아버지는 힘들게 일하십니다.<br>为了省钱，他不吃外卖。(wèi le shěng qián, tā bù chī wài mài) — 돈을 아끼기 위해서 그는 배달 음식을 먹지 않아요.<br>这一切都是为了你。(zhè yí qiè dōu shì wèi le nǐ) — 이 모든 것은 다 너를 위한 거야.<br>为了准时到，我坐了出租车。(wèi le zhǔn shí dào, wǒ zuò le chū zū chē) — 제시간에 도착하기 위해서 저는 택시를 탔어요.<br>为了明天的考试，今天不能玩。(wèi le míng tiān de kǎo shì, jīn tiān bù néng wán) — 내일 시험을 위해서 오늘은 놀면 안 돼.<br>为了大家的方便，请保持安静。(wèi le dà jiā de fāng biàn, qǐng bǎo chí ān jìng) — 모두의 편의를 위해 조용히 해주세요.<br>你为了什么这么努力？(nǐ wèi le shén me zhè me nǔ lì) — 너는 무엇을 위해서 이렇게 열심히 하니?"
+						},
+						{
+							"id": "zh_g_32", "theme": "문법", "title": "[要是 A，就 B] 가정문 (~라면 곧 ~하다)", "summary": "'如果'와 마찬가지로 조건을 가정할 때 쓰이는 일상회화 표현입니다.", "detail": "'要是(yào shi)'는 구어(말할 때)에서 '如果' 못지않게 정말 자주 쓰이는 가정 접속사입니다. 문장 중간에 부사 '就(jiù)'와 호응하여 '만약 A라면 바로 B하다'라는 논리를 만듭니다.", "example": "<br>要是你不喜欢，就别买了。(yào shi nǐ bù xǐ huan, jiù bié mǎi le) — 만약 네가 싫어하면 사지 마.<br>要是明天天气好，我们就去公园。(yào shi míng tiān tiān qì hǎo, wǒ men jiù qù gōng yuán) — 만약 내일 날씨가 좋으면 우리는 공원에 갈 거야.<br>要是有钱，我想买车。(yào shi yǒu qián, wǒ xiǎng mǎi chē) — 만약 돈이 있으면 나 차 사고 싶어.<br>要是累了，就早点儿休息吧。(yào shi lèi le, jiù zǎo diǎnr xiū xi ba) — 만약 피곤하면 좀 일찍 쉬어라.<br>要是你有困难，就告诉我。(yào shi nǐ yǒu kùn nan, jiù gào su wǒ) — 만약 네가 어려움이 있으면 나한테 말해.<br>要是早知道，我就不去了。(yào shi zǎo zhī dào, wǒ jiù bú qù le) — 진작 알았더라면 난 안 갔을 텐데.<br>要是不会，可以问老师。(yào shi bú huì, kě yǐ wèn lǎo shī) — 만약 할 줄 모르면 선생님께 여쭤봐도 돼.<br>要是不想去，就别去了。(yào shi bù xiǎng qù, jiù bié qù le) — 만약 가기 싫으면 가지 마.<br>要是没问题，我们就签合同。(yào shi méi wèn tí, wǒ men jiù qiān hé tong) — 만약 문제가 없다면 우리는 계약서를 쓰겠습니다.<br>要是你来，我就很高兴。(yào shi nǐ lái, wǒ jiù hěn gāo xìng) — 만약 네가 온다면 난 참 기쁠 거야."
+						},
+						{
+							"id": "zh_g_33", "theme": "문법", "title": "[不仅 A，而且 B] 점층 접속사 (A뿐만 아니라 게다가 B하다)", "summary": "어떤 사실에 더해 한 단계 더 나아간 내용을 추가할 때 사용합니다.", "detail": "앞 절에 '不仅(bù jǐn)', 뒤 절에 '而且(ér qiě)'를 사용하여 내용을 누적하는 접속사 문법입니다. 문맥에 따라 '不仅' 대신 '不但(bú dàn)'을 사용할 수도 있으며, 뒤 절에는 '还(hái)'이나 '也(yě)'가 함께 어울리기도 합니다.", "example": "<br>他不仅会 white/说汉语，而且说得很好。(tā bù jǐn huì shuō hàn yǔ, ér qiě shuō de hěn hǎo) — 그는 중국어를 할 줄 알 뿐만 아니라 게다가 아주 잘해요.<br>这家餐厅的菜不仅好吃，而且很便宜。(zhè jiā cān tīng de cài bù jǐn hǎo chī, ér qiě hěn pián yi) — 이 식당의 요리는 맛있을 뿐만 아니라 게다가 저렴해요.<br>她不仅漂亮, 而且很聪明。(tā bù jǐn piào liang, ér qiě hěn cōng ming) — 그녀는 예쁠 뿐만 아니라 게다가 똑똑해요.<br>这个问题不仅很难，而且很重要。(zhè ge wèn tí bù jǐn hěn nán, ér qiě hěn zhòng yào) — 이 문제는 어려울 뿐만 아니라 게다가 중요합니다.<br>今天不仅下雨，而且刮大风。(jīn tiān bù jǐn xià yǔ, ér qiě guā dà fēng) — 오늘은 비가 올 뿐만 아니라 게다가 바람도 크게 불어요.<br>我不仅去过北京，而且去过上海。(wǒ bù jǐn qù guo běi jīng, ér qiě qù guo shàng hǎi) — 저는 베이징에 가봤을 뿐만 아니라 게다가 상하이도 가봤어요.<br>那里的衣服不仅款式好，而且质量也很好。(nà lǐ de yī fu bù jǐn kuǎn shì hǎo, ér qiě zhì liàng yě hěn hǎo) — 그곳의 옷은 디자인이 좋을 뿐만 아니라 품질도 아주 좋아요.<br>学汉语不仅可以旅游，而且对找工作有帮助。(xué hàn yǔ bù jǐn kě yǐ lǚ yóu, ér qiě duì zhǎo gōng zuò yǒu bāng zhù) — 중국어를 배우면 여행을 할 수 있을 뿐만 아니라 취업에도 도움이 됩니다.<br>他不仅喜欢运动，而且玩得很好。(tā bù jǐn xǐ huan yùn dòng, ér qiě wán de hěn hǎo) — 그는 운동을 좋아할 뿐만 아니라 아주 잘해요.<br>这件衣服不仅贵，而且不合适。(zhè jiàn yī fu bù jǐn guì, ér qiě bù hé shì) — 이 옷은 비쌀 뿐만 아니라 게다가 맞지도 않아요."
+						},
+						{
+							"id": "zh_g_34", "theme": "기초회화문법", "title": "[A 还是 B？] 선택 의문문 (A인가요 아니면 B인가요?)", "summary": "두 가지 이상의 옵션 중 하나를 고르도록 질문할 때 사용합니다.", "detail": "선택지를 제공할 때 쓰는 의문 접속사 '还是(hái shi)'입니다. 주의할 점은 '还是'는 질문을 하는 '의문문'에만 사용된다는 점입니다. (평서문인 '~이거나'는 '或者'를 씁니다.) 문장 끝에 '吗'를 붙이지 않는 것이 규칙입니다.", "example": "<br>你喝咖啡还是茶？(nǐ hē kā fēi hái shi chá) — 커피 마실래요, 아니면 차 마실래요?<br>他是韩国人还是中国人？(tā shì hán guó rén hái shi zhōng guó rén) — 그는 한국인인가요, 아니면 중국인인가요?<br>你想今天去还是明天去？(nǐ xiǎng jīn tiān qù hái shi míng tiān qù) — 너 오늘 가고 싶니, 아니면 내일 가고 싶니?<br>我们坐地铁还是坐公交车？(wǒ men zuò dì tiě hái shi zuò gōng jiāo chē) — 우리 지하철 탈까요, 아니면 버스 탈까요?<br>这个包是你的还是他的？(zhè ge bāo shì wǒ de hái shi tā de) — 이 가방은 네 것이니, 아니면 그 사람 것이니?<br>去这家饭馆还是那家？(qù zhè jiā fàn guǎn hái shi nà jiā) — 이 식당으로 갈래요, 아니면 저 식당으로 갈래요?<br>汉语难还是英语难？(hàn yǔ nán hái shi yīng yǔ nán) — 중국어가 어렵나요, 아니면 영어가 어렵나요?<br>你想买大的还是小的？(nǐ xiǎng mǎi dà de hái shi xiǎo de) — 큰 거 사고 싶으세요, 아니면 작은 거 사고 싶으세요?<br>现在是去公司还是回家？(xiàn zài shì qù gōng sī hái shi huí jiā) — 지금 회사에 가는 건가요, 아니면 집에 가는 건가요?<br>你喜欢看电影还是听音乐？(nǐ xǐ huan kàn diàn yǐng hái shi tīng yīn yuè) — 영화 보는 걸 좋아하세요, 아니면 음악 듣는 걸 좋아하세요?"
+						},
+						{
+							"id": "zh_g_35", "theme": "기초회화문법", "title": "[~ 吧] 추측과 확인의 어조 (~이죠? ~이겠지요?)", "summary": "어떤 사실을 이미 대략 짐작하고 있으면서 확인 차 물어볼 때 씁니다.", "detail": "제안이나 청유(~합시다)로 쓰이던 '吧(ba)'가 문장 끝에서 의문조사로 쓰이면 '반신반의하며 추측하여 묻는' 뉘앙스가 됩니다. 100% 모를 때 쓰는 '吗(ma)'와 달리, '아마 그럴 것이다'라고 생각하며 동의를 구할 때 씁니다.", "example": "<br>你是韩国人吧。(nǐ shì hán guó rén ba) — 당신은 한국인이시죠? (어느 정도 확신)<br>今天天气很好吧。(jīn tiān tiān qì hěn hǎo ba) — 오늘 날씨 좋지요?<br>这件衣服很贵吧。(zhè jiàn yī fu hěn guì ba) — 이 옷 많이 비싸죠?<br>你已经知道了吧。(nǐ yǐ jīng zhī dào le ba) — 너 이미 알고 있지?<br>那家餐厅的菜好吃吧。(nà jiā cān tīng de cài hǎo chī ba) — 그 식당 요리 맛있지?<br>汉语不太难吧。(hàn yǔ bú tài nán ba) — 중국어 그리 어렵지 않죠?<br>他是你的男朋友吧。(tā shì nǐ de nán péng you ba) — 그는 네 남자친구지?<br>你明天不来吧。(nǐ míng tiān bù lái ba) — 너 내일 안 오지?<br>工作很累吧。(gōng zuò hěn lèi ba) — 일하는 거 많이 힘들죠?<br>现在已经十二点了吧。(xiàn zài yǐ jīng shí èr diǎn le ba) — 지금 벌써 12시가 넘었지?"
+						},
+						{
+							"id": "zh_g_36", "theme": "문법", "title": "[听说 ~] 전해 듣기 (~라더군요, ~라고 들었다)", "summary": "다른 사람이나 소문으로부터 들은 내용을 전달할 때 문장 맨 앞에 씁니다.", "detail": "'듣다'의 '听(tīng)'과 '말하다'의 '说(shuō)'가 결합한 단어로, '듣자 하니 ~라 카더라', '~라고 들었다'라는 표현입니다. 주어 뒤나 문장 맨 앞에 와서 객관적인 소식을 전할 때 아주 유용합니다.", "example": "<br>听说你要结婚了。(tīng shuō nǐ yào jié hūn le) — 너 결혼한다면서? (결혼한다고 들었어)<br>听说那部电影很好看。(tīng shuō nà bù diàn yǐng hěn hǎo kàn) — 그 영화 아주 재미있다더군요.<br>听说中国菜很辣。(tīng shuō zhōng guó cài hěn là) — 중국 요리는 많이 맵다고 들었어요.<br>我听说他不来上班了。(wǒ tīng shuō tā bù lái shàng bān le) — 그 사람 이제 출근 안 한다고 들었어요.<br>听说明天要下雨。(tīng shuō míng tiān yào xià yǔ) — 내일 비가 온다더군요.<br>听说他汉语说得非常好。(tīng shuō tā hàn yǔ shuō de fēi cháng hǎo) — 그 사람 중국어 엄청 잘한다고 들었어.<br>听说那家饭馆最近很火。(tīng shuō nà jiā fàn guǎn zuì jìn hěn huǒ) — 그 식당 요즘 엄청 핫하다(인기 많다)면서요.<br>听说北京的冬天非常冷。(tīng shuō běi jīng de dōng tiān fēi cháng lěng) — 베이징의 겨울은 무척 춥다고 들었습니다.<br>你听说过这事吗？(nǐ tīng shuō guo zhè shì ma) — 너 이 소리(이 일) 들어본 적 있어?<br>听说这里的风景很美。(tīng shuō zhè lǐ de fēng jǐng hěn měi) — 여기 풍경이 아주 아름답다고 들었어요."
+						},
+						{
+							"id": "zh_g_37", "theme": "기초어순", "title": "[对 + 대상 + 형용사/동사] 대상을 지정하는 전치사 (~에 대하여)", "summary": "어떤 행동이나 감정이 향하는 구체적인 대상을 지정할 때 씁니다.", "detail": "'~에 대하여, ~를 대하다'라는 전치사 '对(duì)'입니다. [对 + 대상] 구조를 동사나 형용사 앞에 배치하여, 내 생각이나 반응이 '누구 혹은 무엇을 향해' 일어나는지 명확히 해줍니다.", "example": "<br>他对我很亲切。(tā duì wǒ hěn qīn qiè) — 그는 나에게 매우 친절해요.<br>我 \u200b\u200b对汉语很感兴趣。(wǒ duì hàn yǔ hěn gǎn xìng qù) — 저는 중국어에 아주 관심이 많아요.<br>跑步对身体很好。(pǎo bù duì shēn tǐ hěn hǎo) — 달리기는 건강에 아주 좋습니다.<br>你对这个有什么意见？(nǐ duì zhè ge yǒu shén me yì jiàn) — 당신은 이것에 대해 어떤 의견이 있으신가요?<br>他对自己要求很严。(tā duì zì jǐ yāo qiú hěn yán) — 그는 자신에 대해 요구가 엄격하다(스스로에게 엄격하다).<br>多喝水对皮肤好。(duō hē shuǐ duì pí fū hǎo) — 물을 많이 마시는 것은 피부에 좋아요.<br>别对他生气了。(bié duì tā shēng qì le) — 그 사람에게 화내지 마.<br>老师对学生都负责。(lǎo shī duì xué sheng dōu fù zé) — 선생님은 학생들에게 모두 책임감이 있으십니다.<br>我对这里不太熟悉。(wǒ duì zhè lǐ bú tài shú xī) — 저는 이곳에 대해 지리가 그리 익숙하지 않아요.<br>抽烟对身体不好。(chōu yān duì shēn tǐ bù hǎo) — 흡연은 몸에 좋지 않습니다."
+						},
+						{
+							"id": "zh_g_38", "theme": "문법", "title": "[除了 ... 以外] 예외 지정 (~을 제외하고, ~외에)", "summary": "어떤 범위를 한정하여 특정 대상을 예외로 둘 때 완벽한 세트로 씁니다.", "detail": "27번에서 다룬 '除了' 구조를 문어적, 혹은 정형화하여 완성한 격식 있는 형태입니다. '除了 [대상] 以外(yǐ wài)'로 감싸주어 의미를 더 명확하게 차단합니다. 마찬가지로 '都(제외)'나 '还(추가)'와 호응합니다.", "example": "<br>除了星期天以外，我都上班。(chú le xīng qī tiān yǐ wài, wǒ dōu shàng bān) — 일요일을 제외하고 저는 다 출근해요.<br>除了他以外，大家都到了。(chú le tā yǐ wài, dà jiā dōu dào le) — 그를 제외하고 모두 도착했습니다.<br>除了辣的以外，别的朋友都吃。(chú le là de yǐ wài, bié de dōu chī) — 매운 것만 빼고 다른 건 다 먹어요.<br>除了汉语以外，我还会说英语。(chú le hàn yǔ yǐ wài, wǒ hái huì shuō yīng yǔ) — 중국어 외에도 저는 영어를 할 줄 압니다. (추가)<br>除了咖啡以外，我们还买了蛋糕。(chú le kā fēi yǐ wài, wǒ men hái mǎi le dàn gāo) — 커피 외에도 우리는 케이크를 샀어요.<br>除了他以外，没有别的人知道。(chú le tā yǐ wài, méi yǒu bié de rén zhī dào) — 그 사람 말고는 아는 사람이 아무도 없어요.<br>除了工作以外，他只喜欢睡觉。(chú le gōng zuò yǐ wài, tā zhǐ xǐ huan shuì jiào) — 일하는 거 외에 그는 오직 잠자는 것만 좋아해요.<br>除了这个包以外，那个也很好看。(chú le zhè ge bāo yǐ wài, nà ge yě hěn hǎo kàn) — 이 가방 외에 저것도 아주 예쁘네요.<br>除了学费以外，还要花很多钱。(chú le xué fèi yǐ wài, hái yào huā hěn duō qián) — 학비 외에도 돈이 많이 듭니다.<br>除了不便宜以外，别的都好。(chú le bù pián yi, yǐ wài, bié de dōu hǎo) — 저렴하지 않은 점을 제외하면 나머지는 다 좋아요."
+						},
+						{
+							"id": "zh_g_39", "theme": "기초회화문법", "title": "[只要 A，就 B] 충분조건 (A 하기만 하면 바로 B 하다)", "summary": "최소한의 필요한 조건(A)만 갖추어지면 바로 결과(B)가 성립됨을 뜻합니다.", "detail": "'~하기만 하면'이라는 뜻의 접속사 '只要(zhǐ yào)'와 이에 호응하는 부사 '就(jiù)'의 매칭입니다. 복잡한 조건 없이 '이거 하나면 충분하다'라는 느낌을 줄 때 회화에서 매우 유용합니다.", "example": "<br>只要努力，就能学好。(zhǐ yào nǔ lì, jiù néng xué hǎo) — 노력하기만 하면 잘 배울 수 있어요.<br>只要你来，我就去。(zhǐ yào nǐ lái, wǒ jiù qù) — 네가 오기만 하면 난 바로 갈게.<br>只要有时间，我就运动。(zhǐ yào yǒu shí jiān, jiù wǒ yùn dòng) — 시간만 나면 난 바로 운동해.<br>只要你喜欢，我就给你买。(zhǐ yào nǐ xǐ huan, wǒ jiù gěi nǐ mǎi) — 네가 좋아하기만 하면 내가 바로 사줄게.<br>只要不下雨，我们休就去爬山。(zhǐ yào bú xià yǔ, wǒ men jiù qù pá shān) — 비만 안 오면 우리 바로 등산 갈 거야.<br>只要没问题，现在就签合同。(zhǐ yào méi wèn tí, xiàn zài jiù qiān hé tong) — 문제만 없으면 지금 바로 계약합시다.<br>只要坚持，就会成功。(zhǐ yào jiān chí, jiù huì chéng gōng) — 버티기(지속하기)만 하면 곧 성공할 거예요.<br>只要问他，就知道了。(zhǐ yào wèn tā, jiù zhī dào le) — 그에게 물어보기만 하면 바로 알 수 있어.<br>只要是好东西，多贵我都买。(zhǐ yào shì hǎo dōng xi, duō guì wǒ dōu mǎi) — 좋은 물건이기만 하면 아무리 비싸도 난 다 살 거야.<br>只要听一遍，你就会唱。(zhǐ yào tīng yí biàn, nǐ jiù huì chàng) — 한 번 듣기만 하면 너도 바로 부를 수 있을 거야."
+						},
+						{
+							"id": "zh_g_40", "theme": "문법", "title": "[~ 或者是 ~] 평서문 선택 (~이거나, 또는)", "summary": "의문문이 아닌 평서문에서 여러 대상 중 하나를 선택해 나열할 때 씁니다.", "detail": "34번의 '还是'가 질문할 때의 '아니면'이었다면, '或者(huò zhě)'는 나열하거나 서술할 때 쓰는 '~이거나/또는'입니다. 회화에서는 단독 명사뿐만 아니라 'A 행동을 하거나 B 행동을 한다'의 문장 연결에도 광범위하게 쓰입니다.", "example": "<br>我打算喝咖啡或者茶。(wǒ dǎ suàn hē kā fēi huò zhě chá) — 저는 커피를 마시거나 차를 마실 계획이에요.<br>星期六或者星期日都可以。(xīng qī liù huò zhě xīng qī rì dōu kě yǐ) — 토요일이나 일요일 다 괜찮습니다.<br>我想去中国或者日本旅游。(wǒ xiǎng qù zhōng guó huò zhě rì běn lǚ yóu) — 저는 중국이나 일본으로 여행을 가고 싶어요.<br>下课后，我去看电影或者去图书馆。(xià kè hòu, wǒ qù kàn diàn yǐng huò zhě qù tú shū guǎn) — 수업 끝나고 전 영화를 보거나 도서관에 가요.<br>你可以问我或者问老师。(nǐ kě yǐ wèn wǒ huò zhě wèn lǎo shī) — 나한테 물어보거나 선생님께 여쭤봐도 돼.<br>吃米饭或者吃面条都可以。(chī mǐ fàn huò zhě chī miàn tiáo dōu kě yǐ) — 밥을 먹거나 국수를 먹거나 다 괜찮아요.<br>你可以坐地铁或者坐出租车。(nǐ kě yǐ zuò dì tiě huò zhě zuò chū zū chē) — 지하철을 타거나 택시를 타시면 됩니다.<br>今天晚上我想吃披萨或者炸鸡。(jīn tiān wǎn shang wǒ xiǎng chī pī sà huò zhě zhà jī) — 오늘 저녁에 피자나 치킨을 먹고 싶어.<br>有不懂的可以查字典或者上网看。(yǒu bù dǒng de kě yǐ chá zì diǎn huò zhě shàng wǎng kàn) — 모르는 게 있으면 사전을 찾거나 인터넷을 보면 돼.<br>他是坐火车或者飞机来的。(tā shì zuò huǒ chē huò zhě fēi jī lái de) — 그는 기차나 비행기를 타고 온 거야."
+						},
+						{
+							"id": "zh_g_41", "theme": "문법", "title": "[应该 + 동사] 당위성 표현 (~해야 한다, 마땅히 ~이다)", "summary": "도덕적, 객관적, 혹은 상식적으로 당연히 해야 하는 의무를 나타냅니다.", "detail": "'~해야 한다'라는 뜻의 능원동사(조동사) '应该(yīng gāi)'입니다. 강한 명령보다는 '마땅히 그렇게 하는 것이 옳다' 혹은 사정상 '당연히 그렇게 될 것이다'라는 권유와 추측의 뉘앙스를 동사 앞에 더해줍니다.", "example": "<br>你应该努力学习。(nǐ yīng gāi nǔ lì xué xí) — 너는 열심히 공부해야 해.<br>我们应该保护环境。(wǒ men yīng gāi bǎo hù huán jìng) — 우리는 환경을 보호해야 합니다.<br>你不应该对妈妈生气。(nǐ bù yīng gāi duì mā ma shēng qì) — 너 엄마한테 화내면 안 돼. (부정형)<br>现在应该出发了。(xiàn zài yīng gāi chū fā le) — 지금 당연히 출발해야 할 때야.<br>生病了就应该去医院。(shēng bìng le jiù yīng gāi qù yī yuàn) — 병이 났으면 마땅히 병원에 가야지.<br>他现在应该在公司。(tā xiàn zài yīng gāi zài gōng sī) — 그는 지금 당연히 회사에 있을 거야. (추측)<br>你应该多喝水。(nǐ yīng gāi duō hē shuǐ) — 너 물 좀 많이 마셔야겠다.<br>这件事你应该早点儿告诉我。(zhè jiàn shì nǐ yīng gāi zǎo diǎnr gào su wǒ) — 이 일은 네가 나한테 진작 말해줬어야지.<br>大家都应该遵守交通规则。(dà jiā dōu yīng gāi zūn shǒu jiāo tōng guī zé) — 모두가 교통법규를 준수해야 합니다.<br>我不应该买这件衣服。(wǒ bù yīng gāi mǎi zhè jiàn yī fu) — 나 이 옷 사지 말았어야 했는데."
+						},
+						{
+							"id": "zh_g_42", "theme": "기초회화문법", "title": "[동사 + 不 + 결과/방향] 가능보어 부정형 (~할 수 없다)", "summary": "신체적 능력 부족이나 객관적 조건 때문에 행동을 완수할 수 없음을 나타냅니다.", "detail": "회화에서 정말 많이 쓰는 '불가능' 표현입니다. 동사와 보어(결합단어) 사이에 '不(bù)'를 끼워 넣어 '[동사] 해도 [보어]라는 결과에 도달할 수 없다'는 뜻을 만듭니다. 예를 들어 '听懂(듣고 이해하다)' 사이에 不를 넣으면 '听不懂( 들어도 이해할 수 없다)'가 됩니다.", "example": "<br>我听不懂中国话。(wǒ tīng bù dǒng zhōng guó huà) — 저 중국어는 들어도 이해할 수 없어요. (못 알아들어요)<br>字太小，我看주어/不清。(zì tài xiǎo, wǒ kàn bù qīng) — 글씨가 너무 작아서 잘 보이지 않아요. (봐도 선명하지 않음)<br>我今天去不了公司。(wǒ jīn tiān qù bù liǎo gōng sī) — 저 오늘 회사에 갈 수 없어요. (상황상 불가능)<br>作业太多，我做不完。(zuò yè tài duō, wǒ zuò bù wán) — 숙제가 너무 많아서 다 끝낼 수가 없어요.<br>那家店太贵，我买不起。(nà jiā diàn tài guì, wǒ mǎi bù qǐ) — 그 가게는 너무 비싸서 제가 살 엄두가 안 나요. (경제적 능력 부족)<br>今天太累了，我睡不着。(jīn tiān tài lèi le, wǒ shuì bù zháo) — 오늘 너무 피곤해서 잠이 안 와요. (자려고 해도 잠들 수 없음)<br>钱包放在哪儿？我找不到。(qián bāo fàng zài nǎr? wǒ zhǎo bú dào) — 지갑 어디 뒀지? 못 찾겠어.<br>这里太吵，我听不见。(zhè lǐ tài chǎo, wǒ tīng bú jiàn) — 여기 너무 시끄러워서 안 들려요.<br>这道菜太辣，我吃不下。(zhè dào cài tài là, wǒ chī bú xià) — 이 요리는 너무 매워서 못 먹겠어요. (삼킬 수 없음)<br>太多了，我一个人搬不动。(tài duō le, wǒ yí ge rén bān bú dòng) — 너무 많아서 저 혼자서는 못 옮겨요."
+						},
+						{
+							"id": "zh_g_43", "theme": "문법", "title": "[只有 A，才 B] 유일조건 접속사 (오직 A 해야만 비로소 B 하다)", "summary": "B가 이루어지기 위한 유일하고 필수적인 단 하나의 조건(A)을 지정합니다.", "detail": "39번의 '只要(그거면 충분해)'와 정반대 개념입니다. '오직 ~해야만'이라는 뜻의 '只有(zhǐ yǒu)'와 '그제야 비로소'라는 뜻의 부사 '才(cái)'가 만나, '이 조건이 없으면 절대로 결과가 나오지 않는다'라는 강력한 필수 조건을 나타냅니다. '才' 뒤에는 '了'를 쓰지 않는 것이 원칙입니다.", "example": "<br>只有努力学习，才能学好汉语。(zhǐ yǒu nǔ lì xué xí, cái néng xué hǎo hàn yǔ) — 오직 열심히 공부해야만 비로소 중국어를 잘할 수 있다.<br>只有你去，我才去。(zhǐ yǒu nǐ qù, wǒ cái qù) — 오직 네가 가야만 나도 갈 거야.<br>只有多运动，身体才会健康。(zhǐ yǒu duō yùn dòng, shēn tǐ cái huì jiàn kāng) — 오직 운동을 많이 해야만 몸이 건강해질 수 있어요.<br>只有多听，才能听懂。(zhǐ yǒu duō tīng, cái néng tīng dǒng) — 오직 많이 들어야만 비로소 알아들을 수 있습니다.<br>只有坚持，才能成功。(zhǐ yǒu jiān chí, cái néng chéng gōng) — 오직 끝까지 버텨야만 비로소 성공할 수 있어요.<br>只有你，才能帮我。(zhǐ yǒu nǐ, cái néng bāng wǒ) — 오직 너만이 나를 도와줄 수 있어.<br>只有到周末，我才有时间。(zhǐ yǒu dào zhōu mò, wǒ cái yǒu shí jiān) — 오직 주말이 되어야만 난 비로소 시간이 나.<br>只有查字典，才能知道这个字的意思。(zhǐ yǒu chá zì diǎn, cái néng zhī dào zhè ge zì de yì si) — 오직 사전을 찾아봐야만 비로소 이 글자의 뜻을 알 수 있어.<br>只有省钱，才能买房子。(zhǐ yǒu shěng qián, cái néng mǎi fáng zi) — 오직 돈을 아껴야만 집을 살 수 있습니다.<br>只有签了合同，才可以工作。(zhǐ yǒu qiān le hé tong, cái kě yǐ gōng zuò) — 오직 계약서를 써야만 비로소 일을 할 수 있습니다."
+						},
+						{
+							"id": "zh_g_44", "theme": "기초어순", "title": "[往 + 방향/장소 + 동사] 방향 지향 표현 (~를 향해 가다/하다)", "summary": "동작의 진행 방향이나 공간적 목표를 지시할 때 사용합니다.", "detail": "'~를 향하여'라는 전치사 '往(wǎng)'입니다. 주로 [往 + 동/서/남/북/앞/뒤/좌/우 + 동사] 형태로 길을 안내하거나 사람의 시선, 행동의 방향을 지시할 때 일상회화에서 핵심적으로 활용됩니다.", "example": "<br>往外/前走。(wǎng qián zǒu) — 앞으로 걸어가세요.<br>请往右拐。(qǐng wǎng yòu guǎi) — 오른쪽으로 도세요. (우회전하세요)<br>往左看，地铁站在那里。(wǎng zuǒ kàn, dì tiě zhàn zài nà lǐ) — 왼쪽을 보세요, 지하철역이 저기 있습니다.<br>请往后退一步。(qǐng wǎng hòu tuì yí bù) — 뒤로 한 걸음 물러서 주세요.<br>一直往南开就到了。(yì zhí wǎng nán kāi jiù dào le) — 쭉 남쪽으로 운전해 가면 도착합니다.<br>请把车往前往挪一下。(qǐng bǎ chē wǎng qián nuó yí xià) — 차를 앞으로 좀만 옮겨주세요.<br>大家往里走，里面有位子。(dà jiā wǎng lǐ zǒu, lǐ mian yǒu wèi zi) — 여러분 안쪽으로 들어가세요, 안쪽에 자리가 있습니다.<br>往上看，那是飞机。(wǎng shàng kàn, nà shì fēi jī) — 위를 봐봐, 저거 비행기야.<br>这班列车是开往北京的。(zhè bān liè chē shì kāi wǎng běi jīng de) — 이 열차는 베이징을 향해 가는 열차입니다.<br>不要往回看，走吧。(bú yào wǎng huí kàn, zǒu ba) — 뒤돌아보지 말고 가자."
+						},
+						{
+							"id": "zh_g_45", "theme": "기초회화문법", "title": "[太 ~ 了] 감탄 및 과도함 표현 (너무 ~하다!)", "summary": "상태의 정도가 매우 심함을 나타내거나, 감탄의 감정을 어조에 실어 표현합니다.", "detail": "'너무, 아주'라는 뜻의 부사 '太(tài)'와 문장 맨 끝의 어기조사 '了(le)'가 한 세트로 호응하는 고정 구문입니다. 7번에서 맛보기로 보았던 구조로, 단순히 '매우'라는 뜻도 되지만 '기준치를 넘어서서 과하다'라는 불평의 의미도 함께 담깁니다.", "example": "<br>太好了！(tài hǎo le) — 와, 너무 잘됐다! (최고야!)<br>这件衣服太贵了。(zhè jiàn yī fu tài guì le) — 이 옷은 너무 비싸요. (과함)<br>今天天气太热了。(jīn tiān tiān qì tài rè le) — 오늘 날씨 정말 너무 덥다.<br>太谢谢你了。(tài xiè xie nǐ le) — 정말 너무 고마워.<br>中国菜太好吃了。(zhōng guó cài tài hǎo chī le) — 중국 요리는 진짜 너무 맛있다!<br>这里太吵了，我们走吧。(zhè lǐ tài chǎo le, wǒ men zǒu ba) — 여기 너무 시끄럽다, 우리 가자.<br>已经太晚了，明天再说吧。(yǐ jīng tài wǎn le, míng tiān zài shuō ba) — 이미 너무 늦었으니 내일 다시 얘기하자.<br>作业太 confederate/多了，我做不完。(zuò yè tài duō le, wǒ做不完) — 숙제가 너무 많아서 다 못 끝내겠어.<br>你太聪明了！(nǐ tài cōng ming le) — 너 진짜 너무 똑똑하다!<br>这道题太难了，我不会。(zhè dào tí tài nán le, wǒ bú huì) — 이 문제는 너무 어려워서 전 모르겠어요."
+						},
+						{
+							"id": "zh_g_46", "theme": "문법", "title": "[~ 的时候] 시간 명시 (~할 때)", "summary": "어떤 행동을 하거나 특정 상태에 처해 있는 시간적 배경을 설정합니다.", "detail": "명사나 동사구, 심지어 긴 문장 뒤에 '的时候(de shí hou)'를 붙여 '~할 때'라는 타이밍을 나타냅니다. 과거, 현재, 미래 시제에 상관없이 모두 사용할 수 있어 회화 전개에 필수적입니다.", "example": "<br>我吃饭的时候不看手机。(wǒ chī fàn de shí hou bú kàn shǒu jī) — 나는 밥 먹을 때 휴대폰을 보지 않는다.<br>你什么时候有空？(nǐ shén me shí hou yǒu kòng) — 너 '어느 때'에 시간 있니? (언제 시간 돼?)<br>去中国的时候，我想买茶。(qù zhōng guó de shí hou, wǒ xiǎng mǎi chá) — 중국에 갈 때, 나 차를 사고 싶어.<br>小的时候，我很喜欢看漫画。(xiǎo de shí hou, wǒ hěn xǐ huan kàn màn huà) — 어렸을 때, 나는 만화책 보는 것을 아주 좋아했다.<br>下雨的时候，我喜欢在家里睡觉。(xià yǔ de shí hou, wǒ xǐ huan zài jiā lǐ shuì jiào) — 비가 올 때, 나는 집에서 잠자는 걸 좋아해.<br>生病的时候，最想家。(shēng bìng de shí hou, zuì xiǎng jiā) — 몸이 아플 때, 집 생각이 가장 많이 난다.<br>工作的时候请认真点儿。(gōng zuò de shí hou qǐng rèn zhēn diǎnr) — 일할 때는 좀 진지하게(열심히) 해주세요.<br>我到家的时候，妈妈正在做饭。(wǒ dào jiā de shí hou, mā ma zhèng zài zuò fàn) — 내가 집에 도착했을 때, 엄마는 요리를 하던 중이었다.<br>有困难的时候，可以给我打电话。(yǒu kùn nan de shí hou, kě yǐ gěi wǒ dǎ diàn huà) — 어려움이 있을 때, 나한테 전화해도 돼.<br>睡觉的时候请关灯。(shuì jiào de shí hou qǐng guān dēng) — 잘 때는 불을 꺼주세요."
+						},
+						{
+							"id": "zh_g_47", "theme": "기초회화문법", "title": "[~ 以前 / ~ 以后] 전후 관계 표현 (~하기 전 / ~한 후)", "summary": "동작이나 사건의 시간적 전후 관계를 구분하여 명시합니다.", "detail": "행동이나 명사 뒤에 '以前(yǐ qián)'을 붙이면 '~하기 전'이 되고, '以后(yǐ hòu)'를 붙이면 '~한 후'가 됩니다. '以前' 단독으로 쓰이면 '예전에, 과거에'라는 뜻의 부사로도 쓰입니다.", "example": "<br>吃饭以前要洗手。(chī fàn yǐ qián yào xǐ shǒu) — 밥 먹기 전에 손을 씻어야 해요.<br>下班以后我们去喝一杯吧。(xià bān yǐ hòu wǒ men qù hē yì bēi ba) — 퇴근한 후에 우리 한잔하러 가자.<br>半年以前，我来到了中国。(bàn nián yǐ qián, wǒ lái dào le zhōng guó) — 반년 전에, 저는 중국에 왔습니다.<br>毕业以后你打算做什么？(bì yè yǐ hòu nǐ dǎ suàn zuò shén me) — 졸업한 후에 너는 무엇을 할 계획이니?<br>睡觉以前不要吃东西。(shuì jiào yǐ qián bú yào chī dōng xi) — 자기 전에 음식 먹지 마세요.<br>来韩国以后，我交了很多朋友。(lái hán guó yǐ hòu, wǒ jiāo le hěn duō péng you) — 한국에 온 후에, 저는 친구를 많이 사겼어요.<br>出发以前请再检查一下行李。(chū fā yǐ qián qǐng zài jiǎn chá yí xià xíng li) — 출발하기 전에 짐을 한 번 더 체크해 주세요.<br>十分钟以后开会。(shí fēn zhōng yǐ hòu kāi huì) — 10분 후에 회의합니다.<br>我以前见过那个人。(wǒ yǐ qián jiàn guo nà ge rén) — 나 예전에 저 사람 만난 적 있어. (단독 사용)<br>学会汉语以后，我想去中国旅游。(xué huì hàn yǔ yǐ hòu, wǒ xiǎng qù zhōng guó lǚ yóu) — 중국어를 마스터한 후에, 전 중국 여행을 가고 싶어요."
+						},
+						{
+							"id": "zh_g_48", "theme": "문법", "title": "[除了 A，也/还 B] 추가 접속사 (A 외에도, 추가로 B도 하다)", "summary": "27번과 38번에서 학습한 '除了' 구조 중 '포함 및 추가'의 뉘앙스만 콕 집은 형태입니다.", "detail": "'除了(chú le)' 뒤에 오는 대상을 배제하는 것이 아니라 기본 옵션으로 깔아두고, 뒷문장에 '也(yě)'나 '还(hái)'을 붙여 'A는 물론이고 추가로 B까지 더 있다'는 누적·확장 회화를 구사할 때 씁니다.", "example": "<br>除了会说汉语，他还会说英语。(chú le huì shuō hàn yǔ, tā hái huì shuō yīng yǔ) — 중국어를 할 줄 아는 것 외에, 그는 영어도 할 줄 안다.<br>除了北京，我也去过上海。(chú le běi jīng, wǒ yě qù guo shàng hǎi) — 베이징 외에, 저 상하이도 가본 적 있어요.<br>今天除了买衣服，我还买了个包。(jīn tiān chú le mǎi yī fu, wǒ hái mǎi le ge bāo) — 오늘 옷을 산 것 외에, 나 가방도 하나 샀어.<br>除了面条，他还点 了一个炒饭。(chú le miàn tiáo, tā hái diǎn le yí ge chǎo fàn) — 국수 말고도, 그는 볶음밥도 하나 더 주문했어.<br>除了听音乐，你还有什么爱好？(chú le tīng yīn yuè, nǐ hái yǒu shén me ài hào) — 음악 듣는 것 말고, 너 또 무슨 취미가 있니?<br>那家餐厅除了菜好吃，服务也很好。(nà jiā cān tīng chú le cài hǎo chī, fú wù yě hěn hǎo) — 그 식당은 요리가 맛있는 것 외에, 서비스도 아주 좋아요.<br>除了周末，平时他也很忙。(chú le zhōu mò, píng shí tā yě hěn māng) — 주말 외에, 평소에도 그는 아주 바쁩니다.<br>除了水果，我还喜欢吃蛋糕。(chú le shuǐ guǒ, wǒ hái xǐ huan chī dàn gāo) — 과일 말고도, 난 케이크 먹는 것도 좋아해.<br>这里除了有超市，附近还有银行。(zhè lǐ chú le yǒu chāo shì, fù jìn hái yǒu yín háng) — 여기 마트가 있는 것 외에, 근처에 은행도 있습니다.<br>除了看电影，我还喜欢看书。(chú le kàn diàn yǐng, wǒ hái xǐ huan kàn shū) — 영화 보는 것 외에, 난 책 읽는 것도 좋아해."
+						},
+						{
+							"id": "zh_g_49", "theme": "기초회화문법", "title": "[~ 差不多] 부사 및 형용사 활용 (거의, 비슷하다)", "summary": "정도가 거의 일치하거나 수량이 어림잡아 비슷할 때 일상에서 매주 자주 씁니다.", "detail": "'차이가 얼마 없다'라는 뜻의 '差不多(chà bu duō)'입니다. 동사나 수량 앞에 쓰이면 '거의, 대략'이라는 부사 역할을 하고, 문장 맨 끝에서 서술어로 쓰이면 '두 대상이 비슷하다, 얼추 다 됐다'라는 뜻을 가집니다.", "example": "<br>我的汉语和他的差不多。(wǒ de hàn yǔ hé tā de chà bu duō) — 내 중국어 실력과 그 사람 실력은 비슷해. (서술어)<br>作业我差不多做完了。(zuò yè wǒ chà bu duō zuò wán le) — 숙제 나 거의 다 끝냈어. (부사)<br>这两个包价格 差不多。(zhè liǎng ge bāo jià gé chà bu duō) — 이 두 가방은 가격이 비슷비슷해요.<br>我们差不多等了一个小时。(wǒ men chà bu duō děng le yí ge xiǎo shí) — 우리 거의 한 시간 동안 기다렸어.<br>他跟我差不多高。(tā gēn wǒ chà bu duō gāo) — 그는 나와 키가 거의 비슷해.<br>电影差不多要开始了。(diàn yǐng chà bu duō yào kāi shǐ le) — 영화 거의 시작할 때 됐어.<br>大家都差不多到了。(dà jiā dōu chà bu duō dào le) — 사람들 거의 다 도착했어.<br>这件衣服的颜色和那件 差不多。(zhè jiàn yī fu de yán sè hé nà jiàn chà bu duō) — 이 옷의 색상은 저 옷과 거의 비슷해요.<br>今天的工作差不多好了。(jīn tiān de gōng zuò chà bu duō hǎo le) — 오늘 업무는 얼추 다 마무리됐어.<br>我每天差不多十一点睡觉。(wǒ měi tiān chà bu duō shí yī diǎn shuì jiào) — 나는 매일 대략 11시쯤에 잔다."
+						},
+						{
+							"id": "zh_g_50", "theme": "문법", "title": "[~ 听说过 / 没听说过] 경험적 알림 (들어본 적 있다 / 없다)", "summary": "특정 소문, 이름, 지식 등에 대해 과거에 들어서 알고 있는지 여부를 나타냅니다.", "detail": "36번의 '听说'에 경험 조사 '过(guo)'가 결합한 회화 전용 단어 패턴입니다. 어떤 화제를 꺼내기 전에 상대방의 배경지식을 확인하는 용도로 원어민들이 입에 달고 사는 표현입니다.", "example": "<br>你听说过这个人吗？(nǐ tīng shuō guo zhè ge rén ma) — 너 이 사람 이름 들어본 적 있어?<br>我没听说过这件事。(wǒ méi tīng shuō guo zhè jiàn shì) — 나 이 일은 들어본 적이 없어. (부정형)<br>我以前听说过那家餐厅。(wǒ yǐ qián tīng shuō guo nà jiā cān tīng) — 나 예전에 그 레스토랑 들어본 적 있어.<br>你听说过北京烤鸭吗？(nǐ tīng shuō guo běi jīng kǎo yā ma) — 너 베이징 카오야라고 들어봤니?<br>大家都没听说过这个名字。(dà jiā dōu méi tīng shuō guo zhè ge míng zi) — 사람들 모두 이 이름은 들어본 적이 없대요.<br>我听说过他要去中国留学。(wǒ tīng shuō guo tā yào qù zhōng guó liú xué) — 그 사람이 중국으로 유학 간다는 소리는 들어본 적 있어.<br>你听说过这首歌吗？(nǐ tīng shuō guo zhè shǒu gē ma) — 너 이 노래 들어본 적 있니?<br>很多韩国인都听说过孙悟空。(hěn duō hán guó rén dōu tīng shuō guo sūn wù kōng) — 많은 한국인들이 손오공에 대해 들어본 적이 있습니다.<br>这个品牌我从没听说过。(zhè ge pǐn pái wǒ cóng méi tīng shuō guo) — 이 브랜드는 난 전형 들어본 적이 없어.<br>听说过就好，那我就不用介绍了。(tīng shuō guo jiù hǎo, nà wǒ jiù bú yòng jiè shào le) — 들어본 적이 있다면 다행이네, 그럼 굳이 소개 안 해도 되겠다."
+						},
+						{
+							"id": "zh_g_51", "theme": "문법", "title": "[可能 + 동사/형용사] 추측 표현 (아마 ~일 것이다, ~일지도 모른다)", "summary": "확신이 없는 상태에서 어떤 상황이나 행동 가능성을 추측할 때 씁니다.", "detail": "'아마, 어쩌면, ~일지도 모른다'라는 뜻의 부사 또는 동사 '可能(kě néng)'입니다. 영어의 'maybe'나 'might'처럼 문장 앞에 붙어 확신의 정도를 낮추고 부드러운 추측의 뉘앙스를 풍기게 합니다.", "example": "<br>他可能不来了。(tā kě néng bù lái le) — 그 사람 아마 안 올지도 몰라요.<br>明天下雨。(míng tiān kě néng xià yǔ) — 내일 어쩌면 비가 올지도 모르겠네요.<br>这件事他可能已经知道了。(zhè jiàn shì tā kě néng yǐ jīng zhī dào le) — 이 일을 그는 아마 이미 알고 있을 거예요.<br>我可能买错衣服了。(wǒ kě néng mǎi cuò yī fu le) — 나 어쩌면 옷을 잘못 샀을지도 몰라.<br>这里可能没有你要的东西。(zhè lǐ kě néng méi yǒu nǐ yào de dōng xi) — 여기에는 아마 네가 찾는 물건이 없을지도 몰라.<br>他最近可能很忙。(tā zuì jìn kě néng hěn máng) — 그는 요즘 아마 많이 바쁠 것입니다.<br>我们可能需要多一点时间。(wǒ men kě néng xū yào duō yì diǎn shí jiān) — 우리는 어쩌면 시간이 조금 더 필요할지도 몰라요.<br>这首歌你可能听过。(zhè shǒu gē nǐ kě néng tīng guo) — 이 노래 너 아마 들어봤을 수도 있어.<br>他可能去外地旅游了。(tā kě néng qù wài dì lǚ yóu le) — 그는 아마 다른 지역으로 여행을 갔을 거예요.<br>这个问题可能有别的 해결방법/办法。(zhè ge wèn tí kě néng yǒu bié de bàn fǎ) — 이 문제는 어쩌면 다른 해결 방법이 있을지도 모릅니다."
+						},
+						{
+							"id": "zh_g_52", "theme": "기초회화문법", "title": "[还是 ~ 吧] 제안의 강조 (아무래도 ~하는 편이 좋겠다)", "summary": "여러 상황을 고려한 뒤, 상대방에게 '이것이 최선의 선택'이라고 부드럽게 권유합니다.", "detail": "선택 의문문에서 쓰이던 '还是(hái shi)'가 문장 중간에 오고, 끝에 제안의 '吧(ba)'가 결합하면 '비교해 보니 그래도 ~하는 게 제일 낫겠다'라는 완곡하고 사려 깊은 제안을 표현하게 됩니다.", "example": "<br>我们还是坐地铁吧。(wǒ men hái shi zuò dì tiě ba) — 우리 아무래도 지하철을 타는 편이 좋겠어.<br>你还是问一下老师吧。(nǐ hái shi wèn yí xià lǎo shī ba) — 너 아무래도 선생님께 좀 여쭤보는 게 좋겠다.<br>今天太累了，我们还是回家吧。(jīn tiān tài lèi le, wǒ men hái shi huí jiā ba) — 오늘 너무 피곤하다, 우리 아무래도 그냥 집으로 가자.<br>这件事你还是早点说吧。(zhè jiàn shì nǐ hái shi zǎo diǎnr shuō ba) — 이 일은 네가 아무래도 일찍 말하는 게 낫겠어.<br>太贵了，我们还是别買了吧。(tài guì le, wǒ men hái shi bié mǎi le ba) — 너무 비싸네, 우리 아무래도 사지 않는 게 좋겠어.<br>外面下雨了，你还是带把伞吧。(wài mian xià yǔ le, nǐ hái shi dài bǎ sǎn ba) — 밖에 비 온다, 너 아무래도 우산 챙겨가는 게 좋겠다.<br>他正在忙，我们还是等一下吧。(tā zhèng zài máng, wǒ men hái shi děng yí xià ba) — 그 사람 지금 바쁘니까, 우리 아무래도 좀 기다리는 게 좋겠어.<br>这道菜太辣，你还是别吃了。(zhè dào cài tài là, nǐ hái shi bié chī le) — 이 요리 너무 매워, 너 아무래도 먹지 않는 편이 좋겠어.<br>既然不会，你还是学一下吧。(jì rán bú huì, nǐ hái shi xué yí xià ba) — 할 줄 모르는 바에야, 너 아무래도 좀 배우는 게 좋겠다.<br>时间不早了，我们还是出发吧。(shí jiān bù zǎo le, wǒ men hái shi chū fā ba) — 시간이 늦었으니, 우리 아무래도 출발하는 게 좋겠어."
+						},
+						{
+							"id": "zh_g_53", "theme": "문법", "title": "[为了 + 목적, 주어 + 동사] 목적 한정 표현 (~을 달성하기 위해)", "summary": "31번 패턴의 심화로, 인생의 큰 목표나 구체적인 행동 목표를 문두에 내세웁니다.", "detail": "회화에서 내 행동의 타당성을 부여하기 위해 문장 맨 앞에 '为了(wèi le) + [목적 키워드]'를 던져두고 주절을 이어가는 구조입니다. 중국어 말하기 시험이나 격식 있는 자리, 혹은 진지한 대화에서 필수적인 뼈대입니다.", "example": "<br>为了学好汉语，我每天听录音。(wèi le xué hǎo hàn yǔ, wǒ měi tiān tīng lù yīn) — 중국어를 잘 배우기 위해서, 저는 매일 녹음을 듣습니다.<br>为了找到好工作，他努力考证。(wèi le zhǎo dào hǎo gōng zuò, tā nǔ lì kǎo zhèng) — 좋은 직장을 구하기 위해서, 그는 열심히 자격증을 땁니다.<br>为了这次考试，我复习了一个星期。(wèi le zhè cì kǎo shuai, wǒ fù xí le yí ge xīng qī) — 이번 시험을 위해서, 저는 일주일 동안 복습했어요.<br>为了省时间, 我们坐出租车吧。(wèi le shěng shí jiān, wǒ men zuò chū zū chē ba) — 시간을 아끼기 위해서, 우리 택시를 타자.<br>为了见你，我特意跑过来。(wèi le jiàn nǐ, wǒ tè yì pǎo guò lái) — 너를 만나기 위해서, 내가 일부러 달려왔어.<br>为了防止感冒，多吃点水果吧。(wèi le fáng zhǐ gǎn mào, duō chī diǎnr shuǐ guǒ ba) — 감기를 예방하기 위해서, 과일을 좀 많이 먹으렴.<br>为了不迟到，他今天起得很早。(wèi le bù chí dào, tā jīn tiān qǐ de hěn zǎo) — 늦지 않기 위해서, 그는 오늘 아주 일찍 일어났다.<br>为了准备旅行，我在网上查了很多攻略。(wèi le zhǔn bèi lǚ xíng, wǒ zài wǎng shàng chá le hěn duō gōng lüè) — 여행을 준비하기 위해, 저는 인터넷에서 공략(정보)을 많이 찾았어요.<br>为了公司的发展，大家都在加班。(wèi le gōng sī de fā zhǎn, dà jiā dōu zài jiā bān) — 회사의 발전을 위해서, 모두가 야근을 하고 있습니다.<br>这一切都是为了孩子。(zhè yí qiè dōu  shì wèi le hái zi) — 이 모든 것은 다 아이를 위한 거야."
+						},
+						{
+							"id": "zh_g_54", "theme": "기초회화문법", "title": "[本来 ~ , 后来 ~] 과거 상태의 전환 (본래는 ~했는데, 나중에는 ~했다)", "summary": "처음 계획이나 상태가 중간에 어떤 계기로 인해 바뀌었음을 대조하여 설명합니다.", "detail": "'本来(běn lái)'는 '원래, 본래'라는 뜻으로 과거의 초기 상태를 뜻하고, '后来(hòu lái)'는 '그 후, 나중에'라는 뜻으로 시간 흐름에 따라 변화된 결과를 나타내어, 두 문장을 역접으로 연결할 때 유용합니다.", "example": "<br>我本来想去，后来没去。(wǒ běn lái xiǎng qù, hòu lái méi qù) — 저 원래는 가고 싶었는데, 나중에는 안 갔어요.<br>他本来不学汉语，后来开始学了。(tā běn lái bù xué hàn yǔ, hòu lái kāi shǐ xué le) — 그는 원래 중국어를 안 배웠는데, 나중에 배우기 시작했어.<br>天气本来很好，后来下雨了。(tiān qì běn lái hěn hǎo, hòu lái xià yǔ le) — 날씨가 원래는 참 좋았는데, 나중에는 비가 왔어.<br>这件衣服本来很贵，后来打折了。(zhè jiàn yī fu běn lái hěn guì, hòu lái dǎ zhé le) — 이 옷 원래 엄청 비쌌는데, 나중에 세일(할인)했어.<br>我本来不认识他，后来成了朋友。(wǒ běn lái bú rèn shi tā, hòu lái chéng le péng you) — 저 원래 그 사람 몰랐는데, 나중에 친구가 되었어요.<br>作业本来很难，后来老师解释了一下就会了。(zuò yè běn lái hěn nán, hòu lái lǎo shī jiě shì le yí xià jiù huì le) — 숙제가 원래는 어려웠는데, 나중에 선생님이 설명해 주시니 할 수 있게 됐어.<br>我本来想买这个，后来买了那个。(wǒ běn lái xiǎng mǎi zhè ge, hòu lái mǎi le nà ge) — 나 원래 이거 사고 싶었는데, 나중엔 저거 샀어.<br>他本来在韩国，后来去了中国。(tā běn lái zài hán guó, hòu lái qù le zhōng guó) — 그는 원래 한국에 있었는데, 나중에 중국으로 갔어.<br>这家店本来人很多，后来变少了。(zhè jiā dān běn lái rén hěn duō, hòu lái biàn shǎo le) — 이 가게 원래 사람이 많았는데, 나중에는 적어졌어.<br>我本来不懂，后来听懂了。(wǒ běn lái bù dǒng, hòu lái tīng dǒng le) — 나 원래 이해 못 했었는데, 나중에는 알아들었어."
+						},
+						{
+							"id": "zh_g_55", "theme": "기초어순", "title": "[~ 是应该的] 당연함의 강조 (~하는 것은 당연한 일이다)", "summary": "상대방의 칭찬이나 고마움에 대해 '마땅히 해야 할 일'이라며 겸손하게 응답합니다.", "detail": "41번에서 배운 조동사 '应该'를 문장 끝에 명사화 구조로 변형하여 '[행동] + 是应该的' 형태로 만듭니다. 고맙다는 인사를 받았을 때 원어민들이 부드러운 거절 및 매너 표현으로 자주 씁니다.", "example": "<br> 帮忙是应该的。(bāng máng shì yīng gāi de) — 돕는 것은 당연한 일입니다. (천만에요)<br>好好学习是应该的。(hǎo hǎo xué xí shì yīng gāi de) — 열심히 공부하는 것은 당연한 일이지요.<br>孝敬父母是应该的。(xiào jìng fù mǔ  shì yīng gāi de) — 부모님께 효도하는 것은 당연한 일입니다.<br>遵守规则是应该的。(zūn shǒu guī zé shì yīng gāi de) — 규칙을 지키는 것은 당연한 일입니다.<br>谢什么，这都是我应该做的。(xiè shén me, zhè dōu shì wǒ yīng gāi zuò de) — 고맙긴요, 이건 다 제가 당연히 해야 할 일인걸요.<br>保护动物是应该的。(bǎo hù dòng wù  shì yīng gāi de) — 동물을 보호하는 것은 당연한 일입니다.<br>跟你说一声是应该的。(gēn nǐ shuō yì shēng shì yīng gāi de) — 너한테 한마디 해주는 건 당연한 도리지.<br>认真工作是应该的。(rèn zhēn gōng zuò  shì yīng gāi de) — 맡은 일을 성실히 하는 것은 당연한 일입니다.<br>保持安静是应该的。(bǎo chí ān jìng  shì yīng gāi de) — 조용히 유지하는 것은 당연한 기본 매너입니다.<br>客气什么，互相帮助是应该的。(kè qi shén me, hù xiāng bāng zhù  shì yīng gāi de) — 양보하긴요, 서로 돕는 것은 당연한 일입니다."
+						},
+						{
+							"id": "zh_g_56", "theme": "문법", "title": "[从来不 + 동사] 절대적 부정 (여태껏 단 한 번도 ~안 하다)", "summary": "과거부터 지금까지의 습관이나 행동 중에서 '절대 하지 않는 일'을 강조합니다.", "detail": "'여태껏, 지금까지'라는 뜻의 부사 '从来(cóng lái)' 뒤에 부정어 '不(bù)'를 붙여, 과거부터 현재까지 단 한 번의 예외도 없이 일관되게 행동하지 않는 고정된 습관이나 체질을 나타냅니다.", "example": "<br>我从来不喝酒。(wǒ cóng lái bù hē jiǔ) — 저 여태껏 술은 절대 안 마셔요. (체질/습관)<br>他从来不迟到。(tā cóng lái bù chí dào) — 그는 지금까지 단 한 번도 지각한 적이 없다.<br>我从来不看恐怖电影。(wǒ cóng lái bú kàn kǒng bù diàn yǐng) — 나 평소에 공포 영화는 절대 안 봐.<br>妹妹从来不吃辣的。(mèi mei cóng lái bù chī là de) — 여동생은 여태껏 매운 음식을 전혀 안 먹어.<br>他从来不听别人的意见。(tā cóng lái bù tīng bié rén de yì jiàn) — 그는 전혀 다른 사람의 의견을 듣지 않는다.<br>我从来不玩网络游戏。(wǒ cóng lái bù wán wǎng luò yóu xì) — 저 여태껏 온라인 게임은 절대 안 해요.<br>那家店从来不打折。(nài jiā diàn cóng lái bù dǎ zhé) — 그 가게는 여태껏 절대 세일(할인)을 안 해.<br>爸爸在家里从来不发脾气。(bà ba zài jiā lǐ cóng lái bù fā pí qi) — 아버지는 집에서 여태껏 절대 화를 내지 않으신다.<br>我从来不跟别人借钱。(wǒ cóng lái bù gēn bié rén jiè qián) — 난 지금까지 남에게 돈을 절대 빌리지 않아.<br>他从来不坐出租车。(tā cóng lái bú zuò chū zū chē) — 그는 여태껏 절대 택시를 타지 않는다."
+						},
+						{
+							"id": "zh_g_57", "theme": "문법", "title": "[从来没 + 동사 + 过] 경험의 강력한 부정 (여태껏 ~해 본 적이 없다)", "summary": "인생을 살면서 단 한 번도 그러한 경험을 겪어본 적이 없음을 나타냅니다.", "detail": "56번의 '从来不(습관)'과 달리, '从来没(méi) + 过(guo)'는 과거의 '경험 자산'이 제로(0)임을 뜻합니다. '나 살면서 이거 진짜 처음 해봐!'라는 느낌을 전달할 때 회화에서 감탄조로 쓰입니다.", "example": "<br>我从来没去过中国。(wǒ cóng lái méi qù guo zhōng guó) — 전 여태껏 중국에 단 한 번도 가본 적이 없어요.<br>这种菜我从来没吃过。(zhè zhǒng cài wǒ cóng lái méi chī guo) — 이런 요리는 저 평생 한 번도 안 먹어 봤어요.<br>我从来没听过这首歌。(wǒ cóng lái méi tīng guo zhè shǒu gē) — 나 살면서 이 노래 들어본 적이 진짜 없어.<br>他从来没谈过恋爱。(tā cóng lái méi tán guo liàn ài) — 그는 모태솔로야 (여태 연애해 본 적 없어).<br>我从来没见过这么漂亮的风景。(wǒ cóng lái méi jiàn guo zhè me piào liang de fēng jǐng) — 나 태어나서 이렇게 아름다운 풍경은 처음 봐.<br>你从来没听说过这件事吗？(nǐ cóng lái méi tīng shuō guo zhè jiàn  shì ma) — 너 여태껏 이 사건에 대해 한 번도 못 들어봤어?<br>这个汉字我从来没见过。(zhè ge hàn zì wǒ cóng lái méi jiàn guo) — 이 한자는 내 평생 처음 보는 글자야.<br>我从来没坐过飞机。(wǒ cóng lái méi zuò guo fēi jī) — 전 지금까지 비행기를 타본 적이 단 한 번도 없습니다.<br>他从来没跟别人吵过架。(tā cóng lái méi gēn bié rén chǎo guo jià) — 그는 여태껏 남과 싸워본 적이 한 번도 없는 사람이다.<br>这样的好运我从来没遇到过。(zhè yàng de hǎo yùn wǒ cóng lái méi yù dào guo) — 이런 행운은 내 평생 단 한 번도 마주해 본 적이 없어."
+						},
+						{
+							"id": "zh_g_58", "theme": "기초회화문법", "title": "[快要 ~ 了] 시간 임박 표현 (곧 ~ 하려고 한다, 머지않아 ~ 된다)", "summary": "어떤 사건이나 상황이 발생하기 직전의 임박한 타이밍을 나타냅니다.", "detail": "'곧, 머지않아'를 뜻하는 '快要(kuài yào)'와 문장 끝의 변화 조사 '了(le)'가 세트입니다. 눈앞에 곧 닥칠 미래를 표현할 때 쓰이며, 문장에 구체적인 시간 명사(예: 내일, 3시)가 없을 때 주로 단독 부사세트로 씁니다.", "example": "<br>火车快要出发了。(huǒ chē kuài yào chū fā le) — 기차가 곧 출발하려고 해요.<br>电影快要开始了。(diàn yǐng kuài yào kāi shǐ le) — 영화가 곧 시작되겠어.<br>我快要累死了。(wǒ kuài yào lèi sǐ le) — 나 곧 피곤해 죽을 것 같아. (지쳐 쓰러지기 직전)<br>天快要黑了，快回家吧。(tiān kuài yào hēi le, kuài huí jiā ba) — 날이 곧 어두워지겠어, 얼른 집에 가자.<br>他的生日快要到了。(tā de shēng rì kuài yào dào le) — 그의 생일이 머지않아 다가와요.<br>我们要结婚了。(wǒ men kuài yào jié hūn le) — 우리 곧 결혼해.<br>快要下课了，再等五分钟。(kuài yào xià kè le, zài děng wǔ fēn zhōng) — 곧 수업 끝나니까, 5분만 더 기다려.<br>这本电脑快要没电了。(zhè běn diàn nǎo kuài yào méi diàn le) — 이 노트북 곧 배터리가 다 닳아 가.<br>新的一年快要开始了。(xīn de yì nián kuài yào kāi shǐ le) — 새해가 곧 시작되려고 합니다.<br>我的手机快要弄坏了。(wǒ de shǒu jī kuài yào nòng huài le) — 내 휴대폰 거의 고장 나기 일보 직전이야."
+						},
+						{
+							"id": "zh_g_59", "theme": "기초어순", "title": "[A 离 B + 형용사] 공간적/시간적 거리 (~로부터 거리가 ~하다)", "summary": "특정 기준점(A)에서 목표점(B)까지의 거리나 시간적 격차를 말합니다.", "detail": "'~로부터 떨어져 있다'라는 뜻의 전치사 '离(lí)'입니다. [A 离 B + 远(멀다)/近(깝다)] 구조로 장소 간의 거리를 표현하거나, 시험이나 기념일이 며칠 남았는지 시간적 거리를 잴 때도 활용됩니다.", "example": "<br>我家离公司很近。(wǒ jiā lí gōng sī hěn jìn) — 우리 집은 회사에서 아주 가까워요.<br>学校离地铁站远不远？(xué xiào lí dì tiě zhàn yuǎn bù yuǎn) — 학교는 지하철역에서 먼가요, 안 먼가요?<br>韩国离中国很近。(hán guó lí zhōng guó hěn jìn) — 한국은 중국과 거리가 매우 가깝습니다.<br>这里离商店走路要十分钟。(zhè lǐ lí shāng diàn zǒu lù yào shí fēn zhōng) — 여기서 상점까지 걸어서 10분 걸려요.<br>离考试还有三天。(lí kǎo shì hái yǒu sān tiān) — 시험까지 아직 사흘(3일) 남았습니다. (시간 거리)<br>你家离这儿有多远？(nǐ jiā lí zhèr yǒu duō yuǎn) — 너희 집은 여기서 얼마나 머니?<br>离国庆节还有一个星期。(lí guó qìng jié hái yǒu yí ge xīng qī) — 국경절까지 아직 일주일 남았어.<br>新公司离我家太远了。(xīn gōng sī lí wǒ jiā tài yuǎn le) — 새 회사가 우리 집에서 너무 멀어.<br>那家饭馆离银行不远。(nà jiā fàn guǎn lí yín háng bù yuǎn) — 그 식당은 은행에서 멀지 않아요.<br>离出发时间还有半个小时。(lí chū fā shí jiān hái yǒu bàn ge xiǎo shí) — 출발 시간까지 아직 반 시간(30분) 남았어."
+						},
+						{
+							"id": "zh_g_60", "theme": "기초회화문법", "title": "[~ 听说过 / 没见过] 감각적 대조 (귀로는 들었으나 눈으론 못 봤다)", "summary": "소문이나 이름은 익히 들었지만 직접 실물을 접하지 못했을 때 세트로 연이어 씁니다.", "detail": "앞 절에는 50번 패턴의 '听说过(들어본 적 있다)'를 쓰고, 뒤 절에는 '没见过(jiàn guo, 본 적 없다)'를 배치하여 '소문은 자자한데 실제로는 처음 본다'라는 원어민 특유의 감탄과 신기함을 드러내는 관용 회화 뼈대입니다.", "example": "<br>我听说过他，但是没见过。(wǒ tīng shuō guo tā, dàn shì méi jiàn guo) — 나 그 사람 말은 들어봤는데, 실제로 본 적은 없어.<br>北京烤鸭我听说过很多次，但是从来没见过。(běi jīng kǎo yā wǒ tīng shuō guo hěn duō cì, dàn  shì cóng lái méi jiàn guo) — 베이징 카오야 소문은 많이 들었는데, 진짜 실물은 한 번도 못 봤어.<br>这个名字我听说过，但是真人没见过。(zhè ge míng zi wǒ tīng shuō guo, dàn shì zhēn rén méi jiàn guo) — 이 이름은 들어봤는데, 실제 인물은 본 적이 없네.<br>那里的风景我只听说过，没见过。(nà lǐ de fēng jǐng wǒ zhǐ tīng shuō guo, méi jiàn guo) — 그곳 풍경이 좋다는 건 귀로만 들었지, 보진 못했어.<br>           중국 전통 의상인 치파오(旗袍)는听说过，但是没见过。(qí páo wǒ tīng shuō guo, dàn shì méi jiàn guo) — 치파오는 들어봤는데, 실물은 본 적이 없어.<br>他的女朋友我听说过，就是没见过。(tā de nǚ péng you wǒ tīng shuō guo, jiù shì méi jiàn guo) — 걔 여자친구 소식은 들었는데, 단지 보질 못했을 뿐이야.<br>这种동물/动物我听说过，在国内没见过。(zhè zhǒng dòng wù wǒ tīng shuō guo, zài guó nèi méi jiàn guo) — 이런 동물 들어는 봤는데, 국내에선 본 적이 없어.<br>           그 기술에 대해선听说过，实际应用没见过。(nà xiē jì shù wǒ tīng shuō guo, shí jì yìng yòng méi jiàn guo) — 그 기술에 대해 들어본 적은 있지만 실제 적용된 건 못 봤어.<br> 이 브랜드는 听说过，实体店我没见过。(zhè ge pǐn pái wǒ tīng shuō guo, shí tǐ diàn wǒ méi jiàn guo) — 이 브랜드 들어는 봤는데 오프라인 매장은 본 적이 없어.<br> 听说过就好，没见过的话今天带你去看看。(tīng shuō guo jiù hǎo, méi jiàn guo de huà jīn tiān dài nǐ qù kàn kàn) — 들어봤다니 다행이네, 본 적 없다면 오늘 내가 데리고 가서 보여줄게."
+						},
+						{
+							"id": "zh_g_61", "theme": "문법",
+							"title": "[除了 A 以外，都 B] 제외의 강조 (~을 제외하고는 모두)",
+							"summary": "특정 대상(A) 하나만을 제외한 나머지 전체가 동일한 상태임을 나타냅니다.",
+							"detail": "38번 구조의 응용으로, 뒤 절에 '모두'를 뜻하는 부사 '都(dōu)'를 결합합니다. 지정된 대상을 제외한 전체 범위를 강하게 단정 지을 때 일상에서 자주 사용됩니다.",
+							"example": "<br>除了星期天以外，我都上班。(chú le xīng qī tiān yǐ wài, wǒ dōu shàng bān) — 일요일을 제외하고, 저는 모두 출근해요.<br>除了他以外，大家都到了。(chú le tā yǐ wài, dà jiā dōu dào le) — 그 사람을 제외하고는, 모두 도착했습니다.<br>除了辣的以外，别的东西我都吃。(chú le là de yǐ wài, bié de dōng xi wǒ dōu chī) — 매운 음식을 제외하고는, 다른 것은 저 모두 먹어요.<br>除了我以外，别 사람/人都不知情。(chú le wǒ yǐ wài, bié de rén dōu bù zhī qíng) — 나를 제외하고는, 다른 사람들은 모두 내막을 몰라요.<br>除了贵以外，这件衣服都好。(chú le guì yǐ wài, zhè jiàn yī fu dōu hǎo) — 비싼 것만 제외하면, 이 옷은 모두 좋습니다.<br>除了上海以外，中国的城市我都没去过。(chú le shàng hǎi yǐ wài, zhōng guó de chéng shì wǒ dōu méi qù guo) — 상하이를 제외하고는, 중국의 도시들을 전 모두 안 가봤어요.<br>除了第一题以外，我都做对了。(chú le dì yī tí yǐ wài, wǒ dōu zuò duì le) — 첫 번째 문제를 제외하고는, 저 모두 맞았어요.<br>除了苹果以外，别的 과일/水果他都不吃。(chú le píng guǒ, yǐ wài, bié de shuǐ guǒ tā dōu bù chī) — 사과를 제외하고는, 다른 과일을 그는 모두 안 먹어요.<br>除了周末以外，图书馆每天都开门。(chú le zhōu mò yǐ wài, tú shū guǎn měi tiān dōu kāi mén) — 주말을 제외하고는, 도서관은 매일 문을 엽니다.<br>除了那家店以外，这儿의 餐厅都便宜。(chú le nà jiā diàn yǐ wài, zhèr de cān tīng dōu pián yi) — 그 가게를 제외하고는, 여기 식당들은 모두 저렴해요."
+						},
+						{
+							"id": "zh_g_62",
+							"theme": "문법",
+							"title": "[除了 A 以外，还/也 B] 추가의 강조 (~외에 또/역시 ~하다)",
+							"summary": "특정 대상(A)을 기본으로 포함하고, 거기에 또 다른 내용(B)을 추가할 때 씁니다.",
+							"detail": "앞서 다룬 제외의 '都'와 달리, 뒤 절에 '还(hái, 또)'이나 '也(yě, 역시)'를 붙여서 범위를 덧붙이고 확장하는 문맥을 만듭니다.",
+							"example": "<br>除了汉语以外，我还会说英语。(chú le hàn yǔ yǐ wài, wǒ hái huì shuō yīng yǔ) — 중국어 외에도, 저는 영어를 할 줄 압니다.<br>除了咖啡以外，我们还 샀다/买了蛋糕。(chú le kā fēi yǐ wài, wǒ men hái mǎi le dàn gāo) — 커피 외에도, 우리는 케이크를 샀어요.<br>除了北京以外，他也去过 상하이/上海。(chú le běi jīng yǐ wài, tā yě qù guo shàng hǎi) — 베이징 외에도, 그는 상하이도 가본 적이 있습니다.<br>除了听音乐以外，你还有什么爱好？(chú le tīng yīn yuè yǐ wài, nǐ hái yǒu shén me ài hào) — 음악 듣는 것 외에도, 너 또 무슨 취미가 있니?<br>除了水果以外，我还喜欢吃 과자/饼干。(chú le shuǐ guǒ yǐ wài, wǒ hái xǐ huan chī bǐng gān) — 과일 외에도, 저는 과자 먹는 것도 좋아해요.<br>除了学费以外，还要花很多钱。(chú le xué fèi yǐ wài, hái yào huā hěn duō qián) — 학비 외에도, 돈이 많이 듭니다.<br>除了这个包以外，那个包也很 예쁘다/好看。(chú le zhè ge bāo yǐ wài, nà ge bāo yě hěn hǎo kàn) — 이 가방 외에도, 저 가방 역시 매우 예쁘네요.<br>除了工作以外，他平时也做 运动。(chú le gōng zuò yǐ wài, tā píng shí yě zuò yùn dòng) — 일하는 것 외에도, 그는 평소에 운동도 합니다.<br>除了他以外, 别的朋友也 知道。(chú le tā yǐ wài, bié de péng you yě zhī dào) — 그 사람 외에도, 다른 친구들 역시 알고 있어요.<br>除了不便宜以外，别的优点还 먾다/很多。(chú le bù pián yi yǐ wài, bié de yōu diǎn hái hěn duō) — 저렴하지 않은 것 외에도, 다른 장점들이 아직 많이 있습니다."
+						},
+						{
+							"id": "zh_g_63",
+							"theme": "기초회화문법",
+							"title": "[不管 A，都 B] 조건 양보 접속사 (A에 상관없이 모두 B하다)",
+							"summary": "어떤 조건이나 상황(A)이 오더라도 결과(B)는 변하지 않음을 강조합니다.",
+							"detail": "'~에 관계없이, ~를 불문하고'라는 뜻의 '不管(bù guǎn)'입니다. A 자리에는 주로 의문사(무엇, 언제, 어디)나 반대되는 대조 단어(가든 안 가든, 좋든 싫든)가 와서 '어떠한 예외도 없다'는 어조를 만듭니다.",
+							"example": "<br>不管多忙，我都要去。(bù guǎn duō máng, wǒ dōu yào qù) — 아무리 바쁘더라도, 저는 가야 합니다.<br>不管明天天气怎么样，都出发。(bù guǎn míng tiān tiān qì zěn me yàng, dōu chū fā) — 내일 날씨가 어떻든 상관없이, 모두 출발합니다.<br>不管你是谁，都不能 进。(bù guǎn nǐ shì shéi, dōu bù néng jìn) — 당신이 누구든 관계없이, 모두 들어올 수 없습니다.<br>不管有多难，我都要 坚持。(bù guǎn yǒu duō nán, wǒ dōu yào jiān chí) — 얼마나 어렵든 상관없이, 저는 버텨낼 거예요.<br>不管你去不去，我都去。(bù guǎn nǐ qù bú qù, wǒ dōu qù) — 네가 가든 안 가든 관계없이, 나는 갈 거야.<br>不管花多少钱，我都要买。(bù guǎn huā duō shǎo qián, wǒ dōu yào mǎi) — 돈이 얼마가 들든 상관없이, 난 꼭 살 거야.<br>不管别人怎么说，我相信你。(bù guǎn bié rén zěn me shuō, wǒ xiāng xìn nǐ) — 다른 사람이 어떻게 말하든 관계없이, 난 너를 믿어.<br>不管做什么，他都很认真。(bù guǎn zuò shén me, tā dōu hěn rèn zhēn) — 무슨 일을 하든 상관없이, 그는 모두 아주 성실합니다.<br>不管时间多晚，你都可以给我打电话。(bù guǎn shí jiān duō wǎn, nǐ dōu kě yǐ gěi wǒ dǎ diàn huà) — 시간이 얼마나 늦든 관계없이, 넌 나한테 전화해도 돼.<br>不管怎么样，谢谢你。(bù guǎn zěn me yàng, xiè xie nǐ) — 어찌 됐든 상관없이, 고마워요."
+						},
+						{
+							"id": "zh_g_64",
+							"theme": "문법",
+							"title": "[A 离 B ~ ] 시공간적 거리 측정 심화 (A는 B와 거리/시간이 ~하다)",
+							"summary": "59번 패턴의 실전 심화로, 숫자 수량사나 구체적인 수치를 넣는 문법입니다.",
+							"detail": "'离' 구조 뒤에 단순히 '멀다/가깝다' 대신 '3킬로미터', '5분'처럼 명확한 수치 보어를 결합하여 구체적인 정보를 제공합니다.",
+							"example": "<br>我家离公司有三公里。(wǒ jiā lí gōng sī yǒu sān gōng lǐ) — 우리 집은 회사에서 3킬로미터 떨어져 있습니다.<br>这里离 机场开车要一个小时。(zhè lǐ lí jī chǎng kāi chē yào yí ge xiǎo shí) — 여기는 공항에서 차로 1시간 걸립니다.<br>学校离地铁站只有一百米。(xué xiào lí dì tiě zhàn zhǐ yǒu yì bǎi mǐ) — 학교는 지하철역에서 겨우 100미터 거리입니다.<br>离 电影开始还有十分钟。(lí diàn yǐng kāi shǐ hái yǒu shí fēn zhōng) — 영화 시작까지 아직 10분 남았습니다.<br>离我毕业还有两年。(lí wǒ bì yè hái yǒu liǎng nián) — 내가 졸업하려면 아직 2년 남았어.<br>新사옥/新大楼离这儿不太远。(xīn dà lóu lí zhèr bú tài yuǎn) — 새 건물은 여기서 그리 멀지 않아요.<br>离出发时间只有五分钟了。(lí chū fā shí jiān zhǐ yǒu wǔ fēn zhōng le) — 출발 시간까지 이제 겨우 5분 남았어.<br>他家离我们公司走路五分钟。(tā jiā lí wǒ men gōng sī zǒu lù wǔ fēn zhōng) — 그 사람 집은 우리 회사에서 걸어서 5분 거리야.<br>离春节还有一个多月。(lí chūn jié hái yǒu yí ge duō yuè) — 설날까지 아직 한 달 넘게 남았어.<br>这里离最近的 医院有多远？(zhè lǐ lí zuì jìn de yī yuàn yǒu duō yuǎn) — 여기는 가장 가까운 병원에서 얼마나 먼가요?"
+						},
+						{
+							"id": "zh_g_65",
+							"theme": "기초회화문법",
+							"title": "[~ 的话] 구어체 가정문 (~라면, ~할 경우)",
+							"summary": "문장 끝에 붙여 간편하게 '가정 조건'을 설정할 때 씁니다.",
+							"detail": "21번의 '如果'나 32번의 '要是'를 앞에 쓰지 않더라도, 문장 끝에 '的话(de huà)'를 붙이는 것만으로 완벽한 가정문(~라면)이 완성되는 편리한 구어 표현입니다.",
+							"example": "<br>下雨的话，我们就不去。(xià yǔ de huà, wǒ men jiù bú qù) — 비가 오면, 우리 안 갈래.<br>不舒服的话，就去 休息吧。(bù shū fu de huà, jiù qù xiū xi ba) — 몸이 안 좋으면, 가서 좀 쉬어라.<br>喜欢的话，我给你买。(xǐ huan de huà, wǒ gěi nǐ mǎi) — 마음에 들면, 내가 너 사줄게.<br>有时间的话，一起吃饭吧。(yǒu shí jiān de huà, yì qǐ chī fàn ba) — 시간 있으면, 같이 밥 먹자.<br>有不懂的话，可以问我。(yǒu bù dǒng de huà, kě yǐ wèn wǒ) — 모르는 게 있으면, 나한테 물어봐도 돼.<br>没问题的话, 现在就 签合同。(méi wèn tí de huà, xiàn zài jiù qiān hé tong) — 문제가 없으면, 지금 바로 계약서를 씁시다.<br>你想去的话，我和你一起去。(nǐ xiǎng qù de huà, wǒ hé nǐ yì qǐ qù) — 네가 가고 싶다면, 내가 너랑 같이 갈게.<br>太贵的话，就别买了。(tài guì de huà, jiù bié mǎi le) — 너무 비싸면, 사지 마.<br>明天不来的话，请提前 告诉我。(míng tiān bù lái de huà, qǐng tí qián gào su wǒ) — 내일 못 오게 되면, 미리 나한테 알려줘.<br>找不到的话，給我打电话。(zhǎo bú dào de huà, gěi wǒ dǎ diàn huà) — 못 찾겠으면, 나한테 전화해."
+						},
+						{
+							"id": "zh_g_66",
+							"theme": "문법",
+							"title": "[A 把 B + 동사 + 在/到 + 장소] 把문 심화 (A가 B를 어떤 장소에 ~하다)",
+							"summary": "물건의 위치를 다른 장소로 이동시키거나 배치한 결과를 강조합니다.",
+							"detail": "23번 '把'문의 확장입니다. 동사 뒤에 결과물로서 전치사 '在(zài, ~에)'나 '到(dào, ~까지)'를 붙이고 구체적인 장소를 배치하여 대상을 어디로 보냈는지 구체적으로 처치합니다.",
+							"example": "<br>我把手机留在家里了。(wǒ bǎ shǒu jī liú zài jiā lǐ le) — 나 휴대폰을 집에 두고 왔어.<br>请把车停在 门口。(qǐng bǎ chē tíng zài mén kǒu) — 차를 문 앞에 세워 주세요.<br>他把书放在桌子上了。(tā bǎ shū fàng zài zhuō zi shang le) — 그는 책을 책상 위에 올려두었어요.<br>请把衣服挂在 里面。(qǐng bǎ yī fu guà zài lǐ mian) — 옷을 안쪽에 걸어 주세요.<br>我把衣服拿到洗衣店了。(wǒ bǎ yī fu ná dào xǐ yī diàn le) — 나 옷 세탁소에 가져다줬어.<br>把行李搬到车里吧。(bǎ xíng li bān dào chē lǐ ba) — 짐을 차 안으로 옮깁시다.<br>请把名字写在 纸上。(qǐng bǎ míng zi xiě zài zhǐ shàng) — 이름을 종이 위에 적어주세요.<br>不要把垃圾扔在 地上。(bú yào bǎ lā jī rēng zài dì shàng) — 쓰레기를 바닥에 버리지 마세요.<br>他把包忘在 出租车上了。(tā bǎ bāo wàng zài chū zū chē shàng le) — 그는 가방을 택시에 깜빡하고 두고 내렸어요.<br>我把电脑带到 公司了。(wǒ bǎ diàn nǎo dài dào gōng sī le) — 나 컴퓨터 회사로 챙겨왔어."
+						},
+						{
+							"id": "zh_g_67",
+							"theme": "기초회화문법",
+							"title": "[连 A 都/也 B] 극단적 강조 (A조차도, A마저도 B하다)",
+							"summary": "가장 기본적인 상식인 대상(A)을 예시로 들어, 상황의 극단성을 부각합니다.",
+							"detail": "'~조차도, ~마저도'라는 뜻의 부사 구문 '连(lián) + [대상] + 都/也'입니다. 영어의 'even'과 같으며, 회화에서 상대방을 탓하거나 내 상황의 심각성을 하소연할 때 핵심적으로 쓰입니다.",
+							"example": "<br>他连自己的名字都不会写。(tā lián zì jǐ de míng zi dōu bú huì xiě) — 그는 자기 이름조차도 쓸 줄 몰라요.<br>这道题太 났다/난, 连老师都不会。(zhè dào tí tài nán, lián lǎo shī dōu bú huì) — 이 문제는 너무 어려워서, 선생님조차도 모르십니다.<br>我太忙了，连吃饭的时间都没有。(wǒ tài máng le, lián chī fàn de shí ian méi yǒu) — 나 너무 바빠서, 밥 먹을 시간조차도 없어.<br>他太生气了，连一句话也没说。(tā tài shēng qì le, lián yí jù huà yě méi shuō) — 그는 너무 화가 나서, 한 마디조차도 하지 않았어.<br>这个秘密连我妈妈都 知道。(zhè ge mì mì lián wǒ mā ma dōu zhī dào) — 이 비밀은 우리 엄마조차도 알고 있어.<br>这里太穷了，连 ict/网络都没有。(zhè lǐ tài qióng le, lián wǎng luò dōu méi yǒu) — 여기는 너무 낙후되어서, 인터넷조차도 안 돼요.<br>他学了三年汉语，连这个字都不认识。(tā xué le sān nián hàn yǔ, lián zhè ge zì dōu bú rèn shi) — 그는 중국어를 3년 배웠는데, 이 글자조차도 모르네.<br>我今天太 累了，连动都不想动。(wǒ jìn tiān tài lèi le, lián dòng dōu bù xiǎng dòng) — 나 오늘 너무 피곤해서, 움직이는 것조차도 하기 싫어.<br>那件事我连 听说都没听说过。(nà jiàn shì wǒ lián tīng shuō dōu méi tīng shuō guo) — 그 일은 난 들어본 적조차도 없어.<br>他走得太快，连影儿都 몾봤다/没看见。(tā zǒu de tài kuài, lián yǐngr dōu méi kàn jiàn) — 그가 너무 빨리 걸어가서, 그림자조차도 못 봤어."
+						},
+						{
+							"id": "zh_g_68",
+							"theme": "기초어순",
+							"title": "[A 对 B 来说] 입장 지정 (~의 입장에서 보면, ~에게 있어서)",
+							"summary": "판단이나 평가의 주체가 되는 대상의 입장을 제한할 때 씁니다.",
+							"detail": "'~에 대하여'라는 '对' 뒤에 대상과 '来说(lái shuō)'를 감싸주어 '[누구]의 입장에서 말하자면'이라는 주관적 기준의 한계를 정해줍니다.",
+							"example": "<br>对我来说，汉语很难。(duì wǒ lái shuō, hàn yǔ hěn nán) — 저에게 있어서, 중국어는 어려워요.<br>学汉语对 韩国人来说比较容易。(xué hàn yǔ duì hán guó rén lái shuō bǐ jiào róng yì) — 중국어를 배우는 것은 한국인에게 있어서 비교적 쉽습니다.<br>健康对 每个人来说都很重要。(jiàn kāng duì měi ge rén lái shuō dōu hěn zhòng yào) — 건강은 모든 사람에게 있어서 다 중요합니다.<br>钱对他来说不是问题。(qián duì tā lái shuō bú shì wèn tí) — 돈은 그 사람 입장에선 문제가 아니에요.<br>这件礼物对我来说很有 意义。(zhè jiàn lǐ wù duì wǒ lái shuō hěn yǒu yì yì) — 이 선물은 저에게 있어서 매우 의미가 깊습니다.<br>时间对 忙人来说就是金钱。(shí jiān duì máng rén lái shuō jiù shì jīn qián) — 시간은 바쁜 사람 입장에선 바로 돈입니다.<br>这个工作对他来说太累了。(zhè ge gōng zuò duì tā lái shuō tài lèi le) — 이 업무는 그 사람 입장에선 너무 힘들어요.<br>失败对 创业者来说是正常的。(shī bài duì chuàng yè zhě lái shuō shì zhèng cháng de) — 실패는 창업가에게 있어서 정상적인 일입니다.<br>买房子对我来说是一件大事。(mǎi fáng zi duì wǒ lái shuō shì yí jiàn dà shì) — 집을 사는 것은 제 입장에선 하나의 큰 일입니다.<br>对孩子来说, 玩是最重要的。(duì hái zi lái shuō, wán shì zuì zhòng yào de) — 아이들에게 있어서는, 노는 것이 가장 중요합니다."
+						},
+						{
+							"id": "zh_g_69",
+							"theme": "문법",
+							"title": "[非 A 不可] 강한 의지와 당위 (반드시 A 해야만 한다)",
+							"summary": "어떤 행동(A)을 하지 않으면 절대 안 된다는 강력한 결심이나 필연성을 타타냅니다.",
+							"detail": "'아닐 비(非)'와 '안 된다(不可)'의 이중 부정이 만나 강한 긍정이 되는 강조 패턴입니다. '무슨 일이 있어도 기필코 해내겠다'는 개인적 의지를 구사할 때 회화의 악센트가 됩니다.",
+							"example": "<br>这件衣服我非买不可。(zhè jiàn yī fu wǒ fēi mǎi bù kě) — 이 옷은 나 기필코 사야만 해.<br>今天的会议你非 去不可。(jīn tiān de huì yì nǐ fēi qù bù kě) — 오늘 회의에 당신은 반드시 가야만 합니다.<br>这个问题非 解决不可。(zhè ge wèn tí fēi jiě jué bù kě) — 이 문제는 필히 해결해야만 해요.<br>汉语虽然难，但我非 学好不可。(hàn yǔ suī rán nán, dàn wǒ fēi xué hǎo bù kě) — 중국어가 비록 어렵지만, 난 기필코 마스터해야겠어.<br>生病了非去 医院不可。(shēng bìng le fēi qù yī yuàn bù kě) — 병이 났으면 무조건 병원에 가야만 하지.<br>你要是想成功，非 努力不可。(nǐ yào shi xiǎng chéng gōng, fēi nǔ lì bù kě) — 네가 만약 성공하고 싶다면, 무조건 노력해야만 해.<br>这笔钱我非 存不可。(zhè bǐ qián wǒ fēi cún bù kě) — 이 돈은 나 반드시 저금해야 해.<br>今天的工作非 做完不可。(jīn tiān de gōng zuò fēi zuò wán bù kě) — 오늘 업무는 기어코 다 끝내야만 합니다.<br>他非要一个人去不可。(tā fēi yào yí ge rén qù bù kě) — 그는 기어이 혼자 가겠다고 우겨요.<br>这次机会我非 抓住不可。(zhè cì jī huì wǒ fēi zhuā zhù bù kě) — 이번 기회는 내가 무조건 잡아야만 해."
+						},
+						{
+							"id": "zh_g_70",
+							"theme": "기초회화문법",
+							"title": "[~ 听说过，但是忘了] 기억의 한계 표현 (들어봤는데 까먹었다)",
+							"summary": "어떤 화제나 이름에 대해 익숙하긴 하지만 구체적인 기억이 안 날 때 씁니다.",
+							"detail": "60번 패턴의 변형으로, 일상 대화 중 기억이 가물가물한 상황을 모면하거나 원어민과 공감대를 형성할 때 밥 먹듯이 사용하는 리액션 패턴입니다.",
+							"example": "<br>这个名字我听说过，但是忘了。(zhè ge míng zi wǒ tīng shuō guo, dàn shì wàng le) — 이 이름 들어봤는데, 그런데 까먹었어.<br>那家餐厅我 听说过，但是忘了名字。(nā jiā cān tīng wǒ tīng shuō guo, dàn shì wàng le míng zi) — 그 식당 들어본 적은 있는데, 그런데 이름을 잊어버렸어.<br>这首歌我听说过，但是 忘了怎么唱。(zhè shǒu gē wǒ tīng shuō guo, dàn  shì wàng le zěn me chàng) — 이 노래 들어봤는데, 어떻게 부르는지 잊어버렸네.<br>那个故事我听说过，但是 忘了内容。(nà ge gù shi wǒ tīng shuō guo, dàn  shì wàng le nèi róng) — 그 이야기 들어봤는데, 그런데 내용을 까먹었어.<br>电影的名字我听说过，但是 忘了演员是谁。(diàn yǐng de míng zi wǒ tīng shuō guo, dàn  shì wàng le yǎn yuán shì shéi) — 영화 제목은 들어봤는데, 배우가 누구였는지는 잊어버렸어.<br>你以前跟我说过吧，我听说过但是忘了。(nǐ yǐ qián gēn wǒ shuō guo ba, wǒ tīng shuō guo dàn shì wàng le) — 너 예전에 나한테 말한 적 있지? 들어봤는데 까먹었어.<br>那个漢子/汉字我听说过，但是 忘了怎么写。(zhè ge hàn zì wǒ tīng shuō guo, dàn  shì wàng le zěn me xiě) — 그 한자 들어본 적 있는데, 쓰는 법을 까먹었네.<br>브랜드 이름은听说过，但是 忘了在哪里买的。(zhè ge pǐn pái wǒ tīng shuō guo, dàn  shì wàng le zài nǎ lǐ mǎi de) — 브랜드는 들어봤는데 어디서 샀는지를 잊어버렸어.<br> 이 주소는 听说过，但是忘了怎么走。(zhè ge zhǔ suǒ wǒ tīng shuō guo, dàn  shì wàng le zěn me zǒu) — 이 주소 들어는 봤는데 어떻게 가는지 까먹었어.<br> 听说过但是忘了也没关系，我再 告诉你一遍。(tīng shuō guo dàn shì wàng le yě méi guān xi, wǒ zài gào su nǐ yí biàn) — 들어봤는데 까먹었어도 괜찮아, 내가 다시 한번 말해줄게."
+						},
+						{
+							"id": "zh_g_71",
+							"theme": "문법",
+							"title": "[~ 动词 + 起来] 동작의 시작과 지속 (막 ~하기 시작하다)",
+							"summary": "어떤 동작이나 상태가 갑자기 발생하여 앞으로 계속 이어짐을 나타냅니다.",
+							"detail": "동사 뒤에 방향보어 '起来(qǐ lái)'를 결합하여 '일어나다'라는 본뜻 외에, 파생 의미로 '갑자기 어떤 행동을 개시하다'라는 동태의 변화를 묘사합니다.",
+							"example": "<br>大家都笑了起来。(dà jiā dōu xiào le qǐ lái) — 사람들이 모두 웃기 시작했다.<br>突然下起雨来了。(tū rán xià qǐ yǔ lái le) — 갑자기 비가 내리기 시작했어.<br>天气热了起来。(tiān qì rè le qǐ lái) — 날씨가 더워지기 시작하네.<br>听了这句话，他哭了起来。(tīng le zhè jù huà, tā kū le qǐ lái) — 이 말을 듣고, 그는 울기 시작했다.<br>外面刮起大风来了。(wài mian guā qǐ dà fēng lái le) — 밖에 큰 바람이 불기 시작했어.<br>这首歌越听越好听起来。(zhè shǒu gē yuè tīng yuè hǎo tīng qǐ lái) — 이 노래는 들을수록 점점 더 좋아지기 시작하네.<br>大家忙了起来。(dà jiā máng le qǐ lái) — 사람들이 바빠지기 시작했습니다.<br>他突然唱起歌来了。(tā tū rán chàng qǐ gē lái le) — 그가 갑자기 노래를 부르기 시작했어.<br>看清楚字以后，他写了起来。(kàn qīng chu zì yǐ hòu, tā xiě le qǐ lái) — 글자를 똑바로 본 후, 그는 쓰기 시작했다.<br>想到高兴的事，他笑了起来。(xiǎng dào gāo xìng de shì, tā xiào le qǐ lái) — 기쁜 일이 생각나자, 그는 웃음을 터뜨렸다."
+						},
+						{
+							"id": "zh_g_72",
+							"theme": "기초회화문법",
+							"title": "[多 + 형용사 + 啊！] 감탄문 (얼마나 ~한가!)",
+							"summary": "상태의 깊이에 감탄하며 문장 끝에 '啊'를 붙여 풍부한 감정을 표현합니다.",
+							"detail": "'많을 다(多)'를 형용사 앞에 부사처럼 사용하고, 끝에 감탄 조사 '啊(a)'를 매칭하여 문장을 장식합니다. 상대방의 의견에 격하게 맞장구칠 때 활용됩니다.",
+							"example": "<br>今天天气多好啊！(jīn tiān tiān qì duō hǎo a) — 오늘 날씨가 얼마나 좋은지 몰라요!<br>这件衣服多 漂亮啊！(zhè jiàn yī fu duō piào liang a) — 이 옷 진짜 얼마나 예쁜가요!<br>汉语学起来多有意思啊！(hàn yǔ xué qǐ lái duō yǒu yì si a) — 중국어 배우는 게 얼마나 재미있게요!<br>他多高啊！(tā duō gāo a) — 그 사람 키가 진짜 얼마나 큰지 몰라!<br>这里的菜多好吃啊！(zhè lǐ de cài duō hǎo chī a) — 여기 요리 진짜 얼마나 맛있니!<br>你多聪明啊！(nǐ duō cōng ming a) — 너 진짜 얼마나 똑똑한가 몰라!<br>能见你多高兴啊！(néng jiàn nǐ duō gāo xìng a) — 너를 만날 수 있어서 얼마나 기쁜지 몰라!<br>这个问题多重要啊！(zhè ge wèn tí duō zhòng yào a) — 이 문제가 얼마나 중요한지 아세요!<br>那里的风景多美啊！(nà lǐ de fēng jǐng duō měi a) — 그곳 풍경이 얼마나 아름다운가요!<br>时间过得多快啊！(shí jiān guò de duō kuài a) — 시간이 얼마나 빨리 지나가는지!"
+						},
+						{
+							"id": "zh_g_73",
+							"theme": "기초어순",
+							"title": "[~ 的样子] 상태와 외양 묘사 (~하는 모양새, ~인 듯한 모습)",
+							"summary": "사람이나 사물의 겉모습, 혹은 돌아가는 상황의 분위기를 어림잡아 묘사합니다.",
+							"detail": "명사나 문장 뒤에 '的样子(de yàng zi)'를 붙여서 '~인 것 같다, ~하는 폼이다'라는 시각적 인상을 어조에 담아냅니다.",
+							"example": "<br>看他的样子，好像知道了。(kàn tā de yàng zi, hǎo xiàng zhī dào le) — 그 사람 표정(모습)을 보니, 마치 알고 있는 듯해요.<br>他一副很累的样子。(tā yí fù hěn lèi de yàng zi) — 그는 아주 피곤해 보이는 기색입니다.<br>外面是要下雨的样子。(wài mian shì yào xià yǔ de yàng zi) — 바깥은 비가 오려고 하는 모양새예요.<br>他高兴得像个孩子的样子。(tā gāo xìng de xiàng ge hái zi de yàng zi) — 그는 마치 아이 같은 모습으로 기뻐했다.<br>别一副不高兴的样子。(bié yí fù bù gāo xìng de yàng zi) — 안 기쁜 표정 짓고 있지 마렴.<br>那件衣服是便宜 的样子。(nà jiàn yī fu shì pián yi de yàng zi) — 저 옷은 저렴해 보이는 스타일이에요.<br>他认真工作的样子很帅。(tā rèn zhēn gōng zuò de yàng zi hěn shuài) — 그가 성실하게 일하는 모습은 참 멋집니다.<br>看样子，今天他不会来了。(kàn yàng zi, jīn tiān tā bú huì lái le) — 보아하니, 오늘 그는 안 올 모양입니다. (단독 사용)<br>这个电脑是弄坏 的样子。(zhè ge diàn nǎo shì nòng huài de yàng zi) — 이 컴퓨터는 고장 난 듯한 외양이에요.<br>她笑的样子很 亲切。(tā xiào de yàng zi hěn qīn qiè) — 그녀가 웃는 모습은 매우 친근해 보여요."
+						},
+						{
+							"id": "zh_g_74",
+							"theme": "문법",
+							"title": "[一 + 양사 + 也/都 + 不/没] 완전 부정 (단 하나도 ~않다)",
+							"summary": "수량의 최소 단위인 '하나(一)'조차도 부정하여 '전혀 없다'를 나타냅니다.",
+							"detail": "영어의 'not at all'과 같은 구조입니다. [一 + 수량단위(个, 杯, 点儿 등) + 都 + 不/没] 조합으로 단 한 방울, 단 한 개도 허용하지 않는 완벽한 부정 회화를 구사합니다.",
+							"example": "<br>我一点儿都不累。(wǒ yì diǎnr dōu bú lèi) — 저 진짜 조금도 안 피곤해요.<br>钱我一个都没有。(qián wǒ yí ge dōu méi yǒu) — 돈 나 진짜 단 한 푼도 없어.<br>今天的菜我一口也没吃。(jīn tiān de cài wǒ yì kǒu yě méi chī) — 오늘 요리 나 한 입도 안 먹었어.<br>这首歌我一遍也没听过。(zhè shǒu gē wǒ yí biàn yě méi tīng guo) — 이 노래 나 한 번도 들어본 적 없어.<br>那个人我认识，但他一句话也没说。(tā yí jù huà yě méi shuō) — 그 사람 아는데, 근데 한 마디도 안 하더라.<br>这个汉字我一个也不认识。(zhè ge hàn zì wǒ yí ge yě bú rèn shi) — 이 한자는 난 글자 한 개도 모르겠어.<br>北京我一次也没去过。(běi jīng wǒ yí cì yě méi qù guo) — 베이징 나 한 번도 안 가봤어.<br>钱包里一毛钱都没有。(qián bāo lǐ yì máo qián dōu méi yǒu) — 지갑 속에 단돈 10전도 없어.<br>我一分钟也不想等了。(wǒ yì fēn zhōng yě bù xiǎng děng le) — 나 1분도 더 기다리고 싶지 않아.<br>这里的衣服我一件都不喜欢。(zhè lǐ de yī fu wǒ yí jiàn dōu bù xǐ huan) — 여기 옷은 나 진짜 한 벌도 맘에 안 들어."
+						},
+						{
+							"id": "zh_g_75",
+							"theme": "기초회화문법",
+							"title": "[~ 动词 + 错了] 결과보어 错 활용 (잘못 ~하다)",
+							"summary": "행동은 했으나 그 대상이나 결과가 엇나갔음을 구체적으로 설명합니다.",
+							"detail": "17번 결과보어의 핵심 단편 패턴입니다. 동사 뒤에 '틀릴 착(错)'을 붙여 '잘못 말하다(说话+错=说错)', '잘못 사다(买错)' 등 내 실수를 정중히 시인할 때 유용합니다.",
+							"example": "<br>对不起，我说错了。(duì bù qǐ, wǒ shuō cuò le) — 죄송합니다, 제가 말을 잘못 했습니다.<br>不好意思，我认错人了。(bù hǎo yì si, wǒ rèn cuò rén le) — 죄송해요, 제가 사람을 잘못 알아봤네요.<br>衣服我买错 颜色了。(yī fu wǒ mǎi cuò yán sè le) — 옷 색상을 내가 잘못 샀어.<br>字写错了，请擦掉。(zì xiě cuò le, qǐng cā diào) — 글자가 틀렸으니, 지워주세요.<br>这个电话你打错了。(zhè ge diàn huà nǐ dǎ cuò le) — 이 전화 당신 잘못 거셨습니다. (전화 잘못 왔어요)<br>对不起，我走错 房间了。(duì bù qǐ, wǒ zǒu cuò fáng jiān le) — 죄송합니다, 제가 방을 잘못 찾아왔어요.<br>那道题我做错了。(nà dào tí wǒ zuò cuò le) — 그 문제 내가 잘못 풀었어(틀렸어).<br>车坐错了，我们要下车。(chē zuò cuò le, wǒ men yào xià chē) — 차를 잘못 탔어, 우리 내려야 해.<br>时间你看错了吧。(shí jiān nǐ kàn cuò le ba) — 시간 너 잘못 본 거 아니니?<br>听错了，我以为你叫我。(tīng cuò le, wǒ yǐ wéi nǐ jiào wǒ) — 잘못 들었어, 네가 나 부르는 줄 알았지."
+						},
+						{
+							"id": "zh_g_76",
+							"theme": "문법",
+							"title": "[除了 A，就数 B] 최고급 한정 구문 (A를 빼면 바로 B가 최고다)",
+							"summary": "1등인 대상(A) 바로 다음으로 뛰어난 2등 대상(B)을 꼽을 때 쓰는 고급 구어입니다.",
+							"detail": "'除了' 뒤에 탑티어를 두고, 뒤 절에 '셀 수(数)'를 활용한 '就数(jiù shǔ, 바로 손에 꼽힌다)'를 써서 최상급 라인업을 구성해 줍니다.",
+							"example": "<br>除了老师以外，就数他汉语说得最好。(chú le lǎo shī yǐ wài, jiù shǔ tā hàn yǔ shuō de zuì hǎo) — 선생님을 제외하면, 바로 그가 중국어를 가장 잘합니다.<br>在这个班里，除了他，就数我高。(zài zhè ge bān lǐ, chú le tā, jiù shǔ wǒ gāo) — 이 반에서, 그를 빼면 바로 내가 키가 커요.<br>我们公司里，除了老板，就数他最有钱。(wǒ men gōng sī lǐ, chú le lǎo bǎn, jiù shǔ tā zuì yǒu qián) — 우리 회사에서, 사장님을 제외하면 바로 그가 돈이 가장 많아요.<br>这些菜里，除了比萨，就数炸鸡好吃。(zhè xiē cài lǐ, chú le bǐ sà, jiù shǔ zhà jī hǎo chī) — 이 요리들 중에, 피자를 빼면 바로 치킨이 맛있어.<br>除了第一名，就数他努力了。(chú le dì yī míng, jiù shǔ tā nǔ lì le) — 1등을 제외하면, 바로 그가 노력한 거야.<br>这里除了我家，就数他家近。(zhè lǐ chú le wǒ jiā, jiù shǔ tā jiā jìn) — 여기선 우리 집을 빼면 바로 그 사람 집이 가까워.<br>除了北京，中国的城市里就数上海大。(chú le běi jīng, zhōng guó de chéng shì lǐ jiù shǔ shàng hǎi dà) — 베이징을 제외하면, 중국 도시 중 바로 상하이가 큽니다.<br>这个品牌里，除了这个包，就数那个贵。(zhè ge pǐn pái lǐ, chú le zhè ge bāo, jiù shǔ nà ge guì) — 이 브랜드에서, 이 가방을 빼면 바로 저 가방이 비싸요.<br>除了我，就数他知道这个秘密。(chú le wǒ, jiù shǔ tā zhī dào zhè ge mì mì) — 나를 제외하면, 바로 그가 이 비밀을 알고 있어.<br>在所有的水果里，除了西瓜，就数苹果我喜欢。(suǒ yǒu de shuǐ guǒ lǐ, chú le xī guā, jiù shǔ píng guǒ wǒ xǐ huan) — 모든 과일 중에, 수박을 빼면 바로 사과를 내가 좋아해."
+						},
+						{
+							"id": "zh_g_77",
+							"theme": "기초회화문법",
+							"title": "[怪不得 ~ ] 인과 확인 부사 (어쩐지 ~하더라니!)",
+							"summary": "어떤 숨겨진 원인을 알게 된 순간 '어쩐지 그래서 그랬구나!' 하고 무릎을 칠 때 씁니다.",
+							"detail": "'탓할 수 없다'라는 직역 뜻에서 유래하여, 회화에서는 원인을 깨닫고 납득하는 감탄 부사 '怪不得(guài bu de)'로 고정되어 원어민들이 매일 사용합니다.",
+							"example": "<br>怪不得他汉语说得这么好，原来是在中国留过学。(guài bu de tā hàn yǔ shuō de zhè me hǎo, yuán lái shì zài zhōng guó liú guo xué) — 어쩐지 중국어를 이렇게 잘하더라니, 알고 보니 중국에서 유학했었구나.<br>怪不得今天这么冷，原来是下雪了。(guài bu de jīn tiān zhè me lěng, yuán lái shì xià xuě le) — 어쩐지 오늘 이렇게 춥더라니, 알고 보니 눈이 왔네.<br>怪不得找不到钱包，原来是忘在车上了。(guài bu de zhǎo bú dào qián bāo, yuán lái shì wàng zài chē shàng le) — 어쩐지 지갑을 못 찾겠더라니, 알고 보니 차에 두고 내렸었어.<br>怪不得她今天不高兴，原来是弄坏了手机。(guài bu de tā jīn tiān bù gāo xìng, yuán lái shì nòng huài le shǒu jī) — 어쩐지 그녀가 오늘 저기압이더라니, 알고 보니 휴대폰을 고장 냈구나.<br>怪不得店里人这么多，原来是在打折。(guài bu de diàn lǐ rén zhè me duō, yuán lái shì zài dǎ zhé) — 어쩐지 가게에 사람이 이렇게 많더라니, 알고 보니 세일 중이었어.<br>怪不得你这么累，原来是一夜没睡。(guài bu de nǐ zhè me lèi, yuán lái shì yí yè méi shuì) — 어쩐지 네가 이렇게 피곤해하더라니, 알고 보니 밤을 새웠구나.<br>怪不得他没来公司，原来是生病了。(guài bu de tā méi lái gōng sī, yuán lái shì shēng bìng le) — 어쩐지 그가 회사에 안 왔더라니, 알고 보니 아팠던 거였어.<br>怪不得菜这么贵，原来是质量好。(guài bu de cài zhè me guì, yuán lái shì zhì liàng hǎo) — 어쩐지 요리가 이렇게 비싸더라니, 알고 보니 품질이 좋아서였네.<br>怪不得我听不懂，原来他说的是方言。(guài bu de wǒ tīng bù dǒng, yuán lái tā shuō de shì fāng yán) — 어쩐지 내가 못 알아듣겠더라니, 알고 보니 방언(사투리)을 쓰고 있었어.<br>怪不得你 知道这个秘密，原来是他告诉你的。(guài bu de nǐ zhī dào zhè ge mì mì, yuán lái shì tā gào su nǐ de) — 어쩐지 네가 이 비밀을 알더라니, 알고 보니 그가 너한테 말해준 거였구나."
+						},
+						{
+							"id": "zh_g_78",
+							"theme": "기초어순",
+							"title": "[A 借给 B / A 跟 B 借] 대여 방향 구분 (빌려주다 / 빌리다)",
+							"summary": "돈이나 물건을 주고받는 동작의 주체적 방향성을 명확히 구분합니다.",
+							"detail": "'빌릴 차(借)' 단어 하나가 방향에 따라 뜻이 정반대가 됩니다. [주어 + 借给(gěi) + 사람]은 주어가 남에게 '빌려주다'이고, [주어 + 跟/向 + 사람 + 借]는 주어가 남으로부터 '빌려 오다'가 됩니다.",
+							"example": "<br>他借给我一本书。(tā jiè gěi wǒ yì běn shū) — 그가 나에게 책 한 권을 빌려주었다.<br>我跟朋友借了一笔钱。(wǒ gēn péng you jiè le yì bǐ qián) — 나는 친구에게 돈을 좀 빌렸다. (빌려 왔다)<br>请把你的电脑借给我一下。(qǐng bǎ nǐ de diàn nǎo jiè gěi wǒ yí xià) — 네 컴퓨터 나한테 좀 빌려줄 수 있니?<br>你不应该跟别人借钱。(nǐ bù yīng gāi gēn bié rén jiè qián) — 너 남한테 돈 빌리면 안 돼.<br>我已经把衣服借给他了。(wǒ yǐ jīng bǎ yī fu jiè gěi tā le) — 나 이미 그 옷 그 사람한테 빌려줬어.<br>我想向老师借一本词典。(wǒ xiǎng xiàng lǎo shī jiè yì běn cí diǎn) — 전 선생님께 사전 한 권을 빌리고 싶습니다.<br>钱包没带，你能不能借给我点儿钱？(qián bāo méi帶, nǐ néng bù néng jiè gěi wǒ diǎnr qián) — 지갑 안 가져왔는데, 너 나한테 돈 좀 빌려줄 수 있어?<br>他借给我的车，我弄坏了。(tā jiè gěi wǒ de chē, wǒ nòng huài le) — 그가 나에게 빌려준 차를 내가 고장 내 버렸어.<br>这本书是我跟图书馆借的。(zhè běn shū shì wǒ gēn tú shū guǎn jiè de) — 이 책은 내가 도서관에서 빌린 거야. (강조구문 조합)<br>别借给他，他不还钱。(bié jiè gěi tā, tā bù huán qián) — 그 사람한테 빌려주지 마, 걔 돈 안 갚아."
+						},
+						{
+							"id": "zh_g_79",
+							"theme": "문법",
+							"title": "[~ 动词 + 见] 결과보어 见 활용 (감각적 도달 성취)",
+							"summary": "보고, 듣는 감각 능력을 통해 그 대상이 내 뇌와 눈에 도달했음을 강조합니다.",
+							"detail": "17번과 75번 보어의 심화입니다. '볼 견(见)'을 '看(보다)', '听(듣기)' 뒤에 붙여서 단순히 행동만 한 게 아니라, 실질적으로 내 신경계에 잡혔다(보였다, 들렸다)는 성공적 도달을 뜻하는 회화 필수 요소입니다.",
+							"example": "<br>我看见他了。(wǒ kàn jiàn tā le) — 나 그 사람 봤어 (내 눈에 포착됐어).<br>你听见我说的话了吗？(nǐ tīng jiàn wǒ shuō de huà le ma) — 너 내가 한 말 들었니? (귀에 들렸어?)<br>字太小，我看不见。(zì tài xiǎo, wǒ kàn bú jiàn) — 글씨가 너무 작아서 안 보여요. (가능보어 결합형)<br>这里很吵，我听不见。(zhè lǐ hěn chǎo, wǒ tīng bú jiàn) — 여기 너무 시끄러워서 안 들려요.<br>刚才在商店，我看见了一件漂亮的衣服。(gāng cái zài shāng diàn, wǒ kàn jiàn le yí jiàn piào liang de yī fu) — 방금 상점에서, 내 눈에 예쁜 옷 한 벌이 보였어.<br>没看见我的钱包吗？(méi kàn jiàn wǒ de qián bāo ma) — 제 지갑 못 보셨나요? (눈에 띈 적 없나요?)<br>我没听见有人开门。(wǒ méi tīng jiàn yǒu rén kāi mén) — 누군가 문 여는 소리 나 못 들었어.<br>走吧，他们听不见我们说话。(zǒu ba, tā men tīng bú jiàn wǒ men shuō huà) — 가자, 쟤네 우리 말하는 거 안 들려.<br>在飞机上，我看看见了美丽的云。(zài fēi jī shàng, wǒ kàn jiàn le měi lì de yún) — 비행기 위에서, 난 아름다운 구름을 보았어.<br>听见你这么说，我就放心了。(tīng jiàn nǐ zhè me shuō, wǒ jiù fàng xīn le) — 네가 그렇게 말하는 걸 들으니, 난 이제 안심이 된다."
+						},
+						{
+							"id": "zh_g_80",
+							"theme": "문법",
+							"title": "[동사 + 得/不 + 起] 경제적/사회적 능력 조건 (~할 여유가 있다/없다)",
+							"summary": "금전적인 능력이나 신분상의 조건이 어떤 행동을 감당할 수 있는지 나타냅니다.",
+							"detail": "42번에서 불가능 표현으로 잠깐 다룬 패턴의 독립 문법입니다. 동사 뒤에 '得起(dé qǐ)'를 붙이면 감당할 능력이 된다는 뜻이고, '不起(bù qǐ)'를 붙이면 돈이 없거나 형편이 안 되어 감당할 수 없음을 강력하게 뜻합니다. 회화에서 소비 성향을 말할 때 단골로 쓰입니다.",
+							"example": "<br>这家餐厅 贵，我吃不起。(zhè jiā cān tīng tài guì, wǒ chī bù qǐ) — 이 식당은 너무 비싸서 제가 사 먹을 엄두가 안 나요.<br>这 衣服很便宜，我买得起。(zhè jiàn yī fu hěn pián yi, wǒ mǎi de qǐ) — 이 옷은 아주 저렴해서 나 살 여유가 돼.<br>那么贵的车，我们普通人买不起。(nà me guì de chē, wǒ men pǔ tōng rén mǎi bù qǐ) — 그렇게 비싼 차는 우리 같은 보통 사람은 살 여력이 안 돼요.<br>只要努力，以后什么样的 房子都买得起。(zhǐ yào nǔ lì, yǐ hòu shén me yàng de fáng zi dōu mǎi de qǐ) — 노력하기만 하면, 나중에 어떤 집이든 다 살 능력이 될 거야.<br>名牌包我可 買不起。(míng pái bāo wǒ kě mǎi bù qǐ) — 명품 가방은 난 진짜 살 형편이 안 돼.<br>去国外 旅游，你觉得我花得起这个钱吗？(qù guó wài lǚ yóu, nǐ jué de wǒ huā de qǐ zhè ge qián ma) — 해외여행이라니, 너 내가 그 돈을 감당할 수 있을 거라 생각해?<br>对不起，这种 错误我犯不起。(duì bù qǐ, zhè zhǒng cuò wù wǒ fàn bù qǐ) — 죄송하지만, 이런 실수는 제 처지에 감당할 수가 없습니다.<br>只要你喜欢，多贵我都让你穿得起。(zhǐ yào nǐ xǐ huan, duō guì wǒ dōu ràng nǐ chuān de qǐ) — 네가 좋아하기만 하면, 아무리 비싸도 다 입게 해줄 수 있어.<br>这个手机我现在 还买不起。(zhè ge shǒu jī wǒ xiàn zài hái mǎi bù qǐ) — 이 휴대폰은 내가 지금은 아직 살 형편이 안 된다.<br>别看不起人，我买得起！(bié kàn bù qǐ rén, wǒ mǎi de qǐ) — 사람 무시하지 마세요, 저 살 돈 있어요!"
+						},
+						{
+							"id": "zh_g_81",
+							"theme": "문법",
+							"title": "[既然 A，就 B] 기정 사실의 전제 (기왕 A 된 바에야, 곧 B하다)",
+							"summary": "이미 일어난 사실이나 결정된 상황(A)을 인정하고, 그 바탕 위에 결론(B)을 이끌어냅니다.",
+							"detail": "'이왕 ~인 이상은, ~하게 된 바에야'라는 뜻의 접속사 '既然(jì rán)'입니다. 이미 되돌릴 수 없는 전제 조건을 앞에 깔아두고, 뒤 절에서 '그렇다면 당연히 이렇게 해야지'라는 논리를 이끌 때 부사 '就(jiù)'나 '那(nà)'와 짝을 이뤄 씁니다.",
+							"example": "<br>既然来了，就吃完饭再走吧。(jì rán lái le, jiù chī wán fàn zài zǒu ba) — 기왕 온 김에, 밥은 먹고 가라.<br>既然你不想去，就别 去了。(jì rán nǐ bù xiǎng qù, jiù bié qù le) — 네가 이왕 가기 싫은 바에야, 그냥 가지 마라.<br>既然决定了，就不要 后悔。(jì rán jué dìng le, jiù bú yào hòu huǐ) — 이미 결정한 이상은, 후회하지 마.<br>既然汉语 难，为什么非学不可？(jì rán hàn yǔ nán, wèi shén me fēi xué bù kě) — 중국어가 이왕 어려운 바에야, 왜 기필코 배우려고 하는 거야?<br>既然生病了，就在家 好好休息吧。(jì rán shēng bìng le, jiù zài jiā hǎo hǎo xiū xi ba) — 이미 몸이 아픈 이상, 집에서 푹 쉬어라.<br>既然钱不够，那就 别买这个包了。(jì rán qián bú gòu, nà jiù bié mǎi zhè ge bāo le) — 기왕 돈이 부족한 바에야, 그럼 이 가방은 사지 말자.<br>既然大家都 知道了，我就不瞒着了。(jì rán dà jiā dōu zhī dào le, wǒ jiù bù mán zhe le) — 이미 모두가 다 안 이상, 나도 더는 숨기지 않을게.<br>既然是你的  birthday/生日，今天我请客。(jì rán shì nǐ de shēng rì, jīn tiān wǒ qǐng kè) — 이왕 네 생일인 바에야, 오늘 내가 쏠게.<br>既然不会做饭，那就 点外卖吧。(jì rán bú huì zuò fàn, nà jiù diǎn wài mài ba) — 기왕 요리할 줄 모르는 이상은, 그럼 배달 시켜 먹자.<br>既然合同 签了，我们就要认真工作。(jì rán hé tong qiān le, wǒ men jiù yào rèn zhēn gōng zuò) — 계약서를 이미 쓴 이상, 우리는 성실히 일해야 합니다."
+						},
+						{
+							"id": "zh_g_82",
+							"theme": "기초회화문법",
+							"title": "[~ 动词 + 完了] 결과보어 完 활용 (남김없이 다 ~하다)",
+							"summary": "어떤 행동을 끝까지 완수하여 더 이상 남은 대상이 없음을 확실히 합니다.",
+							"detail": "17번 결과보어의 핵심 단편 패턴으로 일상에서 가장 빈도가 높습니다. 동사 뒤에 '마칠 완(完)'을 붙여 '다 먹었다(吃完)', '다 썼다(写完/用完)', '다 봤다(看完)' 등 행동의 최종 마무리를 선언합니다.",
+							"example": "<br>我把饭吃完了。(wǒ bǎ fàn chī wán le) — 나 밥 다 먹었어. (남김없이 비움)<br>今天的 作业你做完了吗？(jīn tiān de zuò yè nǐ zuò wán le ma) — 오늘 숙제 너 다 끝냈니?<br>那本 小说我已经看完了。(nà běn xiǎo shuō wǒ yǐ jīng kàn wán le) — 그 소설책 나 이미 다 읽었어.<br>这杯 咖啡喝完了，我再点一杯。(zhè bēi kā fēi hē wán le, wǒ zài diǎn yì bēi) — 이 커피 다 마셨으니, 나 한 잔 더 주문할게.<br>我的 钱都花完了。(wǒ de qián dōu huā wán le) — 내 돈 다 써버렸어. (탕진함)<br>电影 唱完了吗？还没有。(diàn yǐng kàn wán le ma? hái méi yǒu) — 영화 다 끝났나요? 아직 안 끝났어요.<br>请把话说完，别吞吞吐吐的。(qǐng bǎ huà shuō wán, bié tūn tūn tǔ tǔ de) — 말 좀 끝까지 다 하세요, 우물쭈물하지 말고.<br>今天的工作 做完了就可以下班。(jīn tiān de gōng zuò zuò wán le jiù kě yǐ xià bān) — 오늘 업무는 다 끝내면 바로 퇴근해도 돼.<br>字写完了 检查一下。(zì xiě wán le jiǎn chá yí xià) — 글씨 다 썼으면 한 번 확인해 보렴.<br>洗手间里 的纸用完了。(xǐ shǒu jiān lǐ de zhǐ yòng wán le) — 화장실 안에 휴지 다 썼어."
+						},
+						{
+							"id": "zh_g_83",
+							"theme": "기초회화문법",
+							"title": "[除了 A，别无选择] 굳은 의지와 상황 한정 (A 말고는 다른 선택이 없다)",
+							"summary": "막다른 상황이거나 확고한 목표가 있어서 오직 단 하나의 길(A)만 있음을 탄식하거나 강조합니다.",
+							"detail": "'除了' 구문과 구어 관용어인 '别无选择(bié wú xuǎn zé, 다른 선택지가 없다)'을 결합한 패턴입니다. 내 선택의 필연성을 강하게 피력할 때 씁니다.",
+							"example": "<br>为了还钱，除了加班，我别无选择。(wèi le huán qián, chú le jiā bān, wǒ bié wú xuǎn zé) — 돈을 갚기 위해선, 야근하는 것 외엔 난 다른 선택이 없어.<br>面对 困难，除了坚持，我们别无选择。(miàn duì kùn nan, chú le jiān chí, wǒ men bié wú xuǎn zé) — 어려움에 직면했을 때, 버텨내는 것 말고는 우린 다른 선택이 없습니다.<br>要想 学好汉语，除了多听多说，你别无选择。(yào xiǎng xué hǎo hàn yǔ, chú le duō tīng duō shuō, nǐ bié wú xuǎn zé) — 중국어를 잘 배우고 싶다면, 많이 듣고 많이 말하는 것 외엔 넌 다른 방법이 없어.<br>那家店太贵，除了放弃，我别无选择。(nà jiā diàn tài guì, chú le fàng qì, wǒ bié wú xuǎn zé) — 그 가게는 너무 비싸서, 포기하는 것 말고는 난 다른 도리가 없다.<br>火车票 卖光了，除了坐飞机，我们别无选择。(huǒ chē piào mài guāng le, chú le zuò fēi jī, wǒ men bié wú xuǎn zé) — 기차표가 매진되어서, 비행기를 타는 것 외엔 우린 다른 대안이 없어.<br>为了 准时到，除了打车，我别无选择。(wèi le zhǔn shí dào, chú le dǎ chē, wǒ bié wú xuǎn zé) — 제시간에 도착하려면, 택시 타는 것 외엔 난 다른 방법이 없었어.<br>密码忘了，除了办新卡，他别无选择。(mì mǎ wàng le, chú le bàn xīn kǎ, tā bié wú xuǎn zé) — 비밀번호를 까먹어서, 새 카드를 발급받는 것 말고는 그는 다른 방법이 없다.<br>这里 只有这一家饭馆，除了在这儿吃，我们别无选择。(zhè lǐ zhǐ yǒu zhè yī jiā fàn guǎn, chú le zài zhèr chī, wǒ men bié wú xuǎn zé) — 여기는 이 식당 하나뿐이라, 여기서 먹는 것 말고는 우린 다른 대안이 없어.<br>字写错了，除了重写，你别无选择。(zì xiě cuò le, chú le chóng xiě, nǐ bié wú xuǎn zé) — 글자가 틀려서, 새로 쓰는 것 외엔 넌 다른 방법이 없어.<br>既然是 公司的命令，除了执行，他别无选择。(jì rán shì gōng sī de mìnglìng, chú le zhí xíng, tā bié wú xuǎn zé) — 이왕 회사의 명령인 이상, 집행하는 것 말고는 그는 다른 선택이 없다."
+						},
+						{
+							"id": "zh_g_84",
+							"theme": "기초어순",
+							"title": "[A 借给 B / B 向 A 借] 대여 방향 마스터 (빌려주다 / 빌려오다 수치 결합)",
+							"summary": "78번 대여 방향 문법에 구체적인 돈의 액수나 기간을 매칭하는 실전형 구조입니다.",
+							"detail": "'借给' 뒤에 금액을 넣거나, '向...借' 구조 뒤에 시간 보어(얼마 동안)를 결합하여 실생활에서 구체적인 거래나 부탁을 나눌 수 있게 확장합니다.",
+							"example": "<br>他借给我一千块钱。(tā jiè gěi wǒ yì qiān kuài qián) — 그가 나에게 1,000위안을 빌려주었다.<br>我向朋友 借了三天的车。(wǒ xiàng péng you jiè le sān tiān de chē) — 나는 친구에게 사흘 동안 차를 빌렸다.<br>能 借给我五十块钱吗？(néng jiè gěi wǒ wǔ shí kuài qián ma) — 나한테 50위안만 빌려줄 수 있니?<br>我不 喜欢向别人借钱。(wǒ bù xǐ huan xiàng bié rén jiè qián) — 난 남에게 돈을 빌리는 것을 좋아하지 않아.<br>他已经把 电脑借给妹妹用了一个星期。(tā yǐ jīng bǎ diàn nǎo jiè gěi mèi mei yòng le yí ge xīng qī) — 그는 이미 컴퓨터를 여동생에게 빌려주어 일주일 동안 쓰게 했다.<br>这本书 我是从图书馆借了一个月的。(zhè běn shū shì wǒ cóng tú shū guǎn jiè le yí ge yuè de) — 이 책은 내가 도서관에서 한 달 기한으로 빌려온 거야.<br>钱包 没带，你借给我一百块吧。(qián bāo méi dài, nǐ jiè gěi wǒ yì bǎi kuài ba) — 지갑을 안 가져왔는데, 너 나한테 100위안만 좀 빌려줘라.<br>这是 他借给我的手机，我用三天就还。(zhè shì tā jiè gěi wǒ de shǒu jī, wǒ yòng sān tiān jiù huán) — 이건 그가 나한테 빌려준 휴대폰인데, 나 사흘만 쓰고 바로 돌려줄게.<br>不要 向不能还钱的人借钱。(bú yào xiàng bù néng huán qián de rén jiè qián) — 돈을 못 갚는 사람에게는 돈을 빌려주지도 말아라.<br>借给 别人东西的时候，一定要说清楚还的时间。(jiè gěi bié rén dōng xi de shí hou, yí dìng yào shuō qīng chu huán de shí jiān) — 남에게 물건을 빌려줄 때는, 반드시 돌려받을 시간을 확실히 말해야 해."
+						},
+						{
+							"id": "zh_g_85",
+							"theme": "문법",
+							"title": "[要是 A 的话，就 B] 구어체 완전 가정문 (~라 한다면 바로 ~하다)",
+							"summary": "32번 '要是'와 65번 '~的话'를 모두 결합하여 조건을 가장 확실하고 친근하게 제시합니다.",
+							"detail": "머리에는 '要是(yào shi)'를 두고, 꼬리에는 '的话(de huà)'를 달아 가정의 어조를 2중으로 굳힌 형태입니다. 원어민들이 대화할 때 조건절을 만들 수 있는 가장 완벽하고 정겨운 구조입니다.",
+							"example": "<br>要是明天下雨 的话，我们就不去爬山。(yào shi míng tiān xià yǔ de huà, wǒ men jiù bú qù pá shān) — 만약 내일 비가 온다고 치면, 우린 등산 안 갈래.<br>要是你身体不舒服 的话，就快去医院吧。(yào shi nǐ shēn tǐ bù shū fu de huà, jiù kuài qù yī yuàn ba) — 만약 네가 몸이 안 좋은 거라면, 얼른 병원에 가 봐.<br>要是这件衣服太贵 的话，就别买了吧。(yào shi zhè jiàn yī fu tài guì de huà, jiù bié mǎi le ba) — 만약 이 옷이 너무 비싼 거라면, 우리 사지 않는 게 좋겠어.<br>要是有不懂 的话，可以随时问我。(yào shi yǒu bù dǒng de huà, kě yǐ suí shí wèn wǒ) — 만약 모르는 게 있는 거라면, 언제든 나한테 물어봐도 돼.<br>要是想吃中国菜 的话，我知道一家很好的店。(yào shi xiǎng chī zhōng guó cài de huà, wǒ zhī dào yì jiā hěn hǎo de diàn) — 만약 중국 요리가 먹고 싶은 거라면, 내가 아주 좋은 가게 하나 알고 있어.<br>要是找不到 钱包的话，就给我打电话。(yào shi zhǎo bú dào qián bāo de huà, jiù gěi wǒ dǎ diàn huà) — 만약 지갑을 진짜 못 찾겠는 거라면, 나한테 전화해.<br>要是明天你有时间 的话，一起喝杯咖啡吧。(yào shi míng tiān nǐ yǒu shí jiān de huà, yì qǐ hē bēi kā fēi ba) — 만약 내일 네가 시간이 되는 거라면, 같이 커피 한잔하자.<br>要是觉得汉语难 的话，可以多听听录音。(yào shi jué de hàn yǔ nán de huà, kě yǐ duō tīng tīng lù yīn) — 만약 중국어가 어렵다고 느껴진다면, 녹음을 많이 들어봐.<br>要是没问题 的话，我们现在就签合同。(yào shi méi wèn tí de huà, wǒ men xiàn zài jiù qiān hé tong) — 만약 아무 문제가 없는 거라면, 우리 지금 바로 계약서 씁시다.<br>要是你不喜欢他的话，就早点 告诉他。(yào shi nǐ bù xǐ huan tā de huà, jiù zǎo diǎnr gào su tā) — 만약 네가 그 사람을 안 좋아하는 거라면, 걔한테 일찍 말해줘."
+						},
+						{
+							"id": "zh_g_86",
+							"theme": "문법",
+							"title": "[A 把 B + 동사 + 결과보어] 把문 최종 마스터 (A가 B를 ~하여 그 결과가 ~되다)",
+							"summary": "물건을 목적어로 당겨와서 처치한 뒤, 그로 인해 발생한 완벽한 '결과 상태'까지 표현합니다.",
+							"detail": "23번과 66번 '把'문의 최종 종착지입니다. [把 + 목적어] 뒤에 동사를 쓰고, 그 뒤에 '完(완료)', '错(실수)', '好(완성)' 등의 결과보어를 붙여 문장을 완벽하게 종결짓는 최고 빈도 회화 패턴입니다.",
+							"example": "<br>他把今天的作业做完了。(tā bǎ jīn tiān de zuò yè zuò wán le) — 그는 오늘 숙제를 다 끝마쳤어요.<br>对不起，我把 名字写错了。(duì bù qǐ, wǒ bǎ míng zi xiě cuò le) — 죄송합니다, 제가 이름을 잘못 적었습니다.<br>我已经把行李 准备好了。(wǒ yǐ jīng bǎ xíng li zhǔn bèi hǎo le) — 저는 이미 짐 준비를 완벽히 끝내 두었어요.<br>请把门 关好。(qǐng bǎ mén guān hǎo) — 문 좀 제대로 잘 닫아 주세요. (好는 똑바로의 뜻)<br>你把刚才的话 说对了。(nǐ bǎ gāng cái de huà shuō duì le) — 너 방금 한 말 정확하게 맞게 잘 했어.<br>不要把手机弄坏了。(bú yào bǎ shǒu jī nòng huài le) — 휴대폰 고장 내지 마라. (弄坏은 고장 내다)<br>我把那杯 咖啡喝完了。(wǒ bǎ nà bēi kā fēi hē wán le) — 나 그 커피 다 마셔 버렸어.<br>他把 钱包找见了。(tā bǎ qián bāo zhǎo jiàn le) — 그는 지갑을 결국 찾아서 찾아냈어요. (见은 시각적 도달)<br>请把字 写清楚。(qǐng bǎ zì xiě qīng chu) — 글씨를 선명하게 똑바로 써 주세요.<br>我把要做的事 忘光了。(wǒ bǎ yào zuò de shì wàng guāng le) — 나 해야 할 일들을 깡그리 다 까먹었어. (光은 빛날 광, 남김없이의 뜻)"
+						},
+						{
+							"id": "zh_g_87",
+							"theme": "기초회화문법",
+							"title": "[连 A 都不/没 B] 극단적 완전 부정 (A조차도 전혀 ~않다)",
+							"summary": "67번 패턴의 부정형 강화 버전으로, 상식 이하의 극단적인 불가능을 꼬집습니다.",
+							"detail": "'连 + [가장 작거나 쉬운 단위] + 都不/没' 구조를 취해 '이것조차도 안 하는데 다른 건 말할 필요도 없다'는 뉘앙스를 확실히 전달합니다.",
+							"example": "<br>他连一句话都不说。(tā lián yí jù huà dōu bù shuō) — 그는 단 한 마디조차도 절대 하지 않는다.<br>我今天太 忙了, 连一口水都没喝。(wǒ jīn tiān tài máng le, lián yì kǒu shuǐ dōu méi hē) — 나 오늘 너무 바빠서, 물 한 모금조차도 못 마셨어.<br>这个字 这么简单，连孩子都认识。(zhè ge zì zhè me jiǎn dān, lián hái zi dōu rèn shi) — 이 글자는 이렇게 쉬워서, 아이조차도 다 알아봐요.<br>他学了三年汉语，连自的名都不会写。(tā lián zì jǐ de míng zi dōu bú huì xiě) — 그는 중국어를 3년 배웠으면서 자기 이름조차 쓸 줄 몰라.<br>这件衣服 太便宜了，连我都不想买。(zhè jiàn yī fu tài pián yi le, lián wǒ dōu bù xiǎng mǎi) — 이 옷은 너무 싸구려라, 나조차도 사고 싶지 않을 정도야.<br>那个秘密 连他妈妈都没告诉。(zhè ge mì mì lián tā mā ma dōu méi gào su) — 그 비밀은 자기 엄마한테조차도 말 안 했어.<br>这里太 偏僻了，连手机信号都没有。(zhè lǐ tài piān pì le, lián shǒu jī xìn hào dōu méi yǒu) — 여기는 너무 외져서, 휴대폰 신호조차도 안 잡혀요.<br>对不起，那 件事我连听都没听过。(duì bù qǐ, nà jiàn shì wǒ lián tīng dōu méi tīng quo) — 죄송해요, 그 일은 전 들어본 적조차도 없습니다.<br>他今天 生气得连饭都不想吃。(tā jīn tiān shēng qì de lián fàn dōu bù xiǎng chī) — 그는 오늘 너무 화가 나서 밥조차도 먹고 싶어 하지 않아.<br>走得太 快了，连个影子都没看见。(zǒu de tài kuài le, lián ge yǐng zi dōu méi kàn jiàn) — 어찌나 빨리 가던지, 그림자 하나조차도 못 봤어."
+						},
+						{
+							"id": "zh_g_88",
+							"theme": "기초어순",
+							"title": "[对 + 사람 + 影响很大] 핵심 관용 부사구 (~에게 영향이 매우 크다)",
+							"summary": "특정 사건, 인물, 환경이 누군가에게 지대한 정신적·물질적 변화를 주었음을 고정 패턴으로 표현합니다.",
+							"detail": "37번 '对(대상의 전치사)'의 가장 대표적인 비즈니스 및 일상 관용 뼈대입니다. '影响(yǐng xiǎng, 영향)'과 '很大(크다)'를 합쳐 하나의 숙어처럼 통째로 외워 사용합니다.",
+							"example": "<br>老师对我影响很大。(lǎo shī duì wǒ yǐng xiǎng hěn dà) — 선생님은 저에게 영향이 매우 크십니다. (큰 영향을 주셨습니다)<br>学汉语对我的工作 影响很大。(xué hàn yǔ duì wǒ de gōng zuò yǐng xiǎng hěn dà) — 중국어를 배운 것은 제 업무에 아주 큰 영향을 미쳤어요.<br>父母对 孩子的成长影响很大。(fù mǔ duì hái zi de chéng zhǎng yǐng xiǎng hěn dà) — 부모는 아이의 성장에 미치는 영향이 매우 큽니다.<br>今天下大雨 对交通影响很大。(jīn tiān xià dà yǔ duì jiāo tōng yǐng xiǎng hěn dà) — 오늘 폭우가 내린 것은 교통에 아주 큰 지장을 주었네요.<br>朋友对他的 想法影响很大。(péng you duì tā de xiǎng fǎ yǐng xiǎng hěn dà) — 친구들이 그의 생각에 미친 영향이 아주 큽니다.<br>环境对 一个人的性格影响很大。(huán jìng duì yí ge rén de xìng gé yǐng xiǎng hěn dà) — 환경은 한 사람의 성격에 미치는 영향이 매우 깊어요.<br>换工作对 我的生活影响很大。(huàn gōng zuò duì wǒ de shēng huó yǐng xiǎng hěn dà) — 이직을 한 것은 제 삶에 아주 큰 변화(영향)를 주었습니다.<br>这部电影 对年轻人的想法影响很大。(zhè bù diàn yǐng duì nián qīng rén de xiǎng fǎ yǐng xiǎng hěn dà) — 이 영화는 젊은이들의 가치관에 큰 영향을 주었어요.<br>读书对他的 人生影响很大。(dú shū duì tā de rén shēng yǐng xiǎng hěn dà) — 독서는 그의 인생에 아주 큰 영향을 미쳤습니다.<br>你的 话对他影响很大，别乱说。(nǐ de huà duì tā yǐng xiǎng hěn dà, bié luàn shuō) — 네 말이 걔한테 미치는 영향이 대단히 크니까, 함부로 말하지 마."
+						},
+						{
+							"id": "zh_g_89",
+							"theme": "문법",
+							"title": "[非要 + 동사 + 不可] 고집의 강조 (기어이 기필코 ~하려고 들다)",
+							"summary": "69번 강한 당위성 문법에 '원할 요(要)'를 섞어, 주어의 주관적인 '똥고집'을 유머러스하거나 불평 섞이게 묘사합니다.",
+							"detail": "[非要...不可] 구조는 주어가 주변의 만류나 상황 조건에도 아랑곳하지 않고 자기 뜻을 억지로 밀어붙이려 할 때 원어민들이 혀를 차며 자주 쓰는 표현입니다.",
+							"example": "<br>他非要一个人去中国不可。(tā fēi yào yí ge rén qù zhōng guó bù kě) — 그는 기어이 혼자서 중국에 가겠다고 고집을 피우네.<br>妹妹非要 买那个昂贵的包不可。(mèi mei fēi yào mǎi nà ge áng guì de bāo bù kě) — 여동생은 기어코 저 비싼 가방을 사겠다고 난리야.<br>天气这么 冷，他非要穿短袖不可。(tiān qì zhè me lěng, tā fēi yào chuān duǎn xiù bù kě) — 날씨가 이렇게 추운데, 그는 기어코 반팔을 입겠다고 고집을 부린다.<br>已经十二 點了，他非要给我打电话不可。(yǐ jīng shí èr diǎn le, tā fēi yào gěi wǒ dǎ diàn huà) — 벌써 12시인데, 그는 기어이 나한테 전화를 걸겠다고 고집이네.<br>我都说了 不知道，他非要问不可。(wǒ dōu shuō le bù zhī dào, tā fēi yào wèn bù kě) — 내가 모른다고 이미 말했는데도, 그는 기어코 물어보려고 들어.<br>生病这么 严重，他非要硬撑着上班不可。(shēng bìng zhè me yán zhòng, tā fēi yào yìng chēng zhe shàng bān bù kě) — 병이 이렇게 심한데도, 그는 기어이 억지로 버티며 출근하겠다고 고집이야.<br>孩子非要 吃冰淇淋不可，没办法。(hái zi fēi yào chī bīng qí lín bù kě, méi bàn fǎ) — 아이가 기어코 아이스크림을 먹겠다고 떼를 쓰니, 방법이 없네.<br>这件衣服 不适合你，你为什么非要买不可？(zhè jiàn yī fu bù shì hé nǐ, nǐ wèi shén me fēi yào mǎi bù kě) — 이 옷은 너한테 안 맞는데, 너 왜 기어코 사려고 고집부리니?<br>大家都 决定了，他非要提出反对不可。(dà jiā dōu jué dìng le, tā fēi yào tí chū fǎn duì bù kě) — 모두가 다 결정했는데, 그는 기어이 반대를 제기하겠다고 우긴다.<br>这笔钱 我非要存起来不可，谁也别劝我。(zhè bǐ qián wǒ fēi yào cún qǐ lái不可, shéi yě bié quàn wǒ) — 이 돈은 내 기필코 저금해 둘 테니, 아무도 날 말리지 마."
+						},
+						{
+							"id": "zh_g_90",
+							"theme": "기초회화문법",
+							"title": "[~ 动词 + 懂了] 결과보어 懂 활용 (들어서/봐서 마스터하다)",
+							"summary": "강의, 대화, 책의 내용을 접하고 머릿속으로 완벽하게 이해했음을 선언합니다.",
+							"detail": "'알 해(懂)'를 지각 동사인 '听(듣다)'이나 '看(보다)' 뒤에 붙인 단편 핵심 패턴입니다. 원어민과의 대화나 중국어 수업 중 내가 완전히 알아들었음을 알리는 리액션의 핵심 뼈대입니다.",
+							"example": "<br>老师讲的课，我都听懂了。(lǎo shī jiǎng de kè, wǒ dōu tīng dǒng le) — 선생님이 하신 수업, 저 다 알아들었어요. (이해했어요)<br>这句话 我看懂了，意思是这样。(zhè jù huà wǒ kàn dǒng le, yì si shì zhè yàng) — 이 문장 나 글자로 봐서 이해했어, 뜻이 이러네.<br>你听懂我 说的汉语了吗？(nǐ tīng dǒng wǒ shuō de hàn yǔ le ma) — 너 내가 말한 중국어 알아들었니?<br>对不起，我 没听懂，请再说一遍。(duì bù qǐ, wǒ méi tīng dǒng, qǐng zài shuō yí biàn) — 죄송합니다, 제가 못 알아들었어요, 다시 한 번 말씀해 주세요. (부정은 没)<br>说明书 我终于看懂了，原来要这么用。(shuō míng shū wǒ zhōng yú kàn dǒng le, yuán lái yào zhè me yòng) — 설명서 나 드디어 봐서 이해했어, 알고 보니 이렇게 쓰는 거였군.<br>看懂了 就快做作业吧。(kàn dǒng le jiù kuài zuò zuò yè ba) — 보고 이해했으면 얼른 숙제하렴.<br>他说话 口音太重，我实在听不懂。(tā shuō huà kǒu yīn tài zhòng, wǒ shí zài tīng bù dǒng) — 그 사람 말투 사투리가 너무 심해서, 나 진짜 도저히 못 알아듣겠어. (가능보어 결합)<br>这些 汉字你看懂了几个？(zhè xiē hàn zì nǐ kàn dǒng le jǐ ge) — 이 한자들 너 봐서 이해한 게 몇 개나 되니?<br>听懂了 就跟我点点头。(tīng dǒng le jiù gēn wǒ diǎn diǎn tóu) — 알아들었으면 나한테 고개를 좀 끄덕여 주렴.<br>我懂了 你的意思，放心吧。(wǒ dǒng le nǐ de yì si, fàng xīn ba) — 나 네 뜻 완전히 이해했으니까, 안심해."
+						}, {
+							"id": "zh_g_91",
+							"theme": "문법",
+							"title": "[哪怕 A，也 B] 극한 가정 양보 접속사 (설령 A 할지라도 역시 B 하다)",
+							"summary": "가장 극단적인 상황(A)을 가정하더라도, 결과(B)에는 전혀 영향을 주지 않음을 나타냅니다.",
+							"detail": "'비록 ~일지라도, 설령 ~라 하더라도'라는 뜻의 양보 접속사 '哪怕(nǎ pà)'입니다. 앞서 배웠던 '虽然'보다 훨씬 더 극단적이거나 실현 가능성이 낮은 조건을 가정하여 내 굳은 의지나 변함없는 사실을 부사 '也(yě)'와 함께 강조할 때 사용합니다.",
+							"example": "<br>哪怕明天下大雨，我也要去。(nǎ pà míng tiān xià dà yǔ, wǒ yě yào qù) — 설령 내일 폭우가 쏟아질지라도, 난 기어코 갈 거야.<br>哪怕再难，我也会坚持到底。(nǎ pà zài nán, wǒ yě huì jiān chí dào dǐ) — 비록 아무리 어려울지라도, 저는 끝까지 버텨낼 것입니다.<br>哪怕没有钱，我也想买这个包。(nǎ pà méi yǒu qián, wǒ yě xiǎng mǎi zhè ge bāo) — 설령 돈이 없을지라도, 나 이 가방 꼭 사고 싶어.<br>哪怕只有一个人去，他也非去不可。(nǎ pà zhǐ yǒu yí ge rén qù, tā yě fēi qù bù kě) — 설령 단 한 사람만 갈지라도, 그는 기필코 가겠다고 하네.<br>哪怕不便宜，为了健康我也要买。(nǎ pà bù pián yi, wèi le jiàn kāng wǒ yě yào mǎi) — 비록 저렴하지 않을지라도, 건강을 위해서 전 무조건 살 거예요.<br>哪怕失败了，你也不要后悔。(nǎ pà shī bài le, nǐ yě bú yào hòu huǐ) — 설령 실패하게 될지라도, 너 절대 후회하지 마라.<br>哪怕花再多时间，我也要学好汉语。(nǎ pà huā zài duō shí jiān, wǒ yě yào xué hǎo hàn yǔ) — 설령 아무리 많은 시간을 허비할지라도, 난 중국어를 마스터할 거야.<br>那里的风景哪怕只看一眼，你也忘不了。(nà lǐ de fēng jǐng nǎ pà zhǐ kàn yì yǎn, nǐ yě wàng bù liǎo) — 그곳 풍경은 설령 딱 한 눈만 볼지라도, 넌 절대 잊지 못할 걸.<br>哪怕他不同意，我们也要做这件事。(nǎ pà tā bù tóng yì, wǒ men yě yào zuò zhè jiàn shì) — 설령 그가 동의하지 않을지라도, 우리는 이 일을 추진해야만 해.<br>哪怕工作再累，回到家看见孩子我也很高兴。(nǎ pà gōng zuò zài lèi, huí dào jiā kàn jiàn hái zi wǒ yě hěn gāo xìng) — 설령 업무가 아무리 고될지라도, 집에 와서 아이를 보면 난 마냥 행복해."
+						},
+						{
+							"id": "zh_g_92",
+							"theme": "문법",
+							"title": "[既然 A，那就 B] 기정 사실의 정중한 제안 (기왕 A 이니, 그렇다면 B 하자)",
+							"summary": "81번 '既然' 패턴의 제안형 확장 버전으로, 상대방의 상황에 맞추어 부드럽게 대안을 제시합니다.",
+							"detail": "상대방이 밝힌 상황이나 결정(A)을 전제로 받아들인 뒤, 문장 중간에 '那就(nà jiù, 그렇다면 바로)'를 넣어 '우리 이렇게 조치하자'라고 매끄럽게 합의를 도출하는 일상회화 최고의 비즈니스 매너 조항입니다.",
+							"example": "<br>既然你这么忙，那我们就明天再谈吧。(jì rán nǐ zhè me máng, nà wǒ men jiù míng tiān zài tán ba) — 기왕 당신이 이렇게 바쁘시니, 그렇다면 우리 내일 다시 이야기 나눕시다.<br>既然肚子饿了，那我们就先去吃饭吧。(jì rán dù zi è le, nà wǒ men jiù xiān qù chī fàn ba) — 기왕 배가 고픈 바에야, 그렇다면 우리 먼저 밥 먹으러 가자.<br>既然你喜欢，那我就给你买吧。(jì rán nǐ xǐ huan, nà wǒ men jiù gěi nǐ mǎi ba) — 기왕 네가 마음에 들어 하니, 그렇다면 내가 너 사줄게.<br>既然老师没来，那我们就自学吧。(jì rán lǎo shī méi lái, nà wǒ men jiù zì xué ba) — 기왕 선생님께서 안 오신 이상, 그렇다면 우리 자습하자.<br>既然已经弄坏了，那就别再生气了。(jì rán yǐ jīng nòng huài le, nà jiù bié zài shēng qì le) — 이미 고장 나 버린 바에야, 그렇다면 더는 화내지 마렴.<br>既然找不到钱包，那你就先用我的钱吧。(jì rán zhǎo bú dào qián bāo, nà nǐ jiù xiān yòng wǒ de qián ba) — 기왕 지갑을 못 찾겠는 상황이니, 그렇다면 우선 내 돈 먼저 쓰려무나.<br>既然明天你放假，那我们就一起去游玩吧。(jì rán míng tiān nǐ fàng jià, nà wǒ men jiù yì qǐ qù yóu wán ba) — 기왕 내일 네가 쉬는 날이니, 그렇다면 우리 같이 놀러 가자.<br>既然觉得汉语难，那你就多听听录音吧。(jì rán jué de hàn yǔ nán, nà nǐ jiù duō tīng tīng lù yīn ba) — 기왕 중국어가 어렵다고 느끼는 바에야, 그렇다면 넌 녹음을 좀 많이 들어봐.<br>既然合同没问题，那我们就现在签吧。(jì rán hé tong méi wèn tí, nà wǒ men jiù xiàn zài qiān ba) — 기왕 계약서에 문제가 없는 이상, 그렇다면 우리 지금 바로 씁시다.<br>既然大家都想去，那我们就出发吧。(jì rán dà jiā dōu xiǎng qù, nà wǒ men jiù chū fā ba) — 기왕 모두가 가고 싶어 하니, 그렇다면 우리 바로 출발하자!"
+						},
+						{
+							"id": "zh_g_93",
+							"theme": "기초회화문법",
+							"title": "[~ 动词 + 好了] 결과보어 好의 행동 완료 (~을 완벽하게 끝내다)",
+							"summary": "단순히 끝낸 것을 넘어 마음에 들게 '제대로, 잘, 완벽하게' 완료했음을 강조합니다.",
+							"detail": "17번과 86번에서 다룬 '好' 보어의 기본 서술형 패턴입니다. 동사 뒤에 '좋을 호(好)'와 '了'를 붙여 '준비 다 됐다(准备好)', '약속 다 정했다(商量好)', '옷 제대로 다 입었다(穿好)' 등 완결성을 선언합니다.",
+							"example": "<br>我已经把行李准备好了。(wǒ yǐ jīng bǎ xíng li zhǔn bèi hǎo le) — 저 이미 짐 준비 확실하게 다 끝내 두었어요.<br>菜已经做好了，快来吃吧。(cài yǐ jīng zuò hǎo le, kuài lái chī ba) — 요리 마침내 다 완성됐으니, 얼른 와서 먹으렴.<br>衣服请穿好，外面很冷。(yī fu qǐng chuān hǎo, wài mian hěn lěng) — 옷 매무새 똑바로 잘 입으세요, 바깥이 아주 춥습니다.<br>明天见面的时间我们已经商量好了。(míng tiān jiàn miàn de shí jiān wǒ men yǐ jīng shāng liang hǎo le) — 내일 만날 시간은 저희가 이미 완벽하게 다 상의해 두었습니다.<br>字写好了就交给我吧。(zì xiě hǎo le jiù jiāo gěi wǒ ba) — 글씨 제대로 다 썼으면 나한테 제출하렴.<br>票我在网上已经买好了。(piào wǒ zài wǎng shàng yǐ jīng mǎi hǎo le) — 표는 내가 인터넷으로 이미 완벽하게 예매해 두었어.<br>你跟爸爸说好了吗？(nǐ gēn bà ba shuō hǎo le ma) — 너 아버지랑 이야기 확실하게 잘 끝냈니?<br>事情既然办好了，你就别担心了。(shì qing jì rán bàn hǎo le, nǐ jiù bié dān xīn le) — 일이 기왕 완벽하게 잘 처리된 바에야, 넌 더는 걱정하지 마.<br>合同我已经看好了，没问题。(hé tong wǒ yǐ jīng kàn hǎo le, méi wèn tí) — 계약서 내가 이미 꼼꼼하게 다 살펴봤는데, 아무 문제 없어.<br>座位选好了，我们走吧。(zuò wèi xuǎn hǎo le, wǒ men zǒu ba) — 좌석 지정 제대로 다 끝났으니, 우리 가자."
+						},
+						{
+							"id": "zh_g_94",
+							"theme": "기초회화문법",
+							"title": "[除了 A 以外，其余的都 B] 최고급 예외 한정 (A를 제외하고, '나머지 찌꺼기 전부'가 B하다)",
+							"summary": "특정 대상(A) 하나만을 칼같이 떼어내고, '나머지 일체'의 대상을 묶어 단정합니다.",
+							"detail": "61번 '除了...都' 패턴의 격식체이자 완벽한 고어 문맥 표기법입니다. '나머지, 그 외의 것'을 뜻하는 '其余的(qí yú de)'를 한가운데 배치하여 예외 대상을 완벽하게 고립시킵니다.",
+							"example": "<br>除了星期天以外，其余的我都上班。(chú le xīng qī tiān yǐ wài, qí yú de wǒ dōu shàng bān) — 일요일을 제외하고, 나머지 날엔 전 전부 출근해요.<br>除了他以外，其余的人都到了。(chú le tā yǐ wài, qí yú de rén dōu dào le) — 그 사람 한 명을 제외하고, 나머지 인원은 전부 도착했습니다.<br>除了辣的以外，其余的菜我都吃。(chú le là de yǐ wài, qí yú de cài wǒ dōu chī) — 매운 음식을 제외하고, 나머지 요리들은 전 전부 먹어요.<br>除了这个包以外，其余的包都不好看。(chú le zhè ge bāo yǐ wài, qí yú de bāo dōu bù hǎo kàn) — 이 가방 하나를 제외하면, 나머지 가방들은 전부 안 예쁩니다.<br>除了第一题以外，其余的题我都做对了。(chú le dì yī tí yǐ wài, qí yú de tí wǒ dōu zuò duì le) — 첫 번째 문항을 제외하고, 나머지 문제들은 저 전부 맞았어요.<br>除了苹果以外，其余的水果他都不吃。(chú le píng guǒ yǐ wài, qí yú de shuǐ guǒ tā dōu bù chī) — 사과를 제외하고, 나머지 과일들을 그는 일절 안 먹습니다.<br>除了我以外，其余的人都不知情。(chú le wǒ yǐ wài, qí yú de rén dōu bù zhī qíng) — 나를 제외하고, 나머지 사람들은 전부 이 내막을 모릅니다.<br>除了那家店以外，其余的餐厅都便宜。(chú le nà jiā diàn yǐ wài, qí yú de cān tīng dōu pián yi) — 그 가게를 제외하고, 나머지 식당들은 전부 저렴해요.<br>除了周末以外，其余的时间图书馆都开门。(chú le zhōu mò yǐ wài, qí yú de shí jiān tú shū guǎn dōu kāi mén) — 주말을 제외하고, 나머지 시간대엔 도서관이 항상 문을 엽니다.<br>除了这件衣服以外，其余的衣服都打折。(chú le zhè jiàn yī fu yǐ wài, qí yú de yī fu dōu dǎ zhé) — 이 옷 한 벌을 제외하고, 나머지 옷들은 전부 세일(할인) 품목입니다."
+						},
+						{
+							"id": "zh_g_95",
+							"theme": "기초어순",
+							"title": "[A 跟 B 借 + 수량/기간] 대여 정보의 완벽한 묘사 (A가 B에게 얼마 동안 ~를 빌리다)",
+							"summary": "84번 패턴의 연장선상으로, 누구에게 어떤 물건을 구체적으로 얼마큼 빌렸는지 서술합니다.",
+							"detail": "[주어 + 跟/向 + 사람 + 借 + 목적어 + 시간의 길이]의 어순 결합입니다. 목적어 뒤에 시간의 양(시량보어)을 배치하는 중국어 어순 특징이 고스란히 담긴 실전형 구조입니다.",
+							"example": "<br>我向朋友借了三天的车。(wǒ xiàng péng you jiè le sān tiān de chē) — 나는 친구에게 사흘(3일) 동안 차를 빌렸어.<br>他跟我借了一百块钱。(tā gēn wǒ jiè le yì bǎi kuài qián) — 그가 나에게 100위안의 돈을 빌려 갔어.<br>我想向老师借一本词典用一天。(wǒ xiàng lǎo shī jiè yì běn cí diǎn yòng yì tiān) — 전 선생님께 사전 한 권을 빌려서 하루 동안 쓰고 싶습니다.<br>你不应该总是跟别人借钱。(nǐ bù yīng gāi zǒng shì gēn bié rén jiè qián) — 너 버릇처럼 자꾸 남한테 돈 빌리고 다니면 안 돼.<br>这本书我是从图书馆借了一个月的。(zhè běn shū  shì wǒ cóng tú shū guǎn jiè le yí ge yuè de) — 이 책은 내가 도서관에서 한 달 기한으로 빌려온 거야.<br>钱包没带，我向同事借了五十块买饭。(wǒ xiàng tóng shì jiè le wǔ shí kuài mǎi fàn) — 지갑을 안 챙겨와서, 나 동료한테 50위안 빌려서 밥 사 먹었어.<br>他向我借了那部电脑用了一个星期。(tā xiàng wǒ jiè le nà bù diàn nǎo yòng le yí ge xīng qī) — 그는 나에게 저 노트북을 빌려 가더니 일주일 동안 사용했어.<br>不要总是向不能还钱的人借东西。(bú yào zǒng shì xiàng bù néng huán qián de rén jiè dōng xi) — 제때 돈이나 물건을 안 돌려주는 사람에겐 아예 빌려주지도 마라.<br>这是我向姐姐借了一天的手机。(zhè  shì wǒ xiàng jiě jie jiè le yì tiān de shǒu jī) — 이건 내가 누나(언니)한테 딱 하루 기한으로 빌려온 휴대폰이야.<br>向别人借东西的时候，必须要说清楚还的时间。(xiàng bié rén jiè dōng xi de shí hou, bì xū yào shuō qīng chu huán de shí jiān) — 남에게 물건을 빌릴 때는, 반드시 돌려줄 타이밍을 명확히 말해야 해."
+						},
+						{
+							"id": "zh_g_96",
+							"theme": "문법",
+							"title": "[要是 A 的话，那就 B] 완전 조건의 타당성 도출 (~라 카면, 그렇다면 바로 ~하자)",
+							"summary": "85번 구조를 제안형 결론(那就)으로 연결하여 상대방의 의견에 완벽하게 동조해 줍니다.",
+							"detail": "머리에 '要是', 꼬리에 '的话'를 달아 조건의 범위를 확실히 잠근 뒤, 해결책으로 뒷문장 머리에 '那就'를 배치하여 가장 매끄럽고 설득력 있는 답변을 제공하는 구문입니다.",
+							"example": "<br>要是明天下雨的话，那 silver/那我们就别去爬山了。(yào shi míng tiān xià yǔ de huà, nà wǒ men jiù bié qù pá shān le) — 만약 내일 진짜 비가 온다고 치면, 그렇다면 우리 등산은 가지 말자.<br>要是你身体不舒服的话，那你就快去医院看看吧。(yào shi nǐ shēn tǐ bù shū fu de huà, nà nǐ jiù kuài qù yī yuàn kàn kàn ba) — 만약 네 몸 상태가 정말 안 좋은 거라면, 그렇다면 넌 얼른 병원 가서 진찰을 받아봐.<br>要是这件衣服太贵的话，那我们就别买了吧。(yào shi zhè jiàn yī fu tài guì de huà, nà wǒ men jiù bié mǎi le ba) — 만약 이 옷이 너무 지나치게 비싼 거라면, 그렇다면 우리 사지 않는 게 좋겠어.<br>要是有不懂的话，那你随时都可以问我。(yào shi yǒu bù dǒng de huà, nà nǐ suí shí dōu kě yǐ wèn wǒ) — 만약 이해가 안 되는 게 있는 거라면, 그렇다면 넌 언제든 나한테 물어봐도 돼.<br>要是你想吃中国菜的话，那我知道一家正宗的店。(yào shi xiǎng chī zhōng guó cài de huà, nà wǒ zhī dào yì jiā zhèng zōng de diàn) — 만약 네가 중국 요리를 먹고 싶은 거라면, 그렇다면 내가 아주 제대로 하는 가게 하나 알고 있어.<br>要是找不到钱包的话，那你就先用我的钱。(yào shi zhǎo bú dào qián bāo de huà, nà nǐ jiù xiān yòng wǒ de qián) — 만약 지갑을 진짜 못 찾겠는 상황이라면, 그렇다면 넌 우선 내 돈 먼저 가져다 써.<br>要是明天你有时间的话，那我们就一起喝杯咖啡。(yào shi míng tiān nǐ yǒu shí jiān de huà, nà wǒ men jiù yì qǐ hē bēi kā fēi) — 만약 내일 네가 시간이 정말 괜찮은 거라면, 그렇다면 우리 같이 커피 한잔하자.<br>要是觉得汉语难的话，那你就多听听录音。(yào shi jué de hàn yǔ nán de huà, nà nǐ jiù duō tīng tīng lù yīn) — 만약 중국어가 어렵다고 느껴지는 상황이라면, 그렇다면 넌 녹음을 자주 반복해서 들어봐.<br>要是没问题的话，那我们现在就签合同吧。(yào shi méi wèn tí de huà, nà wǒ men xiàn zài jiù qiān hé tong ba) — 만약 계약서에 아무런 하자가 없는 거라면, 그렇다면 우리 지금 바로 서명합시다.<br>要是你不喜欢他的话，那你就早点告诉他。(yào shi nǐ bù xǐ huan tā de huà, nà nǐ jiù zǎo diǎnr gào su tā) — 만약 네가 그 사람을 전혀 좋아하지 않는 거라면, 그렇다면 걔한테 진작 솔직하게 말해줘."
+						},
+						{
+							"id": "zh_g_97",
+							"theme": "문법",
+							"title": "[A 把 B + 동사 + 기한/결과 단어] 把문 완전 마스터 최종장 (A가 B를 ~하여 남김없이 처치하다)",
+							"summary": "86번 '把'문 구조에 '光(남김없이 탕진)', '完(끝냄)' 등의 극단적 결과 보어를 결합한 완전체 문법입니다.",
+							"detail": "목적어를 앞으로 끌고 와서 행동을 가한 뒤, 물건이 아예 소멸되거나(다 먹어 치우다, 다 써버리다) 완벽히 다른 상태로 전환되었음을 강조하여 보고할 때 쓰는 회화 핵심 기둥입니다.",
+							"example": "<br>我把那杯咖啡喝完了。(wǒ bǎ nà bēi kā fēi hē wán le) — 나 그 커피 남김없이 다 마셔 버렸어.<br>他把今天的作业终于做完了。(tā bǎ jīn tiān de zuò yè zhōng yú zuò wán le) — 그는 오늘 숙제를 드디어 끝까지 다 마쳤어요.<br>对不起，我把你的名字写错了。(duì bù qǐ, wǒ bǎ nǐ de míng zi xiě cuò le) — 죄송합니다, 제가 당신의 이름을 완전히 잘못 적었습니다.<br>我已经把所有的行李准备好了。(wǒ yǐ jīng bǎ suǒ yǒu de xíng li zhǔn bèi hǎo le) — 저는 이미 모든 가방 짐 준비를 완벽하게 끝내 두었습니다.<br>请把洗手间的门关好。(qǐng bǎ xǐ shǒu jiān de mén guān hǎo) — 화장실 문 좀 제대로 확실하게 잘 닫아 주세요.<br>你把刚才那道题说对了。(nǐ bǎ gāng cái nà dào tí shuō duì le) — 너 방금 그 문제 정확하게 정답을 잘 맞혔어.<br>不要把新买的手机弄坏了。(bú yào bǎ xīn mǎi de shǒu jī nòng huài le) — 새로 산 휴대폰 절대 고장 내지 않도록 조심해라.<br>他把丢了的钱包终于找见了。(tā bǎ diū le de qián bāo zhōng yú zhǎo jiàn le) — 그는 잃어버렸던 지갑을 결국 눈으로 찾아서 찾아냈어요.<br>请把这张纸上的字写清楚。(qǐng bǎ zhè zhāng zhǐ shàng de zì xiě qīng chu) — 이 종이 위에 글씨를 선명하게 똑바로 적어 주세요.<br>我把要做的事忘得一干二净了。(wǒ bǎ yào zuò de  shì wàng de yì gān èr jìng le) — 나 해야 할 일들을 완전 깨끗하게 까맣게 잊어버렸어. (一干二净은 티 없이 깨끗이의 뜻)"
+						},
+						{
+							"id": "zh_g_98",
+							"theme": "기초회화문법",
+							"title": "[连 A 都没有，何况 B] 설상가상 점층 표현 (A조차 없는데 하물며 B는 말할 필요도 없다)",
+							"summary": "가장 기본적이고 작은 것(A)조차 성립되지 않으니, 그보다 큰 대상(B)은 당연히 불가능함을 강조합니다.",
+							"detail": "87번 '连' 구조에 '하물며 ~랴'라는 뜻의 접속사 '何况(hé kuàng)'을 매칭한 고급 구어체 패턴입니다. 내 처지의 한계를 유머러스하게 한탄하거나 상대방의 터무니없는 요구를 차단할 때 씁니다.",
+							"example": "<br>我连买衣服的钱都没有，何况买车。(wǒ lián mǎi yī fu de qián dōu méi yǒu, hé kuàng mǎi chē) — 나 옷 살 돈조차도 없는데, 하물며 차를 사는 건 말할 것도 없지.<br>他连自己的名字都不会写，何况写文章。(tā lián zì jǐ de míng zi dōu bú huì xiě, hé kuàng xiě wén zhāng) — 그는 자기 이름조차 쓸 줄 모르는데, 하물며 문장을 쓰는 건 더 말할 필요도 없지.<br>我连一口水都没喝，何况吃饭。(wǒ lián yì kǒu shuǐ dōu méi hē, hé kuàng chī fàn) — 나 물 한 모금조차 못 마셨는데, 하물며 밥 먹을 여유가 어딨겠니.<br>这个字连老师都不认识，何况学生。(zhè ge zì lián lǎo shī dōu bú rèn shi, hé kuàng xué sheng) — 이 글자는 선생님조차 모르시는데, 하물며 학생들이 알 리가 없지.<br>这里连手机信号都没有，何况电脑网络。(zhè lǐ lián shǒu jī xìn hào dōu méi yǒu, hé kuàng diàn nǎo wǎng luò) — 여기는 휴대폰 안테나조차 안 터지는데, 하물며 인터넷망이 깔렸겠어.<br>那件事连他妈妈都没告诉，何况我。(zhè ge mì mì lián tā mā ma dōu méi gào su, hé kuàng wǒ) — 그 비밀은 자기 엄마한테조차 말 안 했는데, 하물며 나한테 말해줬겠니.<br>对不起，那个品牌连听都没听过，何况去买。(duì bù qǐ, nà ge pǐn pái lián tīng dōu méi tīng guo, hé kuàng qù mǎi) — 죄송해요, 그 브랜드는 이름조차 들어본 적 없는데, 하물며 가서 사는 건 상상도 못 해.<br>他今天生气得连饭都不想吃，何况出去玩。(tā jìn tiān shēng qì de lián fàn dōu bù xiǎng chī, hé kuàng chū qù wán) — 그는 오늘 너무 화가 나서 밥조차 먹기 싫어하는데, 하물며 밖에 나가 놀 기분이겠어.<br>走得太快了，连个影子都没看见，何况说话。(zǒu de tài kuài le, lián ge yǐng zi dōu méi kàn jiàn, hé kuàng shuō huà) — 어찌나 빨리 가버렸던지 그림자조차 못 봤는데, 하물며 말을 붙여봤겠니.<br>我连一分钟都不想等了，何况等一个小时。(wǒ yì fēn zhōng yě bù xiǎng děng le, hé kuàng děng yí ge xiǎo shí) — 나 지금 1분도 더 기다리기 싫은데, 하물며 한 시간을 어떻게 더 기다려."
+						},
+						{
+							"id": "zh_g_99",
+							"theme": "기초어순",
+							"title": "[对 + 대상 + 有帮助] 일상 관용 부사구 (~에게 도움이 되다)",
+							"summary": "특정 행동이나 지식이 누군가에게 실질적인 '도움과 유익함'을 주었음을 표현합니다.",
+							"detail": "88번 '影响很大' 패턴과 쌍벽을 이루는 '对'의 최고 빈도 관용 골격입니다. '帮助(bāng zhù, 돕다/도움)'와 결합하여 무언가가 유익했음을 정중히 밝힐 때 활용합니다.",
+							"example": "<br>学汉语对我的工作有帮助。(xué hàn yǔ duì wǒ de gōng zuò yǒu bāng zhù) — 중국어를 배운 것은 제 업무에 실질적인 도움이 됩니다.<br>多喝水对皮肤有帮助。(duō hē shuǐ duì pí fū yǒu bāng zhù) — 물을 자주 마시는 것은 피부 미용에 도움이 돼요.<br>老师对我的成长有帮助。(lǎo shī duì wǒ de chéng zhǎng yǒu bāng zhù) — 선생님은 제 성장에 아주 큰 가르침(도움)이 되셨습니다.<br>跑步对身体健康有帮助。(pǎo bù duì shēn tǐ jiàn kāng  yǒu bāng zhù) — 달리기 운동은 신체 건강에 큰 도움이 됩니다.<br>读书对人生的发展有帮助。(dú shū duì rén shēng de fā zhǎn yǒu bāng zhù) — 독서는 인생의 발전을 도모하는 데 유익합니다.<br>朋友的意见对我的决定有帮助。(péng you de yì jiàn duì wǒ de jué dìng yǒu bāng zhù) — 친구의 의견이 제 결정을 내리는 데 큰 도움이 되었어요.<br>换工作对改变生活环境有帮助。(huàn gōng zuò duì gǎi biàn shēng huó huán jìng  yǒu bāng zhù) — 이직을 한 것은 생활 환경을 바꾸는 데 일조했습니다.<br>这部电影对了解中国文化有帮助。(zhè bù diàn yǐng duì liǎo jiě zhōng guó wén huà  yǒu bāng zhù) — 이 영화는 중국 문화를 이해하는 데 큰 도움이 됩니다.<br>每天坚持运动对减肥有帮助。(měi tiān jiān chí yùn dòng duì jiǎn féi  yǒu bāng zhù) — 매일 꾸준히 운동하는 것은 체중 감량에 도움이 돼요.<br>你的话对我启发很大，非常有帮助。(nǐ de huà duì wǒ qǐ fā hěn dà, fēi cháng yǒu bāng zhù) — 네 말이 나에게 큰 깨달음을 주었고, 정말 큰 도움이 되었어."
+						},
+						{
+							"id": "zh_g_100",
+							"theme": "기초회화문법",
+							"title": "[~ 动词 + 见 / 懂了] 감각과 인지의 완벽한 도달 완료 (알아듣고 마스터하다)",
+							"summary": "초급 문법의 총체적 복습으로, 귀와 눈으로 지각하여 완전히 내 지식으로 흡수했음을 나타냅니다.",
+							"detail": "90번 결과보어의 종합 판본입니다. 내 감각 기관(看, 听)을 거쳐 최종적으로 이해의 상태(懂)에 도달했음을 선언하여, 상대방의 설명이 완벽하게 내 뇌리에 꽂혔음을 증명하는 감탄 리액션입니다.",
+							"example": "<br>老师讲的课程，我现在全部听懂了。(lǎo shī jiǎng de kè chéng, wǒ xiàn zài quán bù tīng dǒng le) — 선생님께서 강의하신 커리큘럼, 저 이제 전부 완벽히 알아들었어요.<br>说明书上的字我看懂了，原来是这么回事。(shuō míng shū shàng de zì wǒ kàn dǒng le, yuán lái  shì zhè me huí shì) — 설명서에 적힌 글귀들 나 봐서 완전히 이해했어, 알고 보니 이런 거였군.<br>你刚才说的那些汉语，我其实听懂了。(nǐ gāng cái shuō de nà xiē hàn yǔ, wǒ qí shí tīng dǒng le) — 네가 방금 속사포처럼 말한 그 중국어들, 나 사실 다 알아들었어.<br>对不起，刚才环境太吵我没听懂。(duì bù qǐ, gāng cái huán jìng tài chǎo wǒ méi tīng dǒng) — 죄송해요, 방금 주변이 너무 소란스러워서 제가 제대로 이해하지 못했습니다.<br>这些复杂的汉字，你到底看懂了几个？(zhè xiē fú zá de hàn zì, nǐ dào dǐ kàn dǒng le jǐ ge) — 이 복잡한 한자들, 너 도대체 봐서 알아먹은 게 몇 개나 되니?<br>听懂了我的意思就请跟我点点头。(tīng dǒng le wǒ de yì si jiù qǐng gēn wǒ diǎn diǎn tóu) — 제 뜻을 완벽히 이해하셨다면 저에게 고개를 끄덕여 신호를 주세요.<br>他说话带着浓重的地方口音，我实在听不懂。(tā shuō huà dài zhe nóng zhòng de dì fāng kǒu yīn, wǒ shí zài tīng bān dǒng) — 그 사람 말투에 억센 지방 사투리가 섞여서, 전 도저히 귀로 들어서 이해할 수가 없네요.<br>把这些内容全部看懂了，你就可以去参加考试。(bǎ zhè xiē nèi róng quán bù kàn dǒng le, nǐ jiù kě yǐ qù cān jiā kǎo shì) — 이 내용들을 전부 읽어서 마스터한다면, 넌 바로 시험을 치르러 가도 돼.<br>放心吧，你们的想法和目的我早就懂了。(fàng xīn ba, nǐ men de xiǎng fǎ hé mù dì wǒ zǎo jiù dǒng le) — 안심하세요, 당신들의 생각과 최종 목적은 제가 진작부터 파악하고 있었습니다.<br>100个语法全都听懂了，你太棒了！(yì bǎi ge yǔ fǎ quán dōu tīng dǒng le, nǐ tài bàng le) — 100개의 핵심 문법을 모조리 다 알아듣다니, 당신 정말 최고예요!"
+						}
+					],
+					"words": []
+				}
+			}
+
+			, en: {
+				name: "영어",
+				themes: {
+					grammar: ["전체", "나의 상태/기분", "진행/계획", "취향/의지", "과거/경험", "조동사", "의문사", "제안/부탁", "존재/생각"],
+					words: ["전체", "감정/기분", "날씨/계절", "성격/성향", "상태/외모", "크기/모양", "평가/느낌", "행동/동작"]
+				},
+				data: {
+					grammar: [
+						// 1. 나의 상태 및 기분 표현하기
+						{
+							id: "en_g_1",
+							theme: "나의 상태/기분",
+							title: "I'm + 형용사",
+							summary: "현재 자신의 상태나 기분을 '나 ~해'라고 표현할 때 사용합니다.",
+							detail: "I am의 줄임말인 I'm 뒤에 감정이나 상태를 나타내는 형용사를 붙여서 말합니다.",
+							example: "<br>I'm tired.<br>(나 피곤해.)"
+						},
+						{
+							id: "en_g_2",
+							theme: "나의 상태/기분",
+							title: "I'm not + 형용사",
+							summary: "현재 자신의 상태나 기분이 '안 ~해'라고 부정할 때 사용합니다.",
+							detail: "I'm 뒤에 부정어 not을 붙이고 형용사를 연결합니다.",
+							example: "<br>I'm not hungry.<br>(나 배 안 고파.)"
+						},
+						{
+							id: "en_g_3",
+							theme: "나의 상태/기분",
+							title: "I'm + 명사 (직업/신분)",
+							summary: "자신의 직업, 신분 등을 '나 ~야'라고 소개할 때 사용합니다.",
+							detail: "I'm 뒤에 명사를 붙이며, 단수일 경우 관사(a/an)를 함께 씁니다.",
+							example: "<br>I'm a student.<br>(나 학생이야.)"
+						},
+						{
+							id: "en_g_4",
+							theme: "나의 상태/기분",
+							title: "I'm + 명사 (장소)",
+							summary: "자신이 현재 있는 위치를 '나 ~에 있어'라고 말할 때 사용합니다.",
+							detail: "I'm 뒤에 장소를 나타내는 전치사(at, in 등)와 명사를 함께 씁니다.",
+							example: "<br>I'm at home.<br>(나 집에 있어.)"
+						},
+						{
+							id: "en_g_5",
+							theme: "나의 상태/기분",
+							title: "I'm getting + 형용사",
+							summary: "상태가 '점점 ~해진다'라며 변화하는 과정을 나타낼 때 사용합니다.",
+							detail: "get에 -ing를 붙여 현재 변화하고 있는 상태를 강조합니다.",
+							example: "<br>I'm getting hungry.<br>(점점 배고파진다.)"
+						},
+						{
+							id: "en_g_6",
+							theme: "나의 상태/기분",
+							title: "I'm good at + 명사/동사-ing",
+							summary: "자신이 무언가를 '잘한다'고 말할 때 사용합니다.",
+							detail: "at이 전치사이므로 뒤에는 명사나 동사원형에 -ing를 붙인 동명사가 옵니다.",
+							example: "<br>I'm good at cooking.<br>(나 요리 잘해.)"
+						},
+						{
+							id: "en_g_7",
+							theme: "나의 상태/기분",
+							title: "I'm bad at + 명사/동사-ing",
+							summary: "자신이 무언가를 '못한다(서툴다)'고 말할 때 사용합니다.",
+							detail: "good의 반대인 bad를 사용하여 전치사 at 뒤에 명사/동명사를 연결합니다.",
+							example: "<br>I'm bad at directions.<br>(나 길치야.)"
+						},
+						{
+							id: "en_g_8",
+							theme: "나의 상태/기분",
+							title: "I'm interested in ~",
+							summary: "무언가에 '관심이나 흥미가 있다'고 표현할 때 사용합니다.",
+							detail: "전치사 in 뒤에 관심 있는 분야의 명사나 동명사를 씁니다.",
+							example: "<br>I'm interested in art.<br>(나 미술에 관심 있어.)"
+						},
+						{
+							id: "en_g_9",
+							theme: "나의 상태/기분",
+							title: "I'm afraid of ~",
+							summary: "무언가를 '무서워하거나 두려워할 때' 사용합니다.",
+							detail: "전치사 of 뒤에 무서워하는 대상(명사)을 넣습니다.",
+							example: "<br>I'm afraid of spiders.<br>(나 거미 무서워해.)"
+						},
+						{
+							id: "en_g_10",
+							theme: "나의 상태/기분",
+							title: "I'm full of ~",
+							summary: "몸이나 마음에 무언가가 '가득 차 있다'고 표현할 때 사용합니다.",
+							detail: "주로 에너지, 자신감 등 추상적인 느낌이나 사물이 가득 찼을 때 씁니다.",
+							example: "<br>I'm full of energy.<br>(나 에너지가 넘쳐.)"
+						},
+						{
+							id: "en_g_11",
+							theme: "나의 상태/기분",
+							title: "I'm ready to + 동사",
+							summary: "어떤 행동을 '할 준비가 되었다'고 말할 때 사용합니다.",
+							detail: "to 뒤에는 동사원형이 오며, 행동할 준비가 완료되었음을 나타냅니다.",
+							example: "<br>I'm ready to go.<br>(나 갈 준비 됐어.)"
+						},
+						{
+							id: "en_g_12",
+							theme: "나의 상태/기분",
+							title: "I'm sure ~",
+							summary: "어떤 사실을 '확신한다'고 강하게 말할 때 사용합니다.",
+							detail: "I'm sure 뒤에 주어+동사 문장을 이어서 확신하는 내용을 씁니다.",
+							example: "<br>I'm sure you can do it.<br>(너라면 할 수 있어.)"
+						},
+						{
+							id: "en_g_13",
+							theme: "나의 상태/기분",
+							title: "I'm sorry to + 동사",
+							summary: "상대방에게 미안함을 전하거나 유감스러운 소식을 듣고 위로할 때 사용합니다.",
+							detail: "to 뒤에 동사원형을 써서 미안하거나 유감인 원인을 나타냅니다.",
+							example: "<br>I'm sorry to hear that.<br>(그 말을 들으니 유감이야.)"
+						},
+						{
+							id: "en_g_14",
+							theme: "나의 상태/기분",
+							title: "I'm glad to + 동사",
+							summary: "어떤 행동을 하게 되어 '기쁘다'고 표현할 때 사용합니다.",
+							detail: "주로 처음 만났거나 좋은 일이 있을 때 격식 있게 기쁨을 표현합니다.",
+							example: "<br>I'm glad to meet you.<br>(만나서 반가워.)"
+						},
+						{
+							id: "en_g_15",
+							theme: "나의 상태/기분",
+							title: "I'm used to + 동사-ing",
+							summary: "어떤 일이나 환경에 '익숙하다'고 말할 때 사용합니다.",
+							detail: "여기서 to는 전치사이므로 뒤에 동사원형이 아닌 동명사(-ing)가 옵니다.",
+							example: "<br>I'm used to waking up early.<br>(일찍 일어나는 거 익숙해.)"
+						},
+
+						// 2. 지금 하고 있는 행동 표현하기
+						{
+							id: "en_g_16",
+							theme: "진행/계획",
+							title: "I'm + 동사-ing",
+							summary: "지금 현재 실시간으로 '~하는 중이다'라고 말할 때 사용합니다.",
+							detail: "be동사(am)와 동사원형-ing가 결합한 현재진행형 구조입니다.",
+							example: "<br>I'm watching TV.<br>(나 TV 보는 중이야.)"
+						},
+						{
+							id: "en_g_17",
+							theme: "진행/계획",
+							title: "I'm looking for ~",
+							summary: "물건이나 사람 등을 '찾는 중이다'라고 말할 때 사용합니다.",
+							detail: "look for(~을 찾다) 패턴을 현재진행형으로 바꾼 표현입니다.",
+							example: "<br>I'm looking for my keys.<br>(내 열쇠 찾는 중이야.)"
+						},
+						{
+							id: "en_g_18",
+							theme: "진행/계획",
+							title: "I'm thinking of + 동사-ing",
+							summary: "확정되진 않았지만 '~할까 생각 중이다'라고 말할 때 사용합니다.",
+							detail: "of 뒤에 생각하고 있는 행동을 동명사(-ing) 형태로 연결합니다.",
+							example: "<br>I'm thinking of buying a car.<br>(차 살까 생각 중이야.)"
+						},
+						{
+							id: "en_g_19",
+							theme: "진행/계획",
+							title: "I'm trying to + 동사",
+							summary: "무언가를 해내려고 애쓰거나 '노력하는 중이다'라고 할 때 사용합니다.",
+							detail: "try to+동사원형 패턴을 진행형으로 만들어 노력의 과정을 강조합니다.",
+							example: "<br>I'm trying to study.<br>(나 공부하려고 애쓰는 중이야.)"
+						},
+						{
+							id: "en_g_20",
+							theme: "진행/계획",
+							title: "I'm planning to + 동사",
+							summary: "향후 일정을 '~할 계획이다'라고 말할 때 사용합니다.",
+							detail: "to 뒤에 계획하고 있는 행동의 동사원형을 붙입니다.",
+							example: "<br>I'm planning to travel.<br>(나 여행 갈 계획이야.)"
+						},
+						{
+							id: "en_g_21",
+							theme: "진행/계획",
+							title: "I'm working on ~",
+							summary: "특정 업무, 과제, 프로젝트를 '진행 중이다'라고 할 때 사용합니다.",
+							detail: "on 뒤에 현재 공을 들이고 있는 대상(명사)을 씁니다.",
+							example: "<br>I'm working on a project.<br>(나 프로젝트 하는 중이야.)"
+						},
+						{
+							id: "en_g_22",
+							theme: "진행/계획",
+							title: "I'm on my way to ~",
+							summary: "어디론가 '가는 길이다' 혹은 '이동 중이다'라고 할 때 사용합니다.",
+							detail: "to 뒤에 목적지(명사)를 씁니다. 단, home으로 갈 때는 to를 빼고 'I'm on my way home'이라고 합니다.",
+							example: "<br>I'm on my way to work.<br>(나 출근하는 길이야.)"
+						},
+						{
+							id: "en_g_23",
+							theme: "진행/계획",
+							title: "I'm about to + 동사",
+							summary: "정말 곧, 직전에 '막 ~하려던 참이다'라고 말할 때 사용합니다.",
+							detail: "아주 가까운 미래에 일어날 직전의 행동을 표현할 때 유용합니다.",
+							example: "<br>I'm about to leave.<br>(나 막 나가려던 참이야.)"
+						},
+						{
+							id: "en_g_24",
+							theme: "진행/계획",
+							title: "Are you + 동사-ing?",
+							summary: "상대방이 지금 현재 '~하고 있는 중인지' 물어볼 때 사용합니다.",
+							detail: "현재진행형의 의문문 구조로, 너 지금 대상을 붙여 질문합니다.",
+							example: "<br>Are you listening to me?<br>(내 말 듣고 있어?)"
+						},
+						{
+							id: "en_g_25",
+							theme: "진행/계획",
+							title: "What are you + 동사-ing?",
+							summary: "상대방이 구체적으로 '무엇을 하는 중인지' 질문할 때 사용합니다.",
+							detail: "의문사 What을 맨 앞에 두고 진행형 의문문을 만듭니다.",
+							example: "<br>What are you doing?<br>(너 뭐 하고 있어?)"
+						},
+
+						// 3. 나의 취향, 욕구, 의지 표현하기
+						{
+							id: "en_g_26",
+							theme: "취향/의지",
+							title: "I like + 명사/동사-ing",
+							summary: "자신의 취향이나 좋아하는 것을 '~ 좋아해'라고 말할 때 사용합니다.",
+							detail: "like 뒤에 좋아하는 사물(명사)이나 행동(동명사)을 넣습니다.",
+							example: "<br>I like coffee. / I like swimming.<br>(커피 좋아해 / 수영 좋아해.)"
+						},
+						{
+							id: "en_g_27",
+							theme: "취향/의지",
+							title: "I don't like ~",
+							summary: "자신이 싫어하거나 취향이 아닌 것을 '안 좋아해'라고 할 때 사용합니다.",
+							detail: "일반동사 like의 부정문인 don't like 구조를 사용합니다.",
+							example: "<br>I don't like spicy food.<br>(나 매운 음식 안 좋아해.)"
+						},
+						{
+							id: "en_g_28",
+							theme: "취향/의지",
+							title: "I love + 명사/동사-ing",
+							summary: "like보다 더 강하게 '정말 너무 좋아해'라고 표현할 때 사용합니다.",
+							detail: "대상을 엄청 아끼거나 취미 생활을 강조할 때 유용합니다.",
+							example: "<br>I love watching movies.<br>(나 영화 보는 거 정말 좋아해.)"
+						},
+						{
+							id: "en_g_29",
+							theme: "취향/의지",
+							title: "I hate + 명사/동사-ing",
+							summary: "무언가를 '정말 싫어한다' 혹은 '질색한다'고 표현할 때 사용합니다.",
+							detail: "강한 거부감을 나타내므로 부드러운 자리에서는 don't like를 권장합니다.",
+							example: "<br>I hate waiting.<br>(나 기다리는 거 질색이야.)"
+						},
+						{
+							id: "en_g_30",
+							theme: "취향/의지",
+							title: "I want + 명사",
+							summary: "원하는 사물이나 대상을 '나 ~를 원해'라고 직접적으로 요구할 때 사용합니다.",
+							detail: "want 뒤에 원하는 대상(명사)을 바로 연결합니다.",
+							example: "<br>I want some water.<br>(물 좀 원해.)"
+						},
+						{
+							id: "en_g_31",
+							theme: "취향/의지",
+							title: "I want to + 동사",
+							summary: "원하는 행동을 '나 ~하고 싶어'라고 표현할 때 사용합니다.",
+							detail: "회화에서는 want to를 줄여서 'wanna(워나)'로 자주 발음합니다.",
+							example: "<br>I want to go home.<br>(나 집에 가고 싶어.)"
+						},
+						{
+							id: "en_g_32",
+							theme: "취향/의지",
+							title: "I don't want to + 동사",
+							summary: "어떤 행동을 '하고 싶지 않다'고 거절하거나 의사를 밝힐 때 사용합니다.",
+							detail: "wanna의 부정형으로, 회화에서는 don't wanna로 발음되기도 합니다.",
+							example: "<br>I don't want to argue.<br>(나 싸우고 싶지 않아.)"
+						},
+						{
+							id: "en_g_33",
+							theme: "취향/의지",
+							title: "I'd like + 명사",
+							summary: "식당, 매장 등에서 무언가를 '주시겠어요?' 하고 공손히 주문할 때 사용합니다.",
+							detail: "I would like의 줄임말로, want보다 훨씬 정중하고 세련된 표현입니다.",
+							example: "<br>I'd like a cup of tea, please.<br>(차 한 잔 주세요.)"
+						},
+						{
+							id: "en_g_34",
+							theme: "취향/의지",
+							title: "I'd like to + 동사",
+							summary: "상대방에게 정중하게 조심스럽게 '저 ~하고 싶어요'라고 의사를 밝힐 때 사용합니다.",
+							detail: "I would like to 뒤에 동사원형을 결합합니다.",
+							example: "<br>I'd like to ask a question.<br>(질문 하나 하고 싶어요.)"
+						},
+						{
+							id: "en_g_35",
+							theme: "취향/의지",
+							title: "I need + 명사",
+							summary: "단순한 욕구를 넘어 필수적으로 '나 ~가 필요해'라고 할 때 사용합니다.",
+							detail: "물건뿐만 아니라 시간, 휴식 같은 개념도 들어갈 수 있습니다.",
+							example: "<br>I need a break.<br>(나 휴식이 필요해.)"
+						},
+						{
+							id: "en_g_36",
+							theme: "취향/의지",
+							title: "I need to + 동사",
+							summary: "당장 상황상 '나 ~해야 해'라며 필요성에 의한 행동을 나타낼 때 사용합니다.",
+							detail: "의무라기보다는 본인을 위해 꼭 해야 하는 행동을 칭할 때 씁니다.",
+							example: "<br>I need to study tonight.<br>(나 오늘 밤에 공부해야 해.)"
+						},
+						{
+							id: "en_g_37",
+							theme: "취향/의지",
+							title: "I feel like + 동사-ing",
+							summary: "지금 순간 갑자기 '나 ~하고 싶은 기분이야'라고 할 때 사용합니다.",
+							detail: "like 뒤에 동사원형-ing 형태를 붙여서 충동적이거나 가벼운 욕구를 나타냅니다.",
+							example: "<br>I feel like eating pizza.<br>(나 피자 먹고 싶은 기분이야.)"
+						},
+						{
+							id: "en_g_38",
+							theme: "취향/의지",
+							title: "I don't feel like + 동사-ing",
+							summary: "귀찮거나 내키지 않아서 '나 ~할 기분이 아니야'라고 할 때 사용합니다.",
+							detail: "feel like 패턴의 부정문 형태로 일상에서 정말 많이 쓰입니다.",
+							example: "<br>I don't feel like going out.<br>(나 나갈 기분 아니야.)"
+						},
+						{
+							id: "en_g_39",
+							theme: "취향/의지",
+							title: "I decided to + 동사",
+							summary: "고민 끝에 '나 ~하기로 결정했어/결심했어'라고 선언할 때 사용합니다.",
+							detail: "decide의 과거형을 사용하여 결정을 내린 상태를 의미합니다.",
+							example: "<br>I decided to exercise.<br>(나 운동하기로 결심했어.)"
+						},
+						{
+							id: "en_g_40",
+							theme: "취향/의지",
+							title: "I hope to + 동사",
+							summary: "미래에 긍정적인 일이나 바라는 점을 '~하기를 바라'라고 소망할 때 사용합니다.",
+							detail: "to 뒤에 희망하는 행동의 동사원형을 씁니다.",
+							example: "<br>I hope to see you again.<br>(너를 다시 보길 바라.)"
+						},
+						{
+							id: "en_g_41",
+							theme: "취향/의지",
+							title: "I will + 동사",
+							summary: "지금 막 결정한 즉흥적인 의지나 약속으로 '나 ~할게'라고 할 때 사용합니다.",
+							detail: "축약형 'I'll(아일)'로 주로 쓰이며 뒤에는 동사원형이 옵니다.",
+							example: "<br>I'll call you later.<br>(내가 나중에 전화할게.)"
+						},
+						{
+							id: "en_g_42",
+							theme: "취향/의지",
+							title: "I won't + 동사",
+							summary: "강한 거절이나 다짐으로 '나 절대 ~ 안 할게'라고 말할 때 사용합니다.",
+							detail: "will not의 줄임말인 won't(웡트) 뒤에 동사원형을 씁니다.",
+							example: "<br>I won't do it again.<br>(다시는 안 그러겠어.)"
+						},
+						{
+							id: "en_g_43",
+							theme: "취향/의지",
+							title: "I'm going to + 동사",
+							summary: "이미 전부터 예정되어 있던 계획을 바탕으로 '나 ~할 거야'라고 할 때 사용합니다.",
+							detail: "회화에서는 going to를 줄여 'gonna(거나)'로 빈번하게 발음합니다.",
+							example: "<br>I'm going to sleep early.<br>(나 일찍 잘 거야.)"
+						},
+						{
+							id: "en_g_44",
+							theme: "취향/의지",
+							title: "I promise to + 동사",
+							summary: "상대방에게 신뢰를 주기 위해 '나 ~한다고 약속해'라고 강조할 때 사용합니다.",
+							detail: "to 뒤에 약속하는 구체적인 행동의 동사원형을 연결합니다.",
+							example: "<br>I promise to be there.<br>(거기 가겠다고 약속할게.)"
+						},
+						{
+							id: "en_g_45",
+							theme: "취향/의지",
+							title: "I prefer A to B",
+							summary: "두 가지 선택지 중에서 'B보다 A가 더 좋아'라고 선호도를 밝힐 때 사용합니다.",
+							detail: "than이 아니라 전치사 'to'를 사용하여 대상을 비교하는 점에 주의합니다.",
+							example: "<br>I prefer tea to coffee.<br>(난 커피보다 차가 좋아.)"
+						},
+
+						// 4. 과거의 일과 경험 말하기
+						{
+							id: "en_g_46",
+							theme: "과거/경험",
+							title: "I + 과거동사",
+							summary: "이미 지나간 과거의 행동을 단순하게 '나 ~했어'라고 말할 때 사용합니다.",
+							detail: "동사의 과거형(규칙 -ed형 또는 불규칙 변형)을 주어 뒤에 배치합니다.",
+							example: "<br>I met my friend yesterday.<br>(나 어제 친구 만났어.)"
+						},
+						{
+							id: "en_g_47",
+							theme: "과거/경험",
+							title: "I didn't + 동사원형",
+							summary: "과거에 어떤 행동을 '나 ~ 안 했어'라고 부정할 때 사용합니다.",
+							detail: "과거 부정 조동사인 didn't 뒤에는 반드시 '동사원형'이 와야 합니다.",
+							example: "<br>I didn't watch that movie.<br>(나 그 영화 안 봤어.)"
+						},
+						{
+							id: "en_g_48",
+							theme: "과거/경험",
+							title: "Did you + 동사원형?",
+							summary: "상대방에게 과거의 행적에 대해 '너 ~했어?'라고 물어볼 때 사용합니다.",
+							detail: "Did로 질문을 시작하고, 주어 뒤에는 동사원형을 유지합니다.",
+							example: "<br>Did you eat lunch?<br>(너 점심 먹었어?)"
+						},
+						{
+							id: "en_g_49",
+							theme: "과거/경험",
+							title: "I was + 형용사/명사",
+							summary: "과거 시점의 상태나 신분을 '나 ~했었어 / ~였어'라고 설명할 때 사용합니다.",
+							detail: "am/is의 과거형인 was를 사용하여 과거의 주어 상태를 표현합니다.",
+							example: "<br>I was busy yesterday.<br>(나 어제 바빴어.)"
+						},
+						{
+							id: "en_g_50",
+							theme: "과거/경험",
+							title: "I wasn't + 형용사/명사",
+							summary: "과거 상태에 대해 '나 안 ~했었어 / ~가 아니었어'라고 부정을 표현할 때 사용합니다.",
+							detail: "was 뒤에 부정어 not을 줄인 wasn't 형태를 사용합니다.",
+							example: "<br>I wasn't angry.<br>(나 화 안 났었어.)"
+						},
+						{
+							id: "en_g_51",
+							theme: "과거/경험",
+							title: "Were you + 형용사?",
+							summary: "과거 상대방의 감정이나 상태에 대해 '너 ~했었어?'라고 물어볼 때 사용합니다.",
+							detail: "you에 매칭되는 be동사 과거형인 Were를 문장 맨 앞으로 보냅니다.",
+							example: "<br>Were you surprised?<br>(너 놀랐었어?)"
+						},
+						{
+							id: "en_g_52",
+							theme: "과거/경험",
+							title: "I have + 과거분사(p.p.)",
+							summary: "과거부터 지금까지 살아오며 '나 (지금껏) ~해봤어'라고 경험을 말할 때 사용합니다.",
+							detail: "현재완료(have+p.p.) 시제이며 주로 가본 적이 있거나 해본 적을 칭합니다.",
+							example: "<br>I have been to Paris.<br>(나 파리에 가봤어.)"
+						},
+						{
+							id: "en_g_53",
+							theme: "과거/경험",
+							title: "I have never + 과거분사(p.p.)",
+							summary: "살면서 한 번도 해보지 않은 일에 대해 '나 한 번도 ~ 안 해봤어'라고 강력히 말할 때 사용합니다.",
+							detail: "not 대신 절대 없다는 의미의 never를 have와 p.p. 사이에 삽입합니다.",
+							example: "<br>I have never eaten this.<br>(나 이거 한 번도 안 먹어봤어.)"
+						},
+						{
+							id: "en_g_54",
+							theme: "과거/경험",
+							title: "Have you ever + 과거분사(p.p.)?",
+							summary: "상대방의 인생 경험에 관해 '너 살면서 ~해본 적 있어?'라고 물을 때 사용합니다.",
+							detail: "의문문 구조로, 여태껏이라는 의미를 강조하기 위해 ever를 주어 뒤에 넣습니다.",
+							example: "<br>Have you ever met him? <br>(너 그 사람 만난 적 있어?)"
+						},
+						{
+							id: "en_g_55",
+							theme: "과거/경험",
+							title: "I used to + 동사원형",
+							summary: "지금은 안 하지만 과거에는 규칙적으로 '나 예전에 ~하곤 했어'라고 추억할 때 사용합니다.",
+							detail: "과거의 규칙적인 습관이나 상태를 나타내며, 지금은 그렇지 않다는 뉘앙스가 포함됩니다.",
+							example: "<br>I used to smoke.<br>(나 예전에 담배 피웠었어.)"
+						},
+
+						// 5. 의무, 허락, 가능성 (조동사 활용)
+						{
+							id: "en_g_56",
+							theme: "조동사",
+							title: "I can + 동사원형",
+							summary: "자신의 능력이나 가능성에 기반해 '나 ~할 수 있어'라고 선언할 때 사용합니다.",
+							detail: "조동사 can 뒤에는 언제나 동사의 원래 형태(원형)가 결합합니다.",
+							example: "<br>I can speak English.<br>(나 영어 할 수 있어.)"
+						},
+						{
+							id: "en_g_57",
+							theme: "조동사",
+							title: "I can't + 동사원형",
+							summary: "능력이 부족하거나 불가능할 때 '나 ~할 수 없어'라고 표현할 때 사용합니다.",
+							detail: "cannot의 준말인 can't 뒤에 동사원형을 씁니다.",
+							example: "<br>I can't swim.<br>(나 수영 못 해.)"
+						},
+						{
+							id: "en_g_58",
+							theme: "조동사",
+							title: "Can you + 동사원형?",
+							summary: "상대방에게 편하게 '너 ~해줄 수 있어?'라고 부탁하거나 요청할 때 사용합니다.",
+							detail: "친구 사이에 캐주얼하게 도움을 구하는 대표적 의문형 패턴입니다.",
+							example: "<br>Can you help me?<br>(나 좀 도와줄 수 있어?)"
+						},
+						{
+							id: "en_g_59",
+							theme: "조동사",
+							title: "Can I + 동사원형?",
+							summary: "상대방에게 '내가 ~해도 돼?'라며 가볍게 허락을 구할 때 사용합니다.",
+							detail: "자신의 행동 허가를 구하는 표현입니다.",
+							example: "<br>Can I use this?<br>(나 이거 써도 돼?)"
+						},
+						{
+							id: "en_g_60",
+							theme: "조동사",
+							title: "I have to + 동사원형",
+							summary: "상황적, 규칙적으로 어쩔 수 없이 '나 ~해야만 해'라고 강한 의무를 말할 때 사용합니다.",
+							detail: "must와 유사하게 꼭 해야 하는 강제성이 띌 때 씁니다.",
+							example: "<br>I have to go now.<br>(나 지금 가야 해.)"
+						},
+						{
+							id: "en_g_61",
+							theme: "조동사",
+							title: "You should + 동사원형",
+							summary: "상대방에게 강요가 아닌 권유나 추천으로 '너 ~하는 게 좋겠어'라고 조언할 때 사용합니다.",
+							detail: "매우 부드러우면서도 일상적인 조언용 조동사입니다.",
+							example: "<br>You should see a doctor.<br>(너 병원 가보는 게 좋겠어.)"
+						},
+						{
+							id: "en_g_62",
+							theme: "조동사",
+							title: "You don't have to + 동사원형",
+							summary: "억지로 할 필요 없다는 뜻으로 '너 ~할 필요 없어'라고 말해줄 때 사용합니다.",
+							detail: "have to의 부정형은 금지가 아니라 '불필요'를 의미하는 핵심 문법입니다.",
+							example: "<br>You don't have to worry.<br>(걱정할 필요 없어.)"
+						},
+						{
+							id: "en_g_63",
+							theme: "조동사",
+							title: "May I + 동사원형?",
+							summary: "격식 있는 자리나 낯선 사람에게 '제가 ~해도 될까요?'라고 아주 정중히 허락을 구할 때 사용합니다.",
+							detail: "Can I보다 훨씬 예의 바르고 공손한 느낌을 주는 표현입니다.",
+							example: "<br>May I come in?<br>(들어가도 될까요?)"
+						},
+						{
+							id: "en_g_64",
+							theme: "조동사",
+							title: "It might + 동사원형",
+							summary: "불확실한 추측으로 '어쩌면 ~일지도 몰라'라고 말할 때 사용합니다.",
+							detail: "가능성이 다소 낮은 약한 추측을 나타낼 때 유용합니다.",
+							example: "<br>It might rain later.<br>(나중에 비 올지도 몰라.)"
+						},
+						{
+							id: "en_g_65",
+							theme: "조동사",
+							title: "You must not + 동사원형",
+							summary: "법이나 규칙상 '너 ~하면 절대 안 돼'라고 강하게 금지할 때 사용합니다.",
+							detail: "가장 높은 수준의 경고나 절대적 금지를 나타내는 조동사 표현입니다.",
+							example: "<br>You must not smoke here.<br>(여기서 담배 피우면 안 돼.)"
+						},
+
+						// 6. 질문하고 정보 묻기 (의문사 활용)
+						{
+							id: "en_g_66",
+							theme: "의문사",
+							title: "What is your ~?",
+							summary: "상대방의 기본 정보에 대해 '네 ~가 뭐야?'라고 물을 때 사용합니다.",
+							detail: "의문사 What 뒤에 명사 구를 연결하여 사물, 이름 등을 묻습니다.",
+							example: "<br>What is your phone number?<br>(전화번호가 뭐야?)"
+						},
+						{
+							id: "en_g_67",
+							theme: "의문사",
+							title: "What do you + 동사?",
+							summary: "평소에 상대방이 '무엇을 ~해?'라고 행동의 대상을 물을 때 사용합니다.",
+							detail: "What do you 뒤에 일반동사의 원형을 연결합니다.",
+							example: "<br>What do you mean?<br>(무슨 뜻이야?)"
+						},
+						{
+							id: "en_g_68",
+							theme: "의문사",
+							title: "Where is the ~?",
+							summary: "길을 찾거나 물건 위치를 물을 때 '~가 어디 있어요?'라고 질문할 때 사용합니다.",
+							detail: "장소를 물어보는 의문사 Where를 활용합니다.",
+							example: "<br>Where is the restroom?<br>(화장실이 어디예요?)"
+						},
+						{
+							id: "en_g_69",
+							theme: "의문사",
+							title: "Where do you + 동사?",
+							summary: "평소 행동하는 장소를 겨냥해 '너 어디서 ~해?'라고 물을 때 사용합니다.",
+							detail: "거주지, 근무지 등을 물어볼 때 자주 결합합니다.",
+							example: "<br>Where do you live?<br>(너 어디 살아?)"
+						},
+						{
+							id: "en_g_70",
+							theme: "의문사",
+							title: "When is ~?",
+							summary: "일정이나 특정 기념일이 '언제야?'라고 시점을 물어볼 때 사용합니다.",
+							detail: "시간/날짜를 묻는 의문사 When 뒤에 대상 명사를 둡니다.",
+							example: "<br>When is your birthday?<br>(네 생일이 언제야?)"
+						},
+						{
+							id: "en_g_71",
+							theme: "의문사",
+							title: "When do you + 동사?",
+							summary: "상대방의 일상적인 타임라인으로 '너 언제 ~해?'라고 질문할 때 사용합니다.",
+							detail: "행동이 일어나는 시각이나 시점을 물어볼 때 유용합니다.",
+							example: "<br>When do you finish work?<br>(너 언제 일 끝나?)"
+						},
+						{
+							id: "en_g_72",
+							theme: "의문사",
+							title: "Why are you + 형용사?",
+							summary: "상대방의 현재 감정이나 상태의 이유를 '너 왜 ~해?'라고 물을 때 사용합니다합니다.",
+							detail: "원인을 묻는 Why 뒤에 be동사 의문문 구조를 연결합니다.",
+							example: "<br>Why are you sad?<br>(너 왜 슬퍼?)"
+						},
+						{
+							id: "en_g_73",
+							theme: "의문사",
+							title: "Why did you + 동사?",
+							summary: "상대방이 과거에 했던 행동의 이유를 '너 왜 ~했어?'라고 물을 때 사용합니다.",
+							detail: "과거 행동의 원인을 파악하기 위해 did를 사용합니다.",
+							example: "<br>Why did you call me?<br>(너 왜 나한테 전화했어?)"
+						},
+						{
+							id: "en_g_74",
+							theme: "의문사",
+							title: "Who is ~?",
+							summary: "특정 사람의 정체를 '저 사람 누구야?'라고 질문할 때 사용합니다.",
+							detail: "인물을 묻는 의문사 Who 뒤에 대상을 가리키는 지시어 등을 넣습니다.",
+							example: "<br>Who is that guy?<br>(저 남자 누구야?)"
+						},
+						{
+							id: "en_g_75",
+							theme: "의문사",
+							title: "How is ~?",
+							summary: "상태나 안부를 가볍게 '~는 어때?'라고 평가나 상태를 물을 때 사용합니다.",
+							detail: "방법이 아니라 어떠한가라는 상태를 질문하는 How의 용법입니다.",
+							example: "<br>How is the weather?<br>(날씨 어때?)"
+						},
+						{
+							id: "en_g_76",
+							theme: "의문사",
+							title: "How do I + 동사?",
+							summary: "방법이나 길을 잘 모를 때 '내가 어떻게 ~해야 해?'라고 안내를 요청할 때 사용합니다.",
+							detail: "수단과 방법을 질문할 때 매우 중요하게 쓰이는 패턴입니다.",
+							example: "<br>How do I get there?<br>(거기 어떻게 가요?)"
+						},
+						{
+							id: "en_g_77",
+							theme: "의문사",
+							title: "How much is ~?",
+							summary: "쇼핑 등에서 물건의 가격을 물어볼 때 '~는 얼마예요?'라고 사용합니다.",
+							detail: "셀 수 없는 양이나 금액을 표현하는 How much를 사용합니다.",
+							example: "<br>How much is this bag?<br>(이 가방 얼마예요?)"
+						},
+						{
+							id: "en_g_78",
+							theme: "의문사",
+							title: "How many + 복수명사 ~?",
+							summary: "개수를 확인하기 위해 '~가 몇 개나 있어?'라고 물어볼 때 사용합니다.",
+							detail: "셀 수 있는 명사 앞에 How many를 붙이고, 반드시 명사는 '복수형'으로 표기합니다.",
+							example: "<br>How many books do you have?<br>(책 몇 권 있어?)"
+						},
+						{
+							id: "en_g_79",
+							theme: "의문사",
+							title: "How long does it take?",
+							summary: "특정 장소나 일에 '시간이 얼마나 걸려?'라고 소요 시간을 물을 때 사용합니다.",
+							detail: "시간의 길이를 뜻하는 How long과 시간이 걸리다의 take가 세트인 필수 통문장 패턴입니다.",
+							example: "<br>How long does it take to get there?<br>(거기까지 얼마나 걸려?)"
+						},
+						{
+							id: "en_g_80",
+							theme: "의문사",
+							title: "How often do you + 동사?",
+							summary: "상대방의 행동 빈도를 파악하고자 '얼마나 자주 ~해?'라고 질문할 때 사용합니다.",
+							detail: "주기나 횟수를 확인하고 싶을 때 유용한 표현입니다.",
+							example: "<br>How often do you exercise?<br>(너 얼마나 자주 운동해?)"
+						},
+
+						// 7. 제안, 부탁 및 명령하기
+						{
+							id: "en_g_81",
+							theme: "제안/부탁",
+							title: "Let's + 동사원형",
+							summary: "상대방에게 청유형으로 '우리 ~하자'라고 친근하게 제안할 때 사용합니다.",
+							detail: "Let us의 축약형으로 뒤에 함께 행동할 동사원형을 둡니다.",
+							example: "<br>Let's grab some food.<br>(우리 뭐 좀 먹자.)"
+						},
+						{
+							id: "en_g_82",
+							theme: "제안/부탁",
+							title: "Let's not + 동사원형",
+							summary: "부정적인 제안으로 '우리 ~하지 말자'라고 중단을 건넬 때 사용합니다.",
+							detail: "Let's 바로 뒤에 부정어 not을 붙이고 동사원형을 이어서 씁니다.",
+							example: "<br>Let's not waste time.<br>(우리 시간 낭비하지 말자.)"
+						},
+						{
+							id: "en_g_83",
+							theme: "제안/부탁",
+							title: "Why don't we + 동사원형?",
+							summary: "Let's보다 조금 더 생각할 여지를 주며 '우리 ~하는 게 어때?'라고 제안할 때 사용합니다.",
+							detail: "직역하면 왜 안 하니가 되지만, 회화에선 훌륭한 제안 멘트가 됩니다.",
+							example: "<br>Why don't we take a break?<br>(우리 좀 쉬는 게 어때?)"
+						},
+						{
+							id: "en_g_84",
+							theme: "제안/부탁",
+							title: "How about + 명사/동사-ing?",
+							summary: "가볍게 의견을 던지듯 '~는 어때?'라고 질문하며 제안할 때 사용합니다.",
+							detail: "about이 전치사이므로 명사 혹은 동사-ing(동명사)가 뒤따라옵니다.",
+							example: "<br>How about coffee?<br>(커피 한잔 어때?)"
+						},
+						{
+							id: "en_g_85",
+							theme: "제안/부탁",
+							title: "Would you like to + 동사?",
+							summary: "비즈니스나 격식 있는 관계에서 '~하실래요?'라고 다정하고 정중히 제안할 때 사용합니다.",
+							detail: "Do you want to보다 품격 있는 권유의 뉘앙스를 풍깁니다.",
+							example: "<br>Would you like to join us?<br>(우리와 함께 하실래요?)"
+						},
+						{
+							id: "en_g_86",
+							theme: "제안/부탁",
+							title: "Please + 동사원형",
+							summary: "명령조 문장에 예의를 더해 '~해 주세요'라고 정중히 지시할 때 사용합니다.",
+							detail: "문장 맨 앞 혹은 맨 뒤에 Please를 넣어 공손함을 표현합니다.",
+							example: "<br>Please sit down.<br>(앉아 주세요.)"
+						},
+						{
+							id: "en_g_87",
+							theme: "제안/부탁",
+							title: "Don't + 동사원형",
+							summary: "상대방에게 행동을 제한하며 '~하지 마'라고 금지 명령할 때 사용합니다.",
+							detail: "부정 명령문 구조로 동사의 원형 형태가 Don't 뒤에 옵니다.",
+							example: "<br>Don't worry about it.<br>(그것에 대해 걱정하지 마.)"
+						},
+						{
+							id: "en_g_88",
+							theme: "제안/부탁",
+							title: "Could you please + 동사?",
+							summary: "상대방에게 부탁을 해야 할 때 '혹시 ~해 주실 수 있나요?'라고 공손히 요청할 때 사용합니다.",
+							detail: "Can you보다 과거형 조동사 Could를 쓰면 한 층 더 조심스러운 어조가 됩니다.",
+							example: "<br>Could you please repeat that?<br>(다시 한번 말씀해 주시겠어요?)"
+						},
+						{
+							id: "en_g_89",
+							theme: "제안/부탁",
+							title: "Do you mind if I + 동사?",
+							summary: "내 행동이 방해될까 봐 '제가 ~해도 괜찮을까요/꺼리시나요?'라고 양해를 구할 때 사용합니다.",
+							detail: "직역하면 꺼리냐는 뜻이므로, 상대가 괜찮다고 할 땐 No라고 대답하는 문화적 특성이 있습니다.",
+							example: "<br>Do you mind if I open the window?<br>(창문 열어도 될까요?)"
+						},
+						{
+							id: "en_g_90",
+							theme: "제안/부탁",
+							title: "Help me + 동사원형",
+							summary: "혼자 하기 힘든 일을 '내가 ~하는 것 좀 도와줘'라고 요청할 때 사용합니다.",
+							detail: "Help 목적어 뒤에 동사원형(또는 to 동사원형)을 연결하는 구조입니다.",
+							example: "<br>Help me clean the room.<br>(방 청소하는 것 좀 도와줘.)"
+						},
+
+						// 8. 사물/사람 존재 및 생각 표현
+						{
+							id: "en_g_91",
+							theme: "존재/생각",
+							title: "There is + 단수명사",
+							summary: "어떤 사물이나 사람이 '특정 장소에 하나 있다'고 존재를 알릴 때 사용합니다.",
+							detail: "There는 해석하지 않으며, 뒤에 오는 진짜 주어가 단수(1개)일 때 is를 씁니다.",
+							example: "<br>There is a cat on the sofa.<br>(소파 위에 고양이가 있어.)"
+						},
+						{
+							id: "en_g_92",
+							theme: "존재/생각",
+							title: "There are + 복수명사",
+							summary: "여러 개의 사물이나 사람들이 '존재하고 있다'고 말할 때 사용합니다.",
+							detail: "뒤에 연결되는 주어가 2개 이상인 복수 형태일 때 be동사를 are로 씁니다.",
+							example: "<br>There are many people here.<br>(여기 사람이 많아.)"
+						},
+						{
+							id: "en_g_93",
+							theme: "존재/생각",
+							title: "Is there ~? / Are there ~?",
+							summary: "특정 사물이나 장소가 존재 유무를 확인하려 '~가 있나요?'라고 질문할 때 사용합니다.",
+							detail: "There is/are의 어순을 뒤바꾼 의문문 구조로, 뒤에 올 명사 수에 따라 구분해 묻습니다.",
+							example: "<br>Is there a convenience store nearby?<br>(근처에 편의점 있나요?)"
+						},
+						{
+							id: "en_g_94",
+							theme: "존재/생각",
+							title: "I think (that) ~",
+							summary: "내 주관적인 의견을 조심스럽게 '내 생각에는 ~인 것 같아'라고 말할 때 사용합니다.",
+							detail: "자신의 생각을 부드럽고 덜 단정적으로 표현할 때 일상에서 가장 많이 씁니다.",
+							example: "<br>I think it's a good idea.<br>(내 생각엔 좋은 아이디어 같아.)"
+						},
+						{
+							id: "en_g_95",
+							theme: "존재/생각",
+							title: "I don't think (that) ~",
+							summary: "상황에 대해 부정적으로 판단하여 '내 생각엔 ~ 아닌 것 같아'라고 의견을 낼 때 사용합니다.",
+							detail: "I think it's not~ 보다 문장 앞부분을 I don't think~ 로 부정하는 것이 더 자연스러운 영어 식 표현입니다.",
+							example: "<br>I don't think he will come.<br>(그 사람 안 올 것 같아.)"
+						},
+						{
+							id: "en_g_96",
+							theme: "존재/생각",
+							title: "Do you think (that) ~?",
+							summary: "상대방의 의견이나 생각을 '너는 ~라고 생각해?'라고 동의나 의견을 물을 때 사용합니다.",
+							detail: "Do you think 뒤에 궁금한 완전한 문장 구조를 바로 얹어 질문합니다.",
+							example: "<br>Do you think it's possible?<br>(그게 가능하다고 생각해?)"
+						},
+						{
+							id: "en_g_97",
+							theme: "존재/생각",
+							title: "It looks + 형용사",
+							summary: "눈에 보이는 시각적 정보를 보고 '~해 보인다'라고 감상을 말할 때 사용합니다.",
+							detail: "감각동사 look 뒤에 그 대상을 묘사하는 형용사를 바로 가져옵니다.",
+							example: "<br>It looks delicious.<br>(그거 맛있어 보인다.)"
+						},
+						{
+							id: "en_g_98",
+							theme: "존재/생각",
+							title: "It sounds + 형용사",
+							summary: "귀로 이야기를 듣거나 제안을 들었을 때 '~하게 들려 / 좋네!'라고 맞장구칠 때 사용합니다.",
+							detail: "대화 속에서 리액션을 할 때 아주 유용하게 쓰이는 필수 감각동사 패턴입니다.",
+							example: "<br>It sounds fun.<br>(재미있겠네.)"
+						},
+						{
+							id: "en_g_99",
+							theme: "존재/생각",
+							title: "It takes + 시간",
+							summary: "작업을 하거나 어디 가는데 걸리는 시간을 '(시간이) ~만큼 걸려'라고 말할 때 사용합니다.",
+							detail: "시간을 지칭하는 비인칭 주어 It을 사용하여 보편적인 필요 시간을 나타냅니다.",
+							example: "<br>It takes 10 minutes.<br>(10분 걸려.)"
+						},
+						{
+							id: "en_g_100",
+							theme: "존재/생각",
+							title: "That's why ~",
+							summary: "앞서 말한 내용이 원인이 되어 '그래서 내가 ~한 거야'라고 인과관계를 밝힐 때 사용합니다.",
+							detail: "That's why 뒤에는 결과를 나타내는 문장이 와서 상황을 결론지어 줍니다.",
+							example: "<br>That's why I'm late.<br>(그래서 내가 늦은 거야.)"
+						},
+
+						// ==========================================
+						// 6. 질문하고 정보 묻기 (의문사/질문 패턴 추가)
+						// ==========================================
+						{
+							id: "en_g_101",
+							theme: "의문사",
+							title: "Is it okay if I + 동사원형?",
+							summary: "상대방에게 조심스럽게 '내가 ~해도 괜찮을까?'라며 허락을 구할 때 사용합니다.",
+							detail: "Do you mind if I보다 조금 더 캐주얼하면서도 예의를 차리는 유용한 질문 문법입니다.",
+							example: "<br>Is it okay if I sit here?<br>(여기 앉아도 괜찮을까요?)"
+						},
+						{
+							id: "en_g_102",
+							theme: "의문사",
+							title: "What kind of + 명사 + do you like?",
+							summary: "상대방의 구체적인 취향을 '어떤 종류의 ~를 좋아해?'라고 물을 때 사용합니다.",
+							detail: "명사 자리에 음식, 영화, 음악 등을 넣어 상대방과 대화를 시작하기 좋은 패턴입니다.",
+							example: "<br>What kind of movies do you like?<br>(어떤 종류의 영화 좋아해?)"
+						},
+						{
+							id: "en_g_103",
+							theme: "의문사",
+							title: "Have you ever + 과거분사(p.p.)?",
+							summary: "상대방에게 '너 (~해본 적) 있어?'라고 인생 경험을 물어볼 때 사용합니다.",
+							detail: "현재완료 시제의 경험 용법으로, ever는 '여태껏'이라는 의미를 강조합니다.",
+							example: "<br>Have you ever been to Jeju Island?<br>(제주도 가본 적 있어?)"
+						},
+						{
+							id: "en_g_104",
+							theme: "의문사",
+							title: "How do you like + 명사?",
+							summary: "상대방에게 '새로 경험한 것'에 대한 소감이나 의견을 '어때? 마음에 들어?'라고 물을 때 사용합니다.",
+							detail: "How is~ 보다 구체적으로 상대방의 '마음에 드는 정도'를 묻는 뉘앙스입니다.",
+							example: "<br>How do you like your new job?<br>(새 직장은 어때? 마음에 들어?)"
+						},
+						{
+							id: "en_g_105",
+							theme: "의문사",
+							title: "What are you planning to + 동사원형?",
+							summary: "상대방에게 가까운 미래의 일정을 '너 ~할 계획이야?'라고 물어볼 때 사용합니다.",
+							detail: "What are you going to보다 조금 더 구체적인 계획이나 틀이 잡힌 일정을 물을 때 씁니다.",
+							example: "<br>What are you planning to do tonight?<br>(너 오늘 밤에 뭐 할 계획이야?)"
+						},
+						{
+							id: "en_g_106",
+							theme: "의문사",
+							title: "Which one do you prefer?",
+							summary: "선택지를 주고 '어느 쪽이 더 좋아?'라고 상대방의 선호도를 물을 때 사용합니다.",
+							detail: "A와 B 중에서 하나를 골라달라고 요청할 때 쓰는 고정 문형입니다.",
+							example: "<br>Which one do you prefer, coffee or tea?<br>(커피랑 차 중에 어떤 게 더 좋아?)"
+						},
+						{
+							id: "en_g_107",
+							theme: "의문사",
+							title: "Are you interested in + 명사/동사-ing?",
+							summary: "상대방에게 '너 ~에 관심 있어?'라고 흥미를 물어볼 때 사용합니다.",
+							detail: "전치사 in 뒤에는 관심 분야의 명사나 동명사(-ing) 형태가 옵니다.",
+							example: "<br>Are you interested in K-pop?<br>(너 케이팝에 관심 있어?)"
+						},
+						{
+							id: "en_g_108",
+							theme: "의문사",
+							title: "What makes you + 동사원형?",
+							summary: "직역하면 '무엇이 널 ~하게 만드니?'이며, 회화에선 부드럽게 '왜 ~하는 거야?'라고 이유를 물을 때 사용합니다.",
+							detail: "Why로 물어보는 것보다 덜 공격적이고 원어민스러운 세련된 질문 문법입니다.",
+							example: "<br>What makes you think so?<br>(왜 그렇게 생각해?)"
+						},
+						{
+							id: "en_g_109",
+							theme: "의문사",
+							title: "Is there any + 명사?",
+							summary: "어떤 사물이나 기회 등이 있는지 '혹시 ~가 있나요?'라고 유무를 물을 때 사용합니다.",
+							detail: "any가 들어가서 '혹시 조금이라도 있냐'는 뉘앙스를 풍기며, 명사 자리에 단수/복수/셀 수 없는 명사 모두 올 수 있습니다.",
+							example: "<br>Is there any problem?<br>(혹시 무슨 문제라도 있나요?)"
+						},
+						{
+							id: "en_g_110",
+							theme: "의문사",
+							title: "Do you happen to know + 명사/문장?",
+							summary: "상대방에게 조심스럽게 '혹시 ~를 아시나요?'라고 물어볼 때 사용합니다.",
+							detail: "happen to가 들어가면 '우연히', '혹시'라는 뜻이 더해져, 모르는 사람에게 길을 묻거나 조심스럽게 정보를 캐낼 때 최고의 질문 양식이 됩니다.",
+							example: "<br>Do you happen to know where the subway station is?<br>(혹시 지하철역이 어디 있는지 아시나요?)"
+						},
+						// ==========================================
+						// 질문 및 청유 패턴 추가 (111~115)
+						// ==========================================
+						{
+							id: "en_g_111",
+							theme: "의문사",
+							title: "What do you want?",
+							summary: "상대방에게 단도직입적으로 '너 뭐를 원해?'라고 물어볼 때 사용합니다.",
+							detail: "가장 직접적인 표현으로, 친한 사이에서는 솔직하게 원하는 것을 물을 때 쓰지만, 낯선 사람에게는 다소 무례하게 들릴 수 있으니 상황에 맞춰 씁니다.",
+							example: "<br>What do you want for your birthday?<br>(너 생일 선물로 뭐 원해?)"
+						},
+						{
+							id: "en_g_112",
+							theme: "의문사",
+							title: "What do you need?",
+							summary: "도움이 필요한 상대에게 '뭐가 필요해?'라고 물어볼 때 사용합니다.",
+							detail: "상대방에게 필요한 물건이나 지원이 무엇인지 구체적으로 파악하고 도와주려고 할 때 유용한 필수 패턴입니다.",
+							example: "<br>What do you need right now?<br>(너 지금 당장 뭐가 필요해?)"
+						},
+						{
+							id: "en_g_113",
+							theme: "제안/부탁",
+							title: "Hurry up and + 동사원형",
+							summary: "상대방을 재촉하며 '빨리 ~하자 / ~해'라고 말할 때 사용합니다.",
+							detail: "Hurry up(서둘러) 뒤에 and를 붙이고 다음 행동의 동사원형을 연결하여, 서둘러서 무언가를 하도록 유도하는 표현입니다.",
+							example: "<br>Hurry up and get in the car.<br>(빨리 차에 타자.)"
+						},
+						{
+							id: "en_g_114",
+							theme: "의문사",
+							title: "What's going on?",
+							summary: "상황이 이상하거나 무슨 일이 생겼을 때 '무슨 일이야?'라고 물어볼 때 사용합니다.",
+							detail: "What happened?와 비슷하지만, 지금 눈앞에서 벌어지고 있는 분위기나 사건의 내막을 캐주얼하게 물어볼 때 원어민들이 가장 많이 쓰는 의문문입니다.",
+							example: "<br>You look sad. What's going on?<br>(너 슬퍼 보여. 무슨 일이야?)"
+						},
+						{
+							id: "en_g_115",
+							theme: "존재/생각",
+							title: "Do you happen to have + 명사?",
+							summary: "상대방에게 '혹시 ~가 있어요?'라며 물건이나 여유분이 있는지 조심스럽게 물을 때 사용합니다.",
+							detail: "그냥 Do you have~? 보다 happen to가 들어가서 훨씬 조심스럽고 공손한 느낌을 줍니다. 길에서 무언가를 빌리거나 매장에서 재고를 물을 때 유용합니다.",
+							example: "<br>Do you happen to have an extra pen?<br>(혹시 여분의 펜이 있으신가요?)"
+						}
+					],
+					words: [
+						// ==========================================
+						// 1. 감정/기분 (Feelings & Emotions)
+						// ==========================================
+						{
+							id: "en_w_1",
+							theme: "감정/기분",
+							title: "tired",
+							summary: "피곤한, 지친",
+							detail: "품사: 형용사 / 몸이나 정신이 지쳐서 쉬고 싶을 때 씁니다.",
+							example: "<br>I'm so tired today.<br>(나 오늘 너무 피곤해.)"
+						},
+						{
+							id: "en_w_2",
+							theme: "감정/기분",
+							title: "excited",
+							summary: "신이 난, 들뜬",
+							detail: "품사: 형용사 / 기대되는 일로 마음이 설렐 때 씁니다.",
+							example: "<br>I'm excited about the trip.<br>(나 여행 때문에 신나.)"
+						},
+						{
+							id: "en_w_3",
+							theme: "감정/기분",
+							title: "nervous",
+							summary: "긴장되는, 떨리는",
+							detail: "품사: 형용사 / 면접, 시험, 발표 등을 앞두고 긴장될 때 씁니다.",
+							example: "<br>Don't be nervous. You can do it.<br>(긴장하지 마. 넌 할 수 있어.)"
+						},
+
+						// ==========================================
+						// 2. 날씨/계절 (Weather & Seasons)
+						// ==========================================
+						{
+							id: "en_w_4",
+							theme: "날씨/계절",
+							title: "humid",
+							summary: "습한, 끈적거리는",
+							detail: "품사: 형용사 / 공기 중에 습기가 많아 눅눅할 때 씁니다.",
+							example: "<br>It's very humid in summer.<br>(여름에는 날씨가 매우 습해.)"
+						},
+						{
+							id: "en_w_5",
+							theme: "날씨/계절",
+							title: "chilly",
+							summary: "쌀쌀한",
+							detail: "품사: 형용사 / cold보다는 덜하지만 으스스하게 추울 때 씁니다.",
+							example: "<br>It's a bit chilly outside.<br>(밖이 좀 쌀쌀하네.)"
+						},
+
+						// ==========================================
+						// 3. 성격/성향 (Personality & Traits)
+						// ==========================================
+						{
+							id: "en_w_6",
+							theme: "성격/성향",
+							title: "friendly",
+							summary: "다정한, 친근한, 사교적인",
+							detail: "품사: 형용사 / -ly로 끝나지만 부사가 아니라 형용사입니다. 사람이나 분위기가 친근할 때 씁니다.",
+							example: "<br>Our new neighbor is very friendly.<br>(우리 새 이웃은 정말 다정해.)"
+						},
+						{
+							id: "en_w_7",
+							theme: "성격/성향",
+							title: "shy",
+							summary: "부끄러움을 타는, 수줍어하는",
+							detail: "품사: 형용사 / 낯선 사람 앞에서 조용해지거나 내성적인 성격을 뜻합니다.",
+							example: "<br>He is too shy to speak first.<br>(그는 너무 부끄러움이 많아서 먼저 말을 못 걸어.)"
+						},
+
+						// ==========================================
+						// 4. 상태/외모 (Status & Appearance)
+						// ==========================================
+						{
+							id: "en_w_8",
+							theme: "상태/외모",
+							title: "busy",
+							summary: "바쁜",
+							detail: "품사: 형용사 / 할 일이 많아 겨를이 없을 때 씁니다. 뒤에 '동사-ing'를 붙여 '~하느라 바쁘다'로도 씁니다.",
+							example: "<br>I'm busy preparing for the exam.<br>(나 시험 준비하느라 바빠.)"
+						},
+						{
+							id: "en_w_9",
+							theme: "상태/외모",
+							title: "clean",
+							summary: "깨끗한",
+							detail: "품사: 형용사 / 더러운 것이 없고 정돈된 상태를 뜻합니다. (동사로 '청소하다'라는 뜻도 있습니다.)",
+							example: "<br>Keep your room clean.<br>(방을 깨끗하게 유지해라.)"
+						},
+
+						// ==========================================
+						// 5. 크기/모양 (Size & Shape)
+						// ==========================================
+						{
+							id: "en_w_10",
+							theme: "크기/모양",
+							title: "heavy",
+							summary: "무거운",
+							detail: "품사: 형용사 / 무게가 많이 나갈 때 씁니다. 비가 많이 올 때도 'heavy rain'처럼 사용합니다.",
+							example: "<br>This bag is too heavy for me.<br>(이 가방은 나한테 너무 무거워.)"
+						},
+						{
+							id: "en_w_11",
+							theme: "크기/모양",
+							title: "short",
+							summary: "짧은, 키가 작은",
+							detail: "품사: 형용사 / 길이나 시간 등이 '짧은' 것과 사람의 키가 '작은' 것 둘 다 표현할 수 있습니다.",
+							example: "<br>Life is too short.<br>(인생은 너무 짧아.)"
+						},
+
+						// ==========================================
+						// 6. 평가/느낌 (Opinion & Taste)
+						// ==========================================
+						{
+							id: "en_w_12",
+							theme: "평가/느낌",
+							title: "delicious",
+							summary: "맛있는",
+							detail: "품사: 형용사 / 음식 맛이 훌륭할 때 씁니다. 회화에서는 더 편하게 'yummy'나 'good'도 많이 씁니다.",
+							example: "<br>This pizza is absolutely delicious!<br>(이 피자 진짜 대박 맛있다!)"
+						},
+						{
+							id: "en_w_13",
+							theme: "평가/느낌",
+							title: "expensive",
+							summary: "비싼",
+							detail: "품사: 형용사 / 물건의 가격이나 비용이 많이 들어갈 때 씁니다.",
+							example: "<br>Coffee here is too expensive.<br>(여기 커피는 너무 비싸.)"
+						},
+
+						// ==========================================
+						// 7. 행동/동작 (Actions & Activities) *추가됨*
+						// ==========================================
+						{
+							id: "en_w_14",
+							theme: "행동/동작",
+							title: "exercise",
+							summary: "운동하다",
+							detail: "품사: 일반동사 / 건강이나 체력을 위해 몸을 움직여 운동하는 것을 뜻합니다.",
+							example: "<br>I exercise three times a week.<br>(나는 일주일에 세 번 운동해.)"
+						},
+						{
+							id: "en_w_15",
+							theme: "행동/동작",
+							title: "grab",
+							summary: "(음식 등을) 간단히 먹다 / 쥐다",
+							detail: "품사: 일반동사 / 일상 대화에서 '뭐 좀 먹으러 가자'고 할 때 eat 대신 정말 많이 쓰는 유용한 동사입니다.",
+							example: "<br>Let's grab some coffee.<br>(우리 커피 한잔하러 가자.)"
+						},
+						{
+							id: "en_w_16",
+							theme: "행동/동작",
+							title: "relax",
+							summary: "쉬다, 휴식을 취하다, 긴장을 풀다",
+							detail: "품사: 일반동사 / 아무것도 안 하거나 편안한 상태로 몸과 마음을 쉴 때 씁니다.",
+							example: "<br>I just want to relax at home.<br>(난 그냥 집에서 쉬고 싶어.)"
+						},
+						// ==========================================
+						// 8. 방향/위치 (Directions & Locations)
+						// ==========================================
+						{
+							id: "en_w_27",
+							theme: "방향/위치",
+							title: "turn left / turn right",
+							summary: "좌회전하다 / 우회전하다",
+							detail: "품사: 구동사 / 길을 안내할 때 가장 기본이 되는 방향 전환 표현입니다.",
+							example: "<br>Turn left at the corner.<br>(모퉁이에서 좌회전하세요.)"
+						},
+						{
+							id: "en_w_28",
+							theme: "방향/위치",
+							title: "go straight",
+							summary: "직진하다, 똑바로 가다",
+							detail: "품사: 구동사 / 쭉 앞으로 나아가라는 의미로, 뒤에 'for 2 blocks' 등을 붙여 거리를 구체화하기도 합니다.",
+							example: "<br>Go straight for two blocks.<br>(두 블록 직진하세요.)"
+						},
+						{
+							id: "en_w_29",
+							theme: "방향/위치",
+							title: "across from",
+							summary: "~의 맞은편에, 건너편에",
+							detail: "품사: 전치사구 / 도로를 사이에 두고 마주 보고 있는 위치를 설명할 때 씁니다.",
+							example: "<br>The bakery is across from the bank.<br>(빵집은 은행 맞은편에 있어요.)"
+						},
+						{
+							id: "en_w_30",
+							theme: "방향/위치",
+							title: "next to",
+							summary: "~의 옆에",
+							detail: "품사: 전치사구 / 사물이나 장소가 바로 옆에 붙어 있는 물리적 위치를 나타냅니다.",
+							example: "<br>The convenience store is next to the cafe.<br>(편의점은 카페 옆에 있어요.)"
+						},
+						{
+							id: "en_w_31",
+							theme: "방향/위치",
+							title: "between",
+							summary: "(두 대상) 사이에",
+							detail: "품사: 전치사 / 보통 'between A and B' 형태로 쓰여 A와 B 사이에 위치함을 말합니다.",
+							example: "<br>The pharmacy is between the hotel and the station.<br>(약국은 호텔과 역 사이에 있어요.)"
+						},
+						{
+							id: "en_w_32",
+							theme: "방향/위치",
+							title: "behind",
+							summary: "~의 뒤에",
+							detail: "품사: 전치사 / 눈에 보이지 않는 건물 뒷공간이나 사람의 등 뒤를 지칭할 때 씁니다.",
+							example: "<br>The parking lot is behind the building.<br>(주차장은 건물 뒤에 있습니다.)"
+						},
+						{
+							id: "en_w_33",
+							theme: "방향/위치",
+							title: "in front of",
+							summary: "~의 앞에",
+							detail: "품사: 전치사구 / behind의 반대말로, 건물 전면이나 사람의 앞쪽 공간을 뜻합니다.",
+							example: "<br>Let's meet in front of the theater.<br>(영화관 앞에서 만나자.)"
+						},
+						{
+							id: "en_w_34",
+							theme: "방향/위치",
+							title: "around the corner",
+							summary: "모퉁이를 돌면 있는, 아주 가까이에",
+							detail: "품사: 전치사구 / 실제 길모퉁이를 돌면 나오는 위치를 뜻하기도 하고, 회화에서는 시간·거리가 '코앞에 다가왔다'는 비유로도 정말 자주 쓰입니다.",
+							example: "<br>The subway station is just around the corner.<br>(지하철역은 바로 모퉁이 돌면 있어요 / 코앞에 있어요.)"
+						}
+					]
+				}
+			}
+
+		};
+
+
+
+
+
+
+		let currentStatus = { lang: '', type: '', activeTheme: '전체' };
+		let isLoggedIn = false;
+
+
+
+		/* 2. 🌟 사이드바 및 UI 제어 로직 (중복 제거 및 최적화) */
+		function toggleSection(button) {
+			button.parentElement.classList.toggle('active');
+		}
+
+
+
+		function updateSidebarToggleButton() {
+			const toggleBtn = document.getElementById('sidebar-toggle-btn');
+			if (!toggleBtn) return;
+
+
+
+			const isMobile = window.innerWidth <= 768;
+			const isOpen = isMobile
+				? document.body.classList.contains('sidebar-open')
+				: !document.body.classList.contains('sidebar-collapsed');
+
+
+
+			toggleBtn.innerText = isOpen ? '✕ 메뉴' : '☰ 메뉴';
+		}
+
+
+
+		function toggleSidebar() {
+			const isMobile = window.innerWidth <= 768;
+
+
+
+			if (isMobile) {
+				document.body.classList.toggle('sidebar-open');
+			} else {
+				document.body.classList.toggle('sidebar-collapsed');
+			}
+
+
+
+			updateSidebarToggleButton();
+		}
+
+
+
+		function closeSidebar() {
+			document.body.classList.remove('sidebar-open');
+			updateSidebarToggleButton();
+		}
+
+
+
+		window.addEventListener('resize', () => {
+			if (window.innerWidth > 768) {
+				document.body.classList.remove('sidebar-open');
+			}
+			updateSidebarToggleButton();
+		});
+
+
+
+		/* 3. 🌟 [메인 대시보드 화면 렌더링] (메뉴 선택 시 연동) */
+		function loadMainDashboard(lang, type) {
+			currentStatus.lang = lang;
+			currentStatus.type = type;
+			currentStatus.activeTheme = "전체"; // 메뉴 이동 시엔 '전체' 탭을 기본값으로
+
+
+
+			// 모든 사이드바 메뉴 스타일 초기화 후 현재 선택된 메뉴 활성화
+			document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+			//  정확하게 온클릭 속성(lang, type)을 비교해서 현재 클릭한 버튼을 찾아 active 추가
+			document.querySelectorAll('.nav-item').forEach(btn => {
+				if (btn.getAttribute('onclick').includes(`'${lang}'`) && btn.getAttribute('onclick').includes(`'${type}'`)) {
+					btn.classList.add('active');
+				}
+			});
+
+
+			// 클릭된 요소가 있으면 active 클래스 추가
+			if (window.event && window.event.target) {
+				window.event.target.classList.add('active');
+			}
+
+
+
+			renderDashboardView();
+			closeSidebar(); // 모바일에서 메뉴 선택 후 자동 닫기
+		}
+
+
+
+		/* 4. 🌟 우측 화면을 동적으로 그려주는 통합 함수 */
+		function renderDashboardView() {
+			const { lang, type, activeTheme } = currentStatus;
+			if (!lang || !type) return; // 선택된 언어나 타입이 없으면 중단
+
+
+
+			const langData = database[lang];
+			const typeLabel = type === 'grammar' ? '문법' : '단어';
+			const container = document.getElementById('dynamic-content');
+
+
+
+			const writeBtnStyle = isLoggedIn ? 'display: inline-flex;' : 'display: none;';
+
+
+
+			// 구조 설계: 상단 타이틀 -> 소분류 탭 버튼 구역 -> 게시글 카드 리스트 구역
+			let html = `
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+
+
+							<div class="content-header-flex">
+									<div>
+											<h1>${langData.name} ${typeLabel} 자료실</h1>
+											<div class="category-path">${langData.name} > ${typeLabel}</div>
+									</div>
+									<button class="btn-outline write-btn" style="${writeBtnStyle}" onclick="loadWriteForm()">✏️ 새 자료 등록</button>
+							</div>
+							<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+
+
+							<div class="theme-btn-container">
+					`;
+
+
+
+			const availableThemes = langData.themes[type];
+			availableThemes.forEach(theme => {
+				const activeClass = (theme === activeTheme) ? 'active' : '';
+				html += `<button class="theme-tab-btn ${activeClass}" onclick="filterByTheme('${theme}')">${theme}</button>`;
+			});
+
+
+
+			html += `</div><div class="data-list" id="card-list-box">`;
+
+
+
+			// 데이터 필터링 처리 (선택한 소분류 테마에 맞춰서 가져오기)
+			let posts = langData.data[type] || [];
+			if (activeTheme !== "전체") {
+				posts = posts.filter(post => post.theme === activeTheme);
+			}
+
+
+
+			if (posts.length === 0) {
+				html += `<p style='color:#999; padding: 30px 0; text-align:center;'>'${activeTheme}' 테마에 등록된 자료가 없습니다. ${isLoggedIn ? '새로운 자료를 등록해보세요!' : ''}</p>`;
+			} else {
+				posts.forEach(item => {
+					html += `
+											<button class="data-card-btn" onclick="loadDetailView('${item.id}')">
+													<span style="font-size:0.8rem; color:#ff5722; font-weight:bold; display:block; margin-bottom:4px;">[${item.theme}]</span>
+													<strong>${item.title}</strong>
+													<p>${item.summary}</p>
+											</button>
+									`;
+				});
+			}
+
+
+
+			html += `</div>`;
+			container.innerHTML = html;
+			updateSidebarToggleButton(); // 화면 갱신 후 버튼 상태 맞춰주기
+		}
+
+
+
+		/* 5. 🌟 화면상의 소분류 버튼을 눌렀을 때 작동하는 필터링 함수 */
+		function filterByTheme(themeName) {
+			currentStatus.activeTheme = themeName;
+			renderDashboardView(); // 화면 다시 그리기
+		}
+
+
+
+		/* 6. [상세 내용 보기] */
+		function loadDetailView(itemId) {
+			const { lang, type } = currentStatus;
+			const langData = database[lang];
+			const items = langData.data[type];
+			const selectedItem = items.find(item => item.id === itemId);
+			const container = document.getElementById('dynamic-content');
+
+
+
+			if (!selectedItem) return;
+
+
+
+			container.innerHTML = `
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+
+
+							<button class="btn-outline back-btn" onclick="renderDashboardView()">← 목록으로 돌아가기</button>
+
+
+
+							<h1>${selectedItem.title}</h1>
+							<div class="category-path">${langData.name} > ${type === 'grammar' ? '문법' : '단어'} > ${selectedItem.theme} > 상세 내용</div>
+
+
+
+							<div class="detail-content">
+									<span style="color:#ff5722; font-weight:bold;">분류: ${selectedItem.theme}</span>
+									<h3 style="margin-top:10px;">💡 상세 설명</h3>
+									<p>${selectedItem.detail}</p>
+
+
+
+									<div class="example-box">
+											<strong>📖 예문 및 활용</strong>
+											<p style="margin-top: 8px; color: #444; line-height: 1.8;">${selectedItem.example}</p>
+									</div>
+							</div>
+					`;
+			updateSidebarToggleButton();
+		}
+
+
+
+		/* 7. [글쓰기 폼] */
+		function loadWriteForm() {
+			if (!isLoggedIn) return;
+
+
+
+			const { lang, type } = currentStatus;
+			const langData = database[lang];
+			const typeLabel = type === 'grammar' ? '문법' : '단어';
+			const container = document.getElementById('dynamic-content');
+
+
+
+			let selectOptions = "";
+			langData.themes[type].forEach(theme => {
+				if (theme !== "전체") {
+					selectOptions += `<option value="${theme}">${theme}</option>`;
+				}
+			});
+
+
+
+			container.innerHTML = `
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+
+
+							<h1>자료 등록하기</h1>
+							<div class="category-path">위치: ${langData.name} > ${typeLabel} 자료실</div>
+							<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+
+
+							<div class="form-container">
+									<div class="form-group">
+											<label for="write-theme">📌 소분류 테마 선택</label>
+											<select id="write-theme">${selectOptions}</select>
+									</div>
+									<div class="form-group">
+											<label for="write-title">제목</label>
+											<input type="text" id="write-title" placeholder="문법명 또는 단어">
+									</div>
+									<div class="form-group">
+											<label for="write-summary">한 줄 요약</label>
+											<input type="text" id="write-summary" placeholder="목록에 노출될 설명">
+									</div>
+									<div class="form-group">
+											<label for="write-detail">💡 상세 설명</label>
+											<textarea id="write-detail" rows="5" placeholder="상세 설명을 입력하세요."></textarea>
+									</div>
+									<div class="form-group">
+											<label for="write-example">📖 예문 및 활용</label>
+											<textarea id="write-example" rows="4" placeholder="예문을 입력하세요."></textarea>
+									</div>
+
+
+
+									<div class="form-actions">
+											<button class="btn-outline submit-btn" onclick="saveContent()">저장하기</button>
+											<button class="btn-outline cancel-btn" onclick="renderDashboardView()">취소</button>
+									</div>
+							</div>
+					`;
+			updateSidebarToggleButton();
+		}
+
+
+
+		/* 8. [글 저장하기] */
+		function saveContent() {
+			if (!isLoggedIn) return;
+
+
+
+			const selectedTheme = document.getElementById('write-theme').value;
+			const title = document.getElementById('write-title').value.trim();
+			const summary = document.getElementById('write-summary').value.trim();
+			const detail = document.getElementById('write-detail').value.trim();
+			const example = document.getElementById('write-example').value.trim().replace(/\n/g, '<br>');
+
+
+
+			if (!title || !summary || !detail || !example) {
+				alert("모든 빈칸을 채워주세요! ✏️");
+				return;
+			}
+
+
+
+			const { lang, type } = currentStatus;
+
+
+
+			const newPost = {
+				id: `${lang}_${type}_${Date.now()}`,
+				theme: selectedTheme,
+				title: title,
+				summary: summary,
+				detail: detail,
+				example: example
+			};
+
+
+
+			database[lang].data[type].push(newPost);
+			alert(`[${selectedTheme}] 테마에 정상 등록되었습니다! 🎉`);
+
+
+
+			currentStatus.activeTheme = selectedTheme;
+			renderDashboardView();
+		}
+
+
+
+		/* 9. 💬 로그인 모달 로직 */
+		function handleAuthClick() {
+			if (isLoggedIn) {
+				isLoggedIn = false;
+				document.getElementById('sidebar-auth-btn').innerText = "선생님 로그인";
+				alert("로그아웃 되었습니다. 🔒");
+				if (currentStatus.lang) renderDashboardView();
+			} else {
+				document.getElementById('loginModal').classList.add('show');
+			}
+		}
+		function closeModal() {
+			document.getElementById('loginModal').classList.remove('show');
+			document.getElementById('teacher-id').value = "";
+			document.getElementById('teacher-pw').value = "";
+		}
+		function tryLogin() {
+			const id = document.getElementById('teacher-id').value;
+			const pw = document.getElementById('teacher-pw').value;
+			if (id === 'admin' && pw === '1234') {
+				isLoggedIn = true;
+				document.getElementById('sidebar-auth-btn').innerText = "로그아웃";
+				alert("선생님 권한 획득 🔓");
+				closeModal();
+				if (currentStatus.lang) renderDashboardView();
+			} else {
+				alert("틀렸습니다.");
+			}
+		}
+
+
+
+		/* 10. 📊 광고 슬라이드 구동 스크립트 */
+		let currentSlideIndex = 0;
+		const totalSlides = 3;
+		let slideInterval;
+
+
+
+		function showSlide(index) {
+			const slidesContainer = document.getElementById('adSlides');
+			if (!slidesContainer) return; // 홈 화면이 아닐 때 에러 방지
+
+
+
+			if (index >= totalSlides) currentSlideIndex = 0;
+			else if (index < 0) currentSlideIndex = totalSlides - 1;
+			else currentSlideIndex = index;
+
+
+
+			slidesContainer.style.transform = `translateX(-${currentSlideIndex * (100 / totalSlides)}%)`;
+		}
+
+
+
+		function moveSlide(step) {
+			clearInterval(slideInterval);
+			showSlide(currentSlideIndex + step);
+			startAutoSlide();
+		}
+
+
+
+		function startAutoSlide() {
+			if (slideInterval) clearInterval(slideInterval);
+			slideInterval = setInterval(() => {
+				showSlide(currentSlideIndex + 1);
+			}, 3000);
+		}
+
+
+
+		// 초기 설정 실행
+		startAutoSlide();
+		updateSidebarToggleButton();
+	</script>
+</body>
+</html>
