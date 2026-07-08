@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 일본어 수업 설명회</title>
+    <style>
+        /* 기본 스타일 초기화 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+
+
+        body {
+            background-color: #f7f9fa;
+            color: #333333;
+            line-height: 1.6;
+            font-size: 11pt;
+            padding: 20px 10px;
+        }
+
+
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+
+
+        /* SPA 스타일 내비게이션 */
+        .spa-nav {
+            display: flex;
+            width: 100%;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: bold;
+            color: #718096;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+
+
+        .nav-item:hover {
+            color: #4a5568;
+        }
+
+
+
+        .nav-item.active {
+            color: #4a5568;
+            border-bottom: 3px solid #4a5568;
+        }
+
+
+
+        /* SPA 화면 전환 클래스 */
+        .spa-page {
+            display: none;
+        }
+
+
+
+        .spa-page.active {
+            display: block;
+            animation: fadeInPage 0.4s ease-out;
+        }
+
+
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+
+        /* ==========================================
+           📺 [UPGRADED] 첫 접속 PPT 슬라이드 오버레이 (밝은 톤 테마)
+        ========================================== */
+        .welcome-overlay {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(26, 32, 44, 0.4); /* 본문을 어둡게 만드는 반투명 배경 */
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            backdrop-filter: blur(4px); /* 배경 살짝 흐리게 처리 */
+        }
+
+
+
+        .slide-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 420px;
+            background-color: #ffffff; /* 🌟 어두운 회색에서 밝은 화이트로 전면 수정 */
+            color: #2d3748; /* 글자색을 어두운 톤으로 변경 */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border: 1px solid #e2e8f0;
+        }
+
+
+
+        .slide-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+        .slide-item {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px 60px; /* 화살표 버튼 공간 확보를 위해 패딩 조정 */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out, visibility 0.4s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+
+
+        .slide-item.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+
+        .slide-tag {
+            align-self: flex-start;
+            background-color: #edf2f7; /* 밝은 태그 디자인 */
+            color: #4a5568;
+            padding: 5px 12px;
+            font-size: 9pt;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            border: 1px solid #cbd5e0;
+        }
+
+
+
+        .slide-title {
+            font-size: 18pt;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 10px;
+        }
+
+
+
+        .slide-sub {
+            font-size: 11pt;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+
+
+        .slide-grid {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+
+
+        .slide-card {
+            flex: 1;
+            background-color: #f7f9fa; /* 밝은 카드 디자인 */
+            border-left: 4px solid #718096;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+
+
+        .slide-card-title {
+            font-weight: bold;
+            font-size: 10.5pt;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+
+
+        .slide-card-desc {
+            font-size: 9.5pt;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+
+
+        /* ◀ ▶ [NEW] 좌우 넘기기 화살표 버튼 스타일 */
+        .slide-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #e2e8f0;
+            color: #4a5568;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14pt;
+            font-weight: bold;
+            z-index: 30;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+
+
+        .slide-nav-btn:hover {
+            background-color: #4a5568;
+            color: #ffffff;
+            border-color: #4a5568;
+        }
+
+
+
+        .slide-prev { left: 15px; }
+        .slide-next { right: 15px; }
+
+
+
+        /* 하단 도트 내비게이션 */
+        .slide-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+
+
+        .slide-dot {
+            width: 10px; height: 10px;
+            background-color: #cbd5e0;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+
+
+        .slide-dot.active {
+            background-color: #4a5568;
+            width: 24px;
+            border-radius: 5px;
+        }
+
+
+
+        /* 하단 팝업 제어 바 (스킵 / 오늘하루 보지 않기) */
+        .overlay-control-bar {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding: 0 10px;
+        }
+
+
+
+        .overlay-btn {
+            background: none;
+            border: none;
+            color: #4a5568;
+            font-size: 10pt;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+
+
+        .overlay-btn:hover {
+            color: #1a202c;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+
+
+        .btn-skip-main {
+            font-weight: bold;
+            border: 1px solid #4a5568;
+            color: #4a5568;
+        }
+
+
+
+        .btn-skip-main:hover {
+            background-color: #4a5568;
+            color: #ffffff;
+        }
+
+
+
+        /* ==========================================
+           본문 콘텐츠 디자인
+        ========================================== */
+        .header-banner {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+
+        .header-banner h1 { font-size: 17pt; margin-bottom: 6px; font-weight: 700; }
+        .section-title { font-size: 13pt; color: #1a202c; border-left: 5px solid #4a5568; padding-left: 10px; margin: 25px 0 15px 0; font-weight: bold; }
+        p { margin-bottom: 12px; color: #4a5568; }
+        .highlight-box { background-color: #edf2f7; border-radius: 6px; padding: 15px; margin: 15px 0; text-align: center; font-weight: 500; color: #2d3748; }
+
+
+
+        /* 테이블 구조 */
+        .info-table { width: 100%; margin: 15px 0; border-collapse: collapse; border-top: 1px solid #e2e8f0; }
+        .info-table td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; }
+        .info-label { width: 25%; font-weight: bold; color: #4a5568; background-color: #f7f9fa; }
+        .price-tag { font-size: 12pt; font-weight: bold; color: #e53e3e; }
+
+
+
+        /* 하단 버튼 그룹 */
+        .button-section { margin-top: 35px; text-align: center; }
+        .button-title { font-size: 11pt; color: #4a5568; margin-bottom: 15px; font-weight: bold; }
+        .btn-container { display: flex; gap: 15px; margin-top: 15px; }
+        .btn-custom { flex: 1; padding: 14px; font-size: 11pt; font-weight: bold; text-align: center; background-color: #ffffff; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; outline: none; }
+        .btn-krw { border: 2px solid #3182ce; color: #3182ce; }
+        .btn-krw:hover { background-color: #ebf8ff; }
+        .btn-jpy { border: 2px solid #319795; color: #319795; }
+        .btn-jpy:hover { background-color: #e6fffa; }
+
+
+
+        .footer { margin-top: 40px; text-align: center; font-size: 9pt; color: #a0aec0; border-top: 1px solid #e2e8f0; padding-top: 15px; }
+
+
+
+        /* 모달 스타일 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background-color: #ffffff; padding: 25px; border-radius: 8px; width: 90%; max-width: 450px; position: relative; animation: fadeIn 0.3s ease-out; }
+        .modal-header { font-size: 13pt; font-weight: bold; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;}
+        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 16pt; cursor: pointer; color: #a0aec0; border: none; background: none; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 9.5pt; font-weight: bold; color: #4a5568; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 4px; outline: none; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #2d3748; color: #ffffff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+
+
+        @media (max-width: 600px) {
+            .slide-container { height: 490px; }
+            .slide-grid { flex-direction: column; gap: 10px; }
+            .btn-container { flex-direction: column; }
+            .info-table, .info-table tr, .info-table td { display: block; width: 100%; }
+            .info-label { background-color: #f7f9fa; }
+            .slide-item { padding: 40px 45px; }
+            .slide-nav-btn { width: 32px; height: 32px; font-size: 11pt; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+<div class="welcome-overlay" id="welcomeOverlay">
+    <div class="slide-container" id="pptCarousel">
+        <div class="slide-wrapper">
+            
+            <button class="slide-nav-btn slide-prev" onclick="moveSlide(-1)">&#10094;</button>
+            <button class="slide-nav-btn slide-next" onclick="moveSlide(1)">&#10095;</button>
+            
+            <div class="slide-item active">
+                <span class="slide-tag">Intro. 문제 제기</span>
+                <div class="slide-title">온라인 수업, 정말 이대로 괜찮을까요?</div>
+                <div class="slide-sub">"수업은 재미있어야 합니다. 하지만 재미만 있어서는 안 됩니다."</div>
+                <p style="color:#718096; font-size:10pt;">온라인 환경은 편리하지만 일방적 소통 구조로 인해 학생의 '집중력'과 '이해도'가 무너지기 쉽습니다. 우리는 전달의 단점을 보완하고자 원점부터 치열하게 고민했습니다.</p>
+            </div>
+
+
+
+            <div class="slide-item">
+                <span class="slide-tag">Solution. 핵심 가치</span>
+                <div class="slide-title">25분, 내 방에서 끝내는 문자 마스터</div>
+                <div class="slide-sub">편리성 · 집중력 · 유지력 세 마리 토끼를 잡다</div>
+                <div class="slide-grid">
+                    <div class="slide-card" style="border-color: #3182ce;">
+                        <div class="slide-card-title" style="color: #3182ce;">오직 하나만</div>
+                        <div class="slide-card-desc">불필요한 과정 배제, 오직 일본어 문자만 마스터</div>
+                    </div>
+                    <div class="slide-card" style="border-color: #319795;">
+                        <div class="slide-card-title" style="color: #319795;">단 25분의 몰입</div>
+                        <div class="slide-card-desc">뇌가 가장 깊이 집중하는 최적의 단기 완성 시간</div>
+                    </div>
+                    <div class="slide-card" style="border-color: #dd6b20;">
+                        <div class="slide-card-title" style="color: #dd6b20;">한 달의 체화</div>
+                        <div class="slide-card-desc">한 달 안에 완전히 내 몸이 글자를 기억하도록 유도</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="slide-item">
+                <span class="slide-tag">Strategy 01. 편리성</span>
+                <div class="slide-title">학습 문턱을 완전히 제거한 편리한 시스템</div>
+                <div class="slide-sub">시간과 공간의 제약을 뛰어넘는 진정한 내 방 강의실</div>
+                <div class="slide-grid">
+                    <div class="slide-card">
+                        <div class="slide-card-title">자율 예약 티켓제</div>
+                        <div class="slide-card-desc">스케줄 부담 제로, 내가 원하는 일정을 자유 선택</div>
+                    </div>
+                    <div class="slide-card">
+                        <div class="slide-card-title">공간의 자유 (Zoom)</div>
+                        <div class="slide-card-desc">학원 통학시간 0분, 내가 숨 쉬는 공간이 강의실로 변모</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="slide-item">
+                <span class="slide-tag">Strategy 02. 집중력</span>
+                <div class="slide-title">딴생각할 틈을 주지 않는 압도적 집중 전략</div>
+                <div class="slide-sub">짧은 시간 최대 효과를 내기 위한 장치 설계</div>
+                <div class="slide-grid">
+                    <div class="slide-card">
+                        <div class="slide-card-title">시각 자극 각인 자료</div>
+                        <div class="slide-card-desc">뇌리에 직관적으로 각인되도록 개발된 시각 툴 도입</div>
+                    </div>
+                    <div class="slide-card">
+                        <div class="slide-card-title">집중력 유지 및 복습</div>
+                        <div class="slide-card-desc">수업 중 몰입 도구 제공 및 종료 직후 연계되는 복습 시스템</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="slide-item">
+                <span class="slide-tag">Strategy 03. 유지력</span>
+                <div class="slide-title">수업 종료 후에도 지속되는 복습과 지식 유지력</div>
+                <div class="slide-sub">혼자 헤매지 않도록 이끌어주는 든든한 가이드라인</div>
+                <div class="slide-grid">
+                    <div class="slide-card">
+                        <div class="slide-card-title">밀착형 학습 관리</div>
+                        <div class="slide-card-desc">개인별 학습 진도와 성과를 꼼꼼하게 누적 모니터링</div>
+                    </div>
+                    <div class="slide-card">
+                        <div class="slide-card-title">동기부여 커뮤니티</div>
+                        <div class="slide-card-desc">러닝 메이트들과 교류하며 학습 의욕 고취 및 정보 교환</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="slide-controls">
+            <div class="slide-dot active" onclick="currentSlide(0)"></div>
+            <div class="slide-dot" onclick="currentSlide(1)"></div>
+            <div class="slide-dot" onclick="currentSlide(2)"></div>
+            <div class="slide-dot" onclick="currentSlide(3)"></div>
+            <div class="slide-dot" onclick="currentSlide(4)"></div>
+        </div>
+    </div>
+
+
+
+    <div class="overlay-control-bar">
+        <button class="overlay-btn" onclick="dontShowToday()">오늘 하루 보지 않기</button>
+        <button class="overlay-btn btn-skip-main" onclick="closeWelcomeOverlay()">스킵하고 본문 보기 ➔</button>
+    </div>
+</div>
+
+
+
+
+
+<div class="container">
+    <div class="spa-nav">
+        <div class="nav-item active" id="tab-info" onclick="navigateTo('info')">설명회 안내</div>
+        <div class="nav-item" id="tab-intro" onclick="navigateTo('intro')">수업 소개</div>
+        <div class="nav-item" id="tab-apply" onclick="navigateTo('apply')">수강 신청</div>
+    </div>
+
+
+
+    <div id="page-info" class="spa-page active">
+        <div class="header-banner">
+            <h1>[온라인 설명회] 단 25분, 일본어 글자를 내 것으로 만드는 법</h1>
+            <p>내가 있는 공간이 완벽한 배움의 현장으로 재탄생합니다</p>
+        </div>
+
+
+
+        <div class="section-title">상세 운영 정보 요약</div>
+        <table class="info-table">
+            <tr>
+                <td class="info-label">설명회 일시</td>
+                <td class="info-value">[날짜 입력] / [시간 입력]</td>
+            </tr>
+            <tr>
+                <td class="info-label">참가 플랫폼</td>
+                <td class="info-value">온라인 Zoom 원격 회의실 (링크 개별 발송)</td>
+            </tr>
+            <tr>
+                <td class="info-label">소요 비용</td>
+                <td class="info-value"><span class="price-tag">500엔</span> 또는 <span class="price-tag">5,000원</span></td>
+            </tr>
+            <tr>
+                <td class="info-label">진행 프로세스</td>
+                <td class="info-value">25분 문자 암기 비법 시연 ➔ 자율 티켓제 운영 방식 ➔ 자유 Q&A</td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div id="page-intro" class="spa-page">
+        <div class="section-title">왜 문자에만 집착하는 커리큘럼일까요?</div>
+        <p>일본어를 공부하다가 가장 많은 중도 포기자가 발생하는 구간이 바로 초기 문자(히라가나/가타카나) 암기 단계입니다.</p>
+        <div class="highlight-box">
+            기초 회화나 거창한 문법은 다루지 않습니다. 오직 '글자 독파' 하나만 정밀 타격합니다.
+        </div>
+    </div>
+
+
+
+    <div id="page-apply" class="spa-page">
+        <div class="section-title">소규모 그룹 설명회 참석 등록</div>
+        <p>효율적인 쌍방향 소통 및 집중력 유지를 위해 사전 마감될 수 있습니다.</p>
+        
+        <div class="button-section">
+            <div class="button-title">👇 통화별 선택 신청 폼 (모달 오픈)</div>
+            <div class="btn-container">
+                <button class="btn-custom btn-krw" onclick="openModal('KRW')">
+                    ₩ 원화(5,000원)로 신청하기
+                </button>
+                <button class="btn-custom btn-jpy" onclick="openModal('JPY')">
+                    ¥ 엔화(500엔)로 신청하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="footer">
+        © 2026 온라인 일본어 티켓제 클래스. All rights reserved.
+    </div>
+</div>
+
+
+
+<div class="modal-overlay" id="registrationModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-header" id="modalTitle">참가 신청 정보 기입</div>
+        <form id="regForm" onsubmit="submitRegistration(event)">
+            <input type="hidden" id="currencyType" name="currencyType" value="">
+            <div class="form-group">
+                <label for="userName">신청자 성함</label>
+                <input type="text" id="userName" required placeholder="홍길동">
+            </div>
+            <div class="form-group">
+                <label for="userEmail">이메일 주소</label>
+                <input type="email" id="userEmail" required placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <label for="userPhone">휴대전화 번호</label>
+                <input type="tel" id="userPhone" required placeholder="010-1234-5678">
+            </div>
+            <button type="submit" class="btn-submit">작성 완료 후 전송</button>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    /* -------------------------------------------
+       🔒 웰컴 오버레이(풀스크린 PPT) 제어 및 로컬스토리지 시스템
+    ------------------------------------------- */
+    const overlay = document.getElementById('welcomeOverlay');
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const expiryTime = localStorage.getItem('hideWelcomePresentation');
+        const now = new Date().getTime();
+
+
+
+        if (!expiryTime || now > parseInt(expiryTime)) {
+            overlay.style.display = 'flex';
+            startSlideShow(); 
+        } else {
+            overlay.style.display = 'none';
+        }
+    });
+
+
+
+    function closeWelcomeOverlay() {
+        clearTimeout(slideTimer);
+        overlay.style.display = 'none';
+    }
+
+
+
+    function dontShowToday() {
+        const now = new Date();
+        const next24Hours = now.getTime() + (24 * 60 * 60 * 1000); 
+        localStorage.setItem('hideWelcomePresentation', next24Hours);
+        
+        alert("오늘 하루 동안은 인트로 프레젠테이션 스킵 후 본문 화면이 바로 나타납니다.");
+        closeWelcomeOverlay();
+    }
+
+
+
+    /* -------------------------------------------
+       🔄 [UPGRADED] 캐러셀 슬라이드 및 좌우 수동 넘기기 로직
+    ------------------------------------------- */
+    let slideIndex = 0;
+    let slideTimer;
+    const slides = document.querySelectorAll('.slide-item');
+    const dots = document.querySelectorAll('.slide-dot');
+
+
+
+    function startSlideShow() {
+        // 기존 자동 진행 타이머 연동
+        slideTimer = setTimeout(showSlides, 5000);
+    }
+
+
+
+    function showSlides() {
+        slideIndex++;
+        if (slideIndex > slides.length) { slideIndex = 1; }
+        updateSlideDisplay(slideIndex - 1);
+        slideTimer = setTimeout(showSlides, 5000);
+    }
+
+
+
+    // 🌟 [NEW] ◀ ▶ 화살표 버튼을 클릭했을 때 호출되는 함수
+    function moveSlide(direction) {
+        clearTimeout(slideTimer); // 자동 타이머 리셋
+        
+        slideIndex += direction;
+        if (slideIndex > slides.length) { slideIndex = 1; }
+        if (slideIndex < 1) { slideIndex = slides.length; }
+        
+        updateSlideDisplay(slideIndex - 1);
+        slideTimer = setTimeout(showSlides, 5000); // 수동 조작 후 다시 5초 자동 루프 시작
+    }
+
+
+
+    // 도트 클릭 제어용 함수
+    function currentSlide(index) {
+        clearTimeout(slideTimer);
+        slideIndex = index + 1;
+        updateSlideDisplay(index);
+        slideTimer = setTimeout(showSlides, 5000);
+    }
+
+
+
+    // 슬라이드 화면 갱신 통합 함수
+    function updateSlideDisplay(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+    }
+
+
+
+    /* -------------------------------------------
+       SPA 콘텐츠 화면 전환 및 모달 파트 (기존 기능 유지)
+    ------------------------------------------- */
+    function navigateTo(pageId) {
+        const pages = document.querySelectorAll('.spa-page');
+        const tabs = document.querySelectorAll('.spa-nav .nav-item');
+        pages.forEach(page => page.classList.remove('active'));
+        tabs.forEach(tab => tab.classList.remove('active'));
+        document.getElementById('page-' + pageId).classList.add('active');
+        document.getElementById('tab-' + pageId).classList.add('active');
+    }
+
+
+
+    function openModal(currency) {
+        const modal = document.getElementById('registrationModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const currencyInput = document.getElementById('currencyType');
+        
+        if (currency === 'KRW') {
+            modalTitle.innerText = '설명회 참가 신청 (₩ 5,000원 입금)';
+            currencyInput.value = 'KRW';
+        } else if (currency === 'JPY') {
+            modalTitle.innerText = '설명회 참가 신청 (¥ 500엔 입금)';
+            currencyInput.value = 'JPY';
+        }
+        modal.style.display = 'flex';
+    }
+
+
+
+    function closeModal() {
+        document.getElementById('registrationModal').style.display = 'none';
+        document.getElementById('regForm').reset();
+    }
+
+
+
+    function closeModalOnOverlay(event) {
+        if (event.target === document.getElementById('registrationModal')) { closeModal(); }
+    }
+
+
+
+    function submitRegistration(event) {
+        event.preventDefault();
+        const name = document.getElementById('userName').value;
+        alert(`${name}님, 정상 접수되었습니다.`);
+        closeModal();
+    }
+</script>
+
+
+
+</body>
+</html>

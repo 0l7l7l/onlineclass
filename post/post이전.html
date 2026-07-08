@@ -6,557 +6,647 @@
 	<title>나만의 자료실</title>
 	<style>
 		/* 기본 스타일 초기화 */
-		* {
-			box-sizing: border-box;
-			margin: 0;
-			padding: 0;
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+				 * {
+						box-sizing: border-box;
+						margin: 0;
+						padding: 0;
+						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
 		}
 
-		body {
-			display: flex;
-			flex-direction: row; /* 데스크톱에서는 좌우 배치 */
+				body {
+						display: flex;
+						flex-direction: row; /* 데스크톱에서는 좌우 배치 */
 			height: 100vh;
-			color: #333;
-			background-color: #fcfcfc;
-			overflow: hidden; /* 전체 화면 스크롤 방지 및 내부 스크롤 유도 */
+						color: #333;
+						background-color: #fcfcfc;
+						overflow: hidden; /* 전체 화면 스크롤 방지 및 내부 스크롤 유도 */
+
 		}
 
-		/* ---------------------------------- */
-		/* 좌측 사이드바 (메뉴) 스타일 */
-		/* ---------------------------------- */
-		.sidebar {
-			width: 260px;
-			background-color: #ffffff;
-			border-right: 1px solid #e0e0e0;
-			padding: 20px;
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			transition: width 0.3s ease, padding 0.3s ease, border 0.3s ease, transform 0.3s ease;
-			flex-shrink: 0;
-			height: 100vh;
-			z-index: 1200;
+				 /* ---------------------------------- */ /* 좌측 사이드바 (메뉴) 스타일 */ /* ---------------------------------- */
+				 .sidebar {
+						width: 260px;
+						background-color: #ffffff;
+						border-right: 1px solid #e0e0e0;
+						padding: 20px;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						transition: width 0.3s ease, padding 0.3s ease, border 0.3s ease, transform 0.3s ease;
+						flex-shrink: 0;
+						height: 100vh;
+						z-index: 1200;
+
 		}
 
-		body.sidebar-collapsed .sidebar {
-			width: 0;
-			padding: 0;
-			border-right: 0;
-			overflow: hidden;
+				body.sidebar-collapsed .sidebar {
+						width: 0;
+						padding: 0;
+						border-right: 0;
+						overflow: hidden; /* 접혔을 때 내부 내용 강제 숨김 */
+
 		}
 
-		body.sidebar-collapsed .sidebar > * {
-			opacity: 0;
-			pointer-events: none;
+					body.sidebar-collapsed .sidebar > * {
+							opacity: 0;
+							pointer-events: none;
+
+			}
+
+				 .sidebar h2 {
+						font-size: 1.2rem;
+						margin-bottom: 20px;
+						padding-bottom: 10px;
+						border-bottom: 2px solid #333;
+						color: #111;
+
 		}
 
-		.sidebar h2 {
-			font-size: 1.2rem;
-			margin-bottom: 20px;
-			padding-bottom: 10px;
-			border-bottom: 2px solid #333;
-			color: #111;
+				 .lang-section {
+						margin-bottom: 15px;
+
 		}
 
-		.lang-section {
-			margin-bottom: 15px;
+				 /* 대분류 (언어) */ .lang-btn {
+						width: 100%;
+						background: none;
+						border: 1px solid #78699288;
+						color: #9282b8;
+						padding: 10px 15px;
+						text-align: left;
+						font-size: 1rem;
+						font-weight: bold;
+						cursor: pointer;
+						border-radius: 4px;
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+
 		}
 
-		.lang-btn {
-			width: 100%;
-			background: none;
-			border: 1px solid #78699288;
-			color: #9282b8;
-			padding: 10px 15px;
-			text-align: left;
-			font-size: 1rem;
-			font-weight: bold;
-			cursor: pointer;
-			border-radius: 4px;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+					 .lang-btn::after {
+							content: '▼';
+							font-size: 0.8rem;
+							transition: transform 0.2s;
+
+			}
+
+				 .lang-section.active .lang-btn::after {
+						transform: rotate(180deg);
+
 		}
 
-		.lang-btn::after {
-			content: '▼';
-			font-size: 0.8rem;
-			transition: transform 0.2s;
+				 /* 중분류 컨테이너 */ .sub-menu {
+						display: none;
+						padding-left: 10px;
+						margin-top: 5px;
+
 		}
 
-		.lang-section.active .lang-btn::after {
-			transform: rotate(180deg);
+				 .lang-section.active .sub-menu {
+						display: block;
+
 		}
 
-		.sub-menu {
-			display: none;
-			padding-left: 10px;
-			margin-top: 5px;
+				 /* 중분류 버튼 (문법, 단어) */ .nav-item {
+						display: block;
+						width: 100%;
+						background: none;
+						border: 1px solid #555555;
+						color: #555555;
+						padding: 10px 12px;
+						margin-top: 6px;
+						text-align: left;
+						font-size: 0.9rem;
+						cursor: pointer;
+						border-radius: 4px;
+						transition: all 0.2s ease;
+
 		}
 
-		.lang-section.active .sub-menu {
-			display: block;
+					 .nav-item:hover, .nav-item.active {
+							border: 1px solid #ff5722 !important;
+							color: #ff5722 !important;
+							background-color: rgba(255, 87, 34, 0.05) !important;
+							font-weight: bold;
+
+			}
+
+				 .sidebar-footer {
+						padding-top: 15px;
+						border-top: 1px solid #e0e0e0;
+
 		}
 
-		.nav-item {
-			display: block;
-			width: 100%;
-			background: none;
-			border: 1px solid #555555;
-			color: #555555;
-			padding: 10px 12px;
-			margin-top: 6px;
-			text-align: left;
-			font-size: 0.9rem;
-			cursor: pointer;
-			border-radius: 4px;
+				 .auth-btn {
+						width: 100%;
+						padding: 10px;
+						background: none;
+						border: 1px solid #555;
+						color: #555;
+						font-weight: bold;
+						cursor: pointer;
+						border-radius: 4px;
+
+		}
+
+				 /* ---------------------------------- */ /* 우측 콘텐츠 영역 스타일 */ /* ---------------------------------- */ .content-area {
+						flex: 1;
+						padding: 40px;
+						overflow-y: auto;
+						transition: padding-left 0.3s ease;
+
+		}
+
+				 /* 데스크탑 메뉴가 접혔을 때 본문 왼쪽 여백 최소화 */ body.sidebar-collapsed .content-area {
+						padding-left: 40px;
+
+		}
+
+				 .content-box {
+						background-color: #ffffff;
+						padding: 30px;
+						border-radius: 8px;
+						border: 1px solid #e0e0e0;
+						min-height: 80vh;
+
+		}
+
+				 .content-header-flex {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						margin-bottom: 10px;
+
+		}
+
+				 .category-path {
+						font-size: 0.9rem;
+						color: #888;
+						margin-bottom: 20px;
+
+		}
+
+				 /* 전역 메뉴 토글 버튼 위치 고정 */ .sidebar-toggle-btn {
+						position: relative;
+						display: inline-flex;
+						align-items: center;
+						gap: 6px;
+						margin-bottom: 20px;
+						padding: 8px 16px;
+						border: 1px solid #777;
+						background: #fff;
+						color: #333;
+						border-radius: 6px;
+						cursor: pointer;
+						font-size: 0.9rem;
+						font-weight: 500;
+						box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+						transition: left 0.3s ease;
+						z-index: 1300; /* 모바일에서 사이드바 위에 뜨도록 조정 */
+
+		}
+
+					 .sidebar-toggle-btn:hover {
+							border-color: #695d80;
+							color: #6f6f9b;
+							background-color: #f0f7ff;
+
+			}
+
+				body.sidebar-collapsed .sidebar-toggle-btn {
+						left: 12px;
+
+		}
+
+				 /* 모바일 오버레이 배경 */ .sidebar-overlay {
+						position: fixed;
+						inset: 0;
+						background: rgba(0, 0, 0, 0.4);
+						z-index: 1100;
+						opacity: 0;
+						visibility: hidden;
+						transition: opacity 0.3s ease, visibility 0.3s ease;
+
+		}
+
+				 /* 🌟 누락되었던 소분류 테마별 상단 탭 버튼 스타일 복구 및 강화 */ .theme-btn-container {
+						display: flex;
+						flex-wrap: wrap;
+						gap: 10px;
+						margin: 20px 0;
+
+		}
+
+				 .theme-tab-btn {
+						background: none;
+						border: 1px solid #9690ec;
+						color: #5a4b85;
+						padding: 8px 16px;
+						font-size: 0.85rem;
+						font-weight: 500;
+						cursor: pointer;
+						border-radius: 20px; /* 둥근 모양의 깔끔한 탭 형태 */
 			transition: all 0.2s ease;
+
 		}
 
-		.nav-item:hover, .nav-item.active {
-			border: 1px solid #ff5722 !important;
-			color: #ff5722 !important;
-			background-color: rgba(255, 87, 34, 0.05) !important;
-			font-weight: bold;
+					 .theme-tab-btn:hover, .theme-tab-btn.active {
+							background-color: #7779e2 !important;
+							color: #ffffff !important;
+
+			}
+
+				 /* 글쓰기 버튼 */ .write-btn {
+						background: none;
+						cursor: pointer;
+						border-radius: 4px;
+						transition: all 0.2s;
+						display: inline-flex;
+						align-items: center;
+						gap: 5px;
+						border: 1px solid #2e7d32;
+						color: #2e7d32;
+						padding: 8px 16px;
+						font-size: 0.9rem;
+						font-weight: bold;
+
 		}
 
-		.sidebar-footer {
-			padding-top: 15px;
-			border-top: 1px solid #e0e0e0;
+					 .write-btn:hover {
+							background-color: #2e7d32;
+							color: #fff;
+
+			}
+
+				 /* 목록 카드 디자인 */ .data-list {
+						margin-top: 15px;
+						display: flex;
+						flex-direction: column;
+						gap: 15px;
+
 		}
 
-		.auth-btn {
+				 .data-card-btn {
+						width: 100%;
+						background: #ffffff;
+						border: 1px solid #cccccc;
+						border-radius: 6px;
+						padding: 20px;
+						text-align: left;
+						cursor: pointer;
+						transition: all 0.2s ease;
+
+		}
+
+					 .data-card-btn:hover {
+							border-color: #ff5722;
+							box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+			}
+
+					 .data-card-btn strong {
+							display: block;
+							font-size: 1.2rem;
+							color: #111;
+							margin-bottom: 6px;
+
+			}
+
+					 .data-card-btn p {
+							color: #666;
+							font-size: 0.95rem;
+							line-height: 1.5;
+
+			}
+
+				 /* 광고 슬라이더 */ .ad-slider-wrapper {
+						position: relative;
+						width: 100%;
+						height: 500px;
+						margin-top: 30px;
+						border: 1px solid #e0e0e0;
+						border-radius: 8px;
+						overflow: hidden;
+
+		}
+
+				 .ad-slides {
+						display: flex;
+						width: 300%;
+						height: 100%;
+						transition: transform 0.5s ease-in-out;
+
+		}
+
+				 .ad-slide {
+						width: 100%;
+						height: 100%;
+						display: flex;
+						align-items: center;
+						padding: 40px;
+						box-sizing: border-box;
+
+		}
+
+					 .ad-slide h2 {
+							font-size: 1.4rem;
+							color: #222;
+							margin-bottom: 8px;
+
+			}
+
+					 .ad-slide p {
+							font-size: 1rem;
+							color: #666;
+
+			}
+
+				 .slide-btn {
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						background: rgba(255, 255, 255, 0.7);
+						border: 1px solid #777;
+						color: #333;
+						width: 35px;
+						height: 35px;
+						border-radius: 50%;
+						cursor: pointer;
+						font-size: 1rem;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						transition: all 0.2s;
+
+		}
+
+					 .slide-btn:hover {
+							border-color: #0066cc;
+							color: #0066cc;
+							background: #fff;
+
+			}
+
+				 .prev-btn {
+			left: 15px;
+		}
+
+				 .next-btn {
+			right: 15px;
+		}
+
+				 /* 모달 관련 */ .modal-overlay {
+						position: fixed;
+						top: 0;
+			left: 0;
 			width: 100%;
+			height: 100%;
+						background-color: rgba(0, 0, 0, 0.4);
+						display: flex;
+			justify-content: center;
+			align-items: center;
+						z-index: 2000;
+						visibility: hidden;
+			opacity: 0;
+						transition: all 0.3s;
+
+		}
+
+					 .modal-overlay.show {
+							visibility: visible;
+							opacity: 1;
+
+			}
+
+				 .modal-content {
+						background-color: #ffffff;
+						padding: 30px;
+						border-radius: 8px;
+						width: 340px;
+
+		}
+
+					 .modal-content h3 {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+
+					 .modal-content input {
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 12px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+
+				 .modal-btn-wrap {
+			display: flex;
+			gap: 8px;
+		}
+
+				 .modal-btn {
+			flex: 1;
 			padding: 10px;
 			background: none;
-			border: 1px solid #555;
-			color: #555;
+			border-radius: 4px;
 			font-weight: bold;
 			cursor: pointer;
-			border-radius: 4px;
 		}
 
-		/* ---------------------------------- */
-		/* 우측 콘텐츠 영역 스타일 */
-		/* ---------------------------------- */
-		.content-area {
-			flex: 1;
-			padding: 40px;
-			overflow-y: auto;
-			transition: padding-left 0.3s ease;
+				 .content-box {
+						word-break: keep-all;
+						overflow-wrap: anywhere;
+
 		}
 
-		body.sidebar-collapsed .content-area {
-			padding-left: 40px;
+				 /* 상세 정보 뷰 */ .detail-content {
+						margin-top: 20px;
+						background: #fafafa;
+						padding: 20px;
+						border-radius: 6px;
+						border: 1px solid #eee;
+
 		}
 
-		.content-box {
-			background-color: #ffffff;
-			padding: 30px;
-			border-radius: 8px;
-			border: 1px solid #e0e0e0;
-			min-height: 80vh;
+				 .example-box {
+						margin-top: 15px;
+						background: #fff;
+						padding: 15px;
+						border-left: 4px solid #ff5722;
+
 		}
 
-		.content-header-flex {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+				 .back-btn {
+						background: none;
+						border: 1px solid #777;
+						padding: 8px 16px;
+						border-radius: 4px;
+						cursor: pointer;
+						margin-bottom: 15px;
+
+		}
+
+				 /* =========================================            Responsive (Tablet / Mobile)            ========================================= */ @media (max-width: 1024px) {
+						body
+
+		{
+			height: auto;
+			min-height: 100vh;
+		}
+
+					 .sidebar {
+			width: 220px;
+			padding: 16px;
+		}
+
+					 .content-area {
+			padding: 24px;
+		}
+
+					 .content-box {
+			padding: 20px;
+			min-height: auto;
+		}
+
+					 .ad-slider-wrapper {
+			height: 360px;
+		}
+
+					 .ad-slide {
+			padding: 24px;
+		}
+
+						 .ad-slide h2 {
+				font-size: 1.2rem;
+			}
+
+						 .ad-slide p {
+				font-size: 0.95rem;
+			}
+
+
+		}
+
+				 @media (max-width: 768px) {
+						body
+
+		{
+							flex-direction: column;
+							height: auto;
+							position: relative;
+							overflow: auto;
+							min-height: 100vh;
+
+		}
+
+					 .sidebar {
+							position: fixed;
+							top: 0;
+			left: 0;
+							width: 260px;
+			height: 100vh;
+							transform: translateX(-100%);
+							transition: transform 0.3s ease;
+							padding-top: 70px !important;
+							box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+
+		}
+
+					body.sidebar-open .sidebar {
+			transform: translateX(0);
+		}
+
+					body.sidebar-open .sidebar-overlay {
+			opacity: 1;
+			visibility: visible;
+		}
+
+					 .content-area {
+							padding: 16px;
+							width: 100%;
+							overflow: visible;
+							padding-top: 60px;
+
+		}
+
+					 .sidebar-toggle-btn {
+							position: fixed;
+							left: 16px !important;
+							top: 16px;
+							margin-bottom: 0;
+							z-index: 1300;
+
+		}
+
+					body.sidebar-open .sidebar-toggle-btn {
+							left: 195px !important;
+							border-color: #ff5722;
+							color: #ff5722;
+							background: #fff;
+
+		}
+
+					 .content-box {
+			padding: 14px;
+			border-radius: 6px;
+			min-height: auto;
+		}
+
+					 .category-path {
+			font-size: 0.82rem;
 			margin-bottom: 10px;
 		}
 
-		.category-path {
+					 .auth-btn, .lang-btn, .nav-item {
+			min-height: 42px;
+		}
+
+					 /* 모바일 환경 상단 테마 탭 가로 스크롤 레이아웃 정리 */ .theme-btn-container {
+							flex-wrap: nowrap;
+							overflow-x: auto;
+							-webkit-overflow-scrolling: touch;
+							padding-bottom: 8px;
+							gap: 8px;
+
+		}
+
+					 .theme-tab-btn {
+							flex: 0 0 auto;
+							white-space: nowrap;
+							padding: 6px 14px;
+							font-size: 0.8rem;
+
+		}
+
+					 .ad-slider-wrapper {
+			height: 230px;
+			margin-top: 16px;
+		}
+
+					 .ad-slide {
+			padding: 16px;
+		}
+
+						 .ad-slide h2 {
+				font-size: 1rem;
+			}
+
+						 .ad-slide p {
+				font-size: 0.86rem;
+			}
+
+					 .slide-btn {
+			width: 30px;
+			height: 30px;
 			font-size: 0.9rem;
-			color: #888;
-			margin-bottom: 20px;
 		}
 
-		.sidebar-toggle-btn {
-			position: relative;
-			display: inline-flex;
-			align-items: center;
-			gap: 6px;
-			margin-bottom: 20px;
-			padding: 8px 16px;
-			border: 1px solid #777;
-			background: #fff;
-			color: #333;
-			border-radius: 6px;
-			cursor: pointer;
-			font-size: 0.9rem;
-			font-weight: 500;
-			box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-			transition: left 0.3s ease;
-			z-index: 1300;
+
 		}
 
-		.sidebar-toggle-btn:hover {
-			border-color: #695d80;
-color: #6f6f9b;
-			background-color: #f0f7ff;
-		}
-
-		body.sidebar-collapsed .sidebar-toggle-btn {
-			left: 12px;
-		}
-
-		.sidebar-overlay {
-			position: fixed;
-			inset: 0;
-			background: rgba(0, 0, 0, 0.4);
-			z-index: 1100;
-			opacity: 0;
-			visibility: hidden;
-			transition: opacity 0.3s ease, visibility 0.3s ease;
-		}
-
-		/* 🌟 상단 탭 대분류/소분류 통합 스타일 */
-		.theme-btn-container {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 10px;
-			margin: 15px 0;
-		}
-
-		.theme-tab-btn {
-			background: none;
-			border: 1px solid #9690ec;
-			color: #5a4b85;
-			padding: 8px 16px;
-			font-size: 0.85rem;
-			font-weight: 500;
-			cursor: pointer;
-			border-radius: 20px;
-			transition: all 0.2s ease;
-		}
-
-		.theme-tab-btn:hover, .theme-tab-btn.active {
-			background-color:  #7779e2 !important;
-			color: #ffffff !important;
-		}
-
-		/* 세분류 전용 미니 탭 스타일 (오렌지 감성) */
-		.sub-theme-tab-btn {
-			background: none;
-			border: 1px solid #2e7d32;
-			color: #2e7d32;
-			padding: 6px 14px;
-			font-size: 0.8rem;
-			font-weight: 500;
-			cursor: pointer;
-			border-radius: 20px;
-			transition: all 0.2s ease;
-		}
-
-		.sub-theme-tab-btn:hover, .sub-theme-tab-btn.active {
-			background-color: #ff5722 !important;
-			color: #ffffff !important;
-		}
-
-		.write-btn {
-			background: none;
-			cursor: pointer;
-			border-radius: 4px;
-			transition: all 0.2s;
-			display: inline-flex;
-			align-items: center;
-			gap: 5px;
-			border: 1px solid #2e7d32;
-			color: #2e7d32;
-			padding: 8px 16px;
-			font-size: 0.9rem;
-			font-weight: bold;
-		}
-		.write-btn:hover {
-			background-color: #2e7d32;
-			color: #fff;
-		}
-
-		/* 문법(Grammar) 전용 리스트 스타일 */
-		.data-list {
-			margin-top: 15px;
-			display: flex;
-			flex-direction: column;
-			gap: 15px;
-		}
-
-		.data-card-btn {
-			width: 100%;
-			background: #ffffff;
-			border: 1px solid #cccccc;
-			border-radius: 6px;
-			padding: 20px;
-			text-align: left;
-			cursor: pointer;
-			transition: all 0.2s ease;
-		}
-
-		.data-card-btn:hover {
-			border-color: #ff5722;
-			box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-		}
-
-		.data-card-btn strong {
-			display: block;
-			font-size: 1.2rem;
-			color: #111;
-			margin-bottom: 6px;
-		}
-
-		.data-card-btn p {
-			color: #666;
-			font-size: 0.95rem;
-			line-height: 1.5;
-		}
-
-		/* 단어(Words) 전용 카드 대시보드 스타일 */
-		.word-grid-container {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-			gap: 20px;
-			margin-top: 15px;
-		}
-
-		.word-item-card {
-			background: #ffffff;
-			border: 1px solid #e2e8f0;
-			border-radius: 10px;
-			padding: 20px;
-			box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-			transition: transform 0.2s ease, border-color 0.2s ease;
-		}
-
-		.word-item-card:hover {
-			transform: translateY(-2px);
-			border-color: #0066cc;
-			box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-		}
-
-		.word-badge {
-			font-size: 0.75rem;
-			color: #0066cc;
-			background: #e0f2fe;
-			padding: 2px 8px;
-			border-radius: 12px;
-			font-weight: bold;
-			display: inline-block;
-			margin-bottom: 8px;
-		}
-
-		.word-main-title {
-			font-size: 1.4rem;
-			font-weight: 700;
-			color: #1a202c;
-			margin-bottom: 4px;
-		}
-
-		.word-meaning {
-			font-size: 1rem;
-			color: #4a5568;
-			font-weight: 500;
-			border-bottom: 1px dashed #e2e8f0;
-			padding-bottom: 8px;
-			margin-bottom: 10px;
-		}
-
-		.word-desc {
-			font-size: 0.85rem;
-			color: #718096;
-			margin-bottom: 8px;
-			line-height: 1.4;
-		}
-
-		.word-example-box {
-			font-size: 0.85rem;
-			color: #4a5568;
-			background: #f8fafc;
-			padding: 8px 12px;
-			border-radius: 6px;
-			border-left: 3px solid #0066cc;
-			line-height: 1.5;
-		}
-
-		/* 광고 슬라이더 */
-		.ad-slider-wrapper {
-			position: relative;
-			width: 100%;
-			height: 500px;
-			margin-top: 30px;
-			border: 1px solid #e0e0e0;
-			border-radius: 8px;
-			overflow: hidden;
-		}
-
-		.ad-slides {
-			display: flex;
-			width: 300%;
-			height: 100%;
-			transition: transform 0.5s ease-in-out;
-		}
-
-		.ad-slide {
-			width: 100%;
-			height: 100%;
-			display: flex;
-			align-items: center;
-			padding: 40px;
-			box-sizing: border-box;
-		}
-
-		.ad-slide h2 { font-size: 1.4rem; color: #222; margin-bottom: 8px; }
-		.ad-slide p { font-size: 1rem; color: #666; }
-
-		.slide-btn {
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
-			background: rgba(255, 255, 255, 0.7);
-			border: 1px solid #777;
-			color: #333;
-			width: 35px;
-			height: 35px;
-			border-radius: 50%;
-			cursor: pointer;
-			font-size: 1rem;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			transition: all 0.2s;
-		}
-		.slide-btn:hover { border-color: #0066cc; color: #0066cc; background: #fff; }
-		.prev-btn { left: 15px; }
-		.next-btn { right: 15px; }
-
-		/* 모달 관련 */
-		.modal-overlay {
-			position: fixed;
-			top: 0; left: 0; width: 100%; height: 100%;
-			background-color: rgba(0, 0, 0, 0.4);
-			display: flex; justify-content: center; align-items: center;
-			z-index: 2000;
-			visibility: hidden; opacity: 0;
-			transition: all 0.3s;
-		}
-		.modal-overlay.show { visibility: visible; opacity: 1; }
-		.modal-content { background-color: #ffffff; padding: 30px; border-radius: 8px; width: 340px; }
-		.modal-content h3 { text-align: center; margin-bottom: 20px; }
-		.modal-content input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px; }
-		.modal-btn-wrap { display: flex; gap: 8px; }
-		.modal-btn { flex: 1; padding: 10px; background: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-
-		.content-box { word-break: keep-all; overflow-wrap: anywhere; }
-
-		/* 상세 정보 뷰 */
-		.detail-content {
-			margin-top: 20px;
-			background: #fafafa;
-			padding: 20px;
-			border-radius: 6px;
-			border: 1px solid #eee;
-		}
-		.example-box {
-			margin-top: 15px;
-			background: #fff;
-			padding: 15px;
-			border-left: 4px solid #ff5722;
-		}
-		.back-btn {
-			background: none;
-			border: 1px solid #777;
-			padding: 8px 16px;
-			border-radius: 4px;
-			cursor: pointer;
-			margin-bottom: 15px;
-		}
-
-		/* =========================================
-					 Responsive (Tablet / Mobile)
-					 ========================================= */
-		@media (max-width: 1024px) {
-			body { height: auto; min-height: 100vh; }
-			.sidebar { width: 220px; padding: 16px; }
-			.content-area { padding: 24px; }
-			.content-box { padding: 20px; min-height: auto; }
-			.ad-slider-wrapper { height: 360px; }
-			.ad-slide { padding: 24px; }
-			.ad-slide h2 { font-size: 1.2rem; }
-			.ad-slide p { font-size: 0.95rem; }
-		}
-
-		@media (max-width: 768px) {
-			body {
-				flex-direction: column;
-				height: auto;
-				position: relative;
-				overflow: auto;
-				min-height: 100vh;
-			}
-
-			.sidebar {
-				position: fixed;
-				top: 0; left: 0;
-				width: 260px; height: 100vh;
-				transform: translateX(-100%);
-				transition: transform 0.3s ease;
-				padding-top: 70px !important;
-				box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-			}
-
-			body.sidebar-open .sidebar { transform: translateX(0); }
-			body.sidebar-open .sidebar-overlay { opacity: 1; visibility: visible; }
-
-			.content-area {
-				padding: 16px;
-				width: 100%;
-				overflow: visible;
-				padding-top: 60px;
-			}
-
-			.sidebar-toggle-btn {
-				position: fixed;
-				left: 16px !important;
-				top: 16px;
-				margin-bottom: 0;
-				z-index: 1300;
-			}
-
-			body.sidebar-open .sidebar-toggle-btn {
-				left: 195px !important;
-				border-color: #ff5722;
-				color: #ff5722;
-				background: #fff;
-			}
-
-			.content-box { padding: 14px; border-radius: 6px; min-height: auto; }
-			.category-path { font-size: 0.82rem; margin-bottom: 10px; }
-			.auth-btn, .lang-btn, .nav-item { min-height: 42px; }
-
-			.theme-btn-container {
-				flex-wrap: nowrap;
-				overflow-x: auto;
-				-webkit-overflow-scrolling: touch;
-				padding-bottom: 8px;
-				gap: 8px;
-			}
-			.theme-tab-btn, .sub-theme-tab-btn {
-				flex: 0 0 auto;
-				white-space: nowrap;
-				padding: 6px 14px;
-				font-size: 0.8rem;
-			}
-
-			.word-grid-container {
-				grid-template-columns: 1fr;
-				gap: 15px;
-			}
-
-			.ad-slider-wrapper { height: 230px; margin-top: 16px; }
-			.ad-slide { padding: 16px; }
-			.ad-slide h2 { font-size: 1rem; }
-			.ad-slide p { font-size: 0.86rem; }
-			.slide-btn { width: 30px; height: 30px; font-size: 0.9rem; }
-		}
 	</style>
 </head>
 <body>
@@ -657,21 +747,15 @@ color: #6f6f9b;
 
 
 	<script>
-		/* 🌟 확장된 2단계 분류 데이터베이스 구조 */
+		/* 🌟 유연하고 깔끔하게 확장된 데이터베이스 구조 */
 		let database = {
 			ja: {
 				name: "일본어",
 				// 소분류 테마 정의 리스트
 				themes: {
 					grammar: ["전체", "기초", "초급문법", "일상", "반말표현", "응용표현"],
-					words: ["전체", "기초어휘"] // 1차 분류 대문틀
+					words: ["전체", "가족", "숫자/날짜", "물건/장소", "비즈니스"]
 				},
-				// 🌟 단어용 상세 세분류 매핑 선언 구조
-				wordSubThemes: {
-					"전체": ["전체"],
-					"기초어휘": ["전체", "가족", "숫자/날짜", "물건/장소"]
-				},
-
 				// 실제 게시글 데이터 (theme 속성으로 구별)
 				data: {
 					grammar: [
@@ -742,8 +826,6 @@ color: #6f6f9b;
 						}
 					],
 					words: [
-						//{ id: "ja_w_1", theme: "기초어휘", subTheme: "가족", title: "家族 (かぞく)", summary: "가족", detail: "가족 명사입니다.", example: "私の家族" },
-
 						{
 							id: "ja_w_1", theme: "기초어휘",
 							title: "家族 (かぞく)",
@@ -774,74 +856,92 @@ color: #6f6f9b;
 						}
 					]
 				},
+
 			},
-
-
 			ko: {
 				name: "한국어",
 				themes: {
-					grammar: ["전체", "초급"], words: ["전체", "기초어휘"]
-				},
-				wordSubThemes: { "전체": ["전체"], "기초어휘": ["전체", "가족 명칭"] },
-				data: {
-					grammar:
-						[
-							{
-								id: "ko_g_1", theme: "초급",
-								title: "명사 + 이에요/예요",
-								summary: "「〜です」自己紹介や説明をするときの必須表現",
-								detail: "名詞の最後にパッチムがあるかないかで結合が変わります。<br>・パッチムあり + 이에요<br>・パッチムなし + 예요",
-								example: "학생이에요.（学生です）<br>의사예요.（医者です）"
-							},
-							{
-								id: "ko_g_2", theme: "초급",
-								title: "동사/형용사 + 아요/어요",
-								summary: "「〜です/ます」日常会話で最もよく使う丁寧な語尾",
-								detail: "語幹の母音によって使い分けます。<br>・語幹の最後の母音が '아, 오' の時 + 아요<br>・それ以外の母音の時 + 어요<br>・'하다' で終わる動詞・形容詞 → 해요",
-								example: "가다 → 가요.（行きます）<br>먹다 → 먹어요.（食べます）<br>공부하다 → 공부해요.（勉強します）"
-							},
-							{
-								id: "ko_g_3", theme: "일상",
-								title: "동사 + 고 싶다",
-								summary: "「〜したい」自分の願望を伝える表現",
-								detail: "動詞の語幹にそのまま '고 싶다' をつけます。丁寧にする時は '고 싶어요' にします。",
-								example: "보고 싶어요.（会いたいです/見たいです）<br>먹고 싶어요.（食べたいです）"
-							},
-							{
-								id: "ko_g_4", theme: "일상",
-								title: "동사 + (으)ㄹ까요?",
-								summary: "「〜しましょうか？ / 〜でしょうか？」提案や推測の表現",
-								detail: "・パッチムあり + 을까요?<br>・パッチムなし + ㄹ까요?",
-								example: "내일 만날까요?（明日会いましょうか？）<br>뭐 먹을까요?（何を食べましょうか？）"
-							},
-							{
-								id: "ko_g_5", theme: "중급",
-								title: "동사/형용사 + 은/는데",
-								summary: "「〜だけど / 〜なので」会話の前提や言い訳、逆接を繋ぐ言葉",
-								detail: "・動詞 ＋ 는데<br>・形容詞（パッチムあり） ＋ 은데<br>・形容詞（パッチムなし） ＋ ㄴ데",
-								example: "한국어는 재미있는데 어려워요.（韓国語は面白いですが難しいです）<br>지금 비가 오는데 우산 있어요?（今雨が降っているんですが、傘ありますか？）"
-							}
-
-						],
-					words: [
-						{ id: "ko_w_1", theme: "기초어휘", subTheme: "가족 명칭", title: "가족", summary: "가족 단어", detail: "가족 관계", example: "어머니, 아버지" }]
-				}
-			},
-			zh: {
-				name: "중국어",
-				themes: {
-					grammar: ["전체", "기초어순", "기초회화문법"],
-					words: ["전체", "기초어휘", "실전회화어휘"] // 1차 소분류 버튼용
-				},
-				// 🌟 1차 분류를 눌렀을 때 나올 2차 세분류 리스트를 미리 지정해둡니다.
-				wordSubThemes: {
-					"전체": ["전체"],
-					"기초어휘": ["전체", "나라", "직업", "가족", "숫자"],
-					"실전회화어휘": ["전체", "물건", "탈것", "여행"]
+					grammar: ["전체", "초급", "중급", "일상", "높임말"],
+					words: ["전체", "기초어휘", "정치/경제"]
 				},
 				data: {
 					grammar: [
-						//{ id: "zh_g_1", theme: "기초어순", title: "[A 是 B] A는 B이다", summary: "기본 지정 명사 결합", detail: "기본 어순 구조입니다.", example: "我是韩国人。" },
+						{
+							id: "ko_g_1", theme: "초급",
+							title: "명사 + 이에요/예요",
+							summary: "「〜です」自己紹介や説明をするときの必須表現",
+							detail: "名詞の最後にパッチムがあるかないかで結合が変わります。<br>・パッチムあり + 이에요<br>・パッチムなし + 예요",
+							example: "학생이에요.（学生です）<br>의사예요.（医者です）"
+						},
+						{
+							id: "ko_g_2", theme: "초급",
+							title: "동사/형용사 + 아요/어요",
+							summary: "「〜です/ます」日常会話で最もよく使う丁寧な語尾",
+							detail: "語幹の母音によって使い分けます。<br>・語幹の最後の母音が '아, 오' の時 + 아요<br>・それ以外の母音の時 + 어요<br>・'하다' で終わる動詞・形容詞 → 해요",
+							example: "가다 → 가요.（行きます）<br>먹다 → 먹어요.（食べます）<br>공부하다 → 공부해요.（勉強します）"
+						},
+						{
+							id: "ko_g_3", theme: "일상",
+							title: "동사 + 고 싶다",
+							summary: "「〜したい」自分の願望を伝える表現",
+							detail: "動詞の語幹にそのまま '고 싶다' をつけます。丁寧にする時は '고 싶어요' にします。",
+							example: "보고 싶어요.（会いたいです/見たいです）<br>먹고 싶어요.（食べたいです）"
+						},
+						{
+							id: "ko_g_4", theme: "일상",
+							title: "동사 + (으)ㄹ까요?",
+							summary: "「〜しましょうか？ / 〜でしょうか？」提案や推測の表現",
+							detail: "・パッチムあり + 을까요?<br>・パッチムなし + ㄹ까요?",
+							example: "내일 만날까요?（明日会いましょうか？）<br>뭐 먹을까요?（何を食べましょうか？）"
+						},
+						{
+							id: "ko_g_5", theme: "중급",
+							title: "동사/형용사 + 은/는데",
+							summary: "「〜だけど / 〜なので」会話の前提や言い訳、逆接を繋ぐ言葉",
+							detail: "・動詞 ＋ 는데<br>・形容詞（パッチムあり） ＋ 은데<br>・形容詞（パッチムなし） ＋ ㄴ데",
+							example: "한국어는 재미있는데 어려워요.（韓国語は面白いですが難しいです）<br>지금 비가 오는데 우산 있어요?（今雨が降っているんですが、傘ありますか？）"
+						}
+					],
+					words: [
+						{
+							id: "ko_w_1", theme: "기초어휘",
+							title: "가족 (家族)",
+							summary: "家族を意味する基本的な単語",
+							detail: "어머니（お母さん）, 아버지（お父さん）, 할머니（おばあちゃん）, 할아버지（おじいちゃん）, 남편（夫）, 아내（妻）, 언니（女性から見た姉）, 누나（男性から見た姉）, 오빠（女性から見た兄）, 형（男性から見た兄）, 여동생（妹）, 남동생（弟）",
+							example: "우리 가족은 세 명이에요.（私の家族は3人です）"
+						},
+						{
+							id: "ko_w_2", theme: "기초어휘",
+							title: "인사 (挨拶)",
+							summary: "日常のコミュニケーションに欠かせない挨拶",
+							detail: "안녕하세요（こんにちは）, 반갑습니다（お会いできて嬉しいです）, 감사합니다（ありがとうございます）, 죄송합니다（すみません/ごめんなさい）, 안녕히 계세요（去る時の、さようなら）, 안녕히 가세요（見送る時の、さようなら）",
+							example: "만나서 반갑습니다.（お会いできて嬉しいです）"
+						},
+						{
+							id: "ko_w_3", theme: "기초어휘",
+							title: "음식 (食べ物)",
+							summary: "食事やカフェでよく使う単語",
+							detail: "물（水）, 밥（ご飯）, 고기（肉）, 야채（野菜）, 김치（キムチ）, 찌개（チゲ）, 커피（コーヒー）, 디저트（デザート）, 맛집（美味しいお店）",
+							example: "시원한 물 좀 주세요.（冷たいお水をください）"
+						},
+						{
+							id: "ko_w_4", theme: "정치/경제",
+							title: "경제 기본 (経済の基本)",
+							summary: "ニュースなどでよく見かける経済用語",
+							detail: "물가（物価）, 환율（為替レート）, 주식（株式）, 은행（銀行）, 금리（金利）, 수출（輸出）, 수입（輸入）, 소비（消費）",
+							example: "요즘 물가가 너무 올랐어요.（最近物価が上がりすぎました）"
+						}
+					]
+				}
+			},
+			"zh": {
+				"name": "중국어",
+				"themes": {
+					"grammar": ["전체", "기초어순", "기초회화문법", "문법"],
+					"words": ["전체", "나라", "직업", "가족", "숫자", "물건", "탈것", "여행"]
+				},
+				"data": {
+					"grammar": [
 						{
 							"id": "zh_g_1",
 							"theme": "기초어순",
@@ -1400,1286 +1500,1250 @@ color: #6f6f9b;
 							"detail": "90번 결과보어의 종합 판본입니다. 내 감각 기관(看, 听)을 거쳐 최종적으로 이해의 상태(懂)에 도달했음을 선언하여, 상대방의 설명이 완벽하게 내 뇌리에 꽂혔음을 증명하는 감탄 리액션입니다.",
 							"example": "<br>老师讲的课程，我现在全部听懂了。(lǎo shī jiǎng de kè chéng, wǒ xiàn zài quán bù tīng dǒng le) — 선생님께서 강의하신 커리큘럼, 저 이제 전부 완벽히 알아들었어요.<br>说明书上的字我看懂了，原来是这么回事。(shuō míng shū shàng de zì wǒ kàn dǒng le, yuán lái  shì zhè me huí shì) — 설명서에 적힌 글귀들 나 봐서 완전히 이해했어, 알고 보니 이런 거였군.<br>你刚才说的那些汉语，我其实听懂了。(nǐ gāng cái shuō de nà xiē hàn yǔ, wǒ qí shí tīng dǒng le) — 네가 방금 속사포처럼 말한 그 중국어들, 나 사실 다 알아들었어.<br>对不起，刚才环境太吵我没听懂。(duì bù qǐ, gāng cái huán jìng tài chǎo wǒ méi tīng dǒng) — 죄송해요, 방금 주변이 너무 소란스러워서 제가 제대로 이해하지 못했습니다.<br>这些复杂的汉字，你到底看懂了几个？(zhè xiē fú zá de hàn zì, nǐ dào dǐ kàn dǒng le jǐ ge) — 이 복잡한 한자들, 너 도대체 봐서 알아먹은 게 몇 개나 되니?<br>听懂了我的意思就请跟我点点头。(tīng dǒng le wǒ de yì si jiù qǐng gēn wǒ diǎn diǎn tóu) — 제 뜻을 완벽히 이해하셨다면 저에게 고개를 끄덕여 신호를 주세요.<br>他说话带着浓重的地方口音，我实在听不懂。(tā shuō huà dài zhe nóng zhòng de dì fāng kǒu yīn, wǒ shí zài tīng bān dǒng) — 그 사람 말투에 억센 지방 사투리가 섞여서, 전 도저히 귀로 들어서 이해할 수가 없네요.<br>把这些内容全部看懂了，你就可以去参加考试。(bǎ zhè xiē nèi róng quán bù kàn dǒng le, nǐ jiù kě yǐ qù cān jiā kǎo shì) — 이 내용들을 전부 읽어서 마스터한다면, 넌 바로 시험을 치르러 가도 돼.<br>放心吧，你们的想法和目的我早就懂了。(fàng xīn ba, nǐ men de xiǎng fǎ hé mù dì wǒ zǎo jiù dǒng le) — 안심하세요, 당신들의 생각과 최종 목적은 제가 진작부터 파악하고 있었습니다.<br>100个语法全都听懂了，你太棒了！(yì bǎi ge yǔ fǎ quán dōu tīng dǒng le, nǐ tài bàng le) — 100개의 핵심 문법을 모조리 다 알아듣다니, 당신 정말 최고예요!"
 						}
+					],
+					"words": []
+				}
+			}
 
+			, en: {
+				name: "영어",
+				themes: {
+					grammar: ["전체", "나의 상태/기분", "진행/계획", "취향/의지", "과거/경험", "조동사", "의문사", "제안/부탁", "존재/생각"],
+					words: ["전체", "감정/기분", "날씨/계절", "성격/성향", "상태/외모", "크기/모양", "평가/느낌", "행동/동작"]
+				},
+				data: {
+					grammar: [
+						// 1. 나의 상태 및 기분 표현하기
+						{
+							id: "en_g_1",
+							theme: "나의 상태/기분",
+							title: "I'm + 형용사",
+							summary: "현재 자신의 상태나 기분을 '나 ~해'라고 표현할 때 사용합니다.",
+							detail: "I am의 줄임말인 I'm 뒤에 감정이나 상태를 나타내는 형용사를 붙여서 말합니다.",
+							example: "<br>I'm tired.<br>(나 피곤해.)"
+						},
+						{
+							id: "en_g_2",
+							theme: "나의 상태/기분",
+							title: "I'm not + 형용사",
+							summary: "현재 자신의 상태나 기분이 '안 ~해'라고 부정할 때 사용합니다.",
+							detail: "I'm 뒤에 부정어 not을 붙이고 형용사를 연결합니다.",
+							example: "<br>I'm not hungry.<br>(나 배 안 고파.)"
+						},
+						{
+							id: "en_g_3",
+							theme: "나의 상태/기분",
+							title: "I'm + 명사 (직업/신분)",
+							summary: "자신의 직업, 신분 등을 '나 ~야'라고 소개할 때 사용합니다.",
+							detail: "I'm 뒤에 명사를 붙이며, 단수일 경우 관사(a/an)를 함께 씁니다.",
+							example: "<br>I'm a student.<br>(나 학생이야.)"
+						},
+						{
+							id: "en_g_4",
+							theme: "나의 상태/기분",
+							title: "I'm + 명사 (장소)",
+							summary: "자신이 현재 있는 위치를 '나 ~에 있어'라고 말할 때 사용합니다.",
+							detail: "I'm 뒤에 장소를 나타내는 전치사(at, in 등)와 명사를 함께 씁니다.",
+							example: "<br>I'm at home.<br>(나 집에 있어.)"
+						},
+						{
+							id: "en_g_5",
+							theme: "나의 상태/기분",
+							title: "I'm getting + 형용사",
+							summary: "상태가 '점점 ~해진다'라며 변화하는 과정을 나타낼 때 사용합니다.",
+							detail: "get에 -ing를 붙여 현재 변화하고 있는 상태를 강조합니다.",
+							example: "<br>I'm getting hungry.<br>(점점 배고파진다.)"
+						},
+						{
+							id: "en_g_6",
+							theme: "나의 상태/기분",
+							title: "I'm good at + 명사/동사-ing",
+							summary: "자신이 무언가를 '잘한다'고 말할 때 사용합니다.",
+							detail: "at이 전치사이므로 뒤에는 명사나 동사원형에 -ing를 붙인 동명사가 옵니다.",
+							example: "<br>I'm good at cooking.<br>(나 요리 잘해.)"
+						},
+						{
+							id: "en_g_7",
+							theme: "나의 상태/기분",
+							title: "I'm bad at + 명사/동사-ing",
+							summary: "자신이 무언가를 '못한다(서툴다)'고 말할 때 사용합니다.",
+							detail: "good의 반대인 bad를 사용하여 전치사 at 뒤에 명사/동명사를 연결합니다.",
+							example: "<br>I'm bad at directions.<br>(나 길치야.)"
+						},
+						{
+							id: "en_g_8",
+							theme: "나의 상태/기분",
+							title: "I'm interested in ~",
+							summary: "무언가에 '관심이나 흥미가 있다'고 표현할 때 사용합니다.",
+							detail: "전치사 in 뒤에 관심 있는 분야의 명사나 동명사를 씁니다.",
+							example: "<br>I'm interested in art.<br>(나 미술에 관심 있어.)"
+						},
+						{
+							id: "en_g_9",
+							theme: "나의 상태/기분",
+							title: "I'm afraid of ~",
+							summary: "무언가를 '무서워하거나 두려워할 때' 사용합니다.",
+							detail: "전치사 of 뒤에 무서워하는 대상(명사)을 넣습니다.",
+							example: "<br>I'm afraid of spiders.<br>(나 거미 무서워해.)"
+						},
+						{
+							id: "en_g_10",
+							theme: "나의 상태/기분",
+							title: "I'm full of ~",
+							summary: "몸이나 마음에 무언가가 '가득 차 있다'고 표현할 때 사용합니다.",
+							detail: "주로 에너지, 자신감 등 추상적인 느낌이나 사물이 가득 찼을 때 씁니다.",
+							example: "<br>I'm full of energy.<br>(나 에너지가 넘쳐.)"
+						},
+						{
+							id: "en_g_11",
+							theme: "나의 상태/기분",
+							title: "I'm ready to + 동사",
+							summary: "어떤 행동을 '할 준비가 되었다'고 말할 때 사용합니다.",
+							detail: "to 뒤에는 동사원형이 오며, 행동할 준비가 완료되었음을 나타냅니다.",
+							example: "<br>I'm ready to go.<br>(나 갈 준비 됐어.)"
+						},
+						{
+							id: "en_g_12",
+							theme: "나의 상태/기분",
+							title: "I'm sure ~",
+							summary: "어떤 사실을 '확신한다'고 강하게 말할 때 사용합니다.",
+							detail: "I'm sure 뒤에 주어+동사 문장을 이어서 확신하는 내용을 씁니다.",
+							example: "<br>I'm sure you can do it.<br>(너라면 할 수 있어.)"
+						},
+						{
+							id: "en_g_13",
+							theme: "나의 상태/기분",
+							title: "I'm sorry to + 동사",
+							summary: "상대방에게 미안함을 전하거나 유감스러운 소식을 듣고 위로할 때 사용합니다.",
+							detail: "to 뒤에 동사원형을 써서 미안하거나 유감인 원인을 나타냅니다.",
+							example: "<br>I'm sorry to hear that.<br>(그 말을 들으니 유감이야.)"
+						},
+						{
+							id: "en_g_14",
+							theme: "나의 상태/기분",
+							title: "I'm glad to + 동사",
+							summary: "어떤 행동을 하게 되어 '기쁘다'고 표현할 때 사용합니다.",
+							detail: "주로 처음 만났거나 좋은 일이 있을 때 격식 있게 기쁨을 표현합니다.",
+							example: "<br>I'm glad to meet you.<br>(만나서 반가워.)"
+						},
+						{
+							id: "en_g_15",
+							theme: "나의 상태/기분",
+							title: "I'm used to + 동사-ing",
+							summary: "어떤 일이나 환경에 '익숙하다'고 말할 때 사용합니다.",
+							detail: "여기서 to는 전치사이므로 뒤에 동사원형이 아닌 동명사(-ing)가 옵니다.",
+							example: "<br>I'm used to waking up early.<br>(일찍 일어나는 거 익숙해.)"
+						},
 
+						// 2. 지금 하고 있는 행동 표현하기
+						{
+							id: "en_g_16",
+							theme: "진행/계획",
+							title: "I'm + 동사-ing",
+							summary: "지금 현재 실시간으로 '~하는 중이다'라고 말할 때 사용합니다.",
+							detail: "be동사(am)와 동사원형-ing가 결합한 현재진행형 구조입니다.",
+							example: "<br>I'm watching TV.<br>(나 TV 보는 중이야.)"
+						},
+						{
+							id: "en_g_17",
+							theme: "진행/계획",
+							title: "I'm looking for ~",
+							summary: "물건이나 사람 등을 '찾는 중이다'라고 말할 때 사용합니다.",
+							detail: "look for(~을 찾다) 패턴을 현재진행형으로 바꾼 표현입니다.",
+							example: "<br>I'm looking for my keys.<br>(내 열쇠 찾는 중이야.)"
+						},
+						{
+							id: "en_g_18",
+							theme: "진행/계획",
+							title: "I'm thinking of + 동사-ing",
+							summary: "확정되진 않았지만 '~할까 생각 중이다'라고 말할 때 사용합니다.",
+							detail: "of 뒤에 생각하고 있는 행동을 동명사(-ing) 형태로 연결합니다.",
+							example: "<br>I'm thinking of buying a car.<br>(차 살까 생각 중이야.)"
+						},
+						{
+							id: "en_g_19",
+							theme: "진행/계획",
+							title: "I'm trying to + 동사",
+							summary: "무언가를 해내려고 애쓰거나 '노력하는 중이다'라고 할 때 사용합니다.",
+							detail: "try to+동사원형 패턴을 진행형으로 만들어 노력의 과정을 강조합니다.",
+							example: "<br>I'm trying to study.<br>(나 공부하려고 애쓰는 중이야.)"
+						},
+						{
+							id: "en_g_20",
+							theme: "진행/계획",
+							title: "I'm planning to + 동사",
+							summary: "향후 일정을 '~할 계획이다'라고 말할 때 사용합니다.",
+							detail: "to 뒤에 계획하고 있는 행동의 동사원형을 붙입니다.",
+							example: "<br>I'm planning to travel.<br>(나 여행 갈 계획이야.)"
+						},
+						{
+							id: "en_g_21",
+							theme: "진행/계획",
+							title: "I'm working on ~",
+							summary: "특정 업무, 과제, 프로젝트를 '진행 중이다'라고 할 때 사용합니다.",
+							detail: "on 뒤에 현재 공을 들이고 있는 대상(명사)을 씁니다.",
+							example: "<br>I'm working on a project.<br>(나 프로젝트 하는 중이야.)"
+						},
+						{
+							id: "en_g_22",
+							theme: "진행/계획",
+							title: "I'm on my way to ~",
+							summary: "어디론가 '가는 길이다' 혹은 '이동 중이다'라고 할 때 사용합니다.",
+							detail: "to 뒤에 목적지(명사)를 씁니다. 단, home으로 갈 때는 to를 빼고 'I'm on my way home'이라고 합니다.",
+							example: "<br>I'm on my way to work.<br>(나 출근하는 길이야.)"
+						},
+						{
+							id: "en_g_23",
+							theme: "진행/계획",
+							title: "I'm about to + 동사",
+							summary: "정말 곧, 직전에 '막 ~하려던 참이다'라고 말할 때 사용합니다.",
+							detail: "아주 가까운 미래에 일어날 직전의 행동을 표현할 때 유용합니다.",
+							example: "<br>I'm about to leave.<br>(나 막 나가려던 참이야.)"
+						},
+						{
+							id: "en_g_24",
+							theme: "진행/계획",
+							title: "Are you + 동사-ing?",
+							summary: "상대방이 지금 현재 '~하고 있는 중인지' 물어볼 때 사용합니다.",
+							detail: "현재진행형의 의문문 구조로, 너 지금 대상을 붙여 질문합니다.",
+							example: "<br>Are you listening to me?<br>(내 말 듣고 있어?)"
+						},
+						{
+							id: "en_g_25",
+							theme: "진행/계획",
+							title: "What are you + 동사-ing?",
+							summary: "상대방이 구체적으로 '무엇을 하는 중인지' 질문할 때 사용합니다.",
+							detail: "의문사 What을 맨 앞에 두고 진행형 의문문을 만듭니다.",
+							example: "<br>What are you doing?<br>(너 뭐 하고 있어?)"
+						},
+
+						// 3. 나의 취향, 욕구, 의지 표현하기
+						{
+							id: "en_g_26",
+							theme: "취향/의지",
+							title: "I like + 명사/동사-ing",
+							summary: "자신의 취향이나 좋아하는 것을 '~ 좋아해'라고 말할 때 사용합니다.",
+							detail: "like 뒤에 좋아하는 사물(명사)이나 행동(동명사)을 넣습니다.",
+							example: "<br>I like coffee. / I like swimming.<br>(커피 좋아해 / 수영 좋아해.)"
+						},
+						{
+							id: "en_g_27",
+							theme: "취향/의지",
+							title: "I don't like ~",
+							summary: "자신이 싫어하거나 취향이 아닌 것을 '안 좋아해'라고 할 때 사용합니다.",
+							detail: "일반동사 like의 부정문인 don't like 구조를 사용합니다.",
+							example: "<br>I don't like spicy food.<br>(나 매운 음식 안 좋아해.)"
+						},
+						{
+							id: "en_g_28",
+							theme: "취향/의지",
+							title: "I love + 명사/동사-ing",
+							summary: "like보다 더 강하게 '정말 너무 좋아해'라고 표현할 때 사용합니다.",
+							detail: "대상을 엄청 아끼거나 취미 생활을 강조할 때 유용합니다.",
+							example: "<br>I love watching movies.<br>(나 영화 보는 거 정말 좋아해.)"
+						},
+						{
+							id: "en_g_29",
+							theme: "취향/의지",
+							title: "I hate + 명사/동사-ing",
+							summary: "무언가를 '정말 싫어한다' 혹은 '질색한다'고 표현할 때 사용합니다.",
+							detail: "강한 거부감을 나타내므로 부드러운 자리에서는 don't like를 권장합니다.",
+							example: "<br>I hate waiting.<br>(나 기다리는 거 질색이야.)"
+						},
+						{
+							id: "en_g_30",
+							theme: "취향/의지",
+							title: "I want + 명사",
+							summary: "원하는 사물이나 대상을 '나 ~를 원해'라고 직접적으로 요구할 때 사용합니다.",
+							detail: "want 뒤에 원하는 대상(명사)을 바로 연결합니다.",
+							example: "<br>I want some water.<br>(물 좀 원해.)"
+						},
+						{
+							id: "en_g_31",
+							theme: "취향/의지",
+							title: "I want to + 동사",
+							summary: "원하는 행동을 '나 ~하고 싶어'라고 표현할 때 사용합니다.",
+							detail: "회화에서는 want to를 줄여서 'wanna(워나)'로 자주 발음합니다.",
+							example: "<br>I want to go home.<br>(나 집에 가고 싶어.)"
+						},
+						{
+							id: "en_g_32",
+							theme: "취향/의지",
+							title: "I don't want to + 동사",
+							summary: "어떤 행동을 '하고 싶지 않다'고 거절하거나 의사를 밝힐 때 사용합니다.",
+							detail: "wanna의 부정형으로, 회화에서는 don't wanna로 발음되기도 합니다.",
+							example: "<br>I don't want to argue.<br>(나 싸우고 싶지 않아.)"
+						},
+						{
+							id: "en_g_33",
+							theme: "취향/의지",
+							title: "I'd like + 명사",
+							summary: "식당, 매장 등에서 무언가를 '주시겠어요?' 하고 공손히 주문할 때 사용합니다.",
+							detail: "I would like의 줄임말로, want보다 훨씬 정중하고 세련된 표현입니다.",
+							example: "<br>I'd like a cup of tea, please.<br>(차 한 잔 주세요.)"
+						},
+						{
+							id: "en_g_34",
+							theme: "취향/의지",
+							title: "I'd like to + 동사",
+							summary: "상대방에게 정중하게 조심스럽게 '저 ~하고 싶어요'라고 의사를 밝힐 때 사용합니다.",
+							detail: "I would like to 뒤에 동사원형을 결합합니다.",
+							example: "<br>I'd like to ask a question.<br>(질문 하나 하고 싶어요.)"
+						},
+						{
+							id: "en_g_35",
+							theme: "취향/의지",
+							title: "I need + 명사",
+							summary: "단순한 욕구를 넘어 필수적으로 '나 ~가 필요해'라고 할 때 사용합니다.",
+							detail: "물건뿐만 아니라 시간, 휴식 같은 개념도 들어갈 수 있습니다.",
+							example: "<br>I need a break.<br>(나 휴식이 필요해.)"
+						},
+						{
+							id: "en_g_36",
+							theme: "취향/의지",
+							title: "I need to + 동사",
+							summary: "당장 상황상 '나 ~해야 해'라며 필요성에 의한 행동을 나타낼 때 사용합니다.",
+							detail: "의무라기보다는 본인을 위해 꼭 해야 하는 행동을 칭할 때 씁니다.",
+							example: "<br>I need to study tonight.<br>(나 오늘 밤에 공부해야 해.)"
+						},
+						{
+							id: "en_g_37",
+							theme: "취향/의지",
+							title: "I feel like + 동사-ing",
+							summary: "지금 순간 갑자기 '나 ~하고 싶은 기분이야'라고 할 때 사용합니다.",
+							detail: "like 뒤에 동사원형-ing 형태를 붙여서 충동적이거나 가벼운 욕구를 나타냅니다.",
+							example: "<br>I feel like eating pizza.<br>(나 피자 먹고 싶은 기분이야.)"
+						},
+						{
+							id: "en_g_38",
+							theme: "취향/의지",
+							title: "I don't feel like + 동사-ing",
+							summary: "귀찮거나 내키지 않아서 '나 ~할 기분이 아니야'라고 할 때 사용합니다.",
+							detail: "feel like 패턴의 부정문 형태로 일상에서 정말 많이 쓰입니다.",
+							example: "<br>I don't feel like going out.<br>(나 나갈 기분 아니야.)"
+						},
+						{
+							id: "en_g_39",
+							theme: "취향/의지",
+							title: "I decided to + 동사",
+							summary: "고민 끝에 '나 ~하기로 결정했어/결심했어'라고 선언할 때 사용합니다.",
+							detail: "decide의 과거형을 사용하여 결정을 내린 상태를 의미합니다.",
+							example: "<br>I decided to exercise.<br>(나 운동하기로 결심했어.)"
+						},
+						{
+							id: "en_g_40",
+							theme: "취향/의지",
+							title: "I hope to + 동사",
+							summary: "미래에 긍정적인 일이나 바라는 점을 '~하기를 바라'라고 소망할 때 사용합니다.",
+							detail: "to 뒤에 희망하는 행동의 동사원형을 씁니다.",
+							example: "<br>I hope to see you again.<br>(너를 다시 보길 바라.)"
+						},
+						{
+							id: "en_g_41",
+							theme: "취향/의지",
+							title: "I will + 동사",
+							summary: "지금 막 결정한 즉흥적인 의지나 약속으로 '나 ~할게'라고 할 때 사용합니다.",
+							detail: "축약형 'I'll(아일)'로 주로 쓰이며 뒤에는 동사원형이 옵니다.",
+							example: "<br>I'll call you later.<br>(내가 나중에 전화할게.)"
+						},
+						{
+							id: "en_g_42",
+							theme: "취향/의지",
+							title: "I won't + 동사",
+							summary: "강한 거절이나 다짐으로 '나 절대 ~ 안 할게'라고 말할 때 사용합니다.",
+							detail: "will not의 줄임말인 won't(웡트) 뒤에 동사원형을 씁니다.",
+							example: "<br>I won't do it again.<br>(다시는 안 그러겠어.)"
+						},
+						{
+							id: "en_g_43",
+							theme: "취향/의지",
+							title: "I'm going to + 동사",
+							summary: "이미 전부터 예정되어 있던 계획을 바탕으로 '나 ~할 거야'라고 할 때 사용합니다.",
+							detail: "회화에서는 going to를 줄여 'gonna(거나)'로 빈번하게 발음합니다.",
+							example: "<br>I'm going to sleep early.<br>(나 일찍 잘 거야.)"
+						},
+						{
+							id: "en_g_44",
+							theme: "취향/의지",
+							title: "I promise to + 동사",
+							summary: "상대방에게 신뢰를 주기 위해 '나 ~한다고 약속해'라고 강조할 때 사용합니다.",
+							detail: "to 뒤에 약속하는 구체적인 행동의 동사원형을 연결합니다.",
+							example: "<br>I promise to be there.<br>(거기 가겠다고 약속할게.)"
+						},
+						{
+							id: "en_g_45",
+							theme: "취향/의지",
+							title: "I prefer A to B",
+							summary: "두 가지 선택지 중에서 'B보다 A가 더 좋아'라고 선호도를 밝힐 때 사용합니다.",
+							detail: "than이 아니라 전치사 'to'를 사용하여 대상을 비교하는 점에 주의합니다.",
+							example: "<br>I prefer tea to coffee.<br>(난 커피보다 차가 좋아.)"
+						},
+
+						// 4. 과거의 일과 경험 말하기
+						{
+							id: "en_g_46",
+							theme: "과거/경험",
+							title: "I + 과거동사",
+							summary: "이미 지나간 과거의 행동을 단순하게 '나 ~했어'라고 말할 때 사용합니다.",
+							detail: "동사의 과거형(규칙 -ed형 또는 불규칙 변형)을 주어 뒤에 배치합니다.",
+							example: "<br>I met my friend yesterday.<br>(나 어제 친구 만났어.)"
+						},
+						{
+							id: "en_g_47",
+							theme: "과거/경험",
+							title: "I didn't + 동사원형",
+							summary: "과거에 어떤 행동을 '나 ~ 안 했어'라고 부정할 때 사용합니다.",
+							detail: "과거 부정 조동사인 didn't 뒤에는 반드시 '동사원형'이 와야 합니다.",
+							example: "<br>I didn't watch that movie.<br>(나 그 영화 안 봤어.)"
+						},
+						{
+							id: "en_g_48",
+							theme: "과거/경험",
+							title: "Did you + 동사원형?",
+							summary: "상대방에게 과거의 행적에 대해 '너 ~했어?'라고 물어볼 때 사용합니다.",
+							detail: "Did로 질문을 시작하고, 주어 뒤에는 동사원형을 유지합니다.",
+							example: "<br>Did you eat lunch?<br>(너 점심 먹었어?)"
+						},
+						{
+							id: "en_g_49",
+							theme: "과거/경험",
+							title: "I was + 형용사/명사",
+							summary: "과거 시점의 상태나 신분을 '나 ~했었어 / ~였어'라고 설명할 때 사용합니다.",
+							detail: "am/is의 과거형인 was를 사용하여 과거의 주어 상태를 표현합니다.",
+							example: "<br>I was busy yesterday.<br>(나 어제 바빴어.)"
+						},
+						{
+							id: "en_g_50",
+							theme: "과거/경험",
+							title: "I wasn't + 형용사/명사",
+							summary: "과거 상태에 대해 '나 안 ~했었어 / ~가 아니었어'라고 부정을 표현할 때 사용합니다.",
+							detail: "was 뒤에 부정어 not을 줄인 wasn't 형태를 사용합니다.",
+							example: "<br>I wasn't angry.<br>(나 화 안 났었어.)"
+						},
+						{
+							id: "en_g_51",
+							theme: "과거/경험",
+							title: "Were you + 형용사?",
+							summary: "과거 상대방의 감정이나 상태에 대해 '너 ~했었어?'라고 물어볼 때 사용합니다.",
+							detail: "you에 매칭되는 be동사 과거형인 Were를 문장 맨 앞으로 보냅니다.",
+							example: "<br>Were you surprised?<br>(너 놀랐었어?)"
+						},
+						{
+							id: "en_g_52",
+							theme: "과거/경험",
+							title: "I have + 과거분사(p.p.)",
+							summary: "과거부터 지금까지 살아오며 '나 (지금껏) ~해봤어'라고 경험을 말할 때 사용합니다.",
+							detail: "현재완료(have+p.p.) 시제이며 주로 가본 적이 있거나 해본 적을 칭합니다.",
+							example: "<br>I have been to Paris.<br>(나 파리에 가봤어.)"
+						},
+						{
+							id: "en_g_53",
+							theme: "과거/경험",
+							title: "I have never + 과거분사(p.p.)",
+							summary: "살면서 한 번도 해보지 않은 일에 대해 '나 한 번도 ~ 안 해봤어'라고 강력히 말할 때 사용합니다.",
+							detail: "not 대신 절대 없다는 의미의 never를 have와 p.p. 사이에 삽입합니다.",
+							example: "<br>I have never eaten this.<br>(나 이거 한 번도 안 먹어봤어.)"
+						},
+						{
+							id: "en_g_54",
+							theme: "과거/경험",
+							title: "Have you ever + 과거분사(p.p.)?",
+							summary: "상대방의 인생 경험에 관해 '너 살면서 ~해본 적 있어?'라고 물을 때 사용합니다.",
+							detail: "의문문 구조로, 여태껏이라는 의미를 강조하기 위해 ever를 주어 뒤에 넣습니다.",
+							example: "<br>Have you ever met him? <br>(너 그 사람 만난 적 있어?)"
+						},
+						{
+							id: "en_g_55",
+							theme: "과거/경험",
+							title: "I used to + 동사원형",
+							summary: "지금은 안 하지만 과거에는 규칙적으로 '나 예전에 ~하곤 했어'라고 추억할 때 사용합니다.",
+							detail: "과거의 규칙적인 습관이나 상태를 나타내며, 지금은 그렇지 않다는 뉘앙스가 포함됩니다.",
+							example: "<br>I used to smoke.<br>(나 예전에 담배 피웠었어.)"
+						},
+
+						// 5. 의무, 허락, 가능성 (조동사 활용)
+						{
+							id: "en_g_56",
+							theme: "조동사",
+							title: "I can + 동사원형",
+							summary: "자신의 능력이나 가능성에 기반해 '나 ~할 수 있어'라고 선언할 때 사용합니다.",
+							detail: "조동사 can 뒤에는 언제나 동사의 원래 형태(원형)가 결합합니다.",
+							example: "<br>I can speak English.<br>(나 영어 할 수 있어.)"
+						},
+						{
+							id: "en_g_57",
+							theme: "조동사",
+							title: "I can't + 동사원형",
+							summary: "능력이 부족하거나 불가능할 때 '나 ~할 수 없어'라고 표현할 때 사용합니다.",
+							detail: "cannot의 준말인 can't 뒤에 동사원형을 씁니다.",
+							example: "<br>I can't swim.<br>(나 수영 못 해.)"
+						},
+						{
+							id: "en_g_58",
+							theme: "조동사",
+							title: "Can you + 동사원형?",
+							summary: "상대방에게 편하게 '너 ~해줄 수 있어?'라고 부탁하거나 요청할 때 사용합니다.",
+							detail: "친구 사이에 캐주얼하게 도움을 구하는 대표적 의문형 패턴입니다.",
+							example: "<br>Can you help me?<br>(나 좀 도와줄 수 있어?)"
+						},
+						{
+							id: "en_g_59",
+							theme: "조동사",
+							title: "Can I + 동사원형?",
+							summary: "상대방에게 '내가 ~해도 돼?'라며 가볍게 허락을 구할 때 사용합니다.",
+							detail: "자신의 행동 허가를 구하는 표현입니다.",
+							example: "<br>Can I use this?<br>(나 이거 써도 돼?)"
+						},
+						{
+							id: "en_g_60",
+							theme: "조동사",
+							title: "I have to + 동사원형",
+							summary: "상황적, 규칙적으로 어쩔 수 없이 '나 ~해야만 해'라고 강한 의무를 말할 때 사용합니다.",
+							detail: "must와 유사하게 꼭 해야 하는 강제성이 띌 때 씁니다.",
+							example: "<br>I have to go now.<br>(나 지금 가야 해.)"
+						},
+						{
+							id: "en_g_61",
+							theme: "조동사",
+							title: "You should + 동사원형",
+							summary: "상대방에게 강요가 아닌 권유나 추천으로 '너 ~하는 게 좋겠어'라고 조언할 때 사용합니다.",
+							detail: "매우 부드러우면서도 일상적인 조언용 조동사입니다.",
+							example: "<br>You should see a doctor.<br>(너 병원 가보는 게 좋겠어.)"
+						},
+						{
+							id: "en_g_62",
+							theme: "조동사",
+							title: "You don't have to + 동사원형",
+							summary: "억지로 할 필요 없다는 뜻으로 '너 ~할 필요 없어'라고 말해줄 때 사용합니다.",
+							detail: "have to의 부정형은 금지가 아니라 '불필요'를 의미하는 핵심 문법입니다.",
+							example: "<br>You don't have to worry.<br>(걱정할 필요 없어.)"
+						},
+						{
+							id: "en_g_63",
+							theme: "조동사",
+							title: "May I + 동사원형?",
+							summary: "격식 있는 자리나 낯선 사람에게 '제가 ~해도 될까요?'라고 아주 정중히 허락을 구할 때 사용합니다.",
+							detail: "Can I보다 훨씬 예의 바르고 공손한 느낌을 주는 표현입니다.",
+							example: "<br>May I come in?<br>(들어가도 될까요?)"
+						},
+						{
+							id: "en_g_64",
+							theme: "조동사",
+							title: "It might + 동사원형",
+							summary: "불확실한 추측으로 '어쩌면 ~일지도 몰라'라고 말할 때 사용합니다.",
+							detail: "가능성이 다소 낮은 약한 추측을 나타낼 때 유용합니다.",
+							example: "<br>It might rain later.<br>(나중에 비 올지도 몰라.)"
+						},
+						{
+							id: "en_g_65",
+							theme: "조동사",
+							title: "You must not + 동사원형",
+							summary: "법이나 규칙상 '너 ~하면 절대 안 돼'라고 강하게 금지할 때 사용합니다.",
+							detail: "가장 높은 수준의 경고나 절대적 금지를 나타내는 조동사 표현입니다.",
+							example: "<br>You must not smoke here.<br>(여기서 담배 피우면 안 돼.)"
+						},
+
+						// 6. 질문하고 정보 묻기 (의문사 활용)
+						{
+							id: "en_g_66",
+							theme: "의문사",
+							title: "What is your ~?",
+							summary: "상대방의 기본 정보에 대해 '네 ~가 뭐야?'라고 물을 때 사용합니다.",
+							detail: "의문사 What 뒤에 명사 구를 연결하여 사물, 이름 등을 묻습니다.",
+							example: "<br>What is your phone number?<br>(전화번호가 뭐야?)"
+						},
+						{
+							id: "en_g_67",
+							theme: "의문사",
+							title: "What do you + 동사?",
+							summary: "평소에 상대방이 '무엇을 ~해?'라고 행동의 대상을 물을 때 사용합니다.",
+							detail: "What do you 뒤에 일반동사의 원형을 연결합니다.",
+							example: "<br>What do you mean?<br>(무슨 뜻이야?)"
+						},
+						{
+							id: "en_g_68",
+							theme: "의문사",
+							title: "Where is the ~?",
+							summary: "길을 찾거나 물건 위치를 물을 때 '~가 어디 있어요?'라고 질문할 때 사용합니다.",
+							detail: "장소를 물어보는 의문사 Where를 활용합니다.",
+							example: "<br>Where is the restroom?<br>(화장실이 어디예요?)"
+						},
+						{
+							id: "en_g_69",
+							theme: "의문사",
+							title: "Where do you + 동사?",
+							summary: "평소 행동하는 장소를 겨냥해 '너 어디서 ~해?'라고 물을 때 사용합니다.",
+							detail: "거주지, 근무지 등을 물어볼 때 자주 결합합니다.",
+							example: "<br>Where do you live?<br>(너 어디 살아?)"
+						},
+						{
+							id: "en_g_70",
+							theme: "의문사",
+							title: "When is ~?",
+							summary: "일정이나 특정 기념일이 '언제야?'라고 시점을 물어볼 때 사용합니다.",
+							detail: "시간/날짜를 묻는 의문사 When 뒤에 대상 명사를 둡니다.",
+							example: "<br>When is your birthday?<br>(네 생일이 언제야?)"
+						},
+						{
+							id: "en_g_71",
+							theme: "의문사",
+							title: "When do you + 동사?",
+							summary: "상대방의 일상적인 타임라인으로 '너 언제 ~해?'라고 질문할 때 사용합니다.",
+							detail: "행동이 일어나는 시각이나 시점을 물어볼 때 유용합니다.",
+							example: "<br>When do you finish work?<br>(너 언제 일 끝나?)"
+						},
+						{
+							id: "en_g_72",
+							theme: "의문사",
+							title: "Why are you + 형용사?",
+							summary: "상대방의 현재 감정이나 상태의 이유를 '너 왜 ~해?'라고 물을 때 사용합니다합니다.",
+							detail: "원인을 묻는 Why 뒤에 be동사 의문문 구조를 연결합니다.",
+							example: "<br>Why are you sad?<br>(너 왜 슬퍼?)"
+						},
+						{
+							id: "en_g_73",
+							theme: "의문사",
+							title: "Why did you + 동사?",
+							summary: "상대방이 과거에 했던 행동의 이유를 '너 왜 ~했어?'라고 물을 때 사용합니다.",
+							detail: "과거 행동의 원인을 파악하기 위해 did를 사용합니다.",
+							example: "<br>Why did you call me?<br>(너 왜 나한테 전화했어?)"
+						},
+						{
+							id: "en_g_74",
+							theme: "의문사",
+							title: "Who is ~?",
+							summary: "특정 사람의 정체를 '저 사람 누구야?'라고 질문할 때 사용합니다.",
+							detail: "인물을 묻는 의문사 Who 뒤에 대상을 가리키는 지시어 등을 넣습니다.",
+							example: "<br>Who is that guy?<br>(저 남자 누구야?)"
+						},
+						{
+							id: "en_g_75",
+							theme: "의문사",
+							title: "How is ~?",
+							summary: "상태나 안부를 가볍게 '~는 어때?'라고 평가나 상태를 물을 때 사용합니다.",
+							detail: "방법이 아니라 어떠한가라는 상태를 질문하는 How의 용법입니다.",
+							example: "<br>How is the weather?<br>(날씨 어때?)"
+						},
+						{
+							id: "en_g_76",
+							theme: "의문사",
+							title: "How do I + 동사?",
+							summary: "방법이나 길을 잘 모를 때 '내가 어떻게 ~해야 해?'라고 안내를 요청할 때 사용합니다.",
+							detail: "수단과 방법을 질문할 때 매우 중요하게 쓰이는 패턴입니다.",
+							example: "<br>How do I get there?<br>(거기 어떻게 가요?)"
+						},
+						{
+							id: "en_g_77",
+							theme: "의문사",
+							title: "How much is ~?",
+							summary: "쇼핑 등에서 물건의 가격을 물어볼 때 '~는 얼마예요?'라고 사용합니다.",
+							detail: "셀 수 없는 양이나 금액을 표현하는 How much를 사용합니다.",
+							example: "<br>How much is this bag?<br>(이 가방 얼마예요?)"
+						},
+						{
+							id: "en_g_78",
+							theme: "의문사",
+							title: "How many + 복수명사 ~?",
+							summary: "개수를 확인하기 위해 '~가 몇 개나 있어?'라고 물어볼 때 사용합니다.",
+							detail: "셀 수 있는 명사 앞에 How many를 붙이고, 반드시 명사는 '복수형'으로 표기합니다.",
+							example: "<br>How many books do you have?<br>(책 몇 권 있어?)"
+						},
+						{
+							id: "en_g_79",
+							theme: "의문사",
+							title: "How long does it take?",
+							summary: "특정 장소나 일에 '시간이 얼마나 걸려?'라고 소요 시간을 물을 때 사용합니다.",
+							detail: "시간의 길이를 뜻하는 How long과 시간이 걸리다의 take가 세트인 필수 통문장 패턴입니다.",
+							example: "<br>How long does it take to get there?<br>(거기까지 얼마나 걸려?)"
+						},
+						{
+							id: "en_g_80",
+							theme: "의문사",
+							title: "How often do you + 동사?",
+							summary: "상대방의 행동 빈도를 파악하고자 '얼마나 자주 ~해?'라고 질문할 때 사용합니다.",
+							detail: "주기나 횟수를 확인하고 싶을 때 유용한 표현입니다.",
+							example: "<br>How often do you exercise?<br>(너 얼마나 자주 운동해?)"
+						},
+
+						// 7. 제안, 부탁 및 명령하기
+						{
+							id: "en_g_81",
+							theme: "제안/부탁",
+							title: "Let's + 동사원형",
+							summary: "상대방에게 청유형으로 '우리 ~하자'라고 친근하게 제안할 때 사용합니다.",
+							detail: "Let us의 축약형으로 뒤에 함께 행동할 동사원형을 둡니다.",
+							example: "<br>Let's grab some food.<br>(우리 뭐 좀 먹자.)"
+						},
+						{
+							id: "en_g_82",
+							theme: "제안/부탁",
+							title: "Let's not + 동사원형",
+							summary: "부정적인 제안으로 '우리 ~하지 말자'라고 중단을 건넬 때 사용합니다.",
+							detail: "Let's 바로 뒤에 부정어 not을 붙이고 동사원형을 이어서 씁니다.",
+							example: "<br>Let's not waste time.<br>(우리 시간 낭비하지 말자.)"
+						},
+						{
+							id: "en_g_83",
+							theme: "제안/부탁",
+							title: "Why don't we + 동사원형?",
+							summary: "Let's보다 조금 더 생각할 여지를 주며 '우리 ~하는 게 어때?'라고 제안할 때 사용합니다.",
+							detail: "직역하면 왜 안 하니가 되지만, 회화에선 훌륭한 제안 멘트가 됩니다.",
+							example: "<br>Why don't we take a break?<br>(우리 좀 쉬는 게 어때?)"
+						},
+						{
+							id: "en_g_84",
+							theme: "제안/부탁",
+							title: "How about + 명사/동사-ing?",
+							summary: "가볍게 의견을 던지듯 '~는 어때?'라고 질문하며 제안할 때 사용합니다.",
+							detail: "about이 전치사이므로 명사 혹은 동사-ing(동명사)가 뒤따라옵니다.",
+							example: "<br>How about coffee?<br>(커피 한잔 어때?)"
+						},
+						{
+							id: "en_g_85",
+							theme: "제안/부탁",
+							title: "Would you like to + 동사?",
+							summary: "비즈니스나 격식 있는 관계에서 '~하실래요?'라고 다정하고 정중히 제안할 때 사용합니다.",
+							detail: "Do you want to보다 품격 있는 권유의 뉘앙스를 풍깁니다.",
+							example: "<br>Would you like to join us?<br>(우리와 함께 하실래요?)"
+						},
+						{
+							id: "en_g_86",
+							theme: "제안/부탁",
+							title: "Please + 동사원형",
+							summary: "명령조 문장에 예의를 더해 '~해 주세요'라고 정중히 지시할 때 사용합니다.",
+							detail: "문장 맨 앞 혹은 맨 뒤에 Please를 넣어 공손함을 표현합니다.",
+							example: "<br>Please sit down.<br>(앉아 주세요.)"
+						},
+						{
+							id: "en_g_87",
+							theme: "제안/부탁",
+							title: "Don't + 동사원형",
+							summary: "상대방에게 행동을 제한하며 '~하지 마'라고 금지 명령할 때 사용합니다.",
+							detail: "부정 명령문 구조로 동사의 원형 형태가 Don't 뒤에 옵니다.",
+							example: "<br>Don't worry about it.<br>(그것에 대해 걱정하지 마.)"
+						},
+						{
+							id: "en_g_88",
+							theme: "제안/부탁",
+							title: "Could you please + 동사?",
+							summary: "상대방에게 부탁을 해야 할 때 '혹시 ~해 주실 수 있나요?'라고 공손히 요청할 때 사용합니다.",
+							detail: "Can you보다 과거형 조동사 Could를 쓰면 한 층 더 조심스러운 어조가 됩니다.",
+							example: "<br>Could you please repeat that?<br>(다시 한번 말씀해 주시겠어요?)"
+						},
+						{
+							id: "en_g_89",
+							theme: "제안/부탁",
+							title: "Do you mind if I + 동사?",
+							summary: "내 행동이 방해될까 봐 '제가 ~해도 괜찮을까요/꺼리시나요?'라고 양해를 구할 때 사용합니다.",
+							detail: "직역하면 꺼리냐는 뜻이므로, 상대가 괜찮다고 할 땐 No라고 대답하는 문화적 특성이 있습니다.",
+							example: "<br>Do you mind if I open the window?<br>(창문 열어도 될까요?)"
+						},
+						{
+							id: "en_g_90",
+							theme: "제안/부탁",
+							title: "Help me + 동사원형",
+							summary: "혼자 하기 힘든 일을 '내가 ~하는 것 좀 도와줘'라고 요청할 때 사용합니다.",
+							detail: "Help 목적어 뒤에 동사원형(또는 to 동사원형)을 연결하는 구조입니다.",
+							example: "<br>Help me clean the room.<br>(방 청소하는 것 좀 도와줘.)"
+						},
+
+						// 8. 사물/사람 존재 및 생각 표현
+						{
+							id: "en_g_91",
+							theme: "존재/생각",
+							title: "There is + 단수명사",
+							summary: "어떤 사물이나 사람이 '특정 장소에 하나 있다'고 존재를 알릴 때 사용합니다.",
+							detail: "There는 해석하지 않으며, 뒤에 오는 진짜 주어가 단수(1개)일 때 is를 씁니다.",
+							example: "<br>There is a cat on the sofa.<br>(소파 위에 고양이가 있어.)"
+						},
+						{
+							id: "en_g_92",
+							theme: "존재/생각",
+							title: "There are + 복수명사",
+							summary: "여러 개의 사물이나 사람들이 '존재하고 있다'고 말할 때 사용합니다.",
+							detail: "뒤에 연결되는 주어가 2개 이상인 복수 형태일 때 be동사를 are로 씁니다.",
+							example: "<br>There are many people here.<br>(여기 사람이 많아.)"
+						},
+						{
+							id: "en_g_93",
+							theme: "존재/생각",
+							title: "Is there ~? / Are there ~?",
+							summary: "특정 사물이나 장소가 존재 유무를 확인하려 '~가 있나요?'라고 질문할 때 사용합니다.",
+							detail: "There is/are의 어순을 뒤바꾼 의문문 구조로, 뒤에 올 명사 수에 따라 구분해 묻습니다.",
+							example: "<br>Is there a convenience store nearby?<br>(근처에 편의점 있나요?)"
+						},
+						{
+							id: "en_g_94",
+							theme: "존재/생각",
+							title: "I think (that) ~",
+							summary: "내 주관적인 의견을 조심스럽게 '내 생각에는 ~인 것 같아'라고 말할 때 사용합니다.",
+							detail: "자신의 생각을 부드럽고 덜 단정적으로 표현할 때 일상에서 가장 많이 씁니다.",
+							example: "<br>I think it's a good idea.<br>(내 생각엔 좋은 아이디어 같아.)"
+						},
+						{
+							id: "en_g_95",
+							theme: "존재/생각",
+							title: "I don't think (that) ~",
+							summary: "상황에 대해 부정적으로 판단하여 '내 생각엔 ~ 아닌 것 같아'라고 의견을 낼 때 사용합니다.",
+							detail: "I think it's not~ 보다 문장 앞부분을 I don't think~ 로 부정하는 것이 더 자연스러운 영어 식 표현입니다.",
+							example: "<br>I don't think he will come.<br>(그 사람 안 올 것 같아.)"
+						},
+						{
+							id: "en_g_96",
+							theme: "존재/생각",
+							title: "Do you think (that) ~?",
+							summary: "상대방의 의견이나 생각을 '너는 ~라고 생각해?'라고 동의나 의견을 물을 때 사용합니다.",
+							detail: "Do you think 뒤에 궁금한 완전한 문장 구조를 바로 얹어 질문합니다.",
+							example: "<br>Do you think it's possible?<br>(그게 가능하다고 생각해?)"
+						},
+						{
+							id: "en_g_97",
+							theme: "존재/생각",
+							title: "It looks + 형용사",
+							summary: "눈에 보이는 시각적 정보를 보고 '~해 보인다'라고 감상을 말할 때 사용합니다.",
+							detail: "감각동사 look 뒤에 그 대상을 묘사하는 형용사를 바로 가져옵니다.",
+							example: "<br>It looks delicious.<br>(그거 맛있어 보인다.)"
+						},
+						{
+							id: "en_g_98",
+							theme: "존재/생각",
+							title: "It sounds + 형용사",
+							summary: "귀로 이야기를 듣거나 제안을 들었을 때 '~하게 들려 / 좋네!'라고 맞장구칠 때 사용합니다.",
+							detail: "대화 속에서 리액션을 할 때 아주 유용하게 쓰이는 필수 감각동사 패턴입니다.",
+							example: "<br>It sounds fun.<br>(재미있겠네.)"
+						},
+						{
+							id: "en_g_99",
+							theme: "존재/생각",
+							title: "It takes + 시간",
+							summary: "작업을 하거나 어디 가는데 걸리는 시간을 '(시간이) ~만큼 걸려'라고 말할 때 사용합니다.",
+							detail: "시간을 지칭하는 비인칭 주어 It을 사용하여 보편적인 필요 시간을 나타냅니다.",
+							example: "<br>It takes 10 minutes.<br>(10분 걸려.)"
+						},
+						{
+							id: "en_g_100",
+							theme: "존재/생각",
+							title: "That's why ~",
+							summary: "앞서 말한 내용이 원인이 되어 '그래서 내가 ~한 거야'라고 인과관계를 밝힐 때 사용합니다.",
+							detail: "That's why 뒤에는 결과를 나타내는 문장이 와서 상황을 결론지어 줍니다.",
+							example: "<br>That's why I'm late.<br>(그래서 내가 늦은 거야.)"
+						},
+
+						// ==========================================
+						// 6. 질문하고 정보 묻기 (의문사/질문 패턴 추가)
+						// ==========================================
+						{
+							id: "en_g_101",
+							theme: "의문사",
+							title: "Is it okay if I + 동사원형?",
+							summary: "상대방에게 조심스럽게 '내가 ~해도 괜찮을까?'라며 허락을 구할 때 사용합니다.",
+							detail: "Do you mind if I보다 조금 더 캐주얼하면서도 예의를 차리는 유용한 질문 문법입니다.",
+							example: "<br>Is it okay if I sit here?<br>(여기 앉아도 괜찮을까요?)"
+						},
+						{
+							id: "en_g_102",
+							theme: "의문사",
+							title: "What kind of + 명사 + do you like?",
+							summary: "상대방의 구체적인 취향을 '어떤 종류의 ~를 좋아해?'라고 물을 때 사용합니다.",
+							detail: "명사 자리에 음식, 영화, 음악 등을 넣어 상대방과 대화를 시작하기 좋은 패턴입니다.",
+							example: "<br>What kind of movies do you like?<br>(어떤 종류의 영화 좋아해?)"
+						},
+						{
+							id: "en_g_103",
+							theme: "의문사",
+							title: "Have you ever + 과거분사(p.p.)?",
+							summary: "상대방에게 '너 (~해본 적) 있어?'라고 인생 경험을 물어볼 때 사용합니다.",
+							detail: "현재완료 시제의 경험 용법으로, ever는 '여태껏'이라는 의미를 강조합니다.",
+							example: "<br>Have you ever been to Jeju Island?<br>(제주도 가본 적 있어?)"
+						},
+						{
+							id: "en_g_104",
+							theme: "의문사",
+							title: "How do you like + 명사?",
+							summary: "상대방에게 '새로 경험한 것'에 대한 소감이나 의견을 '어때? 마음에 들어?'라고 물을 때 사용합니다.",
+							detail: "How is~ 보다 구체적으로 상대방의 '마음에 드는 정도'를 묻는 뉘앙스입니다.",
+							example: "<br>How do you like your new job?<br>(새 직장은 어때? 마음에 들어?)"
+						},
+						{
+							id: "en_g_105",
+							theme: "의문사",
+							title: "What are you planning to + 동사원형?",
+							summary: "상대방에게 가까운 미래의 일정을 '너 ~할 계획이야?'라고 물어볼 때 사용합니다.",
+							detail: "What are you going to보다 조금 더 구체적인 계획이나 틀이 잡힌 일정을 물을 때 씁니다.",
+							example: "<br>What are you planning to do tonight?<br>(너 오늘 밤에 뭐 할 계획이야?)"
+						},
+						{
+							id: "en_g_106",
+							theme: "의문사",
+							title: "Which one do you prefer?",
+							summary: "선택지를 주고 '어느 쪽이 더 좋아?'라고 상대방의 선호도를 물을 때 사용합니다.",
+							detail: "A와 B 중에서 하나를 골라달라고 요청할 때 쓰는 고정 문형입니다.",
+							example: "<br>Which one do you prefer, coffee or tea?<br>(커피랑 차 중에 어떤 게 더 좋아?)"
+						},
+						{
+							id: "en_g_107",
+							theme: "의문사",
+							title: "Are you interested in + 명사/동사-ing?",
+							summary: "상대방에게 '너 ~에 관심 있어?'라고 흥미를 물어볼 때 사용합니다.",
+							detail: "전치사 in 뒤에는 관심 분야의 명사나 동명사(-ing) 형태가 옵니다.",
+							example: "<br>Are you interested in K-pop?<br>(너 케이팝에 관심 있어?)"
+						},
+						{
+							id: "en_g_108",
+							theme: "의문사",
+							title: "What makes you + 동사원형?",
+							summary: "직역하면 '무엇이 널 ~하게 만드니?'이며, 회화에선 부드럽게 '왜 ~하는 거야?'라고 이유를 물을 때 사용합니다.",
+							detail: "Why로 물어보는 것보다 덜 공격적이고 원어민스러운 세련된 질문 문법입니다.",
+							example: "<br>What makes you think so?<br>(왜 그렇게 생각해?)"
+						},
+						{
+							id: "en_g_109",
+							theme: "의문사",
+							title: "Is there any + 명사?",
+							summary: "어떤 사물이나 기회 등이 있는지 '혹시 ~가 있나요?'라고 유무를 물을 때 사용합니다.",
+							detail: "any가 들어가서 '혹시 조금이라도 있냐'는 뉘앙스를 풍기며, 명사 자리에 단수/복수/셀 수 없는 명사 모두 올 수 있습니다.",
+							example: "<br>Is there any problem?<br>(혹시 무슨 문제라도 있나요?)"
+						},
+						{
+							id: "en_g_110",
+							theme: "의문사",
+							title: "Do you happen to know + 명사/문장?",
+							summary: "상대방에게 조심스럽게 '혹시 ~를 아시나요?'라고 물어볼 때 사용합니다.",
+							detail: "happen to가 들어가면 '우연히', '혹시'라는 뜻이 더해져, 모르는 사람에게 길을 묻거나 조심스럽게 정보를 캐낼 때 최고의 질문 양식이 됩니다.",
+							example: "<br>Do you happen to know where the subway station is?<br>(혹시 지하철역이 어디 있는지 아시나요?)"
+						},
+						// ==========================================
+						// 질문 및 청유 패턴 추가 (111~115)
+						// ==========================================
+						{
+							id: "en_g_111",
+							theme: "의문사",
+							title: "What do you want?",
+							summary: "상대방에게 단도직입적으로 '너 뭐를 원해?'라고 물어볼 때 사용합니다.",
+							detail: "가장 직접적인 표현으로, 친한 사이에서는 솔직하게 원하는 것을 물을 때 쓰지만, 낯선 사람에게는 다소 무례하게 들릴 수 있으니 상황에 맞춰 씁니다.",
+							example: "<br>What do you want for your birthday?<br>(너 생일 선물로 뭐 원해?)"
+						},
+						{
+							id: "en_g_112",
+							theme: "의문사",
+							title: "What do you need?",
+							summary: "도움이 필요한 상대에게 '뭐가 필요해?'라고 물어볼 때 사용합니다.",
+							detail: "상대방에게 필요한 물건이나 지원이 무엇인지 구체적으로 파악하고 도와주려고 할 때 유용한 필수 패턴입니다.",
+							example: "<br>What do you need right now?<br>(너 지금 당장 뭐가 필요해?)"
+						},
+						{
+							id: "en_g_113",
+							theme: "제안/부탁",
+							title: "Hurry up and + 동사원형",
+							summary: "상대방을 재촉하며 '빨리 ~하자 / ~해'라고 말할 때 사용합니다.",
+							detail: "Hurry up(서둘러) 뒤에 and를 붙이고 다음 행동의 동사원형을 연결하여, 서둘러서 무언가를 하도록 유도하는 표현입니다.",
+							example: "<br>Hurry up and get in the car.<br>(빨리 차에 타자.)"
+						},
+						{
+							id: "en_g_114",
+							theme: "의문사",
+							title: "What's going on?",
+							summary: "상황이 이상하거나 무슨 일이 생겼을 때 '무슨 일이야?'라고 물어볼 때 사용합니다.",
+							detail: "What happened?와 비슷하지만, 지금 눈앞에서 벌어지고 있는 분위기나 사건의 내막을 캐주얼하게 물어볼 때 원어민들이 가장 많이 쓰는 의문문입니다.",
+							example: "<br>You look sad. What's going on?<br>(너 슬퍼 보여. 무슨 일이야?)"
+						},
+						{
+							id: "en_g_115",
+							theme: "존재/생각",
+							title: "Do you happen to have + 명사?",
+							summary: "상대방에게 '혹시 ~가 있어요?'라며 물건이나 여유분이 있는지 조심스럽게 물을 때 사용합니다.",
+							detail: "그냥 Do you have~? 보다 happen to가 들어가서 훨씬 조심스럽고 공손한 느낌을 줍니다. 길에서 무언가를 빌리거나 매장에서 재고를 물을 때 유용합니다.",
+							example: "<br>Do you happen to have an extra pen?<br>(혹시 여분의 펜이 있으신가요?)"
+						}
 					],
 					words: [
-
-						{ id: "zh_w_1", theme: "기초어휘", subTheme: "가족", title: "爸爸 (bàba)", summary: "아빠, 아버지", detail: "명사 / 가족 구어체 표현입니다.", example: "我爸爸在公司。(우리 아빠는 회사에 계십니다.)" },
-						{ id: "zh_w_2", theme: "기초어휘", subTheme: "가족", title: "妈妈 (māma)", summary: "엄마, 어머니", detail: "명사 / 가족 구어체 표현입니다.", example: "妈妈在厨房。(어머니는 주방에 계십니다.)" },
-						{ id: "zh_w_3", theme: "기초어휘", subTheme: "나라", title: "韩国 (Hánguó)", summary: "한국", detail: "명사 / 국가 명칭입니다.", example: "我是韩国人。(저는 한국인입니다.)" },
-						{ id: "zh_w_13", theme: "기초어휘", subTheme: "나라", title: "越南 (yuè nán)", summary: "한국베트남", detail: "명사 / 국가 명칭입니다.", example: "我是越南人。(저는 베트남사람입니다.)" },
-						{ id: "zh_w_4", theme: "기초어휘", subTheme: "직업", title: "老师 (lǎoshī)", summary: "선생님, 교사", detail: "명사 / 직업 명칭입니다.", example: "他是汉语老师。(그는 중국어 선생님입니다.)" },
-						{ id: "zh_w_5", theme: "기초어휘", subTheme: "숫자", title: "一 (yī)", summary: "일, 1", detail: "수사 / 기본 숫자입니다.", example: "第一 (제일, 첫 번째)" },
+						// ==========================================
+						// 1. 감정/기분 (Feelings & Emotions)
+						// ==========================================
 						{
-											"id": "zh_w_6",
-											"theme": "나라",
-											"title": "주요 국가 명칭",
-											"summary": "기초 일상회화 및 자기소개 시 가장 먼저 사용하는 나라 이름입니다.",
-											"detail": "중국어로 나라 이름을 말할 때는 보통 음역(소리를 본뜸)을 하거나 뜻을 살려 만듭니다. 뒤에 '人(rén)'을 붙이면 해당 국가의 사람이 되고, '国语(guó yǔ)'나 '文(wén)' 등을 붙이면 해당 국가의 언어가 됩니다.",
-											"example": "<br>韩国 (hán guó) — 한국<br>中国 (zhōng guó) — 중국<br>美国 (měi guó) — 미국<br>日本 (rì běn) — 일본<br>英国 (yīng guó) — 영국<br>法国 (fǎ guó) — 프랑스<br>德国 (dé guó) — 독일<br>加拿大 (jiā ná dà) — 캐나다<br>澳大利亚 (ào dà lì yà) — 호주<br>越南 (yuè nán) — 베트남"
-										},
-										{
-											"id": "zh_w_7",
-											"theme": "직업",
-											"title": "일상 필수 직업군",
-											"summary": "서로의 신분을 묻고 답할 때 자주 쓰이는 직업 명칭입니다.",
-											"detail": "중국어에서 직업을 나타내는 단어들은 주로 '师(전문가)', '员(구성원)', '生(학생/소질이 있는 사람)' 등의 접미사로 끝나는 경우가 많습니다. '我是+직업' 형태로 명사 연결 문법(是)과 함께 자주 쓰입니다.",
-											"example": "<br>学生 (xué sheng) — 학생<br>老师 (lǎo shī) — 선생님<br>公司职员 (gōng sī zhí yuán) — 회사원<br>医生 (yī shēng) — 의사<br>护士 (hù shi) — 간호사<br>厨师 (chú shī) — 요리사<br>警察 (jǐng chá) — 경찰<br>律师 (lǜ shī) — 변호사<br>公务员 (gōng wù yuán) — 공무원<br>商人 (shāng rén) — 사업가/상인"
-										},
-										{
-											"id": "zh_w_8",
-											"theme": "가족",
-											"title": "가족 관계 및 호칭",
-											"summary": "가족 구성원을 부르거나 소개할 때 사용하는 필수 호칭입니다.",
-											"detail": "중국어의 가족 호칭은 두 글자를 중첩(반복)해서 발음하는 특징이 있으며, 두 번째 글자는 대개 성조가 없는 '경성'으로 가볍게 발음합니다. 나보다 윗사람인지 아랫사람인지에 따라 명확히 구분됩니다.",
-											"example": "<br>爸爸 (bà ba) — 아빠<br>妈妈 (mā ma) — 엄마<br>爷爷 (yé ye) — 할아버지<br>奶奶 (nǎi nai) — 할머니<br>哥哥 (gē ge) — 형/오빠<br>姐姐 (jiě jie) — 누나/언니<br>弟弟 (dì di) — 남동생<br>妹妹 (mèi mei) — 여동생<br>儿子 (ér zi) — 아들<br>女儿 (nǚ ér) — 딸"
-										},
-										{
-											"id": "zh_w_9",
-											"theme": "숫자",
-											"title": "기초 숫자와 양사 단위",
-											"summary": "금액, 시간, 전화번호 등을 표현할 때 뼈대가 되는 숫자와 단위입니다.",
-											"detail": "중국어에서 숫자 '2'를 표현할 때는 주의가 필요합니다. 단순히 번호를 읽거나 차례를 셀 때는 '二(èr)'를 쓰지만, 물건의 개수를 세거나 양사 앞에서는 반드시 '两(liǎng)'으로 바꾸어 표현해야 합니다.",
-											"example": "<br>一 / 二 / 三 (yī / èr / sān) — 1 / 2 / 3<br>四 / 五 / 六 (sì / wǔ / liù) — 4 / 5 / 6<br>七 / 八 / 九 / 十 (qī / bā / jiǔ / shí) — 7 / 8 / 9 / 10<br>两 (liǎng) — 둘 (수량 셀 때)<br>百 / 千 / 万 (bǎi / qiān / wàn) — 백 / 천 / 만<br>个 (gè) — 개/명 (가장 만능 양사)<br>块 (kuài) — 위안 (중국 화폐 단위 구어체)<br>点 (diǎn) — 시 (시간 단위)<br>分钟 (fēn zhōng) — 분 (시간 길이)<br>月 / 号 (yuè / hào) — 월 / 일"
-										},
-										{
-											"id": "zh_w_10",
-											"theme": "물건",
-											"title": "생활 속 주변 물건",
-											"summary": "일상생활 공간이나 가방 속에 늘 존재하는 고빈도 물건 단어입니다.",
-											"detail": "소유를 뜻하는 '有(있다)' 문법이나 지시 대명사인 '这是(이것은 ~이다)', '那是(저것은 ~이다)' 구문과 결합하여 물건의 주인이나 정체를 묻고 답할 때 뼈대가 되는 명사들입니다.",
-											"example": "<br>手机 (shǒu jī) — 휴대폰<br>电脑 (diàn nǎo) — 컴퓨터<br>钱包 (qián bāo) — 지갑<br>钥匙 (yào shi) — 열쇠<br>书 (shū) — 책<br>衣服 (yī fu) — 옷<br>包 (bāo) — 가방<br>手表 (shǒu biǎo) — 손목시계<br>水杯 (shuǐ bēi) — 텀블러/물컵<br>雨伞 (yǔ sǎn) — 우산"
-										},
-										{
-											"id": "zh_w_11",
-											"theme": "탈것",
-											"title": "교통수단 및 승하차",
-											"summary": "이동할 때 사용하는 대중교통과 주요 이동 수단 명칭입니다.",
-											"detail": "중국어는 어떤 교통수단을 이용할 때 '타다'라는 뜻의 동사 '坐(zuò)'를 앞에 붙입니다. (단, 자전거나 오토바이처럼 말 타듯 걸터앉는 수단은 '骑(qí)'를 씁니다.) 방향을 나타내는 '去(가다)' 연동문과 자주 호응합니다.",
-											"example": "<br>地铁 (dì tiě) — 지하철<br>公交车 (gōng jiāo chē) — 버스<br>出租车 (chū zū chē) — 택시<br>飞机 (fēi jī) — 비행기<br>火车 (huǒ chē) — 기차<br>高铁 (gāo tiě) — 고속철도(KTX급)<br>自行车 (zì xíng chē) — 자전거<br>摩托车 (mó tuō chē) — 오토바이<br>步行 / 走路 (bù xíng / zǒu lù) — 도보 / 걷기<br>火车站 / 地铁站 (huǒ chē zhàn / dì tiě zhàn) — 기차역 / 지하철역"
-										},
-										{
-											"id": "zh_w_12",
-											"theme": "여행",
-											"title": "여행 필수 장소와 행동",
-											"summary": "여행지, 공항, 호텔 등 관광 중에 마주치는 핵심 단어와 상황 명사입니다.",
-											"detail": "길을 묻거나 위치를 파악할 때 쓰이는 '在(zài, ~에 있다)' 문법이나 목적을 나타내는 '为了(~을 위해)' 구문에 단골로 등장하는 여행 필수 어휘 노드입니다.",
-											"example": "<br>机场 (jī chǎng) — 공항<br>酒店 / 饭店 (jiǔ diàn / fàn diàn) — 호텔<br>洗手间 / 厕所 (xǐ shǒu jiān / cè suǒ) — 화장실<br>饭馆 / 餐厅 (fàn guǎn / cān tīng) — 식당 / 레스토랑<br>超市 (chāo shì) — 마트 / 슈퍼마켓<br>银行 (yín háng) — 은행<br>门票 (mén piào) — 입장권 / 티켓<br>换钱 / 兑换 (huàn qián / duì huàn) — 환전<br>风景 / 景点 (fēng jǐng / jǐng diǎn) — 풍경 / 관광지<br>地图 (dì tú) — 지도"
-										}
-									]
-								}
-							
+							id: "en_w_1",
+							theme: "감정/기분",
+							title: "tired",
+							summary: "피곤한, 지친",
+							detail: "품사: 형용사 / 몸이나 정신이 지쳐서 쉬고 싶을 때 씁니다.",
+							example: "<br>I'm so tired today.<br>(나 오늘 너무 피곤해.)"
 						},
-			en: {
-				name: "영어",
-				themes: { grammar: ["전체", "나의 상태/기분", "진행/계획", "취향/의지", "과거/경험", "조동사", "의문사", "제안/부탁", "존재/생각"], words: ["전체", "기초어휘"] },
-				wordSubThemes: { "전체": ["전체"], "기초어휘": ["전체", "감정/기분", "날씨/계절", "성격/성향", "상태/외모", "크기/모양", "평가/느낌", "행동/동작"] },
-				data: {
-					grammar:
-						[
-
-							//{ id: "en_g_1", theme: "나의 상태/기분", title: "I'm + 형용사", summary: "기분 표현", detail: "설명", example: "I'm tired." }
-							{
-								id: "en_g_1",
-								theme: "나의 상태/기분",
-								title: "I'm + 형용사",
-								summary: "현재 자신의 상태나 기분을 '나 ~해'라고 표현할 때 사용합니다.",
-								detail: "I am의 줄임말인 I'm 뒤에 감정이나 상태를 나타내는 형용사를 붙여서 말합니다.",
-								example: "<br>I'm tired.<br>(나 피곤해.)"
-							},
-							{
-								id: "en_g_2",
-								theme: "나의 상태/기분",
-								title: "I'm not + 형용사",
-								summary: "현재 자신의 상태나 기분이 '안 ~해'라고 부정할 때 사용합니다.",
-								detail: "I'm 뒤에 부정어 not을 붙이고 형용사를 연결합니다.",
-								example: "<br>I'm not hungry.<br>(나 배 안 고파.)"
-							},
-							{
-								id: "en_g_3",
-								theme: "나의 상태/기분",
-								title: "I'm + 명사 (직업/신분)",
-								summary: "자신의 직업, 신분 등을 '나 ~야'라고 소개할 때 사용합니다.",
-								detail: "I'm 뒤에 명사를 붙이며, 단수일 경우 관사(a/an)를 함께 씁니다.",
-								example: "<br>I'm a student.<br>(나 학생이야.)"
-							},
-							{
-								id: "en_g_4",
-								theme: "나의 상태/기분",
-								title: "I'm + 명사 (장소)",
-								summary: "자신이 현재 있는 위치를 '나 ~에 있어'라고 말할 때 사용합니다.",
-								detail: "I'm 뒤에 장소를 나타내는 전치사(at, in 등)와 명사를 함께 씁니다.",
-								example: "<br>I'm at home.<br>(나 집에 있어.)"
-							},
-							{
-								id: "en_g_5",
-								theme: "나의 상태/기분",
-								title: "I'm getting + 형용사",
-								summary: "상태가 '점점 ~해진다'라며 변화하는 과정을 나타낼 때 사용합니다.",
-								detail: "get에 -ing를 붙여 현재 변화하고 있는 상태를 강조합니다.",
-								example: "<br>I'm getting hungry.<br>(점점 배고파진다.)"
-							},
-							{
-								id: "en_g_6",
-								theme: "나의 상태/기분",
-								title: "I'm good at + 명사/동사-ing",
-								summary: "자신이 무언가를 '잘한다'고 말할 때 사용합니다.",
-								detail: "at이 전치사이므로 뒤에는 명사나 동사원형에 -ing를 붙인 동명사가 옵니다.",
-								example: "<br>I'm good at cooking.<br>(나 요리 잘해.)"
-							},
-							{
-								id: "en_g_7",
-								theme: "나의 상태/기분",
-								title: "I'm bad at + 명사/동사-ing",
-								summary: "자신이 무언가를 '못한다(서툴다)'고 말할 때 사용합니다.",
-								detail: "good의 반대인 bad를 사용하여 전치사 at 뒤에 명사/동명사를 연결합니다.",
-								example: "<br>I'm bad at directions.<br>(나 길치야.)"
-							},
-							{
-								id: "en_g_8",
-								theme: "나의 상태/기분",
-								title: "I'm interested in ~",
-								summary: "무언가에 '관심이나 흥미가 있다'고 표현할 때 사용합니다.",
-								detail: "전치사 in 뒤에 관심 있는 분야의 명사나 동명사를 씁니다.",
-								example: "<br>I'm interested in art.<br>(나 미술에 관심 있어.)"
-							},
-							{
-								id: "en_g_9",
-								theme: "나의 상태/기분",
-								title: "I'm afraid of ~",
-								summary: "무언가를 '무서워하거나 두려워할 때' 사용합니다.",
-								detail: "전치사 of 뒤에 무서워하는 대상(명사)을 넣습니다.",
-								example: "<br>I'm afraid of spiders.<br>(나 거미 무서워해.)"
-							},
-							{
-								id: "en_g_10",
-								theme: "나의 상태/기분",
-								title: "I'm full of ~",
-								summary: "몸이나 마음에 무언가가 '가득 차 있다'고 표현할 때 사용합니다.",
-								detail: "주로 에너지, 자신감 등 추상적인 느낌이나 사물이 가득 찼을 때 씁니다.",
-								example: "<br>I'm full of energy.<br>(나 에너지가 넘쳐.)"
-							},
-							{
-								id: "en_g_11",
-								theme: "나의 상태/기분",
-								title: "I'm ready to + 동사",
-								summary: "어떤 행동을 '할 준비가 되었다'고 말할 때 사용합니다.",
-								detail: "to 뒤에는 동사원형이 오며, 행동할 준비가 완료되었음을 나타냅니다.",
-								example: "<br>I'm ready to go.<br>(나 갈 준비 됐어.)"
-							},
-							{
-								id: "en_g_12",
-								theme: "나의 상태/기분",
-								title: "I'm sure ~",
-								summary: "어떤 사실을 '확신한다'고 강하게 말할 때 사용합니다.",
-								detail: "I'm sure 뒤에 주어+동사 문장을 이어서 확신하는 내용을 씁니다.",
-								example: "<br>I'm sure you can do it.<br>(너라면 할 수 있어.)"
-							},
-							{
-								id: "en_g_13",
-								theme: "나의 상태/기분",
-								title: "I'm sorry to + 동사",
-								summary: "상대방에게 미안함을 전하거나 유감스러운 소식을 듣고 위로할 때 사용합니다.",
-								detail: "to 뒤에 동사원형을 써서 미안하거나 유감인 원인을 나타냅니다.",
-								example: "<br>I'm sorry to hear that.<br>(그 말을 들으니 유감이야.)"
-							},
-							{
-								id: "en_g_14",
-								theme: "나의 상태/기분",
-								title: "I'm glad to + 동사",
-								summary: "어떤 행동을 하게 되어 '기쁘다'고 표현할 때 사용합니다.",
-								detail: "주로 처음 만났거나 좋은 일이 있을 때 격식 있게 기쁨을 표현합니다.",
-								example: "<br>I'm glad to meet you.<br>(만나서 반가워.)"
-							},
-							{
-								id: "en_g_15",
-								theme: "나의 상태/기분",
-								title: "I'm used to + 동사-ing",
-								summary: "어떤 일이나 환경에 '익숙하다'고 말할 때 사용합니다.",
-								detail: "여기서 to는 전치사이므로 뒤에 동사원형이 아닌 동명사(-ing)가 옵니다.",
-								example: "<br>I'm used to waking up early.<br>(일찍 일어나는 거 익숙해.)"
-							},
-
-							// 2. 지금 하고 있는 행동 표현하기
-							{
-								id: "en_g_16",
-								theme: "진행/계획",
-								title: "I'm + 동사-ing",
-								summary: "지금 현재 실시간으로 '~하는 중이다'라고 말할 때 사용합니다.",
-								detail: "be동사(am)와 동사원형-ing가 결합한 현재진행형 구조입니다.",
-								example: "<br>I'm watching TV.<br>(나 TV 보는 중이야.)"
-							},
-							{
-								id: "en_g_17",
-								theme: "진행/계획",
-								title: "I'm looking for ~",
-								summary: "물건이나 사람 등을 '찾는 중이다'라고 말할 때 사용합니다.",
-								detail: "look for(~을 찾다) 패턴을 현재진행형으로 바꾼 표현입니다.",
-								example: "<br>I'm looking for my keys.<br>(내 열쇠 찾는 중이야.)"
-							},
-							{
-								id: "en_g_18",
-								theme: "진행/계획",
-								title: "I'm thinking of + 동사-ing",
-								summary: "확정되진 않았지만 '~할까 생각 중이다'라고 말할 때 사용합니다.",
-								detail: "of 뒤에 생각하고 있는 행동을 동명사(-ing) 형태로 연결합니다.",
-								example: "<br>I'm thinking of buying a car.<br>(차 살까 생각 중이야.)"
-							},
-							{
-								id: "en_g_19",
-								theme: "진행/계획",
-								title: "I'm trying to + 동사",
-								summary: "무언가를 해내려고 애쓰거나 '노력하는 중이다'라고 할 때 사용합니다.",
-								detail: "try to+동사원형 패턴을 진행형으로 만들어 노력의 과정을 강조합니다.",
-								example: "<br>I'm trying to study.<br>(나 공부하려고 애쓰는 중이야.)"
-							},
-							{
-								id: "en_g_20",
-								theme: "진행/계획",
-								title: "I'm planning to + 동사",
-								summary: "향후 일정을 '~할 계획이다'라고 말할 때 사용합니다.",
-								detail: "to 뒤에 계획하고 있는 행동의 동사원형을 붙입니다.",
-								example: "<br>I'm planning to travel.<br>(나 여행 갈 계획이야.)"
-							},
-							{
-								id: "en_g_21",
-								theme: "진행/계획",
-								title: "I'm working on ~",
-								summary: "특정 업무, 과제, 프로젝트를 '진행 중이다'라고 할 때 사용합니다.",
-								detail: "on 뒤에 현재 공을 들이고 있는 대상(명사)을 씁니다.",
-								example: "<br>I'm working on a project.<br>(나 프로젝트 하는 중이야.)"
-							},
-							{
-								id: "en_g_22",
-								theme: "진행/계획",
-								title: "I'm on my way to ~",
-								summary: "어디론가 '가는 길이다' 혹은 '이동 중이다'라고 할 때 사용합니다.",
-								detail: "to 뒤에 목적지(명사)를 씁니다. 단, home으로 갈 때는 to를 빼고 'I'm on my way home'이라고 합니다.",
-								example: "<br>I'm on my way to work.<br>(나 출근하는 길이야.)"
-							},
-							{
-								id: "en_g_23",
-								theme: "진행/계획",
-								title: "I'm about to + 동사",
-								summary: "정말 곧, 직전에 '막 ~하려던 참이다'라고 말할 때 사용합니다.",
-								detail: "아주 가까운 미래에 일어날 직전의 행동을 표현할 때 유용합니다.",
-								example: "<br>I'm about to leave.<br>(나 막 나가려던 참이야.)"
-							},
-							{
-								id: "en_g_24",
-								theme: "진행/계획",
-								title: "Are you + 동사-ing?",
-								summary: "상대방이 지금 현재 '~하고 있는 중인지' 물어볼 때 사용합니다.",
-								detail: "현재진행형의 의문문 구조로, 너 지금 대상을 붙여 질문합니다.",
-								example: "<br>Are you listening to me?<br>(내 말 듣고 있어?)"
-							},
-							{
-								id: "en_g_25",
-								theme: "진행/계획",
-								title: "What are you + 동사-ing?",
-								summary: "상대방이 구체적으로 '무엇을 하는 중인지' 질문할 때 사용합니다.",
-								detail: "의문사 What을 맨 앞에 두고 진행형 의문문을 만듭니다.",
-								example: "<br>What are you doing?<br>(너 뭐 하고 있어?)"
-							},
-
-							// 3. 나의 취향, 욕구, 의지 표현하기
-							{
-								id: "en_g_26",
-								theme: "취향/의지",
-								title: "I like + 명사/동사-ing",
-								summary: "자신의 취향이나 좋아하는 것을 '~ 좋아해'라고 말할 때 사용합니다.",
-								detail: "like 뒤에 좋아하는 사물(명사)이나 행동(동명사)을 넣습니다.",
-								example: "<br>I like coffee. / I like swimming.<br>(커피 좋아해 / 수영 좋아해.)"
-							},
-							{
-								id: "en_g_27",
-								theme: "취향/의지",
-								title: "I don't like ~",
-								summary: "자신이 싫어하거나 취향이 아닌 것을 '안 좋아해'라고 할 때 사용합니다.",
-								detail: "일반동사 like의 부정문인 don't like 구조를 사용합니다.",
-								example: "<br>I don't like spicy food.<br>(나 매운 음식 안 좋아해.)"
-							},
-							{
-								id: "en_g_28",
-								theme: "취향/의지",
-								title: "I love + 명사/동사-ing",
-								summary: "like보다 더 강하게 '정말 너무 좋아해'라고 표현할 때 사용합니다.",
-								detail: "대상을 엄청 아끼거나 취미 생활을 강조할 때 유용합니다.",
-								example: "<br>I love watching movies.<br>(나 영화 보는 거 정말 좋아해.)"
-							},
-							{
-								id: "en_g_29",
-								theme: "취향/의지",
-								title: "I hate + 명사/동사-ing",
-								summary: "무언가를 '정말 싫어한다' 혹은 '질색한다'고 표현할 때 사용합니다.",
-								detail: "강한 거부감을 나타내므로 부드러운 자리에서는 don't like를 권장합니다.",
-								example: "<br>I hate waiting.<br>(나 기다리는 거 질색이야.)"
-							},
-							{
-								id: "en_g_30",
-								theme: "취향/의지",
-								title: "I want + 명사",
-								summary: "원하는 사물이나 대상을 '나 ~를 원해'라고 직접적으로 요구할 때 사용합니다.",
-								detail: "want 뒤에 원하는 대상(명사)을 바로 연결합니다.",
-								example: "<br>I want some water.<br>(물 좀 원해.)"
-							},
-							{
-								id: "en_g_31",
-								theme: "취향/의지",
-								title: "I want to + 동사",
-								summary: "원하는 행동을 '나 ~하고 싶어'라고 표현할 때 사용합니다.",
-								detail: "회화에서는 want to를 줄여서 'wanna(워나)'로 자주 발음합니다.",
-								example: "<br>I want to go home.<br>(나 집에 가고 싶어.)"
-							},
-							{
-								id: "en_g_32",
-								theme: "취향/의지",
-								title: "I don't want to + 동사",
-								summary: "어떤 행동을 '하고 싶지 않다'고 거절하거나 의사를 밝힐 때 사용합니다.",
-								detail: "wanna의 부정형으로, 회화에서는 don't wanna로 발음되기도 합니다.",
-								example: "<br>I don't want to argue.<br>(나 싸우고 싶지 않아.)"
-							},
-							{
-								id: "en_g_33",
-								theme: "취향/의지",
-								title: "I'd like + 명사",
-								summary: "식당, 매장 등에서 무언가를 '주시겠어요?' 하고 공손히 주문할 때 사용합니다.",
-								detail: "I would like의 줄임말로, want보다 훨씬 정중하고 세련된 표현입니다.",
-								example: "<br>I'd like a cup of tea, please.<br>(차 한 잔 주세요.)"
-							},
-							{
-								id: "en_g_34",
-								theme: "취향/의지",
-								title: "I'd like to + 동사",
-								summary: "상대방에게 정중하게 조심스럽게 '저 ~하고 싶어요'라고 의사를 밝힐 때 사용합니다.",
-								detail: "I would like to 뒤에 동사원형을 결합합니다.",
-								example: "<br>I'd like to ask a question.<br>(질문 하나 하고 싶어요.)"
-							},
-							{
-								id: "en_g_35",
-								theme: "취향/의지",
-								title: "I need + 명사",
-								summary: "단순한 욕구를 넘어 필수적으로 '나 ~가 필요해'라고 할 때 사용합니다.",
-								detail: "물건뿐만 아니라 시간, 휴식 같은 개념도 들어갈 수 있습니다.",
-								example: "<br>I need a break.<br>(나 휴식이 필요해.)"
-							},
-							{
-								id: "en_g_36",
-								theme: "취향/의지",
-								title: "I need to + 동사",
-								summary: "당장 상황상 '나 ~해야 해'라며 필요성에 의한 행동을 나타낼 때 사용합니다.",
-								detail: "의무라기보다는 본인을 위해 꼭 해야 하는 행동을 칭할 때 씁니다.",
-								example: "<br>I need to study tonight.<br>(나 오늘 밤에 공부해야 해.)"
-							},
-							{
-								id: "en_g_37",
-								theme: "취향/의지",
-								title: "I feel like + 동사-ing",
-								summary: "지금 순간 갑자기 '나 ~하고 싶은 기분이야'라고 할 때 사용합니다.",
-								detail: "like 뒤에 동사원형-ing 형태를 붙여서 충동적이거나 가벼운 욕구를 나타냅니다.",
-								example: "<br>I feel like eating pizza.<br>(나 피자 먹고 싶은 기분이야.)"
-							},
-							{
-								id: "en_g_38",
-								theme: "취향/의지",
-								title: "I don't feel like + 동사-ing",
-								summary: "귀찮거나 내키지 않아서 '나 ~할 기분이 아니야'라고 할 때 사용합니다.",
-								detail: "feel like 패턴의 부정문 형태로 일상에서 정말 많이 쓰입니다.",
-								example: "<br>I don't feel like going out.<br>(나 나갈 기분 아니야.)"
-							},
-							{
-								id: "en_g_39",
-								theme: "취향/의지",
-								title: "I decided to + 동사",
-								summary: "고민 끝에 '나 ~하기로 결정했어/결심했어'라고 선언할 때 사용합니다.",
-								detail: "decide의 과거형을 사용하여 결정을 내린 상태를 의미합니다.",
-								example: "<br>I decided to exercise.<br>(나 운동하기로 결심했어.)"
-							},
-							{
-								id: "en_g_40",
-								theme: "취향/의지",
-								title: "I hope to + 동사",
-								summary: "미래에 긍정적인 일이나 바라는 점을 '~하기를 바라'라고 소망할 때 사용합니다.",
-								detail: "to 뒤에 희망하는 행동의 동사원형을 씁니다.",
-								example: "<br>I hope to see you again.<br>(너를 다시 보길 바라.)"
-							},
-							{
-								id: "en_g_41",
-								theme: "취향/의지",
-								title: "I will + 동사",
-								summary: "지금 막 결정한 즉흥적인 의지나 약속으로 '나 ~할게'라고 할 때 사용합니다.",
-								detail: "축약형 'I'll(아일)'로 주로 쓰이며 뒤에는 동사원형이 옵니다.",
-								example: "<br>I'll call you later.<br>(내가 나중에 전화할게.)"
-							},
-							{
-								id: "en_g_42",
-								theme: "취향/의지",
-								title: "I won't + 동사",
-								summary: "강한 거절이나 다짐으로 '나 절대 ~ 안 할게'라고 말할 때 사용합니다.",
-								detail: "will not의 줄임말인 won't(웡트) 뒤에 동사원형을 씁니다.",
-								example: "<br>I won't do it again.<br>(다시는 안 그러겠어.)"
-							},
-							{
-								id: "en_g_43",
-								theme: "취향/의지",
-								title: "I'm going to + 동사",
-								summary: "이미 전부터 예정되어 있던 계획을 바탕으로 '나 ~할 거야'라고 할 때 사용합니다.",
-								detail: "회화에서는 going to를 줄여 'gonna(거나)'로 빈번하게 발음합니다.",
-								example: "<br>I'm going to sleep early.<br>(나 일찍 잘 거야.)"
-							},
-							{
-								id: "en_g_44",
-								theme: "취향/의지",
-								title: "I promise to + 동사",
-								summary: "상대방에게 신뢰를 주기 위해 '나 ~한다고 약속해'라고 강조할 때 사용합니다.",
-								detail: "to 뒤에 약속하는 구체적인 행동의 동사원형을 연결합니다.",
-								example: "<br>I promise to be there.<br>(거기 가겠다고 약속할게.)"
-							},
-							{
-								id: "en_g_45",
-								theme: "취향/의지",
-								title: "I prefer A to B",
-								summary: "두 가지 선택지 중에서 'B보다 A가 더 좋아'라고 선호도를 밝힐 때 사용합니다.",
-								detail: "than이 아니라 전치사 'to'를 사용하여 대상을 비교하는 점에 주의합니다.",
-								example: "<br>I prefer tea to coffee.<br>(난 커피보다 차가 좋아.)"
-							},
-
-							// 4. 과거의 일과 경험 말하기
-							{
-								id: "en_g_46",
-								theme: "과거/경험",
-								title: "I + 과거동사",
-								summary: "이미 지나간 과거의 행동을 단순하게 '나 ~했어'라고 말할 때 사용합니다.",
-								detail: "동사의 과거형(규칙 -ed형 또는 불규칙 변형)을 주어 뒤에 배치합니다.",
-								example: "<br>I met my friend yesterday.<br>(나 어제 친구 만났어.)"
-							},
-							{
-								id: "en_g_47",
-								theme: "과거/경험",
-								title: "I didn't + 동사원형",
-								summary: "과거에 어떤 행동을 '나 ~ 안 했어'라고 부정할 때 사용합니다.",
-								detail: "과거 부정 조동사인 didn't 뒤에는 반드시 '동사원형'이 와야 합니다.",
-								example: "<br>I didn't watch that movie.<br>(나 그 영화 안 봤어.)"
-							},
-							{
-								id: "en_g_48",
-								theme: "과거/경험",
-								title: "Did you + 동사원형?",
-								summary: "상대방에게 과거의 행적에 대해 '너 ~했어?'라고 물어볼 때 사용합니다.",
-								detail: "Did로 질문을 시작하고, 주어 뒤에는 동사원형을 유지합니다.",
-								example: "<br>Did you eat lunch?<br>(너 점심 먹었어?)"
-							},
-							{
-								id: "en_g_49",
-								theme: "과거/경험",
-								title: "I was + 형용사/명사",
-								summary: "과거 시점의 상태나 신분을 '나 ~했었어 / ~였어'라고 설명할 때 사용합니다.",
-								detail: "am/is의 과거형인 was를 사용하여 과거의 주어 상태를 표현합니다.",
-								example: "<br>I was busy yesterday.<br>(나 어제 바빴어.)"
-							},
-							{
-								id: "en_g_50",
-								theme: "과거/경험",
-								title: "I wasn't + 형용사/명사",
-								summary: "과거 상태에 대해 '나 안 ~했었어 / ~가 아니었어'라고 부정을 표현할 때 사용합니다.",
-								detail: "was 뒤에 부정어 not을 줄인 wasn't 형태를 사용합니다.",
-								example: "<br>I wasn't angry.<br>(나 화 안 났었어.)"
-							},
-							{
-								id: "en_g_51",
-								theme: "과거/경험",
-								title: "Were you + 형용사?",
-								summary: "과거 상대방의 감정이나 상태에 대해 '너 ~했었어?'라고 물어볼 때 사용합니다.",
-								detail: "you에 매칭되는 be동사 과거형인 Were를 문장 맨 앞으로 보냅니다.",
-								example: "<br>Were you surprised?<br>(너 놀랐었어?)"
-							},
-							{
-								id: "en_g_52",
-								theme: "과거/경험",
-								title: "I have + 과거분사(p.p.)",
-								summary: "과거부터 지금까지 살아오며 '나 (지금껏) ~해봤어'라고 경험을 말할 때 사용합니다.",
-								detail: "현재완료(have+p.p.) 시제이며 주로 가본 적이 있거나 해본 적을 칭합니다.",
-								example: "<br>I have been to Paris.<br>(나 파리에 가봤어.)"
-							},
-							{
-								id: "en_g_53",
-								theme: "과거/경험",
-								title: "I have never + 과거분사(p.p.)",
-								summary: "살면서 한 번도 해보지 않은 일에 대해 '나 한 번도 ~ 안 해봤어'라고 강력히 말할 때 사용합니다.",
-								detail: "not 대신 절대 없다는 의미의 never를 have와 p.p. 사이에 삽입합니다.",
-								example: "<br>I have never eaten this.<br>(나 이거 한 번도 안 먹어봤어.)"
-							},
-							{
-								id: "en_g_54",
-								theme: "과거/경험",
-								title: "Have you ever + 과거분사(p.p.)?",
-								summary: "상대방의 인생 경험에 관해 '너 살면서 ~해본 적 있어?'라고 물을 때 사용합니다.",
-								detail: "의문문 구조로, 여태껏이라는 의미를 강조하기 위해 ever를 주어 뒤에 넣습니다.",
-								example: "<br>Have you ever met him? <br>(너 그 사람 만난 적 있어?)"
-							},
-							{
-								id: "en_g_55",
-								theme: "과거/경험",
-								title: "I used to + 동사원형",
-								summary: "지금은 안 하지만 과거에는 규칙적으로 '나 예전에 ~하곤 했어'라고 추억할 때 사용합니다.",
-								detail: "과거의 규칙적인 습관이나 상태를 나타내며, 지금은 그렇지 않다는 뉘앙스가 포함됩니다.",
-								example: "<br>I used to smoke.<br>(나 예전에 담배 피웠었어.)"
-							},
-
-							// 5. 의무, 허락, 가능성 (조동사 활용)
-							{
-								id: "en_g_56",
-								theme: "조동사",
-								title: "I can + 동사원형",
-								summary: "자신의 능력이나 가능성에 기반해 '나 ~할 수 있어'라고 선언할 때 사용합니다.",
-								detail: "조동사 can 뒤에는 언제나 동사의 원래 형태(원형)가 결합합니다.",
-								example: "<br>I can speak English.<br>(나 영어 할 수 있어.)"
-							},
-							{
-								id: "en_g_57",
-								theme: "조동사",
-								title: "I can't + 동사원형",
-								summary: "능력이 부족하거나 불가능할 때 '나 ~할 수 없어'라고 표현할 때 사용합니다.",
-								detail: "cannot의 준말인 can't 뒤에 동사원형을 씁니다.",
-								example: "<br>I can't swim.<br>(나 수영 못 해.)"
-							},
-							{
-								id: "en_g_58",
-								theme: "조동사",
-								title: "Can you + 동사원형?",
-								summary: "상대방에게 편하게 '너 ~해줄 수 있어?'라고 부탁하거나 요청할 때 사용합니다.",
-								detail: "친구 사이에 캐주얼하게 도움을 구하는 대표적 의문형 패턴입니다.",
-								example: "<br>Can you help me?<br>(나 좀 도와줄 수 있어?)"
-							},
-							{
-								id: "en_g_59",
-								theme: "조동사",
-								title: "Can I + 동사원형?",
-								summary: "상대방에게 '내가 ~해도 돼?'라며 가볍게 허락을 구할 때 사용합니다.",
-								detail: "자신의 행동 허가를 구하는 표현입니다.",
-								example: "<br>Can I use this?<br>(나 이거 써도 돼?)"
-							},
-							{
-								id: "en_g_60",
-								theme: "조동사",
-								title: "I have to + 동사원형",
-								summary: "상황적, 규칙적으로 어쩔 수 없이 '나 ~해야만 해'라고 강한 의무를 말할 때 사용합니다.",
-								detail: "must와 유사하게 꼭 해야 하는 강제성이 띌 때 씁니다.",
-								example: "<br>I have to go now.<br>(나 지금 가야 해.)"
-							},
-							{
-								id: "en_g_61",
-								theme: "조동사",
-								title: "You should + 동사원형",
-								summary: "상대방에게 강요가 아닌 권유나 추천으로 '너 ~하는 게 좋겠어'라고 조언할 때 사용합니다.",
-								detail: "매우 부드러우면서도 일상적인 조언용 조동사입니다.",
-								example: "<br>You should see a doctor.<br>(너 병원 가보는 게 좋겠어.)"
-							},
-							{
-								id: "en_g_62",
-								theme: "조동사",
-								title: "You don't have to + 동사원형",
-								summary: "억지로 할 필요 없다는 뜻으로 '너 ~할 필요 없어'라고 말해줄 때 사용합니다.",
-								detail: "have to의 부정형은 금지가 아니라 '불필요'를 의미하는 핵심 문법입니다.",
-								example: "<br>You don't have to worry.<br>(걱정할 필요 없어.)"
-							},
-							{
-								id: "en_g_63",
-								theme: "조동사",
-								title: "May I + 동사원형?",
-								summary: "격식 있는 자리나 낯선 사람에게 '제가 ~해도 될까요?'라고 아주 정중히 허락을 구할 때 사용합니다.",
-								detail: "Can I보다 훨씬 예의 바르고 공손한 느낌을 주는 표현입니다.",
-								example: "<br>May I come in?<br>(들어가도 될까요?)"
-							},
-							{
-								id: "en_g_64",
-								theme: "조동사",
-								title: "It might + 동사원형",
-								summary: "불확실한 추측으로 '어쩌면 ~일지도 몰라'라고 말할 때 사용합니다.",
-								detail: "가능성이 다소 낮은 약한 추측을 나타낼 때 유용합니다.",
-								example: "<br>It might rain later.<br>(나중에 비 올지도 몰라.)"
-							},
-							{
-								id: "en_g_65",
-								theme: "조동사",
-								title: "You must not + 동사원형",
-								summary: "법이나 규칙상 '너 ~하면 절대 안 돼'라고 강하게 금지할 때 사용합니다.",
-								detail: "가장 높은 수준의 경고나 절대적 금지를 나타내는 조동사 표현입니다.",
-								example: "<br>You must not smoke here.<br>(여기서 담배 피우면 안 돼.)"
-							},
-
-							// 6. 질문하고 정보 묻기 (의문사 활용)
-							{
-								id: "en_g_66",
-								theme: "의문사",
-								title: "What is your ~?",
-								summary: "상대방의 기본 정보에 대해 '네 ~가 뭐야?'라고 물을 때 사용합니다.",
-								detail: "의문사 What 뒤에 명사 구를 연결하여 사물, 이름 등을 묻습니다.",
-								example: "<br>What is your phone number?<br>(전화번호가 뭐야?)"
-							},
-							{
-								id: "en_g_67",
-								theme: "의문사",
-								title: "What do you + 동사?",
-								summary: "평소에 상대방이 '무엇을 ~해?'라고 행동의 대상을 물을 때 사용합니다.",
-								detail: "What do you 뒤에 일반동사의 원형을 연결합니다.",
-								example: "<br>What do you mean?<br>(무슨 뜻이야?)"
-							},
-							{
-								id: "en_g_68",
-								theme: "의문사",
-								title: "Where is the ~?",
-								summary: "길을 찾거나 물건 위치를 물을 때 '~가 어디 있어요?'라고 질문할 때 사용합니다.",
-								detail: "장소를 물어보는 의문사 Where를 활용합니다.",
-								example: "<br>Where is the restroom?<br>(화장실이 어디예요?)"
-							},
-							{
-								id: "en_g_69",
-								theme: "의문사",
-								title: "Where do you + 동사?",
-								summary: "평소 행동하는 장소를 겨냥해 '너 어디서 ~해?'라고 물을 때 사용합니다.",
-								detail: "거주지, 근무지 등을 물어볼 때 자주 결합합니다.",
-								example: "<br>Where do you live?<br>(너 어디 살아?)"
-							},
-							{
-								id: "en_g_70",
-								theme: "의문사",
-								title: "When is ~?",
-								summary: "일정이나 특정 기념일이 '언제야?'라고 시점을 물어볼 때 사용합니다.",
-								detail: "시간/날짜를 묻는 의문사 When 뒤에 대상 명사를 둡니다.",
-								example: "<br>When is your birthday?<br>(네 생일이 언제야?)"
-							},
-							{
-								id: "en_g_71",
-								theme: "의문사",
-								title: "When do you + 동사?",
-								summary: "상대방의 일상적인 타임라인으로 '너 언제 ~해?'라고 질문할 때 사용합니다.",
-								detail: "행동이 일어나는 시각이나 시점을 물어볼 때 유용합니다.",
-								example: "<br>When do you finish work?<br>(너 언제 일 끝나?)"
-							},
-							{
-								id: "en_g_72",
-								theme: "의문사",
-								title: "Why are you + 형용사?",
-								summary: "상대방의 현재 감정이나 상태의 이유를 '너 왜 ~해?'라고 물을 때 사용합니다합니다.",
-								detail: "원인을 묻는 Why 뒤에 be동사 의문문 구조를 연결합니다.",
-								example: "<br>Why are you sad?<br>(너 왜 슬퍼?)"
-							},
-							{
-								id: "en_g_73",
-								theme: "의문사",
-								title: "Why did you + 동사?",
-								summary: "상대방이 과거에 했던 행동의 이유를 '너 왜 ~했어?'라고 물을 때 사용합니다.",
-								detail: "과거 행동의 원인을 파악하기 위해 did를 사용합니다.",
-								example: "<br>Why did you call me?<br>(너 왜 나한테 전화했어?)"
-							},
-							{
-								id: "en_g_74",
-								theme: "의문사",
-								title: "Who is ~?",
-								summary: "특정 사람의 정체를 '저 사람 누구야?'라고 질문할 때 사용합니다.",
-								detail: "인물을 묻는 의문사 Who 뒤에 대상을 가리키는 지시어 등을 넣습니다.",
-								example: "<br>Who is that guy?<br>(저 남자 누구야?)"
-							},
-							{
-								id: "en_g_75",
-								theme: "의문사",
-								title: "How is ~?",
-								summary: "상태나 안부를 가볍게 '~는 어때?'라고 평가나 상태를 물을 때 사용합니다.",
-								detail: "방법이 아니라 어떠한가라는 상태를 질문하는 How의 용법입니다.",
-								example: "<br>How is the weather?<br>(날씨 어때?)"
-							},
-							{
-								id: "en_g_76",
-								theme: "의문사",
-								title: "How do I + 동사?",
-								summary: "방법이나 길을 잘 모를 때 '내가 어떻게 ~해야 해?'라고 안내를 요청할 때 사용합니다.",
-								detail: "수단과 방법을 질문할 때 매우 중요하게 쓰이는 패턴입니다.",
-								example: "<br>How do I get there?<br>(거기 어떻게 가요?)"
-							},
-							{
-								id: "en_g_77",
-								theme: "의문사",
-								title: "How much is ~?",
-								summary: "쇼핑 등에서 물건의 가격을 물어볼 때 '~는 얼마예요?'라고 사용합니다.",
-								detail: "셀 수 없는 양이나 금액을 표현하는 How much를 사용합니다.",
-								example: "<br>How much is this bag?<br>(이 가방 얼마예요?)"
-							},
-							{
-								id: "en_g_78",
-								theme: "의문사",
-								title: "How many + 복수명사 ~?",
-								summary: "개수를 확인하기 위해 '~가 몇 개나 있어?'라고 물어볼 때 사용합니다.",
-								detail: "셀 수 있는 명사 앞에 How many를 붙이고, 반드시 명사는 '복수형'으로 표기합니다.",
-								example: "<br>How many books do you have?<br>(책 몇 권 있어?)"
-							},
-							{
-								id: "en_g_79",
-								theme: "의문사",
-								title: "How long does it take?",
-								summary: "특정 장소나 일에 '시간이 얼마나 걸려?'라고 소요 시간을 물을 때 사용합니다.",
-								detail: "시간의 길이를 뜻하는 How long과 시간이 걸리다의 take가 세트인 필수 통문장 패턴입니다.",
-								example: "<br>How long does it take to get there?<br>(거기까지 얼마나 걸려?)"
-							},
-							{
-								id: "en_g_80",
-								theme: "의문사",
-								title: "How often do you + 동사?",
-								summary: "상대방의 행동 빈도를 파악하고자 '얼마나 자주 ~해?'라고 질문할 때 사용합니다.",
-								detail: "주기나 횟수를 확인하고 싶을 때 유용한 표현입니다.",
-								example: "<br>How often do you exercise?<br>(너 얼마나 자주 운동해?)"
-							},
-
-							// 7. 제안, 부탁 및 명령하기
-							{
-								id: "en_g_81",
-								theme: "제안/부탁",
-								title: "Let's + 동사원형",
-								summary: "상대방에게 청유형으로 '우리 ~하자'라고 친근하게 제안할 때 사용합니다.",
-								detail: "Let us의 축약형으로 뒤에 함께 행동할 동사원형을 둡니다.",
-								example: "<br>Let's grab some food.<br>(우리 뭐 좀 먹자.)"
-							},
-							{
-								id: "en_g_82",
-								theme: "제안/부탁",
-								title: "Let's not + 동사원형",
-								summary: "부정적인 제안으로 '우리 ~하지 말자'라고 중단을 건넬 때 사용합니다.",
-								detail: "Let's 바로 뒤에 부정어 not을 붙이고 동사원형을 이어서 씁니다.",
-								example: "<br>Let's not waste time.<br>(우리 시간 낭비하지 말자.)"
-							},
-							{
-								id: "en_g_83",
-								theme: "제안/부탁",
-								title: "Why don't we + 동사원형?",
-								summary: "Let's보다 조금 더 생각할 여지를 주며 '우리 ~하는 게 어때?'라고 제안할 때 사용합니다.",
-								detail: "직역하면 왜 안 하니가 되지만, 회화에선 훌륭한 제안 멘트가 됩니다.",
-								example: "<br>Why don't we take a break?<br>(우리 좀 쉬는 게 어때?)"
-							},
-							{
-								id: "en_g_84",
-								theme: "제안/부탁",
-								title: "How about + 명사/동사-ing?",
-								summary: "가볍게 의견을 던지듯 '~는 어때?'라고 질문하며 제안할 때 사용합니다.",
-								detail: "about이 전치사이므로 명사 혹은 동사-ing(동명사)가 뒤따라옵니다.",
-								example: "<br>How about coffee?<br>(커피 한잔 어때?)"
-							},
-							{
-								id: "en_g_85",
-								theme: "제안/부탁",
-								title: "Would you like to + 동사?",
-								summary: "비즈니스나 격식 있는 관계에서 '~하실래요?'라고 다정하고 정중히 제안할 때 사용합니다.",
-								detail: "Do you want to보다 품격 있는 권유의 뉘앙스를 풍깁니다.",
-								example: "<br>Would you like to join us?<br>(우리와 함께 하실래요?)"
-							},
-							{
-								id: "en_g_86",
-								theme: "제안/부탁",
-								title: "Please + 동사원형",
-								summary: "명령조 문장에 예의를 더해 '~해 주세요'라고 정중히 지시할 때 사용합니다.",
-								detail: "문장 맨 앞 혹은 맨 뒤에 Please를 넣어 공손함을 표현합니다.",
-								example: "<br>Please sit down.<br>(앉아 주세요.)"
-							},
-							{
-								id: "en_g_87",
-								theme: "제안/부탁",
-								title: "Don't + 동사원형",
-								summary: "상대방에게 행동을 제한하며 '~하지 마'라고 금지 명령할 때 사용합니다.",
-								detail: "부정 명령문 구조로 동사의 원형 형태가 Don't 뒤에 옵니다.",
-								example: "<br>Don't worry about it.<br>(그것에 대해 걱정하지 마.)"
-							},
-							{
-								id: "en_g_88",
-								theme: "제안/부탁",
-								title: "Could you please + 동사?",
-								summary: "상대방에게 부탁을 해야 할 때 '혹시 ~해 주실 수 있나요?'라고 공손히 요청할 때 사용합니다.",
-								detail: "Can you보다 과거형 조동사 Could를 쓰면 한 층 더 조심스러운 어조가 됩니다.",
-								example: "<br>Could you please repeat that?<br>(다시 한번 말씀해 주시겠어요?)"
-							},
-							{
-								id: "en_g_89",
-								theme: "제안/부탁",
-								title: "Do you mind if I + 동사?",
-								summary: "내 행동이 방해될까 봐 '제가 ~해도 괜찮을까요/꺼리시나요?'라고 양해를 구할 때 사용합니다.",
-								detail: "직역하면 꺼리냐는 뜻이므로, 상대가 괜찮다고 할 땐 No라고 대답하는 문화적 특성이 있습니다.",
-								example: "<br>Do you mind if I open the window?<br>(창문 열어도 될까요?)"
-							},
-							{
-								id: "en_g_90",
-								theme: "제안/부탁",
-								title: "Help me + 동사원형",
-								summary: "혼자 하기 힘든 일을 '내가 ~하는 것 좀 도와줘'라고 요청할 때 사용합니다.",
-								detail: "Help 목적어 뒤에 동사원형(또는 to 동사원형)을 연결하는 구조입니다.",
-								example: "<br>Help me clean the room.<br>(방 청소하는 것 좀 도와줘.)"
-							},
-
-							// 8. 사물/사람 존재 및 생각 표현
-							{
-								id: "en_g_91",
-								theme: "존재/생각",
-								title: "There is + 단수명사",
-								summary: "어떤 사물이나 사람이 '특정 장소에 하나 있다'고 존재를 알릴 때 사용합니다.",
-								detail: "There는 해석하지 않으며, 뒤에 오는 진짜 주어가 단수(1개)일 때 is를 씁니다.",
-								example: "<br>There is a cat on the sofa.<br>(소파 위에 고양이가 있어.)"
-							},
-							{
-								id: "en_g_92",
-								theme: "존재/생각",
-								title: "There are + 복수명사",
-								summary: "여러 개의 사물이나 사람들이 '존재하고 있다'고 말할 때 사용합니다.",
-								detail: "뒤에 연결되는 주어가 2개 이상인 복수 형태일 때 be동사를 are로 씁니다.",
-								example: "<br>There are many people here.<br>(여기 사람이 많아.)"
-							},
-							{
-								id: "en_g_93",
-								theme: "존재/생각",
-								title: "Is there ~? / Are there ~?",
-								summary: "특정 사물이나 장소가 존재 유무를 확인하려 '~가 있나요?'라고 질문할 때 사용합니다.",
-								detail: "There is/are의 어순을 뒤바꾼 의문문 구조로, 뒤에 올 명사 수에 따라 구분해 묻습니다.",
-								example: "<br>Is there a convenience store nearby?<br>(근처에 편의점 있나요?)"
-							},
-							{
-								id: "en_g_94",
-								theme: "존재/생각",
-								title: "I think (that) ~",
-								summary: "내 주관적인 의견을 조심스럽게 '내 생각에는 ~인 것 같아'라고 말할 때 사용합니다.",
-								detail: "자신의 생각을 부드럽고 덜 단정적으로 표현할 때 일상에서 가장 많이 씁니다.",
-								example: "<br>I think it's a good idea.<br>(내 생각엔 좋은 아이디어 같아.)"
-							},
-							{
-								id: "en_g_95",
-								theme: "존재/생각",
-								title: "I don't think (that) ~",
-								summary: "상황에 대해 부정적으로 판단하여 '내 생각엔 ~ 아닌 것 같아'라고 의견을 낼 때 사용합니다.",
-								detail: "I think it's not~ 보다 문장 앞부분을 I don't think~ 로 부정하는 것이 더 자연스러운 영어 식 표현입니다.",
-								example: "<br>I don't think he will come.<br>(그 사람 안 올 것 같아.)"
-							},
-							{
-								id: "en_g_96",
-								theme: "존재/생각",
-								title: "Do you think (that) ~?",
-								summary: "상대방의 의견이나 생각을 '너는 ~라고 생각해?'라고 동의나 의견을 물을 때 사용합니다.",
-								detail: "Do you think 뒤에 궁금한 완전한 문장 구조를 바로 얹어 질문합니다.",
-								example: "<br>Do you think it's possible?<br>(그게 가능하다고 생각해?)"
-							},
-							{
-								id: "en_g_97",
-								theme: "존재/생각",
-								title: "It looks + 형용사",
-								summary: "눈에 보이는 시각적 정보를 보고 '~해 보인다'라고 감상을 말할 때 사용합니다.",
-								detail: "감각동사 look 뒤에 그 대상을 묘사하는 형용사를 바로 가져옵니다.",
-								example: "<br>It looks delicious.<br>(그거 맛있어 보인다.)"
-							},
-							{
-								id: "en_g_98",
-								theme: "존재/생각",
-								title: "It sounds + 형용사",
-								summary: "귀로 이야기를 듣거나 제안을 들었을 때 '~하게 들려 / 좋네!'라고 맞장구칠 때 사용합니다.",
-								detail: "대화 속에서 리액션을 할 때 아주 유용하게 쓰이는 필수 감각동사 패턴입니다.",
-								example: "<br>It sounds fun.<br>(재미있겠네.)"
-							},
-							{
-								id: "en_g_99",
-								theme: "존재/생각",
-								title: "It takes + 시간",
-								summary: "작업을 하거나 어디 가는데 걸리는 시간을 '(시간이) ~만큼 걸려'라고 말할 때 사용합니다.",
-								detail: "시간을 지칭하는 비인칭 주어 It을 사용하여 보편적인 필요 시간을 나타냅니다.",
-								example: "<br>It takes 10 minutes.<br>(10분 걸려.)"
-							},
-							{
-								id: "en_g_100",
-								theme: "존재/생각",
-								title: "That's why ~",
-								summary: "앞서 말한 내용이 원인이 되어 '그래서 내가 ~한 거야'라고 인과관계를 밝힐 때 사용합니다.",
-								detail: "That's why 뒤에는 결과를 나타내는 문장이 와서 상황을 결론지어 줍니다.",
-								example: "<br>That's why I'm late.<br>(그래서 내가 늦은 거야.)"
-							},
-
-							// ==========================================
-							// 6. 질문하고 정보 묻기 (의문사/질문 패턴 추가)
-							// ==========================================
-							{
-								id: "en_g_101",
-								theme: "의문사",
-								title: "Is it okay if I + 동사원형?",
-								summary: "상대방에게 조심스럽게 '내가 ~해도 괜찮을까?'라며 허락을 구할 때 사용합니다.",
-								detail: "Do you mind if I보다 조금 더 캐주얼하면서도 예의를 차리는 유용한 질문 문법입니다.",
-								example: "<br>Is it okay if I sit here?<br>(여기 앉아도 괜찮을까요?)"
-							},
-							{
-								id: "en_g_102",
-								theme: "의문사",
-								title: "What kind of + 명사 + do you like?",
-								summary: "상대방의 구체적인 취향을 '어떤 종류의 ~를 좋아해?'라고 물을 때 사용합니다.",
-								detail: "명사 자리에 음식, 영화, 음악 등을 넣어 상대방과 대화를 시작하기 좋은 패턴입니다.",
-								example: "<br>What kind of movies do you like?<br>(어떤 종류의 영화 좋아해?)"
-							},
-							{
-								id: "en_g_103",
-								theme: "의문사",
-								title: "Have you ever + 과거분사(p.p.)?",
-								summary: "상대방에게 '너 (~해본 적) 있어?'라고 인생 경험을 물어볼 때 사용합니다.",
-								detail: "현재완료 시제의 경험 용법으로, ever는 '여태껏'이라는 의미를 강조합니다.",
-								example: "<br>Have you ever been to Jeju Island?<br>(제주도 가본 적 있어?)"
-							},
-							{
-								id: "en_g_104",
-								theme: "의문사",
-								title: "How do you like + 명사?",
-								summary: "상대방에게 '새로 경험한 것'에 대한 소감이나 의견을 '어때? 마음에 들어?'라고 물을 때 사용합니다.",
-								detail: "How is~ 보다 구체적으로 상대방의 '마음에 드는 정도'를 묻는 뉘앙스입니다.",
-								example: "<br>How do you like your new job?<br>(새 직장은 어때? 마음에 들어?)"
-							},
-							{
-								id: "en_g_105",
-								theme: "의문사",
-								title: "What are you planning to + 동사원형?",
-								summary: "상대방에게 가까운 미래의 일정을 '너 ~할 계획이야?'라고 물어볼 때 사용합니다.",
-								detail: "What are you going to보다 조금 더 구체적인 계획이나 틀이 잡힌 일정을 물을 때 씁니다.",
-								example: "<br>What are you planning to do tonight?<br>(너 오늘 밤에 뭐 할 계획이야?)"
-							},
-							{
-								id: "en_g_106",
-								theme: "의문사",
-								title: "Which one do you prefer?",
-								summary: "선택지를 주고 '어느 쪽이 더 좋아?'라고 상대방의 선호도를 물을 때 사용합니다.",
-								detail: "A와 B 중에서 하나를 골라달라고 요청할 때 쓰는 고정 문형입니다.",
-								example: "<br>Which one do you prefer, coffee or tea?<br>(커피랑 차 중에 어떤 게 더 좋아?)"
-							},
-							{
-								id: "en_g_107",
-								theme: "의문사",
-								title: "Are you interested in + 명사/동사-ing?",
-								summary: "상대방에게 '너 ~에 관심 있어?'라고 흥미를 물어볼 때 사용합니다.",
-								detail: "전치사 in 뒤에는 관심 분야의 명사나 동명사(-ing) 형태가 옵니다.",
-								example: "<br>Are you interested in K-pop?<br>(너 케이팝에 관심 있어?)"
-							},
-							{
-								id: "en_g_108",
-								theme: "의문사",
-								title: "What makes you + 동사원형?",
-								summary: "직역하면 '무엇이 널 ~하게 만드니?'이며, 회화에선 부드럽게 '왜 ~하는 거야?'라고 이유를 물을 때 사용합니다.",
-								detail: "Why로 물어보는 것보다 덜 공격적이고 원어민스러운 세련된 질문 문법입니다.",
-								example: "<br>What makes you think so?<br>(왜 그렇게 생각해?)"
-							},
-							{
-								id: "en_g_109",
-								theme: "의문사",
-								title: "Is there any + 명사?",
-								summary: "어떤 사물이나 기회 등이 있는지 '혹시 ~가 있나요?'라고 유무를 물을 때 사용합니다.",
-								detail: "any가 들어가서 '혹시 조금이라도 있냐'는 뉘앙스를 풍기며, 명사 자리에 단수/복수/셀 수 없는 명사 모두 올 수 있습니다.",
-								example: "<br>Is there any problem?<br>(혹시 무슨 문제라도 있나요?)"
-							},
-							{
-								id: "en_g_110",
-								theme: "의문사",
-								title: "Do you happen to know + 명사/문장?",
-								summary: "상대방에게 조심스럽게 '혹시 ~를 아시나요?'라고 물어볼 때 사용합니다.",
-								detail: "happen to가 들어가면 '우연히', '혹시'라는 뜻이 더해져, 모르는 사람에게 길을 묻거나 조심스럽게 정보를 캐낼 때 최고의 질문 양식이 됩니다.",
-								example: "<br>Do you happen to know where the subway station is?<br>(혹시 지하철역이 어디 있는지 아시나요?)"
-							},
-							// ==========================================
-							// 질문 및 청유 패턴 추가 (111~115)
-							// ==========================================
-							{
-								id: "en_g_111",
-								theme: "의문사",
-								title: "What do you want?",
-								summary: "상대방에게 단도직입적으로 '너 뭐를 원해?'라고 물어볼 때 사용합니다.",
-								detail: "가장 직접적인 표현으로, 친한 사이에서는 솔직하게 원하는 것을 물을 때 쓰지만, 낯선 사람에게는 다소 무례하게 들릴 수 있으니 상황에 맞춰 씁니다.",
-								example: "<br>What do you want for your birthday?<br>(너 생일 선물로 뭐 원해?)"
-							},
-							{
-								id: "en_g_112",
-								theme: "의문사",
-								title: "What do you need?",
-								summary: "도움이 필요한 상대에게 '뭐가 필요해?'라고 물어볼 때 사용합니다.",
-								detail: "상대방에게 필요한 물건이나 지원이 무엇인지 구체적으로 파악하고 도와주려고 할 때 유용한 필수 패턴입니다.",
-								example: "<br>What do you need right now?<br>(너 지금 당장 뭐가 필요해?)"
-							},
-							{
-								id: "en_g_113",
-								theme: "제안/부탁",
-								title: "Hurry up and + 동사원형",
-								summary: "상대방을 재촉하며 '빨리 ~하자 / ~해'라고 말할 때 사용합니다.",
-								detail: "Hurry up(서둘러) 뒤에 and를 붙이고 다음 행동의 동사원형을 연결하여, 서둘러서 무언가를 하도록 유도하는 표현입니다.",
-								example: "<br>Hurry up and get in the car.<br>(빨리 차에 타자.)"
-							},
-							{
-								id: "en_g_114",
-								theme: "의문사",
-								title: "What's going on?",
-								summary: "상황이 이상하거나 무슨 일이 생겼을 때 '무슨 일이야?'라고 물어볼 때 사용합니다.",
-								detail: "What happened?와 비슷하지만, 지금 눈앞에서 벌어지고 있는 분위기나 사건의 내막을 캐주얼하게 물어볼 때 원어민들이 가장 많이 쓰는 의문문입니다.",
-								example: "<br>You look sad. What's going on?<br>(너 슬퍼 보여. 무슨 일이야?)"
-							},
-							{
-								id: "en_g_115",
-								theme: "존재/생각",
-								title: "Do you happen to have + 명사?",
-								summary: "상대방에게 '혹시 ~가 있어요?'라며 물건이나 여유분이 있는지 조심스럽게 물을 때 사용합니다.",
-								detail: "그냥 Do you have~? 보다 happen to가 들어가서 훨씬 조심스럽고 공손한 느낌을 줍니다. 길에서 무언가를 빌리거나 매장에서 재고를 물을 때 유용합니다.",
-								example: "<br>Do you happen to have an extra pen?<br>(혹시 여분의 펜이 있으신가요?)"
-							}
-
-						],
-					words: [
-						{ id: "en_w_1", theme: "기초어휘", subTheme: "감정/기분", title: "tired", summary: "피곤한", detail: "형용사", example: "I'm tired." },
-
-						{ id: "en_w_2", theme: "기초어휘", subTheme: "감정/기분", title: "happy", summary: "행복한", detail: "형용사", example: "She is happy." },
-						{ id: "en_w_3", theme: "기초어휘", subTheme: "감정/기분", title: "sad", summary: "슬픈", detail: "형용사", example: "He looks sad." },
-						{ id: "en_w_4", theme: "기초어휘", subTheme: "감정/기분", title: "angry", summary: "화난", detail: "형용사", example: "They are angry." },
-						{ id: "en_w_5", theme: "기초어휘", subTheme: "감정/기분", title: "excited", summary: "신이 난, 흥분한", detail: "형용사 품사: 형용사 / 기대되는 일로 마음이 설렐 때 씁니다.",  example: "I'm excited about the trip.<br>(나 여행 때문에 신나.)" },
-
-						{ id: "en_w_6", theme: "기초어휘", subTheme: "감정/기분", title: "nervous", summary: "긴장한", detail: "형용사", example: "She feels nervous before the presentation." },
-						{ id: "en_w_7", theme: "기초어휘", subTheme: "감정/기분", title: "relaxed", summary: "편안한, 긴장이 풀린", detail: "형용사", example: "He feels relaxed after the massage." },
-						{ id: "en_w_8", theme: "기초어휘", subTheme: "감정/기분", title: "bored", summary: "지루한, 심심한", detail: "형용사", example: "They are bored during the long lecture." },
-						{ id: "en_w_9", theme: "기초어휘", subTheme: "감정/기분", title: "confused", summary: "혼란스러운, 당황한", detail: "형용사", example: "She looks confused by the instructions." },
-		{ id: "en_w_10", theme: "기초어휘", subTheme: "감정/기분", title: "surprised", summary: "놀란, 깜짝 놀란", detail: "형용사", example: "He was surprised by the unexpected gift." },
-		{
-			id: "en_w_11",
-				theme: "감정/기분",
-					title: "nervous",
-						summary: "긴장되는, 떨리는",
+						{
+							id: "en_w_2",
+							theme: "감정/기분",
+							title: "excited",
+							summary: "신이 난, 들뜬",
+							detail: "품사: 형용사 / 기대되는 일로 마음이 설렐 때 씁니다.",
+							example: "<br>I'm excited about the trip.<br>(나 여행 때문에 신나.)"
+						},
+						{
+							id: "en_w_3",
+							theme: "감정/기분",
+							title: "nervous",
+							summary: "긴장되는, 떨리는",
 							detail: "품사: 형용사 / 면접, 시험, 발표 등을 앞두고 긴장될 때 씁니다.",
-								example: "<br>Don't be nervous. You can do it.<br>(긴장하지 마. 넌 할 수 있어.)"
-		},
+							example: "<br>Don't be nervous. You can do it.<br>(긴장하지 마. 넌 할 수 있어.)"
+						},
 
-		// ==========================================
-		// 2. 날씨/계절 (Weather & Seasons)
-		// ==========================================
-		{
-			id: "en_w_12",
-				theme: "날씨/계절",
-					title: "humid",
-						summary: "습한, 끈적거리는",
+						// ==========================================
+						// 2. 날씨/계절 (Weather & Seasons)
+						// ==========================================
+						{
+							id: "en_w_4",
+							theme: "날씨/계절",
+							title: "humid",
+							summary: "습한, 끈적거리는",
 							detail: "품사: 형용사 / 공기 중에 습기가 많아 눅눅할 때 씁니다.",
-								example: "<br>It's very humid in summer.<br>(여름에는 날씨가 매우 습해.)"
-		},
-		{
-			id: "en_w_13",
-				theme: "날씨/계절",
-					title: "chilly",
-						summary: "쌀쌀한",
+							example: "<br>It's very humid in summer.<br>(여름에는 날씨가 매우 습해.)"
+						},
+						{
+							id: "en_w_5",
+							theme: "날씨/계절",
+							title: "chilly",
+							summary: "쌀쌀한",
 							detail: "품사: 형용사 / cold보다는 덜하지만 으스스하게 추울 때 씁니다.",
-								example: "<br>It's a bit chilly outside.<br>(밖이 좀 쌀쌀하네.)"
-		},
+							example: "<br>It's a bit chilly outside.<br>(밖이 좀 쌀쌀하네.)"
+						},
 
-		// ==========================================
-		// 3. 성격/성향 (Personality & Traits)
-		// ==========================================
-		{
-			id: "en_w_14",
-				theme: "성격/성향",
-					title: "friendly",
-						summary: "다정한, 친근한, 사교적인",
+						// ==========================================
+						// 3. 성격/성향 (Personality & Traits)
+						// ==========================================
+						{
+							id: "en_w_6",
+							theme: "성격/성향",
+							title: "friendly",
+							summary: "다정한, 친근한, 사교적인",
 							detail: "품사: 형용사 / -ly로 끝나지만 부사가 아니라 형용사입니다. 사람이나 분위기가 친근할 때 씁니다.",
-								example: "<br>Our new neighbor is very friendly.<br>(우리 새 이웃은 정말 다정해.)"
-		},
-		{
-			id: "en_w_15",
-				theme: "성격/성향",
-					title: "shy",
-						summary: "부끄러움을 타는, 수줍어하는",
+							example: "<br>Our new neighbor is very friendly.<br>(우리 새 이웃은 정말 다정해.)"
+						},
+						{
+							id: "en_w_7",
+							theme: "성격/성향",
+							title: "shy",
+							summary: "부끄러움을 타는, 수줍어하는",
 							detail: "품사: 형용사 / 낯선 사람 앞에서 조용해지거나 내성적인 성격을 뜻합니다.",
-								example: "<br>He is too shy to speak first.<br>(그는 너무 부끄러움이 많아서 먼저 말을 못 걸어.)"
-		},
+							example: "<br>He is too shy to speak first.<br>(그는 너무 부끄러움이 많아서 먼저 말을 못 걸어.)"
+						},
 
-		// ==========================================
-		// 4. 상태/외모 (Status & Appearance)
-		// ==========================================
-		{
-			id: "en_w_16",
-				theme: "상태/외모",
-					title: "busy",
-						summary: "바쁜",
+						// ==========================================
+						// 4. 상태/외모 (Status & Appearance)
+						// ==========================================
+						{
+							id: "en_w_8",
+							theme: "상태/외모",
+							title: "busy",
+							summary: "바쁜",
 							detail: "품사: 형용사 / 할 일이 많아 겨를이 없을 때 씁니다. 뒤에 '동사-ing'를 붙여 '~하느라 바쁘다'로도 씁니다.",
-								example: "<br>I'm busy preparing for the exam.<br>(나 시험 준비하느라 바빠.)"
-		},
-		{
-			id: "en_w_17",
-				theme: "상태/외모",
-					title: "clean",
-						summary: "깨끗한",
+							example: "<br>I'm busy preparing for the exam.<br>(나 시험 준비하느라 바빠.)"
+						},
+						{
+							id: "en_w_9",
+							theme: "상태/외모",
+							title: "clean",
+							summary: "깨끗한",
 							detail: "품사: 형용사 / 더러운 것이 없고 정돈된 상태를 뜻합니다. (동사로 '청소하다'라는 뜻도 있습니다.)",
-								example: "<br>Keep your room clean.<br>(방을 깨끗하게 유지해라.)"
-		},
+							example: "<br>Keep your room clean.<br>(방을 깨끗하게 유지해라.)"
+						},
 
-		// ==========================================
-		// 5. 크기/모양 (Size & Shape)
-		// ==========================================
-		{
-			id: "en_w_18",
-				theme: "크기/모양",
-					title: "heavy",
-						summary: "무거운",
+						// ==========================================
+						// 5. 크기/모양 (Size & Shape)
+						// ==========================================
+						{
+							id: "en_w_10",
+							theme: "크기/모양",
+							title: "heavy",
+							summary: "무거운",
 							detail: "품사: 형용사 / 무게가 많이 나갈 때 씁니다. 비가 많이 올 때도 'heavy rain'처럼 사용합니다.",
-								example: "<br>This bag is too heavy for me.<br>(이 가방은 나한테 너무 무거워.)"
-		},
-		{
-			id: "en_w_19",
-				theme: "크기/모양",
-					title: "short",
-						summary: "짧은, 키가 작은",
+							example: "<br>This bag is too heavy for me.<br>(이 가방은 나한테 너무 무거워.)"
+						},
+						{
+							id: "en_w_11",
+							theme: "크기/모양",
+							title: "short",
+							summary: "짧은, 키가 작은",
 							detail: "품사: 형용사 / 길이나 시간 등이 '짧은' 것과 사람의 키가 '작은' 것 둘 다 표현할 수 있습니다.",
-								example: "<br>Life is too short.<br>(인생은 너무 짧아.)"
-		},
+							example: "<br>Life is too short.<br>(인생은 너무 짧아.)"
+						},
 
-		// ==========================================
-		// 6. 평가/느낌 (Opinion & Taste)
-		// ==========================================
-		{
-			id: "en_w_20",
-				theme: "평가/느낌",
-					title: "delicious",
-						summary: "맛있는",
+						// ==========================================
+						// 6. 평가/느낌 (Opinion & Taste)
+						// ==========================================
+						{
+							id: "en_w_12",
+							theme: "평가/느낌",
+							title: "delicious",
+							summary: "맛있는",
 							detail: "품사: 형용사 / 음식 맛이 훌륭할 때 씁니다. 회화에서는 더 편하게 'yummy'나 'good'도 많이 씁니다.",
-								example: "<br>This pizza is absolutely delicious!<br>(이 피자 진짜 대박 맛있다!)"
-		},
-		{
-			id: "en_w_21",
-				theme: "평가/느낌",
-					title: "expensive",
-						summary: "비싼",
+							example: "<br>This pizza is absolutely delicious!<br>(이 피자 진짜 대박 맛있다!)"
+						},
+						{
+							id: "en_w_13",
+							theme: "평가/느낌",
+							title: "expensive",
+							summary: "비싼",
 							detail: "품사: 형용사 / 물건의 가격이나 비용이 많이 들어갈 때 씁니다.",
-								example: "<br>Coffee here is too expensive.<br>(여기 커피는 너무 비싸.)"
-		},
+							example: "<br>Coffee here is too expensive.<br>(여기 커피는 너무 비싸.)"
+						},
 
-		// ==========================================
-		// 7. 행동/동작 (Actions & Activities) *추가됨*
-		// ==========================================
-		{
-			id: "en_w_22",
-				theme: "행동/동작",
-					title: "exercise",
-						summary: "운동하다",
+						// ==========================================
+						// 7. 행동/동작 (Actions & Activities) *추가됨*
+						// ==========================================
+						{
+							id: "en_w_14",
+							theme: "행동/동작",
+							title: "exercise",
+							summary: "운동하다",
 							detail: "품사: 일반동사 / 건강이나 체력을 위해 몸을 움직여 운동하는 것을 뜻합니다.",
-								example: "<br>I exercise three times a week.<br>(나는 일주일에 세 번 운동해.)"
-		},
-		{
-			id: "en_w_23",
-				theme: "행동/동작",
-					title: "grab",
-						summary: "(음식 등을) 간단히 먹다 / 쥐다",
+							example: "<br>I exercise three times a week.<br>(나는 일주일에 세 번 운동해.)"
+						},
+						{
+							id: "en_w_15",
+							theme: "행동/동작",
+							title: "grab",
+							summary: "(음식 등을) 간단히 먹다 / 쥐다",
 							detail: "품사: 일반동사 / 일상 대화에서 '뭐 좀 먹으러 가자'고 할 때 eat 대신 정말 많이 쓰는 유용한 동사입니다.",
-								example: "<br>Let's grab some coffee.<br>(우리 커피 한잔하러 가자.)"
-		},
-		{
-			id: "en_w_24",
-				theme: "행동/동작",
-					title: "relax",
-						summary: "쉬다, 휴식을 취하다, 긴장을 풀다",
+							example: "<br>Let's grab some coffee.<br>(우리 커피 한잔하러 가자.)"
+						},
+						{
+							id: "en_w_16",
+							theme: "행동/동작",
+							title: "relax",
+							summary: "쉬다, 휴식을 취하다, 긴장을 풀다",
 							detail: "품사: 일반동사 / 아무것도 안 하거나 편안한 상태로 몸과 마음을 쉴 때 씁니다.",
-								example: "<br>I just want to relax at home.<br>(난 그냥 집에서 쉬고 싶어.)"
-		},
-		// ==========================================
-		// 8. 방향/위치 (Directions & Locations)
-		// ==========================================
-		{
-			id: "en_w_25",
-				theme: "방향/위치",
-					title: "turn left / turn right",
-						summary: "좌회전하다 / 우회전하다",
+							example: "<br>I just want to relax at home.<br>(난 그냥 집에서 쉬고 싶어.)"
+						},
+						// ==========================================
+						// 8. 방향/위치 (Directions & Locations)
+						// ==========================================
+						{
+							id: "en_w_27",
+							theme: "방향/위치",
+							title: "turn left / turn right",
+							summary: "좌회전하다 / 우회전하다",
 							detail: "품사: 구동사 / 길을 안내할 때 가장 기본이 되는 방향 전환 표현입니다.",
-								example: "<br>Turn left at the corner.<br>(모퉁이에서 좌회전하세요.)"
-		},
-		{
-			id: "en_w_26",
-				theme: "방향/위치",
-					title: "go straight",
-						summary: "직진하다, 똑바로 가다",
+							example: "<br>Turn left at the corner.<br>(모퉁이에서 좌회전하세요.)"
+						},
+						{
+							id: "en_w_28",
+							theme: "방향/위치",
+							title: "go straight",
+							summary: "직진하다, 똑바로 가다",
 							detail: "품사: 구동사 / 쭉 앞으로 나아가라는 의미로, 뒤에 'for 2 blocks' 등을 붙여 거리를 구체화하기도 합니다.",
-								example: "<br>Go straight for two blocks.<br>(두 블록 직진하세요.)"
-		},
-		{
-			id: "en_w_27",
-				theme: "방향/위치",
-					title: "across from",
-						summary: "~의 맞은편에, 건너편에",
+							example: "<br>Go straight for two blocks.<br>(두 블록 직진하세요.)"
+						},
+						{
+							id: "en_w_29",
+							theme: "방향/위치",
+							title: "across from",
+							summary: "~의 맞은편에, 건너편에",
 							detail: "품사: 전치사구 / 도로를 사이에 두고 마주 보고 있는 위치를 설명할 때 씁니다.",
-								example: "<br>The bakery is across from the bank.<br>(빵집은 은행 맞은편에 있어요.)"
-		},
-		{
-			id: "en_w_28",
-				theme: "방향/위치",
-					title: "next to",
-						summary: "~의 옆에",
+							example: "<br>The bakery is across from the bank.<br>(빵집은 은행 맞은편에 있어요.)"
+						},
+						{
+							id: "en_w_30",
+							theme: "방향/위치",
+							title: "next to",
+							summary: "~의 옆에",
 							detail: "품사: 전치사구 / 사물이나 장소가 바로 옆에 붙어 있는 물리적 위치를 나타냅니다.",
-								example: "<br>The convenience store is next to the cafe.<br>(편의점은 카페 옆에 있어요.)"
-		},
-		{
-			id: "en_w_29",
-				theme: "방향/위치",
-					title: "between",
-						summary: "(두 대상) 사이에",
+							example: "<br>The convenience store is next to the cafe.<br>(편의점은 카페 옆에 있어요.)"
+						},
+						{
+							id: "en_w_31",
+							theme: "방향/위치",
+							title: "between",
+							summary: "(두 대상) 사이에",
 							detail: "품사: 전치사 / 보통 'between A and B' 형태로 쓰여 A와 B 사이에 위치함을 말합니다.",
-								example: "<br>The pharmacy is between the hotel and the station.<br>(약국은 호텔과 역 사이에 있어요.)"
-		},
-		{
-			id: "en_w_30",
-				theme: "방향/위치",
-					title: "behind",
-						summary: "~의 뒤에",
+							example: "<br>The pharmacy is between the hotel and the station.<br>(약국은 호텔과 역 사이에 있어요.)"
+						},
+						{
+							id: "en_w_32",
+							theme: "방향/위치",
+							title: "behind",
+							summary: "~의 뒤에",
 							detail: "품사: 전치사 / 눈에 보이지 않는 건물 뒷공간이나 사람의 등 뒤를 지칭할 때 씁니다.",
-								example: "<br>The parking lot is behind the building.<br>(주차장은 건물 뒤에 있습니다.)"
-		},
-		{
-			id: "en_w_31",
-				theme: "방향/위치",
-					title: "in front of",
-						summary: "~의 앞에",
+							example: "<br>The parking lot is behind the building.<br>(주차장은 건물 뒤에 있습니다.)"
+						},
+						{
+							id: "en_w_33",
+							theme: "방향/위치",
+							title: "in front of",
+							summary: "~의 앞에",
 							detail: "품사: 전치사구 / behind의 반대말로, 건물 전면이나 사람의 앞쪽 공간을 뜻합니다.",
-								example: "<br>Let's meet in front of the theater.<br>(영화관 앞에서 만나자.)"
-		},
-		{
-			id: "en_w_32",
-				theme: "방향/위치",
-					title: "around the corner",
-						summary: "모퉁이를 돌면 있는, 아주 가까이에",
+							example: "<br>Let's meet in front of the theater.<br>(영화관 앞에서 만나자.)"
+						},
+						{
+							id: "en_w_34",
+							theme: "방향/위치",
+							title: "around the corner",
+							summary: "모퉁이를 돌면 있는, 아주 가까이에",
 							detail: "품사: 전치사구 / 실제 길모퉁이를 돌면 나오는 위치를 뜻하기도 하고, 회화에서는 시간·거리가 '코앞에 다가왔다'는 비유로도 정말 자주 쓰입니다.",
-								example: "<br>The subway station is just around the corner.<br>(지하철역은 바로 모퉁이 돌면 있어요 / 코앞에 있어요.)"
-		}
-
-
+							example: "<br>The subway station is just around the corner.<br>(지하철역은 바로 모퉁이 돌면 있어요 / 코앞에 있어요.)"
+						}
 					]
 				}
 			}
+
 		};
 
-		// 🌟 2차 세분류 추적을 위해 activeSubTheme 추가
-		let currentStatus = { lang: '', type: '', activeTheme: '전체', activeSubTheme: '전체' };
+
+
+
+
+
+		let currentStatus = { lang: '', type: '', activeTheme: '전체' };
 		let isLoggedIn = false;
 
+
+
+		/* 2. 🌟 사이드바 및 UI 제어 로직 (중복 제거 및 최적화) */
 		function toggleSection(button) {
 			button.parentElement.classList.toggle('active');
 		}
 
+
+
 		function updateSidebarToggleButton() {
 			const toggleBtn = document.getElementById('sidebar-toggle-btn');
 			if (!toggleBtn) return;
+
+
 
 			const isMobile = window.innerWidth <= 768;
 			const isOpen = isMobile
 				? document.body.classList.contains('sidebar-open')
 				: !document.body.classList.contains('sidebar-collapsed');
 
+
+
 			toggleBtn.innerText = isOpen ? '✕ 메뉴' : '☰ 메뉴';
 		}
 
+
+
 		function toggleSidebar() {
 			const isMobile = window.innerWidth <= 768;
+
+
+
 			if (isMobile) {
 				document.body.classList.toggle('sidebar-open');
 			} else {
 				document.body.classList.toggle('sidebar-collapsed');
 			}
+
+
+
 			updateSidebarToggleButton();
 		}
+
+
 
 		function closeSidebar() {
 			document.body.classList.remove('sidebar-open');
 			updateSidebarToggleButton();
 		}
+
+
 
 		window.addEventListener('resize', () => {
 			if (window.innerWidth > 768) {
@@ -2688,139 +2752,131 @@ color: #6f6f9b;
 			updateSidebarToggleButton();
 		});
 
+
+
+		/* 3. 🌟 [메인 대시보드 화면 렌더링] (메뉴 선택 시 연동) */
 		function loadMainDashboard(lang, type) {
 			currentStatus.lang = lang;
 			currentStatus.type = type;
-			currentStatus.activeTheme = "전체";
-			currentStatus.activeSubTheme = "전체"; // 초기화
+			currentStatus.activeTheme = "전체"; // 메뉴 이동 시엔 '전체' 탭을 기본값으로
 
+
+
+			// 모든 사이드바 메뉴 스타일 초기화 후 현재 선택된 메뉴 활성화
 			document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+			//  정확하게 온클릭 속성(lang, type)을 비교해서 현재 클릭한 버튼을 찾아 active 추가
 			document.querySelectorAll('.nav-item').forEach(btn => {
 				if (btn.getAttribute('onclick').includes(`'${lang}'`) && btn.getAttribute('onclick').includes(`'${type}'`)) {
 					btn.classList.add('active');
 				}
 			});
 
+
+			// 클릭된 요소가 있으면 active 클래스 추가
+			if (window.event && window.event.target) {
+				window.event.target.classList.add('active');
+			}
+
+
+
 			renderDashboardView();
-			closeSidebar();
+			closeSidebar(); // 모바일에서 메뉴 선택 후 자동 닫기
 		}
 
-		/* 🌟 2단계 구조 맞춤형 핵심 대시보드 렌더링 함수 */
+
+
+		/* 4. 🌟 우측 화면을 동적으로 그려주는 통합 함수 */
 		function renderDashboardView() {
-			const { lang, type, activeTheme, activeSubTheme } = currentStatus;
-			if (!lang || !type) return;
+			const { lang, type, activeTheme } = currentStatus;
+			if (!lang || !type) return; // 선택된 언어나 타입이 없으면 중단
+
+
 
 			const langData = database[lang];
 			const typeLabel = type === 'grammar' ? '문법' : '단어';
 			const container = document.getElementById('dynamic-content');
+
+
+
 			const writeBtnStyle = isLoggedIn ? 'display: inline-flex;' : 'display: none;';
 
-			// 1. 기본 헤더 구역 생성
+
+
+			// 구조 설계: 상단 타이틀 -> 소분류 탭 버튼 구역 -> 게시글 카드 리스트 구역
 			let html = `
-						<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
-						<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-						<div class="content-header-flex">
-								<div>
-										<h1>${langData.name} ${typeLabel} 자료실</h1>
-										<div class="category-path">${langData.name} > ${typeLabel}</div>
-								</div>
-								<button class="btn-outline write-btn" style="${writeBtnStyle}" onclick="loadWriteForm()">✏️ 새 자료 등록</button>
-						</div>
-						<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
 
-						<!-- 1차 분류 (전체, 기초어휘 등) 컨테이너 -->
-						<div class="theme-btn-container">
+
+							<div class="content-header-flex">
+									<div>
+											<h1>${langData.name} ${typeLabel} 자료실</h1>
+											<div class="category-path">${langData.name} > ${typeLabel}</div>
+									</div>
+									<button class="btn-outline write-btn" style="${writeBtnStyle}" onclick="loadWriteForm()">✏️ 새 자료 등록</button>
+							</div>
+							<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+
+
+							<div class="theme-btn-container">
 					`;
 
-			// 1차 분류 버튼 그리기
+
+
 			const availableThemes = langData.themes[type];
 			availableThemes.forEach(theme => {
 				const activeClass = (theme === activeTheme) ? 'active' : '';
 				html += `<button class="theme-tab-btn ${activeClass}" onclick="filterByTheme('${theme}')">${theme}</button>`;
 			});
-			html += `</div>`;
 
-			// 🌟 2. 단어(words) 자료실이고, '전체'가 아닌 특정 테마를 골랐을 때 하위 세분류(나라, 직업 등) 버튼을 한 줄 더 그려줍니다.
-			if (type === 'words') {
-				html += `<div class="theme-btn-container" style="margin-top: -5px; margin-bottom: 20px; background: #f8fafc; padding: 10px; border-radius: 8px;">`;
-				const subThemes = langData.wordSubThemes[activeTheme] || ["전체"];
 
-				subThemes.forEach(sub => {
-					const activeSubClass = (sub === activeSubTheme) ? 'active' : '';
-					html += `<button class="sub-theme-tab-btn ${activeSubClass}" onclick="filterBySubTheme('${sub}')">${sub}</button>`;
-				});
-				html += `</div>`;
-			}
 
-			// 3. 데이터 필터링 조건문 연산
+			html += `</div><div class="data-list" id="card-list-box">`;
+
+
+
+			// 데이터 필터링 처리 (선택한 소분류 테마에 맞춰서 가져오기)
 			let posts = langData.data[type] || [];
-
-			// 1차 필터링
 			if (activeTheme !== "전체") {
 				posts = posts.filter(post => post.theme === activeTheme);
 			}
-			// 2차 필터링 (단어 자료실 전용)
-			if (type === 'words' && activeSubTheme !== "전체") {
-				posts = posts.filter(post => post.subTheme === activeSubTheme);
-			}
 
-			// 4. 문법 vs 단어 최종 레이아웃 렌더링 분기
-			if (type === 'grammar') {
-				html += `<div class="data-list" id="card-list-box">`;
-				if (posts.length === 0) {
-					html += `<p style='color:#999; padding: 30px 0; text-align:center;'>'${activeTheme}' 테마에 등록된 문법 자료가 없습니다.</p>`;
-				} else {
-					posts.forEach(item => {
-						html += `
-									<button class="data-card-btn" onclick="loadDetailView('${item.id}')">
-											<span style="font-size:0.8rem; color:#ff5722; font-weight:bold; display:block; margin-bottom:4px;">[${item.theme}]</span>
-											<strong>${item.title}</strong>
-											<p>${item.summary}</p>
-									</button>
-								`;
-					});
-				}
-				html += `</div>`;
+
+
+			if (posts.length === 0) {
+				html += `<p style='color:#999; padding: 30px 0; text-align:center;'>'${activeTheme}' 테마에 등록된 자료가 없습니다. ${isLoggedIn ? '새로운 자료를 등록해보세요!' : ''}</p>`;
 			} else {
-				html += `<div class="word-grid-container" id="card-list-box">`;
-				if (posts.length === 0) {
-					html += `<p style='color:#999; padding: 30px 0; text-align:center; grid-column: 1/-1;'>조건에 부합하는 등록된 단어가 없습니다.</p>`;
-				} else {
-					posts.forEach(item => {
-						html += `
-									<div class="word-item-card">
-										<span class="word-badge">${item.theme} &gt; ${item.subTheme}</span>
-										<div class="word-main-title">${item.title}</div>
-										<div class="word-meaning">${item.summary}</div>
-										<div class="word-desc">${item.detail}</div>
-										<div class="word-example-box">
-											<strong>활용 예문:</strong><br>${item.example}
-										</div>
-									</div>
-								`;
-					});
-				}
-				html += `</div>`;
+				posts.forEach(item => {
+					html += `
+											<button class="data-card-btn" onclick="loadDetailView('${item.id}')">
+													<span style="font-size:0.8rem; color:#ff5722; font-weight:bold; display:block; margin-bottom:4px;">[${item.theme}]</span>
+													<strong>${item.title}</strong>
+													<p>${item.summary}</p>
+											</button>
+									`;
+				});
 			}
 
+
+
+			html += `</div>`;
 			container.innerHTML = html;
-			updateSidebarToggleButton();
+			updateSidebarToggleButton(); // 화면 갱신 후 버튼 상태 맞춰주기
 		}
 
-		// 1차 분류 탭 변경 함수
+
+
+		/* 5. 🌟 화면상의 소분류 버튼을 눌렀을 때 작동하는 필터링 함수 */
 		function filterByTheme(themeName) {
 			currentStatus.activeTheme = themeName;
-			currentStatus.activeSubTheme = "전체"; // 대분류가 바뀌면 세분류 탭은 '전체'로 강제 리셋
-			renderDashboardView();
+			renderDashboardView(); // 화면 다시 그리기
 		}
 
-		// 🌟 2차 세분류 전용 탭 변경 함수 추가
-		function filterBySubTheme(subThemeName) {
-			currentStatus.activeSubTheme = subThemeName;
-			renderDashboardView();
-		}
 
+
+		/* 6. [상세 내용 보기] */
 		function loadDetailView(itemId) {
 			const { lang, type } = currentStatus;
 			const langData = database[lang];
@@ -2828,38 +2884,57 @@ color: #6f6f9b;
 			const selectedItem = items.find(item => item.id === itemId);
 			const container = document.getElementById('dynamic-content');
 
+
+
 			if (!selectedItem) return;
 
+
+
 			container.innerHTML = `
-						<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
-						<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-						<button class="back-btn" onclick="renderDashboardView()">← 목록으로 돌아가기</button>
 
-						<h1>${selectedItem.title}</h1>
-						<div class="category-path">${langData.name} > ${type === 'grammar' ? '문법' : '단어'} > ${selectedItem.theme} > 상세 내용</div>
 
-						<div class="detail-content">
-								<span style="color:#ff5722; font-weight:bold;">분류: ${selectedItem.theme}</span>
-								<h3 style="margin-top:10px;">💡 상세 설명</h3>
-								<p>${selectedItem.detail}</p>
+							<button class="btn-outline back-btn" onclick="renderDashboardView()">← 목록으로 돌아가기</button>
 
-								<div class="example-box">
-										<strong>📖 예문 및 활용</strong>
-										<p style="margin-top: 8px; color: #444; line-height: 1.8;">${selectedItem.example}</p>
-								</div>
-						</div>
+
+
+							<h1>${selectedItem.title}</h1>
+							<div class="category-path">${langData.name} > ${type === 'grammar' ? '문법' : '단어'} > ${selectedItem.theme} > 상세 내용</div>
+
+
+
+							<div class="detail-content">
+									<span style="color:#ff5722; font-weight:bold;">분류: ${selectedItem.theme}</span>
+									<h3 style="margin-top:10px;">💡 상세 설명</h3>
+									<p>${selectedItem.detail}</p>
+
+
+
+									<div class="example-box">
+											<strong>📖 예문 및 활용</strong>
+											<p style="margin-top: 8px; color: #444; line-height: 1.8;">${selectedItem.example}</p>
+									</div>
+							</div>
 					`;
 			updateSidebarToggleButton();
 		}
 
+
+
+		/* 7. [글쓰기 폼] */
 		function loadWriteForm() {
 			if (!isLoggedIn) return;
+
+
 
 			const { lang, type } = currentStatus;
 			const langData = database[lang];
 			const typeLabel = type === 'grammar' ? '문법' : '단어';
 			const container = document.getElementById('dynamic-content');
+
+
 
 			let selectOptions = "";
 			langData.themes[type].forEach(theme => {
@@ -2868,91 +2943,103 @@ color: #6f6f9b;
 				}
 			});
 
+
+
 			container.innerHTML = `
-						<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
-						<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-						<h1>자료 등록하기</h1>
-						<div class="category-path">위치: ${langData.name} > ${typeLabel} 자료실</div>
-						<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
 
-						<div class="form-container" style="background:#fafafa; padding:20px; border-radius:6px; border:1px solid #eee;">
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-theme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 1차 테마 선택</label>
-										<select id="write-theme" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">${selectOptions}</select>
-								</div>
-								<!-- 🌟 단어 등록 시 사용될 세분류 텍스트 입력창 고정 추가 -->
-								<div class="form-group" style="margin-bottom:15px; ${type === 'words' ? '' : 'display:none;'}">
-										<label for="write-subtheme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 2차 세분류 입력 (단어 전용)</label>
-										<input type="text" id="write-subtheme" placeholder="예: 나라, 직업, 가족, 숫자 직접 입력" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" value="전체">
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-title" style="display:block; font-weight:bold; margin-bottom:5px;">제목 (${typeLabel})</label>
-										<input type="text" id="write-title" placeholder="예: ~です 또는 爸爸" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-summary" style="display:block; font-weight:bold; margin-bottom:5px;">한 줄 뜻 / 요약</label>
-										<input type="text" id="write-summary" placeholder="예: ~입니다 또는 아빠, 아버지" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-detail" style="display:block; font-weight:bold; margin-bottom:5px;">💡 상세 설명 / 품사</label>
-										<textarea id="write-detail" rows="5" placeholder="상세한 설명이나 단어 품사를 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-example" style="display:block; font-weight:bold; margin-bottom:5px;">📖 예문 및 활용</label>
-										<textarea id="write-example" rows="4" placeholder="예문을 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
-								</div>
 
-								<div class="form-actions" style="display:flex; gap:10px;">
-										<button class="write-btn" onclick="saveContent()">저장하기</button>
-										<button class="back-btn" onclick="renderDashboardView()" style="margin-bottom:0;">취소</button>
-								</div>
-						</div>
+							<h1>자료 등록하기</h1>
+							<div class="category-path">위치: ${langData.name} > ${typeLabel} 자료실</div>
+							<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+
+
+							<div class="form-container">
+									<div class="form-group">
+											<label for="write-theme">📌 소분류 테마 선택</label>
+											<select id="write-theme">${selectOptions}</select>
+									</div>
+									<div class="form-group">
+											<label for="write-title">제목</label>
+											<input type="text" id="write-title" placeholder="문법명 또는 단어">
+									</div>
+									<div class="form-group">
+											<label for="write-summary">한 줄 요약</label>
+											<input type="text" id="write-summary" placeholder="목록에 노출될 설명">
+									</div>
+									<div class="form-group">
+											<label for="write-detail">💡 상세 설명</label>
+											<textarea id="write-detail" rows="5" placeholder="상세 설명을 입력하세요."></textarea>
+									</div>
+									<div class="form-group">
+											<label for="write-example">📖 예문 및 활용</label>
+											<textarea id="write-example" rows="4" placeholder="예문을 입력하세요."></textarea>
+									</div>
+
+
+
+									<div class="form-actions">
+											<button class="btn-outline submit-btn" onclick="saveContent()">저장하기</button>
+											<button class="btn-outline cancel-btn" onclick="renderDashboardView()">취소</button>
+									</div>
+							</div>
 					`;
 			updateSidebarToggleButton();
 		}
 
+
+
+		/* 8. [글 저장하기] */
 		function saveContent() {
 			if (!isLoggedIn) return;
 
+
+
 			const selectedTheme = document.getElementById('write-theme').value;
-			const subThemeInput = document.getElementById('write-subtheme').value.trim(); // 2차 세분류 값
 			const title = document.getElementById('write-title').value.trim();
 			const summary = document.getElementById('write-summary').value.trim();
 			const detail = document.getElementById('write-detail').value.trim();
 			const example = document.getElementById('write-example').value.trim().replace(/\n/g, '<br>');
+
+
 
 			if (!title || !summary || !detail || !example) {
 				alert("모든 빈칸을 채워주세요! ✏️");
 				return;
 			}
 
+
+
 			const { lang, type } = currentStatus;
+
+
 
 			const newPost = {
 				id: `${lang}_${type}_${Date.now()}`,
 				theme: selectedTheme,
-				subTheme: type === 'words' ? subThemeInput : '전체', // 단어일 때만 subTheme 연동
 				title: title,
 				summary: summary,
 				detail: detail,
 				example: example
 			};
 
+
+
 			database[lang].data[type].push(newPost);
+			alert(`[${selectedTheme}] 테마에 정상 등록되었습니다! 🎉`);
 
-			// 등록 시 데이터베이스 자동 확장 (세분류 목록이 존재하지 않는 새로운 텍스트면 목록 배열에 자동 추가)
-			if (type === 'words' && !database[lang].wordSubThemes[selectedTheme].includes(subThemeInput)) {
-				database[lang].wordSubThemes[selectedTheme].push(subThemeInput);
-			}
 
-			alert(`[${selectedTheme} > ${newPost.subTheme}] 테마에 정상 등록되었습니다! 🎉`);
 
 			currentStatus.activeTheme = selectedTheme;
-			currentStatus.activeSubTheme = newPost.subTheme;
 			renderDashboardView();
 		}
 
+
+
+		/* 9. 💬 로그인 모달 로직 */
 		function handleAuthClick() {
 			if (isLoggedIn) {
 				isLoggedIn = false;
@@ -2963,13 +3050,11 @@ color: #6f6f9b;
 				document.getElementById('loginModal').classList.add('show');
 			}
 		}
-
 		function closeModal() {
 			document.getElementById('loginModal').classList.remove('show');
 			document.getElementById('teacher-id').value = "";
 			document.getElementById('teacher-pw').value = "";
 		}
-
 		function tryLogin() {
 			const id = document.getElementById('teacher-id').value;
 			const pw = document.getElementById('teacher-pw').value;
@@ -2984,26 +3069,39 @@ color: #6f6f9b;
 			}
 		}
 
+
+
+		/* 10. 📊 광고 슬라이드 구동 스크립트 */
 		let currentSlideIndex = 0;
 		const totalSlides = 3;
 		let slideInterval;
 
+
+
 		function showSlide(index) {
 			const slidesContainer = document.getElementById('adSlides');
-			if (!slidesContainer) return;
+			if (!slidesContainer) return; // 홈 화면이 아닐 때 에러 방지
+
+
 
 			if (index >= totalSlides) currentSlideIndex = 0;
 			else if (index < 0) currentSlideIndex = totalSlides - 1;
 			else currentSlideIndex = index;
 
+
+
 			slidesContainer.style.transform = `translateX(-${currentSlideIndex * (100 / totalSlides)}%)`;
 		}
+
+
 
 		function moveSlide(step) {
 			clearInterval(slideInterval);
 			showSlide(currentSlideIndex + step);
 			startAutoSlide();
 		}
+
+
 
 		function startAutoSlide() {
 			if (slideInterval) clearInterval(slideInterval);
@@ -3012,6 +3110,9 @@ color: #6f6f9b;
 			}, 3000);
 		}
 
+
+
+		// 초기 설정 실행
 		startAutoSlide();
 		updateSidebarToggleButton();
 	</script>
