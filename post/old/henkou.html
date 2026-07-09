@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>나만의 자료실</title>
+	<style>
+		/* 기본 스타일 초기화 */
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+
+		body {
+			display: flex;
+			flex-direction: row; /* 데스크톱에서는 좌우 배치 */
+			height: 100vh;
+			color: #333;
+			background-color: #fcfcfc;
+			overflow: hidden; /* 전체 화면 스크롤 방지 및 내부 스크롤 유도 */
+		}
+
+		/* ---------------------------------- */
+		/* 좌측 사이드바 (메뉴) 스타일 */
+		/* ---------------------------------- */
+		.sidebar {
+			width: 260px;
+			background-color: #ffffff;
+			border-right: 1px solid #e0e0e0;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			transition: width 0.3s ease, padding 0.3s ease, border 0.3s ease, transform 0.3s ease;
+			flex-shrink: 0;
+			height: 100vh;
+			z-index: 1200;
+		}
+
+		body.sidebar-collapsed .sidebar {
+			width: 0;
+			padding: 0;
+			border-right: 0;
+			overflow: hidden;
+		}
+
+		body.sidebar-collapsed .sidebar > * {
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.sidebar h2 {
+			font-size: 1.2rem;
+			margin-bottom: 20px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #333;
+			color: #111;
+		}
+
+		.lang-section {
+			margin-bottom: 15px;
+		}
+
+		.lang-btn {
+			width: 100%;
+			background: none;
+			border: 1px solid #0066cc;
+			color: #0066cc;
+			padding: 10px 15px;
+			text-align: left;
+			font-size: 1rem;
+			font-weight: bold;
+			cursor: pointer;
+			border-radius: 4px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.lang-btn::after {
+			content: '▼';
+			font-size: 0.8rem;
+			transition: transform 0.2s;
+		}
+
+		.lang-section.active .lang-btn::after {
+			transform: rotate(180deg);
+		}
+
+		.sub-menu {
+			display: none;
+			padding-left: 10px;
+			margin-top: 5px;
+		}
+
+		.lang-section.active .sub-menu {
+			display: block;
+		}
+
+		.nav-item {
+			display: block;
+			width: 100%;
+			background: none;
+			border: 1px solid #555555;
+			color: #555555;
+			padding: 10px 12px;
+			margin-top: 6px;
+			text-align: left;
+			font-size: 0.9rem;
+			cursor: pointer;
+			border-radius: 4px;
+			transition: all 0.2s ease;
+		}
+
+		.nav-item:hover, .nav-item.active {
+			border: 1px solid #ff5722 !important;
+			color: #ff5722 !important;
+			background-color: rgba(255, 87, 34, 0.05) !important;
+			font-weight: bold;
+		}
+
+		.sidebar-footer {
+			padding-top: 15px;
+			border-top: 1px solid #e0e0e0;
+		}
+
+		.auth-btn {
+			width: 100%;
+			padding: 10px;
+			background: none;
+			border: 1px solid #555;
+			color: #555;
+			font-weight: bold;
+			cursor: pointer;
+			border-radius: 4px;
+		}
+
+		/* ---------------------------------- */
+		/* 우측 콘텐츠 영역 스타일 */
+		/* ---------------------------------- */
+		.content-area {
+			flex: 1;
+			padding: 40px;
+			overflow-y: auto;
+			transition: padding-left 0.3s ease;
+		}
+
+		body.sidebar-collapsed .content-area {
+			padding-left: 40px;
+		}
+
+		.content-box {
+			background-color: #ffffff;
+			padding: 30px;
+			border-radius: 8px;
+			border: 1px solid #e0e0e0;
+			min-height: 80vh;
+		}
+
+		.content-header-flex {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 10px;
+		}
+
+		.category-path {
+			font-size: 0.9rem;
+			color: #888;
+			margin-bottom: 20px;
+		}
+
+		.sidebar-toggle-btn {
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			margin-bottom: 20px;
+			padding: 8px 16px;
+			border: 1px solid #777;
+			background: #fff;
+			color: #333;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 0.9rem;
+			font-weight: 500;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+			transition: left 0.3s ease;
+			z-index: 1300;
+		}
+
+		.sidebar-toggle-btn:hover {
+			border-color: #0066cc;
+			color: #0066cc;
+			background-color: #f0f7ff;
+		}
+
+		body.sidebar-collapsed .sidebar-toggle-btn {
+			left: 12px;
+		}
+
+		.sidebar-overlay {
+			position: fixed;
+			inset: 0;
+			background: rgba(0, 0, 0, 0.4);
+			z-index: 1100;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+		}
+
+		/* 🌟 상단 탭 대분류/소분류 통합 스타일 */
+		.theme-btn-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 15px 0;
+		}
+
+		.theme-tab-btn {
+			background: none;
+			border: 1px solid #0066cc;
+			color: #0066cc;
+			padding: 8px 16px;
+			font-size: 0.85rem;
+			font-weight: 500;
+			cursor: pointer;
+			border-radius: 20px;
+			transition: all 0.2s ease;
+		}
+
+		.theme-tab-btn:hover, .theme-tab-btn.active {
+			background-color: #0066cc !important;
+			color: #ffffff !important;
+		}
+
+		/* 세분류 전용 미니 탭 스타일 (오렌지 감성) */
+		.sub-theme-tab-btn {
+			background: none;
+			border: 1px solid #ff5722;
+			color: #ff5722;
+			padding: 6px 14px;
+			font-size: 0.8rem;
+			font-weight: 500;
+			cursor: pointer;
+			border-radius: 20px;
+			transition: all 0.2s ease;
+		}
+
+		.sub-theme-tab-btn:hover, .sub-theme-tab-btn.active {
+			background-color: #ff5722 !important;
+			color: #ffffff !important;
+		}
+
+		.write-btn {
+			background: none;
+			cursor: pointer;
+			border-radius: 4px;
+			transition: all 0.2s;
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			border: 1px solid #2e7d32;
+			color: #2e7d32;
+			padding: 8px 16px;
+			font-size: 0.9rem;
+			font-weight: bold;
+		}
+		.write-btn:hover {
+			background-color: #2e7d32;
+			color: #fff;
+		}
+
+		/* 문법(Grammar) 전용 리스트 스타일 */
+		.data-list {
+			margin-top: 15px;
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.data-card-btn {
+			width: 100%;
+			background: #ffffff;
+			border: 1px solid #cccccc;
+			border-radius: 6px;
+			padding: 20px;
+			text-align: left;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.data-card-btn:hover {
+			border-color: #ff5722;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+		}
+
+		.data-card-btn strong {
+			display: block;
+			font-size: 1.2rem;
+			color: #111;
+			margin-bottom: 6px;
+		}
+
+		.data-card-btn p {
+			color: #666;
+			font-size: 0.95rem;
+			line-height: 1.5;
+		}
+
+		/* 단어(Words) 전용 카드 대시보드 스타일 */
+		.word-grid-container {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: 20px;
+			margin-top: 15px;
+		}
+
+		.word-item-card {
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+			padding: 20px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+			transition: transform 0.2s ease, border-color 0.2s ease;
+		}
+
+		.word-item-card:hover {
+			transform: translateY(-2px);
+			border-color: #0066cc;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+		}
+
+		.word-badge {
+			font-size: 0.75rem;
+			color: #0066cc;
+			background: #e0f2fe;
+			padding: 2px 8px;
+			border-radius: 12px;
+			font-weight: bold;
+			display: inline-block;
+			margin-bottom: 8px;
+		}
+
+		.word-main-title {
+			font-size: 1.4rem;
+			font-weight: 700;
+			color: #1a202c;
+			margin-bottom: 4px;
+		}
+
+		.word-meaning {
+			font-size: 1rem;
+			color: #4a5568;
+			font-weight: 500;
+			border-bottom: 1px dashed #e2e8f0;
+			padding-bottom: 8px;
+			margin-bottom: 10px;
+		}
+
+		.word-desc {
+			font-size: 0.85rem;
+			color: #718096;
+			margin-bottom: 8px;
+			line-height: 1.4;
+		}
+
+		.word-example-box {
+			font-size: 0.85rem;
+			color: #4a5568;
+			background: #f8fafc;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border-left: 3px solid #0066cc;
+			line-height: 1.5;
+		}
+
+		/* 광고 슬라이더 */
+		.ad-slider-wrapper {
+			position: relative;
+			width: 100%;
+			height: 500px;
+			margin-top: 30px;
+			border: 1px solid #e0e0e0;
+			border-radius: 8px;
+			overflow: hidden;
+		}
+
+		.ad-slides {
+			display: flex;
+			width: 300%;
+			height: 100%;
+			transition: transform 0.5s ease-in-out;
+		}
+
+		.ad-slide {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			padding: 40px;
+			box-sizing: border-box;
+		}
+
+		.ad-slide h2 { font-size: 1.4rem; color: #222; margin-bottom: 8px; }
+		.ad-slide p { font-size: 1rem; color: #666; }
+
+		.slide-btn {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background: rgba(255, 255, 255, 0.7);
+			border: 1px solid #777;
+			color: #333;
+			width: 35px;
+			height: 35px;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 1rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s;
+		}
+		.slide-btn:hover { border-color: #0066cc; color: #0066cc; background: #fff; }
+		.prev-btn { left: 15px; }
+		.next-btn { right: 15px; }
+
+		/* 모달 관련 */
+		.modal-overlay {
+			position: fixed;
+			top: 0; left: 0; width: 100%; height: 100%;
+			background-color: rgba(0, 0, 0, 0.4);
+			display: flex; justify-content: center; align-items: center;
+			z-index: 2000;
+			visibility: hidden; opacity: 0;
+			transition: all 0.3s;
+		}
+		.modal-overlay.show { visibility: visible; opacity: 1; }
+		.modal-content { background-color: #ffffff; padding: 30px; border-radius: 8px; width: 340px; }
+		.modal-content h3 { text-align: center; margin-bottom: 20px; }
+		.modal-content input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px; }
+		.modal-btn-wrap { display: flex; gap: 8px; }
+		.modal-btn { flex: 1; padding: 10px; background: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+		.content-box { word-break: keep-all; overflow-wrap: anywhere; }
+
+		/* 상세 정보 뷰 */
+		.detail-content {
+			margin-top: 20px;
+			background: #fafafa;
+			padding: 20px;
+			border-radius: 6px;
+			border: 1px solid #eee;
+		}
+		.example-box {
+			margin-top: 15px;
+			background: #fff;
+			padding: 15px;
+			border-left: 4px solid #ff5722;
+		}
+		.back-btn {
+			background: none;
+			border: 1px solid #777;
+			padding: 8px 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			margin-bottom: 15px;
+		}
+
+		/* =========================================
+					 Responsive (Tablet / Mobile)
+					 ========================================= */
+		@media (max-width: 1024px) {
+			body { height: auto; min-height: 100vh; }
+			.sidebar { width: 220px; padding: 16px; }
+			.content-area { padding: 24px; }
+			.content-box { padding: 20px; min-height: auto; }
+			.ad-slider-wrapper { height: 360px; }
+			.ad-slide { padding: 24px; }
+			.ad-slide h2 { font-size: 1.2rem; }
+			.ad-slide p { font-size: 0.95rem; }
+		}
+
+		@media (max-width: 768px) {
+			body {
+				flex-direction: column;
+				height: auto;
+				position: relative;
+				overflow: auto;
+				min-height: 100vh;
+			}
+
+			.sidebar {
+				position: fixed;
+				top: 0; left: 0;
+				width: 260px; height: 100vh;
+				transform: translateX(-100%);
+				transition: transform 0.3s ease;
+				padding-top: 70px !important;
+				box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+			}
+
+			body.sidebar-open .sidebar { transform: translateX(0); }
+			body.sidebar-open .sidebar-overlay { opacity: 1; visibility: visible; }
+
+			.content-area {
+				padding: 16px;
+				width: 100%;
+				overflow: visible;
+				padding-top: 60px;
+			}
+
+			.sidebar-toggle-btn {
+				position: fixed;
+				left: 16px !important;
+				top: 16px;
+				margin-bottom: 0;
+				z-index: 1300;
+			}
+
+			body.sidebar-open .sidebar-toggle-btn {
+				left: 195px !important;
+				border-color: #ff5722;
+				color: #ff5722;
+				background: #fff;
+			}
+
+			.content-box { padding: 14px; border-radius: 6px; min-height: auto; }
+			.category-path { font-size: 0.82rem; margin-bottom: 10px; }
+			.auth-btn, .lang-btn, .nav-item { min-height: 42px; }
+
+			.theme-btn-container {
+				flex-wrap: nowrap;
+				overflow-x: auto;
+				-webkit-overflow-scrolling: touch;
+				padding-bottom: 8px;
+				gap: 8px;
+			}
+			.theme-tab-btn, .sub-theme-tab-btn {
+				flex: 0 0 auto;
+				white-space: nowrap;
+				padding: 6px 14px;
+				font-size: 0.8rem;
+			}
+
+			.word-grid-container {
+				grid-template-columns: 1fr;
+				gap: 15px;
+			}
+
+			.ad-slider-wrapper { height: 230px; margin-top: 16px; }
+			.ad-slide { padding: 16px; }
+			.ad-slide h2 { font-size: 1rem; }
+			.ad-slide p { font-size: 0.86rem; }
+			.slide-btn { width: 30px; height: 30px; font-size: 0.9rem; }
+		}
+	</style>
+</head>
+<body>
+
+	<nav class="sidebar">
+		<div class="sidebar-menu-wrap">
+			<h2>Semo 자료실</h2>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">일본어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('ja', 'grammar')"> 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('ja', 'words')"> 단어 자료실</button>
+				</div>
+			</div>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">한국어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('ko', 'grammar')"> 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('ko', 'words')">단어 자료실</button>
+				</div>
+			</div>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">중국어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('zh', 'grammar')">📚 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('zh', 'words')">✏️ 단어 자료실</button>
+				</div>
+			</div>
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">영어</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadMainDashboard('en', 'grammar')"> 문법 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('en', 'words')">단어 자료실</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="sidebar-footer">
+			<button id="sidebar-auth-btn" class="auth-btn" onclick="handleAuthClick()"> 로그인</button>
+		</div>
+	</nav>
+
+	<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+	<main class="content-area">
+		<div class="content-box">
+			<div id="dynamic-content">
+
+				<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+
+				<h1>메뉴를 선택해주세요</h1>
+				<div class="category-path">좌측 메뉴에서 학습할 카테고리를 선택하세요.</div>
+
+				<div class="ad-slider-wrapper">
+					<div class="ad-slides" id="adSlides">
+						<div class="ad-slide" style="background-color: #f0f7ff;">
+							<div>
+								<h2>🚀 일본어 언어 마스터 패키지</h2>
+								<p>일본어, 기초부터 비즈니스까지 한 번에 끝내기!</p>
+							</div>
+						</div>
+						<div class="ad-slide" style="background-color: #fff0f5;">
+							<div>
+								<h2>📚 원어민 1:1 화상 회화 20% 할인</h2>
+								<p>지금 가입하면 첫 달 무료 수강권 증정 쿠폰 발급</p>
+							</div>
+						</div>
+						<div class="ad-slide" style="background-color: #f5fff0;">
+							<div>
+								<h2>📝 글자 마스터반 개시</h2>
+								<p>매일 25분 투자로 히라가나 정복하는 비법</p>
+							</div>
+						</div>
+					</div>
+					<button class="slide-btn prev-btn" onclick="moveSlide(-1)">❮</button>
+					<button class="slide-btn next-btn" onclick="moveSlide(1)">❯</button>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<div class="modal-overlay" id="loginModal">
+		<div class="modal-content">
+			<h3> 로그인</h3>
+			<p>로그인을 하시면 게시물이 작성됩니다.</p>
+			<input type="text" id="teacher-id" placeholder="아이디 (admin)">
+			<input type="password" id="teacher-pw" placeholder="비밀번호 (1234)">
+			<div class="modal-btn-wrap">
+				<button class="modal-btn" style="border:1px solid #0066cc; color:#0066cc;" onclick="tryLogin()">로그인</button>
+				<button class="modal-btn" style="border:1px solid #777; color:#777;" onclick="closeModal()">닫기</button>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		/* 🌟 확장된 2단계 분류 데이터베이스 구조 */
+		let database = {
+			ja: {
+				name: "일본어",
+				themes: {
+					grammar: ["전체", "초급문법", "중급문법"],
+					words: ["전체", "기초어휘"] // 1차 분류 대문틀
+				},
+				// 🌟 단어용 상세 세분류 매핑 선언 구조
+				wordSubThemes: {
+					"전체": ["전체"],
+					"기초어휘": ["전체", "가족", "숫자/날짜", "물건/장소"]
+				},
+				data: {
+					grammar: [
+						{ id: "ja_g_1", theme: "초급문법", title: "~です (~입니다)", summary: "명사 뒤에 붙는 가장 기초적인 단정 문형", detail: "일본어 공부의 시작이 되는 문형입니다.", example: "私は학생입니다." }
+					],
+					words: [
+						{ id: "ja_w_1", theme: "기초어휘", subTheme: "가족", title: "家族 (かぞく)", summary: "가족", detail: "가족 명사입니다.", example: "私の家族" }
+					]
+				}
+			},
+			ko: {
+				name: "한국어",
+				themes: { grammar: ["전체", "초급"], words: ["전체", "기초어휘"] },
+				wordSubThemes: { "전체": ["전체"], "기초어휘": ["전체", "가족 명칭"] },
+				data: {
+					grammar: [{ id: "ko_g_1", theme: "초급", title: "명사 + 예요 / 이에요", summary: "소개문", detail: "설명", example: "학생이에요." }],
+					words: [{ id: "ko_w_1", theme: "기초어휘", subTheme: "가족 명칭", title: "가족", summary: "가족 단어", detail: "가족 관계", example: "어머니, 아버지" }]
+				}
+			},
+			zh: {
+				name: "중국어",
+				themes: {
+					grammar: ["전체", "기초어순", "기초회화문법"],
+					words: ["전체", "기초어휘", "실전회화어휘"] // 1차 소분류 버튼용
+				},
+				// 🌟 [중요] 1차 분류를 눌렀을 때 나올 2차 세분류 리스트를 미리 지정해둡니다.
+				wordSubThemes: {
+					"전체": ["전체"],
+					"기초어휘": ["전체", "나라", "직업", "가족", "숫자"],
+					"실전회화어휘": ["전체", "물건", "탈것", "여행"]
+				},
+				data: {
+					grammar: [
+						{ id: "zh_g_1", theme: "기초어순", title: "[A 是 B] A는 B이다", summary: "기본 지정 명사 결합", detail: "기본 어순 구조입니다.", example: "我是韩国人。" }
+					],
+					words: [
+						/* 🌟 2단계 매핑 데이터 샘플들 (theme와 subTheme를 모두 가집니다) */
+						{ id: "zh_w_1", theme: "기초어휘", subTheme: "가족", title: "爸爸 (bàba)", summary: "아빠, 아버지", detail: "명사 / 가족 구어체 표현입니다.", example: "我爸爸在公司。(우리 아빠는 회사에 계십니다.)" },
+						{ id: "zh_w_2", theme: "기초어휘", subTheme: "가족", title: "妈妈 (māma)", summary: "엄마, 어머니", detail: "명사 / 가족 구어체 표현입니다.", example: "妈妈在厨房。(어머니는 주방에 계십니다.)" },
+						{ id: "zh_w_3", theme: "기초어휘", subTheme: "나라", title: "韩国 (Hánguó)", summary: "한국", detail: "명사 / 국가 명칭입니다.", example: "我是韩国人。(저는 한국인입니다.)" },
+						{ id: "zh_w_4", theme: "기초어휘", subTheme: "직업", title: "老师 (lǎoshī)", summary: "선생님, 교사", detail: "명사 / 직업 명칭입니다.", example: "他是汉语老师。(그는 중국어 선생님입니다.)" },
+						{ id: "zh_w_5", theme: "기초어휘", subTheme: "숫자", title: "一 (yī)", summary: "일, 1", detail: "수사 / 기본 숫자입니다.", example: "第一 (제일, 첫 번째)" }
+					]
+				}
+			},
+			en: {
+				name: "영어",
+				themes: { grammar: ["전체", "나의 상태/기분"], words: ["전체", "기초어휘"] },
+				wordSubThemes: { "전체": ["전체"], "기초어휘": ["전체", "감정/기분", "날씨/계절"] },
+				data: {
+					grammar: [{ id: "en_g_1", theme: "나의 상태/기분", title: "I'm + 형용사", summary: "기분 표현", detail: "설명", example: "I'm tired." }],
+					words: [{ id: "en_w_1", theme: "기초어휘", subTheme: "감정/기분", title: "tired", summary: "피곤한", detail: "형용사", example: "I'm tired." }]
+				}
+			}
+		};
+
+		// 🌟 2차 세분류 추적을 위해 activeSubTheme 추가
+		let currentStatus = { lang: '', type: '', activeTheme: '전체', activeSubTheme: '전체' };
+		let isLoggedIn = false;
+
+		function toggleSection(button) {
+			button.parentElement.classList.toggle('active');
+		}
+
+		function updateSidebarToggleButton() {
+			const toggleBtn = document.getElementById('sidebar-toggle-btn');
+			if (!toggleBtn) return;
+
+			const isMobile = window.innerWidth <= 768;
+			const isOpen = isMobile
+				? document.body.classList.contains('sidebar-open')
+				: !document.body.classList.contains('sidebar-collapsed');
+
+			toggleBtn.innerText = isOpen ? '✕ 메뉴' : '☰ 메뉴';
+		}
+
+		function toggleSidebar() {
+			const isMobile = window.innerWidth <= 768;
+			if (isMobile) {
+				document.body.classList.toggle('sidebar-open');
+			} else {
+				document.body.classList.toggle('sidebar-collapsed');
+			}
+			updateSidebarToggleButton();
+		}
+
+		function closeSidebar() {
+			document.body.classList.remove('sidebar-open');
+			updateSidebarToggleButton();
+		}
+
+		window.addEventListener('resize', () => {
+			if (window.innerWidth > 768) {
+				document.body.classList.remove('sidebar-open');
+			}
+			updateSidebarToggleButton();
+		});
+
+		function loadMainDashboard(lang, type) {
+			currentStatus.lang = lang;
+			currentStatus.type = type;
+			currentStatus.activeTheme = "전체";
+			currentStatus.activeSubTheme = "전체"; // 초기화
+
+			document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+			document.querySelectorAll('.nav-item').forEach(btn => {
+				if (btn.getAttribute('onclick').includes(`'${lang}'`) && btn.getAttribute('onclick').includes(`'${type}'`)) {
+					btn.classList.add('active');
+				}
+			});
+
+			renderDashboardView();
+			closeSidebar();
+		}
+
+		/* 🌟 2단계 구조 맞춤형 핵심 대시보드 렌더링 함수 */
+		function renderDashboardView() {
+			const { lang, type, activeTheme, activeSubTheme } = currentStatus;
+			if (!lang || !type) return;
+
+			const langData = database[lang];
+			const typeLabel = type === 'grammar' ? '문법' : '단어';
+			const container = document.getElementById('dynamic-content');
+			const writeBtnStyle = isLoggedIn ? 'display: inline-flex;' : 'display: none;';
+
+			// 1. 기본 헤더 구역 생성
+			let html = `
+				<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+				<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+				<div class="content-header-flex">
+						<div>
+								<h1>${langData.name} ${typeLabel} 자료실</h1>
+								<div class="category-path">${langData.name} > ${typeLabel}</div>
+						</div>
+						<button class="btn-outline write-btn" style="${writeBtnStyle}" onclick="loadWriteForm()">✏️ 새 자료 등록</button>
+				</div>
+				<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+				<!-- 1차 분류 (전체, 기초어휘 등) 컨테이너 -->
+				<div class="theme-btn-container">
+			`;
+
+			// 1차 분류 버튼 그리기
+			const availableThemes = langData.themes[type];
+			availableThemes.forEach(theme => {
+				const activeClass = (theme === activeTheme) ? 'active' : '';
+				html += `<button class="theme-tab-btn ${activeClass}" onclick="filterByTheme('${theme}')">${theme}</button>`;
+			});
+			html += `</div>`;
+
+			// 🌟 2. 단어(words) 자료실이고, '전체'가 아닌 특정 테마를 골랐을 때 하위 세분류(나라, 직업 등) 버튼을 한 줄 더 그려줍니다.
+			if (type === 'words') {
+				html += `<div class="theme-btn-container" style="margin-top: -5px; margin-bottom: 20px; background: #f8fafc; padding: 10px; border-radius: 8px;">`;
+				const subThemes = langData.wordSubThemes[activeTheme] || ["전체"];
+				
+				subThemes.forEach(sub => {
+					const activeSubClass = (sub === activeSubTheme) ? 'active' : '';
+					html += `<button class="sub-theme-tab-btn ${activeSubClass}" onclick="filterBySubTheme('${sub}')">${sub}</button>`;
+				});
+				html += `</div>`;
+			}
+
+			// 3. 데이터 필터링 조건문 연산
+			let posts = langData.data[type] || [];
+			
+			// 1차 필터링
+			if (activeTheme !== "전체") {
+				posts = posts.filter(post => post.theme === activeTheme);
+			}
+			// 2차 필터링 (단어 자료실 전용)
+			if (type === 'words' && activeSubTheme !== "전체") {
+				posts = posts.filter(post => post.subTheme === activeSubTheme);
+			}
+
+			// 4. 문법 vs 단어 최종 레이아웃 렌더링 분기
+			if (type === 'grammar') {
+				html += `<div class="data-list" id="card-list-box">`;
+				if (posts.length === 0) {
+					html += `<p style='color:#999; padding: 30px 0; text-align:center;'>'${activeTheme}' 테마에 등록된 문법 자료가 없습니다.</p>`;
+				} else {
+					posts.forEach(item => {
+						html += `
+							<button class="data-card-btn" onclick="loadDetailView('${item.id}')">
+									<span style="font-size:0.8rem; color:#ff5722; font-weight:bold; display:block; margin-bottom:4px;">[${item.theme}]</span>
+									<strong>${item.title}</strong>
+									<p>${item.summary}</p>
+							</button>
+						`;
+					});
+				}
+				html += `</div>`;
+			} else {
+				html += `<div class="word-grid-container" id="card-list-box">`;
+				if (posts.length === 0) {
+					html += `<p style='color:#999; padding: 30px 0; text-align:center; grid-column: 1/-1;'>조건에 부합하는 등록된 단어가 없습니다.</p>`;
+				} else {
+					posts.forEach(item => {
+						html += `
+							<div class="word-item-card">
+								<span class="word-badge">${item.theme} &gt; ${item.subTheme}</span>
+								<div class="word-main-title">${item.title}</div>
+								<div class="word-meaning">${item.summary}</div>
+								<div class="word-desc">${item.detail}</div>
+								<div class="word-example-box">
+									<strong>활용 예문:</strong><br>${item.example}
+								</div>
+							</div>
+						`;
+					});
+				}
+				html += `</div>`;
+			}
+
+			container.innerHTML = html;
+			updateSidebarToggleButton();
+		}
+
+		// 1차 분류 탭 변경 함수
+		function filterByTheme(themeName) {
+			currentStatus.activeTheme = themeName;
+			currentStatus.activeSubTheme = "전체"; // 대분류가 바뀌면 세분류 탭은 '전체'로 강제 리셋
+			renderDashboardView();
+		}
+
+		// 🌟 2차 세분류 전용 탭 변경 함수 추가
+		function filterBySubTheme(subThemeName) {
+			currentStatus.activeSubTheme = subThemeName;
+			renderDashboardView();
+		}
+
+		function loadDetailView(itemId) {
+			const { lang, type } = currentStatus;
+			const langData = database[lang];
+			const items = langData.data[type];
+			const selectedItem = items.find(item => item.id === itemId);
+			const container = document.getElementById('dynamic-content');
+
+			if (!selectedItem) return;
+
+			container.innerHTML = `
+				<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+				<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+				<button class="back-btn" onclick="renderDashboardView()">← 목록으로 돌아가기</button>
+
+				<h1>${selectedItem.title}</h1>
+				<div class="category-path">${langData.name} > ${type === 'grammar' ? '문법' : '단어'} > ${selectedItem.theme} > 상세 내용</div>
+
+				<div class="detail-content">
+						<span style="color:#ff5722; font-weight:bold;">분류: ${selectedItem.theme}</span>
+						<h3 style="margin-top:10px;">💡 상세 설명</h3>
+						<p>${selectedItem.detail}</p>
+
+						<div class="example-box">
+								<strong>📖 예문 및 활용</strong>
+								<p style="margin-top: 8px; color: #444; line-height: 1.8;">${selectedItem.example}</p>
+						</div>
+				</div>
+			`;
+			updateSidebarToggleButton();
+		}
+
+		function loadWriteForm() {
+			if (!isLoggedIn) return;
+
+			const { lang, type } = currentStatus;
+			const langData = database[lang];
+			const typeLabel = type === 'grammar' ? '문법' : '단어';
+			const container = document.getElementById('dynamic-content');
+
+			let selectOptions = "";
+			langData.themes[type].forEach(theme => {
+				if (theme !== "전체") {
+					selectOptions += `<option value="${theme}">${theme}</option>`;
+				}
+			});
+
+			container.innerHTML = `
+				<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+				<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+				<h1>자료 등록하기</h1>
+				<div class="category-path">위치: ${langData.name} > ${typeLabel} 자료실</div>
+				<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+				<div class="form-container" style="background:#fafafa; padding:20px; border-radius:6px; border:1px solid #eee;">
+						<div class="form-group" style="margin-bottom:15px;">
+								<label for="write-theme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 1차 테마 선택</label>
+								<select id="write-theme" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">${selectOptions}</select>
+						</div>
+						<!-- 🌟 단어 등록 시 사용될 세분류 텍스트 입력창 고정 추가 -->
+						<div class="form-group" style="margin-bottom:15px; ${type === 'words' ? '' : 'display:none;'}">
+								<label for="write-subtheme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 2차 세분류 입력 (단어 전용)</label>
+								<input type="text" id="write-subtheme" placeholder="예: 나라, 직업, 가족, 숫자 직접 입력" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" value="전체">
+						</div>
+						<div class="form-group" style="margin-bottom:15px;">
+								<label for="write-title" style="display:block; font-weight:bold; margin-bottom:5px;">제목 (${typeLabel})</label>
+								<input type="text" id="write-title" placeholder="예: ~です 또는 爸爸" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+						</div>
+						<div class="form-group" style="margin-bottom:15px;">
+								<label for="write-summary" style="display:block; font-weight:bold; margin-bottom:5px;">한 줄 뜻 / 요약</label>
+								<input type="text" id="write-summary" placeholder="예: ~입니다 또는 아빠, 아버" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+						</div>
+						<div class="form-group" style="margin-bottom:15px;">
+								<label for="write-detail" style="display:block; font-weight:bold; margin-bottom:5px;">💡 상세 설명 / 품사</label>
+								<textarea id="write-detail" rows="5" placeholder="상세한 설명이나 단어 품사를 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
+						</div>
+						<div class="form-group" style="margin-bottom:15px;">
+								<label for="write-example" style="display:block; font-weight:bold; margin-bottom:5px;">📖 예문 및 활용</label>
+								<textarea id="write-example" rows="4" placeholder="예문을 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
+						</div>
+
+						<div class="form-actions" style="display:flex; gap:10px;">
+								<button class="write-btn" onclick="saveContent()">저장하기</button>
+								<button class="back-btn" onclick="renderDashboardView()" style="margin-bottom:0;">취소</button>
+						</div>
+				</div>
+			`;
+			updateSidebarToggleButton();
+		}
+
+		function saveContent() {
+			if (!isLoggedIn) return;
+
+			const selectedTheme = document.getElementById('write-theme').value;
+			const subThemeInput = document.getElementById('write-subtheme').value.trim(); // 2차 세분류 값
+			const title = document.getElementById('write-title').value.trim();
+			const summary = document.getElementById('write-summary').value.trim();
+			const detail = document.getElementById('write-detail').value.trim();
+			const example = document.getElementById('write-example').value.trim().replace(/\n/g, '<br>');
+
+			if (!title || !summary || !detail || !example) {
+				alert("모든 빈칸을 채워주세요! ✏️");
+				return;
+			}
+
+			const { lang, type } = currentStatus;
+
+			const newPost = {
+				id: `${lang}_${type}_${Date.now()}`,
+				theme: selectedTheme,
+				subTheme: type === 'words' ? subThemeInput : '전체', // 단어일 때만 subTheme 연동
+				title: title,
+				summary: summary,
+				detail: detail,
+				example: example
+			};
+
+			database[lang].data[type].push(newPost);
+			
+			// 등록 시 데이터베이스 자동 확장 (세분류 목록이 존재하지 않는 새로운 텍스트면 목록 배열에 자동 추가)
+			if (type === 'words' && !database[lang].wordSubThemes[selectedTheme].includes(subThemeInput)) {
+				database[lang].wordSubThemes[selectedTheme].push(subThemeInput);
+			}
+
+			alert(`[${selectedTheme} > ${newPost.subTheme}] 테마에 정상 등록되었습니다! 🎉`);
+
+			currentStatus.activeTheme = selectedTheme;
+			currentStatus.activeSubTheme = newPost.subTheme;
+			renderDashboardView();
+		}
+
+		function handleAuthClick() {
+			if (isLoggedIn) {
+				isLoggedIn = false;
+				document.getElementById('sidebar-auth-btn').innerText = "선생님 로그인";
+				alert("로그아웃 되었습니다. 🔒");
+				if (currentStatus.lang) renderDashboardView();
+			} else {
+				document.getElementById('loginModal').classList.add('show');
+			}
+		}
+		
+		function closeModal() {
+			document.getElementById('loginModal').classList.remove('show');
+			document.getElementById('teacher-id').value = "";
+			document.getElementById('teacher-pw').value = "";
+		}
+		
+		function tryLogin() {
+			const id = document.getElementById('teacher-id').value;
+			const pw = document.getElementById('teacher-pw').value;
+			if (id === 'admin' && pw === '1234') {
+				isLoggedIn = true;
+				document.getElementById('sidebar-auth-btn').innerText = "로그아웃";
+				alert("선생님 권한 획득 🔓");
+				closeModal();
+				if (currentStatus.lang) renderDashboardView();
+			} else {
+				alert("틀렸습니다.");
+			}
+		}
+
+		let currentSlideIndex = 0;
+		const totalSlides = 3;
+		let slideInterval;
+
+		function showSlide(index) {
+			const slidesContainer = document.getElementById('adSlides');
+			if (!slidesContainer) return;
+
+			if (index >= totalSlides) currentSlideIndex = 0;
+			else if (index < 0) currentSlideIndex = totalSlides - 1;
+			else currentSlideIndex = index;
+
+			slidesContainer.style.transform = `translateX(-${currentSlideIndex * (100 / totalSlides)}%)`;
+		}
+
+		function moveSlide(step) {
+			clearInterval(slideInterval);
+			showSlide(currentSlideIndex + step);
+			startAutoSlide();
+		}
+
+		function startAutoSlide() {
+			if (slideInterval) clearInterval(slideInterval);
+			slideInterval = setInterval(() => {
+				showSlide(currentSlideIndex + 1);
+			}, 3000);
+		}
+
+		startAutoSlide();
+		updateSidebarToggleButton();
+	</script>
+</body>
+</html>
