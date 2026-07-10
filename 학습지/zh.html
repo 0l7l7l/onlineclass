@@ -1,0 +1,4195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>처음 배우는 중국어 회화 문법</title>
+     <style>
+        /* 전역 초기화 및 상자 크기 정의 */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* ----------------------------------
+            B5 용지 규격 및 제본 여백 설정 (인쇄 표준 매칭)
+           ------------------------------------- */
+        @page {
+            size: B5; /* B5 규격(182mm x 257mm)으로 변경 */
+            /* 제본 여백 최적화: 상 20mm, 우 12mm, 하 20mm, 좌 18mm (좌측 제본 공간 확보) */
+            margin: 20mm 12mm 20mm 18mm; 
+            background-color: #faf9f6; /* 눈이 편안한 따뜻한 아이보리 톤 */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            page-break-after: always; /* 출력 시 자동 페이지 넘김 */
+        }
+
+        /* 웹 화면에서 볼 때 배경을 어둡게 하여 책 페이지를 강조 */
+        body {
+            margin: 0;
+            padding: 40px 0;
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            font-size: 10pt; /* B5 크기에 맞춰 기본 폰트 크기 미세 축소 (11pt -> 10pt) */
+            line-height: 1.6;
+            color: #333333;
+            background-color: #dbd7d2; /* 화면을 약간 어둡게 처리하여 페이지 돋보임 효과 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px; /* 컴퓨터 화면에서 페이지와 페이지 사이의 간격 */
+        }
+
+        /* ----------------------------------
+            컴퓨터 화면 중심 정렬 및 B5 책 모양 가상화
+           ------------------------------------- */
+        .page {
+            position: relative;
+            width: 182mm;  /* B5 가로 규격 표준 반영 */
+            height: 257mm; /* B5 세로 규격 표준 반영 */
+            /* 안쪽 여백: 좌측 제본을 고려하여 왼쪽 여백(23mm)을 오른쪽(17mm)보다 넓게 설정 */
+            padding: 20mm 17mm 20mm 23mm; 
+            background-color: #faf9f6; /* 눈이 편안한 종이 색상 */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* 실제 책 같은 입체적인 그림자 */
+            border-radius: 4px;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        /* 인쇄할 때는 배경 어두운 톤이나 그림자를 모두 무시하고 흰 종이에 깔끔하게 출력 */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+                gap: 0;
+            }
+            .page {
+                box-shadow: none;
+                border-radius: 0;
+                margin: 0;
+                page-break-after: always;
+            }
+            .page:last-child {
+                page-break-after: avoid;
+            }
+        }
+
+        /* ----------------------------------
+            [1쪽] 대단원 표지 스타일
+           ------------------------------------- */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .cover-sub {
+            font-size: 13pt; /* B5 맞춤 조정 */
+            color: #8c7b6e;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .cover-title {
+            font-size: 24pt; /* B5 맞춤 조정 (28pt -> 24pt) */
+            color: #2c3e50;
+            line-height: 1.4;
+            margin: 0;
+            font-weight: 800;
+            word-break: keep-all;
+        }
+
+        .cover-line {
+            width: 50px;
+            height: 4px;
+            background-color: #c0392b;
+            margin: 25px auto 0;
+        }
+
+        /* ----------------------------------
+            본문 공통 스타일
+           ------------------------------------- */
+        .page-header {
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 6px;
+            margin-bottom: 20px; /* B5 규격 안에서 콘텐츠가 안 넘치도록 여백 축소 */
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 12pt; /* B5 맞춤 조정 */
+            color: #2c3e50;
+        }
+
+        /* 문법 설명 스타일 */
+        .grammar-section h3 {
+            font-size: 15pt; /* B5 맞춤 조정 (18pt -> 15pt) */
+            color: #c0392b;
+            margin-top: 0;
+            margin-bottom: 12px;
+            border-left: 5px solid #c0392b;
+            padding-left: 10px;
+        }
+
+        .pattern-box {
+            background-color: #f2ede4;
+            border: 1px solid #dcd5c7;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pattern-text {
+            font-size: 14pt; /* B5 맞춤 조정 */
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .explanation-text {
+            font-size: 10pt; /* B5 맞춤 조정 */
+            text-align: justify;
+            margin-bottom: 20px;
+            word-break: keep-all;
+        }
+
+        .explanation-text p {
+            margin: 0 0 10px 0;
+            text-indent: 6px;
+        }
+
+        .example-box {
+            background-color: #ffffff;
+            border-left: 4px solid #2c3e50;
+            padding: 12px 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .example-title {
+            font-size: 9pt; /* B5 맞춤 조정 */
+            color: #7f8c8d;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* 루비 문자(한자 위 병음 배치) 전용 스타일 */
+        ruby {
+            ruby-position: over;
+            font-family: 'STKaiti', 'SimSun', serif;
+            font-size: 19pt; /* B5 크기에 맞춰 가독성을 확보하는 최적의 크기로 조정 (22pt -> 19pt) */
+            color: #111111;
+        }
+
+        rt {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 10pt; /* 병음 크기 미세 축소 */
+            color: #e67e22;
+            letter-spacing: 0.5px;
+            padding-bottom: 3px;
+        }
+
+        .translation {
+            font-size: 11pt; /* B5 맞춤 조정 */
+            color: #333333;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+
+        .tip-box {
+            background-color: #eef7fa;
+            border: 1px dashed #3498db;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .tip-box h4 {
+            margin: 0 0 6px 0;
+            color: #2980b9;
+            font-size: 10pt;
+        }
+
+        .tip-box ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 9.5pt;
+        }
+
+        /* ----------------------------------
+            말풍선 형태의 단어장 & 연습문제
+           ------------------------------------- */
+        .section-title {
+            font-size: 11pt; /* B5 맞춤 조정 */
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .word-bubble-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* 공백 간격 최적화 */
+            margin-bottom: 25px;
+        }
+
+        .word-bubble {
+            background-color: #ffffff;
+            border: 1px solid #e2dacb;
+            border-radius: 10px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        .word-bubble ruby {
+            font-size: 15pt; /* 단어장 한자 크기 축소 */
+        }
+
+        .word-meaning {
+            font-size: 10pt; /* 뜻 글씨 크기 축소 */
+            font-weight: bold;
+            color: #4a5568;
+            background-color: #f0f4f8;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        /* 연습문제 스타일 */
+        .quiz-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .quiz-item {
+            margin-bottom: 20px;
+        }
+
+        .quiz-question {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quiz-question span {
+            color: #c0392b;
+        }
+
+        .quiz-line-container {
+            margin-left: 10px;
+        }
+
+        .quiz-line-container .chinese-q {
+            font-family: 'STKaiti', 'SimSun', serif;
+            font-size: 14pt; /* 문제 내 한자 크기 축소 */
+            margin-bottom: 4px;
+        }
+
+        /* 쓰기 가이드 라인 */
+        .quiz-print-line {
+            border-bottom: 1px dashed #999999;
+            height: 32px; /* 가이드 라인 높이 소폭 조정 */
+            margin-bottom: 5px;
+        }
+
+        .quiz-hint {
+            font-size: 9pt;
+            color: #7f8c8d;
+            margin-top: 3px;
+        }
+
+        /* 하단 고정 페이지 번호 */
+        .page-footer {
+            position: absolute;
+            bottom: 10mm; /* B5 높이에 맞추어 조정 */
+            left: 23mm;   /* 제본 여백과 일치 */
+            right: 17mm;  /* 제본 여백과 일치 */
+            text-align: center;
+            font-size: 8.5pt;
+            color: #999999;
+            border-top: 1px solid #eee;
+            padding-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+<!-- ==========================================
+         [1쪽] 종합 교재 메인 앞표지 (B5 최적화)
+         ========================================== -->
+    <div class="page">
+        <div class="cover-page" style="justify-content: space-between; padding: 20mm 0;">
+            <!-- 상단 장식 서브 타이틀 -->
+            <div class="cover-sub" style="font-size: 12pt; letter-spacing: 4px; color: #7f8c8d;">
+                STEP BY STEP CHINESE GRAMMAR
+            </div>
+            
+            <!-- 중앙 메인 타이틀 구역 -->
+            <div style="margin-top: 20mm;">
+                <h1 style="font-size: 28pt; color: #2c3e50; font-weight: 900; line-height: 1.3; margin: 0; word-break: keep-all;">
+                    가장 쉬운 독학<br>
+                    <span style="color: #c0392b; font-size: 32pt;">중국어 핵심 문법</span>
+                </h1>
+                <div class="cover-line" style="width: 60px; height: 4px; background-color: #c0392b; margin: 30px auto;"></div>
+                <p style="font-size: 12pt; color: #555; font-weight: 500; margin: 0; letter-spacing: 0.5px;">
+                    기초 구조부터 특수 구문까지 한 권으로 끝내는 패턴 중국어
+                </p>
+            </div>
+
+            <!-- 하단 디자인 요소 및 여백 -->
+            <div style="margin-bottom: 10mm;">
+                <div style="font-family: 'Times New Roman', serif; font-style: italic; font-size: 13pt; color: #8c7b6e; font-weight: bold; margin-bottom: 5px;">
+                    Essential 30 Patterns
+                </div>
+                <div style="font-size: 9.5pt; color: #999; letter-spacing: 1px;">
+                    HANDMADE GRAMMAR BOOK
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         [2쪽] 목차 (Contents) - Part 1 & Part 2
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>CONTENTS / 차례</h2>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 25px;">
+            <!-- 대단원 1 -->
+            <div>
+                <h3 style="font-size: 12pt; color: #c0392b; border-bottom: 1px solid #c0392b; padding-bottom: 4px; margin: 0 0 12px 0; font-weight: bold;">
+                    PART 1. 기본 구조 및 의문문
+                </h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 9.5pt; line-height: 1.8;">
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">01. 是 (shì)</td><td style="color: #555;">~이다 (A + 是 + B)</td><td style="text-align: right; color: #999;">Page 02</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">02. 有 (yǒu)</td><td style="color: #555;">~이 있다, 가지고 있다 (부정: 没有)</td><td style="text-align: right; color: #999;">Page 04</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">03. 吗 (ma)</td><td style="color: #555;">~입니까? (일반 의문문)</td><td style="text-align: right; color: #999;">Page 06</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">04. 呢 (ne)</td><td style="color: #555;">~는요? (되묻기 / 진행)</td><td style="text-align: right; color: #999;">Page 08</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">05. 吧 (ba)</td><td style="color: #555;">~하죠?, ~합시다 (제안/추측)</td><td style="text-align: right; color: #999;">Page 10</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">06. 的 (de)</td><td style="color: #555;">~의, ~한 (수식 구조)</td><td style="text-align: right; color: #999;">Page 12</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">07. 在 (zài)</td><td style="color: #555;">~에 있다 (장소 안착)</td><td style="text-align: right; color: #999;">Page 14</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">08. 정반의문문</td><td style="color: #555;">~해요, 안 해요? (긍정+부정 동사)</td><td style="text-align: right; color: #999;">Page 16</td></tr>
+                </table>
+            </div>
+
+            <!-- 대단원 2 -->
+            <div style="margin-top: 10px;">
+                <h3 style="font-size: 12pt; color: #c0392b; border-bottom: 1px solid #c0392b; padding-bottom: 4px; margin: 0 0 12px 0; font-weight: bold;">
+                    PART 2. 시제 및 동작의 상태
+                </h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 9.5pt; line-height: 1.8;">
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">09. 了 (le)</td><td style="color: #555;">~했다 (변화 및 완료)</td><td style="text-align: right; color: #999;">Page 18</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">10. 过 (guò)</td><td style="color: #555;">~한 적이 있다 (과거의 경험)</td><td style="text-align: right; color: #999;">Page 20</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">11. 正在 (zhèngzài)</td><td style="color: #555;">한창 ~하는 중이다 (현재 진행)</td><td style="text-align: right; color: #999;">Page 22</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">12. 要~了 (yào~le)</td><td style="color: #555;">곧 ~하려고 한다 (임박태 구조)</td><td style="text-align: right; color: #999;">Page 24</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">13. 是~的 (shì~de)</td><td style="color: #555;">과거 사건의 요소(시간/장소/방식) 강조</td><td style="text-align: right; color: #999;">Page 26</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">14. 着 (zhe)</td><td style="color: #555;">~한 채로 있다 (상태의 지속)</td><td style="text-align: right; color: #999;">Page 28</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">15. 动量词 (동량사)</td><td style="color: #555;">동작의 횟수 세기 (次 / 遍)</td><td style="text-align: right; color: #999;">Page 30</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="page-footer">Contents - 1</div>
+    </div>
+
+    <!-- ==========================================
+         [3쪽] 목차 (Contents) - Part 3 & Part 4
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>CONTENTS / 차례</h2>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 25px;">
+            <!-- 대단원 3 -->
+            <div>
+                <h3 style="font-size: 12pt; color: #c0392b; border-bottom: 1px solid #c0392b; padding-bottom: 4px; margin: 0 0 12px 0; font-weight: bold;">
+                    PART 3. 조동사 및 부사 활용
+                </h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 9.5pt; line-height: 1.8;">
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">16. 想 (xiǎng)</td><td style="color: #555;">~하고 싶다 (주관적 소망)</td><td style="text-align: right; color: #999;">Page 32</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">17. 会 (huì)</td><td style="color: #555;">~할 줄 안다 (능력) / ~일 것이다 (추측)</td><td style="text-align: right; color: #999;">Page 34</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">18. 能 (néng)</td><td style="color: #555;">~할 수 있다 (조건 및 상황상 가능)</td><td style="text-align: right; color: #999;">Page 36</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">19. 可以 (kěyǐ)</td><td style="color: #555;">~해도 된다 (부드러운 허가와 승인)</td><td style="text-align: right; color: #999;">Page 38</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">20. 也 (yě)</td><td style="color: #555;">~도 또한 (공통 분모 표현 부사)</td><td style="text-align: right; color: #999;">Page 40</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">21. 都 (dōu)</td><td style="color: #555;">모두, 다 (복수 대상을 하나로 묶음)</td><td style="text-align: right; color: #999;">Page 42</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">22. 太~了 (tài~le)</td><td style="color: #555;">너무 ~하다 (감탄 및 깊은 강조)</td><td style="text-align: right; color: #999;">Page 44</td></tr>
+                </table>
+            </div>
+
+            <!-- 대단원 4 -->
+            <div style="margin-top: 10px;">
+                <h3 style="font-size: 12pt; color: #c0392b; border-bottom: 1px solid #c0392b; padding-bottom: 4px; margin: 0 0 12px 0; font-weight: bold;">
+                    PART 4. 특수 구문 및 복문
+                </h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 9.5pt; line-height: 1.8;">
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">23. 比 (bǐ)</td><td style="color: #555;">~보다 (두 대상을 저울질하는 비교문)</td><td style="text-align: right; color: #999;">Page 46</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">24. 跟~一样 (gēn~yíyàng)</td><td style="color: #555;">~와 같다 (동등 비교 표현)</td><td style="text-align: right; color: #999;">Page 48</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">25. 把 (bǎ)</td><td style="color: #555;">~을/를 (목적어를 변화시키는 처치문)</td><td style="text-align: right; color: #999;">Page 50</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">26. 被 (bèi)</td><td style="color: #555;">~에게 ~당하다 (피해를 나타내는 피동문)</td><td style="text-align: right; color: #999;">Page 52</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">27. 得 (de)</td><td style="color: #555;">~하는 정도가 어떠하다 (정도보어)</td><td style="text-align: right; color: #999;">Page 54</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">28. 因为~所以~</td><td style="color: #555;">왜냐하면 ~기 때문에, 그래서 ~하다 (인과)</td><td style="text-align: right; color: #999;">Page 56</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">29. 虽然~但是~</td><td style="color: #555;">비록 ~이지만, 그러나 ~하다 (전환)</td><td style="text-align: right; color: #999;">Page 58</td></tr>
+                    <tr style="border-bottom: 1px dashed #e2dacb;"><td style="padding: 4px 0; font-weight: bold; color: #2c3e50;">30. 如果~的话</td><td style="color: #555;">만약 ~라면 (미래 상황을 그리는 가정문)</td><td style="text-align: right; color: #999;">Page 60</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="page-footer">Contents - 2</div>
+    </div>
+
+    <!-- ==========================================
+         [1쪽] 대문짝만한 대단원 표지 페이지
+         ========================================== -->
+    <div class="page">
+        <div class="cover-page">
+            <div class="cover-sub">중국어 회화 핵심 문법</div>
+            <h1 class="cover-title">1. 기본 구조 및 의문문<br>(1~8)</h1>
+            <div class="cover-line"></div>
+        </div>
+        <div class="page-footer">Page 1</div>
+    </div>
+
+
+    <!-- ==========================================
+         [2쪽] 문법 상세 설명 페이지 (1. 是)
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 1강: 중국어의 첫걸음, 주어와 개념 잡기</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>1. 是 (shì) : ~이다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 是 + 목적어</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>우리가 처음 중국어를 배울 때 가장 먼저 마주하는 단어가 바로 <strong>是(shì)</strong>입니다. 한국어의 <strong>"~이다"</strong>에 해당하는 단어이지요. 한국어에서는 "저는 한국인<b>입니다</b>"처럼 결론을 문장 맨 뒤에 말하지만, <strong>중국어는 결론(동사)을 주어 바로 뒤에 먼저 던집니다.</strong></p>
+                <p>즉, 머릿속으로 <strong>"나 = 이다 = 한국인"</strong>이라는 순서로 뼈대를 잡고 단어를 나열해야 합니다. 이 규칙만 기억하면 중국어 문장 구조의 절반을 이해하신 거예요!</p>
+                <p>주의할 점은, 영어의 Be동사(am, are, is)와 달리 주어가 '나, 너, 우리, 그들'로 바뀌어도 <strong>是는 절대 변하지 않고 그대로 쓴다는 것</strong>입니다. 정말 쉽죠?</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>是<rt>shì</rt></ruby> <ruby>韩<rt>hán</rt></ruby><ruby>국<rt>guó</rt></ruby><ruby>人<rt>rén</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 한국인입니다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>是 (shì)</strong> : ~이다 (동사)</li>
+                    <li><strong>韩国人 (hánguórén)</strong> : 한국인 (목적어)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 2</div>
+    </div>
+
+
+    <!-- ==========================================
+         [3쪽] 단어 및 연습문제 페이지 (1. 是)
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 1강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>我<rt>wǒ</rt></ruby>
+                <div class="word-meaning">나, 저</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>你<rt>nǐ</rt></ruby>
+                <div class="word-meaning">너, 당신</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>老<rt>lǎo</rt></ruby><ruby>师<rt>shī</rt></ruby>
+                <div class="word-meaning">선생님</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>学<rt>xue</rt></ruby><ruby>生<rt>sheng</rt></ruby>
+                <div class="word-meaning">학생</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>中<rt>zhōng</rt></ruby><ruby>国<rt>guó</rt></ruby><ruby>人<rt>rén</rt></ruby>
+                <div class="word-meaning">중국인</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 是 + 목적어] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 학생입니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; ) <span>学生</span>。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '~이다'에 들어갈 단어를 한자나 병음으로 써보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "당신은 선생님입니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 당신 + 이다 + 선생님 순서로 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"他是中国人。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 他(tā)는 '그(He)'라는 뜻의 3인칭 대명사입니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 3</div>
+    </div>
+
+
+    <!-- ==========================================
+         [4쪽] 문법 상세 설명 페이지 (2. 有) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 2강: 소유와 존재를 나타내는 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>2. 有 (yǒu) : ~이 있다, 가지고 있다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 有 + 목적어</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>무언가를 소유하고 있거나 특정 대상이 존재하는 것을 나타낼 때 중국어에서는 <strong>有(yǒu)</strong>를 사용합니다. 한국어의 <strong>"~이 있다"</strong> 혹은 <strong>"가지고 있다"</strong>에 상응하는 표현입니다.</p>
+                <p>앞서 배운 是(shì) 문법체계와 마찬가지로 어순은 <strong>"주어 + 동사(有) + 목적어"</strong> 순서로 구성됩니다. 내가 소유한 물건이나 사람, 혹은 시간이나 돈 같은 추상적인 개념도 이 패턴을 사용해 전부 표현할 수 있습니다.</p>
+                <p>중요한 포인트 하나! 이 표현을 부정하여 <strong>"없다, 가지고 있지 않다"</strong>를 말하고 싶을 때는 절대 不有(bù yǒu)라고 하지 않고, 반드시 <strong>没有(méiyǒu)</strong>라는 형태를 사용해야 합니다. (이 부분은 다음 3강에서 더 자세히 다룰 예정입니다!)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>有<rt>yǒu</rt></ruby> <ruby>中<rt>zhōng</rt></ruby><ruby>国<rt>guó</rt></ruby> <ruby>朋<rt>péng</rt></ruby><ruby>友<rt>you</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 중국인 친구가 있어요.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>有 (yǒu)</strong> : ~이 있다, 가지고 있다 (동사)</li>
+                    <li><strong>中国朋友 (zhōngguó péngyou)</strong> : 중국인 친구 (목적어)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 4</div>
+    </div>
+
+
+    <!-- ==========================================
+         [5쪽] 단어 및 연습문제 페이지 (2. 有) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 2강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>朋<rt>péng</rt></ruby><ruby>友<rt>you</rt></ruby>
+                <div class="word-meaning">친구</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>钱<rt>qián</rt></ruby>
+                <div class="word-meaning">돈</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>时<rt>shí</rt></ruby><ruby>间<rt>jiān</rt></ruby>
+                <div class="word-meaning">시간</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>书<rt>shū</rt></ruby>
+                <div class="word-meaning">책</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>车<rt>chē</rt></ruby>
+                <div class="word-meaning">차, 자동차</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 有 + 목적어] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 돈이 있어요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; ) <span>钱</span>。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '~이 있다'에 들어갈 동사 有를 한자나 병음으로 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "그는 책을 가지고 있습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 그(他) + 있다(有) + 책(书) 순서로 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我有시간。"</span>에서 빈칸에 들어갈 '시간'의 올바른 중국어 한자를 적고 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 단어장에 나와 있는 단어를 조합하여 문장 뜻을 완성하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 5</div>
+</div>
+<!-- ==========================================
+         [6쪽] 문법 상세 설명 페이지 (3. 没有) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 3강: 소유와 존재의 부정을 나타내는 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>3. 没有 (méiyǒu) : ~이 없다, 가지고 있지 않다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 没有 + 목적어</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>지난 시간에 배운 <strong>有(yǒu)</strong>의 부정형인 <strong>没有(méiyǒu)</strong>에 대해 알아보겠습니다. 한국어의 <strong>"~이 없다"</strong> 혹은 <strong>"가지고 있지 않다"</strong>에 해당하는 아주 중요한 표현입니다.</p>
+                <p>중국어에서 일반적인 동사나 형용사를 부정할 때는 주로 不(bù)를 앞에 붙이지만, <strong>有(yǒu)만큼은 절대로 不有(bù yǒu)라고 표현할 수 없습니다.</strong> 반드시 앞에 没(méi)를 붙여 <strong>没有(méiyǒu)</strong>라고 해야 합니다. 이는 시험에서도 왕초보분들이 가장 자주 틀리는 단골 규칙 중 하나랍니다!</p>
+                <p>문장의 구조는 동일하게 <strong>"주어 + 没有 + 목적어"</strong>의 순서를 따르며, 회화에서는 상황에 따라 뒤의 有를 생략하고 그냥 <strong>没(méi)</strong>라고만 짧게 말하기도 합니다. (예: 我没钱。 저 돈 없어요.)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>没<rt>méi</rt></ruby><ruby>有<rt>yǒu</rt></ruby> <ruby>中<rt>zhōng</rt></ruby><ruby>国<rt>guó</rt></ruby> <ruby>朋<rt>péng</rt></ruby><ruby>友<rt>you</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 중국인 친구가 없어요.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>没有 (méiyǒu)</strong> : ~이 없다 (부정 동사)</li>
+                    <li><strong>中国朋友 (zhōngguó péngyou)</strong> : 중국인 친구 (목적어)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 6</div>
+    </div>
+
+    
+
+    <!-- ==========================================
+         [7쪽] 단어 및 연습문제 페이지 (3. 没有) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 3강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>男<rt>nán</rt></ruby><ruby>朋<rt>péng</rt></ruby><ruby>友<rt>you</rt></ruby>
+                <div class="word-meaning">남자친구</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>女<rt>nǚ</rt></ruby><ruby>朋<rt>péng</rt></ruby><ruby>友<rt>you</rt></ruby>
+                <div class="word-meaning">여자친구</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>问<rt>wèn</rt></ruby><ruby>题<rt>tí</rt></ruby>
+                <div class="word-meaning">문제, 질문</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>意<rt>yì</rt></ruby><ruby>见<rt>jiàn</rt></ruby>
+                <div class="word-meaning">의견</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>工<rt>gōng</rt></ruby><ruby>作<rt>zuò</rt></ruby>
+                <div class="word-meaning">일, 직업</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 没有 + 목적어] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 질문이 없어요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) <span>问题</span>。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '~이 없다'에 들어갈 단어 沒有를 한자나 병음으로 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "그녀는 여자친구가 없습니다." 문장에서 틀린 부분을 찾아 바르게 고쳐 써보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q" style="color: #c0392b;">他不育女朋友。 (X)</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 有의 부정은 不을 쓰지 않습니다. 올바른 부정형 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我没有工作。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 단어장의 工作(gōngzuò) 뜻을 참고하여 문장을 자연스럽게 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 7</div>
+    </div>
+
+<!-- ==========================================
+         [8쪽] 문법 상세 설명 페이지 (4. 吗) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 4강: 가장 쉬운 질문 만들기, 일반 의문문</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>4. 吗 (ma) : ~입니까? (일반 의문문)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">평서문 끝에 + 吗?</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>중국어에서 가장 간단하게 질문을 던지는 방법은 바로 문장 맨 끝에 <strong>吗(ma)</strong>를 붙이는 것입니다. 한국어의 <strong>"~입니까?", "~하니?", "~해요?"</strong>와 같이 문장을 의문문으로 바꿔주는 역할을 합니다.</p>
+                <p>중국어 의문문의 가장 큰 매력은 <strong>단어의 순서를 전혀 바꿀 필요가 없다</strong>는 점입니다. 영어처럼 주어와 동사의 위치를 바꾸거나(Are you...), 두동사(Do you...)를 데려올 필요 없이, 내가 하고 싶은 일반적인 말(평서문)을 그대로 뱉은 뒤 끝에 <strong>吗?</strong>만 얹어주면 끝납니다.</p>
+                <p>주의할 점은 吗(ma)는 성조가 없는 <strong>경성</strong>이기 때문에, 앞 단어에 이어 가볍고 짧게 툭 떨어트리듯 발음해야 문장이 자연스러워집니다. 문장 끝의 마침표(。)를 물음표(?)로 바꾸는 것도 잊지 마세요!</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>你<rt>nǐ</rt></ruby> <ruby>忙<rt>máng</rt></ruby> <ruby>吗<rt>ma</rt></ruby>？
+                </div>
+                <div class="translation">뜻: 바쁘세요? (당신은 바쁩니까?)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>你 忙 (nǐ máng)</strong> : 당신은 바쁘다 (평서문 구조)</li>
+                    <li><strong>...吗？ (ma)</strong> : ~합니까? (문장을 질문으로 변환)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 8</div>
+    </div>
+
+
+    <!-- ==========================================
+         [9쪽] 단어 및 연습문제 페이지 (4. 吗) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 4강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>忙<rt>máng</rt></ruby>
+                <div class="word-meaning">바쁘다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>累<rt>lèi</rt></ruby>
+                <div class="word-meaning">힘들다, 피곤하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>好<rt>hǎo</rt></ruby>
+                <div class="word-meaning">좋다, 안녕하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>好<rt>hǎo</rt></ruby><ruby>吃<rt>chī</rt></ruby>
+                <div class="word-meaning">맛있다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>热<rt>rè</rt></ruby>
+                <div class="word-meaning">덥다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [평서문 끝에 + 吗?] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "피곤하세요?"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">你 累 ( &nbsp; &nbsp; &nbsp; ) ？</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 문장을 의문문으로 만들어주는 조사 吗를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "맛있습니까?"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '맛있다(好吃)'라는 평서문 뒤에 의문 조사를 붙여 전체 문장을 완성하세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"你好吗？"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 만날 때 하는 인사 '你好'와는 다른, 상대방의 안부를 묻는 표현입니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 9</div>
+    </div>
+
+<!-- ==========================================
+         [10쪽] 문법 상세 설명 페이지 (5. 呢) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 5강: 간결하게 되묻기, 생략 의문문</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>5. 呢 (ne) : ~는요? (되묻기 / 상태 확인)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">명사 / 대명사 + 呢?</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>상대방이 나에게 던진 질문을 그대로 받아서 간결하게 되묻고 싶을 때, 중국어에서는 문장 끝에 <strong>呢(ne)</strong>를 사용합니다. 한국어의 <strong>"~은요?", "~는요?"</strong>에 해당하는 아주 유용한 표현입니다.</p>
+                <p>앞서 질문을 길게 반복할 필요 없이, 궁금한 <strong>대상을 나타내는 대명사나 명사 뒤에 呢?만 툭 붙여주면</strong> 대화가 아주 자연스럽고 매끄러워집니다. 예를 들어 "저는 잘 지내요, 당신은요?"처럼 앞서 나온 질문의 맥락을 그대로 이어받아 상대방의 상태나 의견을 물어볼 때 자주 쓰입니다.</p>
+                <p>이 呢(ne) 역시 성조가 없는 <strong>경성</strong>이므로, 吗(ma)처럼 앞 단어의 끝에 붙여 가볍고 부드럽게 발음해야 원어민 같은 뉘앙스를 살릴 수 있습니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>很<rt>hěn</rt></ruby> <ruby>好<rt>hǎo</rt></ruby>，<ruby>你<rt>nǐ</rt></ruby> <ruby>呢<rt>ne</rt></ruby>？
+                </div>
+                <div class="translation">뜻: 전 잘 지내요, 당신은요?</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我很好 (wǒ hěn hǎo)</strong> : 저는 아주 잘 지냅니다 (답변)</li>
+                    <li><strong>你 呢？ (nǐ ne)</strong> : 당신은요? (동일한 질문을 상대방에게 되묻기)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 10</div>
+    </div>
+
+
+    <!-- ==========================================
+         [11쪽] 단어 및 연습문제 페이지 (5. 呢) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 5강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>很<rt>hěn</rt></ruby>
+                <div class="word-meaning">매우, 아주</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>爸<rt>bà</rt></ruby><ruby>ba<rt>ba</rt></ruby>
+                <div class="word-meaning">아빠, 아버지</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>妈<rt>mā</rt></ruby><ruby>ma<rt>ma</rt></ruby>
+                <div class="word-meaning">엄마, 어머니</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>咖<rt>kā</rt></ruby><ruby>非<rt>fēi</rt></ruby>
+                <div class="word-meaning">커피</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>茶<rt>chá</rt></ruby>
+                <div class="word-meaning">차 (Tea)</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [명사/대명사 + 呢?] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "아빠는요?" (아빠의 안부나 위치를 되물을 때)를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">爸爸 ( &nbsp; &nbsp; &nbsp; ) ？</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 상대방에게 되묻는 어기조사 呢를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "저는 커피를 마셔요, 당신은요?"에서 "당신은요?" 부분을 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我喝咖啡，( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) ？</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '당신'이라는 대명사와 '되묻기 조사'를 결합하여 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 대화 <span>A: "妈妈好吗？" -> B: " Mom很好，爸爸呢？"</span>에서 B가 한 말의 마지막 문장 뜻을 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 엄마의 안부에 답한 후, 이어서 아빠의 안비를 되묻는 상황입니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 11</div>
+    </div>
+<div class="page">
+        <div class="page-header">
+            <h2>제 6강: 부드러운 제안과 짐작, 청유와 추측 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>6. 吧 (ba) : ~하죠?, ~합시다 (제안/추측)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">문장 끝에 + 吧</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>내 의견을 강요하지 않고 상대방에게 부드럽게 권유하거나 대답을 유도할 때, 중국어에서는 문장 끝에 <strong>吧(ba)</strong>를 사용합니다. 크게 두 가지 핵심 역할을 하는데, 첫째는 <strong>"~합시다"</strong>라는 청유나 제안이고, 둘째는 <strong>"~하죠?, ~맞죠?"</strong>라는 추측이나 확인입니다.</p>
+                <p>명령조의 딱딱한 문장이라도 끝에 吧만 붙이면 대화의 분위기가 한결 부드러워집니다. 예를 들어 "가다(去)" 뒤에 吧를 붙여 "갑시다(去吧)"가 되는 것처럼 말이죠. 일상 회화에서 정말 자주 쓰이는 마법 같은 단어입니다.</p>
+                <p>이 吧(ba) 역시 성조가 없는 <strong>경성</strong>이므로 문장 끝에서 가볍게 툭 던지듯 발음해 주세요. 제안이나 청유일 때는 마침표(。)나 느낌표(!)를, 추측이나 확인을 나타낼 때는 물음표(?)를 문장 끝에 붙여 줍니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby><ruby>们<rt>men</rt></ruby> <ruby>易<rt>yì</rt></ruby><ruby>买<rt>mǎi</rt></ruby><ruby>得<rt>dé</rt></ruby> <ruby>去<rt>qù</rt></ruby> <ruby>吧<rt>ba</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 우리 이마트에 갑시다. (易买得 = 이마트)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我们 (wǒmen)</strong> : 우리 (주어)</li>
+                    <li><strong>易买得 去 (yímǎidé qù)</strong> : 이마트에 가다 (목적어 + 동사)</li>
+                    <li><strong>...吧 (ba)</strong> : ~합시다 (제안/권유)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 12</div>
+    </div>
+
+
+    <div class="page">
+        <div class="page-header">
+            <h2>제 6강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>我<rt>wǒ</rt></ruby><ruby>们<rt>men</rt></ruby>
+                <div class="word-meaning">우리, 저희</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>去<rt>qù</rt></ruby>
+                <div class="word-meaning">가다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>吃<rt>chī</rt></ruby><ruby>饭<rt>fàn</rt></ruby>
+                <div class="word-meaning">밥을 먹다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>走<rt>zǒu</rt></ruby>
+                <div class="word-meaning">걷다, 가다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>看<rt>kàn</rt></ruby><ruby>电<rt>diàn</rt></ruby><ruby>影<rt>yǐng</rt></ruby>
+                <div class="word-meaning">영화를 보다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [문장 끝에 + 吧] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "우리 밥 먹읍시다!"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我们 吃饭 ( &nbsp; &nbsp; &nbsp; ) ！</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 청유와 제안을 나타내는 어기조사 吧를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "가자!, 출발합시다!"(우리 이제 갑시다)를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '가다/걷다'를 뜻하는 단어 走(zǒu) 뒤에 吧를 붙여 문장을 완성하세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"他是老师吧？"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 여기에서의 吧는 제안이 아니라, 상대방의 신분을 '추측/확인'하는 질문입니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 13</div>
+    </div>
+
+<!-- ==========================================
+         [14쪽] 문법 상세 설명 페이지 (7. 的) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 7강: 성분과 소유를 연결하는 마법의 단어</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>7. 的 (de) : ~의, ~한 (수식)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">명사 / 형용사 + 的 + 명사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>중국어에서 명사와 명사, 혹은 형용사와 명사 사이를 끈끈하게 연결해 주는 핵심 조사인 <strong>的(de)</strong>에 대해 알아봅니다. 주로 한국어의 <strong>"~의"</strong>(소유)나 <strong>"~한, ~인"</strong>(수식)에 해당하는 역할을 수행합니다.</p>
+                <p>"나<b>의</b> 책", "예쁜 옷"처럼 뒤에 오는 명사를 꾸며주고 싶을 때, 꾸며주는 말 바로 뒤에 <strong>的</strong>를 붙여서 다리를 놓아주면 됩니다. 어순이 한국어와 완전히 똑같기 때문에 초보자분들이 아주 직관적으로 이해하고 사용할 수 있는 고마운 문법입니다.</p>
+                <p>단, 가족 관계(우리 엄마, 내 동생)나 친밀한 소속(우리 학교, 내 회사)처럼 <strong>누가 봐도 아주 가까운 관계를 나타낼 때는 일상 회화에서 的를 자주 생략</strong>하기도 합니다. (예: 我妈妈 / 我学校) 이 단어 역시 가볍고 짧게 발음하는 <strong>경성</strong>입니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>这<rt>zhè</rt></ruby> <ruby>是<rt>shì</rt></ruby> <ruby>我<rt>wǒ</rt></ruby> <ruby>的<rt>de</rt></ruby> <ruby>手<rt>shǒu</rt></ruby><ruby>机<rt>jī</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 이것은 제 휴대폰입니다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>这 是 (zhè shì)</strong> : 이것은 ~이다 (주어 + 동사)</li>
+                    <li><strong>我 的 (wǒ de)</strong> : 나 + 의 (소유 수식어)</li>
+                    <li><strong>手机 (shǒujī)</strong> : 휴대폰 (목적어 명사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 14</div>
+    </div>
+
+
+    <!-- ==========================================
+         [15쪽] 단어 및 연습문제 페이지 (7. 的) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 7강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>这<rt>zhè</rt></ruby>
+                <div class="word-meaning">이것, 이</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>手<rt>shǒu</rt></ruby><ruby>机<rt>jī</rt></ruby>
+                <div class="word-meaning">휴대폰</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>衣<rt>yī</rt></ruby><ruby>服<rt>fu</rt></ruby>
+                <div class="word-meaning">옷</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>漂<rt>piào</rt></ruby><ruby>亮<rt>liang</rt></ruby>
+                <div class="word-meaning">예쁘다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>네<rt>shéi</rt></ruby> / <ruby>谁<rt>shuí</rt></ruby>
+                <div class="word-meaning">누구</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [명사/형용사 + 的 + 명사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "이것은 예쁜 옷입니다."를 중국어로 완성하세요. (형용사가 명사를 수식할 때도 연결고리가 필요합니다!)</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">这是 漂亮 ( &nbsp; &nbsp; &nbsp; ) 衣服。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '~한'이라는 뜻으로 수식 성분을 연결해 주는 조사 的를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "누구의 휴대폰입니까?"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 이것은이다(这是) + 누구(谁) + 의(的) + 휴대폰(手机) + 의문문이 아니므로 吗는 쓰지 않고 물음표만 붙입니다.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"那是老师的书。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 那(nà)는 '저것, 그것'이라는 뜻입니다. 소유 관계를 잘 파악하여 번역해 보세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 15</div>
+    </div>
+
+<!-- ==========================================
+         [16쪽] 문법 상세 설명 페이지 (8. 在) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 8강: 존재의 위치 표현하기, 장소 문법</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>8. 在 (zài) : ~에 있다 (장소)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 在 + 장소</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>사람이나 사물이 어느 장소에 위치하고 있는지를 나타낼 때 중국어에서는 동사 <strong>在(zài)</strong>를 사용합니다. 한국어의 <strong>"~에 있다", "~에 계시다"</strong>에 해당하는 핵심 표현입니다.</p>
+                <p>앞서 배운 소유의 '有(yǒu)'가 "무엇을 가지고 있는지"에 초점을 맞춘다면, 이번에 배우는 '在(zài)'는 <strong>"특정 대상이 어디에 위치하는지(Where)"</strong>를 말할 때 씁니다. 어순은 역시 중국어의 기본 뼈대인 <strong>"주어 + 동사(在) + 장소 목적어"</strong> 순서로 결합합니다.</p>
+                <p>부정형을 만들 때는 在 앞에 不(bù)를 붙여 <strong>不在(bú zài)</strong>라고 표현하며, 뜻은 "~에 없다", "~에 자리에 없다"가 됩니다. (※ 不가 4성인 在를 만나면 2성인 'bú'로 성조가 변한다는 점도 함께 기억해 두시면 좋아요!)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>妈<rt>mā</rt></ruby><ruby>ma<rt>ma</rt></ruby> <ruby>在<rt>zài</rt></ruby> <ruby>家<rt>jiā</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 엄마는 집에 계셔요.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>妈妈 (māma)</strong> : 엄마 (주어)</li>
+                    <li><strong>在 (zài)</strong> : ~에 있다 (동사)</li>
+                    <li><strong>家 (jiā)</strong> : 집 (장소 목적어)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 16</div>
+    </div>
+
+
+    <!-- ==========================================
+         [17쪽] 단어 및 연습문제 페이지 (8. 在) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 8강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>家<rt>jiā</rt></ruby>
+                <div class="word-meaning">집</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>学<rt>xué</rt></ruby><ruby>校<rt>xiào</rt></ruby>
+                <div class="word-meaning">학교</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>公<rt>gōng</rt></ruby><ruby>司<rt>sī</rt></ruby>
+                <div class="word-meaning">회사</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>办<rt>bàn</rt></ruby><ruby>公<rt>gōng</rt></ruby><ruby>室<rt>shì</rt></ruby>
+                <div class="word-meaning">사무실</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>哪<rt>nǎ</rt></ruby><ruby>儿<rt>r(er)</rt></ruby>
+                <div class="word-meaning">어디</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 在 + 장소] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 학교에 있습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; ) <span>学校</span>。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 장소 앞에 위치하여 '~에 있다'를 뜻하는 동사 在를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "당신은 어디에 있습니까?"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 당신(你) + 있다(在) + 어디(哪儿) 순서로 의문문 문장 전체를 구성하세요. 의문사 哪儿이 있으므로 吗는 붙이지 않습니다.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"爸爸不在公司。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 在 앞에 부정을 뜻하는 不가 붙었을 때의 의미와 장소 단어의 뜻을 고려해 보세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 17</div>
+    </div>
+
+<!-- ==========================================
+         [18쪽] 문법 상세 설명 페이지 (9. 정반의문문) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 9강: 긍정과 부정을 한 번에, 정반의문문</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>9. 정반의문문 : ~해요, 안 해요?</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">동사 / 형용사 + 不 + 동사 / 형용사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>중국어에서 문장 끝에 吗(ma)를 붙이지 않고도 질문을 만들 수 있는 또 하나의 매력적인 방법, 바로 <strong>정반의문문(正反疑问句)</strong>입니다. 동사나 형용사의 <strong>긍정형과 부정형을 나란히 붙여서 "~ 하니, 안 하니?"</strong>라고 물어보는 방식입니다.</p>
+                <p>예를 들어 "가다(去)"와 "가지 않다(不去)"를 연속으로 붙여 <strong>去不去(qù bú qù)</strong>라고 말하면 "갈 거야, 안 갈 거야?"라는 확실한 질문이 됩니다. 선택지를 주고 상대방의 명확한 의사를 물어볼 때 일상 회화에서 정말 유용하게 쓰입니다.</p>
+                <p>여기서 아주 중요한 규칙이 있습니다! <strong>정반의문문 자체에 이미 질문의 의미가 포함되어 있기 때문에, 문장 맨 끝에 의문 조사 吗(ma)를 중복해서 붙이면 절대 안 됩니다.</strong> 또한, 가운데에 끼어 있는 부정어 不(bù)는 성조를 잃고 가볍고 짧게 <strong>경성</strong>으로 발음해야 자연스럽습니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>你<rt>nǐ</rt></ruby> <ruby>去<rt>qù</rt></ruby><ruby>不<rt>bu</rt></ruby><ruby>去<rt>qù</rt></ruby>？
+                </div>
+                <div class="translation">뜻: 너 갈 거야, 안 갈 거야? (너 가니 안 가니?)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>你 (nǐ)</strong> : 너, 당신 (주어)</li>
+                    <li><strong>去 (qù)</strong> : 가다 (긍정 동사)</li>
+                    <li><strong>不 (bu)</strong> : 안 ~하다 (부정의 연결고리)</li>
+                    <li><strong>去 (qù)</strong> : 가다 (부정 동사 반복)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 18</div>
+    </div>
+
+
+    <!-- ==========================================
+         [19쪽] 단어 및 연습문제 페이지 (9. 정반의문문) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 9강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>吃<rt>chī</rt></ruby>
+                <div class="word-meaning">먹다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>喝<rt>hē</rt></ruby>
+                <div class="word-meaning">마시다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>买<rt>mǎi</rt></ruby>
+                <div class="word-meaning">살다, 구매하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>나오<rt>lái</rt></ruby> / <ruby>来<rt>lái</rt></ruby>
+                <div class="word-meaning">오다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>한<rt>hàn</rt></ruby> / <ruby>看<rt>kàn</rt></ruby>
+                <div class="word-meaning">보다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [동사/형용사 + 不 + 동사/형용사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "너 올 거야, 안 올 거야?"(너 오니 안 오니?)를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">你 来 ( &nbsp; &nbsp; &nbsp; ) 来？</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 긍정과 부정 사이에 들어갈 부정 부사 不를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "너 이거 살 거야, 안 살 거야?"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">你 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 这个？</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '사다(买)'의 정반의문문 형태를 만들고, 뒤에 '이것(这个)'을 이어 붙이세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"你吃不吃面包？"</span>에서 문법적으로 잘못된 부분을 찾아 바르게 고쳐 쓰고 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q" style="color: #c0392b;">你吃不吃面包吗？ (X)</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 정반의문문이 쓰인 문장에는 의문 조사 吗를 함께 쓸 수 없습니다. 面包(miànbāo)는 '빵'입니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 19</div>
+    </div>
+
+   <!-- ==========================================
+          대문짝만한 대단원 표지 페이지
+         ========================================== -->
+    <div class="page">
+        <div class="cover-page">
+            <div class="cover-sub">중국어 회화 핵심 문법</div>
+            <h1 class="cover-title">2. 시제 및 동작의 상태 <br>(10~16)</h1>
+            <div class="cover-line"></div>
+        </div>
+        <div class="page-footer">Page -</div>
+    </div>
+
+<!-- ==========================================
+         [20쪽] 문법 상세 설명 페이지 (10. 了) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 10강: 완료와 변화를 나타내는 과거 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>10. 了 (le) : ~했다 (변화/완료)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">동사 뒤 혹은 문장 끝 + 了</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>중국어에는 영어처럼 동사 자체의 형태가 과거형으로 변하는 규칙이 없습니다. 대신 문장 안이나 끝에 <strong>了(le)</strong>라는 조사 하나를 붙여서 과거의 <strong>'완료'</strong>나 새로운 상황으로의 <strong>'변화'</strong>를 나타냅니다. 한국어의 <strong>"~했다", "~하게 되었다"</strong>에 해당합니다.</p>
+                <p>가장 흔히 쓰이는 형태는 문장 맨 끝에 吧(ba)나 吗(ma)처럼 <strong>了</strong>를 얹어주는 것입니다. 예를 들어 "밥을 먹다(吃饭)" 뒤에 붙여 "밥을 먹었다(吃饭了)"가 되는 식이죠. 어떤 행동이 끝났음을 상대방에게 가볍게 알릴 때 아주 유용합니다.</p>
+                <p>주의할 점은, <strong>어떤 행동을 '하지 않았다'라고 과거 부정을 할 때는 了를 절대 같이 쓰지 않는다는 것입니다.</strong> 부정 부사 没(méi)를 동사 앞에 붙이는 순간, 문장 끝의 了는 반드시 사라져야 합니다. 이 조사 역시 성조가 없는 <strong>경성</strong>이므로 가볍고 짧게 발음해 주세요.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>吃<rt>chī</rt></ruby><ruby>饭<rt>fàn</rt></ruby><ruby>了<rt>le</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저 밥 먹었어요.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>吃饭 (chīfàn)</strong> : 밥을 먹다 (동사 + 목적어)</li>
+                    <li><strong>...了 (le)</strong> : ~했다 (완료를 나타내는 조사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 20</div>
+    </div>
+
+
+    <!-- ==========================================
+         [21쪽] 단어 및 연습문제 페이지 (10. 了) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 10강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>吃<rt>chī</rt></ruby><ruby>饭<rt>fàn</rt></ruby>
+                <div class="word-meaning">밥을 먹다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>买<rt>mǎi</rt></ruby><ruby>了<rt>le</rt></ruby>
+                <div class="word-meaning">샀다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>知<rt>zhī</rt></ruby><ruby>道<rt>dào</rt></ruby><ruby>了<rt>le</rt></ruby>
+                <div class="word-meaning">알겠습니다, 알았다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>回<rt>huí</rt></ruby><ruby>家<rt>jiā</rt></ruby>
+                <div class="word-meaning">집에 가다(돌아가다)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>太<rt>tài</rt></ruby>……<ruby>了<rt>le</rt></ruby>
+                <div class="word-meaning">너무 ~하다 (감탄/강조)</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [동사 뒤 혹은 문장 끝 + 了] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저 집에 왔어요 / 집에 들어왔어요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 回家 ( &nbsp; &nbsp; &nbsp; ) 。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 문장 끝에 붙어 동작의 완료나 상황의 변화를 나타내는 조사 了를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 일상 대화나 비즈니스에서 자주 쓰는 표현으로, 상대방의 말을 이해했을 때 쓰는 "알겠습니다!"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '알다'를 뜻하는 知道(zhīdào) 뒤에 상황이 변했음을 뜻하는 了를 붙여 문장을 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"太好了！"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '太 + 형용사 + 了'는 "너무 ~하다"라는 감탄 표현입니다. 好(hǎo)의 의미를 살려 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 21</div>
+    </div>
+
+<!-- ==========================================
+         [22쪽] 문법 상세 설명 페이지 (11. 过) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 11강: 과거의 특별한 추억, 경험 표현하기</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>11. 过 (guò) : ~한 적이 있다 (경험)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">동사 + 过</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>단순히 과거에 행동이 끝났음을 나타내는 了(le)와 달리, 살면서 무언가를 해본 적이 있다는 <strong>'경험'</strong>을 강조하고 싶을 때는 동사 바로 뒤에 <strong>过(guò)</strong>를 사용합니다. 한국어의 <strong>"~한 적이 있다", "~해 봤다"</strong>에 상응하는 표현입니다.</p>
+                <p>구조는 아주 간단하게 <strong>"주어 + 동사 + 过 + 목적어"</strong>의 형태를 취합니다. "가다(去)" 뒤에 붙여 "가본 적이 있다(去过)", "먹다(吃)" 뒤에 붙여 "먹어본 적이 있다(吃过)"처럼 동사의 성격만 바꾸어 붙여주면 아주 쉽게 문장이 완성됩니다.</p>
+                <p>과거에 그러한 경험이 없다고 부정할 때는, 앞서 배웠던 부정 부사 没(méi) 혹은 没有(méiyǒu)를 동사 앞에 붙여 줍니다. 이때 <strong>동사 뒤의 过는 了와 다르게 생략되지 않고 그대로 유지된다는 점</strong>을 꼭 기억해 주세요! (예: 我 没去过 - 저 가본 적 없어요.)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>去<rt>qù</rt></ruby><ruby>过<rt>guo</rt></ruby> <ruby>北<rt>běi</rt></ruby><ruby>京<rt>jīng</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 베이징에 가본 적이 있습니다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>去 (qù)</strong> : 가다 (동사)</li>
+                    <li><strong>过 (guo)</strong> : ~한 적이 있다 (경험을 나타내는 조사)</li>
+                    <li><strong>北京 (běijīng)</strong> : 베이징 (목적어 명사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 22</div>
+    </div>
+
+
+    <!-- ==========================================
+         [23쪽] 단어 및 연습문제 페이지 (11. 过) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 11강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>去<rt>qù</rt></ruby><ruby>过<rt>guo</rt></ruby>
+                <div class="word-meaning">가본 적이 있다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>吃<rt>chī</rt></ruby><ruby>过<rt>guo</rt></ruby>
+                <div class="word-meaning">먹어본 적이 있다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>北<rt>běi</rt></ruby><ruby>京<rt>jīng</rt></ruby>
+                <div class="word-meaning">베이징</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>中<rt>zhōng</rt></ruby><ruby>国<rt>guó</rt></ruby> <ruby>菜<rt>cài</rt></ruby>
+                <div class="word-meaning">중국 요리, 중국 음식</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>看<rt>kàn</rt></ruby><ruby>过<rt>guo</rt></ruby>
+                <div class="word-meaning">본 적이 있다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [동사 + 过] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 중국 음식을 먹어본 적이 있습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 吃 ( &nbsp; &nbsp; &nbsp; ) 中国菜。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 동사 뒤에 결합하여 과거의 경험을 나타내는 조사 过를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "저는 이 영화를 본 적이 있습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 나(我) + 보다(看) + 경험조사 + 이 영화(这部电影, zhè bù diànyǐng) 순서로 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我 没去过 北京。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 没(méi)가 사용되어 경험을 부정하고 있습니다. 본문의 팁 설명을 참고하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 23</div>
+    </div>
+
+
+<!-- ==========================================
+         [24쪽] 문법 상세 설명 페이지 (12. 没 ~ 过) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 12강: 과거의 경험 부인하기, "~한 적이 없다" 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>12. 没 ~ 过 (méi ~ guo) : ~한 적이 없다 (경험의 부정)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 没(有) + 동사 + 过 + 목적어</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>이번 시간에는 지난 시간에 배운 경험 조사 过(guò)의 짝꿍이자 반대 표현인 <strong>没 ~ 过(méi ~ guo)</strong> 패턴을 알아봅니다. 살면서 어떤 행동을 단 한 번도 해본 적이 없을 때 사용하는 <strong>"~한 적이 없다", "~해보지 않았다"</strong>라는 표현입니다.</p>
+                <p>동사 바로 앞에 부정 부사 <strong>没(méi)</strong> 또는 <strong>没有(méiyǒu)</strong>를 넣고, 동사 뒤에는 경험을 나타내는 <strong>过(guo)</strong>를 그대로 살려두면 완성됩니다. 흔히 왕초보분들이 과거 부정문이라서 동사 뒤에 완료의 '了(le)'를 함께 쓰는 실수를 하곤 하는데, <strong>경험을 부정할 때는 '了'를 절대로 쓰지 않는다</strong>는 점이 핵심 포인트입니다.</p>
+                <p>회화에서는 <strong>没有 ~ 过</strong>라고 길게 말하면 좀 더 강조하는 뉘앙스가 되고, 일상적으로 빠르게 말할 때는 有를 생략하고 <strong>没 ~ 过</strong>의 형태로 훨씬 더 자주 사용합니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>没<rt>méi</rt></ruby> <ruby>去<rt>qù</rt></ruby><ruby>过<rt>guo</rt></ruby> <ruby>中<rt>zhōng</rt></ruby><ruby>国<rt>guó</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 중국에 가본 적이 없습니다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>没 (méi)</strong> : ~않았다 (부정 부사)</li>
+                    <li><strong>去 (qù)</strong> : 가다 (동사)</li>
+                    <li><strong>过 (guo)</strong> : ~한 적이 있다 (경험 조사)</li>
+                    <li><strong>中国 (zhōngguó)</strong> : 중국 (목적어 명사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 24</div>
+    </div>
+
+
+    <!-- ==========================================
+         [25쪽] 단어 및 연습문제 페이지 (12. 没 ~ 过) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 12강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>没<rt>méi</rt></ruby><ruby>치<rt>chī</rt></ruby><ruby>过<rt>guo</rt></ruby> / <ruby>没<rt>méi</rt></ruby><ruby>吃<rt>chī</rt></ruby><ruby>过<rt>guo</rt></ruby>
+                <div class="word-meaning">먹어본 적이 없다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>麻<rt>má</rt></ruby><ruby>辣<rt>là</rt></ruby><ruby>烫<rt>tàng</rt></ruby>
+                <div class="word-meaning">마라탕</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>谈<rt>tán</rt></ruby><ruby>恋<rt>liàn</rt></ruby><ruby>爱<rt>ài</rt></ruby>
+                <div class="word-meaning">연애를 하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>日<rt>rì</rt></ruby><ruby>本<rt>běn</rt></ruby>
+                <div class="word-meaning">일본</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>听<rt>tīng</rt></ruby><ruby>过<rt>guo</rt></ruby>
+                <div class="word-meaning">들어본 적이 있다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 没 + 동사 + 过 + 목적어] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 마라탕을 먹어본 적이 없습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; ) 吃 ( &nbsp; &nbsp; &nbsp; ) 麻辣烫。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 동사 앞뒤에 각각 들어가서 경험의 부정을 만들어주는 세트 단어 没와 过를 채워보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "저는 연애를 해본 적이 없어요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 나(我) + 没 + 연애하다(谈恋爱) 구조를 사용하되, 동사 '谈(tán)' 바로 뒤에 경험 조사를 붙여 전체 문장을 구성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我没有去过日本。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 没有가 사용되었지만, 뒤에 '过'가 붙어 있으므로 과거의 단순 '안 갔다'가 아니라 '경험'에 집중하여 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 25</div>
+    </div>
+<!-- ==========================================
+         [26쪽] 문법 상세 설명 페이지 (13. 正在) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 13강: 지금 이 순간 일어나는 일, 동작의 진행 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>13. 正在 (zhèngzài) : 한창 ~하는 중이다 (진행)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">正在 + 동사 (+ 呢)</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>과거의 완료나 경험을 넘어, 지금 눈앞에서 어떤 행동이 활발하게 일어나는 <strong>'진행 상태'</strong>를 말하고 싶을 때는 동사 앞에 <strong>正在(zhèngzài)</strong>를 붙여 줍니다. 한국어의 <strong>"한창 ~하는 중이다", "~하고 있다"</strong>에 딱 맞는 표현입니다.</p>
+                <p>이 문법의 재미있는 특징은 문장 맨 끝에 어기조사 <strong>呢(ne)</strong>를 함께 세트로 자주 쓴다는 점입니다. 呢가 붙으면 "~하는 중이라니까요"처럼 진행의 어조를 훨씬 더 생생하고 부드럽게 강조해 주는 효과가 있습니다. 상황에 따라 '正', '在', '正在' 중 하나만 동사 앞에 써도 진행의 의미를 나타낼 수 있습니다.</p>
+                <p>지금 하는 중이 아니라고 부정할 때는 正在를 통째로 빼고, 동사 앞에 <strong>没(méi)</strong> 또는 <strong>没有(méiyǒu)</strong>를 붙여 "~하고 있지 않다"라고 표현합니다. 이때 문장 끝에 붙어 있던 진행의 呢는 자연스럽게 사라집니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>他<rt>tā</rt></ruby> <ruby>正<rt>zhèng</rt></ruby><ruby>在<rt>zài</rt></ruby> <ruby>睡<rt>shuì</rt></ruby><ruby>觉<rt>jiào</rt></ruby> <ruby>呢<rt>ne</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 그는 한창 자는 중이다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>他 (tā)</strong> : 그 (주어)</li>
+                    <li><strong>正在 (zhèngzài)</strong> : 한창 ~하는 중이다 (진행 부사)</li>
+                    <li><strong>睡觉 (shuìjiào)</strong> : 잠을 자다 (동사)</li>
+                    <li><strong>...呢 (ne)</strong> : 진행의 뉘앙스를 강조하는 어기조사</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 26</div>
+    </div>
+
+
+    <!-- ==========================================
+         [27쪽] 단어 및 연습문제 페이지 (13. 正在) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 13강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>睡<rt>shuì</rt></ruby><ruby>觉<rt>jiào</rt></ruby>
+                <div class="word-meaning">잠을 자다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>学<rt>xué</rt></ruby><ruby>习<rt>xí</rt></ruby>
+                <div class="word-meaning">공부하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>汉<rt>hàn</rt></ruby><ruby>语<rt>yǔ</rt></ruby>
+                <div class="word-meaning">중국어</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>工<rt>gōng</rt></ruby><ruby>作<rt>zuò</rt></ruby>
+                <div class="word-meaning">일하다, 일</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>听<rt>tīng</rt></ruby> <ruby>音<rt>yīn</rt></ruby><ruby>乐<rt>yuè</rt></ruby>
+                <div class="word-meaning">음악을 듣다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [正在 + 동사 (+ 呢)] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 한창 중국어를 공부하는 중입니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 学习 汉语 呢。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 동사 앞에 위치하여 '한창 ~하는 중이다'라는 뜻을 더해주는 正在를 한자나 병음으로 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "그녀는 한창 음악을 듣는 중이에요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 그녀(她) + 正在 + 음악을 듣다(听音乐) + 문장 끝에 진행의 맛을 살려주는 呢까지 붙여 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"爸爸正在工作呢。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 주어인 '아빠'의 현재 역동적인 상태를 부드럽게 서술한 진행형 문장입니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 27</div>
+    </div>
+
+<!-- ==========================================
+         [28쪽] 문법 상세 설명 페이지 (14. 要 ~ 了) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 14강: 머지않아 일어날 일, 임박한 미래 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>14. 要 ~ 了 (yào ~ le) : 곧 ~하려고 한다 (임박태)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">要 / 快要 / 就要 + 동사 + 了</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>지금 당장 일어나는 일은 아니지만, 아주 가까운 미래에 어떤 상황이 곧 발생할 것임을 나타낼 때 중국어에서는 <strong>要 ~ 了(yào ~ le)</strong> 패턴을 사용합니다. 한국어의 <strong>"곧 ~하려고 한다", "막 ~하려는 참이다"</strong>에 해당하는 표현으로, 이를 문법 용어로는 '임박태'라고 부릅니다.</p>
+                <p>기본적으로 동사 앞에 <strong>要(yào)</strong>, <strong>快要(kuàiyào)</strong>, <strong>就要(jiùyào)</strong> 중 하나를 쓰고 문장 맨 끝에 완료와 변화를 배웠을 때 만났던 <strong>了(le)</strong>를 세트로 붙여서 만듭니다. '快要'나 '就要'를 사용하면 "정말 곧!, 머지않아 바로!"라는 임박한 뉘앙스가 훨씬 더 강해집니다.</p>
+                <p>여기서 왕초보 탈출을 위한 고급 팁 하나! <strong>'快要 ~ 了' 문장 안에는 구체적인 시간(예: 내일, 3시 등)을 나타내는 단어를 함께 쓸 수 없습니다.</strong> 반면, <strong>'就要 ~ 了'는 구체적인 시간사(시간 단어)와 아주 자유롭게 어울려 쓰일 수 있답니다.</strong> (예: 明天 就要 毕业了 - 내일 곧 졸업한다.)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>快<rt>kuài</rt></ruby><ruby>要<rt>yào</rt></ruby> <ruby>下<rt>xià</rt></ruby><ruby>雨<rt>yǔ</rt></ruby> <ruby>了<rt>le</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 곧 비가 내리려고 한다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>快要 (kuàiyào)</strong> : 곧, 머지않아 (임박 부사)</li>
+                    <li><strong>下雨 (xiàyǔ)</strong> : 비가 내리다 (동사 + 목적어 구조)</li>
+                    <li><strong>...了 (le)</strong> : 새로운 상황이 다가옴을 나타내는 조사</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 28</div>
+    </div>
+
+
+    <!-- ==========================================
+         [29쪽] 단어 및 연습문제 페이지 (14. 要 ~ 了) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 14강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>下<rt>xià</rt></ruby><ruby>雨<rt>yǔ</rt></ruby>
+                <div class="word-meaning">비가 내리다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>出<rt>chū</rt></ruby><ruby>发<rt>fā</rt></ruby>
+                <div class="word-meaning">출발하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>毕<rt>bì</rt></ruby><ruby>业<rt>yè</rt></ruby>
+                <div class="word-meaning">졸업하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>上<rt>shàng</rt></ruby><ruby>课<rt>kè</rt></ruby>
+                <div class="word-meaning">수업하다, 수업을 시작하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>开<rt>kāi</rt></ruby><ruby>始<rt>shǐ</rt></ruby>
+                <div class="word-meaning">시작하다, 시작</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [要/快要/就要 + 동사 + 了] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "곧 출발하려고 합니다!"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">快要 出发 ( &nbsp; &nbsp; &nbsp; ) ！</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 임박태 패턴에서 문장 끝에 반드시 세트로 따라붙는 어기조사 了를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "곧 수업 시작합니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '곧 ~하려고 한다'의 快要(kuàiyào)와 '수업하다'를 뜻하는 上课(shàngkè)를 활용하여 문장을 구성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我们就要毕业了。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 就要 ~ 了 패턴과 단어장의 毕业(bìyè) 뜻을 연결하여 자연스러운 미래 상황으로 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 29</div>
+    </div>
+
+<!-- ==========================================
+         [30쪽] 문법 상세 설명 페이지 (15. 是 ~ 的) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 15강: 과거의 세부 사실을 스포트라이트, 강조 구문</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>15. 是 ~ 的 (shì ~ de) : (이미 일어난 일의 시간/장소/방식) 강조</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">是 + 강조 내용 + 동사 + 的</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>이미 발생한 과거의 일에 대해 이야기할 때, 단순히 "그 행동을 했다"는 사실 자체보다 <strong>"대체 '언제', '어디서', '어떤 방법'으로 한 것인지"</strong> 그 구체적인 배경을 콕 집어 강조하고 싶을 때가 있습니다. 중국어에서는 이때 <strong>是 ~ 的(shì ~ de)</strong> 구문을 활용합니다.</p>
+                <p>강조하고 싶은 시간, 장소, 방식 등의 정보 바로 앞에 <strong>是(shì)</strong>를 세우고, 문장 맨 끝(또는 동사 뒤)에 <strong>的(de)</strong>를 붙여서 문장을 감싸주면 됩니다. 예를 들어 "나 왔어(Implied)"가 아니라, "내가 온 건 바로 <b>'어제'</b>야!"라고 강조하는 느낌을 줍니다.</p>
+                <p>여기서 아주 유용한 회화 팁! 일상 대화에서는 <strong>동사 앞에 붙는 是(shì)를 종종 생략하고 문장 끝에 的만 남겨두기도 합니다.</strong> 하지만 <strong>부정문(~에 한 것이 아니다)을 만들 때는 是 앞에 不를 붙여 반드시 不是 ~ 的 형태로 써야 하며, 이때 是는 절대 생략할 수 없습니다.</strong></p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>是<rt>shì</rt></ruby> <ruby>昨<rt>zuó</rt></ruby><ruby>天<rt>tiān</rt></ruby> <ruby>来<rt>lái</rt></ruby> <ruby>의<rt>de</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 '어제' 왔어요. (제가 온 것은 어제입니다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>是 (shì)</strong> : 강조의 시작을 알리는 신호탄</li>
+                    <li><strong>昨天 (zuótiān)</strong> : 어제 (강조하고자 하는 '시간' 요소)</li>
+                    <li><strong>来 (lái)</strong> : 오다 (이미 일어난 핵심 동작)</li>
+                    <li><strong>...的 (de)</strong> : 강조 구문을 마무리하는 연결 조사</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 30</div>
+    </div>
+
+
+    <!-- ==========================================
+         [31쪽] 단어 및 연습문제 페이지 (15. 是 ~ 的) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 15강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>昨<rt>zuó</rt></ruby><ruby>天<rt>tiān</rt></ruby>
+                <div class="word-meaning">어제</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>坐<rt>zuò</rt></ruby><ruby>飞<rt>fēi</rt></ruby><ruby>机<rt>jī</rt></ruby>
+                <div class="word-meaning">비행기를 타다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>在<rt>zài</rt></ruby><ruby>首<rt>shǒu</rt></ruby><ruby>尔<rt>ěr</rt></ruby>
+                <div class="word-meaning">서울에서 (장소)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>买<rt>mǎi</rt></ruby><ruby>的<rt>de</rt></ruby>
+                <div class="word-meaning">산 것, 샀다 (강조)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>什<rt>shén</rt></ruby><ruby>么<rt>me</rt></ruby><ruby>时<rt>shí</rt></ruby><ruby>候<rt>hou</rt></ruby>
+                <div class="word-meaning">언제 (의문사)</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [是 + 강조 내용 + 동사 + 的] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 서울에서 태어났어요(서울에서 태어난 것입니다)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; ) 在首尔 出生 ( &nbsp; &nbsp; &nbsp; ) 。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 특정 장소인 '在首尔'를 강조하기 위해 앞뒤로 짝을 이루는 구문 是와 的를 채워보세요. 출생하다=出生 chūshēng)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "당신은 언제 왔습니까?"를 중국어로 완성하세요. (상대방이 이미 도착해 있는 상태에서 '언제' 왔는지를 강조해 묻는 문장입니다.)</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 당신(你) + 是 + 언제(什么时候) + 오다(来) + 的? 순서로 강조 의문문을 구성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我是坐飞机来的。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '坐飞机(비행기를 타다)'라는 이동 '방식'이 是와 的 사이에 들어가 강조되고 있습니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 31</div>
+    </div>
+
+<!-- ==========================================
+         [32쪽] 문법 상세 설명 페이지 (16. 着) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 16강: 동작의 상태가 유지되는 순간, 지속 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>16. 着 (zhe) : ~한 채로 있다 (지속)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">동사 + 着</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>지금 막 행동을 하는 중인 진행(正在)과 달리, 어떤 행동을 완료한 후에 <strong>그 상태나 결과가 그대로 유지되고 있는 '지속 상태'</strong>를 표현할 때 중국어에서는 동사 뒤에 <strong>着(zhe)</strong>를 붙입니다. 한국어의 <strong>"~한 채로 있다", "~해 있다"</strong>에 해당하는 문법입니다.</p>
+                <p>가장 대표적인 예로 "문을 열다(开门)"라는 행동이 일어난 뒤, 문이 열려 있는 상태가 그대로 유지되고 있다면 동사 뒤에 바로 착 붙여 <strong>开着(kāizhe)</strong>라고 표현합니다. 옷을 "입고 있는 상태(穿着)", 안경을 "쓰고 있는 상태(戴着)" 등을 묘사할 때도 이 패턴을 사용합니다.</p>
+                <p>이 상태를 부정하여 "~한 채로 있지 않다"라고 말할 때는 동사 앞에 <strong>没(méi)</strong> 또는 <strong>没有(méiyǒu)</strong>를 붙여서 나타냅니다. 이때 경험 조사 过와 마찬가지로 <strong>동사 뒤의 지속 조사 着는 사라지지 않고 문장 속에 그대로 유지된다는 점</strong>을 기억해 주세요. 이 단어 역시 가볍게 발음하는 <strong>경성</strong>입니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>门<rt>mén</rt></ruby> <ruby>开<rt>kāi</rt></ruby><ruby>着<rt>zhe</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 문이 열려 있다. (문이 열린 채로 유지되어 있다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>门 (mén)</strong> : 문 (주어)</li>
+                    <li><strong>开 (kāi)</strong> : 열다 (동사)</li>
+                    <li><strong>...着 (zhe)</strong> : ~한 채로 있다 (상태의 지속을 나타내는 조사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 32</div>
+    </div>
+
+
+    <!-- ==========================================
+         [33쪽] 단어 및 연습문제 페이지 (16. 着) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 16강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>门<rt>mén</rt></ruby>
+                <div class="word-meaning">문 (Door)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>开<rt>kāi</rt></ruby><ruby>着<rt>zhe</rt></ruby>
+                <div class="word-meaning">열려 있다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>关<rt>guān</rt></ruby><ruby>着<rt>zhe</rt></ruby>
+                <div class="word-meaning">닫혀 있다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>穿<rt>chuān</rt></ruby><ruby>着<rt>zhe</rt></ruby>
+                <div class="word-meaning">입고 있다 (착용 상태)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>红<rt>hóng</rt></ruby><ruby>色<rt>sè</rt></ruby> <ruby>衣<rt>yī</rt></ruby><ruby>服<rt>fu</rt></ruby>
+                <div class="word-meaning">빨간색 옷</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [동사 + 着] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "창문이 닫혀 있습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">窗户 关 ( &nbsp; &nbsp; &nbsp; ) 。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 동사 뒤에 결합하여 문이 '닫힌 채로 유지되는 상태'를 뜻하는 조사 着를 넣어보세요. 窗户 chuānghu = 창문)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "그녀는 빨간색 옷을 입고 있다."를 중국어로 완성하세요. (지금 옷을 위로 꿰어 입는 중이 아니라, 이미 입은 상태로 서 있는 모습을 뜻합니다.)</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 그녀(她) + 입고 있다(穿着) + 빨간색 옷(红色衣服) 순서로 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"门 没开着。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 没가 동사 앞에 쓰여 지속의 상태를 부정하고 있습니다. 본문의 팁 설명을 참고하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 33</div>
+    </div>
+
+    <!-- ==========================================
+         대문짝만한 대단원 표지 페이지
+         ========================================== -->
+    <div class="page">
+        <div class="cover-page">
+            <div class="cover-sub">중국어 회화 핵심 문법</div>
+            <h1 class="cover-title">3. 조동사 및 부사 활용<br>(17~23)</h1>
+            <div class="cover-line"></div>
+        </div>
+        <div class="page-footer">Page -</div>
+    </div>
+
+<!-- ==========================================
+         [34쪽] 문법 상세 설명 페이지 (17. 동량사) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 17강: 동작의 횟수를 표현하는 방법, 동량사 문법</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>17. 动量词 (동량사) : 동작의 횟수 세기</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">동사 + 次(번) / 遍(처음부터 끝까지 번)</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>명사를 셀 때 개(个), 권(本) 같은 명량사를 쓰듯이, 어떤 동작을 몇 번 행했는지 <strong>행동의 횟수</strong>를 셀 때는 <strong>동량사(动量词)</strong>를 사용합니다. 한국어의 <strong>"~번", "~차례", "~회"</strong>에 해당합니다.</p>
+                <p>가장 자주 쓰이는 대표적인 동량사로 <strong>次(cì)</strong>와 <strong>遍(biàn)</strong>이 있습니다. <strong>次</strong>는 단순히 동작이 일어난 횟수를 세는 반면, <strong>遍</strong>은 책을 정독하거나 음악을 들을 때처럼 <strong>'처음부터 끝까지 전 과정을 온전하게 한 번 완료했다'</strong>는 맥락을 강조할 때 씁니다. 미묘한 어감 차이가 있지요?</p>
+                <p>문장에서 동량사의 위치는 기본적으로 <strong>"동사 + (조사) + 수사 + 동량사"</strong>의 어순을 따릅니다. "보다(看)" 뒤에 과거 완료의 了를 붙이고 숫자 1과 次를 결합하면 "한 번 보았다(看 了一次)"가 되는 식입니다. 단, 목적어가 사람이거나 대명사일 때는 동량사의 위치가 바뀔 수 있으니 기본 패턴부터 확실히 익혀두세요!</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>看<rt>kàn</rt></ruby><ruby>了<rt>le</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>次<rt>cì</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 나 그거 한번 봤어. (나는 한 번 보았다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>看 (kàn)</strong> : 보다 (동사)</li>
+                    <li><strong>了 (le)</strong> : ~했다 (완료 조사)</li>
+                    <li><strong>一次 (yí cì)</strong> : 한 번 (수사 + 동량사 구조)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 34</div>
+    </div>
+
+
+    <!-- ==========================================
+         [35쪽] 단어 및 연습문제 페이지 (17. 동량사) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 17강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>次<rt>cì</rt></ruby>
+                <div class="word-meaning">번, 횟수 (일반적인 횟수)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>遍<rt>biàn</rt></ruby>
+                <div class="word-meaning">번, 차례 (처음부터 끝까지)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>听<rt>tīng</rt></ruby>
+                <div class="word-meaning">듣다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>说<rt>shuō</rt></ruby>
+                <div class="word-meaning">말하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>再<rt>zài</rt></ruby>
+                <div class="word-meaning">다시, 또 (미래의 중복)</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [동사 + 수사 + 동량사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 한 번 들어봤습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 听了 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 숫자 1의 병음 'yī'는 4성인 次(cì) 앞에서 2성인 'yí'로 성조가 바뀝니다. '한 번'을 뜻하는 두 단어를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 상대방의 말을 잘 못 알아들었을 때 쓰는 일상 표현인 "다시 한 번 말씀해 주세요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">请 再说 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 처음부터 끝까지 전체 내용을 한 번 다 말해달라는 뉘앙스이므로 '一(yí)' 뒤에 동량사 '遍(biàn)'을 조합해 보세요. 请 qǐng = ~해 주세요)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我去 였던 적이 있다 三次 北京。"</span>을 올바른 어순으로 배열하고 해석해 보세요. (동사: 去 / 경험조사: 过 / 목적어: 北京 / 횟수: 三次)</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 주어 + 동사 + 过 + 수량사(三次) + 장소목적어(北京) 순으로 단어를 바르게 배열해 보세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 35</div>
+    </div>
+<!-- ==========================================
+         [36쪽] 문법 상세 설명 페이지 (18. 会) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 18강: 노력으로 얻은 능력과 미래의 짐작, 조동사 문법</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>18. 会 (huì) : ~할 줄 안다 (배워서 아는 능력) / ~일 것이다 (추측)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 会 + 동사 + 목적어</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>중국어에서 본동사 앞에 붙어 본동사의 의미를 도와주는 단어들을 능원동사(조동사)라고 합니다. 그중 가장 대표적인 단어인 <strong>会(huì)</strong>는 크게 두 가지 핵심 역할을 지니고 있습니다.</p>
+                <p>첫째는 <strong>"~할 줄 안다"</strong>라는 뜻으로, 운전, 외국어, 요리처럼 <strong>후천적인 학습이나 훈련을 통해 습득한 능력</strong>을 나타낼 때 씁니다. 단순히 타고난 신체적 조건을 나타내는 能(néng)과는 미묘한 어감 차이가 있어요. 둘째는 <strong>"~일 것이다"</strong>라는 뜻으로, 미래의 일이나 상황에 대한 <strong>강한 추측이나 가능성</strong>을 부드럽게 나타내기도 합니다.</p>
+                <p>능력을 부정하여 <strong>"~할 줄 모른다"</strong>라고 하거나, 추측을 부정하여 <strong>"~일 리가 없다"</strong>라고 말하고 싶을 때는 会 앞에 不를 붙여 <strong>不会(bú huì)</strong>의 형태로 만들어주면 됩니다. (※ 不가 4성인 会를 만나면 2성인 'bú'로 성조가 변하는 점을 유의하세요!)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>会<rt>huì</rt></ruby> <ruby>说<rt>shuō</rt></ruby> <ruby>汉<rt>hàn</rt></ruby><ruby>语<rt>yǔ</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 중국어를 할 줄 압니다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>会 (huì)</strong> : ~할 줄 안다 (능원동사)</li>
+                    <li><strong>说 (shuō)</strong> : 말하다 (본동사)</li>
+                    <li><strong>汉语 (hànyǔ)</strong> : 중국어 (목적어 명사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 36</div>
+    </div>
+
+
+    <!-- ==========================================
+         [37쪽] 단어 및 연습문제 페이지 (18. 会) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 18강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>说<rt>shuō</rt></ruby><ruby>汉<rt>hàn</rt></ruby><ruby>语<rt>yǔ</rt></ruby>
+                <div class="word-meaning">중국어를 말하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>开<rt>kāi</rt></ruby><ruby>车<rt>chē</rt></ruby>
+                <div class="word-meaning">운전하다(차를 몰다)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>做<rt>zuò</rt></ruby><ruby>饭<rt>fàn</rt></ruby>
+                <div class="word-meaning">요리하다(밥을 만들다)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>游<rt>yóu</rt></ruby><ruby>泳<rt>yǒng</rt></ruby>
+                <div class="word-meaning">수영하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>明<rt>míng</rt></ruby><ruby>天<rt>tiān</rt></ruby>
+                <div class="word-meaning">내일</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 会 + 동사 + 목적어] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 운전을 할 줄 압니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; ) 开车。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 배워서 다룰 줄 안다는 능력을 나타내는 단어 会를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "저는 요리를 할 줄 모릅니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 나(我) + '~할 줄 모른다(부정형)' + 요리하다(做饭) 순서로 전체 문장을 완성하세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"明天会下雨。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 여기에서의 会는 능력이 아니라 '내일(明天)' 일어날 날씨에 대한 '추측'을 나타냅니다. 下雨=비가 오다)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 37</div>
+    </div>
+
+<!-- ==========================================
+         [38쪽] 문법 상세 설명 페이지 (19. 不会) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 19강: 능력과 가능성의 완벽한 부인, 조동사 부정 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>19. 不会 (bú huì) : ~할 줄 모른다 / ~일 리가 없다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 不会 + 동사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>지난 시간에 배웠던 능원동사 会(huì)의 부정형태인 <strong>不会(bú huì)</strong>에 대해 집중적으로 알아봅니다. 긍정형과 마찬가지로 문맥에 따라 크게 두 가지의 강력한 부정을 나타냅니다.</p>
+                <p>첫째는 <strong>"~할 줄 모른다"</strong>라는 뜻으로, 방법이나 기술을 배우지 않아서 <strong>할 수 있는 능력이 없음</strong>을 나타냅니다. (예: 저 수영할 줄 몰라요.) 둘째는 <strong>"~일 리가 없다"</strong> 또는 <strong>"~하지 않을 것이다"</strong>라는 뜻으로, 미래의 일이나 가능성에 대해 <strong>강하게 확신을 가지고 부인</strong>할 때 사용됩니다.</p>
+                <p>발음할 때 아주 유용한 성조 변화 팁! 부정을 뜻하는 不(bù)는 원래 4성이지만, <strong>똑같은 4성인 会(huì)를 만나면 앞에 있는 不가 자연스럽게 2성(bú)으로 변합니다.</strong> 따라서 발음 기호를 읽으실 때 부드럽게 올려서 <strong>bú huì</strong>라고 발음해 주셔야 자연스러운 원어민 뉘앙스가 살아납니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>不<rt>bú</rt></ruby><ruby>会<rt>huì</rt></ruby> <ruby>쉬<rt>shuō</rt></ruby> <ruby>汉<rt>hàn</rt></ruby><ruby>语<rt>yǔ</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 저는 중국어를 할 줄 모릅니다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>不会 (bú huì)</strong> : ~할 줄 모른다 (부정 능원동사)</li>
+                    <li><strong>说 (shuō)</strong> : 말하다 (본동사)</li>
+                    <li><strong>汉语 (hànyǔ)</strong> : 중국어 (목적어 명사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 38</div>
+    </div>
+
+
+    <!-- ==========================================
+         [39쪽] 단어 및 연습문제 페이지 (19. 不会) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 19강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>不<rt>bú</rt></ruby><ruby>会<rt>huì</rt></ruby>
+                <div class="word-meaning">~할 줄 모른다 / ~일 리가 없다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>游<rt>yóu</rt></ruby><ruby>泳<rt>yǒng</rt></ruby>
+                <div class="word-meaning">수영하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>喝<rt>hē</rt></ruby><ruby>酒<rt>jiǔ</rt></ruby>
+                <div class="word-meaning">술을 마시다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>来<rt>lái</rt></ruby>
+                <div class="word-meaning">오다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>骗<rt>piàn</rt></ruby><ruby>我<rt>wǒ</rt></ruby>
+                <div class="word-meaning">나를 속이다, 나한테 거짓말하다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 不会 + 동사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저는 술을 마실 줄 모릅니다(못 마십니다)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 喝酒。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 배워서 습득하는 능력의 부정을 뜻하며, 성조 변화로 인해 'bú huì'로 발음되는 한자를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "그는 오지 않을 것입니다(안 올 거예요)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 그(他) + 미래의 부정 추측(不会) + 오다(来) 순서로 문장 전체를 구성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"他不会骗 me。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 여기에서의 不会는 능력이 아니라 강한 부정적 추측(~일 리가 없다)을 나타냅니다. 骗我=나를 속이다)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 39</div>
+    </div>
+
+<!-- ==========================================
+         [40쪽] 문법 상세 설명 페이지 (20. 能) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 20강: 조건과 상황에 따른 가능성, 허가 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>20. 能 (néng) : ~할 수 있다 (조건/능력상 가능)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 能 + 동사 + 목적어</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>앞서 배운 '会(huì)'가 후천적으로 배워서 다룰 줄 아는 능력을 뜻했다면, 이번 시간에 배운 능원동사 <strong>能(néng)</strong>은 주어의 객관적인 <strong>'조건이나 환경'</strong>이 갖추어져서 무언가를 할 수 있음을 나타냅니다. 혹은 상황적으로 그것이 <strong>'허락(허가)'</strong>되는지 물어볼 때도 아주 자주 쓰입니다.</p>
+                <p>예를 들어 "중국어를 할 줄 안다"는 기술의 개념이므로 '会'를 쓰지만, "목이 아파서 말을 할 수 없다"라거나 "시간이 있어서 갈 수 있다"처럼 신체 상태나 상황적 조건에 따른 가능은 <strong>能</strong>을 사용해야 합니다. 또한 "여기서 사진을 찍어도 되나요?"처럼 주변 환경상의 허가를 구할 때도 '能 ~ 吗?' 패턴이 필수적입니다.</p>
+                <p>부정형은 能 앞에 不를 붙여 <strong>不能(bù néng)</strong>의 형태로 사용하며, 뜻은 조건상 "~할 수 없다" 혹은 규칙이나 도덕적으로 <strong>"~해서는 안 된다(금지)"</strong>라는 강한 뉘앙스를 가지게 됩니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>这<rt>zhè</rt></ruby><ruby>里<rt>lǐ</rt></ruby> <ruby>能<rt>néng</rt></ruby> <ruby>抽<rt>chōu</rt></ruby><ruby>烟<rt>yān</rt></ruby> <ruby>吗<rt>ma</rt></ruby>？
+                </div>
+                <div class="translation">뜻: 여기 담배 피울 수 있나요? (여기서 흡연이 가능합니까?)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>这里 (zhèlǐ)</strong> : 여기, 이곳 (장소 주어)</li>
+                    <li><strong>能 (néng)</strong> : ~할 수 있다 (상황상 가능한지 묻는 능원동사)</li>
+                    <li><strong>抽烟 (chōuyān)</strong> : 담배를 피우다 (본동사 + 목적어 구조)</li>
+                    <li><strong>...吗？ (ma)</strong> : 일반 의문문을 만드는 어기조사</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 40</div>
+    </div>
+
+
+    <!-- ==========================================
+         [41쪽] 단어 및 연습문제 페이지 (20. 能) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 20강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>这<rt>zhè</rt></ruby><ruby>里<rt>lǐ</rt></ruby>
+                <div class="word-meaning">여기, 이곳</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>抽<rt>chōu</rt></ruby><ruby>烟<rt>yān</rt></ruby>
+                <div class="word-meaning">담배를 피우다, 흡연하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>拍<rt>pāi</rt></ruby><ruby>照<rt>zhào</rt></ruby>
+                <div class="word-meaning">사진을 찍다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>来<rt>lái</rt></ruby>
+                <div class="word-meaning">오다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>帮<rt>bāng</rt></ruby><ruby>我<rt>wǒ</rt></ruby>
+                <div class="word-meaning">나를 돕다, 나를 도와주다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 能 + 동사 + 목적어] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저를 좀 도와주실 수 있나요?"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">你 ( &nbsp; &nbsp; &nbsp; ) 帮我 吗？</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 상대방의 시간이나 조건상 능력이 되는지 가능 여부를 묻는 능원동사 能을 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "여기서 사진 찍을 수 있나요?"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 여기(这里) + 能 + 사진 찍다(拍照) + 의문 조사 吗를 결합하여 문장 전체를 구성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"他今天전혀 못와。"</span>에서 빈칸에 들어갈 '전혀 못와(상황이 안 돼서 올 수 없다)'의 올바른 중국어 부정 형태를 적고 전체 뜻을 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">他 今天 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 来。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 능원동사 能의 부정형을 동사 앞에 배치해야 합니다. 今天 jīntiān = 오늘)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 41</div>
+    </div>
+
+
+<!-- ==========================================
+         [42쪽] 문법 상세 설명 페이지 (21. 不能) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 21강: 상황적 불가능과 절대 금지, 조동사 부정 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>21. 不能 (bù néng) : ~할 수 없다 / ~해서는 안 된다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 不能 + 동사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>이번 시간에는 객관적인 상황이나 조건이 허락하지 않아 무언가를 할 수 없을 때, 혹은 규칙이나 도덕적으로 절대 해서는 안 될 때 사용하는 <strong>Không thể (bù néng)</strong> 패턴을 공부합니다.</p>
+                <p>첫째로 <strong>"~할 수 없다"</strong>라는 뜻은 시간, 신체 조건, 주변 환경 등이 불가능한 상황임을 나타냅니다. (예: 저 감기 걸려서 술 못 마셔요.) 둘째로 <strong>"~해서는 안 된다"</strong>라는 뜻은 공공장소의 규칙이나 사회적 금지를 나타내어, 상대방의 행동을 강하게 제한하거나 경고할 때 자주 쓰입니다. (예: 여기 주차하면 안 됩니다.)</p>
+                <p>성조를 발음할 때 기억해야 할 점! 능원동사 能(néng)은 2성이기 때문에, 앞에 붙는 부정 부사 不(bù)는 성조 변화 없이 원래의 4성을 그대로 유지합니다. 따라서 2성으로 변했던 不会(bú huì)와 달리, 여기서는 확실하게 4성에서 2성으로 내려갔다 올라오는 <strong>bù néng</strong>으로 정확히 발음해 주셔야 합니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>这<rt>zhè</rt></ruby><ruby>里<rt>lǐ</rt></ruby> <ruby>不<rt>bù</rt></ruby><ruby>能<rt>néng</rt></ruby> <ruby>抽<rt>chōu</rt></ruby><ruby>烟<rt>yān</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 여기서는 담배를 피우면 안 됩니다. (금지)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>这里 (zhèlǐ)</strong> : 여기, 이곳 (장소 주어)</li>
+                    <li><strong>不能 (bù néng)</strong> : ~해서는 안 된다 (금지/불가능의 능원동사)</li>
+                    <li><strong>抽烟 (chōuyān)</strong> : 담배를 피우다 (본동사 + 목적어 구조)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 42</div>
+    </div>
+
+
+    <!-- ==========================================
+         [43쪽] 단어 및 연습문제 페이지 (21. 不能) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 21강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>不<rt>bù</rt></ruby><ruby>能<rt>néng</rt></ruby>
+                <div class="word-meaning">~할 수 없다 / ~해서는 안 된다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>停<rt>tíng</rt></ruby><ruby>车<rt>chē</rt></ruby>
+                <div class="word-meaning">주차하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>感<rt>gǎn</rt></ruby><ruby>冒<rt>mào</rt></ruby>
+                <div class="word-meaning">감기에 걸리다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>进<rt>jìn</rt></ruby><ruby>去<rt>qu</rt></ruby>
+                <div class="word-meaning">들어가다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>微<rt>wēi</rt></ruby><ruby>笑<rt>xiào</rt></ruby>
+                <div class="word-meaning">미소 짓다, 웃다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 不能 + 동사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "여기에 주차하시면 안 됩니다(금지)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">这里 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 停车。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 규정이나 규칙상 '~해서는 안 된다'를 뜻하는 조동사 부정형 不能을 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "저는 감기에 걸려서 갈 수 없습니다(상황적 불가능)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">I感冒了，( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 去。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 나(我)와 함께 '몸 상태로 인해 갈 수 없다'는 뜻의 부정 표현을 완성하세요. 감기 걸렸다=感冒了 gǎnmàole)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"现在不能进去。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 现在(xiànzài)는 '지금'이라는 뜻이고, 进去(jìnqù)는 '들어가다'입니다. 뉘앙스를 살려 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 43</div>
+    </div>
+
+<!-- ==========================================
+         [44쪽] 문법 상세 설명 페이지 (22. 可以) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 22강: 부드러운 허락과 승인, 허가 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>22. 可以 (kěyǐ) : ~해도 된다 (허가) / ~할 수 있다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 可以 + 동사 + 목적어</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>이번 시간에 배울 능원동사 <strong>可以(kěyǐ)</strong>는 중국어 회화에서 상대방에게 무언가를 <strong>'허락(허가)'</strong>해 주거나, 객관적인 상황상 <strong>'~할 수 있다'</strong>라고 가능성을 나타낼 때 쓰는 핵심 표현입니다.</p>
+                <p>앞서 배운 能(néng)이 주로 객관적인 환경이나 신체적 조건에 따른 능력을 뜻한다면, <strong>可以는 대화 속에서 "그렇게 해도 괜찮아", "그 행동을 허가할게"라는 부드러운 승인의 어감</strong>을 강하게 풍깁니다. 일상생활에서 "너 이제 가도 돼", "이거 먹어도 괜찮아"라고 쿨하게 허락해 줄 때 가장 먼저 떠올려야 하는 단어입니다.</p>
+                <p>재미있는 점은, '可以'로 물어본 의문문에 대해 <strong>"안 됩니다(금지)"라고 부정으로 대답할 때는 不可以(bù kěyǐ)도 쓰지만, 앞서 배운 不能(bù néng)을 써서 더 강하고 단호하게 거절</strong>하기도 합니다. 이 경우 성조는 不(4성)와 可(3성)가 만나 성조 변화 없이 원래대로 <strong>bù kěyǐ</strong>라고 발음합니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>你<rt>nǐ</rt></ruby> <ruby>可<rt>kě</rt></ruby><ruby>以<rt>yǐ</rt></ruby> <ruby>走<rt>zǒu</rt></ruby> <ruby>了<rt>le</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 너 가도 돼. (이제 가는 것이 허락되었다는 상황의 변화)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>你 (nǐ)</strong> : 너, 당신 (주어)</li>
+                    <li><strong>可以 (kěyǐ)</strong> : ~해도 된다 (허가를 나타내는 능원동사)</li>
+                    <li><strong>走 (zǒu)</strong> : 가다, 걷다 (본동사)</li>
+                    <li><strong>...了 (le)</strong> : 이제 그렇게 해도 된다는 상황의 변화를 나타내는 조사</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 44</div>
+    </div>
+
+
+    <!-- ==========================================
+         [45쪽] 단어 및 연습문제 페이지 (22. 可以) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 22강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>可<rt>kě</rt></ruby><ruby>以<rt>yǐ</rt></ruby>
+                <div class="word-meaning">~해도 된다, ~할 수 있다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>进<rt>jìn</rt></ruby><ruby>来<rt>lái</rt></ruby>
+                <div class="word-meaning">들어오다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>用<rt>yòng</rt></ruby>
+                <div class="word-meaning">사용하다, 쓰다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>试<rt>shì</rt></ruby><ruby>试<rt>shi</rt></ruby>
+                <div class="word-meaning">시도하다, 입어보다(해보다)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>这<rt>zhè</rt></ruby><ruby>个<rt>ge</rt></ruby>
+                <div class="word-meaning">이것, 이 사람</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 可以 + 동사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 노크 후 방에 들어오려는 사람에게 "들어오셔도 됩니다."라고 허락할 때 빈칸을 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">你 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 进来。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 상대방에게 행동을 허가해 주는 조동사 可以를 한자나 병음으로 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 옷가게에서 마음에 드는 옷을 발견하고 "이거 입어봐도 되나요?"라고 물어볼 때 문장을 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 可以 试试 这个 ( &nbsp; &nbsp; &nbsp; ) ？</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 문장 끝에 붙어 질문(의문문)을 완성해 주는 가장 기본적인 어기조사를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"你可以용 이 펜。"</span>에서 빈칸에 들어갈 '용(사용하다)'의 올바른 중국어 단어를 단어장에서 찾아 문장 전체를 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 상대방에게 내 물건을 써도 된다고 부드럽게 허락하는 상황입니다. 支笔 zhībǐ = 이 펜)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 45</div>
+    </div>
+
+<!-- ==========================================
+         [46쪽] 문법 상세 설명 페이지 (23. 不可以) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 23강: 단호한 거절과 규칙상의 금지 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>23. 不可以 (bù kěyǐ) : ~하면 안 된다 (거절/금지)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 不可以 + 동사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>상대방이 '可以 ~ 吗?' 패턴으로 허락을 구해왔을 때, 그것을 부드러우면서도 단호하게 거절하거나 규칙상 불가능함을 알리고 싶다면 <strong>不可以(bù kěyǐ)</strong>를 사용합니다. 한국어의 <strong>"~하면 안 된다", "~해서는 안 된다"</strong>에 해당하는 표현입니다.</p>
+                <p>앞서 배운 '不能(bù néng)'이 객관적인 상황이나 물리적 조건 때문에 "할래야 할 수 없다"는 느낌이 강하다면, <strong>不可以는 규칙, 규정, 혹은 화자의 의사에 따라 "그 행동을 허락하지 않겠다"는 '금지'와 '거절'의 뉘앙스</strong>가 강하게 들어갑니다.</p>
+                <p>성조를 발음할 때는 조심해야 할 점이 있습니다. 부정을 뜻하는 不(bù)는 4성이고, 可(kě)는 3성이기 때문에 <strong>성조 변화 없이 원래 성조 그대로 부드럽고 명확하게 'bù kěyǐ'</strong>라고 발음해 주셔야 합니다. 회화에서 아주 짧게 거절할 때는 그냥 "不可以！(안 돼요!)"라고만 말하기도 합니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>你<rt>nǐ</rt></ruby> <ruby>不<rt>bù</rt></ruby><ruby>可<rt>kě</rt></ruby><ruby>ई<rt>yǐ</rt></ruby> <ruby>走<rt>zǒu</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 너 가면 안 돼. (가는 것을 허락하지 않는다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>你 (nǐ)</strong> : 너, 당신 (주어)</li>
+                    <li><strong>不可以 (bù kěyǐ)</strong> : ~하면 안 된다 (거절/금지의 조동사)</li>
+                    <li><strong>走 (zǒu)</strong> : 가다, 떠나다 (본동사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 46</div>
+    </div>
+
+
+    <!-- ==========================================
+         [47쪽] 단어 및 연습문제 페이지 (23. 不可以) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 23강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>不<rt>bù</rt></ruby><ruby>可<rt>kě</rt></ruby><ruby>以<rt>yǐ</rt></ruby>
+                <div class="word-meaning">~하면 안 된다, 해서는 안 된다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>吃<rt>chī</rt></ruby>
+                <div class="word-meaning">먹다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>看<rt>kàn</rt></ruby>
+                <div class="word-meaning">보다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>告<rt>gào</rt></ruby><ruby>诉<rt>su</rt></ruby> <ruby>他<rt>tā</rt></ruby>
+                <div class="word-meaning">그에게 말하다(알려주다)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>巧<rt>qiǎo</rt></ruby><ruby>克<rt>kè</rt></ruby><ruby>力<rt>lì</rt></ruby>
+                <div class="word-meaning">초콜릿</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 不可以 + 동사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 비밀을 지켜야 하는 상황에서 "그에게 말하면 안 됩니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">你 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 😭诉他。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 상대방의 행동을 금지하거나 거절하는 표현인 不可以를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 다이어트 중이거나 건강 문제로 "너 초콜릿 먹으면 안 돼."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 너(你) + 不可以 + 먹다(吃) + 초콜릿(巧克力) 순서로 전체 문장을 구성하세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 시험을 보는 상황에서 감독관이 <span>"不可以看书。"</span>라고 말했다면 이 말의 뜻은 무엇일까요?</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 단어장의 看(보다)과 앞서 배운 书(책)의 의미를 조합하여 금지 명령조로 해석해 보세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 47</div>
+    </div>
+<!-- ==========================================
+         [48쪽] 문법 상세 설명 페이지 (24. 也) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 24강: 공통점과 포함을 나타내는 부사 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>24. 也 (yě) : ~도 (또한)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 也 + 동사 / 형용사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>앞서 다른 사람이 한 말이나 행동, 혹은 상태와 나 자신이 동일할 때 사용하는 유용한 부사 <strong>也(yě)</strong>에 대해 알아봅니다. 한국어의 조사 <strong>"~도", "~ 또한"</strong>에 완벽하게 상응하는 표현입니다.</p>
+                <p>우리말에서는 "나<b>도</b>", "너<b>도</b>"처럼 주어 바로 뒤에 조사로 붙여서 사용하지만, <strong>중국어에서 也는 문법상 '부사'이기 때문에 반드시 동사나 형용사(술어)의 바로 앞에 위치해야 합니다.</strong> 즉, 머릿속으로 <strong>"나 + 또한 + 가다"</strong>라는 순서로 뼈대를 잡고 단어를 나열해야 올바른 문장이 됩니다. 초보자분들이 한국어 어순에 밀려 주어 뒤에 조사를 임의로 붙이는 실수를 가장 많이 하는 파트이기도 합니다.</p>
+                <p>만약 앞서 배운 부정 부사 不(bù)나 没(méi)와 함께 써서 "~도 아니다", "~도 없다"라고 부정하고 싶을 때는 <strong>也를 부정 부사보다 더 앞에 배치하여 也不(yě bù), 也没(yě méi)의 순서로</strong> 써야 합니다. 어순 배열에 꼭 유의해 주세요!</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby> <ruby>也<rt>yě</rt></ruby> <ruby>去<rt>qù</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 나도 가. (나도 또한 가다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我 (wǒ)</strong> : 나 (주어)</li>
+                    <li><strong>也 (yě)</strong> : ~도, 또한 (동사 앞 수식 부사)</li>
+                    <li><strong>去 (qù)</strong> : 가다 (본동사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 48</div>
+    </div>
+
+
+    <!-- ==========================================
+         [49쪽] 단어 및 연습문제 페이지 (24. 也) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 24강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>也<rt>yě</rt></ruby>
+                <div class="word-meaning">~도, 또한 (부사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>韩<rt>hán</rt></ruby><ruby>国<rt>guó</rt></ruby><ruby>人<rt>rén</rt></ruby>
+                <div class="word-meaning">한국인</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>学<rt>xué</rt></ruby><ruby>生<rt>sheng</rt></ruby>
+                <div class="word-meaning">학생</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>想<rt>xiǎng</rt></ruby>
+                <div class="word-meaning">~하고 싶다 / 생각하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>吃<rt>chī</rt></ruby>
+                <div class="word-meaning">먹다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 也 + 동사/형용사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "저도 한국인입니다."를 중국어로 완성하세요. (1강에서 배운 是 문법을 떠올려 보세요!)</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我 ( &nbsp; &nbsp; &nbsp; ) 是 韩国人。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 동사 是 앞에 위치하여 '~도'라는 뜻을 더해주는 부사 也를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 친구가 맛있는 것을 먹으러 갈 때 "나도 먹고 싶어!"라고 외치는 문장을 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 나(我) + 또한(也) + ~하고 싶다(想) + 먹다(吃) 순서로 부사와 동사들을 차례대로 연결해 문장 전체를 완성하세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"他也不是学生。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 也가 부정 부사 不보다 앞에 쓰여 "또한 ~이 아니다"라는 전체 부정을 나타냅니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 49</div>
+    </div>
+
+<!-- ==========================================
+         [50쪽] 문법 상세 설명 페이지 (25. 都) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 25강: 대상을 하나로 묶어주는 전체 포괄 부사</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>25. 都 (dōu) : 모두, 다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">복수 주어 + 都 + 동사 / 형용사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>앞에 언급된 여러 개의 대상이나 복수 형태의 주어를 하나로 묶어서 설명할 때 사용하는 부사 <strong>都(dōu)</strong>에 대해 알아봅니다. 한국어의 <strong>"모두", "다", "전부"</strong>에 해당하는 중요한 표현입니다.</p>
+                <p>중국어에서 都를 쓸 때 가장 기억해야 할 점은, <strong>都가 가리키는 범위(복수 대상)는 반드시 都보다 앞(왼쪽)에 와야 한다</strong>는 규칙입니다. 따라서 "우리 모두", "그들 전부"처럼 복수를 뜻하는 단어가 주어로 앞에 서고, 그 뒤에 부사 都를 나열한 뒤 동사나 형용사를 이어 붙입니다.</p>
+                <p>부정문과 결합할 때의 위치 규칙도 재미있습니다. <strong>都不(dōu bù)</strong>의 순서로 쓰면 "모두가 ~이 아니다"라는 <strong>'전체 부정'</strong>이 되고, 반대로 <strong>不都(bù dōu)</strong>의 순서로 쓰면 "모두가 다 ~인 것은 아니다(그런 사람도 있고 아닌 사람도 있다)"라는 <strong>'부분 부정'</strong>이 됩니다. 순서 하나로 뉘앙스가 완전히 바뀌니 주의해서 사용해 주세요!</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>我<rt>wǒ</rt></ruby><ruby>们<rt>men</rt></ruby> <ruby>都<rt>dōu</rt></ruby> <ruby>很<rt>hěn</rt></ruby> <ruby>好<rt>hǎo</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 우리 모두 잘 지내요. (우리들은 전부 아주 좋습니다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>我们 (wǒmen)</strong> : 우리들 (복수 형태의 주어)</li>
+                    <li><strong>都 (dōu)</strong> : 모두, 다 (술어를 수식하는 포괄 부사)</li>
+                    <li><strong>很好 (hěn hǎo)</strong> : 아주 좋다, 잘 지내다 (형용사 술어부)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 50</div>
+    </div>
+
+
+    <!-- ==========================================
+         [51쪽] 단어 및 연습문제 페이지 (25. 都) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 25강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>都<rt>dōu</rt></ruby>
+                <div class="word-meaning">모두, 다 (부사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>他<rt>tā</rt></ruby><ruby>们<rt>men</rt></ruby>
+                <div class="word-meaning">그들, 그 사람들</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>来<rt>lái</rt></ruby><ruby>了<rt>le</rt></ruby>
+                <div class="word-meaning">왔다 (도착했다)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>喜<rt>xǐ</rt></ruby><ruby>欢<rt>huan</rt></ruby>
+                <div class="word-meaning">좋아하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>中<rt>zhōng</rt></ruby><ruby>国<rt>guó</rt></ruby> <ruby>菜<rt>cài</rt></ruby>
+                <div class="word-meaning">중국 요리, 중국 음식</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [복수 주어 + 都 + 동사/형용사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "그들은 모두 왔습니다(다 도착했어요)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">他们 ( &nbsp; &nbsp; &nbsp; ) 来了。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 복수 주어 뒤, 동사 앞에 위치하여 '모두, 다'라는 뜻을 나타내는 부사 都를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "우리들은 모두 중국 음식을 좋아합니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 우리들(我们) + 모두(都) + 좋아하다(喜欢) + 중국 음식(中国菜) 순서로 구조를 탄탄하게 엮어 전체 문장을 완성하세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"他们都不去。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 都가 부정 부사 不보다 앞에 쓰였으므로 '전체 부정'의 뉘앙스를 살려 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 51</div>
+    </div>
+
+
+<!-- ==========================================
+         [52쪽] 문법 상세 설명 페이지 (26. 太 ~ 了) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 26강: 감탄과 강조를 담아 상태 표현하기, 감탄 구문</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>26. 太 ~ 了 (tài ~ le) : 너무 ~하다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">太 + 형용사 + 了</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>어떤 상태나 성질이 일반적인 수준을 훨씬 뛰어넘을 때, 또는 내 마음에 우러나오는 깊은 감탄을 표현하고 싶을 때 중국어에서는 <strong>太 ~ 了(tài ~ le)</strong> 구문을 사용합니다. 한국어의 <strong>"너무 ~하다", "정말 ~하네!"</strong>에 해당하는 대표적인 강조 표현입니다.</p>
+                <p>강조하고 싶은 형용사의 바로 앞에 부사 <strong>太(tài)</strong>를 세우고, 문장 맨 끝에 어기조사 <strong>了(le)</strong>를 세트로 붙여서 문장을 양쪽에서 감싸주면 됩니다. 예를 들어 단순히 "비싸다(贵)"라고 말하는 것보다, 이 패턴을 사용해 <strong>太贵了(tài guì le)</strong>라고 하면 "우와, 너무 비싸요!" 하고 감정이 실린 생생한 뉘앙스가 전달됩니다.</p>
+                <p>보통 '너무'라는 표현은 부정적인 상황(너무 덥다, 너무 힘들다)에 많이 쓰이지만, 중국어의 太 ~ 了 구문은 <strong>"太好了！(너무 잘됐다/좋다!)"처럼 긍정적인 감탄이나 칭찬을 나타낼 때도 일상생활에서 정말 광범위하게 사용</strong>된답니다. 끝의 了는 가볍게 경성으로 발음해 주세요.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>太<rt>tài</rt></ruby> <ruby>贵<rt>guì</rt></ruby> <ruby>了<rt>le</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 너무 비싸요. (정말 비싸네요!)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>太 (tài)</strong> : 너무, 아주 (강조의 시작 부사)</li>
+                    <li><strong>贵 (guì)</strong> : 비싸다 (핵심 형용사)</li>
+                    <li><strong>...了 (le)</strong> : 감탄의 어조를 완성하는 어기조사 세트</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 52</div>
+    </div>
+
+
+    <!-- ==========================================
+         [53쪽] 단어 및 연습문제 페이지 (26. 太 ~ 了) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 26강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>贵<rt>guì</rt></ruby>
+                <div class="word-meaning">비싸다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>好<rt>hǎo</rt></ruby>
+                <div class="word-meaning">좋다, 잘되다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>累<rt>lèi</rt></ruby>
+                <div class="word-meaning">피곤하다, 힘들다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>热<rt>rè</rt></ruby>
+                <div class="word-meaning">덥다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>大<rt>dà</rt></ruby>
+                <div class="word-meaning">크다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [太 + 형용사 + 了] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 기쁜 소식을 듣고 격하게 리액션을 하며 "너무 잘됐다!, 정말 좋다!"를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">太 好 ( &nbsp; &nbsp; &nbsp; ) ！</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 太와 언제나 세트로 짝을 이루어 감탄 구문을 마무리 짓는 조사 了를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 고된 하루를 마치고 온 몸이 지쳤을 때 "너무 피곤해요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 太 + 피곤하다(累) + 了 순서로 강조 감탄 구조를 완성하여 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 한여름 무더위 속에서 뱉은 중국어 문장 <span>"太热了！"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 단어장의 热(rè)가 가진 뜻을 살려, 현재 날씨 상태에 대한 강한 느낌을 표현해 보세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 53</div>
+    </div>
+
+
+    <!-- ==========================================
+       대문짝만한 대단원 표지 페이지
+         ========================================== -->
+    <div class="page">
+        <div class="cover-page">
+            <div class="cover-sub">중국어 회화 핵심 문법</div>
+            <h1 class="cover-title">특수 구문 및 복문 <br>(26~)</h1>
+            <div class="cover-line"></div>
+        </div>
+        <div class="page-footer">Page -</div>
+    </div>
+
+<!-- ==========================================
+         [54쪽] 문법 상세 설명 페이지 (27. 比) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 27강: 두 대상을 저울질하기, 중국어의 비교문</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>27. 比 (bǐ) : ~보다 (비교문)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">A + 比 + B + 형용사</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>두 가지 대상을 서로 비교하여 어떤 것이 더 우세하거나 차이가 있는지를 나타낼 때 중국어에서는 전치사 <strong>比(bǐ)</strong>를 사용합니다. 한국어의 조사 <strong>"~보다"</strong>에 해당하는 가장 대표적인 비교문 표현입니다.</p>
+                <p>우리말은 "형이 나<b>보다</b> 크다"처럼 비교 기준(나) 뒤에 '보다'를 붙이지만, <strong>중국어는 比를 비교 대상 앞에 놓아 "A + 比 B + 형용사"의 순서로 배열합니다.</strong> 즉, 머릿속으로 <strong>"형 + 보다 나 + 크다"</strong>라는 뼈대를 잡고 나열해야 정확한 문장이 됩니다.</p>
+                <p>비교문에서 초보자가 가장 흔히 하는 실수 중 하나는, 형용사 앞에 '매우'를 뜻하는 很(hěn)이나 非常(fēicháng) 같은 일반 부사를 습관적으로 붙이는 것입니다. <strong>比가 쓰인 비교문 구조에서는 형용사 앞에 很이나 非常을 절대로 같이 쓸 수 없습니다.</strong> "훨씬 더 ~하다"라고 강조하고 싶다면 형용사 뒤에 一点儿(yìdiǎnr)이나 得多(deduō) 같은 보어를 붙이거나, 형용사 앞에 更(gèng)을 써야 한답니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>哥<rt>gē</rt></ruby><ruby>ge<rt>ge</rt></ruby> <ruby>比<rt>bǐ</rt></ruby> <ruby>我<rt>wǒ</rt></ruby> <ruby>高<rt>gāo</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 형은 나보다 키가 크다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>哥哥 (gēge)</strong> : 형, 오빠 (비교 주체 A)</li>
+                    <li><strong>比 (bǐ)</strong> : ~보다 (비교를 나타내는 문법 신호)</li>
+                    <li><strong>我 (wǒ)</strong> : 나 (비교 대상 B)</li>
+                    <li><strong>高 (gāo)</strong> : 키가 크다, 높다 (비교 결과를 나타내는 형용사)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 54</div>
+    </div>
+
+
+    <!-- ==========================================
+         [55쪽] 단어 및 연습문제 페이지 (27. 比) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 27강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>比<rt>bǐ</rt></ruby>
+                <div class="word-meaning">~보다 (비교 전치사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>哥<rt>gē</rt></ruby><ruby>ge<rt>ge</rt></ruby>
+                <div class="word-meaning">형, 오빠</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>高<rt>gāo</rt></ruby>
+                <div class="word-meaning">키가 크다, 높다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>今<rt>jīn</rt></ruby><ruby>天<rt>tiān</rt></ruby>
+                <div class="word-meaning">오늘</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>昨<rt>zuó</rt></ruby><ruby>天<rt>tiān</rt></ruby>
+                <div class="word-meaning">어제</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>冷<rt>lěng</rt></ruby>
+                <div class="word-meaning">춥다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [A + 比 + B + 형용사] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 날씨를 비교하며 "오늘은 어제보다 춥습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">今天 ( &nbsp; &nbsp; &nbsp; ) 昨天 冷。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 두 대상 사이에 들어가 비교 기준을 만들어주는 단어 比를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "남동생은 나보다 키가 크다."를 중국어로 완성하세요. (남동생 = 弟弟 dìdi)</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 주체(弟弟) + 比 + 대상(我) + 형용사(高) 순서로 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"今天比昨天很冷。"</span>이 문법적으로 틀린 이유를 설명하고 올바르게 고쳐 써보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 본문 설명에 나와 있는 비교문 내 일반 부사(很)의 사용 제한 규칙을 참고하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 55</div>
+    </div>
+
+<!-- ==========================================
+         [56쪽] 문법 상세 설명 페이지 (28. 跟 ~ 一样) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 28강: 두 대상의 동일함 표현하기, 동등 비교문</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>28. 跟 ~ 一样 (gēn ~ yíyàng) : ~와 같다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">A + 跟 + B + 一样</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>지난 시간에 배운 '比(bǐ)'가 두 대상의 차이를 나타내는 비교문이었다면, 이번에 배울 <strong>跟 ~ 一样(gēn ~ yíyàng)</strong>은 두 대상이 서로 똑같거나 동등함을 나타낼 때 사용하는 <strong>동등 비교문</strong> 표현입니다. 한국어의 <strong>"~와 같다", "~ 고 똑같다"</strong>에 해당합니다.</p>
+                <p>구조는 비교할 첫 번째 대상 <strong>A</strong> 뒤에 '~와/과'를 뜻하는 전치사 <strong>跟(gēn)</strong>을 쓰고, 비교 기준이 되는 대상 <strong>B</strong>를 나열한 뒤, 마지막에 '같다'라는 뜻의 <strong>一样(yíyàng)</strong>을 붙여서 완성합니다. 한국어의 "~와 같다"와 어순이 매우 비슷하여 직관적으로 이해하기 쉽습니다.</p>
+                <p>만약 두 대상이 "서로 같지 않다, 다르다"라고 부정하고 싶을 때는, 一样의 바로 앞에 부정을 뜻하는 不(bù)를 쏙 집어넣어 <strong>跟 ~ 不一样(gēn ~ bù yíyàng)</strong>의 형태로 만들어주면 됩니다. 또한 "나와 키가 똑같이 크다"처럼 구체적인 형질이 같음을 나타내고 싶을 때는 <strong>一样의 바로 뒤에 형용사를 이어 붙여 표현</strong>할 수도 있습니다. (예: 跟 일치 一样高)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>他<rt>tā</rt></ruby><ruby>의<rt>de</rt></ruby> <ruby>想<rt>xiǎng</rt></ruby><ruby>法<rt>fǎ</rt></ruby> <ruby>跟<rt>gēn</rt></ruby> <ruby>我<rt>wǒ</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>样<rt>yàng</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 그의 생각은 나와 같다.</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>他的想法 (tā de xiǎngfǎ)</strong> : 그의 생각 (비교 주체 A)</li>
+                    <li><strong>跟 (gēn)</strong> : ~와, ~과 (동등 비교 연결고리)</li>
+                    <li><strong>我 (wǒ)</strong> : 나 (비교 대상 B)</li>
+                    <li><strong>一样 (yíyàng)</strong> : 같다, 동일하다 (비교 결과 술어)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 56</div>
+    </div>
+
+
+    <!-- ==========================================
+         [57쪽] 단어 및 연습문제 페이지 (28. 跟 ~ 一样) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 28강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>跟<rt>gēn</rt></ruby>
+                <div class="word-meaning">~와, ~과 (전치사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>一<rt>yí</rt></ruby><ruby>样<rt>yàng</rt></ruby>
+                <div class="word-meaning">같다, 동일하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>想<rt>xiǎng</rt></ruby><ruby>法<rt>fǎ</rt></ruby>
+                <div class="word-meaning">생각, 의견</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>衣<rt>yī</rt></ruby><ruby>服<rt>fu</rt></ruby>
+                <div class="word-meaning">옷</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>颜<rt>yán</rt></ruby><ruby>色<rt>sè</rt></ruby>
+                <div class="word-meaning">색상, 색깔</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [A + 跟 + B + 一样] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 커플룩을 보며 "제 옷은 당신 옷과 똑같습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">我的衣服 ( &nbsp; &nbsp; &nbsp; ) 你的衣服 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 동등 비교문을 완성하는 핵심 세트 단어인 跟과 一样을 알맞게 채워보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "나의 의견은 그녀와 다르다(같지 않다)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 나의 생각(我的想法) + 跟 + 그녀(她) + 부정형 동등비교(不一样) 순서로 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"这件衣服의颜色跟那件一样。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 这件衣服(이 옷), 那件(저것)입니다. 단어장의 颜色(색상) 뜻을 참고하여 매끄럽게 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 57</div>
+    </div>
+<!-- ==========================================
+         [58쪽] 문법 상세 설명 페이지 (29. 把) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 29강: 목적어를 가져와 변화시키기, 처치문 문법</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>29. 把 (bǎ) : ~을/를 (처치문)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">주어 + 把 + 목적어 + 동사 + 기타 성분</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>중국어의 기본 뼈대는 "주어+동사+목적어"이지만, 특정 목적어를 앞으로 당겨와서 <strong>"그 목적어를 어떻게 처리(처치)했는지"</strong> 결과나 변화를 강조하고 싶을 때가 있습니다. 이때 사용하는 특수 문형이 바로 <strong>把(bǎ) 문장(처치문)</strong>입니다. 한국어의 조사 <strong>"~을/를"</strong>에 해당합니다.</p>
+                <p>기본 어순은 <strong>"주어 + 把 + 목적어 + 동사 + 기타 성분"</strong>입니다. 우리말과 어순이 "핸드폰을 주다"처럼 비슷해 보이지만, 결정적인 차이는 <strong>동사 뒤에 반드시 결과나 상태를 보충해 주는 '기타 성분'(보어, 了, 대명사 등)이 붙어야 문장이 완성된다</strong>는 점입니다. 중국어에서 동사 혼자 덜렁 把 문장 뒤에 남겨지는 일은 절대 없습니다!</p>
+                <p>또한, 부정 부사 不(bù)나 没(méi), 혹은 능원동사(会, 能, 可以 등)를 함께 사용할 때는 동사 앞이 아니라 <strong>반드시 '把'의 바로 앞에 위치시켜야 한다</strong>는 철칙이 있습니다. (예: 没 把 手机 给我) 이 어순 규칙은 HSK 시험에서도 단골로 출제되니 꼭 눈여겨보세요.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>请<rt>qǐng</rt></ruby> <ruby>把<rt>bǎ</rt></ruby> <ruby>手<rt>shǒu</rt></ruby><ruby>机<rt>jī</rt></ruby> <ruby>给<rt>gěi</rt></ruby> <ruby>我<rt>wǒ</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 핸드폰을 저에게 주세요. (请 qǐng = ~해 주세요)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>请 (qǐng)</strong> : ~해 주세요 (청유를 나타내는 부사)</li>
+                    <li><strong>把 (bǎ)</strong> : ~을/를 (처치 조동사 역할)</li>
+                    <li><strong>手机 (shǒujī)</strong> : 핸드폰 (앞으로 당겨진 목적어)</li>
+                    <li><strong>给 (gěi)</strong> : 주다 (핵심 동사)</li>
+                    <li><strong>我 (wǒ)</strong> : 나 (동사 뒤 결과를 완성하는 기타 성분)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 58</div>
+    </div>
+
+
+    <!-- ==========================================
+         [59쪽] 단어 및 연습문제 페이지 (29. 把) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 29강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>把<rt>bǎ</rt></ruby>
+                <div class="word-meaning">~을/를 (처치문 전치사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>手<rt>shǒu</rt></ruby><ruby>机<rt>jī</rt></ruby>
+                <div class="word-meaning">핸드폰, 휴대전화</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>给<rt>gěi</rt></ruby><ruby>我<rt>wǒ</rt></ruby>
+                <div class="word-meaning">나에게 주다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>门<rt>mén</rt></ruby>
+                <div class="word-meaning">문 (Door)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>关<rt>guān</rt></ruby><ruby>上<rt>shang</rt></ruby>
+                <div class="word-meaning">닫다, 폐쇄하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>喝<rt>hē</rt></ruby><ruby>了<rt>le</rt></ruby>
+                <div class="word-meaning">마셨다, 마셔 버렸다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [주어 + 把 + 목적어 + 동사 + 기타 성분] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 방을 나가면서 상대방에게 "문 좀 닫아주세요."라고 부탁할 때 빈칸을 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">请 ( &nbsp; &nbsp; &nbsp; ) 门 关上。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 목적어인 '门'을 동사 '关' 앞으로 당겨와 처치문을 만드는 핵심 조사 把를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "그는 커피를 다 마셔 버렸습니다."를 중국어로 완성하세요. (커피 = 咖啡 kāfēi)</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 그(他) + 把 + 커피(咖啡) + 마셨다(喝了) 순서로 완료 조사 了를 기타 성분으로 붙여 전체 문장을 구성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"我 没把 钱 给他。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 부정 부사 没(méi)가 '把'의 앞에 쓰인 문장입니다. 어순과 단어장의 단어(钱, 给我 등)를 참고하여 자연스럽게 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 59</div>
+    </div>
+
+<!-- ==========================================
+         [60쪽] 문법 상세 설명 페이지 (30. 被) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 30강: 주어가 주체에게 당하는 상황, 피동문 문법</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>30. 被 (bèi) : ~에게 ~당하다 (피동문)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">A + 被 + B + 동사 + 기타 성분</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>이번 시간에는 주어가 스스로 행동하는 것이 아니라, 다른 주체에 의해 어떤 행위를 '당하는' 상황을 표현하는 <strong>被(bèi) 문장(피동문)</strong>에 대해 공부합니다. 주로 한국어의 <strong>"~에게 ~당하다", "~이 되다"</strong>에 상응하는 표현입니다.</p>
+                <p>기본 어순은 행위를 당하는 주체인 <strong>"A + 被 + 행위를 가하는 주체 B + 동사 + 기타 성분"</strong>입니다. 직전 과에서 배운 처치문(把)과 마찬가지로, 동사 뒤에는 행동의 결과를 마무리 짓는 <strong>'기타 성분'(보어, 了 등)이 반드시 함께 따라와야 문장이 올바르게 완성</strong>됩니다.</p>
+                <p>중국어의 피동문은 영어와 달리 <strong>주로 주어에게 '피해'나 '원치 않는 부정적인 결과'가 발생했을 때 일상 회화에서 자주 사용된다</strong>는 뉘앙스적 특징이 있습니다. 또한 부정 부사 不(bù)나 没(méi), 조동사 등은 처치문과 똑같이 <strong>반드시 '被'의 바로 앞에 위치해야 한다</strong>는 강력한 규칙이 있으니 어순 배열에 꼭 유의해 주세요!</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>蛋<rt>dàn</rt></ruby><ruby>糕<rt>gāo</rt></ruby> <ruby>被<rt>bèi</rt></ruby> <ruby>弟<rt>dì</rt></ruby><ruby>di<rt>di</rt></ruby> <ruby>吃<rt>chī</rt></ruby> <ruby>了<rt>le</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 케이크가 남동생에게 먹혔다. (남동생이 케이크를 먹어버렸다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>蛋糕 (dàngāo)</strong> : 케이크 (행위를 당하는 대상 A)</li>
+                    <li><strong>被 (bèi)</strong> : ~에게 ~당하다 (피동의 전치사)</li>
+                    <li><strong>弟弟 (弟弟)</strong> : 남동생 (행위를 가한 주체 B)</li>
+                    <li><strong>吃 (chī)</strong> : 먹다 (핵심 동사)</li>
+                    <li><strong>...了 (le)</strong> : 이미 먹혀버린 변화/완료의 기타 성분</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 60</div>
+    </div>
+
+
+    <!-- ==========================================
+         [61쪽] 단어 및 연습문제 페이지 (30. 被) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 30강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>被<rt>bèi</rt></ruby>
+                <div class="word-meaning">~에게 ~당하다 (피동문 전치사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>蛋<rt>dàn</rt></ruby><ruby>糕<rt>gāo</rt></ruby>
+                <div class="word-meaning">케이크</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>偷<rt>tōu</rt></ruby><ruby>了<rt>le</rt></ruby>
+                <div class="word-meaning">훔쳤다, 도둑맞았다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>手<rt>shǒu</rt></ruby><ruby>机<rt>jī</rt></ruby>
+                <div class="word-meaning">핸드폰, 휴대전화</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>小<rt>xiǎo</rt></ruby><ruby>偷<rt>tōu</rt></ruby>
+                <div class="word-meaning">도둑</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>发<rt>fā</rt></ruby><ruby>现<rt>xiàn</rt></ruby><ruby>了<rt>le</rt></ruby>
+                <div class="word-meaning">발견했다, 들켰다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [A + 被 + B + 동사 + 기타 성분] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 지하철에서 소지품을 잃어버리고 "핸드폰을 도둑에게 도둑맞았습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">手机 ( &nbsp; &nbsp; &nbsp; ) 小偷 偷了。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 주어인 '手机'가 행위 주체 '小偷'에게 당했음을 나타내는 피동 전치사 被를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 몰래 간식을 먹다가 "저는 선생님에게 들켰습니다(발견당했습니다)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 나(我) + 被 + 선생님(老师) + 발견했다(发现了) 순서로 구조를 올바르게 배치하여 문장 전체를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"手机 没Icon被 偷了。"</span>에서 문법적으로 잘못된 부분을 찾아 바르게 고쳐 쓰고 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q" style="color: #c0392b;">手机 被 没 偷了。 (X)</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 피동문에서 부정 부사 没(méi)의 위치는 반드시 '被'의 앞이어야 합니다. 또한 과거 부정이므로 끝의 了도 함께 생략해야 완벽한 문장이 됩니다.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 61</div>
+    </div>
+
+
+<!-- ==========================================
+         [62쪽] 문법 상세 설명 페이지 (31. 得) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 31강: 동작의 수준과 상태를 평가하기, 정도보어</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>31. 得 (de) : ~하는 정도가 어떠하다 (정도보어)</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">동사 + 得 + 형용사 / 구</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>중국어에서 이미 일어난 동작이나 평소에 하는 행동이 <strong>"어떤 수준이나 상태로 진행되는지"</strong> 그 정도를 평가하고 보충 설명할 때 구조조사 <strong>得(de)</strong>를 사용합니다. 이를 문법 용어로는 '정도보어'라고 부릅니다.</p>
+                <p>기본적인 어순은 <strong>"동사 + 得 + 형용사(보어)"</strong>입니다. "말하는(说) 정도가 아주 좋다(很好)"처럼 동사 바로 뒤에 <strong>得</strong>를 다리로 놓고 그 수준을 이어서 서술합니다. 한국어로는 "중국어를 잘 <b>말한다</b>"처럼 부사가 동사 앞에 오지만, 중국어는 결론(동사)을 먼저 뱉고 평가를 뒤에 붙이는 구조적 차이가 있습니다.</p>
+                <p>여기서 왕초보를 탈출하기 위한 핵심 팁! 문장에 <strong>목적어(예: 중국어)가 함께 올 때는 동사를 두 번 반복하여 "주어 + 목적어 + 동사 + 得 + 보어" 형태로 쓰거나, 앞의 동사를 생략하고 "주어 + 목적어 + 동사 + 得 + 보어" 순서로 써야 합니다.</strong> 또한 이 문장을 부정할 때는 동사 앞이 아니라, <strong>뒤에 오는 형용사(보어)의 바로 앞에 不를 붙여야 한다</strong>는 규칙을 꼭 기억해 주세요! (예: 说得不好)</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>他<rt>tā</rt></ruby> <ruby>汉<rt>hàn</rt></ruby><ruby>语<rt>yǔ</rt></ruby> <ruby>说<rt>shuō</rt></ruby> <ruby>得<rt>de</rt></ruby> <ruby>很<rt>hěn</rt></ruby> <ruby>好<rt>hǎo</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 그는 중국어를 아주 잘 구사한다. (그는 중국어를 말하는 정도가 아주 좋다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>他 (tā)</strong> : 그 (주어)</li>
+                    <li><strong>汉语 (hànyǔ)</strong> : 중국어 (앞으로 당겨진 목적어)</li>
+                    <li><strong>说 (shuō)</strong> : 말하다 (핵심 동사)</li>
+                    <li><strong>得 (de)</strong> : 정도보어를 연결하는 마법의 조사</li>
+                    <li><strong>很好 (hěn hǎo)</strong> : 아주 좋다 (동사의 수준을 평가하는 형용사 보어)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 62</div>
+    </div>
+
+
+    <!-- ==========================================
+         [63쪽] 단어 및 연습문제 페이지 (31. 得) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 31강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>得<rt>de</rt></ruby>
+                <div class="word-meaning">~하는 정도가 ~하다 (구조조사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>说<rt>shuō</rt></ruby>
+                <div class="word-meaning">말하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>跑<rt>pǎo</rt></ruby>
+                <div class="word-meaning">달리다, 뛰다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>快<rt>kuài</rt></ruby>
+                <div class="word-meaning">빠르다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>起<rt>qǐ</rt></ruby><ruby>床<rt>chuáng</rt></ruby>
+                <div class="word-meaning">일어나다, 기상하다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>早<rt>zǎo</rt></ruby>
+                <div class="word-meaning">이르다, 일찍</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [동사 + 得 + 형용사/구] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 친구의 달리기 실력을 칭찬하며 "그는 엄청 빨리 달린다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">他 跑 ( &nbsp; &nbsp; &nbsp; ) 很快。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 동사 '跑' 뒤에 붙어 동작의 정도를 형용사 '很快'와 연결해 주는 조사 得를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 아침형 인간을 보며 "그녀는 아침에 아주 일찍 일어납니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 그녀(她) + 일어나다(起床) + 得 + 아주 일찍(很好早 -> 很好) 순서로 문장 전체를 구성해 보세요. 동사 성분인 '起' 뒤에 바로 得를 붙여 '起床' 구조를 처리합니다: 她 起得 很好。)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"他说汉语得不好。"</span>에서 문법적으로 잘못된 부분을 찾아 바르게 고쳐 쓰고 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 목적어(汉语)가 있을 때의 올바른 정도보어 어순(동사 반복 혹은 목적어 전치)과 부정 부사의 위치 규칙을 떠올려 보세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 63</div>
+    </div>
+<!-- ==========================================
+         [64쪽] 문법 상세 설명 페이지 (32. 因为~所以~) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 32강: 원인과 결과를 매끄럽게 잇는 인과관계 접속사</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>32. 因为~所以~ (yīnwèi~suǒyǐ~) : 왜냐하면 ~이기 때문에, 그래서 ~하다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">因为 + 원인 문장 , 所以 + 결과 문장</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>문장과 문장을 연결하여 더 풍성한 대화를 나눌 때 꼭 필요한 문법이 바로 접속사입니다. 그중에서도 원인과 결과를 확실하게 짝지어 주는 <strong>因为 ~ 所以 ~(yīnwèi ~ suǒyǐ ~)</strong> 구문은 일상 회화에서 가장 많이 쓰이는 필수 패턴입니다. 한국어의 <strong>"~해서(때문에), 그래서 ~하다"</strong>에 정확히 매칭됩니다.</p>
+                <p>첫 번째 문장 맨 앞에 <strong>因为(왜냐하면 ~기 때문에)</strong>를 쓰고 그 뒤에 원인이 되는 사실을 적은 뒤, 쉼표(,)를 찍고 두 번째 문장 앞에 <strong>所以(그래서, 따라서)</strong>를 세워 결과를 자연스럽게 서술해 줍니다. 짝꿍처럼 늘 붙어 다니는 세트 접속사입니다.</p>
+                <p>여기서 아주 유용한 회화 팁 하나! 실제 말로 주고받는 일상 대화에서는 문맥상 원인과 결과가 명확하다면 <strong>因为나 所以 중 어느 한쪽을 과감하게 생략하고 하나만 사용하기도 합니다.</strong> 하지만 문장의 논리적 구조를 정확하게 표현해야 하는 시험이나 공식적인 자리에서는 둘 다 세트로 나란히 써 주는 것이 훨씬 격식 있고 완성도 높은 문장이 됩니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>因<rt>yīn</rt></ruby><ruby>为<rt>wèi</rt></ruby> <ruby>下<rt>xià</rt></ruby><ruby>雨<rt>yǔ</rt></ruby>， <ruby>所<rt>suǒ</rt></ruby><ruby>以<rt>yǐ</rt></ruby> <ruby>我<rt>wǒ</rt></ruby> <ruby>没<rt>méi</rt></ruby> <ruby>去<rt>qù</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 비가 와서 안 갔어요. (비가 내렸기 때문에, 그래서 나는 가지 않았다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>因为 (yīnwèi)</strong> : 왜냐하면 ~이기 때문에 (원인 인도 접속사)</li>
+                    <li><strong>下雨 (xiàyǔ)</strong> : 비가 오다 (원인이 되는 행동)</li>
+                    <li><strong>所以 (suǒyǐ)</strong> : 그래서, 따라서 (결과 인도 접속사)</li>
+                    <li><strong>我没去 (wǒ méi qù)</strong> : 나는 가지 않았다 (과거 부정을 포함한 결과 문장)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 64</div>
+    </div>
+
+
+    <!-- ==========================================
+         [65쪽] 단어 및 연습문제 페이지 (32. 因为~所以~) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 32강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>因<rt>yīn</rt></ruby><ruby>为<rt>wèi</rt></ruby>
+                <div class="word-meaning">왜냐하면 ~기 때문에</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>所<rt>suǒ</rt></ruby><ruby>以<rt>yǐ</rt></ruby>
+                <div class="word-meaning">그래서, 그러니까</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>生<rt>shēng</rt></ruby><ruby>病<rt>bìng</rt></ruby>
+                <div class="word-meaning">병이 나다, 아프다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>没<rt>méi</rt></ruby> <ruby>来<rt>lái</rt></ruby>
+                <div class="word-meaning">오지 않았다 (과거 부정)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>太<rt>tài</rt></ruby><ruby>贵<rt>guì</rt></ruby>
+                <div class="word-meaning">너무 비싸다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>没<rt>méi</rt></ruby> <ruby>买<rt>mǎi</rt></ruby>
+                <div class="word-meaning">사지 않았다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [因为 + 원인, 所以 + 결과] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 결석 사유를 말하며 "몸이 아파서 안 왔어요(아팠기 때문에 그래서 안 왔습니다)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">因为 生病，( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 我 没来。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 원인 문장 뒤에 짝꿍으로 따라붙어 '그래서'라는 결과를 이끌어내는 접속사 所以를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 물건을 사지 않은 이유를 밝히며 "너무 비싸서 안 샀어요."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: เพราะ(因为) + 너무 비싸다(太贵) + , + 그래서(所以) + 나 안 샀다(我没买) 순서로 인과관계 문장 전체를 완성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"因为今天太热，所以我不去。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 앞서 배운 今天(오늘), 太热(너무 덥다), 不去(안 간다)의 뜻과 인과 접속사를 유기적으로 엮어보세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 65</div>
+    </div>
+<!-- ==========================================
+         [66쪽] 문법 상세 설명 페이지 (33. 虽然~打是~) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 33강: 조건과 상황의 극적인 반전, 전환 접속사</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>33. 虽然~但是~ (suīrán~dànshì~) : 비록 ~이지만, 그러나 ~하다</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">虽然 + 양보(인정) 문장 , 但是 + 반전(강조) 문장</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>앞 문장의 상황이나 사실을 한 보 후퇴하여 인정(양보)하면서도, 뒷문장에서 예상치 못한 반전이나 대조적인 내용을 강조하여 표현할 때 <strong>虽然 ~ 但是 ~(suīrán ~ dànshì ~)</strong> 구문을 사용합니다. 한국어의 <strong>"비록 ~이지만, 그러나(하지만) ~하다"</strong>에 해당하는 대표적인 전환 접속사입니다.</p>
+                <p>첫 번째 문장 맨 앞에 <strong>虽然(비록 ~일지라도)</strong>을 배치하여 밑바탕을 깔아주고, 쉼표(,)를 찍은 뒤 핵심이 되는 두 번째 문장 앞에 <strong>但是(그러나, 하지만)</strong>를 붙여 어조를 강하게 꺾어줍니다. 앞서 배운 인과관계 접속사(因为~所以~)처럼 세트로 기억해 두면 활용도가 무궁무진합니다.</p>
+                <p>여기서 중요한 회화적 특징 한 가지! 회화에서는 문맥의 연결을 부드럽게 만들기 위해 <strong>但是(dànshì) 대신 可是(kěshì)나 不过(búguò)를 사용해도 완벽하게 같은 뜻</strong>이 됩니다. 또한 실제 말할 때는 '虽然'을 생략하고 뒷문장의 '하지만'만 남겨 말하는 경우도 무척 많답니다.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>虽<rt>suī</rt></ruby><ruby>然<rt>rán</rt></ruby> <ruby>汉<rt>hàn</rt></ruby><ruby>语<rt>yǔ</rt></ruby> <ruby>很<rt>hěn</rt></ruby> <ruby>难<rt>nán</rt></ruby>， <ruby>但<rt>dàn</rt></ruby><ruby>是<rt>shì</rt></ruby> <ruby>很<rt>hěn</rt></ruby> <ruby>有<rt>yǒu</rt></ruby><ruby>趣<rt>qù</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 중국어는 비록 어렵지만 재미있습니다. (중국어가 비록 매우 어려울지라도, 그러나 매우 흥미롭다.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>虽然 (suīrán)</strong> : 비록 ~이지만 (양보 인도 접속사)</li>
+                    <li><strong>汉语很难 (hànyǔ hěn nán)</strong> : 중국어는 매우 어렵다 (한 보 물러나 인정하는 사실)</li>
+                    <li><strong>但是 (dànshì)</strong> : 그러나, 하지만 (반전 인도 접속사)</li>
+                    <li><strong>很有趣 (hěn yǒuqù)</strong> : 매우 재미있다 (화자가 진짜 하고 싶은 결론)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 66</div>
+    </div>
+
+
+    <!-- ==========================================
+         [67쪽] 단어 및 연습문제 페이지 (33. 虽然~但是~) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 33강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>虽<rt>suī</rt></ruby><ruby>然<rt>rán</rt></ruby>
+                <div class="word-meaning">비록 ~일지라도, ~이지만</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>但<rt>dàn</rt></ruby><ruby>是<rt>shì</rt></ruby>
+                <div class="word-meaning">그러나, 하지만, 그렇지만</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>外<rt>wài</rt></ruby><ruby>面<rt>mian</rt></ruby>
+                <div class="word-meaning">밖, 외부</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>冷<rt>lěng</rt></ruby>
+                <div class="word-meaning">춥다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>家<rt>jiā</rt></ruby><ruby>里<rt>lǐ</rt></ruby>
+                <div class="word-meaning">집안, 집 내부</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>热<rt>rè</rt></ruby>
+                <div class="word-meaning">덥다, 따뜻하다</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [虽然 + 양보, 但是 + 반전] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. "비록 밖은 춥지만, 집 안은 따뜻합니다(덥습니다)."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">虽然 外面很冷，( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) 家里很热。</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 앞 문장의 양보 사실을 꺾어 '그러나, 하지만'이라는 반전을 이어주는 짝꿍 접속사 但是를 적어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. 단어장에서 배운 26강의 '비싸다(贵)'와 18강의 '좋다(好)'를 조합하여 "비록 비싸지만 정말 좋습니다."를 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 비록(虽然) + 비싸다(很贵) + , + 하지만(但是) + 좋다(很好) 순서로 문장 전체를 구성해 보세요. 비교문이 아니므로 형용사 앞의 很은 자연스럽게 유지됩니다.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"虽然他很累，但是他来了。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 26강의 累(lèi = 피곤하다)와 25강의 来了(왔다)를 연결하여 반전의 의미를 살려 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 67</div>
+    </div>
+
+<!-- ==========================================
+         [68쪽] 문법 상세 설명 페이지 (34. 如果~的话) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 34강: 만약의 상황을 가정하는 조건문 표현</h2>
+        </div>
+        
+        <div class="grammar-section">
+            <h3>34. 如果~的话 (rúguǒ~de huà) : 만약 ~라면</h3>
+            
+            <div class="pattern-box">
+                <p class="pattern-text">如果 + 조건 문장 (+ 的话) , (就) + 결과 문장</p>
+            </div>
+
+            <div class="explanation-text">
+                <p>아직 일어나지 않은 미래의 일이나 특정한 상황을 <strong>'만약에 ~라면'</strong>이라고 가정할 때 사용하는 가장 대표적인 패턴이 바로 <strong>如果 ~ 的话(rúguǒ ~ de huà)</strong> 구문입니다. 조건과 결과를 연결하여 풍성한 회화를 만들어주는 일등 공신입니다.</p>
+                <p>가정하는 조건 문장의 맨 앞에 <strong>如果(만약)</strong>를 세우고, 문장 끝에 <strong>的话(~라면, ~의 경우)</strong>를 붙여서 조건부를 한 세트로 묶어줍니다. 그리고 뒷문장에는 <strong>就(jiù, 그러면/곧)</strong>라는 부사를 자주 호응시켜 "만약 ~라면, <b>그러면</b> ~하겠다"라는 자연스러운 흐름을 완성합니다.</p>
+                <p>일상 회화에서 알아두면 뼈가 되고 살이 되는 팁! 실제 중국인들이 빠르게 대화할 때는 앞의 如果를 생략하고 문장 끝에 <strong>的话</strong>만 남겨서 조건을 나타내거나, 반대로 끝의 的话를 생략하고 <strong>如果</strong>만 써서 말하기도 합니다. 셋 다 완벽하게 같은 뜻이니 편한 대로 섞어서 연습해 보세요.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">대표 예문 알아보기 (한자 위 병음을 확인하세요!)</div>
+                <div style="margin-top: 10px;">
+                    <ruby>如<rt>rú</rt></ruby><ruby>果<rt>guǒ</rt></ruby> <ruby>你<rt>nǐ</rt></ruby> <ruby>有<rt>yǒu</rt></ruby> <ruby>时<rt>shí</rt></ruby><ruby>间<rt>jiān</rt></ruby> <ruby>的<rt>de</rt></ruby> <ruby>话<rt>huà</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>们<rt>men</rt></ruby> <ruby>见<rt>jiàn</rt></ruby> <ruby>个<rt>ge</rt></ruby> <ruby>面<rt>miàn</rt></ruby> <ruby>吧<rt>ba</rt></ruby>。
+                </div>
+                <div class="translation">뜻: 만약 시간 있으시면 우리 좀 만나요. (만약 당신이 시간이 있다면, 우리 한 번 만나자.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 왕초보를 위한 구조 매칭 팁</h4>
+                <ul>
+                    <li><strong>如果 (rúguǒ)</strong> : 만약 (가정의 시작을 알리는 접속사)</li>
+                    <li><strong>你有时间 (nǐ yǒu shíjiān)</strong> : 당신이 시간이 있다 (조건 문장)</li>
+                    <li><strong>...的话 (de huà)</strong> : ~라면, ~의 경우 (조건을 부드럽게 마무리하는 단어)</li>
+                    <li><strong>我们见个面吧 (wǒmen jiàn ge miàn ba)</strong> : 우리 좀 만나자 (제안을 나타내는 결과 문장)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-footer">Page 68</div>
+    </div>
+
+
+    <!-- ==========================================
+         [69쪽] 단어 및 연습문제 페이지 (34. 如果~的话) - 새로 추가됨
+         ========================================== -->
+    <div class="page">
+        <div class="page-header">
+            <h2>제 34강: 단어장 및 연습문제</h2>
+        </div>
+
+        <h3 class="section-title">📌 오늘 활용할 필수 단어</h3>
+        <div class="word-bubble-container">
+            <div class="word-bubble">
+                <ruby>如<rt>rú</rt></ruby><ruby>果<rt>guǒ</rt></ruby>
+                <div class="word-meaning">만약</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>的<rt>de</rt></ruby><ruby>话<rt>huà</rt></ruby>
+                <div class="word-meaning">~라면, ~의 경우</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>就<rt>jiù</rt></ruby>
+                <div class="word-meaning">그러면, 바로 (결과 부사)</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>明<rt>míng</rt></ruby><ruby>天<rt>tiān</rt></ruby>
+                <div class="word-meaning">내일</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>下<rt>xià</rt></ruby><ruby>雨<rt>yǔ</rt></ruby>
+                <div class="word-meaning">비가 오다</div>
+            </div>
+            <div class="word-bubble">
+                <ruby>钱<rt>qián</rt></ruby>
+                <div class="word-meaning">돈</div>
+            </div>
+        </div>
+
+        <h3 class="section-title">✍️ 연습문제 (Practice)</h3>
+        <p style="font-size: 10pt; color: #666; margin-bottom: 15px;">* 배운 문법 패턴 [如果 + 조건 + 的话] 구조를 생각하며 빈칸에 알맞은 답을 써보세요.</p>
+        
+        <ul class="quiz-list">
+            <li class="quiz-item">
+                <div class="quiz-question">Q1. 약속을 정하며 "만약 내일 비가 온다면..."을 중국어로 완성하세요.</div>
+                <div class="quiz-line-container">
+                    <div class="chinese-q">如果 明天 下雨 ( &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ) ，...</div>
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: '如果'와 세트로 쓰여 가정 조건을 부드럽게 마무리해 주는 단어 的话를 넣어보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q2. "만약 돈이 있다면, (그러면) 저는 삽니다."를 중국어로 완성하세요. (사다 = 买 mǎi)</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 만약(如果) + 돈이 있다(有钱) + 的话, 我 + 그러면(就) + 산다(买) 순서로 구조를 엮어 완성해 보세요.)</div>
+                </div>
+            </li>
+
+            <li class="quiz-item">
+                <div class="quiz-question">Q3. 중국어 문장 <span>"如果太贵的话，我就不买。"</span>의 뜻을 올바르게 해석해 보세요.</div>
+                <div class="quiz-line-container">
+                    <div class="quiz-print-line"></div>
+                    <div class="quiz-hint">(힌트: 26강의 太贵(너무 비싸다)와 결합된 가정문입니다. 就(그러면) 뒤에 오는 부정형 결과(不买)를 자연스럽게 번역하세요.)</div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="page-footer">Page 69</div>
+    </div>
+
+
+</body>
+</html>

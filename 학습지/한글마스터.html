@@ -1,0 +1,1164 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>ゼロから始めるハングル講座</title>
+	<style>
+
+		/* 기본 스타일 초기화 */
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background-color: #f0f2f5;
+			color: #333;
+			line-height: 1.6;
+		}
+
+
+
+
+		/* B5 사이즈 가상 페이지 설정 (가로 182mm, 세로 257mm 비율) */
+		.page {
+			width: 182mm;
+			min-height: 257mm;
+			padding: 20mm 15mm;
+			margin: 20px auto;
+			background: #ffffff;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+			border-radius: 4px;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+		}
+
+
+
+
+		/* 인쇄할 때 페이지가 딱딱 끊어지도록 설정 */
+		@media print {
+			body {
+				background: none;
+			}
+
+			.page {
+				margin: 0;
+				box-shadow: none;
+				page-break-after: always;
+			}
+		}
+
+
+
+
+		/* 헤더 & 푸터 스타일 */
+		.page-header {
+			border-bottom: 2px solid #4a90e2;
+			padding-bottom: 8px;
+			margin-bottom: 20px;
+			font-size: 14px;
+			color: #4a90e2;
+			font-weight: bold;
+		}
+
+		.page-footer {
+			position: absolute;
+			bottom: 15mm;
+			left: 0;
+			width: 100%;
+			text-align: center;
+			font-size: 12px;
+			color: #888;
+		}
+
+
+
+
+		/* 教材用スタイル */
+		h1 {
+			font-size: 24px;
+			color: #2c3e50;
+			margin-bottom: 15px;
+			text-align: center;
+		}
+
+		h2 {
+			font-size: 18px;
+			color: #2980b9;
+			border-left: 5px solid #2980b9;
+			padding-left: 10px;
+			margin: 20px 0 12px 0;
+		}
+
+		p {
+			font-size: 14px;
+			margin-bottom: 12px;
+		}
+
+
+
+		/* 構造説明用の新しいパズルスタイル */
+		.puzzle-container {
+			background-color: #f8faac;
+			border: 2px solid #e67e22;
+			border-radius: 8px;
+			padding: 15px;
+			margin: 15px 0;
+		}
+
+		.puzzle-title {
+			font-weight: bold;
+			color: #d35400;
+			margin-bottom: 10px;
+			font-size: 15px;
+		}
+
+		.puzzle-flex {
+			display: table;
+			width: 100%;
+			margin-bottom: 15px;
+		}
+
+		.puzzle-col {
+			display: table-cell;
+			width: 50%;
+			vertical-align: top;
+			padding: 5px 10px;
+		}
+
+		.roman-style {
+			font-size: 16px;
+			background: #fff;
+			padding: 10px;
+			border-radius: 6px;
+			border: 1px solid #ddd;
+			text-align: center;
+		}
+
+		.hangul-block-box {
+			background: #fff;
+			padding: 10px;
+			border-radius: 6px;
+			border: 1px solid #ddd;
+			text-align: center;
+		}
+
+		.block-2 {
+			display: inline-block;
+			border: 2px dashed #7f8c8d;
+			width: 80px;
+			height: 50px;
+			line-height: 46px;
+			font-size: 14px;
+		}
+
+		.block-3 {
+			display: inline-block;
+			border: 2px dashed #7f8c8d;
+			width: 80px;
+			height: 75px;
+			font-size: 14px;
+			margin-top: 10px;
+		}
+
+		.b-top, .b-bottom {
+			height: 35px;
+			line-height: 33px;
+		}
+
+		.b-top {
+			border-bottom: 2px dashed #7f8c8d;
+		}
+
+		.part-g {
+			color: #2ecc71;
+			font-weight: bold;
+		}
+		/* 子音 */
+		.part-v {
+			color: #e74c3c;
+			font-weight: bold;
+		}
+		/* 母音 */
+		.part-p {
+			color: #9b59b6;
+			font-weight: bold;
+		}
+		/* パッチム */
+
+
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+			font-size: 14px;
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 10px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #f5f7fa;
+			color: #2c3e50;
+			font-weight: bold;
+		}
+
+		.hangul-char {
+			font-size: 22px;
+			font-weight: bold;
+			color: #e74c3c;
+		}
+
+		.pronun {
+			font-weight: bold;
+			color: #2c3e50;
+		}
+
+		.tip {
+			font-size: 13px;
+			background-color: #fff9db;
+			padding: 8px 12px;
+			border-radius: 4px;
+			border: 1px solid #ffe066;
+			margin-top: 5px;
+			text-align: left;
+		}
+	</style>
+</head>
+<body>
+
+
+
+
+
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第1回</div>
+
+		<h1>ハングルの仕組み</h1>
+
+		<h2>1. ハングルってどんな文字？</h2>
+		<p>韓国語の文字「ハングル」は、一見暗号のように難しそうに見えますが、実は日本の<b>「ローマ字」と全く同じ仕組み</b>（子音と母音の合体）でできています！</p>
+
+		<div class="puzzle-container">
+			<div class="puzzle-title">💡 文字の組み立ては「パズル」と同じ！</div>
+
+			<p style="margin-bottom: 8px;">ハングルは、1つの四角い箱の中に<b>【子音】</b>と<b>【母音】</b>（ときどき<b>【パッチム】</b>）のパーツをハメ込んで作ります。</p>
+
+			<div class="puzzle-flex">
+				<div class="puzzle-col">
+					<p style="font-weight: bold; color: #34495e; font-size: 13px; text-align: center; margin-bottom: 4px;">① 基本の形（パッチムなし）</p>
+					<div class="hangul-block-box">
+						<div class="block-2">
+							<span class="part-g">子音</span> ＋ <span class="part-v">母音</span>
+						</div>
+						<p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">日本語のローマ字と同じ構造</p>
+						<p style="font-size: 14px; margin-top: 5px; font-weight: bold;">
+							例：<span class="part-g">ㄱ (k)</span> ＋ <span class="part-v">ㅏ (a)</span> ＝ <span style="font-size: 18px; color: #2c3e50;">가</span> (ka)
+						</p>
+					</div>
+				</div>
+
+				<div class="puzzle-col">
+					<p style="font-weight: bold; color: #34495e; font-size: 13px; text-align: center; margin-bottom: 4px;">② 下におまけが付く形（パッチムあり）</p>
+					<div class="hangul-block-box">
+						<div class="block-3">
+							<div class="b-top"><span class="part-g">子音</span> ＋ <span class="part-v">母音</span></div>
+							<div class="b-bottom"><span class="part-p">パッチム (下の子音)</span></div>
+						</div>
+						<p style="font-size: 12px; color: #7f8c8d; margin-top: 3px;">日本語の「ん」や「っ」を下に敷くイメージ</p>
+						<p style="font-size: 14px; margin-top: 3px; font-weight: bold;">
+							例：<span style="font-size: 16px; color: #2c3e50;">가</span> (ka) ＋ <span class="part-p">ㅇ (ン)</span> ＝ <span style="font-size: 18px; color: #2c3e50;">강</span> (kaン)
+						</p>
+					</div>
+				</div>
+			</div>
+
+
+
+			<p style="font-size: 13px; color: #2c3e50; line-height: 1.4; border-top: 1px solid #e67e22; padding-top: 8px;">
+				✨ <b>まとめ：</b> <br>
+				・<span class="part-g">【子音】</span>＝ ローマ字の「K」や「S」にあたるパーツ<br>
+				・<span class="part-v">【母音】</span>＝ ローマ字の「A」や「I」にあたるパーツ<br>
+				・<span class="part-p">【パッチム】</span>＝ 文字の一番下に入る、おまけの「ん」や「っ」などの子音パーツ
+			</p>
+		</div>
+
+
+		<div class="page-footer">1</div>
+	</div>
+
+
+
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第1回</div>
+
+		<h1>ハングルの基本母音</h1>
+
+
+		<h2>2. 基本母音（10個）を学ぼう</h2>
+		<p>まずはすべての文字のベースとなる「母音」を10個マスターしましょう。日本語の「あいうえお」に近い順番で覚えると簡単です！</p>
+
+
+
+		<h3>グループ①：日本語とほぼ同じ（超イージー）</h3>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">ハングル</th>
+					<th style="width: 25%;">発音</th>
+					<th style="width: 55%;">発音のコツ</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㅏ</td>
+					<td class="pronun">a（ア）</td>
+					<td>口を大きく開けて日本語の「ア」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅣ</td>
+					<td class="pronun">i（イ）</td>
+					<td>口を左右に引いて日本語の「イ」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅜ</td>
+					<td class="pronun">u（ウ）</td>
+					<td>口をすぼめて前に突き出して「ウ」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅗ</td>
+					<td class="pronun">o（オ）</td>
+					<td>口を丸めて前に突き出して「オ」</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+
+		<h3>グループ②：日本人が間違いやすい「もう1つの『う』と『お』」</h3>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">ハングル</th>
+					<th style="width: 25%;">発音</th>
+					<th style="width: 55%;">発音のコツ</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㅓ</td>
+					<td class="pronun">o（オ）</td>
+					<td>
+						<b>「あ」の口の形で「お」と言う</b><br>
+						<div class="tip">※ ㅗ より口が縦に大きく開きます。</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅡ</td>
+					<td class="pronun">u（ウ）</td>
+					<td>
+						<b>「い」の口の形で「う」と言う</b><br>
+						<div class="tip">※ 歯を軽く噛み合わせて、横に引いたまま発音します。</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+
+		<div class="page-footer">1</div>
+	</div>
+
+
+
+
+
+
+
+	<!-- PAGE 1: 全体像 ＆ 基本母音 -->
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第1回</div>
+
+		<h1>ハングルの仕組みと基本母音</h1>
+
+		<h2>1. ハングルってどんな文字？</h2>
+		<p>韓国語の文字「ハングル」は、一見難しそうに見えますが、実は日本の<b>「ローマ字」と全く同じ仕組み</b>でできています！</p>
+
+		<div class="highlight-box">
+			<p>💡 ハングルはパーツの組み合わせ（パズル）です！</p>
+			<p style="font-weight: normal; font-size: 13px; margin-top: 5px;">
+				・<b>子音：</b> ローマ字の「K」や「S」にあたる部分<br>
+				・<b>母音：</b> ローマ字의「A」や「I」にあたる部分<br>
+				・<b>パッチム：</b> 下にハメ込む「おまけの子音」（「ん」や「っ」のような音）
+			</p>
+		</div>
+
+
+
+		<h2>2. 基本母音（10個）を学ぼう</h2>
+		<p>まずはすべての文字のベースとなる「母音」を10個マスターしましょう。日本語の「あいうえお」に近い順番で覚えると簡単です！</p>
+
+
+
+		<h3>グループ①：日本語とほぼ同じ（超イージー）</h3>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">ハングル</th>
+					<th style="width: 25%;">発音</th>
+					<th style="width: 55%;">発音のコツ</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㅏ</td>
+					<td class="pronun">a（ア）</td>
+					<td>口を大きく開けて日本語の「ア」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅣ</td>
+					<td class="pronun">i（イ）</td>
+					<td>口を左右に引いて日本語の「イ」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅜ</td>
+					<td class="pronun">u（ウ）</td>
+					<td>口をすぼめて前に突き出して「ウ」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅗ</td>
+					<td class="pronun">o（オ）</td>
+					<td>口を丸めて前に突き出して「オ」</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+
+		<h3>グループ②：日本人が間違いやすい「もう1つの『う』と『お』」</h3>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">ハングル</th>
+					<th style="width: 25%;">発音</th>
+					<th style="width: 55%;">発音のコツ</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㅓ</td>
+					<td class="pronun">o（オ）</td>
+					<td>
+						<b>「あ」の口の形で「お」と言う</b><br>
+						<div class="tip">※ ㅗ より口が縦に大きく開きます。</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅡ</td>
+					<td class="pronun">u（ウ）</td>
+					<td>
+						<b>「い」の口の形で「う」と言う</b><br>
+						<div class="tip">※ 歯を軽く噛み合わせて、横に引いたまま発音します。</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+
+		<div class="page-footer">1</div>
+	</div>
+
+
+
+	<!-- PAGE 2: 母音の続き ＆ 基本子音 ＆ クイズ -->
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第2回</div>
+
+
+
+		<h3>グループ③：「ヤ行」の音（短い棒が2本になるだけ！）</h3>
+		<p>基本の形に「短い棒」がもう1本増えると、自動的に<b>「Y（ヤ行）」</b>の音に変わります。</p>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">ハングル</th>
+					<th style="width: 25%;">発音</th>
+					<th style="width: 55%;">仕組み</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">야</td>
+					<td class="pronun">ya（ヤ）</td>
+					<td>ㅏ (ア) ＋ 1本 ＝ ヤ</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">여</td>
+					<td class="pronun">yo（ヨ）</td>
+					<td>ㅓ (オ) ＋ 1本 ＝ ヨ（口を開けるヨ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">요</td>
+					<td class="pronun">yo（ヨ）</td>
+					<td>ㅗ (オ) ＋ 1本 ＝ ヨ（口をすぼめるヨ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">유</td>
+					<td class="pronun">yu（ユ）</td>
+					<td>ㅜ (ウ) ＋ 1本 ＝ ユ</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="page-footer">2</div>
+	</div>
+
+	<!-- PAGE 3: 母音の続き ＆ 基本子音 ＆ クイズ -->
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第3回</div>
+
+		<h2>3. 基本子音と合体させて読もう！</h2>
+		<p>今回は、日本語に近くて覚えやすい基本の子音をいくつかピックアップして、母音と組み合わせてみましょう。</p>
+
+		<table>
+			<thead>
+				<tr>
+					<th>子音パーツ</th>
+					<th>読み方（行）</th>
+					<th>母音「ㅏ(ア)」と合体すると？</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㄴ</td>
+					<td class="pronun">ナ行 (n)</td>
+					<td><span class="hangul-char" style="color:#2ecc71;">나</span>（ナ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅁ</td>
+					<td class="pronun">マ行 (m)</td>
+					<td><span class="hangul-char" style="color:#2ecc71;">마</span>（マ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㄹ</td>
+					<td class="pronun">ラ行 (r)</td>
+					<td><span class="hangul-char" style="color:#2ecc71;">라</span>（ラ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅅ</td>
+					<td class="pronun">サ行 (s)</td>
+					<td><span class="hangul-char" style="color:#2ecc71;">사</span>（サ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅎ</td>
+					<td class="pronun">ハ行 (h)</td>
+					<td><span class="hangul-char" style="color:#2ecc71;">하</span>（ハ）</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+
+		<h2>4. リーディングクイズ！なんて読む？</h2>
+		<p>今日習った文字だけで、実際の韓国語の単語が読めちゃいます！声に出して読んでみましょう。</p>
+
+		<div class="quiz-container">
+			<div class="quiz-card">
+				<div class="quiz-hangul">나비</div>
+				<p>ヒント：ナ ＋ ビ</p>
+				<div class="tip" style="text-align:center;">答え：ナビ（意味：ちょうちょ）</div>
+			</div>
+			<div class="quiz-card">
+				<div class="quiz-hangul">나라</div>
+				<p>ヒント：ナ ＋ ラ</p>
+				<div class="tip" style="text-align:center;">答え：ナラ（意味：国）</div>
+			</div>
+			<div class="quiz-card">
+				<div class="quiz-hangul">바나나</div>
+				<p>ヒント：バ ＋ ナ ＋ ナ</p>
+				<div class="tip" style="text-align:center;">答え：バナナ（意味：バナナ）</div>
+			</div>
+			<div class="quiz-card">
+				<div class="quiz-hangul">하다</div>
+				<p>ヒント：ハ ＋ ダ</p>
+				<div class="tip" style="text-align:center;">答え：ハダ（意味：〜する）</div>
+			</div>
+		</div>
+
+
+
+		<div class="page-footer">3</div>
+	</div>
+
+
+
+	<!-- PAGE 4: 合成母音 ＆ クイズ -->
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第4回</div>
+		<h1>母音 :（合成母音）をマスターしよう</h1>
+		<h2>1. 合成母音ってなに？</h2>
+		<p>ハングルには、基本母音10個のほかに、母音と母音が組み合わさってできた<b>「合成母音（二重母音）」が11個</b>あります。一見複雑そうですが、パーツの組み合わせ（足し算）で覚えるのがコツです！</p>
+		<div class="puzzle-container">
+			<div class="puzzle-title">💡 合成母音は「音の足し算」！</div>
+			<p style="margin-bottom: 0;">たとえば、<b>「ㅗ (o)」</b>の口から素早く<b>「ㅏ (a)」</b>へと音を繋げると、日本語の「オア、オア… ＝ <b>ワ (wa)</b>」の音になります。このように、基本パーツの組み合わせで新しい音が作られています。</p>
+		</div>
+
+		<h2>2. 「エ」の仲間たち（4個）</h2>
+		<p>日本語の「エ」に近い音のグループです。現代の韓国語では、どれもほとんど同じ「エ」の音として発音されるため、まずはまとめて「エ」と覚えてしまってOKです！</p>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">ハングル</th>
+					<th style="width: 25%;">発音</th>
+					<th style="width: 20%;">組み合わせ</th>
+					<th style="width: 35%;">発音のコツ</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㅐ</td>
+					<td class="pronun">ae（エ）</td>
+					<td>ㅏ ＋ ㅣ</td>
+					<td>日本語の「エ」より少し口を大きく開けます。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅔ</td>
+					<td class="pronun">e（エ）</td>
+					<td>ㅓ ＋ ㅣ</td>
+					<td>日本語の「エ」と同じくらい。ㅐと区別しなくてOK！</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅒ</td>
+					<td class="pronun">yae（イェ）</td>
+					<td>ㅑ ＋ ㅣ</td>
+					<td>「ㅐ」に短い棒が1本増えた「ヤ行」の音。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅖ</td>
+					<td class="pronun">ye（イェ）</td>
+					<td>ㅕ ＋ ㅣ</td>
+					<td>「ㅔ」に短い棒が1本増えた「ヤ行」の音。</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h2>3. 「ワ・ウォ・ウェ」の仲間たち（7個）</h2>
+		<p>「オ」や「ウ」の口の形から始まるグループです。英語の「W」の音をイメージして、口をすぼめた状態からスタートするのがポイントです。</p>
+
+		<div style="display: table; width: 100%;">
+			<div style="display: table-cell; width: 50%; padding-right: 5px; vertical-align: top;">
+				<h3 style="font-size: 14px; color: #2c3e50; margin-bottom: 5px;">▼ 「ㅗ (o)」ベースの音</h3>
+				<table>
+					<thead>
+						<tr>
+							<th style="width: 35%;">文字</th>
+							<th style="width: 65%;">発音・コツ</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="hangul-char">ㅘ</td>
+							<td class="pronun">wa（ワ）<br><span style="font-size: 11px; font-weight: normal; color: #666;">ㅗ ＋ ㅏ ＝ ワ</span></td>
+						</tr>
+						<tr>
+							<td class="hangul-char">ㅙ</td>
+							<td class="pronun">wae（ウェ）<br><span style="font-size: 11px; font-weight: normal; color: #666;">ㅗ ＋ ㅐ ＝ ウェ</span></td>
+						</tr>
+						<tr>
+							<td class="hangul-char">ㅚ</td>
+							<td class="pronun">
+								oe（ウェ）<br><span style="font-size: 11px; font-weight: normal; color: #666;">ㅗ ＋ ㅣ ＝ ウェ</span><br>
+								<div class="tip" style="font-size: 11px; padding: 2px 5px;">※ㅙと全く同じ発音でOK！</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div style="display: table-cell; width: 50%; padding-left: 5px; vertical-align: top;">
+				<h3 style="font-size: 14px; color: #2c3e50; margin-bottom: 5px;">▼ 「ㅜ (u)」ベースの音</h3>
+				<table>
+					<thead>
+						<tr>
+							<th style="width: 35%;">文字</th>
+							<th style="width: 65%;">発音・コツ</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="hangul-char">ㅝ</td>
+							<td class="pronun">wo（ウォ）<br><span style="font-size: 11px; font-weight: normal; color: #666;">ㅜ ＋ ㅓ ＝ ウォ</span></td>
+						</tr>
+						<tr>
+							<td class="hangul-char">ㅞ</td>
+							<td class="pronun">we（ウェ）<br><span style="font-size: 11px; font-weight: normal; color: #666;">ㅜ ＋ ㅔ ＝ ウェ</span></td>
+						</tr>
+						<tr>
+							<td class="hangul-char">ㅟ</td>
+							<td class="pronun">wi（ウィ）<br><span style="font-size: 11px; font-weight: normal; color: #666;">ㅜ ＋ ㅣ ＝ ウィ</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<h3 style="font-size: 14px; color: #2c3e50; margin-bottom: 5px;">▼ 特殊な組み合わせ</h3>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">ハングル</th>
+					<th style="width: 25%;">発音</th>
+					<th style="width: 20%;">組み合わせ</th>
+					<th style="width: 35%;">発音のコツ</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㅢ</td>
+					<td class="pronun">ui（ウィ / エ / イ）</td>
+					<td>ㅡ ＋ ㅣ</td>
+					<td>
+						「ㅡ (ウ)」の口のまま「イ」と言います。<br>
+						<div class="tip">単語の位置や意味によって「エ」や「イ」に変化する少し特別な文字です。</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="page-footer">4</div>
+	</div>
+
+
+	<!-- PAGE 5: 子音パーツ(平音) ＆ クイズ -->
+
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第5回</div>
+		<h1>すべての「子音パーツ」をマスターしよう</h1>
+		<h2>1. ハングルの子音は3つのグループがある！</h2>
+		<p>母音の次は、いよいよ文字の左側や上にハメ込む<b>【子音】</b>です。ハンプルの子音は「息の出し方」や「強さ」によって、大きく3つのグループ（平音・激音・濃音）に分かれています。</p>
+		<div class="puzzle-container" style="background-color: #eafaf1; border-color: #2ecc71;">
+			<div class="puzzle-title" style="color: #27ae60;">💡 子音は「セット」で覚えると超かんたん！</div>
+			<p style="margin-bottom: 0;">「カ行」の音をベースにすると、基本の <b>ㄱ</b> に棒を足すと激音の <b>ㅋ</b>、2つ並べると濃音の <b>ㄲ</b> になります。形と音が連動しているので、パズル感覚で覚えられます！</p>
+		</div>
+
+		<h2>2. 基本の子音（平音 9個）</h2>
+		<p>日本語の「カ・サ・タ・ナ・ハ・マ・ヤ・ラ・ワ」行のベースになる基本の文字です。まずはここからスタート！</p>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 15%;">子音</th>
+					<th style="width: 25%;">読み方（行）</th>
+					<th style="width: 60%;">母音「ㅏ(ア)」と合体した形と発音</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㄱ</td>
+					<td class="pronun">カ / ガ行 (k/g)</td>
+					<td><b style="font-size:14pt;">가</b> (ka/ga) … 日本語の「カ/ガ」とほぼ同じ。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㄴ</td>
+					<td class="pronun">ナ行 (n)</td>
+					<td><b style="font-size:14pt;">나</b> (na) … 日本語の「ナ」と同じ。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㄷ</td>
+					<td class="pronun">タ / ダ行 (t/d)</td>
+					<td><b style="font-size:14pt;">다</b> (ta/da) … 日本語の「タ/ダ」とほぼ同じ。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㄹ</td>
+					<td class="pronun">ラ行 (r)</td>
+					<td><b style="font-size:14pt;">라</b> (ra) … 日本語の「ラ」と同じ（巻き舌にしない）。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㅁ</td>
+					<td class="pronun">マ行 (m)</td>
+					<td><b style="font-size:14pt;">마</b> (ma) … 日本語の「マ」と同じ。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㅂ</td>
+					<td class="pronun">パ / バ行 (p/b)</td>
+					<td><b style="font-size:14pt;">바</b> (pa/ba) … 日本語の「パ/バ」とほぼ同じ。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㅅ</td>
+					<td class="pronun">サ行 (s)</td>
+					<td><b style="font-size:14pt;">사</b> (sa) … 日本語の「サ」と同じ。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㅇ</td>
+					<td class="pronun">ア行（無音）</td>
+					<td><b style="font-size:14pt;">아</b> (a) … <b>子音のときは音が出ない</b>飾りパーツです。</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color: #2ecc71;">ㅈ</td>
+					<td class="pronun">チャ / ジャ行 (ch/j)</td>
+					<td><b style="font-size:14pt;">자</b> (cha/ja) … 日本語の「チャ/ジャ」とほぼ同じ。</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<div class="page-footer">5</div>
+	</div>
+
+	<!-- PAGE 6: 子音パーツ(激音) ＆ クイズ -->
+
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第6回</div>
+		<h1>すべての「子音パーツ」をマスターしよう</h1>
+		<h2>1. ハングルの子音は3つのグループがある！</h2>
+		<p>母音の次は、いよいよ文字の左側や上にハメ込む<b>【子音】</b>です。ハンプルの子音は「息の出し方」や「強さ」によって、大きく3つのグループ（平音・激音・濃音）に分かれています。</p>
+		<div class="puzzle-container" style="background-color: #eafaf1; border-color: #2ecc71;">
+			<div class="puzzle-title" style="color: #27ae60;">💡 子音は「セット」で覚えると超かんたん！</div>
+			<p style="margin-bottom: 0;">「カ行」の音をベースにすると、基本の <b>ㄱ</b> に棒を足すと激音の <b>ㅋ</b>、2つ並べると濃音の <b>ㄲ</b> になります。形と音が連動しているので、パズル感覚で覚えられます！</p>
+		</div>
+
+
+
+		<h2>3. 強い息を吹き出す子音（激音 4個）</h2>
+		<p>文字に「棒」が増えた形をしています。口の前にティッシュをかざしたとき、<b>ティッシュが激しく揺れるくらい「強い息」</b>をパッと吐き出しながら発音します。</p>
+
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 15%;">子音</th>
+					<th style="width: 25%;">読み方（行）</th>
+					<th style="width: 20%;">平音との比較</th>
+					<th style="width: 40%;">母音「ㅏ(ア)」と合体</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char" style="color:#e67e22;">ㅋ</td>
+					<td class="pronun">激しいカ行 (k')</td>
+					<td>ㄱ ＋ 棒</td>
+					<td><b style="font-size:14pt; color:#e67e22;">카</b> (k'a) … 息を強く「カッ！」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#e67e22;">ㅌ</td>
+					<td class="pronun">激しいタ行 (t')</td>
+					<td>ㄷ ＋ 棒</td>
+					<td><b style="font-size:14pt; color:#e67e22;">타</b> (t'a) … 息を強く「タッ！」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#e67e22;">ㅍ</td>
+					<td class="pronun">激しいパ行 (p')</td>
+					<td>ㅂ ＋ 変形</td>
+					<td><b style="font-size:14pt; color:#e67e22;">파</b> (p'a) … 息を強く「パッ！」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#e67e22;">ㅊ</td>
+					<td class="pronun">激しいチャ行 (ch')</td>
+					<td>ㅈ ＋ 棒</td>
+					<td><b style="font-size:14pt; color:#e67e22;">차</b> (ch'a) … 息を強く「チャッ！」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#e67e22;">ㅎ</td>
+					<td class="pronun">ハ行 (h)</td>
+					<td>ㅇ ＋ 棒</td>
+					<td><b style="font-size:14pt; color:#e67e22;">하</b> (ha) … 息を吐き出すハ行（仲間として分類）。</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="page-footer">6</div>
+	</div>
+
+
+	<!-- PAGE 7: 子音パーツ(激音) ＆ クイズ -->
+
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第7回</div>
+		<h1>すべての「子音パーツ」をマスターしよう</h1>
+		<h2>1. ハングルの子音は3つのグループがある！</h2>
+		<p>母音の次は、いよいよ文字の左側や上にハメ込む<b>【子音】</b>です。ハンプルの子音は「息の出し方」や「強さ」によって、大きく3つのグループ（平音・激音・濃音）に分かれています。</p>
+		<div class="puzzle-container" style="background-color: #eafaf1; border-color: #2ecc71;">
+			<div class="puzzle-title" style="color: #27ae60;">💡 子音は「セット」で覚えると超かんたん！</div>
+			<p style="margin-bottom: 0;">「カ行」の音をベースにすると、基本の <b>ㄱ</b> に棒を足すと激音の <b>ㅋ</b>、2つ並べると濃音の <b>ㄲ</b> になります。形と音が連動しているので、パズル感覚で覚えられます！</p>
+		</div>
+
+
+		<h2>4. 息を詰めて詰まる音（濃音 5個）</h2>
+		<p>同じ文字を「2つ横に並べた」形をしています。激音とは真逆で、<b>息を外に漏らさず、喉をグッと詰めて</b>「小さな『っ』」を前に置くイメージで鋭く発音します。</p>
+
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 15%;">子音</th>
+					<th style="width: 25%;">読み方（行）</th>
+					<th style="width: 20%;">形の特徴</th>
+					<th style="width: 40%;">母音「ㅏ(ア)」と合体</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char" style="color:#9b59b6;">ㄲ</td>
+					<td class="pronun">詰まるカ行 (kk)</td>
+					<td>ㄱ が2つ</td>
+					<td><b style="font-size:14pt; color:#9b59b6;">까</b> (kka) … 「っカ！」（カラスの鳴き声風）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#9b59b6;">ㄸ</td>
+					<td class="pronun">詰まるタ行 (tt)</td>
+					<td>ㄷ が2つ</td>
+					<td><b style="font-size:14pt; color:#9b59b6;">따</b> (tta) … 「っタ！」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#9b59b6;">ㅃ</td>
+					<td class="pronun">詰まるパ行 (pp)</td>
+					<td>ㅂ が2つ</td>
+					<td><b style="font-size:14pt; color:#9b59b6;">빠</b> (ppa) … 「っパ！」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#9b59b6;">ㅆ</td>
+					<td class="pronun">詰まるサ行 (ss)</td>
+					<td>ㅅ が2つ</td>
+					<td><b style="font-size:14pt; color:#9b59b6;">싸</b> (ssa) … 「っサ！」</td>
+				</tr>
+				<tr>
+					<td class="hangul-char" style="color:#9b59b6;">ㅉ</td>
+					<td class="pronun">詰まるチャ行 (jj)</td>
+					<td>ㅈ が2つ</td>
+					<td><b style="font-size:14pt; color:#9b59b6;">짜</b> (jja) … 「っチャ！」</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="page-footer">7</div>
+	</div>
+
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第8回</div>
+
+		<h1>パズルを完成させて単語を読んでみよう！</h1>
+
+		<h2>1. 文字の組み立てルール（2つの基本パターン）</h2>
+		<p>集めた「子音」と「母音」のパーツを合体させる方法は、母音の形によって<b>2つのパターン</b>しかありません。縦長の母音なら「横並び」、横長の母音なら「縦並び」です！</p>
+
+		<div style="display: table; width: 100%; margin: 10px 0;">
+			<div style="display: table-cell; width: 48%; background: #f4fbf7; border: 1px dashed #2ecc71; padding: 10px; border-radius: 6px; text-align: center;">
+				<span style="font-weight:bold; color:#27ae60;">① 横並びパターン</span><br>
+				<span style="font-size:9.5pt; color:#666;">（母音が縦長のとき：ㅏ, ㅑ, ㅓ, ㅕ, ㅣ など）</span>
+				<div style="font-size: 24pt; margin: 5px 0;">
+					<span style="color: #2ecc71; font-weight: bold;">ㅇ</span> ＋ <span style="color: #e74c3c; font-weight: bold;">ㅏ</span> ＝ <span style="font-weight:bold;">아</span>
+				</div>
+				<p style="font-size:9.5pt; margin-bottom:0;">子音の<b>右側</b>に母音をハメ込みます</p>
+			</div>
+			<div style="display: table-cell; width: 4%;"></div>
+			<div style="display: table-cell; width: 48%; background: #fff9f4; border: 1px dashed #e67e22; padding: 10px; border-radius: 6px; text-align: center;">
+				<span style="font-weight:bold; color:#d35400;">② 縦並びパターン</span><br>
+				<span style="font-size:9.5pt; color:#666;">（母音が横長のとき：ㅗ, ㅛ, ㅜ, ㅠ, ㅡ など）</span>
+				<div style="font-size: 24pt; margin: 5px 0;">
+					<span style="color: #2ecc71; font-weight: bold;">ㅇ</span> ＋ <span style="color: #e74c3c; font-weight: bold;">ㅗ</span> ＝ <span style="font-weight:bold;">오</span>
+				</div>
+				<p style="font-size:9.5pt; margin-bottom:0;">子音の<b>下側</b>に母音をハメ込みます</p>
+			</div>
+		</div>
+
+
+
+		<h2>2. はじめての単語練習（声に出して読んでみよう）</h2>
+		<p>パーツの組み合わせを意識しながら、ゆっくり読んでみましょう。もうあなたは韓国語が読めるようになっています！</p>
+
+		<div class="word-box" style="background-color: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+			<table style="width: 100%; margin-bottom: 0;">
+				<thead>
+					<tr>
+						<th style="width: 25%;">ハングル</th>
+						<th style="width: 25%;">パーツ分解</th>
+						<th style="width: 25%;">読み方</th>
+						<th style="width: 25%;">意味</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="hangul-char" style="font-size:20pt;">아이</td>
+						<td style="font-size:11pt;"><span style="color: #2ecc71; font-weight: bold;">ㅇ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅏ</span> / <span style="color: #2ecc71; font-weight: bold;">ㅇ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅣ</span></td>
+						<td class="pronun" style="font-size:12pt; color:#e74c3c;">アイ</td>
+						<td style="font-weight:bold;">子供</td>
+					</tr>
+					<tr>
+						<td class="hangul-char" style="font-size:20pt;">우유</td>
+						<td style="font-size:11pt;"><span style="color: #2ecc71; font-weight: bold;">ㅇ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅜ</span> / <span style="color: #2ecc71; font-weight: bold;">ㅇ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅠ</span></td>
+						<td class="pronun" style="font-size:12pt; color:#e74c3c;">ウユ</td>
+						<td style="font-weight:bold;">牛乳</td>
+					</tr>
+					<tr>
+						<td class="hangul-char" style="font-size:20pt;">고기</td>
+						<td style="font-size:11pt;"><span style="color: #2ecc71; font-weight: bold;">ㄱ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅗ</span> / <span style="color: #2ecc71; font-weight: bold;">ㄱ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅣ</span></td>
+						<td class="pronun" style="font-size:12pt; color:#e74c3c;">コギ</td>
+						<td style="font-weight:bold;">肉</td>
+					</tr>
+					<tr>
+						<td class="hangul-char" style="font-size:20pt;">나무</td>
+						<td style="font-size:11pt;"><span style="color: #2ecc71; font-weight: bold;">ㄴ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅏ</span> / <span style="color: #2ecc71; font-weight: bold;">ㅁ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅜ</span></td>
+						<td class="pronun" style="font-size:12pt; color:#e74c3c;">ナム</td>
+						<td style="font-weight:bold;">木</td>
+					</tr>
+					<tr>
+						<td class="hangul-char" style="font-size:20pt;">모자</td>
+						<td style="font-size:11pt;"><span style="color: #2ecc71; font-weight: bold;">ㅁ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅗ</span> / <span style="color: #2ecc71; font-weight: bold;">ㅈ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅏ</span></td>
+						<td class="pronun" style="font-size:12pt; color:#e74c3c;">モジャ</td>
+						<td style="font-weight:bold;">帽子</td>
+					</tr>
+					<tr>
+						<td class="hangul-char" style="font-size:20pt;">바지</td>
+						<td style="font-size:11pt;"><span style="color: #2ecc71; font-weight: bold;">ㅂ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅏ</span> / <span style="color: #2ecc71; font-weight: bold;">ㅈ</span>+<span style="color: #e74c3c; font-weight: bold;">ㅣ</span></td>
+						<td class="pronun" style="font-size:12pt; color:#e74c3c;">パジ</td>
+						<td style="font-weight:bold;">ズボン</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+
+
+		<div class="puzzle-container" style="margin-top:15px; background-color: #f0f7ff; border-color: #3498db;">
+			<div class="puzzle-title" style="color: #2980b9;">🎉 おめでとうございます！第1回クリア！</div>
+			<p style="margin-bottom: 0; font-size:10pt;">すべての母音と子音のパーツを学び、文字を組み立てて単語を読むステップまで到達しました！これでハングルの仕組みの「基本の土台」は完璧です。次回は、さらに表現の幅が広がる「パッチム（お座りパーツ）」について学んでいきましょう！</p>
+		</div>
+
+
+
+		<div class="page-footer">8</div>
+	</div>
+
+
+
+	<!-- PAGE 9: 残りの基本子音 ＆ パッチム基本 ＆ 実践単語 -->
+	<div class="page">
+		<div class="page-header">ハングル基礎講座 - 第9回</div>
+		<h1>残りの基本子音とパッチム入門</h1>
+		<h2>1. 残りの基本子音を覚えよう</h2>
+		<p>1・2ページ目で紹介した「ㄴ, ㅁ, ㄹ, ㅅ, ㅎ」に加えて、日本語の「カ・タ・パ・チャ・ア」行にあたる、残りの基本子音5個をマスターしましょう！</p>
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 20%;">子音パーツ</th>
+					<th style="width: 30%;">発音のグループ</th>
+					<th style="width: 50%;">母音「ㅏ(ア)」と合体すると？</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="hangul-char">ㄱ</td>
+					<td class="pronun">カ行 / ガ行 (k/g)</td>
+					<td><span class="hangul-char" style="color: #2980b9;">가</span>（カ / ガ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㄷ</td>
+					<td class="pronun">タ行 / ダ行 (t/d)</td>
+					<td><span class="hangul-char" style="color: #2980b9;">다</span>（タ / ダ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅂ</td>
+					<td class="pronun">パ行 / バ行 (p/b)</td>
+					<td><span class="hangul-char" style="color: #2980b9;">바</span>（パ / バ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅈ</td>
+					<td class="pronun">チャ行 / ジャ行 (ch/j)</td>
+					<td><span class="hangul-char" style="color: #2980b9;">자</span>（チャ / ジャ）</td>
+				</tr>
+				<tr>
+					<td class="hangul-char">ㅇ</td>
+					<td class="pronun">ア行（無音）</td>
+					<td>
+						<span class="hangul-char" style="color: #e74c3c;">아</span>（ア）<br>
+						<div class="tip">※「ㅇ」は子音（左上）の位置にあるときは<b>音がありません</b>。母音の音（ㅏ＝ア）をそのまま発音すればOKです！</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h2>2. ついに登場！「パッチム」の基本</h2>
+		<p>ハングル最大の難関に見える「パッチム」ですが、仕組みはとてもシンプル！文字の<b>一番下（床）に敷く「おまけの子音」</b>です。まずは最もよく使う「ん」の3兄弟から攻略しましょう！</p>
+
+		<div class="puzzle-container" style="background-color: #e3f2fd; border-color: #4a90e2; margin-top: 10px;">
+			<div class="puzzle-title" style="color: #1e88e5;">💡 すべて日本語の「ん」に聞こえるけれど…？</div>
+			<p style="margin-bottom: 10px;">日本語ではすべて「ん」と書きますが、韓国語では<b>口の形（閉じ方）</b>によって3つにきれいに分かれます！</p>
+			<table style="background-color: #ffffff; margin-bottom: 0;">
+				<thead>
+					<tr>
+						<th style="width: 15%;">パッチム</th>
+						<th style="width: 25%;">発音のコツ</th>
+						<th style="width: 60%;">発音のイメージ</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="hangul-char" style="color: #9b59b6;">ㄴ</td>
+						<td class="pronun">英語の「N」</td>
+						<td style="text-align: left; font-size: 13px;">口を開けたまま、<b>舌先を上の歯茎にピタッ</b>とつけて「ん」と言う。<br>（例：案内「あ<b>ん</b>ない」の「ん」）</td>
+					</tr>
+					<tr>
+						<td class="hangul-char" style="color: #9b59b6;">ㅁ</td>
+						<td class="pronun">英語 of 「M」</td>
+						<td style="text-align: left; font-size: 13px;"><b>唇をしっかり閉じて</b>、ハミングするように「ん」と言う。<br>（例：切符「き<b>っ</b>ぷ」や、３万「さ<b>ん</b>まん」の「ん」）</td>
+					</tr>
+					<tr>
+						<td class="hangul-char" style="color: #9b59b6;">ㅇ</td>
+						<td class="pronun">英語の「NG」</td>
+						<td style="text-align: left; font-size: 13px;">口を大きく開けたまま、<b>舌をどこにもつけずに喉の奥を閉じて</b>「ん」と言う。<br>（例：音楽「お<b>ん</b>がく」の「ん」）</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2>3. パッチムを使った単語を読んでみよう！</h2>
+		<p>先ほど習った文字とパッチムを意識しながら、ゆっくり声に出してみましょう！</p>
+		<div style="display: flex; gap: 12px; justify-content: space-between; margin-top: 10px;">
+			<div class="hangul-block-box" style="flex: 1; border-color: #2980b9; padding: 12px 8px;">
+				<p class="hangul-char" style="font-size: 28px; margin-bottom: 5px;">김밥</p>
+				<p class="pronun">キ<span style="color:#9b59b6;">ム</span>パ<span style="color:#9b59b6;">プ</span></p>
+				<div class="tip" style="font-size: 11px; text-align: center; padding: 4px; margin-top: 5px;">おなじみの海苔巻き。「ㅁ」と「ㅂ」でしっかり口を閉じます。</div>
+			</div>
+			<div class="hangul-block-box" style="flex: 1; border-color: #2980b9; padding: 12px 8px;">
+				<p class="hangul-char" style="font-size: 28px; margin-bottom: 5px;">라면</p>
+				<p class="pronun">ラミョ<span style="color:#9b59b6;">ン</span></p>
+				<div class="tip" style="font-size: 11px; text-align: center; padding: 4px; margin-top: 5px;">ラーメン。最後は舌を歯茎につけて「N」で終わります。</div>
+			</div>
+			<div class="hangul-block-box" style="flex: 1; border-color: #2980b9; padding: 12px 8px;">
+				<p class="hangul-char" style="font-size: 28px; margin-bottom: 5px;">강</p>
+				<p class="pronun">カ<span style="color:#9b59b6;">ン</span></p>
+				<div class="tip" style="font-size: 11px; text-align: center; padding: 4px; margin-top: 5px;">韓国語で「川」。口を開けたまま鼻に抜ける「NG」の音です。</div>
+			</div>
+		</div>
+
+		<div class="page-footer">9</div>
+	</div>
+
+
+</body>
+</html>
+
+
+
+
+<!--これで「文字（母音・子音）のパーツ一覧」としてはすべて出揃いました！ ハングルを構成するすべての基本パーツが完成した状態です。
+
+ただ、実際のハングル学習のロードマップとしては、この後に文字を組み立てるルールや、最後の難関である「パッチム」という要素が続きます。
+
+講座の構成（全何回にするかなど）に合わせて、第1回の締めくくり（次のページ）として以下のどちらに進むのがよろしいでしょうか？
+
+第1回のまとめページ（おすすめ）
+
+「子音 ＋ 母音」を実際に合体させて文字を作るパズルのルール（左右・上下の組み合わせ方）と、簡単な単語（「あたま」「き」「こども」など）を読んでみる練習。
+パッチムのページ（第2回以降にするのもおすすめ）
+
+文字の下にくっつく「第3のパーツ（お座りパーツ）」の解説。
+
+もし「パーツだけで第1回を終えて、PDFをここで一度完成（全4ページ）にしたい！」ということであれば、これで全ページの原稿が揃った形になります。
+
+次をどうされるか、ご希望を教えてください！-->

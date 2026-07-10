@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>한국어 기초 회화 문법 20선</title>
+<style>
+        /* 기본 리셋 및 폰트 설정 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background: #f0f2f5;
+            color: #333333;
+            line-height: 1.6;
+        }
+ 
+        /* B5 사이즈 가상 페이지 설정 (가로 182mm, 세로 257mm 비율) */
+        .page {
+            width: 182mm;
+            min-height: 257mm;
+            padding: 20mm 15mm;
+            margin: 20px auto;
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+ 
+        /* 인쇄할 때 페이지가 딱딱 끊어지도록 설정 */
+        @media print {
+            body { background: none; }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+                page-break-after: always;
+            }
+        }
+ 
+        /* 문서 스타일링 */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4a90e2;
+        }
+        .header h1 {
+            font-size: 22px;
+            color: #2c3e50;
+        }
+        .header p {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .section-title {
+            font-size: 15px;
+            color: #fff;
+            background-color: #4a90e2;
+            padding: 6px 12px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+ 
+        .grammar-item {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        .grammar-item:last-child {
+            border-bottom: none;
+        }
+        .grammar-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        .grammar-meaning {
+            font-size: 13px;
+            color: #555555;
+            margin-left: 10px;
+            margin-bottom: 4px;
+        }
+        .grammar-example {
+            font-size: 13px;
+            background-color: #f8f9fa;
+            padding: 6px 10px;
+            border-left: 3px solid #cbd5e1;
+            margin-left: 10px;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 11px;
+            color: #bdc3c7;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+</style>
+</head>
+<body>
+ 
+    <!-- PAGE 1 -->
+<div class="page">
+<div class="header">
+<h1>한국어 기초 회화 문법 20선 (1/2)</h1>
+<p>가장 자주 쓰이는 필수 문법 및 예문 리스트</p>
+</div>
+ 
+        <!-- Section 1 -->
+<div class="section-title">1. 기본 어미 (〜です・ます)</div>
+<div class="grammar-item">
+<div class="grammar-title">① 〜아요 / 어요</div>
+<div class="grammar-meaning">동사·형용사의 어미 (〜です、〜ます)</div>
+<div class="grammar-example">가다 → <span class="highlight">가요</span> (行きます) / 먹다 → <span class="highlight">먹어요</span> (食べます)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">② 〜이에요 / 예요</div>
+<div class="grammar-meaning">명사 뒤에 붙는 표현 (〜です) *받침 있으면 이에요, 없으면 예요</div>
+<div class="grammar-example">학생<span class="highlight">이에요</span>. (학생입니다) / 친구<span class="highlight">예요</span>. (友達입니다)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">③ 〜이/가 아니에요</div>
+<div class="grammar-meaning">명사의 부정형 (〜ではありません)</div>
+<div class="grammar-example">한국 사람이 <span class="highlight">아니에요</span>. (韓国人ではありません)</div>
+</div>
+ 
+        <!-- Section 2 -->
+<div class="section-title">2. 원망·의향 (〜したい·합니다)</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">④ 〜고 싶어요</div>
+<div class="grammar-meaning">동사 뒤에 붙어 희망을 나타냄 (〜したいです)</div>
+<div class="grammar-example">한국에 <span class="highlight">가고 싶어요</span>. (韓国に行きたいです)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑤ 〜(으)ㄹ래요</div>
+<div class="grammar-meaning">자신의 의사 전달 또는 상대방의 의향 질문 (〜합니다、〜합니까?)</div>
+<div class="grammar-example">저는 커피 <span class="highlight">마실래요</span>. (私はコーヒーにします/飲みます)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑥ 〜겠어요</div>
+<div class="grammar-meaning">강한 의지 또는 상태에 대한 추측 (〜합니다, 〜하겠군요/〜해보이네요)</div>
+<div class="grammar-example">맛있<span class="highlight">겠어요</span>! (美味しそうですね！) / 열심히 하<span class="highlight">겠습니다</span>. (頑張ります)</div>
+</div>
+ 
+        <!-- Section 3 -->
+<div class="section-title">3. 과거와 부정 (〜した·〜しない)</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑦ 〜았어요 / 었어요</div>
+<div class="grammar-meaning">과거형 (〜했습니다, 〜했습니다)</div>
+<div class="grammar-example">봤어요 (見ました) / 맛있었어요 (美味しかったです)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑧ 안 〜</div>
+<div class="grammar-meaning">동사·형용사 앞에 위치하는 부정문 (〜하지 않다, 〜지 않다)</div>
+<div class="grammar-example"><span class="highlight">안</span> 매워요 (辛くないです) / <span class="highlight">안</span> 가요 (行きません)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑨ 〜지 않아요</div>
+<div class="grammar-meaning">문말에 위치하는 부정형 (〜하지 않습니다) *안보다 조금 더 정중함</div>
+<div class="grammar-example">춥<span class="highlight">지 않아요</span>. (寒くないです)</div>
+</div>
+ 
+        <div class="footer">- 1 -</div>
+</div>
+ 
+    <!-- PAGE 2 -->
+<div class="page">
+<div class="header">
+<h1>한국어 기초 회화 문법 20선 (2/2)</h1>
+<p>가장 자주 쓰이는 필수 문법 및 예문 리스트</p>
+</div>
+ 
+        <!-- Section 4 -->
+<div class="section-title">4. 의뢰·권유·의무 (〜してください·しましょう)</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑩ 〜아/어 주세요</div>
+<div class="grammar-meaning">요청이나 부탁 (〜해주세요)</div>
+<div class="grammar-example">이거 <span class="highlight">주세요</span> (이것 주세요) / 도와<span class="highlight">주세요</span>. (手伝ってください)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑪ 〜(으)세요</div>
+<div class="grammar-meaning">정중한 지시·명령 또는 존칭 (〜하세요, 〜하십니다)</div>
+<div class="grammar-example">여기 <span class="highlight">앉으세요</span>. (ここに座ってください)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑫ 〜아/어 야 돼요</div>
+<div class="grammar-meaning">의무나 필요성 (〜해야 합니다)</div>
+<div class="grammar-example">지금 <span class="highlight">가야 돼요</span>. (今、行かなければなりません)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑬ 〜(으)ㄹ까요?</div>
+<div class="grammar-meaning">제안이나 상대방의 의견 묻기 (〜할까요?)</div>
+<div class="grammar-example">내일 <span class="highlight">만날까요?</span> (明日会いましょうか？)</div>
+</div>
+ 
+        <!-- Section 5 -->
+<div class="section-title">5. 이유·접속 (〜だから、〜して)</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑭ 〜아/어서</div>
+<div class="grammar-meaning">이유 또는 순서 (〜해서, 〜하니까)</div>
+<div class="grammar-example">바빠<span class="highlight">서</span> 못 가요. (忙しくて行けません)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑮ 〜니까 / 으니까</div>
+<div class="grammar-meaning">주관적 이유, 뒤에 명령·권유가 올 때 사용 (〜하니까, 〜하므로)</div>
+<div class="grammar-example">추우<span class="highlight">니까</span> 문을 닫으세요. (寒い지니까 문을 닫으십시오)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑯ 〜고</div>
+<div class="grammar-meaning">단순 나열 (〜하고, 〜하며)</div>
+<div class="grammar-example">크<span class="highlight">고</span> 싸요. (大きくて安いです)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑰ 〜지만</div>
+<div class="grammar-meaning">역접 (〜하지만, 〜입니다만)</div>
+<div class="grammar-example">어렵<span class="highlight">지만</span> 재미있어요. (難しい지지만 재미있습니다)</div>
+</div>
+ 
+        <!-- Section 6 -->
+<div class="section-title">6. 가능·진행·경험 (〜できる·している·한 적이 있다)</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑱ 〜(으)ㄹ 수 있어요 / 없어요</div>
+<div class="grammar-meaning">가능 및 불가능 (〜할 수 있습니다 / 없습니다)</div>
+<div class="grammar-example">한국어 <span class="highlight">할 수 있어요</span>. (韓国語가 됩니다)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑲ 〜고 있어요</div>
+<div class="grammar-meaning">현재 진행형 (〜하고 있습니다)</div>
+<div class="grammar-example">공부하<span class="highlight">고 있어요</span>. (勉強しています)</div>
+</div>
+ 
+        <div class="grammar-item">
+<div class="grammar-title">⑳ 〜아/어 봤어요</div>
+<div class="grammar-meaning">경험 (〜해 보았습니다, 〜한 적이 있습니다)</div>
+<div class="grammar-example">먹<span class="highlight">어 봤어요</span>. (食べたことがあります)</div>
+</div>
+ 
+        <div class="footer">- 2 -</div>
+</div>
+ 
+</body>
+</html>

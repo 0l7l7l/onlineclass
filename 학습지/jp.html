@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일본어 문법회화 교재</title>
+    <style>
+        /* 기본 스타일 초기화 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* B5 사이즈 가상 페이지 설정 (가로 182mm, 세로 257mm 비율) */
+        .page {
+            width: 182mm;
+            min-height: 257mm;
+            padding: 20mm 15mm;
+            margin: 20px auto;
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 인쇄할 때 페이지가 딱딱 끊어지도록 설정 */
+        @media print {
+            body { background: none; }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+        }
+
+        /* 헤더 & 푸터 스타일 */
+        .page-header {
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #4a90e2;
+            font-weight: bold;
+        }
+        .page-footer {
+            position: absolute;
+            bottom: 15mm;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* 타이틀 및 본문 스타일 */
+        h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        h2 {
+            font-size: 18px;
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4a90e2;
+            padding-left: 8px;
+        }
+        p {
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        /* 포인트 강조 상자 */
+        .point-box {
+            background-color: #eef6ff;
+            border: 1px solid #b3d4fc;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .point-box ul {
+            margin-left: 20px;
+            font-size: 14px;
+        }
+        .point-box li {
+            margin-bottom: 6px;
+        }
+
+        /* 후리가나(루비) 스타일 조정 */
+        ruby {
+            ruby-position: over;
+        }
+        rt {
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
+        .ja {
+            font-family: 'MS Mincho', 'Noto Sans JP', serif;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        /* 예문 스타일 */
+        .example-sentence {
+            background: #f9f9f9;
+            padding: 12px;
+            border-left: 4px solid #2ecc71;
+            margin: 10px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        /* 말풍선 스타일 (단어장용) */
+        .word-section {
+            margin-bottom: 25px;
+        }
+        .balloon-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .balloon {
+            position: relative;
+            background: #fff4e6;
+            border: 2px solid #ffa94d;
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: inline-block;
+            min-width: 100px;
+            text-align: center;
+        }
+        /* 말풍선 꼬리 */
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #fff4e6 transparent;
+            display: block;
+            width: 0;
+        }
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -13px;
+            left: 19px;
+            border-width: 11px 11px 0;
+            border-style: solid;
+            border-color: #ffa94d transparent;
+            display: block;
+            width: 0;
+            z-index: -1;
+        }
+
+        /* 연습문제 빈칸 스타일 */
+        .practice-list {
+            margin-top: 15px;
+        }
+        .practice-item {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .blank {
+            display: inline-block;
+            width: 150px;
+            border-bottom: 1px solid #333;
+            text-align: center;
+            margin: 0 5px;
+        }
+        .translation {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+            padding-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= PAGE 1 : 문법 설명 ================= -->
+    <div class="page">
+        <div class="page-header">BASIC JAPANESE GRAMMAR</div>
+        
+        <h1>제 1과: ~입니다</h1>
+        
+        <h2>1. <span class="ja">～です</span> (~입니다)</h2>
+        <p>가장 기본적인 일본어의 정중형(명사문) 표현입니다. 명사 뒤에 붙어서 문장을 종결하며, 상대를 존중하는 서술어를 만듭니다.</p>
+
+        <div class="point-box">
+            <strong>💡 언제 자세하게 쓸까요?</strong>
+            <ul>
+                <li><strong>처음 만난 사람이나 공적인 자리에서:</strong> 자신을 소개하거나 사물등 무언가를 설명할 때 가장 기본적으로 사용됩니다.</li>
+                <li><strong>정중하고 예의 바른 태도를 보일 때:</strong> 한국어의 '~입니다', '~예요(이에요)'에 딱 대응하는 격식 있는 표현입니다.</li>
+                <li><strong>명사의 성질/상태를 나타낼 때:</strong> 주어의 정체, 직업, 국적, 이름 등을 당당하고 명확하게 규정할 때 씁니다.</li>
+            </ul>
+        </div>
+
+        <h2>대표 예문</h2>
+        <div class="example-sentence">
+          <!--<p class="ja"><ruby>学<rt>がく</rt></ruby><ruby>生<rt>せい</rt></ruby>です (<span class="ja">学生です。</span>)</p>-->
+          <p class="ja"><ruby>学<rt>がく</rt></ruby><ruby>生<rt>せい</rt></ruby>です。</p>
+          <p class="translation">뜻: 학생입니다.</p>
+        </div>
+        <div class="example-sentence">
+          <p class="ja"><ruby>私<rt>わたし</rt></ruby>です。</p>
+            <p class="translation">뜻: 저입니다.</p>
+        </div>
+
+        <div class="page-footer">1</div>
+    </div>
+
+
+    <!-- ================= PAGE 2 : 연습페이지 (테마: 국가) ================= -->
+    <div class="page">
+        <div class="page-header">PRACTICE - THEME: COUNTRY</div>
+        
+        <h1>연습 페이지: 국가 (<ruby>国<rt>くに</rt></ruby>)</h1>
+        <p>아래 말풍선에 적힌 국가 단어를 활용하여 <span class="ja">「～です」</span> 문장을 완성해 보세요!</p>
+
+        <div class="word-section">
+            <h2>오늘 활용할 단어</h2>
+            <div class="balloon-container">
+                <div class="balloon">
+                    <span class="ja"><ruby>韓<rt>かん</rt></ruby><ruby>国<rt>こく</rt></ruby></span><br>
+                    <span class="translation">(한국)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>日<rt>に</rt></ruby><ruby>本<rt>ほん</rt></ruby></span><br>
+                    <span class="translation">(일본)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>ア<rt></rt></ruby><ruby>メ<rt></rt></ruby><ruby>リ<rt></rt></ruby><ruby>カ<rt></rt></ruby></span><br>
+                    <span class="translation">(미국)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>中<rt>ちゅう</rt></ruby><ruby>国<rt>ごく</rt></ruby></span><br>
+                    <span class="translation">(중국)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>문장 연습하기</h2>
+        <div class="practice-list">
+            <div class="practice-item">
+                1. 한국입니다. <br>
+                ➔ <span class="ja"><ruby>韓<rt>かん</rt></ruby><ruby>国<rt>こく</rt></ruby> <span class="blank"></span> 。</span>
+            </div>
+            <div class="practice-item">
+                2. 일본입니다. <br>
+                ➔ <span class="ja"><ruby>日<rt>に</rt></ruby><ruby>本<rt>ほん</rt></ruby> <span class="blank"></span> 。</span>
+            </div>
+            <div class="practice-item">
+                3. 미국입니다. <br>
+                ➔ <span class="ja">アメリカ <span class="blank"></span> 。</span>
+            </div>
+        </div>
+
+        <div class="page-footer">2</div>
+    </div>
+
+
+    <!-- ================= PAGE 3 : 연습페이지 (테마: 직업) ================= -->
+    <div class="page">
+        <div class="page-header">PRACTICE - THEME: OCCUPATION</div>
+        
+        <h1>연습 페이지: 직업 (<ruby>職<rt>しょく</rt></ruby><ruby>業<rt>ぎょう</rt></ruby>)</h1>
+        <p>직업을 나타내는 말을 넣어서 대화를 완성해 봅시다.</p>
+
+        <div class="word-section">
+            <h2>오늘 활용할 단어</h2>
+            <div class="balloon-container">
+                <div class="balloon">
+                    <span class="ja"><ruby>会<rt>かい</rt></ruby><ruby>社<rt>しゃ</rt></ruby><ruby>員<rt>いん</rt></ruby></span><br>
+                    <span class="translation">(회사원)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>医<rt>い</rt></ruby><ruby>者<rt>しゃ</rt></ruby></span><br>
+                    <span class="translation">(의사)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>先<rt>せん</rt></ruby><ruby>生<rt>せい</rt></ruby></span><br>
+                    <span class="translation">(선생님)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>看<rt>かん</rt></ruby><ruby>護<rt>ご</rt></ruby><ruby>師<rt>し</rt></ruby></span><br>
+                    <span class="translation">(간호사)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>문장 연습하기</h2>
+        <div class="practice-list">
+            <div class="practice-item">
+                1. 저는 회사원입니다. <br>
+                ➔ <span class="ja"><ruby>私<rt>わたし</rt></ruby>は <span class="blank"></span> です。</span>
+            </div>
+            <div class="practice-item">
+                2. 다나카 씨는 의사입니다. <br>
+                ➔ <span class="ja">田中さんは <span class="blank"></span> です。</span>
+            </div>
+            <div class="practice-item">
+                3. 선생님입니다. <br>
+                ➔ <span class="ja"><ruby>先<rt>せん</rt></ruby><ruby>生<rt>せい</rt></ruby> <span class="blank"></span> 。</span>
+            </div>
+        </div>
+
+        <div class="page-footer">3</div>
+    </div>
+
+
+    <!-- ================= PAGE 4 : 연습페이지 (테마: 지시대명사) ================= -->
+    <div class="page">
+        <div class="page-header">PRACTICE - THEME: DEMONSTRATIVES</div>
+        
+        <h1>연습 페이지: 이것, 그것, 저것</h1>
+        <p>사물을 가리키는 지시대명사와 <span class="ja">「～です」</span>를 조합해 봅시다.</p>
+
+        <div class="word-section">
+            <h2>오늘 활용할 단어</h2>
+            <div class="balloon-container">
+                <div class="balloon">
+                    <span class="ja">これ</span><br>
+                    <span class="translation">(이것)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja">それ</span><br>
+                    <span class="translation">(그것)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja">あれ</span><br>
+                    <span class="translation">(저것)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>本<rt>ほん</rt></ruby></span><br>
+                    <span class="translation">(책)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>車<rt>くるま</rt></ruby></span><br>
+                    <span class="translation">(자동차)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>문장 연습하기</h2>
+        <div class="practice-list">
+            <div class="practice-item">
+                1. 이것은 책입니다. <br>
+                ➔ <span class="ja"><span class="blank"></span> は <ruby>本<rt>ほん</rt></ruby>です。</span>
+            </div>
+            <div class="practice-item">
+                2. 그것은 자동차입니다. <br>
+                ➔ <span class="ja">そ れ は <span class="blank"></span> です。</span>
+            </div>
+            <div class="practice-item">
+                3. 저것입니다. <br>
+                ➔ <span class="ja"><span class="blank"></span> です。</span>
+            </div>
+        </div>
+
+        <div class="page-footer">4</div>
+    </div>
+
+
+<!-- ================= PAGE 5 : 문법 설명 (부정형) ================= -->
+    <div class="page">
+        <div class="page-header">BASIC JAPANESE GRAMMAR</div>
+        
+        <h1>제 1과: ~가 아닙니다 (부정형)</h1>
+        
+        <h2>2. <span class="ja">～じゃないです</span> (~이/가 아닙니다)</h2>
+        <p>명사 뒤에 붙어 앞선 사실을 부정하는 정중한 표현입니다. 격식 있는 자리에서 쓰는 <span class="ja">「～ではありません」</span>보다 조금 더 부드럽고 일상 대화에서 자주 쓰이는 구어체 형식의 정중형 표현입니다.</p>
+
+        <div class="point-box">
+            <strong>💡 어떤 상황에서 쓰이나요?</strong>
+            <ul>
+                <li><strong>사실 관계를 바로잡을 때:</strong> 타인의 오해나 잘못된 질문에 대해 친절하고 정중하게 부인할 때 사용합니다.</li>
+                <li><strong>나형용사의 부정형으로도 활용:</strong> 명사뿐만 아니라 나형용사의 기본형 어미(<span class="ja">だ</span>)를 떼고 붙여 '~하지 않습니다'라는 뜻으로도 확장됩니다.</li>
+                <li><strong>일반적인 대화(구어체)에서:</strong> 격식은 차리되 너무 딱딱하지 않은 분위기를 만들 때 가장 선호되는 표현입니다.</li>
+            </ul>
+        </div>
+
+        <h2>대표 예문</h2>
+        <div class="example-sentence">
+            <p class="ja"><ruby>病<rt>びょう</rt></ruby><ruby>気<rt>き</rt></ruby>じゃないです。</p>
+            <p class="translation">뜻: 병(아픈 것)이 아닙니다.</p>
+        </div>
+        <div class="example-sentence">
+            <p class="ja"><ruby>日<rt>に</rt></ruby><ruby>本<rt>ほん</rt></ruby><ruby>人<rt>じん</rt></ruby>じゃないです。</p>
+            <p class="translation">뜻: 일본인이 아닙니다.</p>
+        </div>
+        <div class="example-sentence">
+          <p class="ja"><ruby>私<rt>わたし</rt></ruby>の<ruby>本<rt>ほん</rt></ruby>じゃないです。</p>
+            <p class="translation">뜻: 제 책이 아닙니다.</p>
+        </div>
+
+        <div class="page-footer">5</div>
+    </div>
+
+<!-- ================= PAGE 6 : 연습페이지 (테마: 부정형) ================= -->
+    <div class="page">
+        <div class="page-header">PRACTICE - THEME: NEGATION</div>
+        
+        <h1>연습 페이지: ~이 아닙니다 (<span class="ja">～じゃないです</span>)</h1>
+        <p>앞서 배운 단어들과 부정형 표현을 활용하여 문장을 완성해 보세요!</p>
+
+        <div class="word-section">
+            <h2>오늘 활용할 단어 리마인드</h2>
+            <div class="balloon-container">
+                <div class="balloon">
+                    <span class="ja"><ruby>学<rt>がく</rt></ruby><ruby>生<rt>せい</rt></ruby></span><br>
+                    <span class="translation">(학생)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>会<rt>かい</rt></ruby><ruby>社<rt>しゃ</rt></ruby><ruby>員<rt>いん</rt></ruby></span><br>
+                    <span class="translation">(회사원)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>日<rt>に</rt></ruby><ruby>本<rt>ほん</rt></ruby><ruby>人<rt>じん</rt></ruby></span><br>
+                    <span class="translation">(일본인)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja">이것 (<span class="ja">これ</span>)</span><br>
+                    <span class="translation">저것 (<span class="ja">あれ</span>)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>문장 연습하기</h2>
+        <div class="practice-list">
+            <div class="practice-item">
+                1. 저는 학생이 아닙니다. <br>
+                ➔ <span class="ja"><ruby>私<rt>わたし</rt></ruby>은 <ruby>学<rt>がく</rt></ruby><ruby>生<rt>せい</rt></ruby> <span class="blank"></span> 。</span>
+            </div>
+            <div class="practice-item">
+                2. 다나카 씨는 회사원이 아닙니다. <br>
+                ➔ <span class="ja">田中さんは <ruby>会<rt>かい</rt></ruby><ruby>社<rt>しゃ</rt></ruby><ruby>員<rt>いん</rt></ruby> <span class="blank"></span> 。</span>
+            </div>
+            <div class="practice-item">
+                3. 이것은 일본인의 것이 아닙니다. (일본인이 아닙니다) <br>
+                ➔ <span class="ja">これは <ruby>日<rt>に</rt></ruby><ruby>本<rt>ほん</rt></ruby><ruby>人<rt>じん</rt></ruby> <span class="blank"></span> 。</span>
+            </div>
+            <div class="practice-item">
+                4. 저의 차가 아닙니다. <br>
+                ➔ <span class="ja"><ruby>私<rt>わたし</rt></ruby>の <ruby>車<rt>くるま</rt></ruby> <span class="blank"></span> 。</span>
+            </div>
+        </div>
+
+        <div class="page-footer">6</div>
+    </div>
+
+
+<!-- ================= PAGE 7 : 문법 설명 (~의) ================= -->
+    <div class="page">
+        <div class="page-header">BASIC JAPANESE GRAMMAR</div>
+        
+        <h1>제 1과: 조사 ~의</h1>
+        
+        <h2>3. <span class="ja">～の</span> (~의, ~의 것)</h2>
+        <p>명사와 명사 사이를 연결하여 소유나 소속, 수식 관계를 나타내는 아주 중요한 조사입니다. 또한 뒤에 오는 명사를 생략하여 '~의 것'이라는 대명사 역할도 수행할 수 있습니다.</p>
+
+        <div class="point-box">
+            <strong>💡 어떤 역할을 할까요?</strong>
+            <ul>
+                <li><strong>소유 및 수식 (명사 + の + 명사):</strong> 한국어의 '~의'에 해당합니다. (예: 나의 책, 일본의 수도) 한국어에서는 종종 생략되지만, 일본어에서는 명사와 명사 사이에 반드시 <span class="ja">「の」</span>를 넣는 것이 원칙입니다.</li>
+                <li><strong>소유 대명사 (~의 것):</strong> 문맥상 무엇을 가리키는지 알 수 있을 때, 뒤의 명사를 생략하고 <span class="ja">「～の」</span>만 써서 '~의 것'이라는 뜻을 만듭니다.</li>
+            </ul>
+        </div>
+
+        <h2>대표 예문</h2>
+        <div class="example-sentence">
+            <p class="ja"><ruby>私<rt>わたし</rt></ruby>の<ruby>財<rt>さい</rt></ruby><ruby>布<rt>ふ</rt></ruby>です。</p>
+            <p class="translation">뜻: 제(나의) 지갑입니다.</p>
+        </div>
+        <div class="example-sentence">
+            <p class="ja">これ、<ruby>誰<rt>だれ</rt></ruby>の？</p>
+            <p class="translation">뜻: 이거, 누구 꺼(누구의 것)?</p>
+        </div>
+        <div class="example-sentence">
+            <p class="ja"><ruby>日<rt>に</rt></ruby><ruby>本<rt>ほん</rt></ruby>の<ruby>友<rt>とも</rt></ruby><ruby>達<rt>だち</rt></ruby>です。 </p>
+            <p class="translation">뜻: 일본(의) 친구입니다.</p>
+        </div>
+
+        <div class="page-footer">7</div>
+    </div>
+
+
+    <!-- ================= PAGE 8 : 연습페이지 (테마: 조사 の) ================= -->
+    <div class="page">
+        <div class="page-header">PRACTICE - THEME: PARTICLE NO</div>
+        
+        <h1>연습 페이지: 소유와 수식 (<span class="ja">～の</span>)</h1>
+        <p>새로운 단어들과 함께 명사와 명사를 연결해 보거나, '~의 것'이라는 문장을 완성해 봅시다.</p>
+
+        <div class="word-section">
+            <h2>오늘 활용할 단어</h2>
+            <div class="balloon-container">
+                <div class="balloon">
+                    <span class="ja"><ruby>財<rt>さい</rt></ruby><ruby>布<rt>ふ</rt></ruby></span><br>
+                    <span class="translation">(지갑)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>誰<rt>だれ</rt></ruby></span><br>
+                    <span class="translation">(누구)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>友<rt>とも</rt></ruby><ruby>達<rt>だち</rt></ruby></span><br>
+                    <span class="translation">(친구)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja">かばん</span><br>
+                    <span class="translation">(가방)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>문장 연습하기</h2>
+        <div class="practice-list">
+            <div class="practice-item">
+                1. 이것은 저의 지갑입니다. <br>
+                ➔ <span class="ja">これは <ruby>私<rt>わたし</rt></ruby> <span class="blank"></span> <ruby>財<rt>さい</rt></ruby><ruby>布<rt>ふ</rt></ruby>です。</span>
+            </div>
+            <div class="practice-item">
+                2. 그것은 누구의 가방입니까? (※입니까 = ですか) <br>
+                ➔ <span class="ja">それは <ruby>誰<rt>だれ</rt></ruby> <span class="blank"></span> かばんですか。</span>
+            </div>
+            <div class="practice-item">
+                3. 친구의 것입니다. <br>
+                ➔ <span class="ja"><ruby>友<rt>とも</rt></ruby><ruby>達<rt>だち</rt></ruby> <span class="blank"></span> です。</span>
+            </div>
+            <div class="practice-item">
+                4. 다나카 씨의 차가 아닙니다. <br>
+                ➔ <span class="ja">田中さん <span class="blank"></span> <ruby>車<rt>くるま</rt></ruby>じゃないです。</span>
+            </div>
+        </div>
+
+        <div class="page-footer">8</div>
+    </div>
+
+
+<!-- ================= PAGE 9 : 문법 설명 (~도) ================= -->
+    <div class="page">
+        <div class="page-header">BASIC JAPANESE GRAMMAR</div>
+        
+        <h1>제 1과: 조사 ~도</h1>
+        
+        <h2>4. <span class="ja">～も</span> (~도)</h2>
+        <p>앞서 언급된 내용과 동일하거나 유사한 사실을 추가할 때(동조) 사용하는 조사입니다. 한국어의 조사 '~도'와 쓰임새가 완벽히 일치하여, 격조사(<span class="ja">は</span> 등) 자리에 대신 들어가 문장을 구성합니다.</p>
+
+        <div class="point-box">
+            <strong>💡 어떤 상황에서 쓰이나요?</strong>
+            <ul>
+                <li><strong>의견이나 상황이 같을 때:</strong> "나도 그렇게 생각해", "저도 학생입니다"처럼 상대방 또는 앞선 맥락에 공감하고 동조할 때 사용합니다.</li>
+                <li><strong>대상을 추가할 때:</strong> 하나에 그치지 않고 다른 대상을 포함하여 나열하거나 덧붙일 때 씁니다.</li>
+            </ul>
+        </div>
+
+        <h2>대표 예문</h2>
+        <div class="example-sentence">
+            <p class="ja"><ruby>私<rt>わたし</rt></ruby>も<ruby>行<rt>い</rt></ruby>きます。</p>
+            <p class="translation">뜻: 저도 갑니다.</p>
+        </div>
+        <div class="example-sentence">
+            <p class="ja"><ruby>彼<rt>かれ</rt></ruby>も<ruby>会<rt>かい</rt></ruby><ruby>社<rt>しゃ</rt></ruby><ruby>員<rt>いん</rt></ruby>입니다. </p>
+            <p class="translation">뜻: 그도 회사원입니다.</p>
+        </div>
+        <div class="example-sentence">
+            <p class="ja">これも<ruby>私<rt>わたし</rt></ruby>のじゃないです。</p>
+            <p class="translation">뜻: 이것도 제 것이 아닙니다.</p>
+        </div>
+
+        <div class="page-footer">9</div>
+    </div>
+
+
+    <!-- ================= PAGE 10 : 연습페이지 (테마: 조사 も) ================= -->
+    <div class="page">
+        <div class="page-header">PRACTICE - THEME: PARTICLE MO</div>
+        
+        <h1>연습 페이지: 동조와 추가 (<span class="ja">～も</span>)</h1>
+        <p>앞서 배운 명사들과 부정형, 그리고 소유 표현에 조사 <span class="ja">「も」</span>를 조합하여 문장을 완성해 보세요!</p>
+
+        <div class="word-section">
+            <h2>오늘 활용할 단어</h2>
+            <div class="balloon-container">
+                <div class="balloon">
+                    <span class="ja"><ruby>行<rt>い</rt></ruby>く</span><br>
+                    <span class="translation">(가다)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>彼<rt>かれ</rt></ruby></span><br>
+                    <span class="translation">(그)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja"><ruby>韓<rt>かん</rt></ruby><ruby>国<rt>こく</rt></ruby><ruby>人<rt>じん</rt></ruby></span><br>
+                    <span class="translation">(한국인)</span>
+                </div>
+                <div class="balloon">
+                    <span class="ja">지갑 (<span class="ja"><ruby>財<rt>さい</rt></ruby><ruby>布<rt>ふ</rt></ruby></span>)</span><br>
+                    <span class="translation">선생님 (<span class="ja"><ruby>先<rt>せん</rt></ruby><ruby>生<rt>せい</rt></ruby></span>)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>문장 연습하기</h2>
+        <div class="practice-list">
+            <div class="practice-item">
+                1. 저도 갑니다. <br>
+                ➔ <span class="ja"><ruby>私<rt>わたし</rt></ruby> <span class="blank"></span> <ruby>行<rt>い</rt></ruby>きます。</span>
+            </div>
+            <div class="practice-item">
+                2. 김 씨도 한국인입니다. <br>
+                ➔ <span class="ja">キムさん <span class="blank"></span> <ruby>韓<rt>かん</rt></ruby><ruby>国<rt>こく</rt></ruby><ruby>人<rt>じん</rt></ruby>입니다.</span>
+            </div>
+            <div class="practice-item">
+                3. 그것도 선생님의 것이 아닙니다. <br>
+                ➔ <span class="ja">それ <span class="blank"></span> <ruby>先<rt>せん</rt></ruby><ruby>生<rt>せい</rt></ruby>のじゃないです.</span>
+            </div>
+            <div class="practice-item">
+                4. 이것도 저의 지갑이 아닙니다. <br>
+                ➔ <span class="ja">これ <span class="blank"></span> <ruby>私<rt>わたし</rt></ruby>의 <ruby>財<rt>さい</rt></ruby><ruby>布<rt>ふ</rt></ruby>じゃないです.</span>
+            </div>
+        </div>
+
+        <div class="page-footer">10</div>
+    </div>
+<!-- ================= PAGE 11 : 문법 설명 (~와/과) ================= -->
+    <div class="page">
+      <div class="page-header">BASIC JAPANESE GRAMMAR</div>
+
+      <h1>제 1과: 조사 A하고B( ~와/과)</h1>
+
+      <h2>5. <span class="ja">～と</span> (~와/과)</h2>
+      <p>명사와 명사를 대등하게 열거하거나 연결할 때 사용하는 조사입니다. 한국어의 '~와/과'에 정확히 대응하며, 문장에 언급된 요소를 빠짐없이 전부 나열할 때(완전 열거) 주로 사용됩니다.</p>
+
+      <div class="point-box">
+        <strong>💡 어떤 상황에서 쓰이나요?</strong>
+        <ul>
+          <li><strong>명사를 나열할 때 (명사 + と + 명사):</strong> 대상들을 명확하게 묶어서 표현할 때 씁니다. 한국어는 앞 명사의 받침 유무에 따라 '와'와 '과'를 구별하지만, 일본어는 구분 없이 항상 <span class="ja">「と」</span>만 쓰면 되므로 훨씬 간단합니다.</li>
+          <li><strong>행동을 함께하는 대상을 나타낼 때:</strong> '~와 함께'라는 뜻으로 동사 앞에 결합하여 동반 대상을 표현하기도 합니다.</li>
+          </ul>
+      </div>
+      <div class="point-box">
+       
+        <strong>💡 한국어'하고'와'와/과'와 같은말!</strong>
+        <ul>
+          <li>한국어<strong>'하고'</strong> 와<strong>'와/과'</strong>는 같은말입니다.</li>
+          <li>'하고'는<strong>일상생활에서많이쓰이고</strong>'와/과'는 글을쓸때 사용되는문법입니다. 떄문에 헷갈리지마세요!</li>
+        </ul>
+      </div>
+
+      <h2>대표 예문</h2>
+      <div class="example-sentence">
+        <p class="ja"><ruby>肉<rt>にく</rt></ruby>と<ruby>野<rt>や</rt></ruby><ruby>菜<rt>さい</rt></ruby> (<span class="ja">肉と野菜</span>)</p>
+        <p class="translation">뜻: 고기와 야채</p>
+      </div>
+      <div class="example-sentence">
+        <p class="ja"><ruby>本<rt>ほん</rt></ruby>とペンです。 (<span class="ja">本とペンです。</span>)</p>
+        <p class="translation">뜻: 책과 펜입니다.</p>
+      </div>
+      <div class="example-sentence">
+        <p class="ja"><ruby>友<rt>とも</rt></ruby><ruby>達<rt>だち</rt></ruby>と<ruby>行<rt>い</rt></ruby>きます。 (<span class="ja">友達と行きます。</span>)</p>
+        <p class="translation">뜻: 친구와 갑니다.</p>
+      </div>
+
+      <div class="page-footer">11</div>
+    </div>
+
+
+    <!-- ================= PAGE 12 : 연습페이지 (테마: 조사 と) ================= -->
+    <div class="page">
+      <div class="page-header">PRACTICE - THEME: PARTICLE TO</div>
+
+      <h1>연습 페이지: 열거와 연결 (<span class="ja">～と</span>)</h1>
+      <p>새로 등장한 단어들과 함께 명사들을 나란히 연결하는 문장을 완성해 보세요!</p>
+
+      <div class="word-section">
+        <h2>오늘 활용할 단어</h2>
+        <div class="balloon-container">
+          <div class="balloon">
+            <span class="translation"><span class="ja">고기 <ruby>肉<rt>にく</rt></ruby></span></span><br>
+          </div>
+          <div class="balloon">
+            <span class="translation"><span class="ja">야채 <ruby>野<rt>や</rt></ruby><ruby>菜<rt>さい</rt></ruby></span></span><br>
+          </div>
+          <div class="balloon">
+            <span class="ja">책 <ruby>本<rt>ほん</rt></ruby></span><br> 
+          </div>
+          <div class="balloon">
+            <span class="translation"><span class="ja">의사  <ruby>医<rt>い</rt></ruby><ruby>者<rt>しゃ</rt></ruby></span></span><br>
+          </div>
+          <!--<div class="balloon">
+    <span class="ja"><ruby>野<rt>や</rt></ruby><ruby>菜<rt>さい</rt></ruby></span><br>
+    <span class="translation">(야채)</span>
+  </div>
+  <div class="balloon">
+    <span class="ja">ペン</span><br>
+    <span class="translation">(펜)</span>
+  </div>
+  <div class="balloon">
+    <span class="ja"><ruby>本<rt>ほん</rt></ruby></span>)<br>
+    <span class="translation">(책)</span>
+  </div>
+  <div class="balloon">
+    <span class="ja"><ruby>医<rt>い</rt></ruby><ruby>者<rt>しゃ</rt></ruby></span>)<br>
+    <span class="translation">의사</span>
+  </div>-->
+          <div class="balloon">
+            <span class="translation">친구 (<span class="ja"><ruby>友<rt>とも</rt></ruby><ruby>達<rt>だち</rt></ruby></span>)</span>
+          </div>
+        </div>
+        </div>
+
+        <h2>문장 연습하기</h2>
+        <div class="practice-list">
+            <div class="practice-item">
+                1. 고기와 야채를 먹습니다. (고기와 야채) <br>
+                ➔ <span class="ja"><ruby>肉<rt>にく</rt></ruby> <span class="blank"></span> <ruby>野<rt>や</rt></ruby><ruby>菜<rt>さい</rt></ruby></span>
+            </div>
+            <div class="practice-item">
+                2. 이것은 책과 펜입니다. <br>
+                ➔ <span class="ja">buildこれは <ruby>本<rt>ほん</rt></ruby> <span class="blank"></span> ペンです。</span>
+            </div>
+            <div class="practice-item">
+                3. 다나카 씨와 김 씨는 의사입니다. <br>
+                ➔ <span class="ja">田中さん <span class="blank"></span> キムさんは <ruby>医<rt>い</rt></ruby><ruby>者<rt>しゃ</rt></ruby>입니다.</span>
+            </div>
+            <div class="practice-item">
+                4. 그것은 제 책과 제 가방이 아닙니다. <br>
+                ➔ <span class="ja">それは <ruby>私<rt>わたし</rt></ruby>の <ruby>本<rt>ほん</rt></ruby> <span class="blank"></span> <ruby>私<rt>わたし</rt></ruby>のかばんじゃないです。</span>
+            </div>
+        </div>
+
+        <div class="page-footer">12</div>
+    </div>
+
+
+</body>
+</html>
