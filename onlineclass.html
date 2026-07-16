@@ -7,1286 +7,1401 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>일본어 온라인 클래스</title>
-    <style>
-        /* ================= 전역 변수 및 초기화 ================= */
-        :root {
-            --bg-beige: #F9F6F0;
-            --main-beige: #F1EAE0;
-            --point-brown: #6E5A4B;
-            --border-color: #E5DEC9;
-            --white: #ffffff;
-            --text-dark: #333333;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-beige);
-            color: var(--point-brown);
-            font-family: 'Noto Sans KR', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* 공통 유틸리티 클래스 */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .w-full {
-            width: 100%;
-        }
-
-        /* =================  공통 버튼 및 카드 컴포넌트 ================= */
-        .btn-transparent {
-            background: transparent;
-            border: 2px solid var(--point-brown);
-            color: var(--point-brown);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-            .btn-transparent:hover {
-                background: var(--point-brown);
-                color: var(--white);
-            }
-
-        .card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            border: 1px solid var(--border-color);
-        }
-
-        /* ================= 레이아웃 (헤더, 사이드바, 메인) ================= */
-        header {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0.75rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 40;
-        }
-
-        .header-logo {
-            font-size: 1.125rem;
-            font-weight: bold;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-        }
-
-        .header-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--point-brown);
-        }
-
-        #sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.3);
-            z-index: 40;
-        }
-
-        aside {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 16rem;
-            background-color: var(--white);
-            border-right: 1px solid var(--border-color);
-            padding: 1.5rem;
-            z-index: 50;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-            aside.active {
-                transform: translateX(0);
-            }
-
-        .sidebar-header-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .sidebar-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .sidebar-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--point-brown);
-        }
-
-        .menu-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            opacity: 0.4;
-            padding: 0 0.75rem;
-            margin-bottom: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .student-menu-label {
-            color: #92400e;
-            opacity: 0.6;
-        }
-
-        .nav-btn-wrapper {
-            padding: 1rem 0.5rem 0 0.5rem;
-        }
-
-        .nav-link {
-            display: block;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            color: var(--point-brown);
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-            .nav-link:hover {
-                background-color: var(--main-beige);
-            }
-
-            .nav-link.active-style {
-                font-weight: bold;
-                color: #78350f;
-                background-color: #fef3c7;
-            }
-
-        .btn-logout {
-            border-color: #fca5a5;
-            color: #ef4444;
-        }
-
-            .btn-logout:hover {
-                background: #ef4444;
-            }
-
-        .sidebar-footer {
-            font-size: 0.75rem;
-            opacity: 0.5;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1rem;
-        }
-
-        main {
-            flex: 1;
-            max-width: 80rem;
-            width: 100%;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-        }
-
-        .spa-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            text-align: center;
-        }
-
-        /* =================  메인 자동 슬라이더 영역 ================= */
-        #sec-main {
-            position: relative;
-            overflow: hidden;
-            min-height: 450px;
-            justify-content: center;
-        }
-
-        .slide-container {
-            position: relative;
-            width: 100%;
-            max-width: 64rem;
-            margin: 0 auto;
-        }
-
-        .main-slide {
-            transition: opacity 0.7s ease, transform 0.7s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .slide-active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .slide-inactive {
-            opacity: 0;
-            transform: translateX(32px);
-        }
-
-        .main-slide h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            line-height: 1.4;
-        }
-
-        .main-slide p {
-            font-size: 1rem;
-            opacity: 0.8;
-            line-height: 1.6;
-            max-width: 48rem;
-            margin: 0 auto;
-        }
-
-        .main-btn-wrap {
-            padding-top: 1rem;
-        }
-
-        .btn-large {
-            padding: 0.75rem 2rem;
-            font-size: 1.125rem;
-        }
-
-        /* 코스 스타일 */
-        .course-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .badge-wrap {
-            text-align: center;
-        }
-
-        .badge {
-            display: inline-block;
-            background-color: #b45309;
-            color: var(--white);
-            font-size: 0.75rem;
-            padding: 0.35rem 1rem;
-            border-radius: 9999px;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .course-card h2 {
-            font-size: 0.875rem;
-            font-weight: bold;
-            color: #92400e;
-            letter-spacing: 0.05em;
-        }
-
-        .course-card h3 {
-            font-size: 1.75rem;
-            font-weight: 900;
-            margin-top: 0.25rem;
-        }
-
-        .course-highlight-text {
-            font-weight: 600;
-            color: #4b5563;
-        }
-
-        .course-meta {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #f3f4f6;
-        }
-
-        .meta-tag {
-            font-size: 0.875rem;
-            font-weight: bold;
-            background-color: var(--main-beige);
-            padding: 0.35rem 1rem;
-            border-radius: 0.25rem;
-        }
-
-        .meta-price {
-            font-size: 1.5rem;
-            font-weight: 900;
-        }
-
-        .course-sub-btn-wrap {
-            padding-top: 0.5rem;
-        }
-
-        .btn-small {
-            font-size: 0.875rem;
-        }
-
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
-        }
-
-        .dot {
-            width: 0.625rem;
-            height: 0.625rem;
-            border-radius: 50%;
-            background-color: #d1d5db;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-            .dot.active {
-                background-color: var(--point-brown);
-            }
-
-        /* =================  서브 섹션 스타일 ================= */
-        .section-title {
-            font-size: 1.75rem;
-            font-weight: bold;
-            border-bottom: 2px solid var(--point-brown);
-            padding-bottom: 0.5rem;
-            margin: 0 auto;
-            display: inline-block;
-        }
-
-        .info-main-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            padding: 2rem 0;
-        }
-
-        .info-title {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--point-brown);
-        }
-
-        .info-desc {
-            font-size: 1.125rem;
-            font-weight: 500;
-            color: #451a03;
-            margin-top: 0.5rem;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .grid-2x2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
-
-        .sub-btn-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            max-width: 60rem;
-            margin: 0 auto;
-            padding-top: 1rem;
-        }
-
-            .sub-btn-grid .btn-transparent {
-                padding: 2rem 1.5rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 0.75rem;
-                border-radius: 0.75rem;
-            }
-
-        .sub-btn-icon {
-            font-size: 1.75rem;
-        }
-
-        .sub-btn-title {
-            font-weight: bold;
-            font-size: 1.125rem;
-        }
-
-        .sub-btn-desc {
-            font-size: 0.875rem;
-            opacity: 0.7;
-            font-weight: normal;
-        }
-
-        .info-sub-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            text-align: left;
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .sub-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-        }
-
-        .sub-header-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-
-        .sub-back-btn {
-            font-size: 0.875rem;
-            padding: 0.25rem 0.5rem;
-        }
-
-        .sub-text-wrapper {
-            font-size: 1rem;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .sub-highlight-text {
-            font-weight: 600;
-            color: #78350f;
-        }
-
-        .sub-list {
-            list-style-type: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .sub-target-list {
-            font-size: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .sub-target-item {
-            display: flex;
-            gap: 0.5rem;
-            align-items: flex-start;
-        }
-
-        .ticket-type-card {
-            background-color: var(--bg-beige);
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .ticket-type-title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.125rem;
-        }
-
-        .ticket-type-desc {
-            font-size: 0.875rem;
-            opacity: 0.8;
-        }
-
-        /* 테이블 스타일 */
-        .table-responsive {
-            overflow-x: auto;
-            background-color: var(--white);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border-color);
-            max-width: 72rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        table {
-            width: 100%;
-            min-width: 600px;
-            border-collapse: collapse;
-            text-align: center;
-            font-size: 0.875rem;
-        }
-
-        th, td {
-            padding: 1rem 0.75rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: var(--main-beige);
-            white-space: nowrap;
-            font-size: 1rem;
-        }
-
-        .bg-highlight {
-            background-color: rgba(254, 243, 199, 0.4);
-        }
-
-        .td-bold-time {
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .qa-content {
-            font-size: 1rem;
-            text-align: left;
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-            line-height: 1.6;
-        }
-
-        .qa-q {
-            font-weight: bold;
-            font-size: 1.125rem;
-        }
-
-        .qa-a {
-            margin-top: 0.5rem;
-            opacity: 0.8;
-        }
-
-        .archive-content {
-            padding: 3rem;
-            opacity: 0.4;
-            font-size: 1.125rem;
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* ================= 신규 수업 예약 스타일 ================= */
-        .reserve-layout-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
-            text-align: left;
-        }
-
-        .main-tabs {
-            display: flex;
-            border-bottom: 2px solid var(--border-color);
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .main-tab {
-            padding: 1rem 2rem;
-            font-weight: bold;
-            color: #8a817c;
-            cursor: pointer;
-            border-bottom: 4px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.3s ease;
-            font-size: 1.125rem;
-        }
-
-            .main-tab.active {
-                color: var(--point-brown);
-                border-bottom: 4px solid var(--point-brown);
-            }
-
-        .reserve-info-box {
-            background-color: var(--main-beige);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-            .reserve-info-box ul {
-                margin-top: 0.5rem;
-                padding-left: 1.5rem;
-                color: #555;
-            }
-
-        .flexible-booking-container, .group-booking-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .lesson-type-selector {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .type-btn {
-            flex: 1;
-            padding: 1rem;
-            border: 1px solid var(--border-color);
-            background-color: var(--white);
-            border-radius: 0.5rem;
-            font-weight: bold;
-            color: var(--text-dark);
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-            .type-btn.active {
-                background-color: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-        /* 그룹 예약 특화 스타일 */
-        .day-slide-list {
-            display: flex;
-            gap: 0.75rem;
-            overflow-x: auto;
-            padding-bottom: 1rem;
-        }
-
-        .day-btn {
-            flex: 1;
-            min-width: 5rem;
-            padding: 1rem 0;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            background-color: var(--white);
-            font-weight: bold;
-            cursor: pointer;
-            flex-shrink: 0;
-            font-size: 1rem;
-        }
-
-            .day-btn.active {
-                background-color: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-        /* 주차 선택 탭 (그룹 스케줄표용) */
-        .week-tab-list {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 0.5rem;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
-            text-align: center;
-        }
-
-        .flex-calendar-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
-
-        .flex-calendar-title {
-            font-weight: 800;
-            color: var(--text-dark);
-        }
-
-        .flex-calendar-nav {
-            width: 2.25rem;
-            height: 2.25rem;
-            border: 1px solid var(--border-color);
-            background: var(--white);
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-weight: 800;
-        }
-
-        .cal-head {
-            font-weight: bold;
-            font-size: 0.875rem;
-            color: #8a817c;
-            padding-bottom: 0.75rem;
-        }
-
-        .cal-day {
-            padding: 0.75rem 0;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            background-color: var(--bg-beige);
-            border: 1px solid transparent;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-            .cal-day.available {
-                background-color: #fff7d6;
-                border-color: #ead89b;
-                color: var(--point-brown);
-                font-weight: 800;
-            }
-
-            .cal-day.available::after {
-                content: '';
-                display: block;
-                width: 0.35rem;
-                height: 0.35rem;
-                margin: 0.25rem auto 0;
-                border-radius: 999px;
-                background: var(--point-brown);
-            }
-
-            .cal-day.available:hover {
-                background-color: var(--main-beige);
-            }
-
-            .cal-day.active {
-                background-color: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-            .cal-day.empty {
-                background-color: transparent;
-                cursor: default;
-            }
-
-            .cal-day.disabled {
-                opacity: 0.35;
-                cursor: default;
-            }
-
-        .time-slot-list, .group-time-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .time-slot-row, .group-time-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            background-color: var(--bg-beige);
-            transition: all 0.2s;
-        }
-
-            .time-slot-row:hover, .group-time-row:hover {
-                background-color: var(--main-beige);
-            }
-
-            .time-slot-row.active, .group-time-row.active {
-                border-color: var(--point-brown);
-                background-color: var(--main-beige);
-            }
-
-        .time-text {
-            font-weight: bold;
-            color: var(--point-brown);
-            font-size: 1rem;
-        }
-
-        .status-badge {
-            font-size: 0.875rem;
-            background-color: #10b981;
-            color: white;
-            padding: 0.35rem 0.75rem;
-            border-radius: 0.25rem;
-            font-weight: bold;
-        }
-
-        .btn-confirm {
-            padding: 1rem 2rem;
-            background: var(--point-brown);
-            color: var(--white);
-            font-weight: bold;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s;
-        }
-
-            .btn-confirm:hover {
-                background: #5A483B;
-            }
-
-            .btn-confirm:disabled {
-                background: #d1d5db;
-                cursor: not-allowed;
-            }
-
-        .booking-summary-bar {
-            background-color: var(--point-brown);
-            border-radius: 0.5rem;
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .summary-text-wrap {
-            font-size: 1rem;
-        }
-
-        .summary-label {
-            color: #b7ada5;
-        }
-
-        .summary-value {
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .auto-reg-info {
-            color: #bfa393;
-            font-size: 0.875rem;
-            margin-left: 0.5rem;
-        }
-
-        /* 티켓 구매 메인 */
-        .ticket-main-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            padding: 1.5rem 0;
-        }
-
-        .ticket-main-title {
-            font-size: 1.75rem;
-            font-weight: bold;
-            color: var(--point-brown);
-        }
-
-        .ticket-main-desc {
-            font-size: 1rem;
-            opacity: 0.8;
-            margin-top: 0.25rem;
-        }
-
-        .ticket-grid-wrap {
-            max-width: 60rem;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .ticket-cat-btn {
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            height: 100%;
-        }
-
-        .ticket-cat-icon {
-            font-size: 2rem;
-        }
-
-        .ticket-cat-title {
-            font-size: 1.125rem;
-        }
-
-        /* 티켓 슬라이더 */
-        .ticket-slider-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 48rem;
-            margin: 0 auto;
-            padding: 2rem 0;
-        }
-
-        .btn-circle {
-            width: 3rem;
-            height: 3rem;
-            border: 2px solid var(--point-brown);
-            background: none;
-            border-radius: 50%;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            font-size: 1.25rem;
-        }
-
-            .btn-circle:hover {
-                background-color: var(--point-brown);
-                color: var(--white);
-            }
-
-        .ticket-card-box {
-            width: 100%;
-            padding: 0 1.5rem;
-        }
-
-        .ticket-card {
-            background-color: var(--bg-beige);
-            padding: 2.5rem;
-            border-radius: 0.75rem;
-            border: 2px solid var(--point-brown);
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .ticket-detail-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .ticket-detail-desc {
-            font-size: 1rem;
-            opacity: 0.7;
-            line-height: 1.6;
-        }
-
-        .ticket-detail-price {
-            font-size: 1.75rem;
-            font-weight: 900;
-        }
-
-        .ticket-buy-btn {
-            background: var(--white);
-            font-size: 1rem;
-            padding: 1rem;
-        }
-
-        .slider-indicator {
-            font-size: 1rem;
-            opacity: 0.5;
-        }
-
-        /* 마이페이지 */
-        .mypage-greeting {
-            font-weight: 600;
-            font-size: 1.25rem;
-        }
-
-        .mypage-role-text {
-            color: #92400e;
-            font-weight: bold;
-        }
-
-        .mypage-desc {
-            font-size: 1rem;
-            opacity: 0.75;
-            margin-top: 0.5rem;
-        }
-
-        /* 모달 오버레이 */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(110, 90, 75, 0.4);
-            padding: 0 1rem;
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            width: 100%;
-            max-width: 26rem;
-            padding: 1.25rem 1.5rem;
-            border-radius: 0.75rem;
-            position: relative;
-            border: 2px solid var(--point-brown);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.75rem;
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            cursor: pointer;
-            color: #9ca3af;
-        }
-
-        .modal-content h3 {
-            font-size: 1.125rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .modal-form-body {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .modal-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .modal-content input {
-            width: 100%;
-            border: 1px solid var(--border-color);
-            padding: 0.6rem 0.75rem;
-            border-radius: 0.375rem;
-            background-color: var(--bg-beige);
-            font-size: 0.85rem;
-        }
-
-        .modal-submit-btn {
-            margin-top: 0.5rem;
-        }
-
-        .modal-footer-text {
-            text-align: center;
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 0.5rem;
-        }
-
-        .modal-link-text {
-            font-weight: bold;
-            color: var(--point-brown);
-        }
-
-        /* 디버그 스위치 */
-        .debug-switch {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            background: var(--white);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-            font-size: 0.75rem;
-            z-index: 50;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-            .debug-switch button {
-                border: none;
-                padding: 0.25rem 0.5rem;
-                border-radius: 0.25rem;
-                cursor: pointer;
-            }
-
-        .debug-switch-title {
-            font-weight: bold;
-            margin-bottom: 2px;
-        }
-
-        .btn-debug-guest {
-            background-color: #e5e7eb;
-        }
-
-        .btn-debug-student {
-            background-color: #fde68a;
-        }
-
-        /* 마이페이지 신규 레이아웃 등 추가 스타일 */
-        .mypage-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: 1fr;
-            margin-bottom: 1rem;
-        }
-
-        @media (min-width: 768px) {
-            .mypage-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .money-balance {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 1.5rem;
-        }
-
-        .balance-label {
-            font-size: 0.875rem;
-            font-weight: bold;
-            color: #a16207;
-            letter-spacing: 0.05em;
-        }
-
-        .balance-amount {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--point-brown);
-            margin-top: 0.25rem;
-        }
-
-        .mini-stat-list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .mini-stat {
-            background-color: var(--white);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            gap: 0.5rem;
-        }
-
-        /* 충전 모달 특화 스타일 */
-        .bank-info-box {
-            background-color: var(--main-beige);
-            padding: 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .charge-amount-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .charge-amount-btn {
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            background: var(--white);
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-        }
-
-            .charge-amount-btn.active {
-                background: var(--point-brown);
-                color: var(--white);
-                border-color: var(--point-brown);
-            }
-
-        /* ================= 미디어 쿼리 (데스크탑 확장) ================= */
-        @media (min-width: 768px) {
-            body {
-                flex-direction: row;
-            }
-
-            header {
-                display: none;
-            }
-
-            aside {
-                position: sticky;
-                transform: translateX(0);
-                height: 100vh;
-            }
-
-            .sidebar-close {
-                display: none;
-            }
-
-            .main-slide h1 {
-                font-size: 2.25rem;
-            }
-
-            .main-slide p {
-                font-size: 1.125rem;
-            }
-
-            .course-card {
-                padding: 4rem;
-            }
-
-                .course-card h2 {
-                    font-size: 1rem;
-                }
-
-                .course-card h3 {
-                    font-size: 2.25rem;
-                }
-
-            .course-highlight-text {
-                font-size: 1.25rem;
-            }
-
-            .meta-price {
-                font-size: 2rem;
-            }
-
-            .grid-3 {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .grid-2 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .sub-btn-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .course-meta {
-                flex-direction: row;
-                justify-content: center;
-                gap: 1.5rem;
-            }
-
-            table {
-                font-size: 1.125rem;
-            }
-        }
-/*        마이페에지접기*/
+		<style>
+			:root {
+				--bg-beige: #F9F6F0;
+				--main-beige: #F1EAE0;
+				--point-brown: #6E5A4B;
+				--border-color: #E5DEC9;
+				--white: #ffffff;
+				--text-dark: #333333;
+				--accent-blue: #0369a1;
+				--accent-light: #e0f2fe;
+			}
+
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				background-color: var(--bg-beige);
+				color: var(--point-brown);
+				font-family: 'Noto Sans KR', sans-serif;
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+			}
+
+			/* 공통 유틸리티 클래스 */
+			.hidden {
+				display: none !important;
+			}
+
+			.text-center {
+				text-align: center;
+			}
+
+			.w-full {
+				width: 100%;
+			}
+
+			.btn-transparent {
+				background: transparent;
+				border: 2px solid var(--point-brown);
+				color: var(--point-brown);
+				padding: 0.5rem 1rem;
+				border-radius: 0.5rem;
+				font-weight: 600;
+				font-size: 0.875rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+				.btn-transparent:hover {
+					background: var(--point-brown);
+					color: var(--white);
+				}
+
+			.card {
+				background-color: var(--white);
+				padding: 1.5rem;
+				border-radius: 0.75rem;
+				border: 1px solid var(--border-color);
+			}
+
+			header {
+				background-color: var(--white);
+				border-bottom: 1px solid var(--border-color);
+				padding: 0.75rem 1rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				position: sticky;
+				top: 0;
+				z-index: 40;
+			}
+
+			.header-logo {
+				font-size: 1.125rem;
+				font-weight: bold;
+				letter-spacing: 0.05em;
+				cursor: pointer;
+			}
+
+			.header-toggle {
+				background: none;
+				border: none;
+				font-size: 1.5rem;
+				cursor: pointer;
+				color: var(--point-brown);
+			}
+
+			#sidebar-overlay {
+				position: fixed;
+				inset: 0;
+				background-color: rgba(110, 90, 75, 0.2);
+				z-index: 40;
+			}
+
+			/* 사이드바 flex 배치 변경: SNS 및 로그인을 하단으로 고정 */
+			aside {
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				width: 16rem;
+				background-color: var(--white);
+				border-right: 1px solid var(--border-color);
+				padding: 1.5rem;
+				z-index: 50;
+				transform: translateX(-100%);
+				transition: transform 0.3s ease-in-out;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				height: 100vh;
+			}
+
+				aside.active {
+					transform: translateX(0);
+				}
+
+			.sidebar-top {
+				flex-grow: 1;
+				overflow-y: auto;
+			}
+
+			.sidebar-bottom {
+				border-top: 1px solid var(--border-color);
+				padding-top: 1.25rem;
+				margin-top: auto;
+			}
+
+			.sidebar-header-box {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 2rem;
+			}
+
+			.sidebar-title {
+				font-size: 1.25rem;
+				font-weight: bold;
+				cursor: pointer;
+			}
+
+			.sidebar-close {
+				background: none;
+				border: none;
+				font-size: 1.5rem;
+				font-weight: bold;
+				cursor: pointer;
+				color: var(--point-brown);
+			}
+
+			.menu-label {
+				font-size: 0.75rem;
+				font-weight: 600;
+				opacity: 0.4;
+				padding: 0 0.75rem;
+				margin-bottom: 0.5rem;
+				margin-top: 1rem;
+			}
+
+			.student-menu-label {
+				color: #92400e;
+				opacity: 0.6;
+			}
+
+			.nav-btn-wrapper {
+				padding: 0.5rem 0 0 0;
+			}
+
+			.nav-link {
+				display: block;
+				padding: 0.75rem 1rem;
+				border-radius: 0.5rem;
+				text-decoration: none;
+				color: var(--point-brown);
+				font-weight: 500;
+				transition: all 0.2s;
+				border-left: 4px solid transparent;
+			}
+
+				.nav-link:hover {
+					/*					background-color: var(--main-beige);*/
+					background-color: #fef3c7;
+					 color: #78350f;
+					font-weight: bold;
+					 border-left: 4px solid #f59e0b;
+				}
+
+				.nav-link.active-style {
+					background-color: #fef3c7;
+					color: #78350f;
+					font-weight: bold;
+					border-left: 4px solid #f59e0b;
+					padding-left: 1.2rem;
+				}
+
+			.btn-logout {
+				/*				border-color: #fca5a5;
+				color: #ef4444;*/
+				font-weight: bold;
+				 color: #78350f;
+				background-color: #fef3c7;
+				 border-left: 4px solid #f59e0b;
+			}
+
+				.btn-logout:hover {
+					background: #ef4444;
+					color: var(--white);
+				}
+
+			.sidebar-footer {
+				font-size: 0.75rem;
+				opacity: 0.5;
+				text-align: center;
+				margin-top: 1rem;
+			}
+
+			main {
+				flex: 1;
+				max-width: 80rem;
+				width: 100%;
+				margin: 0 auto;
+				padding: 3rem 1.5rem;
+			}
+
+			.spa-section {
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
+				text-align: center;
+			}
+
+			#sec-main {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 40px;
+				padding: 20px 16px;
+				max-width: 1000px;
+				margin: 0 auto;
+			}
+
+			.slide-container {
+				width: 100%;
+				max-width: 750px;
+				min-height: 280px;
+				margin-bottom: 10px;
+				background-color: var(--white);
+				border: 2.5px solid var(--border-color);
+				border-radius: 1.5rem;
+				box-shadow: 0 10px 25px rgba(110, 90, 75, 0.08);
+				overflow: hidden;
+				position: relative;
+			}
+
+			.main-slide {
+				padding: 30px 24px;
+				transition: opacity 0.7s ease, transform 0.7s ease;
+				display: flex;
+				flex-direction: column;
+				gap: 1.25rem;
+			}
+
+			.slide-active {
+				opacity: 1;
+				transform: translateX(0);
+			}
+
+			.slide-inactive {
+				opacity: 0;
+				transform: translateX(32px);
+			}
+
+			.main-slide h1 {
+				font-size: 1.5rem;
+				font-weight: 800;
+				line-height: 1.4;
+			}
+
+			.main-slide p {
+				font-size: 1rem;
+				opacity: 0.85;
+				line-height: 1.6;
+				max-width: 48rem;
+				margin: 0 auto;
+				color: var(--text-dark);
+			}
+
+			.main-btn-wrap {
+				padding-top: 0.5rem;
+			}
+
+			.btn-large {
+				padding: 0.75rem 2rem;
+				font-size: 1.125rem;
+			}
+
+			.badge-wrap {
+				text-align: center;
+			}
+
+			.badge {
+				display: inline-block;
+				background-color: var(--point-brown);
+				color: var(--white);
+				font-size: 0.75rem;
+				padding: 0.35rem 1rem;
+				border-radius: 9999px;
+				font-weight: bold;
+				margin-bottom: 0.5rem;
+			}
+
+			.slider-dots {
+				display: flex;
+				justify-content: center;
+				gap: 0.625rem;
+				margin-top: 0.5rem;
+			}
+
+			.dot {
+				width: 0.625rem;
+				height: 0.625rem;
+				border-radius: 50%;
+				background-color: #E2DDD5;
+				border: none;
+				cursor: pointer;
+				transition: background-color 0.3s, transform 0.2s;
+			}
+
+				.dot:hover {
+					transform: scale(1.15);
+				}
+
+				.dot.active {
+					background-color: var(--point-brown);
+				}
+
+			.about-section {
+				width: 100%;
+				max-width: 750px;
+				background-color: var(--white);
+				border-radius: 1.5rem;
+				padding: 35px 24px;
+				box-sizing: border-box;
+				border: 2px solid var(--border-color);
+				color: var(--text-dark);
+				text-align: center;
+				box-shadow: 0 8px 24px rgba(110, 90, 75, 0.05);
+			}
+
+				.about-section h2 {
+					font-size: 22px;
+					color: var(--point-brown);
+					margin-top: 0;
+					margin-bottom: 15px;
+					font-weight: 700;
+				}
+
+				.about-section p {
+					font-size: 15px;
+					line-height: 1.6;
+					color: var(--point-brown);
+					opacity: 0.9;
+					margin: 0 0 20px 0;
+				}
+
+			.about-features {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 15px;
+				margin-top: 25px;
+			}
+
+			.feature-item {
+				background: var(--bg-beige);
+				padding: 20px 15px;
+				border-radius: 1rem;
+				border: 1px solid var(--border-color);
+			}
+
+				.feature-item h4 {
+					margin: 0 0 8px 0;
+					color: var(--point-brown);
+					font-size: 15px;
+					font-weight: bold;
+				}
+
+				.feature-item p {
+					font-size: 13px;
+					margin: 0;
+					color: #7A6F65;
+					line-height: 1.4;
+				}
+
+			.review-slider-section {
+				width: 100%;
+				overflow: hidden;
+				position: relative;
+				padding: 25px 0;
+				background-color: transparent;
+			}
+
+			.review-slider-title {
+				text-align: center;
+				color: var(--point-brown);
+				font-size: 20px;
+				margin-bottom: 20px;
+				font-weight: bold;
+			}
+
+			.card-slider {
+				width: 100%;
+				overflow: hidden;
+				position: relative;
+			}
+
+				/* 좌우 다크 섀도우를 베이지 그라데이션 마스크로 교체 */
+				.card-slider::before,
+				.card-slider::after {
+					content: "";
+					position: absolute;
+					top: 0;
+					width: 100px;
+					height: 100%;
+					z-index: 2;
+					pointer-events: none;
+				}
+
+				.card-slider::before {
+					left: 0;
+					background: linear-gradient(to right, var(--bg-beige), rgba(249, 246, 240, 0));
+				}
+
+				.card-slider::after {
+					right: 0;
+					background: linear-gradient(to left, var(--bg-beige), rgba(249, 246, 240, 0));
+				}
+
+			.card-track {
+				display: flex;
+				gap: 20px;
+				width: max-content;
+				animation: infiniteScroll 30s linear infinite;
+			}
+
+			.card-slider:hover .card-track {
+				animation-play-state: paused;
+			}
+
+			/* 후기 카드: 다크 아크릴에서 포근한 감성의 크림화이트 카드로 변경 */
+			.comment-card {
+				width: 290px;
+				flex-shrink: 0;
+				padding: 20px;
+				border-radius: 1.25rem;
+				background: var(--white);
+				border: 2px solid var(--border-color);
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				color: var(--text-dark);
+				box-shadow: 0 8px 20px rgba(110, 90, 75, 0.05);
+				text-align: left;
+			}
+
+			.card-title {
+				font-size: 13px;
+				font-weight: bold;
+				color: var(--point-brown);
+			}
+
+			.comment-input {
+				width: 100%;
+				border: none;
+				background: transparent;
+				resize: none;
+				outline: none;
+				font-size: 13.5px;
+				color: var(--text-dark);
+				line-height: 1.5;
+				min-height: 54px;
+				font-family: inherit;
+			}
+
+				.comment-input::placeholder {
+					color: #bfa393;
+				}
+
+			.card-footer {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 11px;
+				color: #8A7E72;
+				border-top: 1px solid var(--border-color);
+				padding-top: 10px;
+			}
+
+			.comment-btn {
+				padding: 4px 12px;
+				font-size: 11px;
+				font-weight: bold;
+				border-radius: 999px;
+				border: 1px solid var(--point-brown);
+				background: var(--main-beige);
+				color: var(--point-brown);
+				cursor: pointer;
+				transition: all 0.2s ease;
+			}
+
+				.comment-btn:hover {
+					background-color: var(--point-brown);
+					color: var(--white);
+				}
+
+			@keyframes infiniteScroll {
+				0% {
+					transform: translateX(0);
+				}
+
+				100% {
+					transform: translateX(-930px);
+				}
+			}
+
+			.sidebar-sns-wrap {
+				display: flex;
+				justify-content: center;
+				gap: 15px;
+				margin: 10px 0 15px 0;
+				padding: 0 15px;
+			}
+
+			.sns-link {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 36px;
+				height: 36px;
+				border-radius: 50%;
+				background: var(--main-beige);
+				color: var(--point-brown);
+				text-decoration: none;
+				font-size: 14px;
+				transition: background 0.2s, transform 0.2s;
+				border: 1px solid var(--border-color);
+			}
+
+				.sns-link:hover {
+					background: var(--point-brown);
+					color: var(--white);
+					transform: translateY(-2px);
+				}
+
+			/* 서브 섹션 스타일 */
+			.section-title {
+				font-size: 1.75rem;
+				font-weight: bold;
+				border-bottom: 2px solid var(--point-brown);
+				padding-bottom: 0.5rem;
+				margin: 0 auto;
+				display: inline-block;
+			}
+
+			.info-main-container {
+				display: flex;
+				flex-direction: column;
+				gap: 2rem;
+				padding: 2rem 0;
+			}
+
+			.info-title {
+				font-size: 2rem;
+				font-weight: 900;
+				color: var(--point-brown);
+			}
+
+			.info-desc {
+				font-size: 1.125rem;
+				font-weight: 500;
+				color: #451a03;
+				margin-top: 0.5rem;
+			}
+
+			.grid-3 {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 1rem;
+			}
+
+			.grid-2 {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 1rem;
+			}
+
+			.grid-2x2 {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 1.5rem;
+			}
+
+			.sub-btn-grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 1.5rem;
+				max-width: 60rem;
+				margin: 0 auto;
+				padding-top: 1rem;
+			}
+
+				.sub-btn-grid .btn-transparent {
+					padding: 2rem 1.5rem;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: 0.75rem;
+					border-radius: 0.75rem;
+				}
+
+			.sub-btn-icon {
+				font-size: 1.75rem;
+			}
+
+			.sub-btn-title {
+				font-weight: bold;
+				font-size: 1.125rem;
+			}
+
+			.sub-btn-desc {
+				font-size: 0.875rem;
+				opacity: 0.7;
+				font-weight: normal;
+			}
+
+			.info-sub-panel {
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
+				text-align: left;
+				max-width: 60rem;
+				margin: 0 auto;
+				width: 100%;
+			}
+
+			.sub-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				border-bottom: 1px solid var(--border-color);
+				padding-bottom: 0.75rem;
+			}
+
+			.sub-header-title {
+				font-size: 1.25rem;
+				font-weight: bold;
+			}
+
+			.sub-back-btn {
+				font-size: 0.875rem;
+				padding: 0.25rem 0.5rem;
+			}
+
+			.sub-text-wrapper {
+				font-size: 1rem;
+				line-height: 1.6;
+				display: flex;
+				flex-direction: column;
+				gap: 1.25rem;
+			}
+
+			.sub-highlight-text {
+				font-weight: 600;
+				color: #78350f;
+			}
+
+			.sub-list {
+				list-style-type: none;
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+			}
+
+			.sub-target-list {
+				font-size: 1rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+			}
+
+			.sub-target-item {
+				display: flex;
+				gap: 0.5rem;
+				align-items: flex-start;
+			}
+
+			.ticket-type-card {
+				background-color: var(--bg-beige);
+				text-align: center;
+				padding: 2rem;
+			}
+
+			.ticket-type-title {
+				font-weight: bold;
+				margin-bottom: 0.5rem;
+				font-size: 1.125rem;
+			}
+
+			.ticket-type-desc {
+				font-size: 0.875rem;
+				opacity: 0.8;
+			}
+
+			.table-responsive {
+				overflow-x: auto;
+				background-color: var(--white);
+				border-radius: 0.75rem;
+				border: 1px solid var(--border-color);
+				max-width: 72rem;
+				margin: 0 auto;
+				width: 100%;
+			}
+
+			table {
+				width: 100%;
+				min-width: 600px;
+				border-collapse: collapse;
+				text-align: center;
+				font-size: 0.875rem;
+			}
+
+			th, td {
+				padding: 1rem 0.75rem;
+				border-bottom: 1px solid var(--border-color);
+			}
+
+			th {
+				background-color: var(--main-beige);
+				white-space: nowrap;
+				font-size: 1rem;
+			}
+
+			.bg-highlight {
+				background-color: rgba(254, 243, 199, 0.4);
+			}
+
+			.td-bold-time {
+				font-weight: 600;
+				white-space: nowrap;
+			}
+
+			.qa-content {
+				font-size: 1rem;
+				text-align: left;
+				max-width: 60rem;
+				margin: 0 auto;
+				width: 100%;
+				line-height: 1.6;
+			}
+
+			.qa-q {
+				font-weight: bold;
+				font-size: 1.125rem;
+			}
+
+			.qa-a {
+				margin-top: 0.5rem;
+				opacity: 0.8;
+			}
+
+			.archive-content {
+				padding: 3rem;
+				opacity: 0.4;
+				font-size: 1.125rem;
+				max-width: 60rem;
+				margin: 0 auto;
+				width: 100%;
+			}
+
+			.reserve-layout-container {
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
+				max-width: 900px;
+				margin: 0 auto;
+				width: 100%;
+				text-align: left;
+			}
+
+			.main-tabs {
+				display: flex;
+				border-bottom: 2px solid var(--border-color);
+				gap: 1rem;
+				justify-content: center;
+			}
+
+			.main-tab {
+				padding: 1rem 2rem;
+				font-weight: bold;
+				color: #8a817c;
+				cursor: pointer;
+				border-bottom: 4px solid transparent;
+				margin-bottom: -2px;
+				transition: all 0.3s ease;
+				font-size: 1.125rem;
+			}
+
+				.main-tab.active {
+					color: var(--point-brown);
+					border-bottom: 4px solid var(--point-brown);
+				}
+
+			.reserve-info-box {
+				background-color: var(--main-beige);
+				border-radius: 0.5rem;
+				padding: 1.5rem;
+				font-size: 1rem;
+				line-height: 1.6;
+			}
+
+				.reserve-info-box ul {
+					margin-top: 0.5rem;
+					padding-left: 1.5rem;
+					color: #555;
+				}
+
+			.flexible-booking-container, .group-booking-container {
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
+			}
+
+			.lesson-type-selector {
+				display: flex;
+				gap: 1rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.type-btn {
+				flex: 1;
+				padding: 1rem;
+				border: 1px solid var(--border-color);
+				background-color: var(--white);
+				border-radius: 0.5rem;
+				font-weight: bold;
+				color: var(--text-dark);
+				cursor: pointer;
+				font-size: 1rem;
+			}
+
+				.type-btn.active {
+					background-color: var(--point-brown);
+					color: var(--white);
+					border-color: var(--point-brown);
+				}
+
+			.day-slide-list {
+				display: flex;
+				gap: 0.75rem;
+				overflow-x: auto;
+				padding-bottom: 1rem;
+			}
+
+			.day-btn {
+				flex: 1;
+				min-width: 5rem;
+				padding: 1rem 0;
+				text-align: center;
+				border: 1px solid var(--border-color);
+				border-radius: 0.5rem;
+				background-color: var(--white);
+				font-weight: bold;
+				cursor: pointer;
+				flex-shrink: 0;
+				font-size: 1rem;
+			}
+
+				.day-btn.active {
+					background-color: var(--point-brown);
+					color: var(--white);
+					border-color: var(--point-brown);
+				}
+
+			.week-tab-list {
+				display: flex;
+				gap: 0.5rem;
+				justify-content: center;
+				flex-wrap: wrap;
+				margin-bottom: 0.5rem;
+			}
+
+			.calendar-grid {
+				display: grid;
+				grid-template-columns: repeat(7, 1fr);
+				gap: 0.5rem;
+				text-align: center;
+			}
+
+			.flex-calendar-toolbar {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 0.75rem;
+			}
+
+			.flex-calendar-title {
+				font-weight: 800;
+				color: var(--text-dark);
+			}
+
+			.flex-calendar-nav {
+				width: 2.25rem;
+				height: 2.25rem;
+				border: 1px solid var(--border-color);
+				background: var(--white);
+				border-radius: 0.375rem;
+				cursor: pointer;
+				font-weight: 800;
+			}
+
+			.cal-head {
+				font-weight: bold;
+				font-size: 0.875rem;
+				color: #8a817c;
+				padding-bottom: 0.75rem;
+			}
+
+			.cal-day {
+				padding: 0.75rem 0;
+				border-radius: 0.25rem;
+				cursor: pointer;
+				background-color: var(--bg-beige);
+				border: 1px solid transparent;
+				font-size: 1rem;
+				font-weight: 500;
+			}
+
+				.cal-day.available {
+					background-color: #fff7d6;
+					border-color: #ead89b;
+					color: var(--point-brown);
+					font-weight: 800;
+				}
+
+					.cal-day.available::after {
+						content: '';
+						display: block;
+						width: 0.35rem;
+						height: 0.35rem;
+						margin: 0.25rem auto 0;
+						border-radius: 999px;
+						background: var(--point-brown);
+					}
+
+					.cal-day.available:hover {
+						background-color: var(--main-beige);
+					}
+
+				.cal-day.active {
+					background-color: var(--point-brown);
+					color: var(--white);
+					border-color: var(--point-brown);
+				}
+
+				.cal-day.empty {
+					background-color: transparent;
+					cursor: default;
+				}
+
+				.cal-day.disabled {
+					opacity: 0.35;
+					cursor: default;
+				}
+
+			.time-slot-list, .group-time-list {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.time-slot-row, .group-time-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 1.25rem 1.5rem;
+				border: 1px solid var(--border-color);
+				border-radius: 0.5rem;
+				cursor: pointer;
+				background-color: var(--bg-beige);
+				transition: all 0.2s;
+			}
+
+				.time-slot-row:hover, .group-time-row:hover {
+					background-color: var(--main-beige);
+				}
+
+				.time-slot-row.active, .group-time-row.active {
+					border-color: var(--point-brown);
+					background-color: var(--main-beige);
+				}
+
+			.time-text {
+				font-weight: bold;
+				color: var(--point-brown);
+				font-size: 1rem;
+			}
+
+			.status-badge {
+				font-size: 0.875rem;
+				background-color: #10b981;
+				color: white;
+				padding: 0.35rem 0.75rem;
+				border-radius: 0.25rem;
+				font-weight: bold;
+			}
+
+			.btn-confirm {
+				padding: 1rem 2rem;
+				background: var(--point-brown);
+				color: var(--white);
+				font-weight: bold;
+				border: none;
+				border-radius: 0.5rem;
+				cursor: pointer;
+				font-size: 1rem;
+				transition: background 0.3s;
+			}
+
+				.btn-confirm:hover {
+					background: #5A483B;
+				}
+
+				.btn-confirm:disabled {
+					background: #d1d5db;
+					cursor: not-allowed;
+				}
+
+			.booking-summary-bar {
+				background-color: var(--point-brown);
+				border-radius: 0.5rem;
+				padding: 1.25rem 1.5rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				flex-wrap: wrap;
+				gap: 1rem;
+			}
+
+			.summary-text-wrap {
+				font-size: 1rem;
+			}
+
+			.summary-label {
+				color: #b7ada5;
+			}
+
+			.summary-value {
+				color: #fff;
+				font-weight: bold;
+			}
+
+			.auto-reg-info {
+				color: #bfa393;
+				font-size: 0.875rem;
+				margin-left: 0.5rem;
+			}
+
+			.ticket-main-container {
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
+				padding: 1.5rem 0;
+			}
+
+			.ticket-main-title {
+				font-size: 1.75rem;
+				font-weight: bold;
+				color: var(--point-brown);
+			}
+
+			.ticket-main-desc {
+				font-size: 1rem;
+				opacity: 0.8;
+				margin-top: 0.25rem;
+			}
+
+			.ticket-grid-wrap {
+				max-width: 60rem;
+				margin: 0 auto;
+				width: 100%;
+			}
+
+			.ticket-cat-btn {
+				padding: 2rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 0.75rem;
+				height: 100%;
+			}
+
+			.ticket-cat-icon {
+				font-size: 2rem;
+			}
+
+			.ticket-cat-title {
+				font-size: 1.125rem;
+			}
+
+			.ticket-slider-wrapper {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				max-width: 48rem;
+				margin: 0 auto;
+				padding: 2rem 0;
+			}
+
+			.btn-circle {
+				width: 3rem;
+				height: 3rem;
+				border: 2px solid var(--point-brown);
+				background: none;
+				border-radius: 50%;
+				font-weight: bold;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.3s;
+				font-size: 1.25rem;
+			}
+
+				.btn-circle:hover {
+					background-color: var(--point-brown);
+					color: var(--white);
+				}
+
+			.ticket-card-box {
+				width: 100%;
+				padding: 0 1.5rem;
+			}
+
+			.ticket-card {
+				background-color: var(--bg-beige);
+				padding: 2.5rem;
+				border-radius: 0.75rem;
+				border: 2px solid var(--point-brown);
+				display: flex;
+				flex-direction: column;
+				gap: 1.25rem;
+			}
+
+			.ticket-detail-title {
+				font-size: 1.5rem;
+				font-weight: bold;
+			}
+
+			.ticket-detail-desc {
+				font-size: 1rem;
+				opacity: 0.7;
+				line-height: 1.6;
+			}
+
+			.ticket-detail-price {
+				font-size: 1.75rem;
+				font-weight: 900;
+			}
+
+			.ticket-buy-btn {
+				background: var(--white);
+				font-size: 1rem;
+				padding: 1rem;
+			}
+
+			.slider-indicator {
+				font-size: 1rem;
+				opacity: 0.5;
+			}
+
+			.mypage-greeting {
+				font-weight: 600;
+				font-size: 1.25rem;
+			}
+
+			.mypage-role-text {
+				color: #92400e;
+				font-weight: bold;
+			}
+
+			.mypage-desc {
+				font-size: 1rem;
+				opacity: 0.75;
+				margin-top: 0.5rem;
+			}
+
+			.modal-overlay {
+				position: fixed;
+				inset: 0;
+				z-index: 100;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: rgba(110, 90, 75, 0.4);
+				padding: 0 1rem;
+			}
+
+			.modal-content {
+				background-color: var(--white);
+				width: 100%;
+				max-width: 26rem;
+				padding: 1.25rem 1.5rem;
+				border-radius: 0.75rem;
+				position: relative;
+				border: 2px solid var(--point-brown);
+			}
+
+			.modal-close {
+				position: absolute;
+				top: 0.5rem;
+				right: 0.75rem;
+				background: none;
+				border: none;
+				font-size: 1.25rem;
+				cursor: pointer;
+				color: #9ca3af;
+			}
+
+			.modal-content h3 {
+				font-size: 1.125rem;
+				font-weight: bold;
+				text-align: center;
+				margin-bottom: 0.75rem;
+				letter-spacing: 0.05em;
+			}
+
+			.modal-form-body {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+			}
+
+			.modal-label {
+				font-size: 0.75rem;
+				font-weight: 600;
+			}
+
+			.modal-content input {
+				width: 100%;
+				border: 1px solid var(--border-color);
+				padding: 0.6rem 0.75rem;
+				border-radius: 0.375rem;
+				background-color: var(--bg-beige);
+				font-size: 0.85rem;
+			}
+
+			.modal-submit-btn {
+				margin-top: 0.5rem;
+			}
+
+			.modal-footer-text {
+				text-align: center;
+				font-size: 0.75rem;
+				opacity: 0.7;
+				margin-top: 0.5rem;
+			}
+
+			.modal-link-text {
+				font-weight: bold;
+				color: var(--point-brown);
+			}
+
+			.debug-switch {
+				position: fixed;
+				bottom: 1rem;
+				right: 1rem;
+				background: var(--white);
+				padding: 0.75rem;
+				border-radius: 0.5rem;
+				border: 1px solid var(--border-color);
+				font-size: 0.75rem;
+				z-index: 50;
+				display: flex;
+				flex-direction: column;
+				gap: 0.25rem;
+			}
+
+				.debug-switch button {
+					border: none;
+					padding: 0.25rem 0.5rem;
+					border-radius: 0.25rem;
+					cursor: pointer;
+				}
+
+			.debug-switch-title {
+				font-weight: bold;
+				margin-bottom: 2px;
+			}
+
+			.btn-debug-guest {
+				background-color: #e5e7eb;
+			}
+
+			.btn-debug-student {
+				background-color: #fde68a;
+			}
+
+			.mypage-grid {
+				display: grid;
+				gap: 1rem;
+				grid-template-columns: 1fr;
+				margin-bottom: 1rem;
+			}
+
+			@media (min-width: 768px) {
+				.mypage-grid {
+					grid-template-columns: 1fr 1fr;
+				}
+			}
+
+			.money-balance {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				gap: 1.5rem;
+			}
+
+			.balance-label {
+				font-size: 0.875rem;
+				font-weight: bold;
+				color: #a16207;
+				letter-spacing: 0.05em;
+			}
+
+			.balance-amount {
+				font-size: 2.5rem;
+				font-weight: 900;
+				color: var(--point-brown);
+				margin-top: 0.25rem;
+			}
+
+			.mini-stat-list {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1rem;
+				margin-bottom: 1rem;
+			}
+
+			.mini-stat {
+				background-color: var(--white);
+				padding: 1rem;
+				border-radius: 0.5rem;
+				border: 1px solid var(--border-color);
+				display: flex;
+				flex-direction: column;
+				align-items: start;
+				gap: 0.5rem;
+			}
+
+			.bank-info-box {
+				background-color: var(--main-beige);
+				padding: 1rem;
+				border-radius: 0.375rem;
+				font-size: 0.875rem;
+				text-align: center;
+				margin-bottom: 1rem;
+				line-height: 1.5;
+			}
+
+			.charge-amount-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0.5rem;
+				margin-bottom: 0.75rem;
+			}
+
+			.charge-amount-btn {
+				padding: 0.75rem;
+				border: 1px solid var(--border-color);
+				background: var(--white);
+				border-radius: 0.375rem;
+				cursor: pointer;
+				font-size: 0.875rem;
+			}
+
+				.charge-amount-btn.active {
+					background: var(--point-brown);
+					color: var(--white);
+					border-color: var(--point-brown);
+				}
 
 			.collapsible-header {
 				display: flex;
@@ -1327,6 +1442,242 @@
 				font-size: 0.85rem;
 			}
 
+			@media (min-width: 768px) {
+				body {
+					flex-direction: row;
+				}
+
+				header {
+					display: none;
+				}
+
+				aside {
+					position: sticky;
+					transform: translateX(0);
+					height: 100vh;
+				}
+
+				.sidebar-close {
+					display: none;
+				}
+
+				.main-slide h1 {
+					font-size: 2rem;
+				}
+
+				.grid-3 {
+					grid-template-columns: repeat(3, 1fr);
+				}
+
+				.grid-2 {
+					grid-template-columns: repeat(2, 1fr);
+				}
+
+				.sub-btn-grid {
+					grid-template-columns: repeat(3, 1fr);
+				}
+
+				table {
+					font-size: 1.125rem;
+				}
+			}
+
+			/* 돌발 캐릭터 컨테이너 */
+			#quiz-mascot {
+				position: fixed;
+				bottom: 80px;
+				right: 25px;
+				z-index: 90;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				cursor: pointer;
+				animation: bounceMascot 2s infinite ease-in-out;
+				transition: opacity 0.5s ease;
+			}
+
+			.quiz-bubble {
+				background-color: var(--white);
+				border: 2px solid var(--point-brown);
+				border-radius: 1rem;
+				padding: 0.5rem 1rem;
+				font-size: 0.8rem;
+				font-weight: bold;
+				color: var(--point-brown);
+				box-shadow: 0 4px 10px rgba(110, 90, 75, 0.1);
+				margin-bottom: 8px;
+				white-space: nowrap;
+				position: relative;
+			}
+
+				.quiz-bubble::after {
+					content: '';
+					position: absolute;
+					bottom: -8px;
+					right: 20px;
+					border-width: 8px 8px 0;
+					border-style: solid;
+					border-color: var(--white) transparent;
+					display: block;
+					width: 0;
+				}
+
+				.quiz-bubble::before {
+					content: '';
+					position: absolute;
+					bottom: -11px;
+					right: 19px;
+					border-width: 9px 9px 0;
+					border-style: solid;
+					border-color: var(--point-brown) transparent;
+					display: block;
+					width: 0;
+					z-index: -1;
+				}
+
+			.mascot-character {
+				font-size: 2.5rem;
+				background-color: var(--main-beige);
+				border: 2px solid var(--point-brown);
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-shadow: 0 5px 15px rgba(110, 90, 75, 0.15);
+			}
+
+			@keyframes bounceMascot {
+				0%, 100% {
+					transform: translateY(0);
+				}
+
+				50% {
+					transform: translateY(-8px);
+				}
+			}
+
+			/* 퀴즈 문제 선택지 카드화 */
+			.quiz-option-btn {
+				width: 100%;
+				background-color: var(--bg-beige);
+				border: 1.5px solid var(--border-color);
+				padding: 0.75rem 1rem;
+				border-radius: 0.5rem;
+				text-align: left;
+				font-size: 0.9rem;
+				font-weight: 500;
+				cursor: pointer;
+				transition: all 0.2s;
+				color: var(--point-brown);
+			}
+
+				.quiz-option-btn:hover {
+					background-color: var(--main-beige);
+					border-color: var(--point-brown);
+				}
+
+			.quiz-result-title {
+				font-size: 1.25rem;
+				font-weight: 900;
+				color: #d97706;
+				margin-bottom: 0.5rem;
+			}
+
+			/* Q&A 아코디언 스타일 */
+			.qa-item {
+				background-color: var(--white);
+				border: 2px solid var(--border-color);
+				border-radius: 0.75rem;
+				margin-bottom: 1rem;
+				text-align: left;
+				overflow: hidden;
+			}
+
+			.qa-q {
+				padding: 1.25rem;
+				font-weight: bold;
+				cursor: pointer;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				background-color: var(--white);
+			}
+
+				.qa-q::after {
+					content: "▼";
+					font-size: 0.8rem;
+					transition: transform 0.3s;
+				}
+/*        Q&A*/
+			.qa-item.open .qa-q::after {
+				transform: rotate(180deg);
+			}
+
+			.qa-a {
+				padding: 0 1.25rem 1.25rem 1.25rem;
+				color: #555;
+				line-height: 1.6;
+				font-size: 0.9rem;
+				display: none;
+				border-top: 1.5px solid var(--border-color);
+				background-color: var(--bg-beige);
+			}
+
+			.qa-item.open .qa-a {
+				display: block;
+			}
+
+/*			#toast {
+				position: fixed;
+				left: 50%;
+				bottom: 24px;
+				transform: translateX(-50%);
+				background: rgba(51, 51, 51, 0.95);
+				color: #fff;
+				padding: 0.75rem 1rem;
+				border-radius: 0.5rem;
+				font-size: 0.9rem;
+				z-index: 9999;
+				display: none;
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+			}*/
+			#toast {
+				position: fixed;
+				bottom: 2rem;
+				left: 50%;
+				transform: translateX(-50%);
+				background-color: var(--point-brown);
+				color: var(--white);
+				padding: 0.75rem 2rem;
+				border-radius: 9999px;
+				box-shadow: 0 10px 20px rgba(110, 90, 75, 0.2);
+				z-index: 200;
+				font-weight: 600;
+				display: none;
+				animation: toastUp 0.3s ease;
+			}
+
+/*      잠시금액변경*/
+			.price-wrap {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.original-price {
+				color: #999;
+				text-decoration: line-through;
+				font-size: 16px;
+			}
+
+			.sale-price {
+				color: #ff3b30;
+				font-size: 24px;
+				font-weight: 700;
+			}
+
     </style>
 </head>
 <body>
@@ -1337,6 +1688,7 @@
 
   <div id="sidebar-overlay" onclick="toggleSidebar()" class="hidden"></div>
 
+  <!-- 사이드바 영역 -->
   <aside id="sidebar">
     <div>
       <div class="sidebar-header-box">
@@ -1345,6 +1697,7 @@
       </div>
 
       <nav>
+        <!-- 게스트 메뉴 -->
         <div id="nav-guest">
           <p class="menu-label">MENU</p>
           <a href="#" onclick="showSection('main'); closeSidebarMobile();" class="nav-link">메인</a>
@@ -1352,16 +1705,31 @@
           <a href="#" onclick="showSection('schedule'); closeSidebarMobile();" class="nav-link">그룹 스케줄표</a>
           <a href="#" onclick="showSection('qa'); closeSidebarMobile();" class="nav-link">Q&A</a>
           <a href="#" onclick="showSection('archive'); closeSidebarMobile();" class="nav-link">자료실</a>
+          <!-- 로그인 버튼 위에 SNS 링크 배치 -->
+          <div class="sidebar-sns-wrap">
+            <a href="https://instagram.com" target="_blank" class="sns-link" title="인스타그램">📸</a>
+            <a href="https://youtube.com" target="_blank" class="sns-link" title="유튜브">🎥</a>
+            <a href="https://blog.naver.com" target="_blank" class="sns-link" title="블로그">📝</a>
+          </div>
+
           <div class="nav-btn-wrapper">
             <button onclick="openModal('login')" class="btn-transparent w-full">로그인</button>
           </div>
         </div>
 
+        <!-- 학생전용 메뉴 -->
         <div id="nav-student" class="hidden">
           <p class="menu-label student-menu-label">STUDENT PAGE</p>
-          <a href="#" onclick="showSection('reserve'); closeSidebarMobile();" class="nav-link active-style">📅 수업 예약</a>
+          <a href="#" onclick="showSection('reserve'); closeSidebarMobile();" class="nav-link">📅 수업 예약</a>
           <a href="#" onclick="showSection('ticket'); closeSidebarMobile();" class="nav-link">🎫 티켓 구매</a>
           <a href="#" onclick="showSection('mypage'); closeSidebarMobile();" class="nav-link">👤 마이페이지</a>
+          <!-- 로그아웃 버튼 위에 SNS 링크 배치 -->
+          <div class="sidebar-sns-wrap">
+            <a href="https://instagram.com" target="_blank" class="sns-link" title="인스타그램">📸</a>
+            <a href="https://youtube.com" target="_blank" class="sns-link" title="유튜브">🎥</a>
+            <a href="https://blog.naver.com" target="_blank" class="sns-link" title="블로그">📝</a>
+          </div>
+
           <div class="nav-btn-wrapper">
             <button onclick="logout()" class="btn-transparent btn-logout w-full">로그아웃</button>
           </div>
@@ -1374,8 +1742,11 @@
     </div>
   </aside>
 
+  <!-- 메인 콘텐츠 영역 -->
   <main>
+    <!-- SPA 메인 섹션 (메인 메뉴 클릭 시에만 활성화되는 단일 부모 구조) -->
     <section id="sec-main" class="spa-section">
+      <!-- 　 상단: 축소된 비주얼 슬라이드 -->
       <div class="slide-container">
         <div class="main-slide text-center slide-active">
           <div class="badge-wrap"><span class="badge" style="background-color: #0284c7; color: #ffffff;">SUMMER EVENT</span></div>
@@ -1407,7 +1778,9 @@
           <p>하루 딱 25분 화면에만 온전히 집중하세요! 직관적인 화면 공유와 풍부한 시각 자료를 통해 지루할 틈 없이 일본어 글자가 머리에 쏙쏙 박힙니다. 작심삼일 프로 포기자도 무조건 정복!</p>
           <div class="course-meta">
             <span class="meta-tag">25분 실시간 밀착 케어</span>
-            <span class="meta-price">99,000원</span>
+            <!--<span class="meta-price">99,000원</span>-->
+            <span class="original-price">99,000원</span>
+            <span class="sale-price">68,800원</span>
           </div>
           <div class="course-sub-btn-wrap">
             <button onclick="showSection('ticket')" class="btn-transparent btn-small">상세 정보 및 구매</button>
@@ -1415,12 +1788,126 @@
         </div>
       </div>
 
+      <!-- 슬라이더 컨트롤 도트 -->
       <div class="slider-dots">
         <button onclick="setMainSlide(0)" id="main-dot-0" class="dot active"></button>
         <button onclick="setMainSlide(1)" id="main-dot-1" class="dot"></button>
         <button onclick="setMainSlide(2)" id="main-dot-2" class="dot"></button>
         <button onclick="setMainSlide(3)" id="main-dot-3" class="dot"></button>
       </div>
+
+      <!-- [2] 중단: 학원 소개 영역 -->
+      <div class="about-section">
+        <h2>🏫 세모일본어는 어떤 곳인가요?</h2>
+        <p>
+          배우기만 하고 쓰지 못하는 죽은 어학은 이제 그만! <br>
+          세모일본어 온라인은 시공간의 제약 없이 검증된 원어민/교포 강사진과 밀착 소통하는 혁신적인 맞춤형 온라인 어학원입니다.
+        </p>
+        <div class="about-features">
+          <div class="feature-item">
+            <h4>🎯 1:1 맞춤 커리큘럼</h4>
+            <p>수강생의 목적과 레벨에 맞춰 교재부터 회화 주제까지 모두 개별 세팅됩니다.</p>
+          </div>
+          <div class="feature-item">
+            <h4>⏰ 자유로운 시간 예약</h4>
+            <p>정해진 요일 없이, 매주 본인이 편한 시간에 자유롭게 수업 예약이 가능합니다.</p>
+          </div>
+          <div class="feature-item">
+            <h4>📝 수업 후 피드백 리포트</h4>
+            <p>매 수업이 끝난 뒤 강사님이 교정해주신 발음과 문장 리포트가 즉시 전송됩니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단: 흐르는 수강후기(댓글) 영역 -->
+      <div class="review-slider-section">
+        <div class="review-slider-title">💬 먼저 경험한 학생들의 실시간 한줄평</div>
+        <div class="card-slider">
+          <div class="card-track">
+            <!-- 후기  -->
+            <div class="comment-card">
+              <div class="card-title">개인수업 · 김*우 수강생</div>
+<textarea class="comment-input" readonly>글솜씨가없지만 끝까지읽어주세요..일본어는 우리나라랑문법이같으니까 자신만만하게 시작했는데 일본인여자친구만나서 한국어로생각하고 대화소통잘되어서 괜찮다고생각했거든요, 그후로 결혼이야기나와서 일본으로 넘어왔습니다.일본사람들과생활하다보니 진짜 일본어소통이 원활하지못하다는걸깨달았어요.제일본어는 여자친구가 한국에대해서아니까 이해하고 넘어간거였어요.좀더 일본에대한 나라를알고싶어졌고 수업시작한지 지금 5개월째입니다. 꾸준히다니는 이유가있겠죠 한번 경험해보세요. 지금목표는 네이티브 일본어입니다. </textarea>
+              <div class="card-footer">
+                <span>⭐ 5.0 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+            <div class="comment-card">
+              <div class="card-title">글자마스터반 · 이*견 수강생</div>
+              <textarea class="comment-input" readonly> 솔직후기 첫번째수업: 들었을때는 어이없었음.보고 바로 말이튀어나오네? 두번째수업:오기생김 세번째수업: 보고바로글자가입으로튀어나옴 세번째 : 대박임재미씀! 긹게읽을수있음 글자마스터반 일단 끝까지완강한사람으로서 후기남깁니다. 시간아깝습니다 빨리들으세요. 첫번째수업때 이정도면 나도혼자할수있겠네라고생각하고 처음듣고 안들었어요. 사람이라는게 막상혼자하려니까 안하더라고요. 다시재시작하고 완강했습니다. 강의하나하나에 선생님의 노력이 보였어요. 간단하면서 머리에 남으니까 언어처음이신분 꼭 들어보세요. </textarea>
+              <div class="card-footer">
+                <span>⭐ 5.0 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+            <div class="comment-card">
+              <div class="card-title">개인수업 · 송*나 수강생</div>
+              <textarea class="comment-input" readonly> 글자마스터반부터 계속 선생님과함께 수업하고있습니다. 저는 엄청만족하고있어요. 선생님이 저한테 재능있다고 완벽하게 입트이면 혼자공부하래요 ㅋㅋ</textarea>
+              <div class="card-footer">
+                <span>⭐ 5.0 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+            <div class="comment-card">
+              <div class="card-title">글자마스터반 · 이*훈 수강생</div>
+              <textarea class="comment-input" readonly> 일본어강의듣고해도 듣기는되는데 입밖으로안나와서 당황했는데 저의 문제점을파악해주셔서 교정받고 수업하고있습니다.여기와서 바로 글자외우고 개인보다 듀오로하다가 지금은 개인수업받고있습니다. </textarea>
+              <div class="card-footer">
+                <span>⭐ 5.0 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+
+            <div class="comment-card">
+              <div class="card-title">듀오수업 · 이*정 수강생</div>
+<textarea class="comment-input" readonly>취미로시작해서 이제는 대화하는게너무재미있어졌어요. 일본은혼자여행다닙니다. 이제 중국어도배우고있어요.</textarea>
+              <div class="card-footer">
+                <span>⭐ 4.8 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+
+            <div class="comment-card">
+              <div class="card-title">개인수업 · 박*지 수강생</div>
+<textarea class="comment-input" readonly>예약 변경 시스템이 대학강의신청보다 간편해서 야근 잦은 직장인한테 이만한 수업이 없네요!</textarea>
+              <div class="card-footer">
+                <span>⭐ 5.0 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+
+            <!-- 무한 루프용 복제 세트 1, 2, 3 (완벽하게 동일해야 끊김이 없습니다) -->
+            <div class="comment-card">
+              <div class="card-title">글자마스터반 · 오*선 수강생</div>
+<textarea class="comment-input" readonly>진짜 히라가나도 모르고 시작했는데 설명해 주셔서 한 달 만에 기초 회화연습이 가능해졌어요!</textarea>
+              <div class="card-footer">
+                <span>⭐ 5.0 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+
+            <div class="comment-card">
+              <div class="card-title">개인수업 · 정*미 수강생</div>
+<textarea class="comment-input" readonly>일본은한국과다르게 메일로 소통해요.회사에서 급하게 메일 쓸 일이 많았는데 비즈니스 작문 피드백 실시간으로 받아서 대만족 중입니다.</textarea>
+              <div class="card-footer">
+                <span>⭐ 4.9 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+
+            <div class="comment-card">
+              <div class="card-title">개인수업 · 김*수 수강생</div>
+<textarea class="comment-input" readonly>취미로듣고있습니다. 말할수있을때쯤이면 네이티브선생님과 수업받을수있는데 이게 제일특징인것같아요. 요즘 일본어 너무 말하는게 재미있어요.</textarea>
+              <div class="card-footer">
+                <span>⭐ 5.0 만점</span>
+                <button class="comment-btn">수강중</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <div id="info-sub-target" class="info-sub-content card info-sub-panel hidden">
@@ -1908,30 +2395,99 @@
       </div>
     </section>
 
-    <section id="sec-qa" class="spa-section hidden">
-      <h2 class="section-title">Q&A</h2>
 
-      <div class="card qa-content">
-        <p class="qa-q">Q. 1:1 수업과 1:2 수업의 '담당 서포터'는 어떤 역할을 하나요?</p>
-        <p class="qa-a">A. 담당강사님이 바쁘실때나 담당 강사 수업 외에 수업 관련 문의 대응등을 도와주는 밀착 매니저입니다.</p>
+    <!-- ================= Q&A 섹션 ================= -->
+
+    <section id="sec-qa" class="spa-section">
+      <div class="section-title">❓ 자주 묻는 질문 </div>
+      <div style="max-width: 800px; margin: 0 auto; width: 100%;">
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">Q. 1:1 수업과 1:2 수업의 '담당 서포터'는 어떤 역할을 하나요?</div>
+          <div class="qa-a">
+            담당강사님이 바쁘실때나 담당 강사 수업 외에 수업 관련 문의 대응등을 도와주는 밀착 매니저입니다.
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">Q. 1:1 수업과 1:2 수업의 '담당 서포터'는 어떤 역할을 하나요?</div>
+          <div class="qa-a">
+            담당강사님이 바쁘실때나 담당 강사 수업 외에 수업 관련 문의 대응등을 도와주는 밀착 매니저입니다.
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">Q. 그룹 수업은 중간에 요일을 바꿀 수 없나요?</div>
+          <div class="qa-a">
+            네, 그룹은 동일 커리큘럼 진도 운영이라 중간 변경이 어렵습니다. 부득이한 상황은 서포터에게 문의해 주세요.
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">Q. 당일 예약 취소나 변경이 가능한가요?</div>
+          <div class="qa-a">
+            수업 시작 12시간 전까지는 마이페이지에서 자유롭게 변경/취소할 수 있습니다. 이후 취소는 티켓 차감이 발생할 수 있습니다.
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">Q. 일본어를 아예 몰라도 수강 가능한가요?</div>
+          <div class="qa-a">
+            네! 완전 생초보자분들을 위한 '나도 문자 마스터 코스'가 준비되어 있습니다. 히라가나부터 발음 교정까지 원어민/교포 강사님이 쉽고 재미있게 가르쳐드리니 걱정하지 않으셔도 됩니다.
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">Q. 예약된 수업을 당일에 취소하거나 변경할 수 있나요?</div>
+          <div class="qa-a">
+            수업 변경 및 취소는 원활한 강사 매칭을 위해 수업 시작 최소 24시간 전까지 마이페이지 또는 수업 예약 메뉴를 통해 수수료 없이 변경 가능합니다.
+          </div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-q" onclick="toggleQA(this)">Q. 수업은 어떤 소프트웨어로 진행되나요?</div>
+          <div class="qa-a">
+            별도의 복잡한 프로그램 설치 없이, 예약 시간 5분 전 전송되는 화상 미팅 링크(Zoom 또는 전용 웹 클래스 링크)를 클릭하시면 즉시 시작됩니다.
+          </div>
+        </div>
+
       </div>
-
-      <div class="card qa-content">
-        <p class="qa-q">Q. 그룹 수업은 중간에 요일을 바꿀 수 없나요?</p>
-        <p class="qa-a">A. 네, 그룹은 동일 커리큘럼 진도 운영이라 중간 변경이 어렵습니다. 부득이한 상황은 서포터에게 문의해 주세요.</p>
-      </div>
-
-      <div class="card qa-content">
-        <p class="qa-q">Q. 당일 예약 취소나 변경이 가능한가요?</p>
-        <p class="qa-a">A. 수업 시작 12시간 전까지는 마이페이지에서 자유롭게 변경/취소할 수 있습니다. 이후 취소는 티켓 차감이 발생할 수 있습니다.</p>
-      </div>
-
     </section>
 
-    <section id="sec-archive" class="spa-section hidden">
+
+    <!--<section id="sec-archive" class="spa-section hidden">
       <h2 class="section-title">자료실</h2>
       <div class="card text-center archive-content">
         🔒 티켓을 구매한 회원 전용 열람 공간입니다.
+      </div>
+    </section>-->
+    <!-- ================= [5] 자료실 섹션 ================= -->
+    <section id="sec-archive" class="spa-section">
+      <div class="section-title">📁 수강 자료실</div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>자료 제목</th>
+              <th>등록일</th>
+              <th>다운로드</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>입문 수강생을 위한 필수 히라가나/가타카나 워크시트 PDF</td>
+              <td>2026.07.10</td>
+              <td><button class="comment-btn" onclick="showToast('다운로드가 완료되었습니다.')">받기</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>비즈니스 전화 응대용 상황별 유용한 경어 패턴 모음집</td>
+              <td>2026.07.01</td>
+              <td><button class="comment-btn" onclick="showToast('다운로드가 완료되었습니다.')">받기</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>일본 여행 시 요긴하게 쓰는 식당 주문 만능 표현 가이드</td>
+              <td>2026.06.15</td>
+              <td><button class="comment-btn" onclick="showToast('다운로드가 완료되었습니다.')">받기</button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -2292,7 +2848,7 @@
 
         </div>
 
-       
+
 
 
         <div class="form-group" style="margin-top:0.75rem;">
@@ -2377,6 +2933,15 @@
         </table>
       </div>
     </div>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+
+  <!-- 돌발 여우 캐릭터 마스코트 꼬리표 -->
+  <div id="quiz-mascot" class="hidden" onclick="triggerSemoQuiz()">
+    <div class="quiz-bubble">🦊 퀴즈 풀고 포인트 받자!</div>
+    <div class="mascot-character">🦊</div>
   </div>
 
 
@@ -2486,7 +3051,7 @@
 
         if (!response.ok || !result || !result.success) {
           console.error('mypage response:', raw);
-          alert((result && result.message) || '마이페이지 정보를 불러오지 못했습니다.');
+          showToast((result && result.message) || '마이페이지 정보를 불러오지 못했습니다.');
           return;
         }
 
@@ -2499,7 +3064,7 @@
           document.getElementById('mypage-ticket-count').innerText = data.tickets;
           document.getElementById('mypage-pdf-days').innerText = data.pdf_days;
           document.getElementById('mypage-next-class').innerText = data.next_class;
-					myTicketItems = Array.isArray(data.ticket_items) ? data.ticket_items : [];//추가
+          myTicketItems = Array.isArray(data.ticket_items) ? data.ticket_items : [];//추가
 
           const tbody = document.getElementById('charge-history-body-collapsible') || document.getElementById('charge-history-body');
           if (!tbody) return;
@@ -2510,11 +3075,11 @@
               const statusText = h.status === 'APPROVED' ? '승인완료' : (h.status === 'REJECTED' ? '거절' : '대기중');
               const statusColor = h.status === 'APPROVED' ? '#166534' : (h.status === 'REJECTED' ? '#b91c1c' : '#92400e');
               tr.innerHTML = `
-                                  <td>${String(h.created_at || '').split(' ')[0]}</td>
-                                  <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount || 0, 10).toLocaleString()}</td>
-                                  <td>${escapeHtml(h.depositor_name || '-')}</td>
-                                  <td><span style="font-size:0.75rem; background:#f3f4f6; color:${statusColor}; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">${statusText}</span></td>
-                              `;
+                                      <td>${String(h.created_at || '').split(' ')[0]}</td>
+                                      <td style="font-weight:bold; color:var(--point-brown);">+${parseInt(h.amount || 0, 10).toLocaleString()}</td>
+                                      <td>${escapeHtml(h.depositor_name || '-')}</td>
+                                      <td><span style="font-size:0.75rem; background:#f3f4f6; color:${statusColor}; padding:0.25rem 0.5rem; border-radius:0.25rem; font-weight:bold;">${statusText}</span></td>
+                                  `;
               tbody.appendChild(tr);
             });
           } else {
@@ -2526,103 +3091,103 @@
       }
     }
 
-     //충전 모달 로직
-		//const originalOpenChargeModal = openChargeModal;
-		//function openChargeModal() {
-		//	originalOpenChargeModal();
-		//	const val = parseInt(document.getElementById('charge-amount').value || 0, 10) || 0;
-		//	updateChargeRealAmount(val);
-		//}
+    //충전 모달 로직
+    //const originalOpenChargeModal = openChargeModal;
+    //function openChargeModal() {
+    //	originalOpenChargeModal();
+    //	const val = parseInt(document.getElementById('charge-amount').value || 0, 10) || 0;
+    //	updateChargeRealAmount(val);
+    //}
     // 세모 -> 원 변환 및 표시 유틸
-		function formatWon(amount) {
-			return Number(amount || 0).toLocaleString('ko-KR') + '원';
-		}
-
-		// 세모 값을 받아 원으로 변환해 모달 상단에 표시
-		function updateChargeRealAmount(semoValue) {
-			const semo = parseInt(semoValue || 0, 10) || 0;
-			const won = semo * 10; // 1세모 = 10원
-			const el = document.getElementById('charge-real-amount');
-			if (el) el.innerText = `결제 금액: ${formatWon(won)}`;
-		}
-
-		// input 직접 입력시 호출 (버튼 active 제거 + 표시 갱신)
-		function onChargeAmountInput(value) {
-			document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
-			document.getElementById('charge-amount').value = value;
-			updateChargeRealAmount(value);
-		}
-
-		// 버튼 클릭으로 금액 선택 시 (기존 selectChargeAmount를 이걸로 교체)
-		function selectChargeAmount(amount, btnElement) {
-			document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
-			if (btnElement) btnElement.classList.add('active');
-			document.getElementById('charge-amount').value = amount;
-			updateChargeRealAmount(amount);
+    function formatWon(amount) {
+      return Number(amount || 0).toLocaleString('ko-KR') + '원';
     }
-		//충전 모달 로직
-		function openChargeModal() {
-			const modal = document.getElementById('charge-modal');
-			if (!modal) return;
-			// 현재 입력값으로 초기 표시
-			const val = parseInt(document.getElementById('charge-amount').value || 0, 10) || 0;
-			updateChargeRealAmount(val);
-			modal.classList.remove('hidden');
-		}
 
-	
+    // 세모 값을 받아 원으로 변환해 모달 상단에 표시
+    function updateChargeRealAmount(semoValue) {
+      const semo = parseInt(semoValue || 0, 10) || 0;
+      const won = semo * 10; // 1세모 = 10원
+      const el = document.getElementById('charge-real-amount');
+      if (el) el.innerText = `결제 금액: ${formatWon(won)}`;
+    }
 
-		function closeChargeModal() {
-			const modal = document.getElementById('charge-modal');
-			if (modal) modal.classList.add('hidden');
-			document.getElementById('charge-amount').value = '';
-			document.getElementById('depositor-name').value = '';
-			document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
-			updateChargeRealAmount(0);
-		}
+    // input 직접 입력시 호출 (버튼 active 제거 + 표시 갱신)
+    function onChargeAmountInput(value) {
+      document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('charge-amount').value = value;
+      updateChargeRealAmount(value);
+    }
 
-   
+    // 버튼 클릭으로 금액 선택 시 (기존 selectChargeAmount를 이걸로 교체)
+    function selectChargeAmount(amount, btnElement) {
+      document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+      document.getElementById('charge-amount').value = amount;
+      updateChargeRealAmount(amount);
+    }
+    //충전 모달 로직
+    function openChargeModal() {
+      const modal = document.getElementById('charge-modal');
+      if (!modal) return;
+      // 현재 입력값으로 초기 표시
+      const val = parseInt(document.getElementById('charge-amount').value || 0, 10) || 0;
+      updateChargeRealAmount(val);
+      modal.classList.remove('hidden');
+    }
 
-		async function submitChargeRequest() {
-			const amount = parseInt(document.getElementById('charge-amount').value || 0, 10);
-			const name = (document.getElementById('depositor-name').value || '').trim();
 
-			if (!amount || amount < 1000) {
-				alert("최소 1,000 세모 이상 충전하실 수 있습니다.");
-				return;
-			}
-			if (!name) {
-				alert("입금자명을 입력해 주세요.");
-				return;
-			}
 
-			try {
-				const formData = new URLSearchParams();
-				formData.append('amount', String(amount));
-				formData.append('depositor_name', name);
+    function closeChargeModal() {
+      const modal = document.getElementById('charge-modal');
+      if (modal) modal.classList.add('hidden');
+      document.getElementById('charge-amount').value = '';
+      document.getElementById('depositor-name').value = '';
+      document.querySelectorAll('.charge-amount-btn').forEach(btn => btn.classList.remove('active'));
+      updateChargeRealAmount(0);
+    }
 
-				const response = await fetch('api/charge_request.php', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-					body: formData.toString()
-				});
-				const result = await response.json().catch(() => null);
 
-				if (!response.ok || !result || !result.success) {
-					alert((result && result.message) || '충전 신청 중 오류가 발생했습니다.');
-					return;
-				}
 
-				alert(result.message);
-				closeChargeModal();
-				if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
-					await loadMyPageData();
-				}
-			} catch (err) {
-				console.error(err);
-				alert('충전 신청 중 네트워크 오류가 발생했습니다.');
-			}
-		}
+    async function submitChargeRequest() {
+      const amount = parseInt(document.getElementById('charge-amount').value || 0, 10);
+      const name = (document.getElementById('depositor-name').value || '').trim();
+
+      if (!amount || amount < 1000) {
+        showToast("최소 1,000 세모 이상 충전하실 수 있습니다.");
+        return;
+      }
+      if (!name) {
+        showToast("입금자명을 입력해 주세요.");
+        return;
+      }
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append('amount', String(amount));
+        formData.append('depositor_name', name);
+
+        const response = await fetch('api/charge_request.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: formData.toString()
+        });
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok || !result || !result.success) {
+          showToast((result && result.message) || '충전 신청 중 오류가 발생했습니다.');
+          return;
+        }
+
+        showToast(result.message);
+        closeChargeModal();
+        if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
+          await loadMyPageData();
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('충전 신청 중 네트워크 오류가 발생했습니다.');
+      }
+    }
 
     function openModal(type) { closeSidebarMobile(); document.getElementById('auth-modal').classList.remove('hidden'); toggleAuthForm(type); }
     function closeModal() { document.getElementById('auth-modal').classList.add('hidden'); }
@@ -2673,7 +3238,7 @@
       const passwordInput = document.getElementById('login-password').value;
 
       if (!idInput || !passwordInput) {
-        alert('아이디와 비밀번호를 입력해 주세요.');
+        showToast('아이디와 비밀번호를 입력해 주세요.');
         return;
       }
 
@@ -2695,20 +3260,20 @@
 
         if (!result) {
           console.error('student login raw response:', raw);
-          alert('로그인 응답 형식이 올바르지 않습니다.');
+          showToast('로그인 응답 형식이 올바르지 않습니다.');
           return;
         }
 
         if (!response.ok || !result.success) {
-          alert(result.message || '로그인에 실패했습니다.');
+          showToast(result.message || '로그인에 실패했습니다.');
           return;
         }
 
         closeModal();
         setRole('student');
-        alert(`${result.user.name || idInput}님으로 로그인되었습니다.`);
+        showToast(`${result.user.name || idInput}님으로 로그인되었습니다.`);
       } catch (error) {
-        alert('로그인 중 오류가 발생했습니다.');
+        showToast('로그인 중 오류가 발생했습니다.');
       }
     }
 
@@ -2718,15 +3283,15 @@
 
         const result = await response.json().catch(() => null);
         if (!response.ok || !result || !result.success) {
-          alert((result && result.message) || '로그아웃 중 오류가 발생했습니다.');
+          showToast((result && result.message) || '로그아웃 중 오류가 발생했습니다.');
           return;
         }
 
         setRole('guest');
-        alert('로그아웃 되었습니다.');
+        showToast('로그아웃 되었습니다.');
       } catch (error) {
         console.error(error);
-        alert('로그아웃 중 네트워크 오류가 발생했습니다.');
+        showToast('로그아웃 중 네트워크 오류가 발생했습니다.');
       }
     }
 
@@ -2761,23 +3326,25 @@
           { id: 203, key: 'duo_8', title: '8회 수강권', price: 21000, badge: 'Premium', desc: '지속적인 회화 루틴을 만드는 프리미엄 패키지' }
         ]
       },
-			// === ticketData.group 상품 메타 추가 (기존 ticketData 블록 내 group 항목 교체) ===
-			group: {
-				title: "🏫 그룹(1:N) 수업 티켓",
+      // === ticketData.group 상품 메타 추가 (기존 ticketData 블록 내 group 항목 교체) ===
+      group: {
+        title: "🏫 그룹(1:N) 수업 티켓",
         products: [
 
-					{ id: 304, key: 'group_free_1', title: '그룹 1회 체험권', price: 0, badge: 'Free', desc: '신규 회원 전용 무료 체험권 (유효기간 7일)', per_week: 0, total_sessions: 1 },
-					{ id: 301, key: 'group_1', title: '이벤트', price: 15800, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님이나 서포터에게 개인수업1회 무료로받자! *소진시조기마감될수있습니다.', per_week: 1, total_sessions: 5 }, // per_week: 주당 횟수
-					{ id: 302, key: 'group_4', title: '4회 수강권', price: 9900, badge: 'Best', desc: '1개월반이면뚝딱. 일본어글자완전마스터반!히라가나?가타카나?다들어와.바로말할수있게해줄게.', per_week: 1, total_sessions: 4 },
-					{ id: 303, key: 'group_8', title: '8회 수강권', price: 15800, badge: 'Premium', desc: '단기간에계획적이고빠르게.글자마스터반1개월형 할인형 패키지', per_week: 2, total_sessions: 8 }
-				]
-			},
+          { id: 304, key: 'group_free_1', title: '그룹 1회 체험권', price: 0, badge: 'Free', desc: '신규 회원 전용 무료 체험권 (유효기간 7일)', per_week: 0, total_sessions: 1 },
+          { id: 301, key: 'group_1', title: '이벤트', price: 15800, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님이나 서포터에게 개인수업1회 무료로받자! *소진시조기마감될수있습니다.', per_week: 1, total_sessions: 5 }, // per_week: 주당 횟수
+
+					{ id: 303, key: 'group_8', title: '8회 수강권', price: 6980, badge: 'Premium', desc: '1개월이면뚝딱. 일본어글자완전마스터반!히라가나?가타카나?다들어와.바로말할수있게해줄게.<br>*이벤트중', per_week: 2, total_sessions: 8 },
+          //{ id: 302, key: 'group_4', title: '4회 수강권', price: 9900, badge: 'Best', desc: '1개월반이면뚝딱. 일본어글자완전마스터반!히라가나?가타카나?다들어와.바로말할수있게해줄게.', per_week: 1, total_sessions: 4 },
+          { id: 303, key: 'group_8', title: '8회 수강권', price: 15800, badge: 'Premium', desc: '단기간에계획적이고빠르게.글자마스터반1개월형 할인형 패키지', per_week: 2, total_sessions: 8 }
+        ]
+      },
       package: {
         title: "🎁 특별 할인 패키지",
         products: [
           //{ id: 401, key: 'package_1', title: '1회 체험권', price: 60000, badge: 'Light', desc: '패키지 할인 혜택으로 가볍게 시작하는 티켓' },
-					{ id: 304, key: 'group_free_1', title: '그룹 1회 체험권', price: 0, badge: 'Free', desc: '신규 회원 전용 무료 체험권 (유효기간 7일)수업이어떻게진행되는지 경험해보자!', per_week: 0, total_sessions: 1 },
-					{ id: 401, key: 'package_1', title: '그룹4회+개인1회', price: 15800, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님과 개인수업1회 추가로받자!그룹으로공부하고 1:1로실력키우자! 수강권을 묶은 효율적인 패키지! *소진시조기마감될수있습니다.' },
+          { id: 304, key: 'group_free_1', title: '그룹 1회 체험권', price: 0, badge: 'Free', desc: '신규 회원 전용 무료 체험권 (유효기간 7일)수업이어떻게진행되는지 경험해보자!', per_week: 0, total_sessions: 1 },
+          { id: 401, key: 'package_1', title: '그룹4회+개인1회', price: 15800, badge: 'Best', desc: '1+4여름이벤트실행중! 담당선생님과 개인수업1회 추가로받자!그룹으로공부하고 1:1로실력키우자! 수강권을 묶은 효율적인 패키지! *소진시조기마감될수있습니다.' },
           //{ id: 402, key: 'package_4', title: '4회 수강권', price: 270000, badge: 'Best', desc: '다양한 수강권을 묶은 효율적인 패키지' },
           { id: 403, key: 'package_8', title: '8회 수강권', price: 49000, badge: 'Premium', desc: '가장 강력한 할인과 혜택을 누리는 패키지' }
         ]
@@ -2786,49 +3353,49 @@
 
     /*티켓확인모달*/
     let myTicketItems = [];
-		function openTicketListModal() {
-			renderTicketListModal();
-			document.getElementById('ticket-list-modal').classList.remove('hidden');
-		}
+    function openTicketListModal() {
+      renderTicketListModal();
+      document.getElementById('ticket-list-modal').classList.remove('hidden');
+    }
 
-		function closeTicketListModal() {
-			document.getElementById('ticket-list-modal').classList.add('hidden');
-		}
+    function closeTicketListModal() {
+      document.getElementById('ticket-list-modal').classList.add('hidden');
+    }
 
-		function renderTicketListModal() {
-			const tbody = document.getElementById('ticket-list-body');
-			if (!tbody) return;
+    function renderTicketListModal() {
+      const tbody = document.getElementById('ticket-list-body');
+      if (!tbody) return;
 
-			tbody.innerHTML = '';
+      tbody.innerHTML = '';
 
-			if (!myTicketItems || myTicketItems.length === 0) {
-				tbody.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">보유 티켓이 없습니다.</td></tr>';
-				return;
-			}
+      if (!myTicketItems || myTicketItems.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">보유 티켓이 없습니다.</td></tr>';
+        return;
+      }
 
-			const classTypeLabel = {
-				PRIVATE: '개인',
-				DUO: '듀오',
-				GROUP: '그룹'
-			};
+      const classTypeLabel = {
+        PRIVATE: '개인',
+        DUO: '듀오',
+        GROUP: '그룹'
+      };
 
-			myTicketItems.forEach(item => {
-				const tr = document.createElement('tr');
-				const typeKey = String(item.class_type || '').toUpperCase();
-				const typeText = classTypeLabel[typeKey] || '-';
-				const remain = parseInt(item.remaining_count || 0, 10);
-				const total = parseInt(item.total_count || 0, 10);
-				const expiredDate = String(item.expired_at || '').split(' ')[0] || '-';
+      myTicketItems.forEach(item => {
+        const tr = document.createElement('tr');
+        const typeKey = String(item.class_type || '').toUpperCase();
+        const typeText = classTypeLabel[typeKey] || '-';
+        const remain = parseInt(item.remaining_count || 0, 10);
+        const total = parseInt(item.total_count || 0, 10);
+        const expiredDate = String(item.expired_at || '').split(' ')[0] || '-';
 
-				tr.innerHTML = `
-            <td>${escapeHtml(item.title || '-')}</td>
-            <td>${typeText}</td>
-            <td style="font-weight: bold; color: var(--point-brown);">${remain} / ${total}</td>
-            <td>${expiredDate}</td>
-        `;
-				tbody.appendChild(tr);
-			});
-		}
+        tr.innerHTML = `
+                <td>${escapeHtml(item.title || '-')}</td>
+                <td>${typeText}</td>
+                <td style="font-weight: bold; color: var(--point-brown);">${remain} / ${total}</td>
+                <td>${expiredDate}</td>
+            `;
+        tbody.appendChild(tr);
+      });
+    }
 
 
 
@@ -2846,95 +3413,95 @@
 
 
 
-		// --- 헬퍼: 사용자가 이미 특정 product_id 를 보유했는지 확인 ---
-		function userHasProduct(productId) {
-			if (!Array.isArray(myTicketItems)) return false;
-			return myTicketItems.some(item => {
-				// 서버에서 반환하는 필드명은 product_id 입니다.
-				const pid = parseInt(item.product_id || item.productId || 0, 10);
-				return pid === productId;
-			});
-		}
+    // --- 헬퍼: 사용자가 이미 특정 product_id 를 보유했는지 확인 ---
+    function userHasProduct(productId) {
+      if (!Array.isArray(myTicketItems)) return false;
+      return myTicketItems.some(item => {
+        // 서버에서 반환하는 필드명은 product_id 입니다.
+        const pid = parseInt(item.product_id || item.productId || 0, 10);
+        return pid === productId;
+      });
+    }
 
-		// 기존 showTicketSub 함수 내부에서 제품을 화면에 반영하는 부분을 찾으세요.
-		// 아래는 showTicketSub 에서 각 product에 대해 버튼을 셋업하는 기존 코드와 교체하거나 병합할 수 있는 안전한 로직입니다.
-		function showTicketSub(menuKey) {
-			const data = ticketData[menuKey];
-			if (!data) return;
+    // 기존 showTicketSub 함수 내부에서 제품을 화면에 반영하는 부분을 찾으세요.
+    // 아래는 showTicketSub 에서 각 product에 대해 버튼을 셋업하는 기존 코드와 교체하거나 병합할 수 있는 안전한 로직입니다.
+    function showTicketSub(menuKey) {
+      const data = ticketData[menuKey];
+      if (!data) return;
 
-			document.getElementById('ticket-main').classList.add('hidden');
-			document.getElementById('ticket-sub-container').classList.remove('hidden');
-			document.getElementById('ticket-sub-title').innerText = data.title;
+      document.getElementById('ticket-main').classList.add('hidden');
+      document.getElementById('ticket-sub-container').classList.remove('hidden');
+      document.getElementById('ticket-sub-title').innerText = data.title;
 
-			totalCards = data.products.length;
-			currentCardIndex = 0;
+      totalCards = data.products.length;
+      currentCardIndex = 0;
 
-			data.products.forEach((product, index) => {
-				const titleEl = document.getElementById(`card-title-${index}`);
-				const priceEl = document.getElementById(`card-price-${index}`);
-				const badgeEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.badge-light');
-				const descEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-detail-desc');
-				const buttonEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-buy-btn');
+      data.products.forEach((product, index) => {
+        const titleEl = document.getElementById(`card-title-${index}`);
+        const priceEl = document.getElementById(`card-price-${index}`);
+        const badgeEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.badge-light');
+        const descEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-detail-desc');
+        const buttonEl = document.querySelectorAll('.ticket-card')[index]?.querySelector('.ticket-buy-btn');
 
-				if (titleEl) titleEl.innerText = product.title;
-				if (priceEl) priceEl.innerText = `${(product.price * 10).toLocaleString()}원`; // 기존 표기 유지
-				if (badgeEl) badgeEl.innerText = product.badge;
-				if (descEl) descEl.innerHTML = product.desc;
+        if (titleEl) titleEl.innerText = product.title;
+        if (priceEl) priceEl.innerText = `${(product.price * 10).toLocaleString()}원`; // 기존 표기 유지
+        if (badgeEl) badgeEl.innerText = product.badge;
+        if (descEl) descEl.innerHTML = product.desc;
 
-				if (buttonEl) {
-					// 무료 체험권(가격 0)이고 이미 발급된 경우: 버튼 숨기거나 비활성화
-					if (parseInt(product.price, 10) === 0 && userHasProduct(product.id)) {
-						buttonEl.disabled = true;
-						buttonEl.innerText = '발급 완료';
-						buttonEl.classList.add('btn-disabled');
-						buttonEl.onclick = null;
-						// 스타일로 숨기려면: buttonEl.style.display = 'none';
-					} else {
-						buttonEl.disabled = false;
-						buttonEl.innerText = product.price === 0 ? '무료로 발급받기' : '세모로 구매하기';
-						buttonEl.onclick = () => openTicketPurchaseModal(menuKey, index);
-						buttonEl.classList.remove('btn-disabled');
-						buttonEl.style.display = '';
-					}
-				}
-			});
+        if (buttonEl) {
+          // 무료 체험권(가격 0)이고 이미 발급된 경우: 버튼 숨기거나 비활성화
+          if (parseInt(product.price, 10) === 0 && userHasProduct(product.id)) {
+            buttonEl.disabled = true;
+            buttonEl.innerText = '발급 완료';
+            buttonEl.classList.add('btn-disabled');
+            buttonEl.onclick = null;
+            // 스타일로 숨기려면: buttonEl.style.display = 'none';
+          } else {
+            buttonEl.disabled = false;
+            buttonEl.innerText = product.price === 0 ? '무료로 발급받기' : '세모로 구매하기';
+            buttonEl.onclick = () => openTicketPurchaseModal(menuKey, index);
+            buttonEl.classList.remove('btn-disabled');
+            buttonEl.style.display = '';
+          }
+        }
+      });
 
-			updateCardVisibility();
-		}
+      updateCardVisibility();
+    }
 
-		// openTicketPurchaseModal에서도 서버중복검사를 보조로 한 번 더 확인
-		function openTicketPurchaseModal(menuKey, productIndex) {
-			if (!isStudentLoggedIn()) {
-				alert('로그인이 필요한 기능입니다.');
-				openModal('login');
-				return;
-			}
+    // openTicketPurchaseModal에서도 서버중복검사를 보조로 한 번 더 확인
+    function openTicketPurchaseModal(menuKey, productIndex) {
+      if (!isStudentLoggedIn()) {
+        showToast('로그인이 필요한 기능입니다.');
+        openModal('login');
+        return;
+      }
 
-			const product = ticketData[menuKey]?.products?.[productIndex];
-			if (!product) return;
+      const product = ticketData[menuKey]?.products?.[productIndex];
+      if (!product) return;
 
-			// 무료 티켓인데 이미 발급된 경우 방지
-			if (parseInt(product.price, 10) === 0 && userHasProduct(product.id)) {
-				alert('이미 무료 체험권을 발급받으셨습니다.');
-				return;
-			}
+      // 무료 티켓인데 이미 발급된 경우 방지
+      if (parseInt(product.price, 10) === 0 && userHasProduct(product.id)) {
+        showToast('이미 무료 체험권을 발급받으셨습니다.');
+        return;
+      }
 
-			selectedTicketPurchase = { menuKey, productIndex, productId: product.id };
+      selectedTicketPurchase = { menuKey, productIndex, productId: product.id };
 
-			document.getElementById('ticket-purchase-title').innerText = product.title;
-			document.getElementById('ticket-purchase-desc').innerText = `${product.title}를 세모 머니로 결제합니다.`;
-			document.getElementById('ticket-purchase-price').innerText = `${product.price.toLocaleString()} 세모`;
-			document.getElementById('ticket-purchase-balance').innerText = `${getCurrentSemoBalance().toLocaleString()} 세모`;
+      document.getElementById('ticket-purchase-title').innerText = product.title;
+      document.getElementById('ticket-purchase-desc').innerText = `${product.title}를 세모 머니로 결제합니다.`;
+      document.getElementById('ticket-purchase-price').innerText = `${product.price.toLocaleString()} 세모`;
+      document.getElementById('ticket-purchase-balance').innerText = `${getCurrentSemoBalance().toLocaleString()} 세모`;
 
-			const balance = getCurrentSemoBalance();
-			const availableText = balance >= product.price ? '구매 가능' : '보유 세모가 부족합니다.';
-			const availableColor = balance >= product.price ? '#b45309' : '#b91c1c';
-			const availableEl = document.getElementById('ticket-purchase-available');
-			availableEl.innerText = availableText;
-			availableEl.style.color = availableColor;
+      const balance = getCurrentSemoBalance();
+      const availableText = balance >= product.price ? '구매 가능' : '보유 세모가 부족합니다.';
+      const availableColor = balance >= product.price ? '#b45309' : '#b91c1c';
+      const availableEl = document.getElementById('ticket-purchase-available');
+      availableEl.innerText = availableText;
+      availableEl.style.color = availableColor;
 
-			document.getElementById('ticket-purchase-modal').classList.remove('hidden');
-		}
+      document.getElementById('ticket-purchase-modal').classList.remove('hidden');
+    }
 
     function closeTicketPurchaseModal() {
       document.getElementById('ticket-purchase-modal').classList.add('hidden');
@@ -2949,7 +3516,7 @@
 
       const balance = getCurrentSemoBalance();
       if (balance < product.price) {
-        alert('보유 세모가 부족합니다. 충전 후 다시 시도해 주세요.');
+        showToast('보유 세모가 부족합니다. 충전 후 다시 시도해 주세요.');
         return;
       }
 
@@ -2967,16 +3534,16 @@
 
         const result = await response.json();
         if (!response.ok || !result.success) {
-          alert(result.message || '수강권 구매 중 오류가 발생했습니다.');
+          showToast(result.message || '수강권 구매 중 오류가 발생했습니다.');
           return;
         }
 
-        alert(`${product.title} 구매가 완료되었습니다.`);
+        showToast(`${product.title} 구매가 완료되었습니다.`);
         closeTicketPurchaseModal();
         await loadMyPageData();
       } catch (error) {
         console.error(error);
-        alert('수강권 구매 중 네트워크 오류가 발생했습니다.');
+        showToast('수강권 구매 중 네트워크 오류가 발생했습니다.');
       }
     }
 
@@ -3078,10 +3645,10 @@
       return booked < maxStudents;
     }
 
-		function isSlotInFuture(slot) {
-			const startAt = new Date(slot.start_time);
-			return startAt.getTime() >= Date.now();
-		}
+    function isSlotInFuture(slot) {
+      const startAt = new Date(slot.start_time);
+      return startAt.getTime() >= Date.now();
+    }
 
     function getAvailableFlexDates() {
       const targetCategory = currentLessonType === 'duo' ? 'duo' : 'private';
@@ -3131,8 +3698,8 @@
       if (title) title.innerText = `${flexCalYear}년 ${flexCalMonth + 1}월`;
 
       grid.innerHTML = `
-              <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
-            `;
+                  <div class="cal-head">일</div><div class="cal-head">월</div><div class="cal-head">화</div><div class="cal-head">수</div><div class="cal-head">목</div><div class="cal-head">금</div><div class="cal-head">토</div>
+                `;
 
       const availableDates = new Set(getAvailableFlexDates());
       const firstDate = new Date(flexCalYear, flexCalMonth, 1);
@@ -3178,17 +3745,17 @@
 
     function confirmFlexBooking() {
       if (!selectedFlexDateISO) {
-        alert('원하시는 날짜를 선택해주세요.');
+        showToast('원하시는 날짜를 선택해주세요.');
         return;
       }
       if (!selectedFlexSlotId) {
-        alert('원하시는 예약 시간을 선택해주세요.');
+        showToast('원하시는 예약 시간을 선택해주세요.');
         return;
       }
 
       const slot = getSlotById(selectedFlexSlotId);
       if (!slot) {
-        alert('선택한 슬롯 정보를 찾을 수 없습니다. 다시 선택해 주세요.');
+        showToast('선택한 슬롯 정보를 찾을 수 없습니다. 다시 선택해 주세요.');
         return;
       }
 
@@ -3268,9 +3835,9 @@
         }
         row.onclick = () => selectFlexTime(row, slot.slot_id);
         row.innerHTML = `
-                <div class="time-text">🕒 ${formatTimeRange(slot.start_time, slot.end_time)}</div>
-                <span class="status-badge">예약 가능</span>
-              `;
+                    <div class="time-text">🕒 ${formatTimeRange(slot.start_time, slot.end_time)}</div>
+                    <span class="status-badge">예약 가능</span>
+                  `;
         list.appendChild(row);
       });
     }
@@ -3308,53 +3875,53 @@
       openReserveConfirm();
     }
 
-		// === 그룹 예약 확정 시 ticket_id 전송 (book_group_package 호출부 수정) ===
-		async function finalizeReservation() {
-			if (!pendingBooking || !pendingBooking.slotIds || pendingBooking.slotIds.length === 0) return;
+    // === 그룹 예약 확정 시 ticket_id 전송 (book_group_package 호출부 수정) ===
+    async function finalizeReservation() {
+      if (!pendingBooking || !pendingBooking.slotIds || pendingBooking.slotIds.length === 0) return;
 
-			try {
-				if (pendingBooking.bookingMode === 'GROUP_PACKAGE') {
-					const groupTicket = getAvailableGroupTicket();
-					if (!groupTicket) {
-						alert('사용 가능한 그룹 티켓이 없습니다.');
-						return;
-					}
+      try {
+        if (pendingBooking.bookingMode === 'GROUP_PACKAGE') {
+          const groupTicket = getAvailableGroupTicket();
+          if (!groupTicket) {
+            showToast('사용 가능한 그룹 티켓이 없습니다.');
+            return;
+          }
 
-					const selectedTicketId = parseInt(groupTicket.ticket_id || groupTicket.user_ticket_id || groupTicket.id || 0, 10);
-					if (!selectedTicketId) {
-						alert('사용할 그룹 티켓 정보를 찾지 못했습니다. 마이페이지를 새로고침 후 다시 시도해 주세요.');
-						await loadMyPageData();
-						return;
-					}
+          const selectedTicketId = parseInt(groupTicket.ticket_id || groupTicket.user_ticket_id || groupTicket.id || 0, 10);
+          if (!selectedTicketId) {
+            showToast('사용할 그룹 티켓 정보를 찾지 못했습니다. 마이페이지를 새로고침 후 다시 시도해 주세요.');
+            await loadMyPageData();
+            return;
+          }
 
-					const form = new URLSearchParams();
-					form.append('slot_ids', pendingBooking.slotIds.join(','));
-					form.append('weeks', String(pendingBooking.weeks || 4));
-         form.append('ticket_id', String(selectedTicketId));
+          const form = new URLSearchParams();
+          form.append('slot_ids', pendingBooking.slotIds.join(','));
+          form.append('weeks', String(pendingBooking.weeks || 4));
+          form.append('ticket_id', String(selectedTicketId));
 
-					const resp = await fetch('api/book_group_package.php', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-						body: form.toString()
-					});
-					const raw = await resp.text();
-					const res = tryParseApiJson(raw);
+          const resp = await fetch('api/book_group_package.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: form.toString()
+          });
+          const raw = await resp.text();
+          const res = tryParseApiJson(raw);
 
-					if (!resp.ok || !res || !res.success) {
-						console.error('book_group_package response:', raw);
-						alert((res && res.message) || '그룹 자동 등록 중 오류가 발생했습니다.');
-						await fetchTeacherSlots();
-						return;
-					}
+          if (!resp.ok || !res || !res.success) {
+            console.error('book_group_package response:', raw);
+            showToast((res && res.message) || '그룹 자동 등록 중 오류가 발생했습니다.');
+            await fetchTeacherSlots();
+            return;
+          }
 
-					alert(res.message || '그룹 수업이 자동 등록되었습니다.');
-					closeReserveConfirm();
-					await fetchTeacherSlots();
-					if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
-						loadMyPageData();
-					}
-					return;
-				}
+          showToast(res.message || '그룹 수업이 자동 등록되었습니다.');
+          closeReserveConfirm();
+          await fetchTeacherSlots();
+          if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
+            loadMyPageData();
+          }
+          return;
+        }
 
         let successCount = 0;
         for (const slotId of pendingBooking.slotIds) {
@@ -3389,7 +3956,7 @@
         }
 
         if (successCount > 0) {
-          alert(successCount === 1 ? '예약이 완료되었습니다. 마이페이지에서 확인하세요.' : `${successCount}건의 예약이 완료되었습니다. 마이페이지에서 확인하세요.`);
+          showToast(successCount === 1 ? '예약이 완료되었습니다. 마이페이지에서 확인하세요.' : `${successCount}건의 예약이 완료되었습니다. 마이페이지에서 확인하세요.`);
           closeReserveConfirm();
           await fetchTeacherSlots();
           if (!document.getElementById('sec-mypage').classList.contains('hidden')) {
@@ -3398,7 +3965,7 @@
         }
       } catch (e) {
         console.error(e);
-        alert('예약 중 네트워크 오류가 발생했습니다.');
+        showToast('예약 중 네트워크 오류가 발생했습니다.');
       }
     }
 
@@ -3449,9 +4016,9 @@
 
           row.onclick = () => toggleGroupSlot(row, label, slot.slot_id, dayStr);
           row.innerHTML = `
-                  <div class="time-text">🎓 ${formatTimeRange(slot.start_time, slot.end_time)}</div>
-                  <span style="font-size:0.875rem; opacity:0.7;">${booked}/${max} 신청중</span>
-                `;
+                      <div class="time-text">🎓 ${formatTimeRange(slot.start_time, slot.end_time)}</div>
+                      <span style="font-size:0.875rem; opacity:0.7;">${booked}/${max} 신청중</span>
+                    `;
           groupContainer.appendChild(row);
         });
       }
@@ -3459,66 +4026,66 @@
       syncGroupSummaryUI();
     }
 
-		function getAvailableGroupTicket() {
-			// myTicketItems는 loadMyPageData()에서 채워짐
-			if (!Array.isArray(myTicketItems)) return null;
-			// 우선순위: 만료 임박하지 않고 잔여갯수(remain) > 0 인 티켓
-			const candidates = myTicketItems
-				.filter(t => String((t.class_type || '')).toUpperCase() === 'GROUP' && parseInt(t.remaining_count || 0, 10) > 0)
-				.sort((a, b) => {
-					const aRemain = parseInt(a.remaining_count || 0, 10);
-					const bRemain = parseInt(b.remaining_count || 0, 10);
-					return bRemain - aRemain;// 잔여 많은 것 우선
-				});
-			return candidates.length ? candidates[0] : null;
-		}
+    function getAvailableGroupTicket() {
+      // myTicketItems는 loadMyPageData()에서 채워짐
+      if (!Array.isArray(myTicketItems)) return null;
+      // 우선순위: 만료 임박하지 않고 잔여갯수(remain) > 0 인 티켓
+      const candidates = myTicketItems
+        .filter(t => String((t.class_type || '')).toUpperCase() === 'GROUP' && parseInt(t.remaining_count || 0, 10) > 0)
+        .sort((a, b) => {
+          const aRemain = parseInt(a.remaining_count || 0, 10);
+          const bRemain = parseInt(b.remaining_count || 0, 10);
+          return bRemain - aRemain;// 잔여 많은 것 우선
+        });
+      return candidates.length ? candidates[0] : null;
+    }
 
-		// === 그룹 선택 토글에서 티켓 허용수 검사 적용 (기존 toggleGroupSlot 대체 또는 내부에 아래 로직 통합) ===
-		function toggleGroupSlot(target, slotName, slotId, dayKey) {
-			const slotKey = String(slotId);
-			const isAlreadyActive = target.classList.contains('active');
+    // === 그룹 선택 토글에서 티켓 허용수 검사 적용 (기존 toggleGroupSlot 대체 또는 내부에 아래 로직 통합) ===
+    function toggleGroupSlot(target, slotName, slotId, dayKey) {
+      const slotKey = String(slotId);
+      const isAlreadyActive = target.classList.contains('active');
 
-			// 티켓 검사
-			const groupTicket = getAvailableGroupTicket();
-			if (!groupTicket) {
-				// 티켓 없으면 구매 유도
-				if (confirm('그룹 수업 티켓이 없습니다. 지금 구매하시겠습니까?')) {
-					showTicketSub('group');
-					// 탭 이동 후 구매 유도(추가 UI 개선 가능)
-				}
-				return;
-			}
+      // 티켓 검사
+      const groupTicket = getAvailableGroupTicket();
+      if (!groupTicket) {
+        // 티켓 없으면 구매 유도
+        if (confirm('그룹 수업 티켓이 없습니다. 지금 구매하시겠습니까?')) {
+          showTicketSub('group');
+          // 탭 이동 후 구매 유도(추가 UI 개선 가능)
+        }
+        return;
+      }
 
-			const perWeekAllowed = parseInt(groupTicket.per_week || 1, 10); // 주당 허용 요일 수(1 또는 2)
-			const currentlySelectedDays = selectedGroupItems.length;
+      const perWeekAllowed = parseInt(groupTicket.per_week || 1, 10); // 주당 허용 요일 수(1 또는 2)
+      const currentlySelectedDays = selectedGroupItems.length;
 
-			if (isAlreadyActive) {
-				// 선택 해제
-				target.classList.remove('active');
-				selectedGroupSlotIds = selectedGroupSlotIds.filter(id => id !== slotKey);
-				selectedGroupItems = selectedGroupItems.filter(item => item.slotId !== slotKey);
-			} else {
-				// 같은 요일 중복 방지(기존 로직 유지)
-				const dayAlreadySelected = selectedGroupItems.some(item => item.dayKey === dayKey);
-				if (dayAlreadySelected) {
-					alert('같은 요일은 한 개 반만 선택할 수 있습니다.');
-					return;
-				}
+      if (isAlreadyActive) {
+        // 선택 해제
+        target.classList.remove('active');
+        selectedGroupSlotIds = selectedGroupSlotIds.filter(id => id !== slotKey);
+        selectedGroupItems = selectedGroupItems.filter(item => item.slotId !== slotKey);
+      } else {
+        // 같은 요일 중복 방지(기존 로직 유지)
+        const dayAlreadySelected = selectedGroupItems.some(item => item.dayKey === dayKey);
+        if (dayAlreadySelected) {
+          alert('같은 요일은 한 개 반만 선택할 수 있습니다.');
+          return;
+        }
 
-				// perWeekAllowed 제한 검사
-				if (currentlySelectedDays >= perWeekAllowed) {
-					alert(`이 티켓은 주 ${perWeekAllowed}회까지 선택 가능합니다.`);
-					return;
-				}
+        // perWeekAllowed 제한 검사
+        if (currentlySelectedDays >= perWeekAllowed) {
+          alert(`이 티켓은 주 ${perWeekAllowed}회까지 선택 가능합니다.`);
+          return;
+        }
 
-				// 허용 범위 내에서 선택
-				target.classList.add('active');
-				selectedGroupSlotIds.push(slotKey);
-				selectedGroupItems.push({ slotId: slotKey, label: slotName, dayKey });
-			}
+        // 허용 범위 내에서 선택
+        target.classList.add('active');
+        selectedGroupSlotIds.push(slotKey);
+        selectedGroupItems.push({ slotId: slotKey, label: slotName, dayKey });
+      }
 
-			syncGroupSummaryUI();
-		}
+      syncGroupSummaryUI();
+    }
 
     function syncGroupSummaryUI() {
       const confirmBtn = document.getElementById('group-submit-btn');
@@ -3553,171 +4120,171 @@
     }
 
 
-		function toggleCollapse(id) {
-			const el = document.getElementById(id);
-			if (!el) return;
-			const arrow = document.getElementById(id === 'charge-section' ? 'charge-arrow' : 'reservation-arrow');
-			if (el.classList.contains('hidden')) {
-				el.classList.remove('hidden');
-				if (arrow) arrow.classList.add('rotated');
-				// 로드가 필요한 경우 데이터 로드
-				if (id === 'reservation-section') loadReservationHistory();
-				if (id === 'charge-section') { /* loadMyPageData already populates charge table; ensure mapped */ }
-			} else {
-				el.classList.add('hidden');
-				if (arrow) arrow.classList.remove('rotated');
-			}
-		}
+    function toggleCollapse(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const arrow = document.getElementById(id === 'charge-section' ? 'charge-arrow' : 'reservation-arrow');
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotated');
+        // 로드가 필요한 경우 데이터 로드
+        if (id === 'reservation-section') loadReservationHistory();
+        if (id === 'charge-section') { /* loadMyPageData already populates charge table; ensure mapped */ }
+      } else {
+        el.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotated');
+      }
+    }
 
-		// 간단한 도움 / 안내
-		function showChargeHelp() {
-			alert('무통장 입금은 입금 확인 후 반영됩니다. 문의는 서포터에게 연락하세요.');
-		}
+    // 간단한 도움 / 안내
+    function showChargeHelp() {
+      showToast('무통장 입금은 입금 확인 후 반영됩니다. 문의는 서포터에게 연락하세요.');
+    }
 
-		// 예약 이력 로드 및 렌더
-		let reservationCache = null;
-		async function loadReservationHistory(force = false) {
-			if (reservationCache && !force) {
-				renderReservationHistory(reservationCache);
-				return;
-			}
-			try {
-				const resp = await fetch('api/reservations.php');
-				const json = await resp.json();
-				if (!resp.ok || !json.success) {
-					console.warn('reservations fetch failed', json);
-					document.getElementById('reservation-history-body').innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0;">예약 정보를 불러올 수 없습니다.</td></tr>';
-					return;
-				}
-				reservationCache = json.data || [];
-				renderReservationHistory(reservationCache);
-			} catch (e) {
-				console.error(e);
-				document.getElementById('reservation-history-body').innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0;">네트워크 오류가 발생했습니다.</td></tr>';
-			}
-		}
+    // 예약 이력 로드 및 렌더
+    let reservationCache = null;
+    async function loadReservationHistory(force = false) {
+      if (reservationCache && !force) {
+        renderReservationHistory(reservationCache);
+        return;
+      }
+      try {
+        const resp = await fetch('api/reservations.php');
+        const json = await resp.json();
+        if (!resp.ok || !json.success) {
+          console.warn('reservations fetch failed', json);
+          document.getElementById('reservation-history-body').innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0;">예약 정보를 불러올 수 없습니다.</td></tr>';
+          return;
+        }
+        reservationCache = json.data || [];
+        renderReservationHistory(reservationCache);
+      } catch (e) {
+        console.error(e);
+        document.getElementById('reservation-history-body').innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0;">네트워크 오류가 발생했습니다.</td></tr>';
+      }
+    }
 
-		function renderReservationHistory(list) {
-			const tbody = document.getElementById('reservation-history-body');
-			tbody.innerHTML = '';
-			if (!Array.isArray(list) || list.length === 0) {
-				tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0; opacity:0.65;">예약 내역이 없습니다.</td></tr>';
-				return;
-			}
-			list.forEach(r => {
-				const classDate = r.class_date || '-';
-				const start = (r.start_time || '').slice(0, 5) || '-';
-				const type = (r.class_type || '-');
-				const teacher = r.teacher_name || '-';
-				const status = (r.status || '-');
-				const reservedAt = (r.reserved_at || '').split(' ')[0] || '-';
-				const canCancel = status === 'CONFIRMED';
-				const tr = document.createElement('tr');
-				tr.innerHTML = `
-      <td>${escapeHtml(reservedAt)}</td>
-      <td>${escapeHtml(classDate)}</td>
-      <td>${escapeHtml(start)}</td>
-      <td>${escapeHtml(type)}</td>
-      <td>${escapeHtml(teacher)}</td>
-      <td>${escapeHtml(status)}</td>
-      <td>
-        <button class="mini-action-btn" onclick="openReservationDetail(${parseInt(r.reservation_id || 0, 10)})">상세</button>
-        ${canCancel ? `<button class="mini-action-btn" onclick="cancelReservation(${parseInt(r.reservation_id || 0, 10)})" style="margin-left:6px;">취소</button>` : ''}
-      </td>
-    `;
-				tbody.appendChild(tr);
-			});
-		}
+    function renderReservationHistory(list) {
+      const tbody = document.getElementById('reservation-history-body');
+      tbody.innerHTML = '';
+      if (!Array.isArray(list) || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding:2rem 0; opacity:0.65;">예약 내역이 없습니다.</td></tr>';
+        return;
+      }
+      list.forEach(r => {
+        const classDate = r.class_date || '-';
+        const start = (r.start_time || '').slice(0, 5) || '-';
+        const type = (r.class_type || '-');
+        const teacher = r.teacher_name || '-';
+        const status = (r.status || '-');
+        const reservedAt = (r.reserved_at || '').split(' ')[0] || '-';
+        const canCancel = status === 'CONFIRMED';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(reservedAt)}</td>
+          <td>${escapeHtml(classDate)}</td>
+          <td>${escapeHtml(start)}</td>
+          <td>${escapeHtml(type)}</td>
+          <td>${escapeHtml(teacher)}</td>
+          <td>${escapeHtml(status)}</td>
+          <td>
+            <button class="mini-action-btn" onclick="openReservationDetail(${parseInt(r.reservation_id || 0, 10)})">상세</button>
+            ${canCancel ? `<button class="mini-action-btn" onclick="cancelReservation(${parseInt(r.reservation_id || 0, 10)})" style="margin-left:6px;">취소</button>` : ''}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-		// 상세 보기 / 다음수업 관련 함수
-		let currentNextReservationId = null;
-		async function openNextClassModal() {
-			try {
-				const resp = await fetch('api/reservations.php');
-				const json = await resp.json();
-				if (!resp.ok || !json.success) {
-					alert('다음 수업 정보를 불러올 수 없습니다.');
-					return;
-				}
-				const now = new Date();
-				const upcoming = (json.data || []).filter(r => {
-					const dt = new Date((r.class_date || '') + 'T' + (r.start_time || '').slice(0, 8));
-					return dt >= now && r.status === 'CONFIRMED';
-				}).sort((a, b) => new Date(a.class_date + 'T' + a.start_time) - new Date(b.class_date + 'T' + b.start_time));
-				if (!upcoming.length) {
-					alert('예정된 다음 수업이 없습니다.');
-					return;
-				}
-				const next = upcoming[0];
-				currentNextReservationId = parseInt(next.reservation_id || 0, 10);
-				document.getElementById('nc-class-info').innerText = `${next.class_date} ${(next.start_time || '').slice(0, 5)} — ${next.class_type || ''}`;
-				document.getElementById('nc-teacher').innerText = `강사: ${next.teacher_name || '-'}`;
-				document.getElementById('nc-status').innerText = `상태: ${next.status || '-'}`;
-				// show modal
-				document.getElementById('next-class-modal').classList.remove('hidden');
-			} catch (e) {
-				console.error(e);
-				alert('다음 수업 정보를 불러오는 중 오류가 발생했습니다.');
-			}
-		}
-		function closeNextClassModal() { document.getElementById('next-class-modal').classList.add('hidden'); }
-		function goToReservationDetail() {
-			closeNextClassModal();
-			toggleCollapse('reservation-section');
-			loadReservationHistory(true);
-			// scroll to reservation list
-			setTimeout(() => {
-				document.getElementById('reservation-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-			}, 200);
-		}
-		async function cancelNextReservation() {
-			if (!currentNextReservationId) {
-				alert('취소할 예약이 없습니다.');
-				return;
-			}
-			if (!confirm('다음 수업을 취소하시겠습니까?')) return;
-			await cancelReservation(currentNextReservationId);
-			closeNextClassModal();
-		}
+    // 상세 보기 / 다음수업 관련 함수
+    let currentNextReservationId = null;
+    async function openNextClassModal() {
+      try {
+        const resp = await fetch('api/reservations.php');
+        const json = await resp.json();
+        if (!resp.ok || !json.success) {
+          showToast('다음 수업 정보를 불러올 수 없습니다.');
+          return;
+        }
+        const now = new Date();
+        const upcoming = (json.data || []).filter(r => {
+          const dt = new Date((r.class_date || '') + 'T' + (r.start_time || '').slice(0, 8));
+          return dt >= now && r.status === 'CONFIRMED';
+        }).sort((a, b) => new Date(a.class_date + 'T' + a.start_time) - new Date(b.class_date + 'T' + b.start_time));
+        if (!upcoming.length) {
+          showToast('예정된 다음 수업이 없습니다.');
+          return;
+        }
+        const next = upcoming[0];
+        currentNextReservationId = parseInt(next.reservation_id || 0, 10);
+        document.getElementById('nc-class-info').innerText = `${next.class_date} ${(next.start_time || '').slice(0, 5)} — ${next.class_type || ''}`;
+        document.getElementById('nc-teacher').innerText = `강사: ${next.teacher_name || '-'}`;
+        document.getElementById('nc-status').innerText = `상태: ${next.status || '-'}`;
+        // show modal
+        document.getElementById('next-class-modal').classList.remove('hidden');
+      } catch (e) {
+        console.error(e);
+        showToast('다음 수업 정보를 불러오는 중 오류가 발생했습니다.');
+      }
+    }
+    function closeNextClassModal() { document.getElementById('next-class-modal').classList.add('hidden'); }
+    function goToReservationDetail() {
+      closeNextClassModal();
+      toggleCollapse('reservation-section');
+      loadReservationHistory(true);
+      // scroll to reservation list
+      setTimeout(() => {
+        document.getElementById('reservation-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
+    async function cancelNextReservation() {
+      if (!currentNextReservationId) {
+        alert('취소할 예약이 없습니다.');
+        return;
+      }
+      if (!confirm('다음 수업을 취소하시겠습니까?')) return;
+      await cancelReservation(currentNextReservationId);
+      closeNextClassModal();
+    }
 
-		// 예약 취소
-		async function cancelReservation(reservationId) {
-			try {
-				const form = new URLSearchParams();
-				form.append('action', 'cancel');
-				form.append('reservation_id', String(reservationId));
-				const resp = await fetch('api/reservations.php', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-					body: form.toString()
-				});
-				const json = await resp.json();
-				if (!resp.ok || !json.success) {
-					alert(json && json.message ? json.message : '예약 취소 중 오류가 발생했습니다.');
-					return;
-				}
-				alert('예약이 취소되었습니다.');
-				// 갱신
-				reservationCache = null;
-				loadReservationHistory(true);
-				await loadMyPageData();
-			} catch (e) {
-				console.error(e);
-				alert('예약 취소 중 네트워크 오류가 발생했습니다.');
-			}
-		}
+    // 예약 취소
+    async function cancelReservation(reservationId) {
+      try {
+        const form = new URLSearchParams();
+        form.append('action', 'cancel');
+        form.append('reservation_id', String(reservationId));
+        const resp = await fetch('api/reservations.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: form.toString()
+        });
+        const json = await resp.json();
+        if (!resp.ok || !json.success) {
+          alert(json && json.message ? json.message : '예약 취소 중 오류가 발생했습니다.');
+          return;
+        }
+        showToast('예약이 취소되었습니다.');
+        // 갱신
+        reservationCache = null;
+        loadReservationHistory(true);
+        await loadMyPageData();
+      } catch (e) {
+        console.error(e);
+        showToast('예약 취소 중 네트워크 오류가 발생했습니다.');
+      }
+    }
 
-		// 예약 상세 보기 간단 구현 (추후 확장)
-		function openReservationDetail(reservationId) {
-			// 현재는 상세로 스크롤 및 강조 처리
-			toggleCollapse('reservation-section');
-			loadReservationHistory(true);
-			setTimeout(() => {
-				const el = Array.from(document.querySelectorAll('#reservation-history-body tr'))
-					.find(tr => tr.innerHTML.includes(`reservation_id="${reservationId}"`) || tr.innerHTML.includes(`openReservationDetail(${reservationId})`));
-				if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			}, 300);
-		}
+    // 예약 상세 보기 간단 구현 (추후 확장)
+    function openReservationDetail(reservationId) {
+      // 현재는 상세로 스크롤 및 강조 처리
+      toggleCollapse('reservation-section');
+      loadReservationHistory(true);
+      setTimeout(() => {
+        const el = Array.from(document.querySelectorAll('#reservation-history-body tr'))
+          .find(tr => tr.innerHTML.includes(`reservation_id="${reservationId}"`) || tr.innerHTML.includes(`openReservationDetail(${reservationId})`));
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
 
 
     //글자마스터반 1주차부터4주차 시간표 //
@@ -3741,60 +4308,213 @@
 
     //가입
 
-		// 클라이언트 검증 + 가입 요청
-		async function submitSignup() {
-			const username = (document.getElementById('signup-username').value || '').trim();
-			const email = (document.getElementById('signup-email').value || '').trim();
-			const name = (document.getElementById('signup-name').value || '').trim();
-			const password = document.getElementById('signup-password').value || '';
-			const passwordConfirm = document.getElementById('signup-password-confirm').value || '';
-			const phone = (document.getElementById('signup-phone').value || '').trim();
-			const agree = document.getElementById('signup-agree').checked;
+    // 클라이언트 검증 + 가입 요청
+    async function submitSignup() {
+      const username = (document.getElementById('signup-username').value || '').trim();
+      const email = (document.getElementById('signup-email').value || '').trim();
+      const name = (document.getElementById('signup-name').value || '').trim();
+      const password = document.getElementById('signup-password').value || '';
+      const passwordConfirm = document.getElementById('signup-password-confirm').value || '';
+      const phone = (document.getElementById('signup-phone').value || '').trim();
+      const agree = document.getElementById('signup-agree').checked;
 
-			if (!username || !email || !name || !password || !passwordConfirm) {
-				alert('모든 필수 항목을 입력해 주세요.');
-				return;
-			}
-			if (password !== passwordConfirm) {
-				alert('비밀번호가 일치하지 않습니다.');
-				return;
-			}
-			if (!agree) {
-				alert('약관에 동의해야 회원가입이 가능합니다.');
-				return;
-			}
-			// 간단한 비밀번호 정책 (예시)
-			if (password.length < 8) {
-				alert('비밀번호는 최소 8자 이상이어야 합니다.');
+      if (!username || !email || !name || !password || !passwordConfirm) {
+        showToast('모든 필수 항목을 입력해 주세요.');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        showToast('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+      if (!agree) {
+        showToast('약관에 동의해야 회원가입이 가능합니다.');
+        return;
+      }
+      // 간단한 비밀번호 정책 (예시)
+      if (password.length < 8) {
+        showToast('비밀번호는 최소 8자 이상이어야 합니다.');
+        return;
+      }
+
+      try {
+        const form = new URLSearchParams();
+        form.append('username', username);
+        form.append('email', email);
+        form.append('name', name);
+        form.append('password', password);
+        form.append('phone', phone);
+        form.append('agree', agree ? '1' : '0'); // 서버에 동의 여부 전달
+
+        const resp = await fetch('api/signup.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: form.toString()
+        });
+        const result = await resp.json().catch(() => null);
+        if (!resp.ok || !result || !result.success) {
+          showToast(result && result.message ? result.message : '회원가입 중 오류가 발생했습니다.');
+          return;
+        }
+
+        showToast('회원가입이 완료되었습니다. 이메일 인증 후 로그인 해 주세요.');
+        toggleAuthForm('login');
+      } catch (e) {
+        console.error(e);
+        showToast('회원가입 요청 중 오류가 발생했습니다.');
+      }
+    }
+
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+
+      if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        overlay.classList.add('hidden');
+      } else {
+        sidebar.classList.add('active');
+        overlay.classList.remove('hidden');
+      }
+    }
+    /* ---------------- Q&A 아코디언 핸들러 ---------------- */
+    function toggleQA(element) {
+      const parent = element.parentElement;
+      parent.classList.toggle('open');
+    }
+
+    /* ---------------- 공통 토스트 팝업 제어 ---------------- */
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) {
+        alert(message);
+        return;
+      }
+      toast.innerText = message;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+
+    /*퀴즈모달*/
+		const semoQuizDatabase = [
+			{ q: "일본어로 '감사합니다'를 의미하는 올바른 한글 표기는?", a: ["스미마센", "아리가토-고자이마스", "はじめまして", "고멘나사이"], correct: 1 },
+			{ q: "히라가나 문자 'あ'의 올바른 발음은 무엇인가요?", a: ["아", "이", "우", "에"], correct: 0 },
+			{ q: "일본어로 '친구(ともだち)'의 발음은?", a: ["토모다치", "가쿠세이", "센세이", "아나타"], correct: 0 },
+			{ q: "가타카나로 '응'은?", a: ["ツ", "シ", "ソ", "ン"], correct: 3 },
+			{ q: "가타카나로 '시'는?", a: ["ツ", "シ", "ソ", "ン"], correct: 1 },
+			{ q: "가타카나로 '우'는?", a: ["ウ", "ワ", "フ", "ヨ", "コ"], correct: 0 },
+			{ q: "가타카나로 '코'는?", a: ["ウ", "ワ", "フ", "ヨ", "コ"], correct: 4 },
+			{ q: "가타카나로 '츠'는?", a: ["ツ", "シ", "ソ", "ン"], correct: 0 },
+			{ q: "'아'는일본어 글자로뭘까?", a: ["お", "あ", "ぬ", "の"], correct: 0 },
+			{ q: "'누'는일본어 글자로뭘까?", a: ["ね", "わ", "ぬ", "の"], correct: 2 },
+			{ q: "'로'는일본어 글자로뭘까?", a: ["ね", "わ", "れ", "る", "ろ"], correct: 2 },
+			{ q: "[ロ]이 '일본어글자'는 발음이 뭘까?", a: ["모", "무", "로", "레", "네모","므","구"], correct: 2 },
+			{ q: "히라가나 'つ'의 올바른 한국어 발음은?", a: ["쿠", "시", "츠", "헤"], correct: 2 },
+			{ q: "일본어로 '처음 뵙겠습니다'를 표현하는 단어는?", a: ["콘니치와", "사요나라", "오하요-", "하지메마시테"], correct: 3 }
+		];
+
+		let selectedQuizData = null;
+		let generatedPoints = 0;
+
+		function checkAndSpawnMascot() {
+			const todayStr = new Date().toISOString().slice(0, 10);
+			const playedToday = localStorage.getItem('semo_quiz_played_today');
+
+			// 오늘 이미 플레이했다면 캐릭터를 띄우지 않습니다.
+			if (playedToday === todayStr) {
+				document.getElementById('quiz-mascot').classList.add('hidden');
 				return;
 			}
 
-			try {
-				const form = new URLSearchParams();
-				form.append('username', username);
-				form.append('email', email);
-				form.append('name', name);
-				form.append('password', password);
-				form.append('phone', phone);
-				form.append('agree', agree ? '1' : '0'); // 서버에 동의 여부 전달
+			// 아직 플레이 안 했다면 노출시킴
+			document.getElementById('quiz-mascot').classList.remove('hidden');
+		}
 
-				const resp = await fetch('api/signup.php', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-					body: form.toString()
-				});
-				const result = await resp.json().catch(() => null);
-				if (!resp.ok || !result || !result.success) {
-					alert(result && result.message ? result.message : '회원가입 중 오류가 발생했습니다.');
-					return;
+		function triggerSemoQuiz() {
+			const todayStr = new Date().toISOString().slice(0, 10);
+			const playedToday = localStorage.getItem('semo_quiz_played_today');
+
+			if (playedToday === todayStr) {
+				alert('🦊 세모짱: "오늘의 퀴즈는 이미 끝났어! 다시 새로운 문제로 만나자!"');
+				return;
+			}
+
+			// 문제 랜덤 세팅
+			const randIndex = Math.floor(Math.random() * semoQuizDatabase.length);
+			selectedQuizData = semoQuizDatabase[randIndex];
+			generatedPoints = Math.floor(Math.random() * 99) + 1; // 1 ~ 99 세모 랜덤
+
+			document.getElementById('quiz-q-text').innerText = selectedQuizData.q;
+			const container = document.getElementById('quiz-options-container');
+			container.innerHTML = '';
+
+			selectedQuizData.a.forEach((option, idx) => {
+				const btn = document.createElement('button');
+				btn.className = 'quiz-option-btn';
+				btn.innerText = `${idx + 1}. ${option}`;
+				btn.onclick = () => submitQuizAnswer(idx);
+				container.appendChild(btn);
+			});
+
+			// 모달 초기화 후 오픈
+			document.getElementById('quiz-question-box').classList.remove('hidden');
+			document.getElementById('quiz-result-box').classList.add('hidden');
+			document.getElementById('semo-quiz-modal').classList.remove('hidden');
+		}
+
+		function submitQuizAnswer(selectedIndex) {
+			const todayStr = new Date().toISOString().slice(0, 10);
+			localStorage.setItem('semo_quiz_played_today', todayStr); // 오늘 기회 소진 저장
+
+			const isCorrect = selectedIndex === selectedQuizData.correct;
+			const statusEmoji = document.getElementById('quiz-status-emoji');
+			const resultTitle = document.getElementById('quiz-result-title');
+			const resultDesc = document.getElementById('quiz-result-desc');
+			const unloggedActions = document.getElementById('quiz-unlogged-actions');
+
+			document.getElementById('quiz-question-box').classList.add('hidden');
+			document.getElementById('quiz-result-box').classList.remove('hidden');
+
+			// 마스코트 즉시 숨기기 (오늘 완료했으므로)
+			document.getElementById('quiz-mascot').classList.add('hidden');
+
+			if (isCorrect) {
+				statusEmoji.innerText = "🎉";
+				resultTitle.innerText = "오-!정답! 🦊";
+				resultTitle.style.color = "#059669";
+
+				if (isStudentLoggedIn()) {
+					resultDesc.innerHTML = `대단해요! 정답을 맞추셨습니다.<br><strong>${generatedPoints} 세모 포인트</strong>가 회원님의 계정에 성공적으로 누적되었습니다!`;
+					// 로컬 가상 밸런스 즉시 반영 및 마이페이지 동기화 (실제 PHP DB 연동 시 비동기 전송 가능)
+					const prevBalance = getCurrentSemoBalance();
+					document.getElementById('semo-balance').innerText = (prevBalance + generatedPoints).toLocaleString();
+					unloggedActions.classList.add('hidden');
+				} else {
+					resultDesc.innerHTML = `정답을 맞추셨습니다! 대단해요!<br>비회원 상태이므로 대기 중인 <strong>${generatedPoints} 세모 포인트</strong>를 저장할 수 없습니다.`;
+					unloggedActions.classList.remove('hidden');
 				}
-
-				alert('회원가입이 완료되었습니다. 이메일 인증 후 로그인 해 주세요.');
-				toggleAuthForm('login');
-			} catch (e) {
-				console.error(e);
-				alert('회원가입 요청 중 오류가 발생했습니다.');
+			} else {
+				statusEmoji.innerText = "😢";
+				resultTitle.innerText = "아쉬워 다시돌아올게.";
+				resultTitle.style.color = "#b91c1c";
+				resultDesc.innerHTML = `정답은 <strong>"${selectedQuizData.a[selectedQuizData.correct]}"</strong> 이었습니다!<br>세모짱의 퀴즈 기회는 랜덤으로 한 번씩 주어지니 실망하지 말고 나를찾으면 다시 도전해 주세요!`;
+				unloggedActions.classList.add('hidden');
 			}
+		}
+
+		function goToLoginForQuizPoints() {
+			closeQuizModal();
+			openModal('login');
+			// 가입 유도 문구 추가 가이드
+			setTimeout(() => {
+				alert(`🦊 세모짱: "로그인을 완료하면 조금 전 획득한 ${generatedPoints} 세모가 안전하게 적립됩니다!"`);
+			}, 300);
+		}
+
+		function closeQuizModal() {
+			document.getElementById('semo-quiz-modal').classList.add('hidden');
 		}
   </script>
 
