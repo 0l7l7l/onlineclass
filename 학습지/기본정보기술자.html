@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>기본정보처리</title>
+	<!DOCTYPE html>
+	<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>세모온라인 - 기본정보처리</title>
+		<style>
+				/* ==========================================================================
+				 1. 기본 스타일 초기화 및 웹 화면용 배경/패딩 설정
+				 ========================================================================== */
+				* {
+					box-sizing: border-box;
+					margin: 0;
+					padding: 0;
+					font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+				}
+
+				body {
+					background-color: #f4f6f9;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					min-height: 100vh;
+					padding: 40px 20px; /* 화면 좌우 여백 확보 */
+					color: #333;
+				}
+
+				/*
+				 ★ 책처럼 아기자기하게 보이도록 비율 조정
+				 화면 해상도에 맞게 0.75배(75%) 크기로 컴팩트하게 축소하여 배치합니다.
+			*/
+				.book-wrapper {
+					display: flex;
+					flex-direction: column;
+					gap: 40px;
+					transform: scale(0.75);
+					transform-origin: top center; /* 상단 중앙을 기준으로 이쁘게 축소 */
+					margin-bottom: -60mm; /* 축소로 인해 생기는 하단 공백 방지 */
+				}
+
+				/* ==========================================================================
+				 2. 책 펼침면 구조 및 은은한 가운데 선
+				 ========================================================================== */
+				.book-container {
+					display: flex;
+					width: 364mm;
+					height: 257mm;
+					background-color: #fff;
+					box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+					border-radius: 12px;
+					overflow: hidden;
+					position: relative;
+				}
+
+					/* ★ 요청하신 은은하고 희미한 가운데 구분선 효과 */
+					.book-container::after {
+						content: "";
+						position: absolute;
+						left: 50%;
+						top: 5%;
+						width: 1px;
+						height: 90%;
+						background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.01));
+						z-index: 10;
+					}
+
+				/* 공통 페이지 스타일 (B5 1장 단위) */
+				.page {
+					width: 182mm;
+					height: 257mm;
+					padding: 30mm 20mm 20mm 20mm;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					background-color: #fff;
+				}
+
+				/* 페이지 번호 */
+				.page-number {
+					position: absolute;
+					bottom: 15mm;
+					font-size: 14px;
+					color: #888;
+					font-weight: bold;
+				}
+
+				.left-page .page-number {
+					left: 20mm;
+				}
+
+				.right-page .page-number {
+					right: 20mm;
+				}
+
+				/* 대단원/소단원 표시 */
+				.chapter-title {
+					position: absolute;
+					top: 15mm;
+					font-size: 13px;
+					color: #999;
+					letter-spacing: 1px;
+				}
+
+				.left-page .chapter-title {
+					left: 20mm;
+				}
+
+				.right-page .chapter-title {
+					right: 20mm;
+					text-align: right;
+					width: calc(100% - 40mm);
+				}
+
+
+				/* ==========================================================================
+				 3. 원본 디자인 및 대제목 좌측 선 보강 (수정 및 유지)
+				 ========================================================================== */
+				.main-title {
+					font-size: 28px;
+					color: #2b4c7e;
+					margin-bottom: 5px;
+					font-weight: 800;
+					/* 대제목 좌측 선 효과 보강 */
+					padding-left: 12px;
+					border-left: 5px solid #2b4c7e;
+					line-height: 1.2;
+				}
+
+					.main-title.green {
+						color: #1e5e4a;
+						border-left-color: #1e5e4a;
+					}
+
+				.sub-title {
+					font-size: 16px;
+					color: #666;
+					margin-bottom: 25px;
+					padding-left: 12px; /* 대제목 선 위치와 정렬 맞춤 */
+				}
+
+				.grammar-box {
+					background-color: #f8fafc;
+					border-left: 5px solid #2b4c7e;
+					padding: 18px;
+					border-radius: 4px;
+					margin-bottom: 25px;
+				}
+
+					.grammar-box.green {
+						background-color: #f4fbf7;
+						border-left: 5px solid #1e5e4a;
+					}
+
+					.grammar-box h3 {
+						font-size: 18px;
+						margin-bottom: 10px;
+						color: #1e293b;
+					}
+
+					.grammar-box p {
+						font-size: 15px;
+						line-height: 1.6;
+						color: #475569;
+					}
+
+				.grammar-table {
+					width: 100%;
+					border-collapse: collapse;
+					margin: 15px 0;
+					font-size: 14px;
+				}
+
+					.grammar-table th, .grammar-table td {
+						border: 1px solid #e2e8f0;
+						padding: 10px;
+						text-align: center;
+					}
+
+					.grammar-table th {
+						background-color: #edf2f7;
+						color: #2d3748;
+					}
+
+				.section-title {
+					font-size: 18px;
+					color: #2b4c7e;
+					margin-bottom: 15px;
+					border-bottom: 2px solid #edf2f7;
+					padding-bottom: 5px;
+					font-weight: 700;
+				}
+
+					.section-title.green {
+						color: #1e5e4a;
+					}
+
+				.example-list {
+					list-style: none;
+				}
+
+				.example-item {
+					margin-bottom: 15px;
+					padding-left: 15px;
+					position: relative;
+				}
+
+					.example-item::before {
+						content: "•";
+						position: absolute;
+						left: 0;
+						color: #2b4c7e;
+						font-weight: bold;
+					}
+
+					.example-item.green::before {
+						color: #1e5e4a;
+					}
+
+				.example-en {
+					font-size: 16px;
+					font-weight: 600;
+					color: #1a202c;
+				}
+
+				.example-ko {
+					font-size: 14px;
+					color: #718096;
+					margin-top: 2px;
+				}
+
+				.bubble-container {
+					position: relative;
+					background: #eef2ff;
+					border-radius: 16px;
+					padding: 20px;
+					margin-bottom: 30px;
+					border: 2px solid #c7d2fe;
+				}
+
+					.bubble-container.green {
+						background: #eefdf7;
+						border-color: #bbf7d0;
+					}
+
+					.bubble-container::after {
+						content: '';
+						position: absolute;
+						bottom: 0;
+						left: 10%;
+						width: 0;
+						height: 0;
+						border: 15px solid transparent;
+						border-top-color: #eef2ff;
+						border-bottom: 0;
+						margin-left: -15px;
+						margin-bottom: -15px;
+					}
+
+					.bubble-container.green::after {
+						border-top-color: #eefdf7;
+					}
+
+					.bubble-container::before {
+						content: '';
+						position: absolute;
+						bottom: 0;
+						left: 10%;
+						width: 0;
+						height: 0;
+						border: 17px solid transparent;
+						border-top-color: #c7d2fe;
+						border-bottom: 0;
+						margin-left: -17px;
+						margin-bottom: -17px;
+						z-index: -1;
+					}
+
+					.bubble-container.green::before {
+						border-top-color: #bbf7d0;
+					}
+
+				.bubble-title {
+					font-size: 15px;
+					font-weight: bold;
+					color: #4f46e5;
+					margin-bottom: 10px;
+					text-transform: uppercase;
+					letter-spacing: 0.5px;
+				}
+
+					.bubble-title.green {
+						color: #166534;
+					}
+
+				.word-grid {
+					display: grid;
+					grid-template-columns: repeat(2, 1fr);
+					gap: 10px;
+				}
+
+				.word-item {
+					font-size: 15px;
+					color: #1e1b4b;
+				}
+
+					.word-item.green {
+						color: #14532d;
+					}
+
+					.word-item strong {
+						color: #4f46e5;
+						font-size: 16px;
+					}
+
+					.word-item.green strong {
+						color: #166534;
+					}
+
+				.quiz-container {
+					flex-grow: 1;
+				}
+
+				.quiz-item {
+					margin-bottom: 18px;
+				}
+
+				.quiz-q {
+					font-size: 15px;
+					font-weight: 600;
+					color: #2d3748;
+					margin-bottom: 6px;
+				}
+
+				.quiz-blank {
+					display: inline-block;
+					width: 70px;
+					border-bottom: 1px solid #333;
+					text-align: center;
+					margin: 0 5px;
+				}
+
+				.quiz-hint {
+					font-size: 13px;
+					color: #718096;
+					margin-left: 5px;
+				}
+
+				/* --- don't 문법 컬러 테마 (오렌지/베이지) --- */
+				.main-title.amber {
+					color: #b45309;
+					border-left-color: #d97706;
+				}
+
+				.grammar-box.amber {
+					background-color: #fffbeb;
+					border-left: 5px solid #d97706;
+				}
+
+				.section-title.amber {
+					color: #b45309;
+				}
+
+				.example-item.amber::before {
+					color: #d97706;
+				}
+
+				.bubble-container.amber {
+					background: #fffbe6;
+					border-color: #fde68a;
+				}
+
+					.bubble-container.amber::after {
+						border-top-color: #fffbe6;
+					}
+
+					.bubble-container.amber::before {
+						border-top-color: #fde68a;
+					}
+
+				.bubble-title.amber {
+					color: #b45309;
+				}
+
+				.word-item.amber {
+					color: #78350f;
+				}
+
+					.word-item.amber strong {
+						color: #b45309;
+					}
+
+				.compare-box {
+					background-color: #fafafa;
+					border: 1px dashed #cbd5e1;
+					padding: 15px;
+					border-radius: 6px;
+					margin-bottom: 20px;
+				}
+
+				.compare-line {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					font-size: 14px;
+					margin-bottom: 10px;
+				}
+
+					.compare-line:last-child {
+						margin-bottom: 0;
+					}
+
+				.arrow-icon {
+					color: #d97706;
+					font-weight: bold;
+				}
+
+				/* --- 의문사 질문 문법 컬러 테마 (네이비/시안) --- */
+				.main-title.navy {
+					color: #0f172a;
+					border-left-color: #334155;
+				}
+
+				.grammar-box.navy {
+					background-color: #f8fafc;
+					border-left: 5px solid #334155;
+				}
+
+				.section-title.navy {
+					color: #1e293b;
+					border-bottom: 2px solid #cbd5e1;
+				}
+
+				.example-item.navy::before {
+					color: #475569;
+				}
+
+				.bubble-container.navy {
+					background: #f1f5f9;
+					border-color: #cbd5e1;
+				}
+
+					.bubble-container.navy::after {
+						border-top-color: #f1f5f9;
+					}
+
+					.bubble-container.navy::before {
+						border-top-color: #cbd5e1;
+					}
+
+				.bubble-title.navy {
+					color: #0f172a;
+				}
+
+				.word-item.navy {
+					color: #334155;
+				}
+
+					.word-item.navy strong {
+						color: #0f172a;
+					}
+
+				.wh-badge {
+					display: inline-block;
+					padding: 2px 6px;
+					background-color: #e2e8f0;
+					color: #0f172a;
+					font-weight: bold;
+					border-radius: 4px;
+					font-size: 13px;
+					margin-right: 4px;
+				}
+
+				/* --- want to 문법 컬러 테마 (퍼플/라벤더) --- */
+				.main-title.purple {
+					color: #581c87;
+					border-left-color: #7c3aed;
+				}
+
+				.grammar-box.purple {
+					background-color: #faf5ff;
+					border-left: 5px solid #7c3aed;
+				}
+
+				.section-title.purple {
+					color: #581c87;
+					border-bottom: 2px solid #ddd6fe;
+				}
+
+				.example-item.purple::before {
+					color: #7c3aed;
+				}
+
+				.bubble-container.purple {
+					background: #f5f3ff;
+					border-color: #ddd6fe;
+				}
+
+					.bubble-container.purple::after {
+						border-top-color: #f5f3ff;
+					}
+
+					.bubble-container.purple::before {
+						border-top-color: #ddd6fe;
+					}
+
+				.bubble-title.purple {
+					color: #581c87;
+				}
+
+				.word-item.purple {
+					color: #4c1d95;
+				}
+
+					.word-item.purple strong {
+						color: #7c3aed;
+					}
+
+				/* --- can 문법 컬러 테마 (스카이 블루/시안) --- */
+				.main-title.cyan {
+					color: #0e7490;
+					border-left-color: #06b6d4;
+				}
+
+				.grammar-box.cyan {
+					background-color: #ecfeff;
+					border-left: 5px solid #06b6d4;
+				}
+
+				.section-title.cyan {
+					color: #0e7490;
+					border-bottom: 2px solid #cffafe;
+				}
+
+				.example-item.cyan::before {
+					color: #06b6d4;
+				}
+
+				.bubble-container.cyan {
+					background: #f0fdfa;
+					border-color: #99f6e4;
+				}
+
+					.bubble-container.cyan::after {
+						border-top-color: #f0fdfa;
+					}
+
+					.bubble-container.cyan::before {
+						border-top-color: #99f6e4;
+					}
+
+				.bubble-title.cyan {
+					color: #0f766e;
+				}
+
+				.word-item.cyan {
+					color: #115e59;
+				}
+
+					.word-item.cyan strong {
+						color: #0d9488;
+					}
+
+				.warning-box {
+					background-color: #fff7ed;
+					border: 1px dashed #fed7aa;
+					padding: 10px 15px;
+					border-radius: 6px;
+					font-size: 14px;
+					color: #c2410c;
+					margin-top: 15px;
+					display: flex;
+					align-items: center;
+					gap: 8px;
+				}
+
+				/* --- 현재진행형 문법 컬러 테마 (로즈/핑크) --- */
+				.main-title.rose {
+					color: #9d174d;
+					border-left-color: #f43f5e;
+				}
+
+				.grammar-box.rose {
+					background-color: #fff1f2;
+					border-left: 5px solid #f43f5e;
+				}
+
+				.section-title.rose {
+					color: #9d174d;
+					border-bottom: 2px solid #fecdd3;
+				}
+
+				.example-item.rose::before {
+					color: #f43f5e;
+				}
+
+				.bubble-container.rose {
+					background: #fff5f5;
+					border-color: #fca5a5;
+				}
+
+					.bubble-container.rose::after {
+						border-top-color: #fff5f5;
+					}
+
+					.bubble-container.rose::before {
+						border-top-color: #fca5a5;
+					}
+
+				.bubble-title.rose {
+					color: #9d174d;
+				}
+
+				.word-item.rose {
+					color: #881337;
+				}
+
+					.word-item.rose strong {
+						color: #e11d48;
+					}
+
+				/* --- Let's 문법 컬러 테마 (옐로우/골드) --- */
+				.main-title.yellow {
+					color: #854d0e;
+					border-left-color: #eab308;
+				}
+
+				.grammar-box.yellow {
+					background-color: #fefce8;
+					border-left: 5px solid #eab308;
+				}
+
+				.section-title.yellow {
+					color: #854d0e;
+					border-bottom: 2px solid #fef08a;
+				}
+
+				.example-item.yellow::before {
+					color: #eab308;
+				}
+
+				.bubble-container.yellow {
+					background: #fefdf0;
+					border-color: #fde047;
+				}
+
+					.bubble-container.yellow::after {
+						border-top-color: #fefdf0;
+					}
+
+					.bubble-container.yellow::before {
+						border-top-color: #fde047;
+					}
+
+				.bubble-title.yellow {
+					color: #854d0e;
+				}
+
+				.word-item.yellow {
+					color: #713f12;
+				}
+
+					.word-item.yellow strong {
+						color: #ca8a04;
+					}
+
+				/* --- 관사 a/an 문법 컬러 테마 (블루/스카이) --- */
+				.main-title.blue {
+					color: #1e3a8a;
+					border-left-color: #3b82f6;
+				}
+
+				.grammar-box.blue {
+					background-color: #eff6ff;
+					border-left: 5px solid #3b82f6;
+				}
+
+				.section-title.blue {
+					color: #1e3a8a;
+					border-bottom: 2px solid #bfdbfe;
+				}
+
+				.example-item.blue::before {
+					color: #3b82f6;
+				}
+
+				.bubble-container.blue {
+					background: #f8fafc;
+					border-color: #cbd5e1;
+				}
+
+					.bubble-container.blue::after {
+						border-top-color: #f8fafc;
+					}
+
+					.bubble-container.blue::before {
+						border-top-color: #cbd5e1;
+					}
+
+				.bubble-title.blue {
+					color: #1e3a8a;
+				}
+
+				.word-item.blue {
+					color: #1e293b;
+				}
+
+					.word-item.blue strong {
+						color: #2563eb;
+					}
+
+				.ox-badge {
+					display: inline-block;
+					font-weight: bold;
+					margin-right: 5px;
+				}
+
+					.ox-badge.o {
+						color: #16a34a;
+					}
+
+					.ox-badge.x {
+						color: #dc2626;
+					}
+
+
+				/* ==========================================================================
+				 4. 프린트/인쇄 전용 미디어 쿼리 (인쇄 시 원래 크기 100% 반영)
+				 ========================================================================== */
+				@media print {
+					@page {
+						size: 364mm 257mm; /* B5 펼침면 규격 */
+						margin: 0;
+					}
+
+					body {
+						background-color: #fff;
+						padding: 0;
+						margin: 0;
+						display: block;
+						min-height: auto;
+					}
+
+					/* ★ 인쇄할 때는 축소(scale) 효과를 해제하고 본래 크기로 꽉 채워 출력 */
+					.book-wrapper {
+						gap: 0;
+						transform: none;
+						margin-bottom: 0;
+					}
+
+					.book-container {
+						width: 364mm;
+						height: 257mm;
+						page-break-after: always;
+						box-shadow: none;
+						border-radius: 0;
+						border: none;
+					}
+
+						.book-container::after {
+							display: none;
+						}
+
+					* {
+						-webkit-print-color-adjust: exact !important;
+						print-color-adjust: exact !important;
+					}
+				}
+		</style>
+
+	</head>
+	<body>
+
+		<div class="book-container">
+
+			<!-- 左ページ：概要・ポイント -->
+			<div class="page left-page">
+				<span class="chapter-title">CHAPTER 01. 基本情報技術者試験とは？</span>
+				<h1 class="main-title amber">Fundamental Information Technology Engineer</h1>
+				<p class="sub-title">ITの基礎を証明する国家資格</p>
+
+				<div class="grammar-box amber">
+					<h3>試験の概要</h3>
+					<p>
+						<strong>基本情報技術者試験（FE）</strong>は、ITエンジニアとして必要な
+						<strong>基礎知識・基本的な実務能力</strong>を問う国家試験です。
+					</p>
+					<p>
+						コンピュータの仕組み、ネットワーク、データベース、アルゴリズム、セキュリティなど
+						ITの基礎を幅広く学ぶことができます。
+					</p>
+
+					<h4 style="margin-top: 12px;">試験形式</h4>
+					<table class="grammar-table">
+						<thead>
+							<tr>
+								<th>区分</th>
+								<th>内容</th>
+								<th>時間</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>午前試験</strong></td>
+								<td>四択の知識問題（80問）</td>
+								<td>90分</td>
+							</tr>
+							<tr>
+								<td><strong>午後試験</strong></td>
+								<td>長文問題＋アルゴリズム＋セキュリティなど</td>
+								<td>100分</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h4 style="margin-top: 12px;">合格基準</h4>
+					<table class="grammar-table">
+						<thead>
+							<tr>
+								<th>区分</th>
+								<th>合格ライン</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>午前試験</strong></td>
+								<td>60%以上</td>
+							</tr>
+							<tr>
+								<td><strong>午後試験</strong></td>
+								<td>60%以上</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<h2 class="section-title amber">学習ポイント</h2>
+				<ul class="example-list">
+					<li class="example-item amber">
+						<p class="example-en">IT基礎を広く理解する</p>
+						<p class="example-ko">ハードウェア・ソフトウェア・ネットワークなどを網羅的に学ぶ</p>
+					</li>
+					<li class="example-item amber">
+						<p class="example-en">アルゴリズムを確実に理解する</p>
+						<p class="example-ko">午後試験の得点源。流れ図・擬似言語に慣れる</p>
+					</li>
+					<li class="example-item amber">
+						<p class="example-en">過去問を繰り返す</p>
+						<p class="example-ko">午前試験は過去問の傾向が強い</p>
+					</li>
+				</ul>
+
+				<span class="page-number">ページ番号</span>
+			</div>
+
+			<!-- 右ページ：練習問題 -->
+			<div class="page right-page">
+				<span class="chapter-title">UNIT 1. 午前試験 練習問題</span>
+
+				<!-- 大きな単語バブル -->
+				<div class="bubble-container amber">
+					<div class="bubble-title amber">📢 Today's Words（IT基礎）</div>
+					<div class="word-grid">
+						<div class="word-item amber"><strong>CPU</strong> 中央処理装置</div>
+						<div class="word-item amber"><strong>RAM</strong> 主記憶装置</div>
+						<div class="word-item amber"><strong>IP address</strong> ネットワーク識別番号</div>
+						<div class="word-item amber"><strong>SQL</strong> データベース操作言語</div>
+						<div class="word-item amber"><strong>Algorithm</strong> 手順・処理の流れ</div>
+						<div class="word-item amber"><strong>Firewall</strong> 不正アクセス防止</div>
+					</div>
+				</div>
+
+				<!-- 練習問題 -->
+				<div class="quiz-container">
+					<h2 class="section-title amber">Practice Test（午前試験風）</h2>
+					<p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+						※ 四択の中から正しい答えを選んでください。
+					</p>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							1. CPUの主な役割はどれか。
+						</p>
+						<p class="quiz-q">
+							A. データを永続的に保存する
+							B. ネットワーク通信を管理する
+							C. プログラムを解釈し処理を行う
+							D. 画面に映像を表示する
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							2. SQLでデータを検索するために使う命令はどれか。
+						</p>
+						<p class="quiz-q">
+							A. INSERT
+							B. DELETE
+							C. SELECT
+							D. UPDATE
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							3. IPアドレスの役割として正しいものはどれか。
+						</p>
+						<p class="quiz-q">
+							A. コンピュータの処理速度を決める
+							B. ネットワーク上の機器を識別する
+							C. データを暗号化する
+							D. プログラムの実行順序を決める
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							4. アルゴリズムの説明として正しいものはどれか。
+						</p>
+						<p class="quiz-q">
+							A. コンピュータの性能を表す指標
+							B. データを保存するための装置
+							C. 問題を解決するための手順
+							D. ネットワークの速度を測る方法
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							5. ファイアウォールの役割はどれか。
+						</p>
+						<p class="quiz-q">
+							A. データを圧縮する
+							B. 不正アクセスを防ぐ
+							C. 電力消費を減らす
+							D. プログラムを高速化する
+						</p>
+					</div>
+				</div>
+
+				<span class="page-number">ページ</span>
+			</div>
+		</div>
+
+
+	</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>기본정보처리</title>
+	<!DOCTYPE html>
+	<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>세모온라인 - 기본정보처리</title>
+		<style>
+				/* ==========================================================================
+				 1. 기본 스타일 초기화 및 웹 화면용 배경/패딩 설정
+				 ========================================================================== */
+				* {
+					box-sizing: border-box;
+					margin: 0;
+					padding: 0;
+					font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+				}
+
+				body {
+					background-color: #f4f6f9;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					min-height: 100vh;
+					padding: 40px 20px; /* 화면 좌우 여백 확보 */
+					color: #333;
+				}
+
+				/*
+				 ★ 책처럼 아기자기하게 보이도록 비율 조정
+				 화면 해상도에 맞게 0.75배(75%) 크기로 컴팩트하게 축소하여 배치합니다.
+			*/
+				.book-wrapper {
+					display: flex;
+					flex-direction: column;
+					gap: 40px;
+					transform: scale(0.75);
+					transform-origin: top center; /* 상단 중앙을 기준으로 이쁘게 축소 */
+					margin-bottom: -60mm; /* 축소로 인해 생기는 하단 공백 방지 */
+				}
+
+				/* ==========================================================================
+				 2. 책 펼침면 구조 및 은은한 가운데 선
+				 ========================================================================== */
+				.book-container {
+					display: flex;
+					width: 364mm;
+					height: 257mm;
+					background-color: #fff;
+					box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+					border-radius: 12px;
+					overflow: hidden;
+					position: relative;
+				}
+
+					/* ★ 요청하신 은은하고 희미한 가운데 구분선 효과 */
+					.book-container::after {
+						content: "";
+						position: absolute;
+						left: 50%;
+						top: 5%;
+						width: 1px;
+						height: 90%;
+						background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.01));
+						z-index: 10;
+					}
+
+				/* 공통 페이지 스타일 (B5 1장 단위) */
+				.page {
+					width: 182mm;
+					height: 257mm;
+					padding: 30mm 20mm 20mm 20mm;
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					background-color: #fff;
+				}
+
+				/* 페이지 번호 */
+				.page-number {
+					position: absolute;
+					bottom: 15mm;
+					font-size: 14px;
+					color: #888;
+					font-weight: bold;
+				}
+
+				.left-page .page-number {
+					left: 20mm;
+				}
+
+				.right-page .page-number {
+					right: 20mm;
+				}
+
+				/* 대단원/소단원 표시 */
+				.chapter-title {
+					position: absolute;
+					top: 15mm;
+					font-size: 13px;
+					color: #999;
+					letter-spacing: 1px;
+				}
+
+				.left-page .chapter-title {
+					left: 20mm;
+				}
+
+				.right-page .chapter-title {
+					right: 20mm;
+					text-align: right;
+					width: calc(100% - 40mm);
+				}
+
+
+				/* ==========================================================================
+				 3. 원본 디자인 및 대제목 좌측 선 보강 (수정 및 유지)
+				 ========================================================================== */
+				.main-title {
+					font-size: 28px;
+					color: #2b4c7e;
+					margin-bottom: 5px;
+					font-weight: 800;
+					/* 대제목 좌측 선 효과 보강 */
+					padding-left: 12px;
+					border-left: 5px solid #2b4c7e;
+					line-height: 1.2;
+				}
+
+					.main-title.green {
+						color: #1e5e4a;
+						border-left-color: #1e5e4a;
+					}
+
+				.sub-title {
+					font-size: 16px;
+					color: #666;
+					margin-bottom: 25px;
+					padding-left: 12px; /* 대제목 선 위치와 정렬 맞춤 */
+				}
+
+				.grammar-box {
+					background-color: #f8fafc;
+					border-left: 5px solid #2b4c7e;
+					padding: 18px;
+					border-radius: 4px;
+					margin-bottom: 25px;
+				}
+
+					.grammar-box.green {
+						background-color: #f4fbf7;
+						border-left: 5px solid #1e5e4a;
+					}
+
+					.grammar-box h3 {
+						font-size: 18px;
+						margin-bottom: 10px;
+						color: #1e293b;
+					}
+
+					.grammar-box p {
+						font-size: 15px;
+						line-height: 1.6;
+						color: #475569;
+					}
+
+				.grammar-table {
+					width: 100%;
+					border-collapse: collapse;
+					margin: 15px 0;
+					font-size: 14px;
+				}
+
+					.grammar-table th, .grammar-table td {
+						border: 1px solid #e2e8f0;
+						padding: 10px;
+						text-align: center;
+					}
+
+					.grammar-table th {
+						background-color: #edf2f7;
+						color: #2d3748;
+					}
+
+				.section-title {
+					font-size: 18px;
+					color: #2b4c7e;
+					margin-bottom: 15px;
+					border-bottom: 2px solid #edf2f7;
+					padding-bottom: 5px;
+					font-weight: 700;
+				}
+
+					.section-title.green {
+						color: #1e5e4a;
+					}
+
+				.example-list {
+					list-style: none;
+				}
+
+				.example-item {
+					margin-bottom: 15px;
+					padding-left: 15px;
+					position: relative;
+				}
+
+					.example-item::before {
+						content: "•";
+						position: absolute;
+						left: 0;
+						color: #2b4c7e;
+						font-weight: bold;
+					}
+
+					.example-item.green::before {
+						color: #1e5e4a;
+					}
+
+				.example-en {
+					font-size: 16px;
+					font-weight: 600;
+					color: #1a202c;
+				}
+
+				.example-ko {
+					font-size: 14px;
+					color: #718096;
+					margin-top: 2px;
+				}
+
+				.bubble-container {
+					position: relative;
+					background: #eef2ff;
+					border-radius: 16px;
+					padding: 20px;
+					margin-bottom: 30px;
+					border: 2px solid #c7d2fe;
+				}
+
+					.bubble-container.green {
+						background: #eefdf7;
+						border-color: #bbf7d0;
+					}
+
+					.bubble-container::after {
+						content: '';
+						position: absolute;
+						bottom: 0;
+						left: 10%;
+						width: 0;
+						height: 0;
+						border: 15px solid transparent;
+						border-top-color: #eef2ff;
+						border-bottom: 0;
+						margin-left: -15px;
+						margin-bottom: -15px;
+					}
+
+					.bubble-container.green::after {
+						border-top-color: #eefdf7;
+					}
+
+					.bubble-container::before {
+						content: '';
+						position: absolute;
+						bottom: 0;
+						left: 10%;
+						width: 0;
+						height: 0;
+						border: 17px solid transparent;
+						border-top-color: #c7d2fe;
+						border-bottom: 0;
+						margin-left: -17px;
+						margin-bottom: -17px;
+						z-index: -1;
+					}
+
+					.bubble-container.green::before {
+						border-top-color: #bbf7d0;
+					}
+
+				.bubble-title {
+					font-size: 15px;
+					font-weight: bold;
+					color: #4f46e5;
+					margin-bottom: 10px;
+					text-transform: uppercase;
+					letter-spacing: 0.5px;
+				}
+
+					.bubble-title.green {
+						color: #166534;
+					}
+
+				.word-grid {
+					display: grid;
+					grid-template-columns: repeat(2, 1fr);
+					gap: 10px;
+				}
+
+				.word-item {
+					font-size: 15px;
+					color: #1e1b4b;
+				}
+
+					.word-item.green {
+						color: #14532d;
+					}
+
+					.word-item strong {
+						color: #4f46e5;
+						font-size: 16px;
+					}
+
+					.word-item.green strong {
+						color: #166534;
+					}
+
+				.quiz-container {
+					flex-grow: 1;
+				}
+
+				.quiz-item {
+					margin-bottom: 18px;
+				}
+
+				.quiz-q {
+					font-size: 15px;
+					font-weight: 600;
+					color: #2d3748;
+					margin-bottom: 6px;
+				}
+
+				.quiz-blank {
+					display: inline-block;
+					width: 70px;
+					border-bottom: 1px solid #333;
+					text-align: center;
+					margin: 0 5px;
+				}
+
+				.quiz-hint {
+					font-size: 13px;
+					color: #718096;
+					margin-left: 5px;
+				}
+
+				/* --- don't 문법 컬러 테마 (오렌지/베이지) --- */
+				.main-title.amber {
+					color: #b45309;
+					border-left-color: #d97706;
+				}
+
+				.grammar-box.amber {
+					background-color: #fffbeb;
+					border-left: 5px solid #d97706;
+				}
+
+				.section-title.amber {
+					color: #b45309;
+				}
+
+				.example-item.amber::before {
+					color: #d97706;
+				}
+
+				.bubble-container.amber {
+					background: #fffbe6;
+					border-color: #fde68a;
+				}
+
+					.bubble-container.amber::after {
+						border-top-color: #fffbe6;
+					}
+
+					.bubble-container.amber::before {
+						border-top-color: #fde68a;
+					}
+
+				.bubble-title.amber {
+					color: #b45309;
+				}
+
+				.word-item.amber {
+					color: #78350f;
+				}
+
+					.word-item.amber strong {
+						color: #b45309;
+					}
+
+				.compare-box {
+					background-color: #fafafa;
+					border: 1px dashed #cbd5e1;
+					padding: 15px;
+					border-radius: 6px;
+					margin-bottom: 20px;
+				}
+
+				.compare-line {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					font-size: 14px;
+					margin-bottom: 10px;
+				}
+
+					.compare-line:last-child {
+						margin-bottom: 0;
+					}
+
+				.arrow-icon {
+					color: #d97706;
+					font-weight: bold;
+				}
+
+				/* --- 의문사 질문 문법 컬러 테마 (네이비/시안) --- */
+				.main-title.navy {
+					color: #0f172a;
+					border-left-color: #334155;
+				}
+
+				.grammar-box.navy {
+					background-color: #f8fafc;
+					border-left: 5px solid #334155;
+				}
+
+				.section-title.navy {
+					color: #1e293b;
+					border-bottom: 2px solid #cbd5e1;
+				}
+
+				.example-item.navy::before {
+					color: #475569;
+				}
+
+				.bubble-container.navy {
+					background: #f1f5f9;
+					border-color: #cbd5e1;
+				}
+
+					.bubble-container.navy::after {
+						border-top-color: #f1f5f9;
+					}
+
+					.bubble-container.navy::before {
+						border-top-color: #cbd5e1;
+					}
+
+				.bubble-title.navy {
+					color: #0f172a;
+				}
+
+				.word-item.navy {
+					color: #334155;
+				}
+
+					.word-item.navy strong {
+						color: #0f172a;
+					}
+
+				.wh-badge {
+					display: inline-block;
+					padding: 2px 6px;
+					background-color: #e2e8f0;
+					color: #0f172a;
+					font-weight: bold;
+					border-radius: 4px;
+					font-size: 13px;
+					margin-right: 4px;
+				}
+
+				/* --- want to 문법 컬러 테마 (퍼플/라벤더) --- */
+				.main-title.purple {
+					color: #581c87;
+					border-left-color: #7c3aed;
+				}
+
+				.grammar-box.purple {
+					background-color: #faf5ff;
+					border-left: 5px solid #7c3aed;
+				}
+
+				.section-title.purple {
+					color: #581c87;
+					border-bottom: 2px solid #ddd6fe;
+				}
+
+				.example-item.purple::before {
+					color: #7c3aed;
+				}
+
+				.bubble-container.purple {
+					background: #f5f3ff;
+					border-color: #ddd6fe;
+				}
+
+					.bubble-container.purple::after {
+						border-top-color: #f5f3ff;
+					}
+
+					.bubble-container.purple::before {
+						border-top-color: #ddd6fe;
+					}
+
+				.bubble-title.purple {
+					color: #581c87;
+				}
+
+				.word-item.purple {
+					color: #4c1d95;
+				}
+
+					.word-item.purple strong {
+						color: #7c3aed;
+					}
+
+				/* --- can 문법 컬러 테마 (스카이 블루/시안) --- */
+				.main-title.cyan {
+					color: #0e7490;
+					border-left-color: #06b6d4;
+				}
+
+				.grammar-box.cyan {
+					background-color: #ecfeff;
+					border-left: 5px solid #06b6d4;
+				}
+
+				.section-title.cyan {
+					color: #0e7490;
+					border-bottom: 2px solid #cffafe;
+				}
+
+				.example-item.cyan::before {
+					color: #06b6d4;
+				}
+
+				.bubble-container.cyan {
+					background: #f0fdfa;
+					border-color: #99f6e4;
+				}
+
+					.bubble-container.cyan::after {
+						border-top-color: #f0fdfa;
+					}
+
+					.bubble-container.cyan::before {
+						border-top-color: #99f6e4;
+					}
+
+				.bubble-title.cyan {
+					color: #0f766e;
+				}
+
+				.word-item.cyan {
+					color: #115e59;
+				}
+
+					.word-item.cyan strong {
+						color: #0d9488;
+					}
+
+				.warning-box {
+					background-color: #fff7ed;
+					border: 1px dashed #fed7aa;
+					padding: 10px 15px;
+					border-radius: 6px;
+					font-size: 14px;
+					color: #c2410c;
+					margin-top: 15px;
+					display: flex;
+					align-items: center;
+					gap: 8px;
+				}
+
+				/* --- 현재진행형 문법 컬러 테마 (로즈/핑크) --- */
+				.main-title.rose {
+					color: #9d174d;
+					border-left-color: #f43f5e;
+				}
+
+				.grammar-box.rose {
+					background-color: #fff1f2;
+					border-left: 5px solid #f43f5e;
+				}
+
+				.section-title.rose {
+					color: #9d174d;
+					border-bottom: 2px solid #fecdd3;
+				}
+
+				.example-item.rose::before {
+					color: #f43f5e;
+				}
+
+				.bubble-container.rose {
+					background: #fff5f5;
+					border-color: #fca5a5;
+				}
+
+					.bubble-container.rose::after {
+						border-top-color: #fff5f5;
+					}
+
+					.bubble-container.rose::before {
+						border-top-color: #fca5a5;
+					}
+
+				.bubble-title.rose {
+					color: #9d174d;
+				}
+
+				.word-item.rose {
+					color: #881337;
+				}
+
+					.word-item.rose strong {
+						color: #e11d48;
+					}
+
+				/* --- Let's 문법 컬러 테마 (옐로우/골드) --- */
+				.main-title.yellow {
+					color: #854d0e;
+					border-left-color: #eab308;
+				}
+
+				.grammar-box.yellow {
+					background-color: #fefce8;
+					border-left: 5px solid #eab308;
+				}
+
+				.section-title.yellow {
+					color: #854d0e;
+					border-bottom: 2px solid #fef08a;
+				}
+
+				.example-item.yellow::before {
+					color: #eab308;
+				}
+
+				.bubble-container.yellow {
+					background: #fefdf0;
+					border-color: #fde047;
+				}
+
+					.bubble-container.yellow::after {
+						border-top-color: #fefdf0;
+					}
+
+					.bubble-container.yellow::before {
+						border-top-color: #fde047;
+					}
+
+				.bubble-title.yellow {
+					color: #854d0e;
+				}
+
+				.word-item.yellow {
+					color: #713f12;
+				}
+
+					.word-item.yellow strong {
+						color: #ca8a04;
+					}
+
+				/* --- 관사 a/an 문법 컬러 테마 (블루/스카이) --- */
+				.main-title.blue {
+					color: #1e3a8a;
+					border-left-color: #3b82f6;
+				}
+
+				.grammar-box.blue {
+					background-color: #eff6ff;
+					border-left: 5px solid #3b82f6;
+				}
+
+				.section-title.blue {
+					color: #1e3a8a;
+					border-bottom: 2px solid #bfdbfe;
+				}
+
+				.example-item.blue::before {
+					color: #3b82f6;
+				}
+
+				.bubble-container.blue {
+					background: #f8fafc;
+					border-color: #cbd5e1;
+				}
+
+					.bubble-container.blue::after {
+						border-top-color: #f8fafc;
+					}
+
+					.bubble-container.blue::before {
+						border-top-color: #cbd5e1;
+					}
+
+				.bubble-title.blue {
+					color: #1e3a8a;
+				}
+
+				.word-item.blue {
+					color: #1e293b;
+				}
+
+					.word-item.blue strong {
+						color: #2563eb;
+					}
+
+				.ox-badge {
+					display: inline-block;
+					font-weight: bold;
+					margin-right: 5px;
+				}
+
+					.ox-badge.o {
+						color: #16a34a;
+					}
+
+					.ox-badge.x {
+						color: #dc2626;
+					}
+
+
+				/* ==========================================================================
+				 4. 프린트/인쇄 전용 미디어 쿼리 (인쇄 시 원래 크기 100% 반영)
+				 ========================================================================== */
+				@media print {
+					@page {
+						size: 364mm 257mm; /* B5 펼침면 규격 */
+						margin: 0;
+					}
+
+					body {
+						background-color: #fff;
+						padding: 0;
+						margin: 0;
+						display: block;
+						min-height: auto;
+					}
+
+					/* ★ 인쇄할 때는 축소(scale) 효과를 해제하고 본래 크기로 꽉 채워 출력 */
+					.book-wrapper {
+						gap: 0;
+						transform: none;
+						margin-bottom: 0;
+					}
+
+					.book-container {
+						width: 364mm;
+						height: 257mm;
+						page-break-after: always;
+						box-shadow: none;
+						border-radius: 0;
+						border: none;
+					}
+
+						.book-container::after {
+							display: none;
+						}
+
+					* {
+						-webkit-print-color-adjust: exact !important;
+						print-color-adjust: exact !important;
+					}
+				}
+		</style>
+
+	</head>
+	<body>
+
+		<div class="book-container">
+
+			<!-- 左ページ：概要・ポイント -->
+			<div class="page left-page">
+				<span class="chapter-title">CHAPTER 01. 基本情報技術者試験とは？</span>
+				<h1 class="main-title amber">Fundamental Information Technology Engineer</h1>
+				<p class="sub-title">ITの基礎を証明する国家資格</p>
+
+				<div class="grammar-box amber">
+					<h3>試験の概要</h3>
+					<p>
+						<strong>基本情報技術者試験（FE）</strong>は、ITエンジニアとして必要な
+						<strong>基礎知識・基本的な実務能力</strong>を問う国家試験です。
+					</p>
+					<p>
+						コンピュータの仕組み、ネットワーク、データベース、アルゴリズム、セキュリティなど
+						ITの基礎を幅広く学ぶことができます。
+					</p>
+
+					<h4 style="margin-top: 12px;">試験形式</h4>
+					<table class="grammar-table">
+						<thead>
+							<tr>
+								<th>区分</th>
+								<th>内容</th>
+								<th>時間</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>午前試験</strong></td>
+								<td>四択の知識問題（80問）</td>
+								<td>90分</td>
+							</tr>
+							<tr>
+								<td><strong>午後試験</strong></td>
+								<td>長文問題＋アルゴリズム＋セキュリティなど</td>
+								<td>100分</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h4 style="margin-top: 12px;">合格基準</h4>
+					<table class="grammar-table">
+						<thead>
+							<tr>
+								<th>区分</th>
+								<th>合格ライン</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>午前試験</strong></td>
+								<td>60%以上</td>
+							</tr>
+							<tr>
+								<td><strong>午後試験</strong></td>
+								<td>60%以上</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<h2 class="section-title amber">学習ポイント</h2>
+				<ul class="example-list">
+					<li class="example-item amber">
+						<p class="example-en">IT基礎を広く理解する</p>
+						<p class="example-ko">ハードウェア・ソフトウェア・ネットワークなどを網羅的に学ぶ</p>
+					</li>
+					<li class="example-item amber">
+						<p class="example-en">アルゴリズムを確実に理解する</p>
+						<p class="example-ko">午後試験の得点源。流れ図・擬似言語に慣れる</p>
+					</li>
+					<li class="example-item amber">
+						<p class="example-en">過去問を繰り返す</p>
+						<p class="example-ko">午前試験は過去問の傾向が強い</p>
+					</li>
+				</ul>
+
+				<span class="page-number">ページ番号</span>
+			</div>
+
+			<!-- 右ページ：練習問題 -->
+			<div class="page right-page">
+				<span class="chapter-title">UNIT 1. 午前試験 練習問題</span>
+
+				<!-- 大きな単語バブル -->
+				<div class="bubble-container amber">
+					<div class="bubble-title amber">📢 Today's Words（IT基礎）</div>
+					<div class="word-grid">
+						<div class="word-item amber"><strong>CPU</strong> 中央処理装置</div>
+						<div class="word-item amber"><strong>RAM</strong> 主記憶装置</div>
+						<div class="word-item amber"><strong>IP address</strong> ネットワーク識別番号</div>
+						<div class="word-item amber"><strong>SQL</strong> データベース操作言語</div>
+						<div class="word-item amber"><strong>Algorithm</strong> 手順・処理の流れ</div>
+						<div class="word-item amber"><strong>Firewall</strong> 不正アクセス防止</div>
+					</div>
+				</div>
+
+				<!-- 練習問題 -->
+				<div class="quiz-container">
+					<h2 class="section-title amber">Practice Test（午前試験風）</h2>
+					<p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+						※ 四択の中から正しい答えを選んでください。
+					</p>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							1. CPUの主な役割はどれか。
+						</p>
+						<p class="quiz-q">
+							A. データを永続的に保存する
+							B. ネットワーク通信を管理する
+							C. プログラムを解釈し処理を行う
+							D. 画面に映像を表示する
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							2. SQLでデータを検索するために使う命令はどれか。
+						</p>
+						<p class="quiz-q">
+							A. INSERT
+							B. DELETE
+							C. SELECT
+							D. UPDATE
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							3. IPアドレスの役割として正しいものはどれか。
+						</p>
+						<p class="quiz-q">
+							A. コンピュータの処理速度を決める
+							B. ネットワーク上の機器を識別する
+							C. データを暗号化する
+							D. プログラムの実行順序を決める
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							4. アルゴリズムの説明として正しいものはどれか。
+						</p>
+						<p class="quiz-q">
+							A. コンピュータの性能を表す指標
+							B. データを保存するための装置
+							C. 問題を解決するための手順
+							D. ネットワークの速度を測る方法
+						</p>
+					</div>
+
+					<div class="quiz-item">
+						<p class="quiz-q">
+							5. ファイアウォールの役割はどれか。
+						</p>
+						<p class="quiz-q">
+							A. データを圧縮する
+							B. 不正アクセスを防ぐ
+							C. 電力消費を減らす
+							D. プログラムを高速化する
+						</p>
+					</div>
+				</div>
+
+				<span class="page-number">ページ</span>
+			</div>
+		</div>
+
+
+	</body>
+</html>
