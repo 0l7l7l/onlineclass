@@ -557,6 +557,92 @@ color: #6f6f9b;
 			.ad-slide p { font-size: 0.86rem; }
 			.slide-btn { width: 30px; height: 30px; font-size: 0.9rem; }
 		}
+
+		.section-divider { height: 1px; background: #ddd; margin: 12px 0;}
+
+
+
+
+		/*포스트리스트**/
+		/* 목록 스타일 */
+		.post-list {
+			list-style: none;
+			padding: 0;
+		}
+
+		.post-item {
+			padding: 15px;
+			border-bottom: 1px solid #eee;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+
+			.post-item:hover {
+				background-color: #f9f9f9;
+			}
+
+		.post-title {
+			font-weight: bold;
+			font-size: 1.1rem;
+			color: #333;
+		}
+
+		.post-desc {
+			color: #666;
+			font-size: 0.9rem;
+			margin: 5px 0;
+		}
+
+		.post-date {
+			color: #999;
+			font-size: 0.8rem;
+		}
+
+		/* 상세 페이지 스타일 */
+		.post-detail-container {
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			line-height: 1.8;
+		}
+
+		.back-btn {
+			background: none;
+			border: none;
+			color: #0066cc;
+			cursor: pointer;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+
+		.quote-box {
+			background-color: #f0f7ff;
+			border-left: 4px solid #0066cc;
+			padding: 15px;
+			margin: 20px 0;
+			font-style: italic;
+			font-weight: bold;
+		}
+
+		.cta-section {
+			margin-top: 40px;
+			padding: 20px;
+			background-color: #fff3cd;
+			border-radius: 8px;
+			text-align: center;
+		}
+
+		.promo-btn {
+			background-color: #ff4757;
+			color: white;
+			border: none;
+			padding: 12px 25px;
+			font-size: 1rem;
+			font-weight: bold;
+			border-radius: 25px;
+			cursor: pointer;
+			margin-top: 10px;
+		}
 	</style>
 </head>
 <body>
@@ -566,35 +652,47 @@ color: #6f6f9b;
 			<h2>Semo 자료실</h2>
 
 			<div class="lang-section">
-				<button class="lang-btn" onclick="toggleSection(this)">일본어</button>
+				<button class="lang-btn" onclick="toggleSection(this)">✏️언어 자료실</button>
 				<div class="sub-menu">
-					<button class="nav-item" onclick="loadMainDashboard('ja', 'grammar')"> 문법 자료실</button>
-					<button class="nav-item" onclick="loadMainDashboard('ja', 'words')"> 단어 자료실</button>
+					<button class="nav-item" onclick="loadMainDashboard('ja', 'grammar')">일본어 문법</button>
+					<button class="nav-item" onclick="loadMainDashboard('ja', 'words')">일본어 단어</button>
+					<button class="nav-item" onclick="loadMainDashboard('ko', 'grammar')">한국어 문법</button>
+					<button class="nav-item" onclick="loadMainDashboard('ko', 'words')">한국어 단어</button>
+					<button class="nav-item" onclick="loadMainDashboard('zh', 'grammar')">중국어 문법</button>
+					<button class="nav-item" onclick="loadMainDashboard('zh', 'words')">중국어 단어</button>
+					<button class="nav-item" onclick="loadMainDashboard('en', 'grammar')">영어 문법</button>
+					<button class="nav-item" onclick="loadMainDashboard('en', 'words')">영어 단어</button>
+				</div>
+			</div>
+
+
+			<hr class="menu-divider">
+			<div class="section-divider"></div>
+
+			<!-- 좌측 사이드바 (메뉴) 일부분 -->
+			<div class="lang-section">
+				<!-- 클릭 시 서브메뉴 토글과 동시에 메인 페이지 로드 -->
+				<button class="lang-btn" onclick="toggleJapanMenu(this)">일본</button>
+				<div class="sub-menu">
+					<button class="nav-item" onclick="loadJapanSub('main')">메인</button>
+					<button class="nav-item" onclick="loadJapanSub('language')">일본'어' 정보</button>
+					<button class="nav-item" onclick="loadJapanSub('travel')">일본 여행정보</button>
+					<button class="nav-item" onclick="loadJapanSub('library')">일본자료실</button>
+				</div>
+			</div>
+
+
+
+			<div class="lang-section">
+				<button class="lang-btn" onclick="toggleSection(this)">한국정보</button>
+				<div class="sub-menu">
+					<div class="coming-soon">🚧 준비중입니다.</div>
 				</div>
 			</div>
 
 			<div class="lang-section">
-				<button class="lang-btn" onclick="toggleSection(this)">한국어</button>
-				<div class="sub-menu">
-					<button class="nav-item" onclick="loadMainDashboard('ko', 'grammar')"> 문법 자료실</button>
-					<button class="nav-item" onclick="loadMainDashboard('ko', 'words')">단어 자료실</button>
-				</div>
-			</div>
-
-			<div class="lang-section">
-				<button class="lang-btn" onclick="toggleSection(this)">중국어</button>
-				<div class="sub-menu">
-					<button class="nav-item" onclick="loadMainDashboard('zh', 'grammar')">📚 문법 자료실</button>
-					<button class="nav-item" onclick="loadMainDashboard('zh', 'words')">✏️ 단어 자료실</button>
-				</div>
-			</div>
-
-			<div class="lang-section">
-				<button class="lang-btn" onclick="toggleSection(this)">영어</button>
-				<div class="sub-menu">
-					<button class="nav-item" onclick="loadMainDashboard('en', 'grammar')"> 문법 자료실</button>
-					<button class="nav-item" onclick="loadMainDashboard('en', 'words')">단어 자료실</button>
-				</div>
+				<button class="lang-btn" onclick="toggleSection(this)">중국정보</button>
+				<div class="sub-menu"><div class="coming-soon">🚧 준비중입니다.</div></div>
 			</div>
 		</div>
 
@@ -605,41 +703,58 @@ color: #6f6f9b;
 
 	<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
+	<!-- 우측 전체 콘텐츠 영역 (단 하나만 존재해야 합니다) -->
 	<main class="content-area">
-		<div class="content-box">
-			<div id="dynamic-content">
+		<!-- 1. 사이드바 토글 버튼 (내용이 바뀌어도 항상 고정 유지) -->
+		<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
 
-				<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+		<!-- 2. 클릭할 때마다 안의 내용이 통째로 바뀌는 메인 박스 -->
+		<div class="content-box" id="main-content">
+			<!-- ============================================== -->
+			<!-- 최초 접속 시 보여지는 기본 화면 (광고 슬라이더 등) -->
+			<!-- 메뉴를 클릭하면 이 부분은 JS에 의해 덮어씌워집니다 -->
+			<!-- ============================================== -->
+			<h1>메뉴를 선택해주세요</h1>
+			<div class="category-path">좌측 메뉴에서 학습할 카테고리를 선택하세요.</div>
 
-				<h1>메뉴를 선택해주세요</h1>
-				<div class="category-path">좌측 메뉴에서 학습할 카테고리를 선택하세요.</div>
+			<div class="ad-slider-wrapper">
+				<div class="ad-slides" id="adSlides">
 
-				<div class="ad-slider-wrapper">
-					<div class="ad-slides" id="adSlides">
-						<div class="ad-slide" style="background-color: #f0f7ff;">
-							<div>
-								<h2>🚀 일본어 언어 마스터 패키지</h2>
-								<p>일본어, 기초부터 비즈니스까지 한 번에 끝내기!</p>
-							</div>
-						</div>
-						<div class="ad-slide" style="background-color: #fff0f5;">
-							<div>
-								<h2>📚 원어민 1:1 화상 회화 20% 할인</h2>
-								<p>지금 가입하면 첫 달 무료 수강권 증정 쿠폰 발급</p>
-							</div>
-						</div>
-						<div class="ad-slide" style="background-color: #f5fff0;">
-							<div>
-								<h2>📝 글자 마스터반 개시</h2>
-								<p>매일 25분 투자로 히라가나 정복하는 비법</p>
-							</div>
+					<div class="ad-slide" style="background-color: #f5fff0;">
+						<div>
+							<h2>📝 글자 마스터반 개시</h2>
+							<p>매주2번 25분 투자로 히라가나 정복하는 비법</p>
+							<p>월 68,800원으로 한달만에 글자마스터!</p>
 						</div>
 					</div>
-					<button class="slide-btn prev-btn" onclick="moveSlide(-1)">❮</button>
-					<button class="slide-btn next-btn" onclick="moveSlide(1)">❯</button>
+					<div class="ad-slide" style="background-color: #f0f7ff;">
+						<div>
+							<h2>🚀 일본어 언어 마스터 패키지</h2>
+							<p>일본어, 기초부터 비즈니스까지 한 번에 끝내기!</p>
+						</div>
+					</div>
+					<div class="ad-slide" style="background-color: #fff0f5;">
+						<div>
+							<h2>📚 원어민 1:1 화상 회화 20% 할인</h2>
+							<p>지금 가입하면 첫 달 무료 수강권 증정 쿠폰 발급</p>
+							<p>* 6명한정 ~ 26.9.29 24:00까지</p>
+						</div>
+					</div>
+					<div class="ad-slide" style="background-color: #f5fff0;">
+						<div>
+							<h2>📝 방구석에서 오직 나만의 1:1 수업!</h2>
+							<p>처음이라 안심, </p>
+						</div>
+					</div>
 				</div>
+
+				</div>
+				<button class="slide-btn prev-btn" onclick="moveSlide(-1)">❮</button>
+				<button class="slide-btn next-btn" onclick="moveSlide(1)">❯</button>
 			</div>
-		</div>
+			<!-- ============================================== -->
+
+
 	</main>
 
 	<div class="modal-overlay" id="loginModal">
@@ -656,7 +771,13 @@ color: #6f6f9b;
 	</div>
 
 
+
+
+
 	<script>
+
+
+
 		/* 🌟 확장된 2단계 분류 데이터베이스 구조 */
 		let database = {
 			ja: {
@@ -779,10 +900,8 @@ color: #6f6f9b;
 
 			ko: {
 				name: "한국어",
-				themes: {
-					grammar: ["전체", "초급"], words: ["전체", "기초어휘"]
-				},
-				wordSubThemes: { "전체": ["전체"], "기초어휘": ["전체", "가족 명칭"] },
+				themes: { grammar: ["전체", "초급"], words: ["전체", "기초어휘", "オノマトペ·의성어·의태어"] },
+				wordSubThemes: { "전체": ["전체"], "기초어휘": ["직업", "가족", "숫자"], "オノマトペ·의성어·의태어": ["식감"] },
 				data: {
 					grammar:
 						[
@@ -824,7 +943,235 @@ color: #6f6f9b;
 
 						],
 					words: [
-						{ id: "ko_w_1", theme: "기초어휘", subTheme: "가족 명칭", title: "가족", summary: "가족 단어", detail: "가족 관계", example: "어머니, 아버지" }]
+						{ id: "ko_w_1", theme: "기초어휘", subTheme: "가족", title: "가족", summary: "가족 단어", detail: "가족 관계", example: "어머니, 아버지" },
+						{ id: "ko_w_2", theme: "기초어휘", subTheme: "가족", title: "어머니", summary: "가족 단어", detail: "お母さん・母", example: "어머니가 있어요." },
+						{ id: "ko_w_3", theme: "기초어휘", subTheme: "가족", title: "아버지", summary: "가족 단어", detail: "お父さん・父", example: "아버지는 회사원이세요." },
+						{ id: "ko_w_4", theme: "기초어휘", subTheme: "가족", title: "부모님", summary: "가족 단어", detail: "両親", example: "부모님과 같이 살아요." },
+						{ id: "ko_w_5", theme: "기초어휘", subTheme: "가족", title: "형", summary: "가족 단어", detail: "兄（男性話者）", example: "형이 두 명 있어요." },
+						{ id: "ko_w_6", theme: "기초어휘", subTheme: "가족", title: "오빠", summary: "가족 단어", detail: "兄（女性話者）", example: "오빠가 대학생이에요." },
+						{ id: "ko_w_7", theme: "기초어휘", subTheme: "가족", title: "누나", summary: "가족 단어", detail: "姉（男性話者）", example: "누나는 선생님이에요." },
+						{ id: "ko_w_8", theme: "기초어휘", subTheme: "가족", title: "언니", summary: "가족 단어", detail: "姉（女性話者）", example: "언니와 쇼핑을 가요." },
+						{ id: "ko_w_9", theme: "기초어휘", subTheme: "가족", title: "남동생", summary: "가족 단어", detail: "弟", example: "남동생은 고등학생이에요." },
+						{ id: "ko_w_10", theme: "기초어휘", subTheme: "가족", title: "여동생", summary: "가족 단어", detail: "妹", example: "여동생이 노래를 잘해요." },
+						{ id: "ko_w_11", theme: "기초어휘", subTheme: "가족", title: "할아버지", summary: "가족 단어", detail: "おじいさん・祖父", example: "할아버지께서 건강하세요." },
+						{ id: "ko_w_12", theme: "기초어휘", subTheme: "가족", title: "할머니", summary: "가족 단어", detail: "おばあさん・祖母", example: "할머니가 음식을 만들어 주세요." },
+						{ id: "ko_w_13", theme: "기초어휘", subTheme: "직업", title: "학생", summary: "직업 단어", detail: "学生", example: "저는 학생이에요." },
+						{ id: "ko_w_14", theme: "기초어휘", subTheme: "직업", title: "선생님", summary: "직업 단어", detail: "先生", example: "어머니는 선생님이에요." },
+						{ id: "ko_w_15", theme: "기초어휘", subTheme: "직업", title: "회사원", summary: "직업 단어", detail: "会社員", example: "아버지는 회사원이에요." },
+						{ id: "ko_w_16", theme: "기초어휘", subTheme: "직업", title: "의사", summary: "직업 단어", detail: "医者", example: "의사가 되고 싶어요." },
+						{ id: "ko_w_17", theme: "기초어휘", subTheme: "직업", title: "간호사", summary: "직업 단어", detail: "看護師", example: "누나는 간호사예요." },
+						{ id: "ko_w_18", theme: "기초어휘", subTheme: "직업", title: "경찰관", summary: "직업 단어", detail: "警察官", example: "형은 경찰관이에요." },
+						{ id: "ko_w_19", theme: "기초어휘", subTheme: "직업", title: "요리사", summary: "직업 단어", detail: "料理人", example: "요리사는 맛있는 음식을 만들어요." },
+						{ id: "ko_w_20", theme: "기초어휘", subTheme: "직업", title: "운전사", summary: "직업 단어", detail: "運転手", example: "버스 운전사예요." },
+						{ id: "ko_w_21", theme: "기초어휘", subTheme: "직업", title: "가수", summary: "직업 단어", detail: "歌手", example: "그는 유명한 가수예요." },
+						{ id: "ko_w_22", theme: "기초어휘", subTheme: "직업", title: "배우", summary: "직업 단어", detail: "俳優", example: "배우가 꿈이에요." },
+						{ id: "ko_w_23", theme: "オノマトペ·의성어·의태어", subTheme: "식감", title: "바삭바삭", summary: "식감 의성어", detail: "サクサク・パリパリ", example: "과자가 바삭바삭해요." },
+						{ id: "ko_w_24", theme: "オノマトペ·의성어·의태어", subTheme: "식감", title: "아삭아삭", summary: "식감 의성어", detail: "シャキシャキ", example: "사과가 아삭아삭해요." },
+						{ id: "ko_w_25", theme: "オノマトペ·의성어·의태어", subTheme: "식감", title: "쫄깃쫄깃", summary: "식감 의성어", detail: "もちもち・弾力がある", example: "떡이 쫄깃쫄깃해요." },
+						{ id: "ko_w_26", theme: "オノマトペ·의성어·의태어", subTheme: "식감", title: "말랑말랑", summary: "식감 의성어", detail: "柔らかくてぷにぷに", example: "빵이 말랑말랑해요." },
+						{
+							id: "ko_w_27",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "보들보들",
+							summary: "식감 의성어",
+							detail: "ふわふわ・なめらか",
+							example: "케이크가 보들보들해요."
+						},
+						{
+							id: "ko_w_28",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "탱글탱글",
+							summary: "식감 의성어",
+							detail: "ぷりぷり",
+							example: "새우가 탱글탱글해요."
+						},
+						{
+							id: "ko_w_29",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "후루룩",
+							summary: "먹는 소리",
+							detail: "ずるずる",
+							example: "국수를 후루룩 먹었어요."
+						},
+						{
+							id: "ko_w_30",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "꿀꺽",
+							summary: "먹는 소리",
+							detail: "ごくり",
+							example: "물을 꿀꺽 마셨어요."
+						},
+						{
+							id: "ko_w_31",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "바삭바삭",
+							summary: "식감 표현",
+							detail: "サクサク・パリパリ",
+							example: "치킨이 바삭바삭해요."
+						},
+						{
+							id: "ko_w_32",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "아삭아삭",
+							summary: "식감 표현",
+							detail: "シャキシャキ",
+							example: "사과가 아삭아삭해요."
+						},
+						{
+							id: "ko_w_33",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "쫄깃쫄깃",
+							summary: "식감 표현",
+							detail: "もちもち・弾力がある",
+							example: "떡이 쫄깃쫄깃해요."
+						},
+						{
+							id: "ko_w_34",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "말랑말랑",
+							summary: "식감 표현",
+							detail: "やわらかい・ぷにぷに",
+							example: "빵이 말랑말랑해요."
+						},
+						{
+							id: "ko_w_35",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "보들보들",
+							summary: "식감 표현",
+							detail: "ふわふわ・なめらか",
+							example: "케이크가 보들보들해요."
+						},
+						{
+							id: "ko_w_36",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "탱글탱글",
+							summary: "식감 표현",
+							detail: "ぷりぷり",
+							example: "새우가 탱글탱글해요."
+						},
+						{
+							id: "ko_w_37",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "폭신폭신",
+							summary: "식감 표현",
+							detail: "ふかふか",
+							example: "빵이 폭신폭신해요."
+						},
+						{
+							id: "ko_w_38",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "퍽퍽",
+							summary: "식감 표현",
+							detail: "ぱさぱさ",
+							example: "닭가슴살이 조금 퍽퍽해요."
+						},
+						{
+							id: "ko_w_39",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "미끌미끌",
+							summary: "식감 표현",
+							detail: "つるつる・ぬるぬる",
+							example: "국수가 미끌미끌해요."
+						},
+						{
+							id: "ko_w_40",
+							theme: "オノマトペ·의성어·의태어",
+							subTheme: "식감",
+							title: "쫀득쫀득",
+							summary: "식감 표현",
+							detail: "ねっとりもちもち",
+							example: "찹쌀떡이 쫀득쫀득해요."
+						},
+						{
+							id: "ko_w_41",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "하나",
+							summary: "고유어 수사 (물건 개수, 나이, 시각 등에 사용)",
+							detail: "1",
+							example: "사과 하나 주세요."
+						},
+						{
+							id: "ko_w_42",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "둘",
+							summary: "고유어 수사 (물건 개수, 나이, 시각 등에 사용)",
+							detail: "2",
+							example: "학생이 둘 있어요."
+						},
+						{
+							id: "ko_w_43",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "셋",
+							summary: "고유어 수사 (물건 개수, 나이, 시각 등에 사용)",
+							detail: "3",
+							example: "강아지가 셋 있어요."
+						},
+						{
+							id: "ko_w_44",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "넷",
+							summary: "고유어 수사 (물건 개수, 나이, 시각 등에 사용)",
+							detail: "4",
+							example: "의자가 넷 있어요."
+						},
+						/***/
+
+						{
+							id: "ko_w_45",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "일",
+							summary: "한자어 수사 (전화번호, 날짜, 층수, 금액 등에 사용)",
+							detail: "1",
+							example: "일 층으로 가세요."
+						},
+						{
+							id: "ko_w_46",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "이",
+							summary: "한자어 수사 (전화번호, 날짜, 층수, 금액 등에 사용)",
+							detail: "2",
+							example: "이 월입니다."
+						},
+						{
+							id: "ko_w_47",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "삼",
+							summary: "한자어 수사 (전화번호, 날짜, 층수, 금액 등에 사용)",
+							detail: "3",
+							example: "삼 번 출구예요."
+						},
+						{
+							id: "ko_w_48",
+							theme: "기초어휘",
+							subTheme: "숫자",
+							title: "사",
+							summary: "한자어 수사 (전화번호, 날짜, 층수, 금액 등에 사용)",
+							detail: "4",
+							example: "사 층에 있어요."
+						}
+
+
+					]
 				}
 			},
 			zh: {
@@ -1412,65 +1759,65 @@ color: #6f6f9b;
 						{ id: "zh_w_4", theme: "기초어휘", subTheme: "직업", title: "老师 (lǎoshī)", summary: "선생님, 교사", detail: "명사 / 직업 명칭입니다.", example: "他是汉语老师。(그는 중국어 선생님입니다.)" },
 						{ id: "zh_w_5", theme: "기초어휘", subTheme: "숫자", title: "一 (yī)", summary: "일, 1", detail: "수사 / 기본 숫자입니다.", example: "第一 (제일, 첫 번째)" },
 						{
-											"id": "zh_w_6",
-											"theme": "나라",
-											"title": "주요 국가 명칭",
-											"summary": "기초 일상회화 및 자기소개 시 가장 먼저 사용하는 나라 이름입니다.",
-											"detail": "중국어로 나라 이름을 말할 때는 보통 음역(소리를 본뜸)을 하거나 뜻을 살려 만듭니다. 뒤에 '人(rén)'을 붙이면 해당 국가의 사람이 되고, '国语(guó yǔ)'나 '文(wén)' 등을 붙이면 해당 국가의 언어가 됩니다.",
-											"example": "<br>韩国 (hán guó) — 한국<br>中国 (zhōng guó) — 중국<br>美国 (měi guó) — 미국<br>日本 (rì běn) — 일본<br>英国 (yīng guó) — 영국<br>法国 (fǎ guó) — 프랑스<br>德国 (dé guó) — 독일<br>加拿大 (jiā ná dà) — 캐나다<br>澳大利亚 (ào dà lì yà) — 호주<br>越南 (yuè nán) — 베트남"
-										},
-										{
-											"id": "zh_w_7",
-											"theme": "직업",
-											"title": "일상 필수 직업군",
-											"summary": "서로의 신분을 묻고 답할 때 자주 쓰이는 직업 명칭입니다.",
-											"detail": "중국어에서 직업을 나타내는 단어들은 주로 '师(전문가)', '员(구성원)', '生(학생/소질이 있는 사람)' 등의 접미사로 끝나는 경우가 많습니다. '我是+직업' 형태로 명사 연결 문법(是)과 함께 자주 쓰입니다.",
-											"example": "<br>学生 (xué sheng) — 학생<br>老师 (lǎo shī) — 선생님<br>公司职员 (gōng sī zhí yuán) — 회사원<br>医生 (yī shēng) — 의사<br>护士 (hù shi) — 간호사<br>厨师 (chú shī) — 요리사<br>警察 (jǐng chá) — 경찰<br>律师 (lǜ shī) — 변호사<br>公务员 (gōng wù yuán) — 공무원<br>商人 (shāng rén) — 사업가/상인"
-										},
-										{
-											"id": "zh_w_8",
-											"theme": "가족",
-											"title": "가족 관계 및 호칭",
-											"summary": "가족 구성원을 부르거나 소개할 때 사용하는 필수 호칭입니다.",
-											"detail": "중국어의 가족 호칭은 두 글자를 중첩(반복)해서 발음하는 특징이 있으며, 두 번째 글자는 대개 성조가 없는 '경성'으로 가볍게 발음합니다. 나보다 윗사람인지 아랫사람인지에 따라 명확히 구분됩니다.",
-											"example": "<br>爸爸 (bà ba) — 아빠<br>妈妈 (mā ma) — 엄마<br>爷爷 (yé ye) — 할아버지<br>奶奶 (nǎi nai) — 할머니<br>哥哥 (gē ge) — 형/오빠<br>姐姐 (jiě jie) — 누나/언니<br>弟弟 (dì di) — 남동생<br>妹妹 (mèi mei) — 여동생<br>儿子 (ér zi) — 아들<br>女儿 (nǚ ér) — 딸"
-										},
-										{
-											"id": "zh_w_9",
-											"theme": "숫자",
-											"title": "기초 숫자와 양사 단위",
-											"summary": "금액, 시간, 전화번호 등을 표현할 때 뼈대가 되는 숫자와 단위입니다.",
-											"detail": "중국어에서 숫자 '2'를 표현할 때는 주의가 필요합니다. 단순히 번호를 읽거나 차례를 셀 때는 '二(èr)'를 쓰지만, 물건의 개수를 세거나 양사 앞에서는 반드시 '两(liǎng)'으로 바꾸어 표현해야 합니다.",
-											"example": "<br>一 / 二 / 三 (yī / èr / sān) — 1 / 2 / 3<br>四 / 五 / 六 (sì / wǔ / liù) — 4 / 5 / 6<br>七 / 八 / 九 / 十 (qī / bā / jiǔ / shí) — 7 / 8 / 9 / 10<br>两 (liǎng) — 둘 (수량 셀 때)<br>百 / 千 / 万 (bǎi / qiān / wàn) — 백 / 천 / 만<br>个 (gè) — 개/명 (가장 만능 양사)<br>块 (kuài) — 위안 (중국 화폐 단위 구어체)<br>点 (diǎn) — 시 (시간 단위)<br>分钟 (fēn zhōng) — 분 (시간 길이)<br>月 / 号 (yuè / hào) — 월 / 일"
-										},
-										{
-											"id": "zh_w_10",
-											"theme": "물건",
-											"title": "생활 속 주변 물건",
-											"summary": "일상생활 공간이나 가방 속에 늘 존재하는 고빈도 물건 단어입니다.",
-											"detail": "소유를 뜻하는 '有(있다)' 문법이나 지시 대명사인 '这是(이것은 ~이다)', '那是(저것은 ~이다)' 구문과 결합하여 물건의 주인이나 정체를 묻고 답할 때 뼈대가 되는 명사들입니다.",
-											"example": "<br>手机 (shǒu jī) — 휴대폰<br>电脑 (diàn nǎo) — 컴퓨터<br>钱包 (qián bāo) — 지갑<br>钥匙 (yào shi) — 열쇠<br>书 (shū) — 책<br>衣服 (yī fu) — 옷<br>包 (bāo) — 가방<br>手表 (shǒu biǎo) — 손목시계<br>水杯 (shuǐ bēi) — 텀블러/물컵<br>雨伞 (yǔ sǎn) — 우산"
-										},
-										{
-											"id": "zh_w_11",
-											"theme": "탈것",
-											"title": "교통수단 및 승하차",
-											"summary": "이동할 때 사용하는 대중교통과 주요 이동 수단 명칭입니다.",
-											"detail": "중국어는 어떤 교통수단을 이용할 때 '타다'라는 뜻의 동사 '坐(zuò)'를 앞에 붙입니다. (단, 자전거나 오토바이처럼 말 타듯 걸터앉는 수단은 '骑(qí)'를 씁니다.) 방향을 나타내는 '去(가다)' 연동문과 자주 호응합니다.",
-											"example": "<br>地铁 (dì tiě) — 지하철<br>公交车 (gōng jiāo chē) — 버스<br>出租车 (chū zū chē) — 택시<br>飞机 (fēi jī) — 비행기<br>火车 (huǒ chē) — 기차<br>高铁 (gāo tiě) — 고속철도(KTX급)<br>自行车 (zì xíng chē) — 자전거<br>摩托车 (mó tuō chē) — 오토바이<br>步行 / 走路 (bù xíng / zǒu lù) — 도보 / 걷기<br>火车站 / 地铁站 (huǒ chē zhàn / dì tiě zhàn) — 기차역 / 지하철역"
-										},
-										{
-											"id": "zh_w_12",
-											"theme": "여행",
-											"title": "여행 필수 장소와 행동",
-											"summary": "여행지, 공항, 호텔 등 관광 중에 마주치는 핵심 단어와 상황 명사입니다.",
-											"detail": "길을 묻거나 위치를 파악할 때 쓰이는 '在(zài, ~에 있다)' 문법이나 목적을 나타내는 '为了(~을 위해)' 구문에 단골로 등장하는 여행 필수 어휘 노드입니다.",
-											"example": "<br>机场 (jī chǎng) — 공항<br>酒店 / 饭店 (jiǔ diàn / fàn diàn) — 호텔<br>洗手间 / 厕所 (xǐ shǒu jiān / cè suǒ) — 화장실<br>饭馆 / 餐厅 (fàn guǎn / cān tīng) — 식당 / 레스토랑<br>超市 (chāo shì) — 마트 / 슈퍼마켓<br>银行 (yín háng) — 은행<br>门票 (mén piào) — 입장권 / 티켓<br>换钱 / 兑换 (huàn qián / duì huàn) — 환전<br>风景 / 景点 (fēng jǐng / jǐng diǎn) — 풍경 / 관광지<br>地图 (dì tú) — 지도"
-										}
-									]
-								}
-							
+							"id": "zh_w_6",
+							"theme": "나라",
+							"title": "주요 국가 명칭",
+							"summary": "기초 일상회화 및 자기소개 시 가장 먼저 사용하는 나라 이름입니다.",
+							"detail": "중국어로 나라 이름을 말할 때는 보통 음역(소리를 본뜸)을 하거나 뜻을 살려 만듭니다. 뒤에 '人(rén)'을 붙이면 해당 국가의 사람이 되고, '国语(guó yǔ)'나 '文(wén)' 등을 붙이면 해당 국가의 언어가 됩니다.",
+							"example": "<br>韩国 (hán guó) — 한국<br>中国 (zhōng guó) — 중국<br>美国 (měi guó) — 미국<br>日本 (rì běn) — 일본<br>英国 (yīng guó) — 영국<br>法国 (fǎ guó) — 프랑스<br>德国 (dé guó) — 독일<br>加拿大 (jiā ná dà) — 캐나다<br>澳大利亚 (ào dà lì yà) — 호주<br>越南 (yuè nán) — 베트남"
 						},
+						{
+							"id": "zh_w_7",
+							"theme": "직업",
+							"title": "일상 필수 직업군",
+							"summary": "서로의 신분을 묻고 답할 때 자주 쓰이는 직업 명칭입니다.",
+							"detail": "중국어에서 직업을 나타내는 단어들은 주로 '师(전문가)', '员(구성원)', '生(학생/소질이 있는 사람)' 등의 접미사로 끝나는 경우가 많습니다. '我是+직업' 형태로 명사 연결 문법(是)과 함께 자주 쓰입니다.",
+							"example": "<br>学生 (xué sheng) — 학생<br>老师 (lǎo shī) — 선생님<br>公司职员 (gōng sī zhí yuán) — 회사원<br>医生 (yī shēng) — 의사<br>护士 (hù shi) — 간호사<br>厨师 (chú shī) — 요리사<br>警察 (jǐng chá) — 경찰<br>律师 (lǜ shī) — 변호사<br>公务员 (gōng wù yuán) — 공무원<br>商人 (shāng rén) — 사업가/상인"
+						},
+						{
+							"id": "zh_w_8",
+							"theme": "가족",
+							"title": "가족 관계 및 호칭",
+							"summary": "가족 구성원을 부르거나 소개할 때 사용하는 필수 호칭입니다.",
+							"detail": "중국어의 가족 호칭은 두 글자를 중첩(반복)해서 발음하는 특징이 있으며, 두 번째 글자는 대개 성조가 없는 '경성'으로 가볍게 발음합니다. 나보다 윗사람인지 아랫사람인지에 따라 명확히 구분됩니다.",
+							"example": "<br>爸爸 (bà ba) — 아빠<br>妈妈 (mā ma) — 엄마<br>爷爷 (yé ye) — 할아버지<br>奶奶 (nǎi nai) — 할머니<br>哥哥 (gē ge) — 형/오빠<br>姐姐 (jiě jie) — 누나/언니<br>弟弟 (dì di) — 남동생<br>妹妹 (mèi mei) — 여동생<br>儿子 (ér zi) — 아들<br>女儿 (nǚ ér) — 딸"
+						},
+						{
+							"id": "zh_w_9",
+							"theme": "숫자",
+							"title": "기초 숫자와 양사 단위",
+							"summary": "금액, 시간, 전화번호 등을 표현할 때 뼈대가 되는 숫자와 단위입니다.",
+							"detail": "중국어에서 숫자 '2'를 표현할 때는 주의가 필요합니다. 단순히 번호를 읽거나 차례를 셀 때는 '二(èr)'를 쓰지만, 물건의 개수를 세거나 양사 앞에서는 반드시 '两(liǎng)'으로 바꾸어 표현해야 합니다.",
+							"example": "<br>一 / 二 / 三 (yī / èr / sān) — 1 / 2 / 3<br>四 / 五 / 六 (sì / wǔ / liù) — 4 / 5 / 6<br>七 / 八 / 九 / 十 (qī / bā / jiǔ / shí) — 7 / 8 / 9 / 10<br>两 (liǎng) — 둘 (수량 셀 때)<br>百 / 千 / 万 (bǎi / qiān / wàn) — 백 / 천 / 만<br>个 (gè) — 개/명 (가장 만능 양사)<br>块 (kuài) — 위안 (중국 화폐 단위 구어체)<br>点 (diǎn) — 시 (시간 단위)<br>分钟 (fēn zhōng) — 분 (시간 길이)<br>月 / 号 (yuè / hào) — 월 / 일"
+						},
+						{
+							"id": "zh_w_10",
+							"theme": "물건",
+							"title": "생활 속 주변 물건",
+							"summary": "일상생활 공간이나 가방 속에 늘 존재하는 고빈도 물건 단어입니다.",
+							"detail": "소유를 뜻하는 '有(있다)' 문법이나 지시 대명사인 '这是(이것은 ~이다)', '那是(저것은 ~이다)' 구문과 결합하여 물건의 주인이나 정체를 묻고 답할 때 뼈대가 되는 명사들입니다.",
+							"example": "<br>手机 (shǒu jī) — 휴대폰<br>电脑 (diàn nǎo) — 컴퓨터<br>钱包 (qián bāo) — 지갑<br>钥匙 (yào shi) — 열쇠<br>书 (shū) — 책<br>衣服 (yī fu) — 옷<br>包 (bāo) — 가방<br>手表 (shǒu biǎo) — 손목시계<br>水杯 (shuǐ bēi) — 텀블러/물컵<br>雨伞 (yǔ sǎn) — 우산"
+						},
+						{
+							"id": "zh_w_11",
+							"theme": "탈것",
+							"title": "교통수단 및 승하차",
+							"summary": "이동할 때 사용하는 대중교통과 주요 이동 수단 명칭입니다.",
+							"detail": "중국어는 어떤 교통수단을 이용할 때 '타다'라는 뜻의 동사 '坐(zuò)'를 앞에 붙입니다. (단, 자전거나 오토바이처럼 말 타듯 걸터앉는 수단은 '骑(qí)'를 씁니다.) 방향을 나타내는 '去(가다)' 연동문과 자주 호응합니다.",
+							"example": "<br>地铁 (dì tiě) — 지하철<br>公交车 (gōng jiāo chē) — 버스<br>出租车 (chū zū chē) — 택시<br>飞机 (fēi jī) — 비행기<br>火车 (huǒ chē) — 기차<br>高铁 (gāo tiě) — 고속철도(KTX급)<br>自行车 (zì xíng chē) — 자전거<br>摩托车 (mó tuō chē) — 오토바이<br>步行 / 走路 (bù xíng / zǒu lù) — 도보 / 걷기<br>火车站 / 地铁站 (huǒ chē zhàn / dì tiě zhàn) — 기차역 / 지하철역"
+						},
+						{
+							"id": "zh_w_12",
+							"theme": "여행",
+							"title": "여행 필수 장소와 행동",
+							"summary": "여행지, 공항, 호텔 등 관광 중에 마주치는 핵심 단어와 상황 명사입니다.",
+							"detail": "길을 묻거나 위치를 파악할 때 쓰이는 '在(zài, ~에 있다)' 문법이나 목적을 나타내는 '为了(~을 위해)' 구문에 단골로 등장하는 여행 필수 어휘 노드입니다.",
+							"example": "<br>机场 (jī chǎng) — 공항<br>酒店 / 饭店 (jiǔ diàn / fàn diàn) — 호텔<br>洗手间 / 厕所 (xǐ shǒu jiān / cè suǒ) — 화장실<br>饭馆 / 餐厅 (fàn guǎn / cān tīng) — 식당 / 레스토랑<br>超市 (chāo shì) — 마트 / 슈퍼마켓<br>银行 (yín háng) — 은행<br>门票 (mén piào) — 입장권 / 티켓<br>换钱 / 兑换 (huàn qián / duì huàn) — 환전<br>风景 / 景点 (fēng jǐng / jǐng diǎn) — 풍경 / 관광지<br>地图 (dì tú) — 지도"
+						}
+					]
+				}
+
+			},
 			en: {
 				name: "영어",
 				themes: { grammar: ["전체", "나의 상태/기분", "진행/계획", "취향/의지", "과거/경험", "조동사", "의문사", "제안/부탁", "존재/생각"], words: ["전체", "기초어휘"] },
@@ -2425,220 +2772,211 @@ color: #6f6f9b;
 						],
 					words: [
 						{ id: "en_w_1", theme: "기초어휘", subTheme: "감정/기분", title: "tired", summary: "피곤한", detail: "형용사", example: "I'm tired." },
-
 						{ id: "en_w_2", theme: "기초어휘", subTheme: "감정/기분", title: "happy", summary: "행복한", detail: "형용사", example: "She is happy." },
 						{ id: "en_w_3", theme: "기초어휘", subTheme: "감정/기분", title: "sad", summary: "슬픈", detail: "형용사", example: "He looks sad." },
 						{ id: "en_w_4", theme: "기초어휘", subTheme: "감정/기분", title: "angry", summary: "화난", detail: "형용사", example: "They are angry." },
-						{ id: "en_w_5", theme: "기초어휘", subTheme: "감정/기분", title: "excited", summary: "신이 난, 흥분한", detail: "형용사 품사: 형용사 / 기대되는 일로 마음이 설렐 때 씁니다.",  example: "I'm excited about the trip.<br>(나 여행 때문에 신나.)" },
-
+						{ id: "en_w_5", theme: "기초어휘", subTheme: "감정/기분", title: "excited", summary: "신이 난, 흥분한", detail: "형용사 품사: 형용사 / 기대되는 일로 마음이 설렐 때 씁니다.", example: "I'm excited about the trip.<br>(나 여행 때문에 신나.)" },
 						{ id: "en_w_6", theme: "기초어휘", subTheme: "감정/기분", title: "nervous", summary: "긴장한", detail: "형용사", example: "She feels nervous before the presentation." },
 						{ id: "en_w_7", theme: "기초어휘", subTheme: "감정/기분", title: "relaxed", summary: "편안한, 긴장이 풀린", detail: "형용사", example: "He feels relaxed after the massage." },
 						{ id: "en_w_8", theme: "기초어휘", subTheme: "감정/기분", title: "bored", summary: "지루한, 심심한", detail: "형용사", example: "They are bored during the long lecture." },
 						{ id: "en_w_9", theme: "기초어휘", subTheme: "감정/기분", title: "confused", summary: "혼란스러운, 당황한", detail: "형용사", example: "She looks confused by the instructions." },
-		{ id: "en_w_10", theme: "기초어휘", subTheme: "감정/기분", title: "surprised", summary: "놀란, 깜짝 놀란", detail: "형용사", example: "He was surprised by the unexpected gift." },
-		{
-			id: "en_w_11",
-				theme: "감정/기분",
-					title: "nervous",
-						summary: "긴장되는, 떨리는",
-							detail: "품사: 형용사 / 면접, 시험, 발표 등을 앞두고 긴장될 때 씁니다.",
-								example: "<br>Don't be nervous. You can do it.<br>(긴장하지 마. 넌 할 수 있어.)"
-		},
+						{ id: "en_w_10", theme: "기초어휘", subTheme: "감정/기분", title: "surprised", summary: "놀란, 깜짝 놀란", detail: "형용사", example: "He was surprised by the unexpected gift." },
+						{ id: "en_w_11", theme: "감정/기분", title: "nervous", summary: "긴장되는, 떨리는", detail: "품사: 형용사 / 면접, 시험, 발표 등을 앞두고 긴장될 때 씁니다.", example: "<br>Don't be nervous. You can do it.<br>(긴장하지 마. 넌 할 수 있어.)" },
 
-		// ==========================================
-		// 2. 날씨/계절 (Weather & Seasons)
-		// ==========================================
-		{
-			id: "en_w_12",
-				theme: "날씨/계절",
-					title: "humid",
-						summary: "습한, 끈적거리는",
+						// ==========================================
+						// 2. 날씨/계절 (Weather & Seasons)
+						// ==========================================
+						{
+							id: "en_w_12",
+							theme: "날씨/계절",
+							title: "humid",
+							summary: "습한, 끈적거리는",
 							detail: "품사: 형용사 / 공기 중에 습기가 많아 눅눅할 때 씁니다.",
-								example: "<br>It's very humid in summer.<br>(여름에는 날씨가 매우 습해.)"
-		},
-		{
-			id: "en_w_13",
-				theme: "날씨/계절",
-					title: "chilly",
-						summary: "쌀쌀한",
+							example: "<br>It's very humid in summer.<br>(여름에는 날씨가 매우 습해.)"
+						},
+						{
+							id: "en_w_13",
+							theme: "날씨/계절",
+							title: "chilly",
+							summary: "쌀쌀한",
 							detail: "품사: 형용사 / cold보다는 덜하지만 으스스하게 추울 때 씁니다.",
-								example: "<br>It's a bit chilly outside.<br>(밖이 좀 쌀쌀하네.)"
-		},
+							example: "<br>It's a bit chilly outside.<br>(밖이 좀 쌀쌀하네.)"
+						},
 
-		// ==========================================
-		// 3. 성격/성향 (Personality & Traits)
-		// ==========================================
-		{
-			id: "en_w_14",
-				theme: "성격/성향",
-					title: "friendly",
-						summary: "다정한, 친근한, 사교적인",
+						// ==========================================
+						// 3. 성격/성향 (Personality & Traits)
+						// ==========================================
+						{
+							id: "en_w_14",
+							theme: "성격/성향",
+							title: "friendly",
+							summary: "다정한, 친근한, 사교적인",
 							detail: "품사: 형용사 / -ly로 끝나지만 부사가 아니라 형용사입니다. 사람이나 분위기가 친근할 때 씁니다.",
-								example: "<br>Our new neighbor is very friendly.<br>(우리 새 이웃은 정말 다정해.)"
-		},
-		{
-			id: "en_w_15",
-				theme: "성격/성향",
-					title: "shy",
-						summary: "부끄러움을 타는, 수줍어하는",
+							example: "<br>Our new neighbor is very friendly.<br>(우리 새 이웃은 정말 다정해.)"
+						},
+						{
+							id: "en_w_15",
+							theme: "성격/성향",
+							title: "shy",
+							summary: "부끄러움을 타는, 수줍어하는",
 							detail: "품사: 형용사 / 낯선 사람 앞에서 조용해지거나 내성적인 성격을 뜻합니다.",
-								example: "<br>He is too shy to speak first.<br>(그는 너무 부끄러움이 많아서 먼저 말을 못 걸어.)"
-		},
+							example: "<br>He is too shy to speak first.<br>(그는 너무 부끄러움이 많아서 먼저 말을 못 걸어.)"
+						},
 
-		// ==========================================
-		// 4. 상태/외모 (Status & Appearance)
-		// ==========================================
-		{
-			id: "en_w_16",
-				theme: "상태/외모",
-					title: "busy",
-						summary: "바쁜",
+						// ==========================================
+						// 4. 상태/외모 (Status & Appearance)
+						// ==========================================
+						{
+							id: "en_w_16",
+							theme: "상태/외모",
+							title: "busy",
+							summary: "바쁜",
 							detail: "품사: 형용사 / 할 일이 많아 겨를이 없을 때 씁니다. 뒤에 '동사-ing'를 붙여 '~하느라 바쁘다'로도 씁니다.",
-								example: "<br>I'm busy preparing for the exam.<br>(나 시험 준비하느라 바빠.)"
-		},
-		{
-			id: "en_w_17",
-				theme: "상태/외모",
-					title: "clean",
-						summary: "깨끗한",
+							example: "<br>I'm busy preparing for the exam.<br>(나 시험 준비하느라 바빠.)"
+						},
+						{
+							id: "en_w_17",
+							theme: "상태/외모",
+							title: "clean",
+							summary: "깨끗한",
 							detail: "품사: 형용사 / 더러운 것이 없고 정돈된 상태를 뜻합니다. (동사로 '청소하다'라는 뜻도 있습니다.)",
-								example: "<br>Keep your room clean.<br>(방을 깨끗하게 유지해라.)"
-		},
+							example: "<br>Keep your room clean.<br>(방을 깨끗하게 유지해라.)"
+						},
 
-		// ==========================================
-		// 5. 크기/모양 (Size & Shape)
-		// ==========================================
-		{
-			id: "en_w_18",
-				theme: "크기/모양",
-					title: "heavy",
-						summary: "무거운",
+						// ==========================================
+						// 5. 크기/모양 (Size & Shape)
+						// ==========================================
+						{
+							id: "en_w_18",
+							theme: "크기/모양",
+							title: "heavy",
+							summary: "무거운",
 							detail: "품사: 형용사 / 무게가 많이 나갈 때 씁니다. 비가 많이 올 때도 'heavy rain'처럼 사용합니다.",
-								example: "<br>This bag is too heavy for me.<br>(이 가방은 나한테 너무 무거워.)"
-		},
-		{
-			id: "en_w_19",
-				theme: "크기/모양",
-					title: "short",
-						summary: "짧은, 키가 작은",
+							example: "<br>This bag is too heavy for me.<br>(이 가방은 나한테 너무 무거워.)"
+						},
+						{
+							id: "en_w_19",
+							theme: "크기/모양",
+							title: "short",
+							summary: "짧은, 키가 작은",
 							detail: "품사: 형용사 / 길이나 시간 등이 '짧은' 것과 사람의 키가 '작은' 것 둘 다 표현할 수 있습니다.",
-								example: "<br>Life is too short.<br>(인생은 너무 짧아.)"
-		},
+							example: "<br>Life is too short.<br>(인생은 너무 짧아.)"
+						},
 
-		// ==========================================
-		// 6. 평가/느낌 (Opinion & Taste)
-		// ==========================================
-		{
-			id: "en_w_20",
-				theme: "평가/느낌",
-					title: "delicious",
-						summary: "맛있는",
+						// ==========================================
+						// 6. 평가/느낌 (Opinion & Taste)
+						// ==========================================
+						{
+							id: "en_w_20",
+							theme: "평가/느낌",
+							title: "delicious",
+							summary: "맛있는",
 							detail: "품사: 형용사 / 음식 맛이 훌륭할 때 씁니다. 회화에서는 더 편하게 'yummy'나 'good'도 많이 씁니다.",
-								example: "<br>This pizza is absolutely delicious!<br>(이 피자 진짜 대박 맛있다!)"
-		},
-		{
-			id: "en_w_21",
-				theme: "평가/느낌",
-					title: "expensive",
-						summary: "비싼",
+							example: "<br>This pizza is absolutely delicious!<br>(이 피자 진짜 대박 맛있다!)"
+						},
+						{
+							id: "en_w_21",
+							theme: "평가/느낌",
+							title: "expensive",
+							summary: "비싼",
 							detail: "품사: 형용사 / 물건의 가격이나 비용이 많이 들어갈 때 씁니다.",
-								example: "<br>Coffee here is too expensive.<br>(여기 커피는 너무 비싸.)"
-		},
+							example: "<br>Coffee here is too expensive.<br>(여기 커피는 너무 비싸.)"
+						},
 
-		// ==========================================
-		// 7. 행동/동작 (Actions & Activities) *추가됨*
-		// ==========================================
-		{
-			id: "en_w_22",
-				theme: "행동/동작",
-					title: "exercise",
-						summary: "운동하다",
+						// ==========================================
+						// 7. 행동/동작 (Actions & Activities) *추가됨*
+						// ==========================================
+						{
+							id: "en_w_22",
+							theme: "행동/동작",
+							title: "exercise",
+							summary: "운동하다",
 							detail: "품사: 일반동사 / 건강이나 체력을 위해 몸을 움직여 운동하는 것을 뜻합니다.",
-								example: "<br>I exercise three times a week.<br>(나는 일주일에 세 번 운동해.)"
-		},
-		{
-			id: "en_w_23",
-				theme: "행동/동작",
-					title: "grab",
-						summary: "(음식 등을) 간단히 먹다 / 쥐다",
+							example: "<br>I exercise three times a week.<br>(나는 일주일에 세 번 운동해.)"
+						},
+						{
+							id: "en_w_23",
+							theme: "행동/동작",
+							title: "grab",
+							summary: "(음식 등을) 간단히 먹다 / 쥐다",
 							detail: "품사: 일반동사 / 일상 대화에서 '뭐 좀 먹으러 가자'고 할 때 eat 대신 정말 많이 쓰는 유용한 동사입니다.",
-								example: "<br>Let's grab some coffee.<br>(우리 커피 한잔하러 가자.)"
-		},
-		{
-			id: "en_w_24",
-				theme: "행동/동작",
-					title: "relax",
-						summary: "쉬다, 휴식을 취하다, 긴장을 풀다",
+							example: "<br>Let's grab some coffee.<br>(우리 커피 한잔하러 가자.)"
+						},
+						{
+							id: "en_w_24",
+							theme: "행동/동작",
+							title: "relax",
+							summary: "쉬다, 휴식을 취하다, 긴장을 풀다",
 							detail: "품사: 일반동사 / 아무것도 안 하거나 편안한 상태로 몸과 마음을 쉴 때 씁니다.",
-								example: "<br>I just want to relax at home.<br>(난 그냥 집에서 쉬고 싶어.)"
-		},
-		// ==========================================
-		// 8. 방향/위치 (Directions & Locations)
-		// ==========================================
-		{
-			id: "en_w_25",
-				theme: "방향/위치",
-					title: "turn left / turn right",
-						summary: "좌회전하다 / 우회전하다",
+							example: "<br>I just want to relax at home.<br>(난 그냥 집에서 쉬고 싶어.)"
+						},
+						// ==========================================
+						// 8. 방향/위치 (Directions & Locations)
+						// ==========================================
+						{
+							id: "en_w_25",
+							theme: "방향/위치",
+							title: "turn left / turn right",
+							summary: "좌회전하다 / 우회전하다",
 							detail: "품사: 구동사 / 길을 안내할 때 가장 기본이 되는 방향 전환 표현입니다.",
-								example: "<br>Turn left at the corner.<br>(모퉁이에서 좌회전하세요.)"
-		},
-		{
-			id: "en_w_26",
-				theme: "방향/위치",
-					title: "go straight",
-						summary: "직진하다, 똑바로 가다",
+							example: "<br>Turn left at the corner.<br>(모퉁이에서 좌회전하세요.)"
+						},
+						{
+							id: "en_w_26",
+							theme: "방향/위치",
+							title: "go straight",
+							summary: "직진하다, 똑바로 가다",
 							detail: "품사: 구동사 / 쭉 앞으로 나아가라는 의미로, 뒤에 'for 2 blocks' 등을 붙여 거리를 구체화하기도 합니다.",
-								example: "<br>Go straight for two blocks.<br>(두 블록 직진하세요.)"
-		},
-		{
-			id: "en_w_27",
-				theme: "방향/위치",
-					title: "across from",
-						summary: "~의 맞은편에, 건너편에",
+							example: "<br>Go straight for two blocks.<br>(두 블록 직진하세요.)"
+						},
+						{
+							id: "en_w_27",
+							theme: "방향/위치",
+							title: "across from",
+							summary: "~의 맞은편에, 건너편에",
 							detail: "품사: 전치사구 / 도로를 사이에 두고 마주 보고 있는 위치를 설명할 때 씁니다.",
-								example: "<br>The bakery is across from the bank.<br>(빵집은 은행 맞은편에 있어요.)"
-		},
-		{
-			id: "en_w_28",
-				theme: "방향/위치",
-					title: "next to",
-						summary: "~의 옆에",
+							example: "<br>The bakery is across from the bank.<br>(빵집은 은행 맞은편에 있어요.)"
+						},
+						{
+							id: "en_w_28",
+							theme: "방향/위치",
+							title: "next to",
+							summary: "~의 옆에",
 							detail: "품사: 전치사구 / 사물이나 장소가 바로 옆에 붙어 있는 물리적 위치를 나타냅니다.",
-								example: "<br>The convenience store is next to the cafe.<br>(편의점은 카페 옆에 있어요.)"
-		},
-		{
-			id: "en_w_29",
-				theme: "방향/위치",
-					title: "between",
-						summary: "(두 대상) 사이에",
+							example: "<br>The convenience store is next to the cafe.<br>(편의점은 카페 옆에 있어요.)"
+						},
+						{
+							id: "en_w_29",
+							theme: "방향/위치",
+							title: "between",
+							summary: "(두 대상) 사이에",
 							detail: "품사: 전치사 / 보통 'between A and B' 형태로 쓰여 A와 B 사이에 위치함을 말합니다.",
-								example: "<br>The pharmacy is between the hotel and the station.<br>(약국은 호텔과 역 사이에 있어요.)"
-		},
-		{
-			id: "en_w_30",
-				theme: "방향/위치",
-					title: "behind",
-						summary: "~의 뒤에",
+							example: "<br>The pharmacy is between the hotel and the station.<br>(약국은 호텔과 역 사이에 있어요.)"
+						},
+						{
+							id: "en_w_30",
+							theme: "방향/위치",
+							title: "behind",
+							summary: "~의 뒤에",
 							detail: "품사: 전치사 / 눈에 보이지 않는 건물 뒷공간이나 사람의 등 뒤를 지칭할 때 씁니다.",
-								example: "<br>The parking lot is behind the building.<br>(주차장은 건물 뒤에 있습니다.)"
-		},
-		{
-			id: "en_w_31",
-				theme: "방향/위치",
-					title: "in front of",
-						summary: "~의 앞에",
+							example: "<br>The parking lot is behind the building.<br>(주차장은 건물 뒤에 있습니다.)"
+						},
+						{
+							id: "en_w_31",
+							theme: "방향/위치",
+							title: "in front of",
+							summary: "~의 앞에",
 							detail: "품사: 전치사구 / behind의 반대말로, 건물 전면이나 사람의 앞쪽 공간을 뜻합니다.",
-								example: "<br>Let's meet in front of the theater.<br>(영화관 앞에서 만나자.)"
-		},
-		{
-			id: "en_w_32",
-				theme: "방향/위치",
-					title: "around the corner",
-						summary: "모퉁이를 돌면 있는, 아주 가까이에",
+							example: "<br>Let's meet in front of the theater.<br>(영화관 앞에서 만나자.)"
+						},
+						{
+							id: "en_w_32",
+							theme: "방향/위치",
+							title: "around the corner",
+							summary: "모퉁이를 돌면 있는, 아주 가까이에",
 							detail: "품사: 전치사구 / 실제 길모퉁이를 돌면 나오는 위치를 뜻하기도 하고, 회화에서는 시간·거리가 '코앞에 다가왔다'는 비유로도 정말 자주 쓰입니다.",
-								example: "<br>The subway station is just around the corner.<br>(지하철역은 바로 모퉁이 돌면 있어요 / 코앞에 있어요.)"
-		}
+							example: "<br>The subway station is just around the corner.<br>(지하철역은 바로 모퉁이 돌면 있어요 / 코앞에 있어요.)"
+						}
 
 
 					]
@@ -2712,26 +3050,26 @@ color: #6f6f9b;
 
 			const langData = database[lang];
 			const typeLabel = type === 'grammar' ? '문법' : '단어';
-			const container = document.getElementById('dynamic-content');
+			const container = document.getElementById('main-content');//('dynamic-content');
 			const writeBtnStyle = isLoggedIn ? 'display: inline-flex;' : 'display: none;';
 
 			// 1. 기본 헤더 구역 생성
 			let html = `
-						<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
-						<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-						<div class="content-header-flex">
-								<div>
-										<h1>${langData.name} ${typeLabel} 자료실</h1>
-										<div class="category-path">${langData.name} > ${typeLabel}</div>
-								</div>
-								<button class="btn-outline write-btn" style="${writeBtnStyle}" onclick="loadWriteForm()">✏️ 새 자료 등록</button>
-						</div>
-						<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+							<div class="content-header-flex">
+									<div>
+											<h1>${langData.name} ${typeLabel} 자료실</h1>
+											<div class="category-path">${langData.name} > ${typeLabel}</div>
+									</div>
+									<button class="btn-outline write-btn" style="${writeBtnStyle}" onclick="loadWriteForm()">✏️ 새 자료 등록</button>
+							</div>
+							<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
 
-						<!-- 1차 분류 (전체, 기초어휘 등) 컨테이너 -->
-						<div class="theme-btn-container">
-					`;
+							<!-- 1차 분류 (전체, 기초어휘 등) 컨테이너 -->
+							<div class="theme-btn-container">
+						`;
 
 			// 1차 분류 버튼 그리기
 			const availableThemes = langData.themes[type];
@@ -2773,12 +3111,12 @@ color: #6f6f9b;
 				} else {
 					posts.forEach(item => {
 						html += `
-									<button class="data-card-btn" onclick="loadDetailView('${item.id}')">
-											<span style="font-size:0.8rem; color:#ff5722; font-weight:bold; display:block; margin-bottom:4px;">[${item.theme}]</span>
-											<strong>${item.title}</strong>
-											<p>${item.summary}</p>
-									</button>
-								`;
+										<button class="data-card-btn" onclick="loadDetailView('${item.id}')">
+												<span style="font-size:0.8rem; color:#ff5722; font-weight:bold; display:block; margin-bottom:4px;">[${item.theme}]</span>
+												<strong>${item.title}</strong>
+												<p>${item.summary}</p>
+										</button>
+									`;
 					});
 				}
 				html += `</div>`;
@@ -2789,16 +3127,16 @@ color: #6f6f9b;
 				} else {
 					posts.forEach(item => {
 						html += `
-									<div class="word-item-card">
-										<span class="word-badge">${item.theme} &gt; ${item.subTheme}</span>
-										<div class="word-main-title">${item.title}</div>
-										<div class="word-meaning">${item.summary}</div>
-										<div class="word-desc">${item.detail}</div>
-										<div class="word-example-box">
-											<strong>활용 예문:</strong><br>${item.example}
+										<div class="word-item-card">
+											<span class="word-badge">${item.theme} &gt; ${item.subTheme}</span>
+											<div class="word-main-title">${item.title}</div>
+											<div class="word-meaning">${item.summary}</div>
+											<div class="word-desc">${item.detail}</div>
+											<div class="word-example-box">
+												<strong>활용 예문:</strong><br>${item.example}
+											</div>
 										</div>
-									</div>
-								`;
+									`;
 					});
 				}
 				html += `</div>`;
@@ -2807,6 +3145,239 @@ color: #6f6f9b;
 			container.innerHTML = html;
 			updateSidebarToggleButton();
 		}
+
+		// 1. 데이터를 스크립트에 미리 저장해둡니다. (원하시는 텍스트 및 카테고리 구성)
+		const japanData = {
+			mainInfo: {
+				title: "일본어가 쉽다고? 일본어공부를 시작한다면, 여기에서!",
+				desc: "최신 일본어 학습 트렌드와 알짜배기 여행 정보를 한눈에 확인하세요."
+			},
+			languagePosts: [
+				{
+					title: "일본어가 쉽다고? 일본어공부를 시작한다면, 여기에서!",
+					desc: "기초 히라가나부터 실전 회화까지 완벽 가이드",
+					date: "2026-07-23"
+				},
+
+				{
+					id: "post-1",
+					title: "일본어가 쉽다고? 일본어공부를 시작한다면, 여기에서!",
+					desc: "기초 히라가나부터 실전 회화까지 완벽 가이드",
+					date: "2026-07-23",
+					// 클릭 시 보여줄 상세 글 내용
+					content: `
+<h2>지식과 행동, 그리고 응용에 관하여: 당신의 지식은 어디에 살고 있습니까?</h2>
+<blockquote class="quote-box">
+                    "지식을 머리로만 알고 남을 판단하는 데 쓰는가, 아니면 내 삶에서 유연하게 행동하고 응용하는 데 쓰는가? 그것은 결국 개인의 선택이다."
+</blockquote>
+<p>세간에는 '말 따로, 행동 따로'라는 말이 있습니다. 수많은 지식을 머릿속에 담고 있고 말로는 무엇이든 할 수 있을 것 같지만, 정작 실전에서는 행동으로 이어지지 않는 모습을 꼬집는 말입니다. 우리는 보통 무언가를 '안다'고 하면 그것으로 충분하다고 착각하곤 합니다. 하지만 진짜 앎은 '아는 것(지식)'에서 '행동하는 것(실천)'으로, 더 나아가 '상황에 맞게 쓰는 것(응용)'으로 나아가야 비로소 가치를 지닙니다.</p>
+ 
+                <h3>1. 아는 것과 응용하는 것: 파스타와 젓가락의 관계</h3>
+<p>여기 '파스타'라는 음식을 예로 들어보겠습니다. "파스타는 보통 무엇으로 먹나요?"라고 물으면, 십중팔구 "포크로 먹습니다"라고 정답을 말합니다. 이것은 우리가 학습을 통해 얻은 규칙이자 '지식'입니다.</p>
+<p>하지만 고급 레스토랑이 아닌, 포크가 구비되지 않은 일상적인 공간에서 파스타를 마주했을 때 우리는 어떻게 하나요? 포크가 없다고 해서 음식을 포기하지 않습니다. 젓가락을 들기도 하고, 숟가락을 쓰기도 하며, 때로는 손을 대기도 합니다. 상황에 맞게 수단을 바꾸어 목적을 달성하는 것, 이것이 바로 지식을 넘어선 '행동'이자 '응용'입니다.</p>
+<p>지식의 틀에 갇힌 사람은 포크가 없으면 당황하거나 "파스타는 포크로 먹어야 하는데"라며 툴툴대지만, 지식을 삶으로 체화한 사람은 젓가락으로도 맛있게 파스타를 즐깁니다. 중요한 것은 형식(포크)이 아니라 본질(식사)이기 때문입니다.</p>
+ 
+                <h3>2. 알기만 하는 것과 경험하는 것: 서랍 속의 외화</h3>
+<p>또 다른 예를 들어보겠습니다. 저는 한국에 살고 있지만, 지금 제 손에 일본 엔화가 있다고 해봅시다. 저는 이것이 '돈'이라는 가치를 지니고 있다는 사실을 아주 잘 '알고' 있습니다.</p>
+<p>하지만 실제로 일본에 가서 그 돈을 내밀고 물건을 사보지 않았다면, 그것은 단지 머릿속에만 존재하는 지식일 뿐입니다. 실제로 가치를 발휘하여 내 삶의 경험으로 환원되지 않았기 때문입니다. 쓰이지 않는 돈은 서랍 속의 종이 조각과 다를 바 없듯이, 행동으로 보여지지 않는 지식 역시 관념의 유희에 불과합니다.</p>
+ 
+                <h3>3. 언어, 그리고 삶의 태도</h3>
+<p>언어도 정확히 이와 같습니다. 언어의 문법을 외우고 사전적 의미를 달달 외우면 무엇하겠습니까? 그것을 가지고 사람과 대화하고, 내 마음을 표현하는 '행동'으로 이어지지 않는다면 그 언어는 죽은 언어입니다.</p>
+<p>지식만 비대해진 사람들은 쉽게 타인을 평가하곤 합니다. 누군가 파스타를 젓가락으로 먹거나 관습에 맞지 않는 행동을 할 때, 그들은 이렇게 말합니다.</p>
+<p><em>"왜 그렇게 먹어?", "그건 틀렸잖아.", "그렇게 하면 안 되지."</em></p>
+<p>머릿속 지식으로 옳고 그름을 '판단'하기는 참 쉽습니다. 하지만 정작 그렇게 말하는 본인은, 예상치 못한 낯선 상황에 마주했을 때 유연하게 바로 행동할 수 있을까요?</p>
+ 
+                <hr>
+ 
+                <h3>결국, 당신의 선택입니다</h3>
+<p>지식을 단지 알고만 있으면서 남을 판단하고 재단하는 잣대로만 쓸 것인가. 아니면 그 지식을 나의 도구로 삼아, 어떤 상황에서든 유연하게 행동하고 응용하며 살아갈 것인가.</p>
+<p>단순히 '아는 사람'이 될지, 아니면 <strong>'행동하고 응용하는 사람'</strong>이 될지. 그것은 온전히 당신의 선택에 달려 있습니다.</p>
+            `
+				},
+				{
+					id: "post-2",
+					title: "헷갈리는 일본어 한자, 쉽게 외우는 법",
+					desc: "부수만 알아도 한자가 보인다!",
+					date: "2026-07-20",
+					content: "<h3>한자 암기법 상세 내용</h3><p>준비 중인 콘텐츠입니다.</p>"
+				}
+
+			],
+			travelCategories: [
+				{
+					name: "교토", // 제1카테고리
+					sub: ["니시쿄쿠", "우쿄쿠", "기타쿠", "사쿄쿠"] // 제2카테고리
+				},
+				{
+					name: "오사카",
+					sub: ["나니와쿠 (난바, 신사이바시)", "츄오쿠", "기타쿠 (우메다)"]
+				},
+				{
+					name: "후쿠오카",
+					sub: ["하카타쿠", "츄오쿠 (텐진)"]
+				}
+			]
+		};
+
+		// 2. 일본 버튼 클릭 시 동작하는 함수 (토글 + 메인 화면 로드)
+		function toggleJapanMenu(btn) {
+			const section = btn.parentElement;
+			// 서브메뉴 열기/닫기 토글
+			section.classList.toggle('active');
+			// 서브메뉴가 열렸을 때 자동으로 메인 대시보드를 로드합니다.
+			if (section.classList.contains('active')) {
+				loadJapanSub('main');
+				// 서브메뉴 중 '메인' 버튼에 시각적으로 활성화 클래스(active)를 줄 수 있습니다.
+				const navItems = section.querySelectorAll('.nav-item');
+				navItems.forEach(item => item.classList.remove('active'));
+				navItems[0].classList.add('active'); // 첫 번째가 '메인'
+			}
+		}
+
+		// 3. 각 서브메뉴 클릭 시 콘텐츠 영역을 변경하는 함수
+		function loadJapanSub(category) {
+			const contentBox = document.getElementById('main-content');
+			if (!contentBox) return;
+
+			let html = '';
+			let path = '일본 > ';
+
+			if (category === 'main') {
+				// [메인 화면 기존 코드 그대로 사용]
+				path += '메인';
+				html += `<div class="category-path">${path}</div>`;
+				html += `<div class="content-header-flex"><h2>🌟 일본 메인 대시보드</h2></div>`;
+				html += `
+<div class="word-grid-container">
+<div class="word-item-card" style="border-color: #ff5722; cursor: pointer;" onclick="loadJapanSub('language')">
+<span class="word-badge" style="background:#fff3e0; color:#ff5722;">최신/추천</span>
+<h3 class="word-main-title">${japanData.mainInfo.title}</h3>
+<p class="word-desc">${japanData.mainInfo.desc}</p>
+<div style="margin-top:10px; font-size:0.8rem; color:#0066cc;">게시글 보러가기 ➔</div>
+</div>
+</div>`;
+				html += `<div class="section-divider" style="margin: 30px 0 15px 0;"></div>`;
+				html += `<h3>✈️ 인기 여행지 카테고리 바로가기</h3>`;
+				html += `<div class="theme-btn-container">`;
+				japanData.travelCategories.forEach(cat => {
+					html += `<button class="theme-tab-btn" onclick="loadJapanSub('travel')">${cat.name}</button>`;
+				});
+				html += `</div>`;
+
+			} else if (category === 'language') {
+				// [일본'어' 정보 화면] - 수정된 부분!
+				path += `일본'어' 정보`;
+				html += `<div class="category-path">${path}</div>`;
+				html += `<h2>📖 일본'어' 정보 게시글 목록</h2>`;
+				html += `<div class="data-list">`;
+				// index(순번)를 함께 활용해서 클릭 이벤트를 걸어줍니다.
+				japanData.languagePosts.forEach((post, index) => {
+					html += `
+<div class="data-card-btn" onclick="loadPostDetail(${index})" style="cursor:pointer;">
+<strong>${post.title}</strong>
+<p>${post.desc}</p>
+<small style="display:block; margin-top:8px; color:#999;">작성일: ${post.date}</small>
+</div>`;
+				});
+				html += `</div>`;
+
+			} else if (category === 'travel') {
+				// [여행정보 기존 코드 그대로 사용]
+				path += '일본 여행정보';
+				html += `<div class="category-path">${path}</div>`;
+				html += `<h2>🗺️ 일본 여행정보</h2>`;
+				html += `<div class="theme-btn-container">`;
+				japanData.travelCategories.forEach((cat, index) => {
+					const activeClass = index === 0 ? 'active' : '';
+					html += `<button class="theme-tab-btn ${activeClass}" onclick="showTravelSub(this, ${index})">${cat.name}</button>`;
+				});
+				html += `</div>`;
+				html += `<div id="travel-sub-container">${getTravelSubHtml(0)}</div>`;
+
+			} else if (category === 'library') {
+				// [자료실 기존 코드 그대로 사용]
+				path += '일본자료실';
+				html += `<div class="category-path">${path}</div>`;
+				html += `<h2>📂 일본자료실</h2>`;
+				html += `<div class="example-box">아직 자료가 등록되지 않았습니다.</div>`;
+			}
+
+			contentBox.innerHTML = html;
+		}
+
+		// -------------------------------------------------------------
+		// 🔥 [새로 추가] 게시글 클릭 시 상세페이지(글 내용)를 보여주는 함수
+		// -------------------------------------------------------------
+		function loadPostDetail(index) {
+			const contentBox = document.getElementById('main-content');
+			if (!contentBox) return;
+
+			const post = japanData.languagePosts[index];
+
+			let html = `
+<div class="category-path">일본 > 일본'어' 정보 > 상세보기</div>
+<button onclick="loadJapanSub('language')" style="margin-bottom:15px; padding:6px 12px; cursor:pointer; background:#fff; border:1px solid #ccc; border-radius:4px;">
+            ← 목록으로 돌아가기
+</button>
+<div class="post-detail-box" style="background:#fff; padding:20px; border-radius:8px; border:1px solid #eee;">
+<h1 style="font-size:1.5rem; margin-bottom:10px;">${post.title}</h1>
+<span style="color:#999; font-size:0.85rem;">작성일: ${post.date}</span>
+<hr style="margin:15px 0; border:none; border-top:1px solid #eee;">
+<!-- 본문 내용 노출 -->
+<div class="post-body" style="line-height:1.7; color:#333;">
+                ${post.content}
+</div>
+ 
+            <!-- 하단 홍보용 버튼 영역 -->
+<div style="margin-top:40px; padding:20px; background:#f0f7ff; text-align:center; border-radius:8px;">
+<p style="font-weight:bold; color:#0066cc; margin-bottom:10px;">머리로만 아는 지식에서 그치지 마세요!</p>
+<button onclick="alert('신청 페이지로 이동합니다.')" style="background:#ff5722; color:#fff; border:none; padding:10px 20px; font-size:1rem; font-weight:bold; border-radius:4px; cursor:pointer;">
+                    지금 바로 직접 실천해보기
+</button>
+</div>
+</div>
+    `;
+
+			contentBox.innerHTML = html;
+		}
+
+		// 4. 여행정보 내 제2분류(서브 카테고리) 버튼 렌더링 함수
+		function getTravelSubHtml(index) {
+			const cat = japanData.travelCategories[index];
+			let subHtml = `<div class="theme-btn-container" style="margin-top: 10px;">`;
+			// 제2분류 탭 (sub-theme-tab-btn 스타일 활용)
+			cat.sub.forEach((subItem, idx) => {
+				const activeClass = idx === 0 ? 'active' : '';
+				subHtml += `<button class="sub-theme-tab-btn ${activeClass}" onclick="selectSubArea(this)">${subItem}</button>`;
+			});
+			subHtml += `</div>`;
+			// 예시 정보 박스
+			subHtml += `<div class="example-box">현재 선택된 지역: <b>${cat.name}</b>의 세부 여행 정보가 이 곳에 로드됩니다.</div>`;
+			return subHtml;
+		}
+
+		// 5. 여행정보 제1분류 탭 클릭 시 이벤트
+		function showTravelSub(btn, index) {
+			// 모든 제1분류 탭에서 active 제거 후 클릭한 버튼만 active 추가
+			const tabs = btn.parentElement.querySelectorAll('.theme-tab-btn');
+			tabs.forEach(t => t.classList.remove('active'));
+			btn.classList.add('active');
+			// 하단 제2분류 컨테이너 내용 교체
+			document.getElementById('travel-sub-container').innerHTML = getTravelSubHtml(index);
+		}
+
+		// 6. 여행정보 제2분류 탭 클릭 시 이벤트 (선택적 기능)
+		function selectSubArea(btn) {
+			const tabs = btn.parentElement.querySelectorAll('.sub-theme-tab-btn');
+			tabs.forEach(t => t.classList.remove('active'));
+			btn.classList.add('active');
+			// 필요하다면 이곳에 세부 지역 관련 게시글을 로드하는 로직을 추가하시면 됩니다.
+		}
+
+
+
+
+
 
 		// 1차 분류 탭 변경 함수
 		function filterByTheme(themeName) {
@@ -2826,30 +3397,30 @@ color: #6f6f9b;
 			const langData = database[lang];
 			const items = langData.data[type];
 			const selectedItem = items.find(item => item.id === itemId);
-			const container = document.getElementById('dynamic-content');
+			const container = document.getElementById('main-content');//('dynamic-content');
 
 			if (!selectedItem) return;
 
 			container.innerHTML = `
-						<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
-						<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-						<button class="back-btn" onclick="renderDashboardView()">← 목록으로 돌아가기</button>
+							<button class="back-btn" onclick="renderDashboardView()">← 목록으로 돌아가기</button>
 
-						<h1>${selectedItem.title}</h1>
-						<div class="category-path">${langData.name} > ${type === 'grammar' ? '문법' : '단어'} > ${selectedItem.theme} > 상세 내용</div>
+							<h1>${selectedItem.title}</h1>
+							<div class="category-path">${langData.name} > ${type === 'grammar' ? '문법' : '단어'} > ${selectedItem.theme} > 상세 내용</div>
 
-						<div class="detail-content">
-								<span style="color:#ff5722; font-weight:bold;">분류: ${selectedItem.theme}</span>
-								<h3 style="margin-top:10px;">💡 상세 설명</h3>
-								<p>${selectedItem.detail}</p>
+							<div class="detail-content">
+									<span style="color:#ff5722; font-weight:bold;">분류: ${selectedItem.theme}</span>
+									<h3 style="margin-top:10px;">💡 상세 설명</h3>
+									<p>${selectedItem.detail}</p>
 
-								<div class="example-box">
-										<strong>📖 예문 및 활용</strong>
-										<p style="margin-top: 8px; color: #444; line-height: 1.8;">${selectedItem.example}</p>
-								</div>
-						</div>
-					`;
+									<div class="example-box">
+											<strong>📖 예문 및 활용</strong>
+											<p style="margin-top: 8px; color: #444; line-height: 1.8;">${selectedItem.example}</p>
+									</div>
+							</div>
+						`;
 			updateSidebarToggleButton();
 		}
 
@@ -2859,7 +3430,7 @@ color: #6f6f9b;
 			const { lang, type } = currentStatus;
 			const langData = database[lang];
 			const typeLabel = type === 'grammar' ? '문법' : '단어';
-			const container = document.getElementById('dynamic-content');
+			const container = document.getElementById('main-content');//('dynamic-content');
 
 			let selectOptions = "";
 			langData.themes[type].forEach(theme => {
@@ -2869,46 +3440,46 @@ color: #6f6f9b;
 			});
 
 			container.innerHTML = `
-						<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
-						<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+							<button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleSidebar()">☰ 메뉴</button>
+							<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-						<h1>자료 등록하기</h1>
-						<div class="category-path">위치: ${langData.name} > ${typeLabel} 자료실</div>
-						<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+							<h1>자료 등록하기</h1>
+							<div class="category-path">위치: ${langData.name} > ${typeLabel} 자료실</div>
+							<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
 
-						<div class="form-container" style="background:#fafafa; padding:20px; border-radius:6px; border:1px solid #eee;">
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-theme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 1차 테마 선택</label>
-										<select id="write-theme" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">${selectOptions}</select>
-								</div>
-								<!-- 🌟 단어 등록 시 사용될 세분류 텍스트 입력창 고정 추가 -->
-								<div class="form-group" style="margin-bottom:15px; ${type === 'words' ? '' : 'display:none;'}">
-										<label for="write-subtheme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 2차 세분류 입력 (단어 전용)</label>
-										<input type="text" id="write-subtheme" placeholder="예: 나라, 직업, 가족, 숫자 직접 입력" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" value="전체">
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-title" style="display:block; font-weight:bold; margin-bottom:5px;">제목 (${typeLabel})</label>
-										<input type="text" id="write-title" placeholder="예: ~です 또는 爸爸" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-summary" style="display:block; font-weight:bold; margin-bottom:5px;">한 줄 뜻 / 요약</label>
-										<input type="text" id="write-summary" placeholder="예: ~입니다 또는 아빠, 아버지" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-detail" style="display:block; font-weight:bold; margin-bottom:5px;">💡 상세 설명 / 품사</label>
-										<textarea id="write-detail" rows="5" placeholder="상세한 설명이나 단어 품사를 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
-								</div>
-								<div class="form-group" style="margin-bottom:15px;">
-										<label for="write-example" style="display:block; font-weight:bold; margin-bottom:5px;">📖 예문 및 활용</label>
-										<textarea id="write-example" rows="4" placeholder="예문을 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
-								</div>
+							<div class="form-container" style="background:#fafafa; padding:20px; border-radius:6px; border:1px solid #eee;">
+									<div class="form-group" style="margin-bottom:15px;">
+											<label for="write-theme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 1차 테마 선택</label>
+											<select id="write-theme" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">${selectOptions}</select>
+									</div>
+									<!-- 🌟 단어 등록 시 사용될 세분류 텍스트 입력창 고정 추가 -->
+									<div class="form-group" style="margin-bottom:15px; ${type === 'words' ? '' : 'display:none;'}">
+											<label for="write-subtheme" style="display:block; font-weight:bold; margin-bottom:5px;">📌 2차 세분류 입력 (단어 전용)</label>
+											<input type="text" id="write-subtheme" placeholder="예: 나라, 직업, 가족, 숫자 직접 입력" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" value="전체">
+									</div>
+									<div class="form-group" style="margin-bottom:15px;">
+											<label for="write-title" style="display:block; font-weight:bold; margin-bottom:5px;">제목 (${typeLabel})</label>
+											<input type="text" id="write-title" placeholder="예: ~です 또는 爸爸" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+									</div>
+									<div class="form-group" style="margin-bottom:15px;">
+											<label for="write-summary" style="display:block; font-weight:bold; margin-bottom:5px;">한 줄 뜻 / 요약</label>
+											<input type="text" id="write-summary" placeholder="예: ~입니다 또는 아빠, 아버지" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+									</div>
+									<div class="form-group" style="margin-bottom:15px;">
+											<label for="write-detail" style="display:block; font-weight:bold; margin-bottom:5px;">💡 상세 설명 / 품사</label>
+											<textarea id="write-detail" rows="5" placeholder="상세한 설명이나 단어 품사를 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
+									</div>
+									<div class="form-group" style="margin-bottom:15px;">
+											<label for="write-example" style="display:block; font-weight:bold; margin-bottom:5px;">📖 예문 및 활용</label>
+											<textarea id="write-example" rows="4" placeholder="예문을 입력하세요." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></textarea>
+									</div>
 
-								<div class="form-actions" style="display:flex; gap:10px;">
-										<button class="write-btn" onclick="saveContent()">저장하기</button>
-										<button class="back-btn" onclick="renderDashboardView()" style="margin-bottom:0;">취소</button>
-								</div>
-						</div>
-					`;
+									<div class="form-actions" style="display:flex; gap:10px;">
+											<button class="write-btn" onclick="saveContent()">저장하기</button>
+											<button class="back-btn" onclick="renderDashboardView()" style="margin-bottom:0;">취소</button>
+									</div>
+							</div>
+						`;
 			updateSidebarToggleButton();
 		}
 
