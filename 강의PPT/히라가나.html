@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>외국인을 위한 일본어 기초 - 히라가나 연습</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', 'Noto Sans SC', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 🔑 [강사 컨트롤러] (Ctrl + M 토글) */
+        .teacher-menu {
+            display: none;
+            position: absolute;
+            top: 15px;
+            background-color: #ffffff;
+            padding: 12px 18px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            border: 2px solid #ef4444; /* 일본어 테마: 레드 포인트 */
+            animation: fadeIn 0.3s ease;
+            width: 90vw;
+            max-width: 580px;
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .menu-title {
+            font-size: 0.85rem;
+            color: #475569;
+            font-weight: bold;
+        }
+
+        .lang-indicator {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #dc2626;
+            background-color: #fef2f2;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .menu-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .topic-btn {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .topic-btn:hover { background-color: #e2e8f0; }
+        .topic-btn.active {
+            background-color: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+
+        /* 슬라이드 감싸는 래퍼 */
+        .wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1160px;
+            padding: 0 20px;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 80vw;
+            max-width: 1000px;
+            height: 72vh;
+            max-height: 620px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 45px 70px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            font-size: 0.95rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.6rem; color: #1e293b; margin-bottom: 12px; }
+        h2 {
+            font-size: 1.9rem;
+            color: #1e293b;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #ef4444;
+            padding-bottom: 8px;
+        }
+
+        p { font-size: 1.25rem; color: #444; line-height: 1.7; word-break: keep-all; }
+
+        .highlight { color: #dc2626; font-weight: bold; }
+	/* 🌟 재미있는 인트로 시각 카드 스타일 */
+        .intro-card-grid {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 720px;
+        }
+
+        .intro-card {
+            flex: 1;
+            background-color: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .intro-card.active-card {
+            border-color: #ef4444;
+            background-color: #fff5f5;
+        }
+
+        .intro-card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .intro-box-display {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #991b1b;
+            background-color: #ffffff;
+            border: 2px dashed #fca5a5;
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin: 8px 0;
+        }
+        /* 🌟 1글자 전용 카드 라이아웃 스타일 */
+        .single-char-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff5f5;
+            border: 3px solid #fca5a5;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.12);
+        }
+
+        .big-char {
+            font-size: 6.5rem;
+            font-weight: 900;
+            color: #991b1b;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .pron-badge {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #9a3412;
+            background-color: #ffedd5;
+            padding: 6px 22px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .char-desc {
+            font-size: 1.15rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .example-tag {
+            margin-top: 12px;
+            font-size: 1.05rem;
+            color: #991b1b;
+            font-weight: bold;
+            background-color: #fee2e2;
+            padding: 6px 16px;
+            border-radius: 8px;
+        }
+
+        .compare-box {
+            background-color: #f8fafc;
+            border-left: 5px solid #ef4444;
+            padding: 16px 22px;
+            border-radius: 8px;
+            text-align: left;
+            width: 100%;
+            max-width: 680px;
+            margin-top: 10px;
+        }
+
+        .answer-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .answer-btn:hover { background-color: #dc2626; }
+
+        /* 외부 화살표 버튼 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            color: #2c3e50;
+            border: 1px solid #e2e8f0;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .nav-btn:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn { left: -10px; }
+        .next-btn { right: -10px; }
+
+        .summary-list { text-align: left; font-size: 1.15rem; line-height: 2; }
+
+        @media (max-width: 1100px) {
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔑 [강사 컨트롤러] (Ctrl + M 토글) -->
+    <div class="teacher-menu" id="teacherMenu">
+        <div class="menu-header">
+            <span class="menu-title">🎓 강사 컨트롤러 [Ctrl+M: 메뉴 토글 | Ctrl+L: 언어 전환]</span>
+            <span class="lang-indicator" id="langIndicator">🇰🇷 한국어판</span>
+        </div>
+        <div class="menu-btn-group">
+	     <button class="topic-btn active" id="btn-intro" onclick="switchTopic('intro')">0. 인트로 (히라가나 원리)</button>
+            <button class="topic-btn active" id="btn-gojyuon" onclick="switchTopic('gojyuon')">1. あ行 (기본 5음)</button>
+            <button class="topic-btn" id="btn-rules" onclick="switchTopic('rules')">2. 발음 규칙 (탁음/요음)</button>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <div class="presentation-container">
+
+
+
+		<!-- ==============================================================
+                 SECTION 0. [신규] 인트로 섹션 (intro) - 재미있는 히라가나 원리
+            ============================================================== -->
+            <!-- Intro 1: 표지 (KR / CN) -->
+            <div class="slide topic-intro lang-kr active">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">재미있는 일본어 이야기 💡</p>
+                <h1>히라가나는 어떻게 생겼을까?</h1>
+                <p>무작정 외우기 전에, 히라가나만의 특별한 비밀을 알아봅시다!</p>
+            </div>
+            <div class="slide topic-intro lang-cn">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">有趣的日文故事 💡</p>
+                <h1>平假名是怎样形成的？</h1>
+                <p>在开始记忆之前，先来了解平假名独特的奥秘吧！</p>
+            </div>
+
+            <!-- Intro 2: 한글/중국어 vs 히라가나 차이점 (KR / CN) -->
+            <div class="slide topic-intro lang-kr">
+                <span class="slide-number">02</span>
+                <h2>1. 글자 탄생의 차이: [조립형 vs 완성형]</h2>
+                <p>한글은 레고처럼 조립하지만, 히라가나는 <b>소리가 레디메이드(완성형)</b>입니다!</p>
+                
+                <div class="intro-card-grid">
+                    <div class="intro-card">
+                        <div class="intro-card-title">🇰🇷 한글 (조립형)</div>
+                        <p style="font-size: 0.95rem;">자음과 모음이 합쳐짐</p>
+                        <div class="intro-box-display">ㄱ + ㅏ = 가</div>
+                        <p style="font-size: 0.9rem; color: #64748b;">[자음 따로, 모음 따로!]</p>
+                    </div>
+                    <div class="intro-card active-card">
+                        <div class="intro-card-title">🇯🇵 히라가나 (완성형)</div>
+                        <p style="font-size: 0.95rem;">글자 하나에 소리가 통째로!</p>
+                        <div class="intro-box-display">か (ka)</div>
+                        <p style="font-size: 0.9rem; color: #dc2626;">[K + A 소리가 한 글자에 완비!]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide topic-intro lang-cn">
+                <span class="slide-number">02</span>
+                <h2>1. 造字方式的差异：[拼音拼读 vs 整体发音]</h2>
+                <p>平假名每个字母自带<b>固定的【辅音+元音】发音</b>！</p>
+                
+                <div class="intro-card-grid">
+                    <div class="intro-card">
+                        <div class="intro-card-title">🇨🇳 汉语拼音 (拼读)</div>
+                        <p style="font-size: 0.95rem;">声母 + 韵母 拼合</p>
+                        <div class="intro-box-display">k + a = ka</div>
+                        <p style="font-size: 0.9rem; color: #64748b;">[声母与韵母分开组合]</p>
+                    </div>
+                    <div class="intro-card active-card">
+                        <div class="intro-card-title">🇯🇵 日文平假名 (整体)</div>
+                        <p style="font-size: 0.95rem;">单字直接代表完整音节</p>
+                        <div class="intro-box-display">か (ka)</div>
+                        <p style="font-size: 0.9rem; color: #dc2626;">[自带 k+a 完整音节！]</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intro 3: 5음도(50음도) 아파트 비유 (KR / CN) -->
+            <div class="slide topic-intro lang-kr">
+                <span class="slide-number">03</span>
+                <h2>2. 히라가나의 비밀지도: [5음도 아파트]</h2>
+                <p>히라가나는 체계적인 <b>'아파트 동/호수'</b> 규칙으로 정리되어 있습니다!</p>
+                <div class="compare-box">
+                    <p>🏢 <b>층수 (단):</b> <span class="highlight">あ·い·う·え·お</span> (5개의 기본 모음 = 5개 층)</p>
+                    <p>🚪 <b>동 이름 (행):</b> <span class="highlight">あ행, か행, さ행, た행...</span> (자음 계열 = 동 건물)</p>
+                    <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p style="font-size: 1.05rem; color: #1e293b;">👉 예: <b>か (ka)</b>는 <b>'か동(K)의 1층(あ)'</b>에 사는 글자입니다!</p>
+                </div>
+            </div>
+            <div class="slide topic-intro lang-cn">
+                <span class="slide-number">03</span>
+                <h2>2. 平假名的秘密地图：[五十音图公寓]</h2>
+                <p>平假名有着像<b>“公寓楼层与门牌”</b>一样非常系统化的规则！</p>
+                <div class="compare-box">
+                    <p>🏢 <b>楼层 (段):</b> <span class="highlight">あ·い·う·え·お</span> (5个基本元音 = 5个楼层)</p>
+                    <p>🚪 <b>楼栋 (行):</b> <span class="highlight">あ行, か行, さ行, た行...</span> (辅音系列 = 不同楼栋)</p>
+                    <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p style="font-size: 1.05rem; color: #1e293b;">👉 例如：<b>か (ka)</b> 就是住在 <b>“か栋(K) 1层(a)”</b> 的字母！</p>
+                </div>
+            </div>
+
+            <!-- Intro 4: 한자 유래 + 학습 출발 (KR / CN) -->
+            <div class="slide topic-intro lang-kr">
+                <span class="slide-number">04</span>
+                <h2>3. 한자를 흘려 쓰다가 탄생한 글자!</h2>
+                <p>옛날 일본 사람들이 한자를 예쁘게 흘려 쓰다가 귀여운 히라가나가 되었답니다.</p>
+                <div class="compare-box" style="text-align: center;">
+                    <p style="font-size: 1.6rem; font-weight: bold; color: #1e293b;">安 (편안할 안) ➡ 流 (흘려쓰기) ➡ <span class="highlight" style="font-size: 2.2rem;">あ</span></p>
+                    <p style="font-size: 1rem; color: #64748b; margin-top: 8px;">* 동글동글 부드러운 선으로 이어 쓰면 바로 히라가나 완성!</p>
+                </div>
+                <p style="margin-top: 15px; font-weight: bold; color: #dc2626;">🚀 그럼 가장 기본이 되는 [あ행] 아파트부터 들어가 볼까요?</p>
+            </div>
+            <div class="slide topic-intro lang-cn">
+                <span class="slide-number">04</span>
+                <h2>3. 由汉字草书演变而来的草体字母！</h2>
+                <p>古代日本人将繁复的汉字草写，演变成了如今可爱的平假名。</p>
+                <div class="compare-box" style="text-align: center;">
+                    <p style="font-size: 1.6rem; font-weight: bold; color: #1e293b;">安 (平安之安) ➡ 草书演变 ➡ <span class="highlight" style="font-size: 2.2rem;">あ</span></p>
+                    <p style="font-size: 1rem; color: #64748b; margin-top: 8px;">* 笔画圆润连贯，就变成了平假名！</p>
+                </div>
+                <p style="margin-top: 15px; font-weight: bold; color: #dc2626;">🚀 那么，让我们从最基础的【あ行】公寓开始探索吧！</p>
+            </div>
+
+
+            <!-- ==============================================================
+                 SECTION 1. あ行 기본 글자 (gojyuon) - 한국어판 & 중국어판
+            ============================================================== -->
+            <!-- 1-1. 표지 (KR) -->
+            <div class="slide topic-gojyuon lang-kr active">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">일본어 히라가나 (Hiragana)</p>
+                <h1>あ行 (아행) 기초 마스터</h1>
+                <p>글자 하나씩 발음과 대표 단어를 연습해 봅시다!</p>
+            </div>
+
+            <!-- 1-1. 표지 (CN) -->
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">日文平假名 (Hiragana)</p>
+                <h1>あ行 (A行) 基础掌握</h1>
+                <p>逐字学习发音嘴型与拼音对比，轻松掌握！</p>
+            </div>
+
+            <!-- ---------------- あ ---------------- -->
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">02</span>
+                <h2>あ行 (1/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">あ</div>
+                    <div class="pron-badge">아 (a)</div>
+                    <div class="char-desc">입을 너무 크게 벌리지 않고 '아'라고 발음합니다.</div>
+                    <div class="example-tag">단어 예시: あい (아이 = 사랑)</div>
+                </div>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">02</span>
+                <h2>あ行 (1/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">あ</div>
+                    <div class="pron-badge">a (啊)</div>
+                    <div class="char-desc">嘴巴自然张开，类似于拼音的 "a"。</div>
+                    <div class="example-tag">单词示例: あい (ai = 爱)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- い ---------------- -->
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">03</span>
+                <h2>あ行 (2/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">い</div>
+                    <div class="pron-badge">이 (i)</div>
+                    <div class="char-desc">입술을 좌우로 넓게 벌리며 '이'라고 발음합니다.</div>
+                    <div class="example-tag">단어 예시: いぬ (이누 = 개/강아지)</div>
+                </div>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">03</span>
+                <h2>あ行 (2/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">い</div>
+                    <div class="pron-badge">i (衣)</div>
+                    <div class="char-desc">嘴角向两侧展平，相当于拼音的 "i"。</div>
+                    <div class="example-tag">单词示例: いぬ (inu = 狗)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- う ---------------- -->
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">04</span>
+                <h2>あ行 (3/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">う</div>
+                    <div class="pron-badge">우 (u)</div>
+                    <div class="char-desc">입술을 앞으로 내밀지 말고 평평하게 유지하며 '우' 발음합니다.</div>
+                    <div class="example-tag">단어 예시: うみ (우미 = 바다)</div>
+                </div>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">04</span>
+                <h2>あ行 (3/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">う</div>
+                    <div class="pron-badge">u (乌 / 扁唇u)</div>
+                    <div class="char-desc">嘴唇不要过于向前突出，发扁唇 "u"。</div>
+                    <div class="example-tag">单词示例: うみ (umi = 大海)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- え ---------------- -->
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">05</span>
+                <h2>あ行 (4/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">え</div>
+                    <div class="pron-badge">에 (e)</div>
+                    <div class="char-desc">입을 살짝 벌린 상태에서 편안하게 '에' 발음합니다.</div>
+                    <div class="example-tag">단어 예시: えき (에키 = 기차역)</div>
+                </div>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">05</span>
+                <h2>あ行 (4/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">え</div>
+                    <div class="pron-badge">e (诶)</div>
+                    <div class="char-desc">嘴巴微张，相当于拼音的 "e" 或 "ei"。</div>
+                    <div class="example-tag">单词示例: えき (eki = 车站)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- お ---------------- -->
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">06</span>
+                <h2>あ行 (5/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">お</div>
+                    <div class="pron-badge">오 (o)</div>
+                    <div class="char-desc">입술을 동그랗게 모아서 '오'라고 발음합니다.</div>
+                    <div class="example-tag">단어 예시: おか (오카 = 언덕)</div>
+                </div>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">06</span>
+                <h2>あ行 (5/5)</h2>
+                <div class="single-char-card">
+                    <div class="big-char">お</div>
+                    <div class="pron-badge">o (喔)</div>
+                    <div class="char-desc">双唇收圆，相当于拼音的 "o"。</div>
+                    <div class="example-tag">单词示例: おか (oka = 山丘)</div>
+                </div>
+            </div>
+
+            <!-- 1-7. 확인 문제 (KR/CN) -->
+		<div class="slide topic-gojyuon lang-kr active">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">말하는게 재미있다! 세모일본어 💡</p>
+                <h1>확인 문제</h1>
+                <p>무작정 외우기 전에, 한번 입밖으로 내뱉어봅시다!</p>
+            </div>
+		<div class="slide topic-gojyuon lang-cn active">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">말하는게 재미있다! 세모일본어 💡</p>
+                <h1>测验</h1>
+                <p>무작정 외우기 전에, 한번 입밖으로 내뱉어봅시다!</p>
+            </div>
+
+
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">07</span>
+                <h2>확인 문제(Quiz)</h2>
+                <p>배운 글자를 조합해서 만든 단어입니다. 무슨 뜻일까요?</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.8rem;">[ あ ] + [ い ] = ?</p>
+                <button class="answer-btn" onclick="toggleAnswer('ans-go-kr')">정답 확인하기</button>
+                <p id="ans-go-kr" class="highlight" style="display:none; font-size: 2rem; margin-top:12px;">あい (아이 = 사랑)</p>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">07</span>
+                <h2>测验 (Quiz)</h2>
+                <p>拼读以下假名组成的单词：</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.8rem;">[ あ ] + [ い ] = ?</p>
+                <button class="answer-btn" onclick="toggleAnswer('ans-go-cn')">查看答案</button>
+                <p id="ans-go-cn" class="highlight" style="display:none; font-size: 2rem; margin-top:12px;">あい (ai = 爱)</p>
+            </div>
+		
+            <!-- ---------------- 입으로말해보기문제 ---------------- -->
+ 	     <!-- ---------------- 입으로말해보기문제 : 문제 ---------- -->
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">05</span>
+                <h2>뭐예요?</h2>
+		<p>배운 글자를 말해봅시다. 무슨 뜻일까요?</p>
+                <div class="single-char-card">
+                    <div class="big-char">え</div>
+                    <div class="example-tag">입을 살짝 벌린 상태에서 편안하게 발음합니다.</div>
+                </div>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">05</span>
+                <h2>뭐예요?</h2>
+		<p>배운 글자를 말해봅시다. 무슨 뜻일까요?</p>
+                <div class="single-char-card">
+                    <div class="big-char">え</div>
+                    <div class="example-tag">嘴巴微张，相当于拼音的 " " 或 " "。</div>
+                </div>
+            </div>
+ 	     <!-- ---------------- 입으로말해보기문제 : 답---------------- -->
+
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">05</span>
+                <h2>뭐예요?</h2>
+                <div class="single-char-card">
+                    <div class="big-char">え</div>
+                    <div class="pron-badge">에 (e)</div>
+                    <div class="char-desc">입을 살짝 벌린 상태에서 편안하게 '에' 발음합니다.</div>
+                    <div class="example-tag">단어 예시: えき (에키 = 기차역)</div>
+                </div>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">05</span>
+                <h2>뭐예요?</h2>
+                <div class="single-char-card">
+                    <div class="big-char">え</div>
+                    <div class="pron-badge">e (诶)</div>
+                    <div class="char-desc">嘴巴微张，相当于拼音的 "e" 或 "ei"。</div>
+                    <div class="example-tag">单词示例: えき (eki = 车站)</div>
+                </div>
+            </div>
+
+
+          <!-- 🎯 [섹션 브릿지] 단어 퀴즈 시작 표지 (KR / CN) -->
+          <div class="slide topic-gojyuon lang-kr">
+            <span class="slide-number">GAME 02</span>
+  <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">한 걸음 더! 레벨업 🚀</p>
+  <h1>좀더 말해볼까요?</h1>
+  <p>이제 2글자 이상 단어를 이어서 소리 내어 읽어봅시다!</p>
+</div>
+<div class="slide topic-gojyuon lang-cn">
+  <span class="slide-number">GAME 02</span>
+  <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">更进一步！ Level Up 🚀</p>
+  <h1>试着多说一点吧！</h1>
+  <p>现在来连读两个字以上的单词吧！</p>
+</div>
+
+            <!-- ---------------- 입으로말해보기문제 ---------------- -->
+<!-- 🎲 [랜덤 퀴즈 슬라이드 - 한국어판] -->
+<!-- 🎲 [1글자 퀴즈 슬라이드 - 한국어판] -->
+<div class="slide topic-gojyuon lang-kr">
+    <span class="slide-number">퀴즈</span>
+    <h2>뭐예요?</h2>
+    <p>배운 글자를 말해봅시다. 무슨 뜻일까요?</p>
+    
+    <div class="single-char-card">
+        <div class="big-char" id="quiz-char-kr">え</div>
+        
+        <!-- 정답 영역 -->
+        <div id="quiz-answer-kr" style="display: none; width: 100%; margin-top: 10px;">
+            <div class="pron-badge" id="quiz-pron-kr" style="font-size: 1.1rem; line-height: 1.5;">
+                에 (e) - 입을 살짝 벌린 상태에서 편안하게 '에' 발음합니다.
+            </div>
+            <div class="example-tag" id="quiz-word-kr">단어 예시: えき (에키 = 기차역)</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button class="answer-btn" onclick="showQuizAnswer('kr')">정답 확인</button>
+        <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomQuiz()">🎲 다음 문제</button>
+    </div>
+</div>
+
+<!-- 🎲 [1글자 퀴즈 슬라이드 - 중국어판] -->
+<div class="slide topic-gojyuon lang-cn">
+    <span class="slide-number">测验</span>
+    <h2>这是什么？</h2>
+    <p>试着读出发音并想想是什么意思吧！</p>
+    
+    <div class="single-char-card">
+        <div class="big-char" id="quiz-char-cn">え</div>
+        
+        <div id="quiz-answer-cn" style="display: none; width: 100%; margin-top: 10px;">
+            <div class="pron-badge" id="quiz-pron-cn" style="font-size: 1.1rem; line-height: 1.5;">
+                e (诶) - 嘴巴微张，相当于拼音的 'e' 或 'ei'。
+            </div>
+            <div class="example-tag" id="quiz-word-cn">单词示例: えき (eki = 车站)</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button class="answer-btn" onclick="showQuizAnswer('cn')">查看答案</button>
+        <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomQuiz()">🎲 下一题</button>
+    </div>
+</div>
+
+<!-- 🎲 [단어 랜덤 퀴즈 - 한국어판] -->
+<div class="slide topic-gojyuon lang-kr">
+    <span class="slide-number">단어 퀴즈</span>
+    <h2>소리 내어 읽어봅시다!</h2>
+    <p>화면에 나오는 글자를 보고 바로 발음해 보세요.</p>
+    
+    <div class="single-char-card" style="max-width: 480px;">
+        <div class="big-char" id="word-char-kr" style="font-size: 4.8rem;">あい</div>
+        
+        <!-- 정답 영역 (발음 + 발음 설명만 표시) -->
+        <div id="word-answer-kr" style="display: none; width: 100%; margin-top: 10px;">
+            <div class="pron-badge" id="word-pron-kr">아이 (a-i)</div>
+            <div class="example-tag" id="word-guide-kr">あ(아)와 い(이)를 부드럽게 이어 발음합니다.</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button class="answer-btn" onclick="showWordAnswer('kr')">정답 확인</button>
+        <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomWord()">🎲 다음 단어</button>
+    </div>
+</div>
+
+<!-- 🎲 [단어 랜덤 퀴즈 - 중국어판] -->
+<div class="slide topic-gojyuon lang-cn">
+    <span class="slide-number">单词测验</span>
+    <h2>请大声读出来！</h2>
+    <p>看大屏幕上的假名，试着直接读出发音。</p>
+    
+    <div class="single-char-card" style="max-width: 480px;">
+        <div class="big-char" id="word-char-cn" style="font-size: 4.8rem;">あい</div>
+        
+        <div id="word-answer-cn" style="display: none; width: 100%; margin-top: 10px;">
+            <div class="pron-badge" id="word-pron-cn">a-i</div>
+            <div class="example-tag" id="word-guide-cn">连贯发音 あ(a) 和 い(i)。</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button class="answer-btn" onclick="showWordAnswer('cn')">查看答案</button>
+        <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomWord()">🎲 下一个单词</button>
+    </div>
+</div>
+		
+
+            <!-- 1-8. 정리 (KR/CN) -->
+            <div class="slide topic-gojyuon lang-kr">
+                <span class="slide-number">08</span>
+                <h2>あ行 정리</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>あ (아)</b> : あい (사랑)</li>
+                    <li>✅ <b>い (이)</b> : いぬ (강아지)</li>
+                    <li>✅ <b>う (우)</b> : うみ (바다)</li>
+                    <li>✅ <b>え (에)</b> : えき (역)</li>
+                    <li>✅ <b>お (오)</b> : おか (언덕)</li>
+                </ul>
+            </div>
+            <div class="slide topic-gojyuon lang-cn">
+                <span class="slide-number">08</span>
+                <h2>あ行 小结</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>あ (a)</b> : あい (爱)</li>
+                    <li>✅ <b>い (i)</b> : いぬ (狗)</li>
+                    <li>✅ <b>う (u)</b> : うみ (大海)</li>
+                    <li>✅ <b>え (e)</b> : えき (车站)</li>
+                    <li>✅ <b>お (o)</b> : おか (山丘)</li>
+                </ul>
+            </div>
+
+
+
+
+            <!-- ==============================================================
+                 SECTION 2. 발음 규칙 (rules) - 한국어판 & 중국어판
+            ============================================================== -->
+            <div class="slide topic-rules lang-kr">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">일본어 발음 규칙 (Rules)</p>
+                <h1>탁음과 반탁음</h1>
+                <p>글자 오른쪽 위에 점(゛)이나 동그라미(゜)를 붙이는 규칙입니다.</p>
+            </div>
+            <div class="slide topic-rules lang-cn">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #ef4444; font-weight: bold;">日文发音规则 (Rules)</p>
+                <h1>浊音与半浊音</h1>
+                <p>在假名右上角添加两点(゛)或小圆圈(゜)的发音变音规则。</p>
+            </div>
+
+            <div class="slide topic-rules lang-kr">
+                <span class="slide-number">02</span>
+                <h2>1. 탁음 (濁音)</h2>
+                <p>글자 우측 상단에 <b>점 두 개 (゛)</b>를 붙여 울리는 소리를 만듭니다.</p>
+                <div class="compare-box">
+                    <p>・ <b>か (카)</b> ＋ ゛ → <span class="highlight">が (가)</span></p>
+                    <p>・ <b>さ (사)</b> ＋ ゛ → <span class="highlight">ざ (자)</span></p>
+                    <p>・ <b>た (타)</b> ＋ ゛ → <span class="highlight">だ (다)</span></p>
+                    <p>・ <b>は (하)</b> ＋ ゛ → <span class="highlight">ば (바)</span></p>
+                </div>
+            </div>
+            <div class="slide topic-rules lang-cn">
+                <span class="slide-number">02</span>
+                <h2>1. 浊音 (濁音)</h2>
+                <p>在假名右上角加上<b>两点 (゛)</b>，使其发音变为浊音：</p>
+                <div class="compare-box">
+                    <p>・ <b>か (ka)</b> ＋ ゛ → <span class="highlight">が (ga)</span></p>
+                    <p>・ <b>さ (sa)</b> ＋ ゛ → <span class="highlight">ざ (za)</span></p>
+                    <p>・ <b>た (ta)</b> ＋ ゛ → <span class="highlight">だ (da)</span></p>
+                    <p>・ <b>は (ha)</b> ＋ ゛ → <span class="highlight">ば (ba)</span></p>
+                </div>
+            </div>
+
+            <div class="slide topic-rules lang-kr">
+                <span class="slide-number">03</span>
+                <h2>2. 반탁음 (半濁音)</h2>
+                <p><b>は행 (は, ひ, ふ, へ, ほ)</b> 우측 상단에 <b>작은 동그라미 (゜)</b>를 붙여 'P' 발음으로 바꿉니다.</p>
+                <div class="compare-box">
+                    <p>・ <b>は (하)</b> ＋ ゜ → <span class="highlight">ぱ (파)</span></p>
+                    <p>・ <b>ひ (히)</b> ＋ ゜ → <span class="highlight">ぴ (피)</span></p>
+                    <p>・ <b>ふ (후)</b> ＋ ゜ → <span class="highlight">ぷ (푸)</span></p>
+                </div>
+            </div>
+            <div class="slide topic-rules lang-cn">
+                <span class="slide-number">03</span>
+                <h2>2. 半浊音 (半濁音)</h2>
+                <p>仅在 <b>は行</b> 右上角加上<b>小圆圈 (゜)</b>，发成 "P" 音：</p>
+                <div class="compare-box">
+                    <p>・ <b>は (ha)</b> ＋ ゜ → <span class="highlight">ぱ (pa)</span></p>
+                    <p>・ <b>ひ (hi)</b> ＋ ゜ → <span class="highlight">ぴ (pi)</span></p>
+                    <p>・ <b>ふ (fu)</b> ＋ ゜ → <span class="highlight">ぷ (pu)</span></p>
+                </div>
+            </div>
+
+            <div class="slide topic-rules lang-kr">
+                <span class="slide-number">04</span>
+                <h2>규칙 정리</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>゛ (탁음)</b> : 가, 자, 다, 바 행 발음으로 변경</li>
+                    <li>✅ <b>゜ (반탁음)</b> : は행에만 부착 가능 (파, 피, 푸, 페, 포)</li>
+                </ul>
+            </div>
+            <div class="slide topic-rules lang-cn">
+                <span class="slide-number">04</span>
+                <h2>规则小结</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>゛ (浊音)</b> : 变为 g, z, d, b 开头的浊音</li>
+                    <li>✅ <b>゜ (半浊音)</b> : 仅用于 は 行，变为 p 开头的发音</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 슬라이드 바깥 화살표 버튼 -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <script>
+        let currentLang = 'kr';     // 'kr' 또는 'cn'
+	let currentTopic = 'intro'; // 기본 주제: 'intro'
+        //let currentTopic = 'gojyuon';  // 'gojyuon' 또는 'rules'
+        let currentSlideIndex = 0;
+
+        function getActiveSlides() {
+            return document.querySelectorAll(`.topic-${currentTopic}.lang-${currentLang}`);
+        }
+
+        // 🌟 슬라이드 번호 자동 계산 (예: 03 / 08)
+        function updateSlideNumbers() {
+            const activeSlides = getActiveSlides();
+            const total = activeSlides.length;
+
+            activeSlides.forEach((slide, index) => {
+                const numElem = slide.querySelector('.slide-number');
+                if (numElem) {
+                    const currentStr = String(index + 1).padStart(2, '0');
+                    const totalStr = String(total).padStart(2, '0');
+                    numElem.innerText = `${currentStr} / ${totalStr}`;
+                }
+            });
+        }
+
+        function showSlide(index) {
+            updateSlideNumbers();
+            const activeSlides = getActiveSlides();
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            if (activeSlides[index]) {
+                activeSlides[index].classList.add('active');
+            }
+        }
+
+        function changeSlide(direction) {
+            const activeSlides = getActiveSlides();
+            currentSlideIndex += direction;
+
+            if (currentSlideIndex < 0) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex >= activeSlides.length) {
+                currentSlideIndex = activeSlides.length - 1;
+            }
+            showSlide(currentSlideIndex);
+        }
+
+        function switchTopic(topicName) {
+            currentTopic = topicName;
+            currentSlideIndex = 0;
+
+            document.getElementById('btn-gojyuon').classList.toggle('active', topicName === 'gojyuon');
+            document.getElementById('btn-rules').classList.toggle('active', topicName === 'rules');
+
+            showSlide(currentSlideIndex);
+        }
+
+        function toggleLanguage() {
+            currentLang = (currentLang === 'kr') ? 'cn' : 'kr';
+            
+            const langIndicator = document.getElementById('langIndicator');
+            langIndicator.innerText = (currentLang === 'kr') ? '🇰🇷 한국어판' : '🇨🇳 중국어판';
+
+            showSlide(currentSlideIndex);
+        }
+
+        // 키보드 단축키
+        document.addEventListener('keydown', (e) => {
+            const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+            if (isCtrlOrCmd && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
+                e.preventDefault();
+                const menu = document.getElementById('teacherMenu');
+                menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            }
+
+            if (isCtrlOrCmd && (e.key === 'l' || e.key === 'L' || e.key === 'ㅣ')) {
+                e.preventDefault();
+                toggleLanguage();
+            }
+
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        function toggleAnswer(answerId) {
+            const answer = document.getElementById(answerId);
+            answer.style.display = (answer.style.display === 'none' || answer.style.display === '') ? 'block' : 'none';
+        }
+
+        // 초기 실행시 번호 부여
+        updateSlideNumbers();
+
+
+// 📦 퀴즈에 나올 글자 데이터 목록 (필요한 만큼 추가하시면 됩니다!)
+const hiraganaQuizData = [
+    {
+        char: "あ",
+        krPron: "아 (a) ",
+        krWord: "입을 너무 크게 벌리지 않고 '아'라고 발음합니다.",
+        cnPron: "a (啊) ",
+        cnWord: "嘴巴自然张开，类似于拼音的 'a'。"
+    },
+    {
+        char: "い",
+        krPron: "이 (i) ",
+        krWord: "입술을 좌우로 넓게 벌리며 '이'라고 발음합니다.",
+        cnPron: "i (衣) ",
+        cnWord: "嘴角向两侧展平，相当于拼音的 'i'。"
+    },
+    {
+        char: "う",
+        krPron: "우 (u) ",
+        krWord: "입술을 앞으로 내밀지 않고 평평하게 유지하며 발음합니다.",
+        cnPron: "u (乌) ",
+        cnWord: "嘴唇不要过于向前突出，发扁唇 'u'。"
+    },
+    {
+        char: "え",
+        krPron: "에 (e) ",
+        krWord: " 입을 살짝 벌린 상태에서 편안하게 발음합니다.",
+        cnPron: "e (诶) ",
+        cnWord: "嘴巴微张，相当于拼音的 'e' 或 'ei'。"
+    },
+    {
+        char: "お",
+        krPron: "오 (o) 입술을 동그랗게 모아서 발음합니다.",
+        krWord: "입술을 동그랗게 모아서 발음합니다.",
+        cnPron: "o (喔) ",
+        cnWord: "双唇收圆，相当于拼音的 'o'。"
+    }
+];
+// 🎲 1글자 랜덤 문제 뽑기 함수 (undefined 오류 해결버전)
+function nextRandomQuiz() {
+    const randomIndex = Math.floor(Math.random() * hiraganaQuizData.length);
+    const item = hiraganaQuizData[randomIndex];
+
+    // 한국어판 데이터 업데이트
+    document.getElementById('quiz-char-kr').innerText = item.char;
+    document.getElementById('quiz-pron-kr').innerText = item.krPron; // Pron 영역에 발음+설명 같이 출력
+    document.getElementById('quiz-word-kr').innerText = item.krWord;
+    document.getElementById('quiz-answer-kr').style.display = 'none'; // 정답 감추기
+
+    // 중국어판 데이터 업데이트
+    document.getElementById('quiz-char-cn').innerText = item.char;
+    document.getElementById('quiz-pron-cn').innerText = item.cnPron; // Pron 영역에 발음+설명 같이 출력
+    document.getElementById('quiz-word-cn').innerText = item.cnWord;
+    document.getElementById('quiz-answer-cn').style.display = 'none'; // 정답 감추기
+}
+
+// 👁️ 정답 보여주기 함수
+function showQuizAnswer(lang) {
+    document.getElementById(`quiz-answer-${lang}`).style.display = 'block';
+}
+
+// 페이지가 처음 로드될 때 무작위 문제 1개 세팅
+window.addEventListener('DOMContentLoaded', () => {
+    nextRandomQuiz();
+});
+
+// 📦 2글자 이상 단어 퀴즈 데이터 목록 (원하시는 단어를 계속 추가하세요!)
+const wordQuizData = [
+    {
+        word: "あい",
+        krPron: "아이 (a-i)",
+        krWord: "あ(아)와 い(이)를 부드럽게 이어 발음합니다.",
+        cnPron: "a-i",
+        cnWord: "连贯发音 あ(a) 和 い(i)。"
+    },
+    {
+        word: "いぬ",
+        krPron: "이누 (i-nu)",
+        krWord: "い(이)와 ぬ(누)를 정확하게 발음합니다.",
+        cnPron: "i-nu",
+        cnWord: "清楚发音 い(i) 和 ぬ(nu)。"
+    },
+    {
+        word: "うみ",
+        krPron: "우미 (u-mi)",
+        krWord: "입술을 너무 내밀지 않고 편안하게 발음합니다.",
+        cnPron: "u-mi",
+        cnWord: "嘴唇不要过于突出，自然发音。"
+    },
+    {
+        word: "えき",
+        krPron: "에키 (e-ki)",
+        krWord: "え(에)와 き(키)를 또박또박 발음합니다.",
+        cnPron: "e-ki",
+        cnWord: "清晰读出 え(e) 和 き(ki)。"
+    },
+    {
+        word: "おか",
+        krPron: "오카 (o-ka)",
+        krWord: "입술을 동그랗게 모아 오(お)를 발음합니다.",
+        cnPron: "o-ka",
+        cnWord: "双唇收圆发 お(o)。"
+    },
+    {
+        word: "あおい",
+        krPron: "아오이 (a-o-i)",
+        krWord: "세 글자를 박자에 맞춰 자연스럽게 읽어줍니다.",
+        cnPron: "a-o-i",
+        cnWord: "顺畅连读三个假名音节。"
+    },
+    {
+        word: "うえ",
+        krPron: "우에 (u-e)",
+        krWord: "う(우)에서 え(에)로 매끄럽게 넘어가며 발음합니다.",
+        cnPron: "u-e",
+        cnWord: "从 う(u) 平滑过渡到 え(e)。"
+    },
+
+
+
+
+
+
+     {
+        word: "いえ",
+        krPron: "이에 (iE)",
+        krWord: "い와 え를 부드럽게 이어 발음합니다.",
+        cnPron: "iE",
+        cnWord: "连贯发音 い 和 え。"
+    },
+     {
+        word: "あう",
+        krPron: "아이 (a-Ｕ)",
+        krWord: "あ와 う를 부드럽게 이어 발음합니다.",
+        cnPron: "a-Ｕ",
+        cnWord: "连贯发音 あ(a) 和 う(Ｕ)。"
+    },
+
+     {
+        word: "いう",
+        krPron: "아이 (i-u)",
+        krWord: "い와 う를 부드럽게 이어 발음합니다.",
+        cnPron: "i-u",
+        cnWord: "连贯发音 い 和 う。"
+    },
+
+     {
+        word: "おい",
+        krPron: "오이 (o-i)",
+        krWord: "お와 い를 부드럽게 이어 발음합니다.",
+        cnPron: "o-i",
+        cnWord: "连贯发音 お 和 い。"
+    },
+
+
+
+];
+
+// 🎲 랜덤 단어 뽑기 함수
+function nextRandomWord() {
+    const randomIndex = Math.floor(Math.random() * wordQuizData.length);
+    const item = wordQuizData[randomIndex];
+
+    // 한국어판 데이터 갱신
+    document.getElementById('word-char-kr').innerText = item.word;
+    document.getElementById('word-pron-kr').innerText = item.krPron;
+    document.getElementById('word-meaning-kr').innerText = item.krMeaning;
+    document.getElementById('word-hint-kr').innerText = item.krHint;
+    document.getElementById('word-answer-kr').style.display = 'none';
+
+    // 중국어판 데이터 갱신
+    document.getElementById('word-char-cn').innerText = item.word;
+    document.getElementById('word-pron-cn').innerText = item.cnPron;
+    document.getElementById('word-meaning-cn').innerText = item.cnMeaning;
+    document.getElementById('word-hint-cn').innerText = item.cnHint;
+    document.getElementById('word-answer-cn').style.display = 'none';
+}
+
+// 👁️ 단어 정답 보이기 함수
+function showWordAnswer(lang) {
+    document.getElementById(`word-answer-${lang}`).style.display = 'block';
+}
+
+// 페이지 열릴 때 첫 단어 세팅
+window.addEventListener('DOMContentLoaded', () => {
+    if (typeof nextRandomQuiz === 'function') nextRandomQuiz();
+    nextRandomWord();
+});
+    </script>
+</body>
+</html>

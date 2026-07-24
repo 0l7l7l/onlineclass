@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FE 기본정보기술자 - Chapter 06. 알고리즘과 자료구조</title>
+    <style>
+/* ==========================================================================
+   1. 기본 스타일 초기화 및 웹 화면용 배경/패딩 설정
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+}
+
+body {
+    background-color: #f0f4f8; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: #2d3748;
+    overflow-x: hidden;
+}
+
+.book-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; 
+    zoom: var(--book-scale, 0.75);
+    transition: zoom 0.2s ease;
+}
+
+:root {
+    --book-scale: 0.75;
+}
+
+@media (max-width: 1500px) { :root { --book-scale: 0.65; } }
+@media (max-width: 1300px) { :root { --book-scale: 0.55; } }
+@media (max-width: 1100px) { :root { --book-scale: 0.45; } }
+
+/* ==========================================================================
+   2. 책 펼침면 구조 및 접힘 선 효과
+   ========================================================================== */
+.book-container {
+    display: flex;
+    width: 364mm; 
+    height: 257mm; 
+    background-color: #fff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.book-container::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    width: 1px;
+    height: 90%; 
+    background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+    z-index: 10;
+}
+
+.page {
+    width: 182mm;
+    height: 257mm;
+    padding: 22mm 18mm 18mm 18mm; 
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 12mm;
+    font-size: 13px;
+    color: #a0aec0;
+    font-weight: bold;
+}
+.left-page .page-number { left: 18mm; }
+.right-page .page-number { right: 18mm; }
+
+.chapter-title {
+    position: absolute;
+    top: 12mm;
+    font-size: 12px;
+    color: #718096;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+.left-page .chapter-title { left: 18mm; }
+.right-page .chapter-title { right: 18mm; text-align: right; width: calc(100% - 36mm); }
+
+/* ==========================================================================
+   3. 알고리즘 테마 컬러 (보라 & 인디고 톤)
+   ========================================================================== */
+.main-title {
+    font-size: 24px;
+    color: #4c1d95; 
+    margin-bottom: 4px;
+    font-weight: 800;
+    padding-left: 10px;
+    border-left: 5px solid #8b5cf6;
+    line-height: 1.2;
+}
+
+.sub-title {
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 14px;
+    padding-left: 10px; 
+}
+
+.concept-box {
+    background-color: #f5f3ff; 
+    border-left: 5px solid #8b5cf6;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+}
+
+.concept-box h3 {
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #4c1d95;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.concept-box p {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.concept-box p:last-child {
+    margin-bottom: 0;
+}
+
+/* 표 스타일 */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 11.5px;
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid #ddd6fe;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.custom-table th {
+    background-color: #ede9fe;
+    color: #4c1d95;
+    font-weight: bold;
+}
+
+.highlight {
+    color: #7c3aed;
+    font-weight: bold;
+}
+
+.badge {
+    display: inline-block;
+    background-color: #8b5cf6;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.section-title {
+    font-size: 15px;
+    color: #4c1d95;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #ddd6fe;
+    padding-bottom: 4px;
+    font-weight: 700;
+}
+
+.example-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* 시험 포인트 강조 박스 */
+.point-container {
+    position: relative;
+    background: #fffbeb;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 14px;
+    border: 2px solid #fef3c7;
+}
+
+.point-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #b45309;
+    margin-bottom: 4px;
+}
+
+.point-list {
+    font-size: 12px;
+    color: #92400e;
+    padding-left: 16px;
+    line-height: 1.5;
+}
+
+/* 문제 풀이 영역 */
+.quiz-container { 
+    flex-grow: 1; 
+}
+
+.quiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.quiz-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 9px 11px;
+    font-size: 11.5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.quiz-q {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.quiz-options {
+    color: #475569;
+    line-height: 1.4;
+}
+
+code {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 11.5px;
+}
+
+/* 반응형 및 모바일 최적화 */
+@media (max-width: 900px) {
+    body { padding: 10px; }
+    .book-wrapper { zoom: 1 !important; width: 100%; gap: 20px; }
+    .book-container { flex-direction: column; width: 100%; height: auto; box-shadow: none; }
+    .book-container::after { display: none; }
+    .page { width: 100%; height: auto; padding: 35px 18px 25px 18px; border-bottom: 2px dashed #cbd5e1; }
+    .page:last-child { border-bottom: none; }
+    .chapter-title { position: relative; top: 0; left: 0 !important; margin-bottom: 12px; display: block; }
+    .right-page .chapter-title { text-align: left; width: 100%; }
+    .page-number { position: relative; bottom: 0; left: 0 !important; right: 0 !important; margin-top: 20px; text-align: center; display: block; }
+    .quiz-grid { grid-template-columns: 1fr; }
+}
+
+@media print {
+    @page { size: 364mm 257mm; margin: 0; }
+    body { background-color: #fff; padding: 0; margin: 0; display: block; }
+    .book-wrapper { gap: 0; zoom: 1 !important; }
+    .book-container { display: flex !important; flex-direction: row !important; width: 364mm; height: 257mm; page-break-after: always; box-shadow: none; border-radius: 0; }
+    .book-container::after { display: none; }
+    .page { width: 182mm !important; height: 257mm !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+    </style>
+</head>
+<body>
+
+<div class="book-wrapper">
+
+
+
+    <!-- ================= [ 1쪽 & 2쪽 펼침면: 진법의 완전 기초 & 변환 원리 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 1쪽 (진법이란? & 10진수와 2진수의 차이) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 01. 컴퓨터 기초 및 진법</span>
+            <h1 class="main-title">FE 기본정보기술자</h1>
+            <p class="sub-title">01. 진법의 기초 개념과 숫자 체계</p>
+            
+            <div class="concept-box">
+                <h3>📖 진법(Numeral System)이란?</h3>
+                <p>진법은 <strong>수를 표현하는 방법</strong>으로, 한 자리에서 사용할 수 있는 숫자의 개수를 의미합니다.</p>
+                <p>• <strong>10진법 (Decimal)</strong>: 0부터 9까지 총 10개의 숫자를 사용합니다. 우리가 일상에서 가장 많이 사용하는 숫자 체계입니다.</p>
+                <p>• <strong>2진법 (Binary)</strong>: 0과 1, 두 개의 숫자만을 사용합니다. 컴퓨터 내부에서 전원(ON/OFF)으로 데이터를 표현할 때 사용됩니다.</p>
+            </div>
+            
+            <h2 class="section-title">💡 10진수와 2진수의 차이점</h2>
+            
+            <div class="example-box">
+                <strong><span class="badge">10진수</span> 자리값 계산</strong><br>
+                각 자리의 값은 <b>10의 거듭제곱</b>을 기반으로 합니다.<br>
+                예: 345 = (3 × 10²) + (4 × 10¹) + (5 × 10⁰) = 300 + 40 + 5
+            </div>
+
+            <div class="example-box">
+                <strong><span class="badge">2진수</span> 자리값 계산</strong><br>
+                각 자리의 값은 <b>2의 거듭제곱</b>을 기반으로 합니다.<br>
+                예: 1011₂ = (1 × 2³) + (0 × 2²) + (1 × 2¹) + (1 × 2⁰)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 8 + 0 + 2 + 1 = <span class="highlight">11</span>
+            </div>
+
+            <div class="concept-box" style="background-color: #f8fafc; border-left-color: #64748b; margin-bottom: 0;">
+                <p style="font-size: 12px; color: #475569;">
+                    <b>단위 정리:</b> 비트(Bit)는 0 또는 1을 담는 최소 단위이며, 8개의 비트가 모여 1 바이트(Byte)가 됩니다.
+                </p>
+            </div>
+
+            <span class="page-number">1</span>
+        </div>
+        
+        <!-- 오른쪽: 2쪽 (변환 방법 상세 & 계산 과정 예제) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 진수 변환 방법 (10진수 ↔ 2진수)</span>
+            
+            <h2 class="section-title" style="margin-top: 5px;">🔄 10진수를 2진수로 변환하는 방법</h2>
+            <div class="example-box">
+                <b>[변환 순서]</b><br>
+                1. 해당 10진수 값을 2로 나눕니다.<br>
+                2. 나머지를 기록합니다.<br>
+                3. 몫을 다시 2로 나누고, 나머지를 기록하는 과정을 <b>몫이 0이 될 때까지</b> 반복합니다.<br>
+                4. 기록한 나머지들을 <b>역순(아래에서 위)으로 읽으면</b> 2진수가 됩니다.
+            </div>
+
+            <div class="concept-box" style="padding: 10px;">
+                <h3 style="font-size: 13.5px; margin-bottom: 4px;">📌 예제 1: 10진수 13을 2진수로 변환하기</h3>
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>계산 과정</th>
+                            <th>몫</th>
+                            <th>나머지</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>13 ÷ 2</td><td>6</td><td><b>1</b></td></tr>
+                        <tr><td>6 ÷ 2</td><td>3</td><td><b>0</b></td></tr>
+                        <tr><td>3 ÷ 2</td><td>1</td><td><b>1</b></td></tr>
+                        <tr><td>1 ÷ 2</td><td>0</td><td><b>1</b></td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 12px; text-align: right; margin-top: 4px;">👉 나머지를 역순으로 읽으면: <span class="highlight">1101₂</span></p>
+            </div>
+
+            <h2 class="section-title">🔄 2진수를 10진수로 변환하는 방법</h2>
+            <div class="example-box">
+                <b>📌 예제 2: 2진수 1101₂를 10진수로 변환하기</b><br>
+                각 자리에 2의 거듭제곱(1, 2, 4, 8...)을 곱해서 모두 더합니다.<br>
+                (1 × 2³) + (1 × 2²) + (0 × 2¹) + (1 × 2⁰)<br>
+                = 8 + 4 + 0 + 1 = <span class="highlight">13</span>
+            </div>
+
+            <span class="page-number">2</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 3쪽 & 4쪽 펼침면: 복습 노트 & 실전 문제 / 풀이 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 3쪽 (복습 정리 & 예상 문제 01~05) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 01. 핵심 복습 & 실전 테스트</span>
+            
+            <div class="review-box">
+                <div class="review-title">📝 한눈에 보는 핵심 복습</div>
+                • <b>10진수</b>: 0~9를 사용하는 일상 기수법 (예: 10, 25, 256)<br>
+                • <b>2진수</b>: 0과 1만 사용하는 컴퓨터 기수법 (전기 신호 ON/OFF)<br>
+                • <b>25를 2진수로 변환 예제</b>: 25÷2(몫12,나머지<b>1</b>) → 12÷2(몫6,나머지<b>0</b>) → 6÷2(몫3,나머지<b>0</b>) → 3÷2(몫1,나머지<b>1</b>) → 1÷2(몫0,나머지<b>1</b>) 👉 역순으로 읽기: <span class="highlight">11001₂</span>
+            </div>
+
+            <div class="point-container">
+                <div class="point-title">🎯 FE 시험 출제 핵심 포인트</div>
+                <ul class="point-list">
+                    <li><b>2진수 ↔ 16진수:</b> 2진수 4자리는 16진수 1자리와 같습니다.</li>
+                    <li><b>2의 보수:</b> 비트를 반전(0↔1)한 후 +1을 해주어 음수를 표현합니다.</li>
+                    <li><b>비트 연산:</b> XOR (두 비트가 다르면 1), Shift Left (1비트 이동 시 ×2배)</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container">
+                <h2 class="section-title"> 예상 문제 (Practice 01~05)</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1. 2진수 11010을 10진수로 변환한 값은?</p>
+                        <p class="quiz-options">① 22 &nbsp; ② 24 &nbsp; ③ 26 &nbsp; ④ 28</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q2. 10진수 25를 2진수로 올바르게 변환한 것은?</p>
+                        <p class="quiz-options">① 11001 &nbsp; ② 10101 &nbsp; ③ 11100 &nbsp; ④ 10011</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q3. 2진수 10110111을 16진수로 변환한 값은?</p>
+                        <p class="quiz-options">① A7 &nbsp; ② B7 &nbsp; ③ C7 &nbsp; ④ D7</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4. 8비트 부호없는 정수(Unsigned)의 최대값은?</p>
+                        <p class="quiz-options">① 127 &nbsp; ② 128 &nbsp; ③ 255 &nbsp; ④ 256</p>
+                    </div>
+
+                    <div class="quiz-card" style="grid-column: span 2;">
+                        <p class="quiz-q">Q5. 2진수 0101에 대한 '2의 보수' 표현은? (4비트 기준)</p>
+                        <p class="quiz-options">① 1010 &nbsp;&nbsp; ② 1011 &nbsp;&nbsp; ③ 1100 &nbsp;&nbsp; ④ 0110</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">3</span>
+        </div>
+        
+        <!-- 오른쪽: 4쪽 (예상 문제 06~10 & 정답 및 기출 해설) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 정답 및 기출문제 풀이</span>
+            
+            <div class="quiz-container">
+                <h2 class="section-title" style="margin-top: 5px;"> 예상 문제 (Practice 06~10)</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q6. 1010과 1100의 XOR 연산 결과는?</p>
+                        <p class="quiz-options">① 0110 &nbsp; ② 1000 &nbsp; ③ 1110 &nbsp; ④ 0001</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7. 16진수 2F를 10진수로 변환한 값은?</p>
+                        <p class="quiz-options">① 45 &nbsp; ② 47 &nbsp; ③ 49 &nbsp; ④ 51</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q8. 2진수를 Shift Left(1비트)할 때의 의미는?</p>
+                        <p class="quiz-options">① +2 &nbsp; ② -2 &nbsp; ③ ×2 &nbsp; ④ ÷2</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q9. 8비트 부호 정수에서 MSB가 1이면?</p>
+                        <p class="quiz-options">① 양수 &nbsp; ② 음수 &nbsp; ③ 짝수 &nbsp; ④ 홀수</p>
+                    </div>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 12px;"> 정답 및 상세 해설</h2>
+                <div class="quiz-grid" style="grid-template-columns: 1fr; gap: 6px;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1 정답: ③ 26 | Q2 정답: ① 11001 | Q3 정답: ② B7</p>
+                        <p class="quiz-options">• Q1: 16 + 8 + 0 + 2 + 0 = 26<br>• Q2: 25 = 16 + 8 + 1 (2⁴ + 2³ + 2⁰) → 11001₂<br>• Q3: 4자리씩 분할 [1011 = 11(B)] [0111 = 7] → B7</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4 정답: ③ 255 | Q5 정답: ② 1011 | Q6 정답: ① 0110</p>
+                        <p class="quiz-options">• Q4: 11111111₂ = 2⁸ - 1 = 255<br>• Q5: 0101 비트 반전(1010) + 1 = 1011<br>• Q6: XOR는 서로 다를 때만 1 (1010 ⊕ 1100 = 0110)</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7 정답: ② 47 | Q8 정답: ③ 2를 곱함 | Q9 정답: ② 음수</p>
+                        <p class="quiz-options">• Q7: 16진수 F = 15 → (2 × 16) + 15 = 47<br>• Q8: 왼쪽 이동 시 2배 증가 / 오른쪽 이동 시 1/2배 감소<br>• Q9: 최상위 비트(MSB) 0 = 양수, 1 = 음수</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">4</span>
+        </div>
+    </div>
+
+
+<!-- ================= [ 1쪽 & 2쪽 펼침면: 진법의 완전 기초 & 변환 원리 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 1쪽 (진법이란? & 10진수와 2진수의 차이) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 01. 컴퓨터 기초 및 진법</span>
+            <h1 class="main-title">FE 기본정보기술자</h1>
+            <p class="sub-title">01. 진법의 기초 개념과 숫자 체계</p>
+            
+            <div class="concept-box">
+                <h3>📖 진법(Numeral System)이란?</h3>
+                <p>진법은 <strong>수를 표현하는 방법</strong>으로, 한 자리에서 사용할 수 있는 숫자의 개수를 의미합니다.</p>
+                <p>• <strong>10진법 (Decimal)</strong>: 0부터 9까지 총 10개의 숫자를 사용합니다. 우리가 일상에서 가장 많이 사용하는 숫자 체계입니다.</p>
+                <p>• <strong>2진법 (Binary)</strong>: 0과 1, 두 개의 숫자만을 사용합니다. 컴퓨터 내부에서 전원(ON/OFF)으로 데이터를 표현할 때 사용됩니다.</p>
+            </div>
+            
+            <h2 class="section-title">💡 10진수와 2진수의 차이점</h2>
+            
+            <div class="example-box">
+                <strong><span class="badge">10진수</span> 자리값 계산</strong><br>
+                각 자리의 값은 <b>10의 거듭제곱</b>을 기반으로 합니다.<br>
+                예: 345 = (3 × 10²) + (4 × 10¹) + (5 × 10⁰) = 300 + 40 + 5
+            </div>
+
+            <div class="example-box">
+                <strong><span class="badge">2진수</span> 자리값 계산</strong><br>
+                각 자리의 값은 <b>2의 거듭제곱</b>을 기반으로 합니다.<br>
+                예: 1011₂ = (1 × 2³) + (0 × 2²) + (1 × 2¹) + (1 × 2⁰)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 8 + 0 + 2 + 1 = <span class="highlight">11</span>
+            </div>
+
+            <div class="concept-box" style="background-color: #f8fafc; border-left-color: #64748b; margin-bottom: 0;">
+                <p style="font-size: 12px; color: #475569;">
+                    <b>단위 정리:</b> 비트(Bit)는 0 또는 1을 담는 최소 단위이며, 8개의 비트가 모여 1 바이트(Byte)가 됩니다.
+                </p>
+            </div>
+
+            <span class="page-number">1</span>
+        </div>
+        
+        <!-- 오른쪽: 2쪽 (변환 방법 상세 & 2진수↔16진수 변환) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 진수 변환 방법 (2진수 ↔ 10진수 / 16진수)</span>
+            
+            <h2 class="section-title" style="margin-top: 5px;">🔄 10진수 ↔ 2진수 변환</h2>
+            <div class="concept-box" style="padding: 10px; margin-bottom: 10px;">
+                <h3 style="font-size: 13px; margin-bottom: 4px;">📌 10진수 13 → 2진수 (2로 나누기)</h3>
+                <table class="custom-table" style="margin: 4px 0;">
+                    <thead>
+                        <tr><th>계산 과정</th><th>몫</th><th>나머지</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>13 ÷ 2</td><td>6</td><td><b>1</b></td></tr>
+                        <tr><td>6 ÷ 2</td><td>3</td><td><b>0</b></td></tr>
+                        <tr><td>3 ÷ 2</td><td>1</td><td><b>1</b></td></tr>
+                        <tr><td>1 ÷ 2</td><td>0</td><td><b>1</b></td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 11.5px; text-align: right;">👉 나머지를 역순으로 읽기: <span class="highlight">1101₂</span></p>
+            </div>
+
+            <!-- 🔥 추가된 핵심 영역: 2진수 ↔ 16진수 변환 방법 -->
+            <h2 class="section-title">✨ 2진수 ↔ 16진수 변환 방법 (시험 자주 출제!)</h2>
+            <div class="example-box">
+                <b>[핵심 원리]</b> $2^4 = 16$ 이므로 <b>2진수 4자리 = 16진수 1자리</b>와 대응됩니다.<br>
+                • <b>10~15 문표기</b>: 10(A), 11(B), 12(C), 13(D), 14(E), 15(F)
+            </div>
+
+            <div class="concept-box" style="padding: 10px; background-color: #f0fdf4; border-left-color: #16a34a;">
+                <h3 style="font-size: 13px; color: #15803d; margin-bottom: 4px;">📌 예제: 2진수 10110111₂ → 16진수로 변환하기</h3>
+                <p style="font-size: 12px; color: #166534; line-height: 1.5;">
+                    1. 뒤에서부터 <b>4자리씩</b> 끊어줍니다: <b style="color:#2563eb;">[1011]</b> <b style="color:#d97706;">[0111]</b><br>
+                    2. 각 4자리를 10진수로 계산합니다:<br>
+                    &nbsp;&nbsp;• <span style="color:#2563eb;">1011</span> = 8 + 0 + 2 + 1 = 11 → 16진수로 <b>'B'</b><br>
+                    &nbsp;&nbsp;• <span style="color:#d97706;">0111</span> = 0 + 4 + 2 + 1 = 7 → 16진수로 <b>'7'</b><br>
+                    3. 두 문자를 나열하면 변환 완료: <span class="highlight" style="color:#16a34a;">B7₁₆</span>
+                </p>
+            </div>
+
+            <span class="page-number">2</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 3쪽 & 4쪽 펼침면: 복습 노트 & 실전 문제 / 풀이 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 3쪽 (복습 정리 & 예상 문제 01~05) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 01. 핵심 복습 & 실전 테스트</span>
+            
+            <div class="review-box">
+                <div class="review-title">📝 한눈에 보는 핵심 복습</div>
+                • <b>10진수</b>: 0~9를 사용하는 일상 기수법 (예: 10, 25, 256)<br>
+                • <b>2진수</b>: 0과 1만 사용하는 컴퓨터 기수법 (전기 신호 ON/OFF)<br>
+                • <b>25를 2진수로 변환 예제</b>: 25÷2(몫12,나머지<b>1</b>) → 12÷2(몫6,나머지<b>0</b>) → 6÷2(몫3,나머지<b>0</b>) → 3÷2(몫1,나머지<b>1</b>) → 1÷2(몫0,나머지<b>1</b>) 👉 역순으로 읽기: <span class="highlight">11001₂</span>
+            </div>
+
+            <div class="point-container">
+                <div class="point-title">🎯 FE 시험 출제 핵심 포인트</div>
+                <ul class="point-list">
+                    <li><b>2진수 ↔ 16진수:</b> 2진수 4자리는 16진수 1자리와 같습니다.</li>
+                    <li><b>2의 보수:</b> 비트를 반전(0↔1)한 후 +1을 해주어 음수를 표현합니다.</li>
+                    <li><b>비트 연산:</b> XOR (두 비트가 다르면 1), Shift Left (1비트 이동 시 ×2배)</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container">
+                <h2 class="section-title"> 예상 문제 (Practice 01~05)</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1. 2진수 11010을 10진수로 변환한 값은?</p>
+                        <p class="quiz-options">① 22 &nbsp; ② 24 &nbsp; ③ 26 &nbsp; ④ 28</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q2. 10진수 25를 2진수로 올바르게 변환한 것은?</p>
+                        <p class="quiz-options">① 11001 &nbsp; ② 10101 &nbsp; ③ 11100 &nbsp; ④ 10011</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q3. 2진수 10110111을 16진수로 변환한 값은?</p>
+                        <p class="quiz-options">① A7 &nbsp; ② B7 &nbsp; ③ C7 &nbsp; ④ D7</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4. 8비트 부호없는 정수(Unsigned)의 최대값은?</p>
+                        <p class="quiz-options">① 127 &nbsp; ② 128 &nbsp; ③ 255 &nbsp; ④ 256</p>
+                    </div>
+
+                    <div class="quiz-card" style="grid-column: span 2;">
+                        <p class="quiz-q">Q5. 2진수 0101에 대한 '2의 보수' 표현은? (4비트 기준)</p>
+                        <p class="quiz-options">① 1010 &nbsp;&nbsp; ② 1011 &nbsp;&nbsp; ③ 1100 &nbsp;&nbsp; ④ 0110</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">3</span>
+        </div>
+        
+        <!-- 오른쪽: 4쪽 (예상 문제 06~10 & 정답 및 기출 해설) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 정답 및 기출문제 풀이</span>
+            
+            <div class="quiz-container">
+                <h2 class="section-title" style="margin-top: 5px;"> 예상 문제 (Practice 06~10)</h2>
+                <div class="quiz-grid">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q6. 1010과 1100의 XOR 연산 결과는?</p>
+                        <p class="quiz-options">① 0110 &nbsp; ② 1000 &nbsp; ③ 1110 &nbsp; ④ 0001</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7. 16진수 2F를 10진수로 변환한 값은?</p>
+                        <p class="quiz-options">① 45 &nbsp; ② 47 &nbsp; ③ 49 &nbsp; ④ 51</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q8. 2진수를 Shift Left(1비트)할 때의 의미는?</p>
+                        <p class="quiz-options">① +2 &nbsp; ② -2 &nbsp; ③ ×2 &nbsp; ④ ÷2</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q9. 8비트 부호 정수에서 MSB가 1이면?</p>
+                        <p class="quiz-options">① 양수 &nbsp; ② 음수 &nbsp; ③ 짝수 &nbsp; ④ 홀수</p>
+                    </div>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 12px;"> 정답 및 상세 해설</h2>
+                <div class="quiz-grid" style="grid-template-columns: 1fr; gap: 6px;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1 정답: ③ 26 | Q2 정답: ① 11001 | Q3 정답: ② B7</p>
+                        <p class="quiz-options">• Q1: 16 + 8 + 0 + 2 + 0 = 26<br>• Q2: 25 = 16 + 8 + 1 (2⁴ + 2³ + 2⁰) → 11001₂<br>• Q3: 4자리씩 분할 [1011 = 11(B)] [0111 = 7] → B7</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4 정답: ③ 255 | Q5 정답: ② 1011 | Q6 정답: ① 0110</p>
+                        <p class="quiz-options">• Q4: 11111111₂ = 2⁸ - 1 = 255<br>• Q5: 0101 비트 반전(1010) + 1 = 1011<br>• Q6: XOR는 서로 다를 때만 1 (1010 ⊕ 1100 = 0110)</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7 정답: ② 47 | Q8 정답: ③ 2를 곱함 | Q9 정답: ② 음수</p>
+                        <p class="quiz-options">• Q7: 16진수 F = 15 → (2 × 16) + 15 = 47<br>• Q8: 왼쪽 이동 시 2배 증가 / 오른쪽 이동 시 1/2배 감소<br>• Q9: 최상위 비트(MSB) 0 = 양수, 1 = 음수</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">4</span>
+        </div>
+    </div>
+
+<!-- 오른쪽: 2쪽 (변환 방법 상세 & 2진수↔16진수 변환 + 진수 비교표) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 진수 변환 방법 (2진수 ↔ 10진수 / 16진수)</span>
+            
+            <h2 class="section-title" style="margin-top: 5px;">🔄 10진수 ↔ 2진수 변환</h2>
+            <div class="concept-box" style="padding: 8px 10px; margin-bottom: 8px;">
+                <h3 style="font-size: 12.5px; margin-bottom: 2px;">📌 10진수 13 → 2진수 (2로 나누기)</h3>
+                <p style="font-size: 11.5px; color: #475569; margin-bottom: 0;">
+                    13÷2(나머지 <b>1</b>) → 6÷2(나머지 <b>0</b>) → 3÷2(나머지 <b>1</b>) → 1÷2(나머지 <b>1</b>) 👉 역순: <span class="highlight">1101₂</span>
+                </p>
+            </div>
+
+            <!-- ✨ 2진수 ↔ 16진수 변환 및 대응 표 -->
+            <h2 class="section-title">✨ 2진수 ↔ 16진수 변환 & 대응표</h2>
+            
+            <!-- 📊 10진수 - 2진수 - 16진수 변환 비교표 -->
+            <table class="custom-table" style="margin: 4px 0 8px 0; font-size: 11px;">
+                <thead>
+                    <tr style="background-color: #e0f2fe; color: #0369a1;">
+                        <th>10진수</th><th>2진수(4bit)</th><th>16진수</th>
+                        <th>10진수</th><th>2진수(4bit)</th><th>16진수</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0000</td><td><b>0</b></td><td>8</td><td>1000</td><td><b>8</b></td></tr>
+                    <tr><td>1</td><td>0001</td><td><b>1</b></td><td>9</td><td>1001</td><td><b>9</b></td></tr>
+                    <tr><td>2</td><td>0010</td><td><b>2</b></td><td>10</td><td>1010</td><td><b style="color:#2563eb;">A</b></td></tr>
+                    <tr><td>3</td><td>0011</td><td><b>3</b></td><td>11</td><td>1011</td><td><b style="color:#2563eb;">B</b></td></tr>
+                    <tr><td>4</td><td>0100</td><td><b>4</b></td><td>12</td><td>1100</td><td><b style="color:#2563eb;">C</b></td></tr>
+                    <tr><td>5</td><td>0101</td><td><b>5</b></td><td>13</td><td>1101</td><td><b style="color:#2563eb;">D</b></td></tr>
+                    <tr><td>6</td><td>0110</td><td><b>6</b></td><td>14</td><td>1110</td><td><b style="color:#2563eb;">E</b></td></tr>
+                    <tr><td>7</td><td>0111</td><td><b>7</b></td><td>15</td><td>1111</td><td><b style="color:#2563eb;">F</b></td></tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box" style="padding: 8px 10px; background-color: #f0fdf4; border-left-color: #16a34a; margin-bottom: 0;">
+                <h3 style="font-size: 12.5px; color: #15803d; margin-bottom: 2px;">📌 예제: 2진수 10110111₂ → 16진수로 변환하기</h3>
+                <p style="font-size: 11.5px; color: #166534; line-height: 1.4;">
+                    1. 뒤에서부터 <b>4자리씩</b> 끊기: <b style="color:#2563eb;">[1011]</b> <b style="color:#d97706;">[0111]</b><br>
+                    2. 위 표에서 값 찾기: <span style="color:#2563eb;">1011</span> → <b>'B'</b> / <span style="color:#d97706;">0111</span> → <b>'7'</b><br>
+                    3. 나열하면 변환 완료: <span class="highlight" style="color:#16a34a;">B7₁₆</span>
+                </p>
+            </div>
+
+            <span class="page-number">2</span>
+        </div>
+
+
+    <!-- ================= [ 1쪽 & 2쪽 펼침면: 개념 + 예시 + 출제포인트 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 1쪽 (개념 설명 및 쉬운 예시) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 01. 컴퓨터 기초 및 표현</span>
+            <h1 class="main-title">FE 기본정보기술자</h1>
+            <p class="sub-title">01. 2진수(Binary)와 진수 변환</p>
+            
+            <div class="concept-box">
+                <h3> 핵심 개념 정리</h3>
+                <p>컴퓨터는 전기의 <strong>ON(1)</strong>과 <strong>OFF(0)</strong> 상태만 구분할 수 있으므로 모든 데이터를 <strong>2진수</strong>로 처리합니다.</p>
+                
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>단위</th>
+                            <th>표현 / 설명</th>
+                            <th>비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Bit (비트)</strong></td>
+                            <td>0 또는 1 (최소 정보 단위)</td>
+                            <td>1 Bit</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Byte (바이트)</strong></td>
+                            <td>8개의 Bit가 모인 단위</td>
+                            <td><span class="highlight">1 Byte = 8 Bits</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Word (워드)</strong></td>
+                            <td>CPU가 한 번에 처리하는 단위</td>
+                            <td>32/64 비트 등</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2 class="section-title"> 쉬운 예시로 이해하기</h2>
+            
+            <div class="example-box">
+                <strong>[예시 1] 2진수 `1011` → 10진수 변환</strong><br>
+                오른쪽 자릿수부터 1, 2, 4, 8 가중치를 곱해서 더합니다.<br>
+                • (1 × 8) + (0 × 4) + (1 × 2) + (1 × 1) = 8 + 0 + 2 + 1 = <span class="highlight">11</span>
+            </div>
+
+            <div class="example-box">
+                <strong>[예시 2] 10진수 `13` → 2진수 변환</strong><br>
+                숫자를 2로 나누면서 나머지 값을 아래에서 위로 읽어 올라갑니다.<br>
+                • 13 ÷ 2 = 몫 6 (나머지 <b>1</b>)<br>
+                • 6 ÷ 2 = 몫 3 (나머지 <b>0</b>)<br>
+                • 3 ÷ 2 = 몫 <b>1</b> (나머지 <b>1</b>) → <span class="highlight">1101(2)</span>
+            </div>
+
+            <span class="page-number">1</span>
+        </div>
+        
+        <!-- 오른쪽: 2쪽 (시험 출제 포인트 & 예상 문제 1~4) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 2진수 변환 및 비트 연산</span>
+            
+            <div class="point-container">
+                <div class="point-title"> FE 시험 출제 핵심 포인트</div>
+                <ul class="point-list">
+                    <li><b>진수 상호 변환:</b> 2진수 4자리는 16진수 1자리와 완벽히 대응됩니다.</li>
+                    <li><b>2의 보수(2's Complement):</b> 비트를 반전(1의 보수)시킨 후 +1을 더해 음수를 표현합니다.</li>
+                    <li><b>비트 연산:</b> XOR(두 비트가 다르면 1), Shift(왼쪽 1비트 이동 = ×2배)</li>
+                </ul>
+            </div>
+            
+            <div class="quiz-container">
+                <h2 class="section-title"> 예상 문제 (Practice 01~04)</h2>
+                
+                <div class="quiz-grid">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1. 2진수 11010을 10진수로 변환한 값은?</p>
+                        <p class="quiz-options">① 22 &nbsp; ② 24<br>③ 26 &nbsp; ④ 28</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q2. 10진수 25를 2진수로 올바르게 변환한 것은?</p>
+                        <p class="quiz-options">① 11001 &nbsp; ② 10101<br>③ 11100 &nbsp; ④ 10011</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q3. 2진수 10110111을 16진수로 변환한 값은?</p>
+                        <p class="quiz-options">① A7 &nbsp; ② B7<br>③ C7 &nbsp; ④ D7</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4. 8비트 부호없는 정수(Unsigned)의 최대값은?</p>
+                        <p class="quiz-options">① 127 &nbsp; ② 128<br>③ 255 &nbsp; ④ 256</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">2</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 3쪽 & 4쪽 펼침면: 예상문제 5~10 + 기출문제 해설 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 3쪽 (예상 문제 5~10) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 01. 컴퓨터 기초 및 표현</span>
+            <h1 class="main-title">Practice Test</h1>
+            <p class="sub-title">예상 문제 (Practice 05~10)</p>
+            
+            <div class="quiz-container">
+                <div class="quiz-grid" style="grid-template-columns: 1fr;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q5. 2진수 0101에 대한 '2의 보수' 표현은? (4비트 기준)</p>
+                        <p class="quiz-options">① 1010 &nbsp;&nbsp; ② 1011 &nbsp;&nbsp; ③ 1100 &nbsp;&nbsp; ④ 0110</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q6. 두 2진수 1010과 1100에 대해 XOR 연산을 수행한 결과는?</p>
+                        <p class="quiz-options">① 0110 &nbsp;&nbsp; ② 1000 &nbsp;&nbsp; ③ 1110 &nbsp;&nbsp; ④ 0001</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7. 16진수 2F를 10진수로 변환한 값은?</p>
+                        <p class="quiz-options">① 45 &nbsp;&nbsp; ② 47 &nbsp;&nbsp; ③ 49 &nbsp;&nbsp; ④ 51</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q8. 2진수를 왼쪽으로 1비트 이동(Shift Left)시키는 연산의 의미는?</p>
+                        <p class="quiz-options">① 2를 더함 &nbsp;&nbsp; ② 2를 뺌 &nbsp;&nbsp; ③ 2를 곱함 &nbsp;&nbsp; ④ 2로 나눔</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q9. 8비트 부호 정수에서 가장 왼쪽 비트(MSB)가 '1'인 경우 의미하는 것은?</p>
+                        <p class="quiz-options">① 양수 &nbsp;&nbsp; ② 음수 &nbsp;&nbsp; ③ 짝수 &nbsp;&nbsp; ④ 홀수</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q10. 2진수 1010과 0110을 더한 2진수 결과 값은?</p>
+                        <p class="quiz-options">① 10000 &nbsp;&nbsp; ② 01000 &nbsp;&nbsp; ③ 11110 &nbsp;&nbsp; ④ 10001</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">3</span>
+        </div>
+        
+        <!-- 오른쪽: 4쪽 (기출 문제 풀이 및 정답) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 정답 및 기출문제 풀이</span>
+            <h2 class="section-title" style="margin-top: 10px;"> 정답 및 상세 해설</h2>
+            
+            <div class="quiz-container">
+                <div class="quiz-grid" style="grid-template-columns: 1fr; gap: 8px;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1 정답: ③ 26</p>
+                        <p class="quiz-options">해설: 16 + 8 + 0 + 2 + 0 = 26</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q2 정답: ① 11001</p>
+                        <p class="quiz-options">해설: 25 = 16 + 8 + 1 = 2⁴ + 2³ + 2⁰ → 11001(2)</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q3 정답: ② B7</p>
+                        <p class="quiz-options">해설: 4자리씩 분할 [1011 = 11(B)] [0111 = 7] → B7</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4 정답: ③ 255</p>
+                        <p class="quiz-options">해설: 8비트 최대값 11111111(2) = 2⁸ - 1 = 255</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q5 정답: ② 1011</p>
+                        <p class="quiz-options">해설: 비트 반전(1010) 후 +1을 함 → 1011</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q6 정답: ① 0110</p>
+                        <p class="quiz-options">해설: XOR는 값이 서로 다를 때만 1이 됨 (1010 ⊕ 1100 = 0110)</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7 정답: ② 47</p>
+                        <p class="quiz-options">해설: 16진수 F = 15, (2 × 16) + 15 = 47</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q8~Q10 정답: Q8: ③ / Q9: ② / Q10: ①</p>
+                        <p class="quiz-options">Q10 해설: 10 + 6 = 16 이므로 2진수로 10000(2)</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">4</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 1쪽 & 2쪽 펼침면: SQL 기초 & 기본키/외래키 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 1쪽 (SQL 개념 및 기본 문법) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 05. 데이터베이스 (Database)</span>
+            <h1 class="main-title">FE 기본정보기술자</h1>
+            <p class="sub-title">01. SQL 기초 (DDL, DML, DCL)</p>
+            
+            <div class="concept-box">
+                <h3>🗄️ SQL (Structured Query Language)이란?</h3>
+                <p>관계형 데이터베이스(RDBMS)에서 데이터를 조회, 삽입, 수정, 삭제하기 위한 표준 언어입니다.</p>
+                <p>• <b>DML (데이터 조작어)</b>: <code>SELECT</code>(조회), <code>INSERT</code>(삽입), <code>UPDATE</code>(수정), <code>DELETE</code>(삭제)</p>
+                <p>• <b>DDL (데이터 정의어)</b>: <code>CREATE</code>(생성), <code>ALTER</code>(수정), <code>DROP</code>(삭제), <code>TRUNCATE</code>(초기화)</p>
+                <p>• <b>DCL (데이터 제어어)</b>: <code>GRANT</code>(권한 부여), <code>REVOKE</code>(권한 회수)</p>
+            </div>
+            
+            <h2 class="section-title">💡 SQL 기본 조회문 쉬운 예시</h2>
+            
+            <div class="example-box">
+                <strong>[예시 1] 회원 테이블에서 20세 이상 회원 이름 조회</strong><br>
+                <code>SELECT 이름 FROM 회원 WHERE 나이 >= 20 ORDER BY 이름 ASC;</code><br>
+                • <code>SELECT</code>: 보고 싶은 컬럼 지정<br>
+                • <code>WHERE</code>: 조건 지정 / <code>ORDER BY</code>: 정렬 (ASC 오름차순, DESC 내림차순)
+            </div>
+
+            <div class="example-box">
+                <strong>[예시 2] 데이터 수정 및 삭제</strong><br>
+                • 수정: <code>UPDATE 회원 SET 나이 = 25 WHERE ID = 'user1';</code><br>
+                • 삭제: <code>DELETE FROM 회원 WHERE ID = 'user1';</code>
+            </div>
+
+            <span class="page-number">1</span>
+        </div>
+        
+        <!-- 오른쪽: 2쪽 (Primary Key & Foreign Key) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 키(Key)의 개념 (PK와 FK)</span>
+            
+            <div class="concept-box">
+                <h3>🔑 Primary Key (기본키, PK)</h3>
+                <p>테이블에서 각 행(Row/Tuple)을 <b>유일하게 식별</b>할 수 있는 대표 키입니다.</p>
+                <p>• <b>개체 무결성 제약조건</b>: PK는 절대 <code>NULL</code>이 될 수 없으며, 중복된 값을 가질 수 없습니다. (Uniqueness + NOT NULL)</p>
+            </div>
+
+            <div class="concept-box" style="background-color: #f0fdf4; border-left-color: #16a34a;">
+                <h3 style="color: #15803d;">🔗 Foreign Key (외래키, FK)</h3>
+                <p>다른 테이블의 Primary Key를 참조하는 키로, 테이블 간의 <b>관계(Relationship)</b>를 연결합니다.</p>
+                <p>• <b>참조 무결성 제약조건</b>: 참조하는 테이블의 PK에 존재하는 값만 가지거나, <code>NULL</code>이어야 합니다.</p>
+            </div>
+
+            <h2 class="section-title">📊 PK와 FK 연결 예시 (고객 - 주문)</h2>
+            <table class="custom-table">
+                <thead>
+                    <tr><th colspan="3">[고객 테이블] (고객ID = PK)</th></tr>
+                    <tr><th>고객ID (PK)</th><th>이름</th><th>연락처</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>C01</b></td><td>홍길동</td><td>010-1111...</td></tr>
+                    <tr><td><b>C02</b></td><td>이순신</td><td>010-2222...</td></tr>
+                </tbody>
+            </table>
+
+            <table class="custom-table">
+                <thead>
+                    <tr><th colspan="3">[주문 테이블] (주문번호 = PK, 고객ID = FK)</th></tr>
+                    <tr><th>주문번호 (PK)</th><th>주문상품</th><th>고객ID (FK)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1001</td><td>노트북</td><td><b>C01</b> (홍길동 주문)</td></tr>
+                    <tr><td>1002</td><td>마우스</td><td><b>C02</b> (이순신 주문)</td></tr>
+                </tbody>
+            </table>
+
+            <span class="page-number">2</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 3쪽 & 4쪽 펼침면: JOIN, Index, Transaction ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 3쪽 (JOIN의 종류 및 이해) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 05. 데이터베이스 (Database)</span>
+            <h1 class="main-title">JOIN (테이블 결합)</h1>
+            <p class="sub-title">02. 여러 테이블의 데이터를 하나로 합치기</p>
+
+            <div class="concept-box">
+                <h3>🤝 JOIN의 종류와 개념</h3>
+                <p>공통된 컬럼(주로 PK와 FK)을 기준으로 두 개 이상의 테이블을 연결하여 데이터를 조회하는 방법입니다.</p>
+            </div>
+
+            <div class="example-box">
+                <b>1. INNER JOIN (내부 조인)</b><br>
+                양쪽 테이블에 <b>모두 존재하는 일치하는 데이터만</b> 결합하여 조회합니다.<br>
+                <code>SELECT A.이름, B.상품 FROM 고객 A INNER JOIN 주문 B ON A.고객ID = B.고객ID;</code>
+            </div>
+
+            <div class="example-box">
+                <b>2. LEFT OUTER JOIN (왼쪽 외부 조인)</b><br>
+                <b>왼쪽 테이블의 모든 데이터</b>와 오른쪽 테이블의 일치하는 데이터를 가져옵니다. (오른쪽에 데이터가 없으면 <code>NULL</code> 표기)
+            </div>
+
+            <div class="example-box">
+                <b>3. RIGHT OUTER JOIN / FULL OUTER JOIN</b><br>
+                • <b>RIGHT</b>: 오른쪽 테이블 기준 모든 데이터 가져오기<br>
+                • <b>FULL</b>: 양쪽 테이블의 모든 데이터 가져오기
+            </div>
+
+            <span class="page-number">3</span>
+        </div>
+        
+        <!-- 오른쪽: 4쪽 (Index & Transaction - ACID 원칙) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 02. Index와 Transaction (ACID)</span>
+            
+            <div class="concept-box">
+                <h3>⚡ Index (인덱스) - 빠른 검색의 핵심</h3>
+                <p>• 책 뒤의 '색인'처럼 데이터 <b>검색 속도(SELECT)를 향상</b>시키기 위해 사용하는 기술입니다.</p>
+                <p>• <b>주의점</b>: 인덱스를 과도하게 생성하면 <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> 성능은 오히려 저하됩니다.</p>
+            </div>
+
+            <div class="concept-box" style="background-color: #fef2f2; border-left-color: #ef4444;">
+                <h3 style="color: #991b1b;">🔄 Transaction (트랜잭션) & ACID 원칙</h3>
+                <p>데이터베이스의 상태를 변화시키는 하나의 <b>하나의 작업 단위</b>(예: 계좌 이체)입니다.</p>
+            </div>
+
+            <div class="point-container">
+                <div class="point-title">🔥 시험 필수 암기! 트랜잭션의 ACID 4특성</div>
+                <ul class="point-list">
+                    <li><b>A (Atomicity, 원자성)</b>: All or Nothing. 모두 성공하든지 모두 취소(Rollback)되어야 함.</li>
+                    <li><b>C (Consistency, 일관성)</b>: 실행 전후에 DB의 제약조건과 일관성이 유지됨.</li>
+                    <li><b>I (Isolation, 고립성/격리성)</b>: 수행 중인 트랜잭션에 다른 트랜잭션이 끼어들 수 없음.</li>
+                    <li><b>D (Durability, 영속성/지속성)</b>: 성공적으로 완료(Commit)된 결과는 영구 보장됨.</li>
+                </ul>
+            </div>
+
+            <span class="page-number">4</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 5쪽 & 6쪽 펼침면: 예상 문제 10문제 & 기출 풀이 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 5쪽 (예상 문제 10문제) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 05. 실전 테스트</span>
+            <h1 class="main-title">Practice Test</h1>
+            <p class="sub-title">데이터베이스 핵심 예상 문제 10선</p>
+            
+            <div class="quiz-container">
+                <div class="quiz-grid" style="grid-template-columns: 1fr;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1. 다음 중 DML(데이터 조작어)에 해당하지 않는 명령어는?</p>
+                        <p class="quiz-options">① SELECT &nbsp;&nbsp; ② INSERT &nbsp;&nbsp; ③ CREATE &nbsp;&nbsp; ④ UPDATE</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q2. Primary Key(기본키)가 반드시 만족해야 하는 제약조건으로 올바른 것은?</p>
+                        <p class="quiz-options">① 개체 무결성 (NULL 불가, 중복 불가) &nbsp;&nbsp; ② 참조 무결성<br>③ 도메인 무결성 &nbsp;&nbsp; ④ 사용자 정의 무결성</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q3. 다른 테이블의 Primary Key를 참조하며, 참조 무결성을 지켜야 하는 키는?</p>
+                        <p class="quiz-options">① Candidate Key &nbsp;&nbsp; ② Foreign Key &nbsp;&nbsp; ③ Super Key &nbsp;&nbsp; ④ Alternate Key</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4. 두 테이블에서 공통으로 존재하는 일치하는 데이터만 결합하는 JOIN 방식은?</p>
+                        <p class="quiz-options">① LEFT JOIN &nbsp;&nbsp; ② RIGHT JOIN &nbsp;&nbsp; ③ INNER JOIN &nbsp;&nbsp; ④ FULL JOIN</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q5. Index(인덱스)에 대한 설명으로 올바르지 않은 것은?</p>
+                        <p class="quiz-options">① SELECT 검색 속도를 대폭 향상시킨다.<br>② B-Tree 구조가 주로 사용된다.<br>③ 인덱스를 많이 만들수록 INSERT, DELETE 속도가 빨라진다.<br>④ 책의 색인과 같은 역할을 한다.</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q6. 트랜잭션의 작업이 "All or Nothing"으로 처리되어야 함을 의미하는 특성은?</p>
+                        <p class="quiz-options">① 원자성(Atomicity) &nbsp;&nbsp; ② 일관성(Consistency) &nbsp;&nbsp; ③ 격리성(Isolation) &nbsp;&nbsp; ④ 영속성(Durability)</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">5</span>
+        </div>
+        
+        <!-- 오른쪽: 6쪽 (문제 7~10 & 정답 및 기출 해설) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 05. 정답 및 기출문제 풀이</span>
+            
+            <div class="quiz-container">
+                <div class="quiz-grid" style="grid-template-columns: 1fr; margin-bottom: 8px;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7. 트랜잭션 연산 중 변경된 내용을 DB에 영구 반영하는 명령어는?</p>
+                        <p class="quiz-options">① ROLLBACK &nbsp;&nbsp; ② COMMIT &nbsp;&nbsp; ③ GRANT &nbsp;&nbsp; ④ REVOKE</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q8. SQL문에서 조회 결과를 오름차순 또는 내림차순으로 정렬할 때 쓰는 절은?</p>
+                        <p class="quiz-options">① GROUP BY &nbsp;&nbsp; ② HAVING &nbsp;&nbsp; ③ ORDER BY &nbsp;&nbsp; ④ WHERE</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q9. LEFT OUTER JOIN에서 오른쪽 테이블에 매칭되는 데이터가 없을 때 채워지는 값은?</p>
+                        <p class="quiz-options">① 0 &nbsp;&nbsp; ② 공백('') &nbsp;&nbsp; ③ NULL &nbsp;&nbsp; ④ N/A</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q10. 데이터베이스의 테이블 구조(Table)를 새로 생성하는 DDL 명령어는?</p>
+                        <p class="quiz-options">① CREATE &nbsp;&nbsp; ② ALTER &nbsp;&nbsp; ③ DROP &nbsp;&nbsp; ④ INSERT</p>
+                    </div>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 8px;"> 정답 및 상세 해설</h2>
+                <div class="quiz-grid" style="grid-template-columns: 1fr; gap: 5px;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1: ③ | Q2: ① | Q3: ② | Q4: ③</p>
+                        <p class="quiz-options">• <b>Q1</b>: CREATE는 데이터 정의어(DDL)입니다.<br>• <b>Q2</b>: 기본키(PK)는 개체 무결성에 의해 NOT NULL + 유일성을 가집니다.<br>• <b>Q3</b>: 외래키(FK)는 참조 무결성을 지키는 키입니다.<br>• <b>Q4</b>: 교집합 형태는 INNER JOIN입니다.</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q5: ③ | Q6: ① | Q7: ② | Q8: ③</p>
+                        <p class="quiz-options">• <b>Q5</b>: 인덱스가 많으면 데이터 변경(INSERT/DELETE) 시 오버헤드가 발생해 느려집니다.<br>• <b>Q6</b>: 완전히 실행되거나 전혀 실행되지 않는 것은 원자성(Atomicity)입니다.<br>• <b>Q7</b>: 정상 완료 처리는 COMMIT, 취소는 ROLLBACK입니다.<br>• <b>Q8</b>: 정렬은 ORDER BY절을 사용합니다.</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q9: ③ | Q10: ①</p>
+                        <p class="quiz-options">• <b>Q9</b>: 매칭되는 상대 데이터가 없으면 <code>NULL</code> 상태가 됩니다.<br>• <b>Q10</b>: 객체 생성은 DDL인 <code>CREATE</code>를 사용합니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">6</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 1쪽 & 2쪽 펼침면: 선형 자료구조 (스택/큐/리스트) ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 1쪽 (스택과 큐) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 06. 알고리즘과 자료구조</span>
+            <h1 class="main-title">FE 기본정보기술자</h1>
+            <p class="sub-title">01. 선형 자료구조 (Stack & Queue)</p>
+            
+            <div class="concept-box">
+                <h3>📚 스택 (Stack) - LIFO</h3>
+                <p>• <b>후입선출 (Last-In, First-Out)</b>: 가장 나중에 들어간 데이터가 가장 먼저 나옵니다.</p>
+                <p>• <b>주요 연산</b>: <code>Push</code>(삽입), <code>Pop</code>(삭제), <code>Top/Peek</code>(맨 위 확인)</p>
+                <p>• <b>사용 예시</b>: 웹 브라우저 뒤로가기, 함수 호출 스택(재귀함수), 실행 취소(Undo)</p>
+            </div>
+
+            <div class="concept-box" style="background-color: #f0fdf4; border-left-color: #16a34a;">
+                <h3 style="color: #15803d;">🚶‍♂️ 큐 (Queue) - FIFO</h3>
+                <p>• <b>선입선출 (First-In, First-Out)</b>: 가장 먼저 들어간 데이터가 가장 먼저 나옵니다.</p>
+                <p>• <b>주요 연산</b>: <code>Enqueue</code>(삽입), <code>Dequeue</code>(삭제)</p>
+                <p>• <b>사용 예시</b>: 프린터 인쇄 대기열, 작업 스케줄링, 버퍼(Buffer)</p>
+            </div>
+
+            <h2 class="section-title">💡 스택과 큐 쉬운 비교 예시</h2>
+            <div class="example-box">
+                • <b>스택(Stack)</b>: 프링글스 과자통 (나중에 넣은 맨 위 과자를 먼저 집어 먹음)<br>
+                • <b>큐(Queue)</b>: 버스 정류장 줄 서기 (먼저 줄 선 사람이 먼저 버스에 탑승함)
+            </div>
+
+            <span class="page-number">1</span>
+        </div>
+        
+        <!-- 오른쪽: 2쪽 (연결 리스트 & 비선형 구조: 트리) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 01. 연결 리스트 & 트리 (Tree)</span>
+            
+            <div class="concept-box">
+                <h3>🔗 연결 리스트 (Linked List)</h3>
+                <p>• 데이터(Data)와 다음 노드를 가리키는 <b>포인터(Pointer)</b>를 묶어서 연결한 구조입니다.</p>
+                <p>• <b>장점</b>: 데이터의 삽입/삭제가 매우 용이함 (포인터 연결만 변경하면 됨)</p>
+                <p>• <b>단점</b>: 특정 번째 노드를 찾으려면 처음부터 차례대로 탐색해야 함 (배열보다 접근 속도가 늚)</p>
+            </div>
+
+            <div class="concept-box" style="background-color: #eff6ff; border-left-color: #2563eb;">
+                <h3 style="color: #1e3a8a;">🌳 이진 트리 (Binary Tree) & 순회</h3>
+                <p>각 노드가 최대 2개의 자식 노드를 가지는 계층형(비선형) 구조입니다.</p>
+                <p>• <b>전위 순회 (Pre-order)</b>: Root → Left → Right</p>
+                <p>• <b>중위 순회 (In-order)</b>: Left → Root → Right (이진 탐색 트리에서 정렬된 값 출력)</p>
+                <p>• <b>후위 순회 (Post-order)</b>: Left → Right → Root</p>
+            </div>
+
+            <h2 class="section-title">📊 트리 순회 예시 (Root: A / Left: B / Right: C)</h2>
+            <table class="custom-table">
+                <thead>
+                    <tr><th>순회 방식</th><th>방문 순서</th><th>설명</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>전위 (Pre)</b></td><td><span class="highlight">A</span> → B → C</td><td>루트를 <b>가장 먼저</b> 방문</td></tr>
+                    <tr><td><b>중위 (In)</b></td><td>B → <span class="highlight">A</span> → C</td><td>루트를 <b>중간에</b> 방문</td></tr>
+                    <tr><td><b>후위 (Post)</b></td><td>B → C → <span class="highlight">A</span></td><td>루트를 <b>가장 나중에</b> 방문</td></tr>
+                </tbody>
+            </table>
+
+            <span class="page-number">2</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 3쪽 & 4쪽 펼침면: 알고리즘 (정렬/탐색) & 시간 복잡도 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 3쪽 (탐색 및 정렬 알고리즘) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 06. 알고리즘과 자료구조</span>
+            <h1 class="main-title">정렬 및 탐색 알고리즘</h1>
+            <p class="sub-title">02. 데이터 탐색과 정렬의 원리</p>
+
+            <div class="concept-box">
+                <h3>🔍 탐색 알고리즘 (Search)</h3>
+                <p>• <b>순차 탐색 (Sequential Search)</b>: 처음부터 끝까지 하나씩 찾아가는 방식. $O(N)$</p>
+                <p>• <b>이진 탐색 (Binary Search)</b>: <b>정렬된 데이터</b>의 중앙값과 비교하여 범위를 반으로 줄여가는 방식. $O(\log N)$</p>
+            </div>
+
+            <h2 class="section-title">🔄 주요 정렬 알고리즘 (Sorting)</h2>
+            <div class="example-box">
+                <b>1. 버블 정렬 (Bubble Sort)</b> - $O(N^2)$<br>
+                인접한 두 요소를 비교하여 크기 순서대로 자리를 계속 바꾸는 가장 단순한 알고리즘입니다.
+            </div>
+
+            <div class="example-box">
+                <b>2. 퀵 정렬 (Quick Sort)</b> - 평균 $O(N \log N)$<br>
+                <b>피봇(Pivot)</b>을 기준으로 작은 값과 큰 값을 분할(Divide & Conquer)하여 정렬하는 매우 빠른 알고리즘입니다.
+            </div>
+
+            <span class="page-number">3</span>
+        </div>
+        
+        <!-- 오른쪽: 4쪽 (시간 복잡도 Big-O & 출제 포인트) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 02. 시간 복잡도 (Big-O Notation)</span>
+            
+            <div class="concept-box">
+                <h3>⏱️ Big-O(빅오) 표기법 - 성능 평가</h3>
+                <p>알고리즘이 실행될 때 데이터 수($N$)에 따라 걸리는 시간의 증가율을 표현한 것입니다.</p>
+            </div>
+
+            <table class="custom-table">
+                <thead>
+                    <tr><th>빅오 표기법</th><th>명칭</th><th>대표 예시</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>$O(1)$</b></td><td>상수 시간</td><td>배열 인덱스 접근, 스택 Push/Pop</td></tr>
+                    <tr><td><b>$O(\log N)$</b></td><td>로그 시간</td><td><b>이진 탐색 (Binary Search)</b></td></tr>
+                    <tr><td><b>$O(N)$</b></td><td>선형 시간</td><td>순차 탐색, 단일 for문 탐색</td></tr>
+                    <tr><td><b>$O(N \log N)$</b></td><td>선형 로그 시간</td><td><b>퀵 정렬, 병합 정렬</b></td></tr>
+                    <tr><td><b>$O(N^2)$</b></td><td>이차 시간</td><td><b>버블 정렬, 이중 for문</b></td></tr>
+                </tbody>
+            </table>
+
+            <div class="point-container">
+                <div class="point-title">🔥 FE 시험 필수 출제 포인트!</div>
+                <ul class="point-list">
+                    <li><b>스택(LIFO) vs 큐(FIFO)</b>의 개념 구분 문제는 단골 문제입니다.</li>
+                    <li><b>이진 탐색</b>은 반드시 데이터가 <b>'정렬'</b>되어 있어야 사용할 수 있습니다!</li>
+                    <li><b>트리 순회 문제</b>는 루트(Root)의 방문 위치를 기준으로 판단하세요.</li>
+                </ul>
+            </div>
+
+            <span class="page-number">4</span>
+        </div>
+    </div>
+
+
+    <!-- ================= [ 5쪽 & 6쪽 펼침면: 예상 문제 10문제 & 기출 풀이 ] ================= -->
+    <div class="book-container">
+        
+        <!-- 왼쪽: 5쪽 (예상 문제 10문제) -->
+        <div class="page left-page">
+            <span class="chapter-title">STAGE 06. 실전 테스트</span>
+            <h1 class="main-title">Practice Test</h1>
+            <p class="sub-title">알고리즘 & 자료구조 핵심 예상 문제 10선</p>
+            
+            <div class="quiz-container">
+                <div class="quiz-grid" style="grid-template-columns: 1fr;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1. 나중에 입력된 데이터가 가장 먼저 출력되는 후입선출(LIFO) 구조의 자료구조는?</p>
+                        <p class="quiz-options">① Queue &nbsp;&nbsp; ② Stack &nbsp;&nbsp; ③ Tree &nbsp;&nbsp; ④ Linked List</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q2. 프린터의 인쇄 대기열이나 작업 스케줄링 등에 사용되는 선입선출(FIFO) 구조는?</p>
+                        <p class="quiz-options">① Stack &nbsp;&nbsp; ② Queue &nbsp;&nbsp; ③ Graph &nbsp;&nbsp; ④ Binary Tree</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q3. 이진 탐색(Binary Search)을 적용하기 위한 전제 조건으로 가장 올바른 것은?</p>
+                        <p class="quiz-options">① 데이터의 개수가 짝수여야 함 &nbsp;&nbsp; ② 데이터가 이미 정렬되어 있어야 함<br>③ 연결 리스트 형태로 구현되어야 함 &nbsp;&nbsp; ④ 데이터에 중복이 없어야 함</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q4. 이진 트리 순회에서 [Left → Root → Right] 순서로 노드를 방문하는 방식은?</p>
+                        <p class="quiz-options">① 전위 순회(Pre-order) &nbsp;&nbsp; ② 중위 순회(In-order)<br>③ 후위 순회(Post-order) &nbsp;&nbsp; ④ 레벨 순회(Level-order)</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q5. 피봇(Pivot)을 기준으로 큰 값과 작은 값을 분할하여 정렬하는 $O(N \log N)$ 알고리즘은?</p>
+                        <p class="quiz-options">① 버블 정렬 &nbsp;&nbsp; ② 선택 정렬 &nbsp;&nbsp; ③ 퀵 정렬 &nbsp;&nbsp; ④ 삽입 정렬</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q6. 연결 리스트(Linked List)에 대한 설명으로 올바르지 않은 것은?</p>
+                        <p class="quiz-options">① 데이터와 포인터로 구성된다.<br>② 노드의 삽입과 삭제가 용이하다.<br>③ 인덱스를 통해 특정 데이터에 $O(1)$ 속도로 임의 접근이 가능하다.<br>④ 메모리를 동적으로 할당받아 사용할 수 있다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">5</span>
+        </div>
+        
+        <!-- 오른쪽: 6쪽 (문제 7~10 & 정답 및 기출 해설) -->
+        <div class="page right-page">
+            <span class="chapter-title">UNIT 06. 정답 및 기출문제 풀이</span>
+            
+            <div class="quiz-container">
+                <div class="quiz-grid" style="grid-template-columns: 1fr; margin-bottom: 8px;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q7. 스택(Stack)에서 데이터를 집어넣는 연산을 의미하는 용어는?</p>
+                        <p class="quiz-options">① Pop &nbsp;&nbsp; ② Push &nbsp;&nbsp; ③ Enqueue &nbsp;&nbsp; ④ Dequeue</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q8. 데이터의 개수가 $N$개일 때, 이진 탐색(Binary Search)의 시간 복잡도는?</p>
+                        <p class="quiz-options">① $O(1)$ &nbsp;&nbsp; ② $O(\log N)$ &nbsp;&nbsp; ③ $O(N)$ &nbsp;&nbsp; ④ $O(N^2)$</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q9. 다음 중 비선형(Non-Linear) 자료구조에 해당하는 것은?</p>
+                        <p class="quiz-options">① 배열(Array) &nbsp;&nbsp; ② 스택(Stack) &nbsp;&nbsp; ③ 큐(Queue) &nbsp;&nbsp; ④ 트리(Tree)</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q10. 인접한 두 항목을 비교하여 교환하는 방식으로, $O(N^2)$의 시간 복잡도를 갖는 정렬은?</p>
+                        <p class="quiz-options">① 버블 정렬 &nbsp;&nbsp; ② 퀵 정렬 &nbsp;&nbsp; ③ 병합 정렬 &nbsp;&nbsp; ④ 힙 정렬</p>
+                    </div>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 8px;"> 정답 및 상세 해설</h2>
+                <div class="quiz-grid" style="grid-template-columns: 1fr; gap: 5px;">
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q1: ② | Q2: ② | Q3: ② | Q4: ②</p>
+                        <p class="quiz-options">• <b>Q1</b>: 후입선출(LIFO)은 스택(Stack)입니다.<br>• <b>Q2</b>: 선입선출(FIFO)은 큐(Queue)입니다.<br>• <b>Q3</b>: 이진 탐색은 반씩 쪼개며 찾으므로 '정렬'이 필수입니다.<br>• <b>Q4</b>: 루트(Root)를 중간에 방문하므로 중위 순회(In-order)입니다.</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q5: ③ | Q6: ③ | Q7: ② | Q8: ②</p>
+                        <p class="quiz-options">• <b>Q5</b>: Pivot 중심의 분할 정렬은 퀵 정렬입니다.<br>• <b>Q6</b>: 임의 접근(Random Access)이 $O(1)$인 것은 '배열'입니다.<br>• <b>Q7</b>: 스택 삽입은 Push, 삭제는 Pop입니다.<br>• <b>Q8</b>: 탐색 범위를 반씩 줄이는 이진 탐색은 $O(\log N)$입니다.</p>
+                    </div>
+
+                    <div class="quiz-card">
+                        <p class="quiz-q">Q9: ④ | Q10: ①</p>
+                        <p class="quiz-options">• <b>Q9</b>: 트리와 그래프는 계층/망 구조인 비선형 자료구조입니다.<br>• <b>Q10</b>: 이웃한 두 값을 비교해 교환하는 정렬은 버블 정렬입니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="page-number">6</span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

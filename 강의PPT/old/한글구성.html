@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>외국인을 위한 한국어 기초 - 한글 구조와 위치</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 🔑 [강사 전용 메뉴판] (Ctrl + M 토글) */
+        .teacher-menu {
+            display: none;
+            position: absolute;
+            top: 20px;
+            background-color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            border: 2px solid #3498db;
+            animation: fadeIn 0.3s ease;
+            width: 90vw;
+            max-width: 520px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .menu-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .topic-btn {
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .topic-btn:hover { background-color: #e2e8f0; }
+        .topic-btn.active {
+            background-color: #3498db;
+            color: #ffffff;
+            border-color: #3498db;
+        }
+
+        /* 슬라이드 감싸는 외부 컨테이너 */
+        .wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1160px;
+            padding: 0 20px;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 80vw;
+            max-width: 1000px;
+            height: 72vh;
+            max-height: 620px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 50px 70px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.8rem; color: #2c3e50; margin-bottom: 15px; }
+        h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 8px;
+        }
+
+        p { font-size: 1.3rem; color: #444; line-height: 1.7; word-break: keep-all; }
+
+        .highlight { color: #e74c3c; font-weight: bold; }
+        .sub-text { font-size: 1rem; color: #666; margin-top: 8px; }
+
+        /* 🧩 자음/모음/받침 구조 Visual Box */
+        .block-grid {
+            display: grid;
+            gap: 8px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        /* 좌우형 (예: ㄱ + ㅏ = 가) */
+        .grid-side {
+            grid-template-columns: 1fr 1fr;
+            width: 220px;
+        }
+        /* 상하형 (예: ㄱ + ㅗ = 고) */
+        .grid-topdown {
+            grid-template-rows: 1fr 1fr;
+            width: 160px;
+        }
+        /* 받침 구조 (예: ㄱ + ㅏ / ㅇ = 강) */
+        .grid-batchim {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            width: 220px;
+        }
+
+        .block-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .block-consonant { background-color: #dbeafe; color: #1e40af; } /* 자음 (파랑) */
+        .block-vowel { background-color: #fef3c7; color: #92400e; }     /* 모음 (노랑) */
+        .block-batchim { background-color: #fce7f3; color: #9d174d; grid-column: span 2; } /* 받침 (분홍) */
+
+        /* 예문 및 비교 박스 */
+        .compare-box {
+            background-color: #f8fafc;
+            border-left: 5px solid #3498db;
+            padding: 18px 25px;
+            border-radius: 8px;
+            text-align: left;
+            width: 100%;
+            max-width: 650px;
+            margin-top: 15px;
+        }
+
+        .answer-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .answer-btn:hover { background-color: #2980b9; }
+
+        /* 외부 화살표 버튼 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            color: #2c3e50;
+            border: 1px solid #e2e8f0;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .nav-btn:hover {
+            background-color: #3498db;
+            color: #ffffff;
+            border-color: #3498db;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn { left: -10px; }
+        .next-btn { right: -10px; }
+
+        .summary-list { text-align: left; font-size: 1.2rem; line-height: 2; }
+
+        @media (max-width: 1100px) {
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔑 [강사 컨트롤러] (Ctrl + M) -->
+    <div class="teacher-menu" id="teacherMenu">
+        <div class="menu-title">🎓 강사 컨트롤러 (언어 선택)</div>
+        <div class="menu-btn-group">
+            <button class="topic-btn active" id="btn-jp" onclick="switchTopic('jp')">🇯🇵 日本語版 (일본어 설명)</button>
+            <button class="topic-btn" id="btn-cn" onclick="switchTopic('cn')">🇨🇳 中文版 (중국어 설명)</button>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <div class="presentation-container">
+
+            <!-- ==========================================
+                 🇯🇵 1. 일본어판 (Japanese Version)
+            ========================================== -->
+            <!-- JP 1: 표지 -->
+            <div class="slide topic-jp active">
+                <span class="slide-number">01 / 06</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韓国語基礎 (Hangul Structure)</p>
+                <h1>ハングル文字の仕組み</h1>
+                <p>子音(子音)・母音(母音)・パッチム(終音)の位置をマスターしましょう！</p>
+            </div>
+
+            <!-- JP 2: 자국어(일본어) 비교 설명 -->
+            <div class="slide topic-jp">
+                <span class="slide-number">02 / 06</span>
+                <h2>1. 日本語との比較 (語順と構造)</h2>
+                <div class="compare-box">
+                    <p><b>① 語順(SOV)は全く同じ！</b></p>
+                    <p style="font-size:1.05rem; color:#555;">・日本語：私は 学生です。</p>
+                    <p style="font-size:1.05rem; color:#2563eb;">・韓国語：わたしは(わたしは) がくせい(がくせい) です(です)。</p>
+                    <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p><b>② 日本語の「かな」との文字構造の違い</b></p>
+                    <p style="font-size:1.05rem; color:#555;">・「か (K+A)」のように、ハングルも<b>【子音 + 母音】</b>を組み合わせて1つの文字を作ります。</p>
+                </div>
+            </div>
+
+            <!-- JP 3: 자음/모음 위치 (좌우 vs 상하) -->
+            <div class="slide topic-jp">
+                <span class="slide-number">03 / 06</span>
+                <h2>2. 子音と母音の位置関係</h2>
+                <p>母音の形によって、並べる位置が変わります！</p>
+                <div style="display: flex; gap: 30px; margin-top: 15px;">
+                    <!-- 좌우형 -->
+                    <div>
+                        <p style="font-size:1rem; font-weight:bold;">① 縦長母音 (ㅏ, ㅓ, ㅣなど) → 左右配置</p>
+                        <div class="block-grid grid-side">
+                            <div class="block-item block-consonant">子音 (ㄱ)</div>
+                            <div class="block-item block-vowel">母音 (ㅏ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅏ = 가 (ga)</p>
+                    </div>
+                    <!-- 상하형 -->
+                    <div>
+                        <p style="font-size:1rem; font-weight:bold;">② 横長母音 (ㅗ, ㅜ, ㅡなど) → 上下配置</p>
+                        <div class="block-grid grid-topdown">
+                            <div class="block-item block-consonant">子音 (ㄱ)</div>
+                            <div class="block-item block-vowel">母音 (ㅗ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅗ = 고 (go)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JP 4: 받침(종성) 위치 설명 -->
+            <div class="slide topic-jp">
+                <span class="slide-number">04 / 06</span>
+                <h2>3. パッチム(パッチム)の位置</h2>
+                <p>文字の<b>「一番下(底)」</b>に入る最後の子音を「パッチム」と呼びます。</p>
+                
+                <div class="block-grid grid-batchim">
+                    <div class="block-item block-consonant">初声 (ㄱ)</div>
+                    <div class="block-item block-vowel">中声 (ㅏ)</div>
+                    <div class="block-item block-batchim">パッチム (ㅇ)</div>
+                </div>
+                <p style="font-size:1.4rem; font-weight:bold; color:#9d174d;">ㄱ + ㅏ + ㅇ = 강 (gang)</p>
+                <p class="sub-text">※ 日本語の「ん(n/m/ng)」や「っ(t/k/p)」のような役割をします。</p>
+            </div>
+
+            <!-- JP 5: 확인 문제 -->
+            <div class="slide topic-jp">
+                <span class="slide-number">05 / 06</span>
+                <h2>4. 確認クイズ (Quiz)</h2>
+                <p>次の組み立てで完成するハングルは何でしょうか？</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.5rem;">
+                    [ 子音: ㄱ ] + [ 母音: ㅗ ] + [ パッチム: ㅁ ] = ?
+                </p>
+                
+                <button class="answer-btn" onclick="toggleAnswer('ans-jp')">答えを確認する</button>
+                <p id="ans-jp" class="highlight" style="display:none; font-size: 2rem; margin-top:15px;">곰 (gom = クマ)</p>
+            </div>
+
+            <!-- JP 6: 정리 -->
+            <div class="slide topic-jp">
+                <span class="slide-number">06 / 06</span>
+                <h2>5. 本日のまとめ</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>子音 + 縦長母音</b> ＝ 左右に並べる (例: 가, 나)</li>
+                    <li>✅ <b>子音 + 横長母音</b> ＝ 上下に並べる (例: 고, 노)</li>
+                    <li>✅ <b>パッチム</b> ＝ 必ず文字の<b>一番下</b>に配置する (例: 강, 곰)</li>
+                </ul>
+            </div>
+
+
+            <!-- ==========================================
+                 🇨🇳 2. 중국어판 (Chinese Version)
+            ========================================== -->
+            <!-- CN 1: 표지 -->
+            <div class="slide topic-cn">
+                <span class="slide-number">01 / 06</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韩语基础 (Hangul Structure)</p>
+                <h1>韩文构造与拼写位置</h1>
+                <p>轻松掌握辅音(声母)、元音(韵母)与收音(韵尾)的位置！</p>
+            </div>
+
+            <!-- CN 2: 자국어(중국어) 비교 설명 -->
+            <div class="slide topic-cn">
+                <span class="slide-number">02 / 06</span>
+                <h2>1. 与中文的对比 (语序与拼音)</h2>
+                <div class="compare-box">
+                    <p><b>① 语序的不同 (主语 + 宾语 + 谓语)</b></p>
+                    <p style="font-size:1.05rem; color:#555;">・中文 (SVO)：我是 学生。</p>
+                    <p style="font-size:1.05rem; color:#2563eb;">・韩语 (SOV)：我是(我是) 学生(学生) 是(是)。</p>
+                    <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p><b>② 拼写构造与汉语拼音相似！</b></p>
+                    <p style="font-size:1.05rem; color:#555;">・韩文如同拼音，由 <b>【辅音(声母) + 元音(韵母)】</b> 组合成一个方块字。</p>
+                </div>
+            </div>
+
+            <!-- CN 3: 자음/모음 위치 -->
+            <div class="slide topic-cn">
+                <span class="slide-number">03 / 06</span>
+                <h2>2. 辅音与元音的位置关系</h2>
+                <p>根据元音的形状，排列位置有所不同：</p>
+                <div style="display: flex; gap: 30px; margin-top: 15px;">
+                    <!-- 좌우형 -->
+                    <div>
+                        <p style="font-size:1rem; font-weight:bold;">① 竖直元音 (ㅏ, ㅓ, ㅣ) → 左右结构</p>
+                        <div class="block-grid grid-side">
+                            <div class="block-item block-consonant">辅音 (ㄱ)</div>
+                            <div class="block-item block-vowel">元音 (ㅏ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅏ = 가 (ga)</p>
+                    </div>
+                    <!-- 상하형 -->
+                    <div>
+                        <p style="font-size:1rem; font-weight:bold;">② 横向元音 (ㅗ, ㅜ, ㅡ) → 上下结构</p>
+                        <div class="block-grid grid-topdown">
+                            <div class="block-item block-consonant">辅音 (ㄱ)</div>
+                            <div class="block-item block-vowel">元音 (ㅗ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅗ = 고 (go)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CN 4: 받침(종성) 위치 설명 -->
+            <div class="slide topic-cn">
+                <span class="slide-number">04 / 06</span>
+                <h2>3. 收音(Batchim)的位置</h2>
+                <p>位于韩文字<b>「最底部」</b>的最终辅音被称为“收音”。</p>
+                
+                <div class="block-grid grid-batchim">
+                    <div class="block-item block-consonant">声母 (ㄱ)</div>
+                    <div class="block-item block-vowel">韵母 (ㅏ)</div>
+                    <div class="block-item block-batchim">收音 (ㅇ)</div>
+                </div>
+                <p style="font-size:1.4rem; font-weight:bold; color:#9d174d;">ㄱ + ㅏ + ㅇ = 강 (gang)</p>
+                <p class="sub-text">※ 类似于汉语拼音中的前鼻音(-n)和后鼻音(-ng)等韵尾。</p>
+            </div>
+
+            <!-- CN 5: 확인 문제 -->
+            <div class="slide topic-cn">
+                <span class="slide-number">05 / 06</span>
+                <h2>4. 随堂测试 (Quiz)</h2>
+                <p>请拼读以下组合拼出的韩文字：</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.5rem;">
+                    [ 辅音: ㄱ ] + [ 元音: ㅗ ] + [ 收音: ㅁ ] = ?
+                </p>
+                
+                <button class="answer-btn" onclick="toggleAnswer('ans-cn')">查看答案</button>
+                <p id="ans-cn" class="highlight" style="display:none; font-size: 2rem; margin-top:15px;">곰 (gom = 熊)</p>
+            </div>
+
+            <!-- CN 6: 정리 -->
+            <div class="slide topic-cn">
+                <span class="slide-number">06 / 06</span>
+                <h2>5. 本课小结</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>辅音 + 竖直元音</b> ＝ 左右排列 (例: 가, 나)</li>
+                    <li>✅ <b>辅音 + 横向元音</b> ＝ 上下排列 (例: 고, 노)</li>
+                    <li>✅ <b>收音 (Batchim)</b> ＝ 永远放在文字的<b>最下方</b> (例: 강, 곰)</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 슬라이드 바깥 화살표 버튼 -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <script>
+        let currentTopic = 'jp'; // 기본 언어: 일본어판
+        let currentSlideIndex = 0;
+
+        function getActiveSlides() {
+            return document.querySelectorAll(`.topic-${currentTopic}`);
+        }
+
+        function showSlide(index) {
+            const activeSlides = getActiveSlides();
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            if (activeSlides[index]) {
+                activeSlides[index].classList.add('active');
+            }
+        }
+
+        function changeSlide(direction) {
+            const activeSlides = getActiveSlides();
+            currentSlideIndex += direction;
+
+            if (currentSlideIndex < 0) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex >= activeSlides.length) {
+                currentSlideIndex = activeSlides.length - 1;
+            }
+            showSlide(currentSlideIndex);
+        }
+
+        function switchTopic(topicName) {
+            currentTopic = topicName;
+            currentSlideIndex = 0;
+
+            document.getElementById('btn-jp').classList.toggle('active', topicName === 'jp');
+            document.getElementById('btn-cn').classList.toggle('active', topicName === 'cn');
+
+            showSlide(currentSlideIndex);
+        }
+
+        // Ctrl + M 토글 & 키보드 방향키 이벤트
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
+                e.preventDefault();
+                const menu = document.getElementById('teacherMenu');
+                menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            }
+
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        function toggleAnswer(answerId) {
+            const answer = document.getElementById(answerId);
+            answer.style.display = (answer.style.display === 'none' || answer.style.display === '') ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

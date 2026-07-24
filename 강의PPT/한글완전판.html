@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>외국인을 위한 한국어 기초 - 기본 모음 & 글자 구조</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 🔑 [강사 컨트롤러] (Ctrl + M 토글) */
+        .teacher-menu {
+            display: none;
+            position: absolute;
+            top: 15px;
+            background-color: #ffffff;
+            padding: 12px 18px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            border: 2px solid #3498db;
+            animation: fadeIn 0.3s ease;
+            width: 90vw;
+            max-width: 580px;
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .menu-title {
+            font-size: 0.85rem;
+            color: #475569;
+            font-weight: bold;
+        }
+
+        .lang-indicator {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            background-color: #eff6ff;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .menu-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .topic-btn {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .topic-btn:hover { background-color: #e2e8f0; }
+        .topic-btn.active {
+            background-color: #3498db;
+            color: #ffffff;
+            border-color: #3498db;
+        }
+
+        /* 슬라이드 외각 감싸는 래퍼 */
+        .wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1160px;
+            padding: 0 20px;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 80vw;
+            max-width: 1000px;
+            height: 72vh;
+            max-height: 620px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 45px 70px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.6rem; color: #2c3e50; margin-bottom: 12px; }
+        h2 {
+            font-size: 1.9rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 8px;
+        }
+
+        p { font-size: 1.25rem; color: #444; line-height: 1.7; word-break: keep-all; }
+
+        .highlight { color: #e74c3c; font-weight: bold; }
+
+	/* 🌟 1글자 전용 카드 라이아웃 스타일 */
+        .single-vowel-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+            border: 3px solid #3498db;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.12);
+        }
+
+	.big-char {
+            font-size: 6rem;
+            font-weight: 900;
+            color: #1e3a8a;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .pron-badge {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #d97706;
+            background-color: #fef3c7;
+            padding: 6px 20px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+	.vowel-desc {
+            font-size: 1.15rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .example-tag {
+            margin-top: 12px;
+            font-size: 1rem;
+            color: #0284c7;
+            font-weight: bold;
+            background-color: #e0f2fe;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+        .sub-text { font-size: 0.95rem; color: #666; margin-top: 6px; }
+
+        /* 모음 표 그리드 레이아웃 */
+        .vowel-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+            width: 100%;
+            max-width: 750px;
+        }
+
+        .vowel-card {
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 8px;
+            transition: all 0.2s;
+        }
+
+        .vowel-card:hover {
+            border-color: #3498db;
+            transform: translateY(-3px);
+        }
+
+        .vowel-char {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        .vowel-sub {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* 🧩 자음/모음/받침 구조 Visual Box */
+        .block-grid {
+            display: grid;
+            gap: 8px;
+            margin: 15px 0;
+            padding: 12px;
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .grid-side { grid-template-columns: 1fr 1fr; width: 220px; }
+        .grid-topdown { grid-template-rows: 1fr 1fr; width: 160px; }
+        .grid-batchim { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; width: 220px; }
+
+        .block-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .block-consonant { background-color: #dbeafe; color: #1e40af; }
+        .block-vowel { background-color: #fef3c7; color: #92400e; }
+        .block-batchim { background-color: #fce7f3; color: #9d174d; grid-column: span 2; }
+
+        .compare-box {
+            background-color: #f8fafc;
+            border-left: 5px solid #3498db;
+            padding: 16px 22px;
+            border-radius: 8px;
+            text-align: left;
+            width: 100%;
+            max-width: 680px;
+            margin-top: 10px;
+        }
+
+        .answer-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .answer-btn:hover { background-color: #2980b9; }
+
+        /* 외부 화살표 버튼 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            color: #2c3e50;
+            border: 1px solid #e2e8f0;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .nav-btn:hover {
+            background-color: #3498db;
+            color: #ffffff;
+            border-color: #3498db;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn { left: -10px; }
+        .next-btn { right: -10px; }
+
+        .summary-list { text-align: left; font-size: 1.15rem; line-height: 2; }
+
+        @media (max-width: 1100px) {
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔑 [강사 컨트롤러] (Ctrl + M 토글) -->
+    <div class="teacher-menu" id="teacherMenu">
+        <div class="menu-header">
+            <span class="menu-title">🎓 강사 컨트롤러 [Ctrl+M: 메뉴 토글 | Ctrl+L: 언어 전환]</span>
+            <span class="lang-indicator" id="langIndicator">🇯🇵 日本語版</span>
+        </div>
+        <div class="menu-btn-group">
+	
+            <button class="topic-btn active" id="btn-vowel" onclick="switchTopic('vowel')">1. 기본 모음 (基本母音)</button>
+            <button class="topic-btn" id="btn-structure" onclick="switchTopic('structure')">2. 글자 구조 & 받침 (構造・パッチム)</button>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <div class="presentation-container">
+
+            <!-- ==============================================================
+                 SECTION 1. 기본 모음 (vowel) - 日本語 & 中文
+            ============================================================== -->
+            <!-- 1-1. 모음 표지 (JP) -->
+            <div class="slide topic-vowel lang-jp active">
+                <span class="slide-number">01 / 05</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韓国語の基本母音</p>
+                <h1>基本母音<br> (ㅏ,ㅑ,ㅓ,ㅕ,ㅗ,ㅛ,ㅜ,ㅠ,ㅡ,ㅣ)</h1>
+                <p>日本語の発音と比較しながら、10個の基本母音を覚えましょう！</p>
+            </div>
+
+            <!-- 1-1. 모음 표지 (CN) -->
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">01 / 05</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韩语基本元音</p>
+                <h1>基本元音<br> (ㅏ,ㅑ,ㅓ,ㅕ,ㅗ,ㅛ,ㅜ,ㅠ,ㅡ,ㅣ)</h1>
+                <p>结合汉语拼音，轻松掌握10个基本元音的发音与规则！</p>
+            </div>
+
+            <!-- 1-2. 모음 10개 한눈에 보기 (JP) -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">02 / 05</span>
+                <h2>1. 基本母音 10個の一覧</h2>
+                <div class="vowel-grid">
+                    <div class="vowel-card"><div class="vowel-char">ㅏ</div><div class="vowel-sub">a (あ)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅑ</div><div class="vowel-sub">ya (や)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅓ</div><div class="vowel-sub">eo (口広お)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅕ</div><div class="vowel-sub">yeo (口広よ)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅗ</div><div class="vowel-sub">o (口丸お)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅛ</div><div class="vowel-sub">yo (口丸よ)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅜ</div><div class="vowel-sub">u (口丸う)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅠ</div><div class="vowel-sub">yu (口丸ゆ)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅡ</div><div class="vowel-sub">eu (口横う)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅣ</div><div class="vowel-sub">i (い)</div></div>
+                </div>
+                <p class="sub-text">※ 韓国語の母音は、日本語の「あいうえお」より種類が豊富です。</p>
+            </div>
+
+            <!-- 1-2. 모음 10개 한눈에 보기 (CN) -->
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">02 / 05</span>
+                <h2>1. 10个基本元音一览</h2>
+                <div class="vowel-grid">
+                    <div class="vowel-card"><div class="vowel-char">ㅏ</div><div class="vowel-sub">a (啊)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅑ</div><div class="vowel-sub">ya (呀)</div></div>
+                    <div class="vowel-card"><div class="vowel-card-char vowel-char">ㅓ</div><div class="vowel-sub">eo (张口e)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅕ</div><div class="vowel-sub">yeo (野eo)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅗ</div><div class="vowel-sub">o (圆唇o)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅛ</div><div class="vowel-sub">yo (哟)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅜ</div><div class="vowel-sub">u (乌)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅠ</div><div class="vowel-sub">yu (迂)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅡ</div><div class="vowel-sub">eu (扁唇e)</div></div>
+                    <div class="vowel-card"><div class="vowel-char">ㅣ</div><div class="vowel-sub">i (衣)</div></div>
+                </div>
+                <p class="sub-text">※ 配合汉语拼音的发音嘴型，能更快速精准地发音！</p>
+            </div>
+
+            <!-- 1-3. 모음 확장 원리 (+I 획 추가) (JP) -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">03 / 05</span>
+                <h2>2. 線を1本足す法則 (Y音の追加)</h2>
+                <p>短い線を1本追加すると、<b>「Y (y)」</b>の発音がプラスされます！</p>
+                <div class="compare-box">
+                    <p>・ <b>ㅏ</b> (a) ＋ 1本 → <span class="highlight">ㅑ</span> (ya)</p>
+                    <p>・ <b>ㅓ</b> (eo) ＋ 1本 → <span class="highlight">ㅕ</span> (yeo)</p>
+                    <p>・ <b>ㅗ</b> (o) ＋ 1本 → <span class="highlight">ㅛ</span> (yo)</p>
+                    <p>・ <b>ㅜ</b> (u) ＋ 1本 → <span class="highlight">ㅠ</span> (yu)</p>
+                </div>
+            </div>
+
+            <!-- 1-3. 모음 확장 원리 (+I 획 추가) (CN) -->
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">03 / 05</span>
+                <h2>2. 增加一笔的规律 (加上 y 音)</h2>
+                <p>在基本元音上多加短划线，就会加上 <b>「y (i)」</b> 的介音！</p>
+                <div class="compare-box">
+                    <p>・ <b>ㅏ</b> (a) ＋ 一笔 → <span class="highlight">ㅑ</span> (ya)</p>
+                    <p>・ <b>ㅓ</b> (eo) ＋ 一笔 → <span class="highlight">ㅕ</span> (yeo)</p>
+                    <p>・ <b>ㅗ</b> (o) ＋ 一笔 → <span class="highlight">ㅛ</span> (yo)</p>
+                    <p>・ <b>ㅜ</b> (u) ＋ 一笔 → <span class="highlight">ㅠ</span> (yu)</p>
+                </div>
+            </div>
+
+<!-- 🌟 [신규 추가] 왜 'ㅇ' 문자가 붙는지 설명하는 슬라이드 (JP) -->
+<div class="slide topic-vowel lang-jp">
+    <span class="slide-number">03-1 / 06</span>
+    <h2>2-1. なぜ「ㅇ」をつけるの？ (ㅇの役割)</h2>
+    <p>韓国語の文字は、必ず<b>【子音＋母音】</b>のセットで1つの文字を作ります。</p>
+    
+    <div class="compare-box" style="margin-top: 15px;">
+        <p><b>① 母音だけで発音したい時：</b></p>
+        <p style="font-size:1.05rem; color:#555;">
+            母音だけ(ㅏ, ㅗ)では文字になれません。そこで、<b>音のない子音「ㅇ (無音/ゼロ音)」</b>を帽子のようにかぶせます！
+        </p>
+        <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+        <p><b>② 比較してみましょう：</b></p>
+        <p style="font-size:1.1rem;">・ <span class="highlight">ㅇ (音なし)</span> ＋ ㅏ (a) ＝ <b>아</b> (a / あ)</p>
+        <p style="font-size:1.1rem;">・ <span class="highlight">ㄱ (k音)</span> ＋ ㅏ (a) ＝ <b>가</b> (ga / が)</p>
+    </div>
+    <p class="sub-text">💡 「ㅇ」は、文字の形を整えるための<b>“空席埋め(デザイン)”</b>の役割をしています。</p>
+</div>
+
+<!-- 🌟 [신규 추가] 왜 'ㅇ' 문자가 붙는지 설명하는 슬라이드 (CN) -->
+<div class="slide topic-vowel lang-cn">
+    <span class="slide-number">03-1 / 06</span>
+    <h2>2-1. 为什么元音前面要加“ㅇ”？</h2>
+    <p>韩文字必须由<b>【辅音＋元音】</b>组合才能构成一个完整的字。</p>
+    
+    <div class="compare-box" style="margin-top: 15px;">
+        <p><b>① 当只想发元音原本的声音时：</b></p>
+        <p style="font-size:1.05rem; color:#555;">
+            单写的元音(ㅏ, ㅗ)不能单独成字。因此需要加上<b>不发音的占位辅音“ㅇ (零声母)”</b>！
+        </p>
+        <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+        <p><b>② 对比看更清晰：</b></p>
+        <p style="font-size:1.1rem;">・ <span class="highlight">ㅇ (不发音)</span> ＋ ㅏ (a) ＝ <b>아</b> (a / 啊)</p>
+        <p style="font-size:1.1rem;">・ <span class="highlight">ㄱ (g/k音)</span> ＋ ㅏ (a) ＝ <b>가</b> (ga)</p>
+    </div>
+    <p class="sub-text">💡 这里的“ㅇ”就像是汉语拼音中的零声母，起到<b>“补齐字形结构”</b>的作用。</p>
+</div>
+
+		<!-- ==============================================================
+                 SECTION 1. 기본 모음 (vowel) - 1글자 1슬라이드
+            ============================================================== -->
+            <!-- 1-1. 모음 표지 (JP) -->
+            <div class="slide topic-vowel lang-jp active">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韓国語の基本母音 (Basic Vowels)</p>
+                <h1>基本母音 10個マスター</h1>
+                <p>1文字ずつ口の形と発音を確認しながら覚えていきましょう！</p>
+            </div>
+
+            <!-- 1-1. 모음 표지 (CN) -->
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">01</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韩语基本元音 (Basic Vowels)</p>
+                <h1>基本元音 10个逐一掌握</h1>
+                <p>逐字学习发音嘴型与拼音对比，轻松掌握！</p>
+            </div>
+
+            <!-- ---------------- ㅏ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">02</span>
+                <h2>基本母音 (1/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅏ</div>
+                    <div class="pron-badge">a (あ)</div>
+                    <div class="vowel-desc">口を大きく開けて日本語の「あ」と発音します。</div>
+                    <div class="example-tag">例: 아이 (a-i = 子ども)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">02</span>
+                <h2>基本元音 (1/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅏ</div>
+                    <div class="pron-badge">a (啊)</div>
+                    <div class="vowel-desc">张大嘴巴，类似于汉语拼音的 "a"。</div>
+                    <div class="example-tag">例: 아이 (a-i = 小孩)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅑ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">03</span>
+                <h2>基本母音 (2/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅑ</div>
+                    <div class="pron-badge">ya (や)</div>
+                    <div class="vowel-desc">「ㅏ」に線を1本追加！「i」を添えて「や」と発音します。</div>
+                    <div class="example-tag">例: 야구 (ya-gu = 野球)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">03</span>
+                <h2>基本元音 (2/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅑ</div>
+                    <div class="pron-badge">ya (呀)</div>
+                    <div class="vowel-desc">在「ㅏ」上加一笔，相当于拼音的 "ya"。</div>
+                    <div class="example-tag">例: 야구 (ya-gu = 棒球)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅓ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">04</span>
+                <h2>基本母音 (3/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅓ</div>
+                    <div class="pron-badge">eo (口を開けた お)</div>
+                    <div class="vowel-desc">口を「あ」の形に広く開けたまま「お」と発音します。</div>
+                    <div class="example-tag">例: 어머니 (eo-meo-ni = お母さん)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">04</span>
+                <h2>基本元音 (3/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅓ</div>
+                    <div class="pron-badge">eo (张口 e / o)</div>
+                    <div class="vowel-desc">嘴巴张大（发"a"的嘴型），发出 "o" 的声音。</div>
+                    <div class="example-tag">例: 어머니 (eo-meo-ni = 妈妈)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅕ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">05</span>
+                <h2>基本母音 (4/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅕ</div>
+                    <div class="pron-badge">yeo (口を開けた よ)</div>
+                    <div class="vowel-desc">「ㅓ」に線を1本追加！口を大きく開けて「よ」と発音します。</div>
+                    <div class="example-tag">例: 여우 (yeo-u = キツネ)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">05</span>
+                <h2>基本元音 (4/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅕ</div>
+                    <div class="pron-badge">yeo (野 / yeo)</div>
+                    <div class="vowel-desc">在「ㅓ」上加一笔，张大嘴巴发 "yeo"。</div>
+                    <div class="example-tag">例: 여우 (yeo-u = 狐狸)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅗ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">06</span>
+                <h2>基本母音 (5/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅗ</div>
+                    <div class="pron-badge">o (口を丸めた お)</div>
+                    <div class="vowel-desc">唇を丸くすぼめて「お」と発音します。</div>
+                    <div class="example-tag">例: 오리 (o-ri = アヒル)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">06</span>
+                <h2>基本元音 (5/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅗ</div>
+                    <div class="pron-badge">o (圆唇 o)</div>
+                    <div class="vowel-desc">双唇拢圆向前突出，类似于拼音的 "o"。</div>
+                    <div class="example-tag">例: 오리 (o-ri = 鸭子)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅛ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">07</span>
+                <h2>基本母音 (6/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅛ</div>
+                    <div class="pron-badge">yo (口を丸めた よ)</div>
+                    <div class="vowel-desc">「ㅗ」に線を1本追加！唇を丸く丸めて「よ」と発音します。</div>
+                    <div class="example-tag">例: 요리 (yo-ri = 料理)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">07</span>
+                <h2>基本元音 (6/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅛ</div>
+                    <div class="pron-badge">yo (哟)</div>
+                    <div class="vowel-desc">在「ㅗ」上加一笔，圆唇发 "yo"。</div>
+                    <div class="example-tag">例: 요리 (yo-ri = 料理/做饭)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅜ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">08</span>
+                <h2>基本母音 (7/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅜ</div>
+                    <div class="pron-badge">u (口を突き出した う)</div>
+                    <div class="vowel-desc">唇を前に突き出して丸く「う」と発音します。</div>
+                    <div class="example-tag">例: 우유 (u-yu = 牛乳)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">08</span>
+                <h2>基本元音 (7/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅜ</div>
+                    <div class="pron-badge">u (乌)</div>
+                    <div class="vowel-desc">双唇突出成圆形，相当于拼音的 "u"。</div>
+                    <div class="example-tag">例: 우유 (u-yu = 牛奶)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅠ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">09</span>
+                <h2>基本母音 (8/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅠ</div>
+                    <div class="pron-badge">yu (口を突き出した ゆ)</div>
+                    <div class="vowel-desc">「ㅜ」に線を1本追加！唇を突き出して「ゆ」と発音します。</div>
+                    <div class="example-tag">例: 휴지 (hyu-ji = ティッシュ)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">09</span>
+                <h2>基本元音 (8/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅠ</div>
+                    <div class="pron-badge">yu (迂 / yu)</div>
+                    <div class="vowel-desc">在「ㅜ」上加一笔，突出嘴唇发 "yu"。</div>
+                    <div class="example-tag">例: 휴지 (hyu-ji = 纸巾)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅡ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">10</span>
+                <h2>基本母音 (9/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅡ</div>
+                    <div class="pron-badge">eu (口を横に引く う)</div>
+                    <div class="vowel-desc">「い」の口の形で唇を横に引きながら「う」と発音します。</div>
+                    <div class="example-tag">例: 으뜸 (eu-tteum = 最高/一番)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">10</span>
+                <h2>基本元音 (9/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅡ</div>
+                    <div class="pron-badge">eu (扁唇 e / eu)</div>
+                    <div class="vowel-desc">嘴角向两侧拉扁（发"i"的嘴型），发出 "u" 的声音。</div>
+                    <div class="example-tag">例: 으뜸 (eu-tteum = 第一/首屈一指)</div>
+                </div>
+            </div>
+
+            <!-- ---------------- ㅣ ---------------- -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">11</span>
+                <h2>基本母音 (10/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅣ</div>
+                    <div class="pron-badge">i (い)</div>
+                    <div class="vowel-desc">口を横に大きく引いて日本語の「い」と発音します。</div>
+                    <div class="example-tag">例: 이 (i = 歯 / 数字の2)</div>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">11</span>
+                <h2>基本元音 (10/10)</h2>
+                <div class="single-vowel-card">
+                    <div class="big-char">ㅣ</div>
+                    <div class="pron-badge">i (衣)</div>
+                    <div class="vowel-desc">嘴角向两侧展开，相当于拼音的 "i"。</div>
+                    <div class="example-tag">例: 이 (i = 牙齿 / 数字2)</div>
+                </div>
+            </div>
+
+            <!-- 1-13. 모음 원리 (+I 획 추가) (JP/CN) -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">12</span>
+                <h2>まとめ: 線を1本足す法則</h2>
+                <p>短い線を1本追加すると、<b>「Y (y)」</b>の発音がプラスされます！</p>
+                <div class="compare-box">
+                    <p>・ <b>ㅏ</b> (a) ＋ 1本 → <span class="highlight">ㅑ</span> (ya)</p>
+                    <p>・ <b>ㅓ</b> (eo) ＋ 1本 → <span class="highlight">ㅕ</span> (yeo)</p>
+                    <p>・ <b>ㅗ</b> (o) ＋ 1本 → <span class="highlight">ㅛ</span> (yo)</p>
+                    <p>・ <b>ㅜ</b> (u) ＋ 1本 → <span class="highlight">ㅠ</span> (yu)</p>
+                </div>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">12</span>
+                <h2>总结: 增加一笔的规律</h2>
+                <p>在基本元音上多加短划线，就会加上 <b>「y (i)」</b> 的介音！</p>
+                <div class="compare-box">
+                    <p>・ <b>ㅏ</b> (a) ＋ 一笔 → <span class="highlight">ㅑ</span> (ya)</p>
+                    <p>・ <b>ㅓ</b> (eo) ＋ 一笔 → <span class="highlight">ㅕ</span> (yeo)</p>
+                    <p>・ <b>ㅗ</b> (o) ＋ 一笔 → <span class="highlight">ㅛ</span> (yo)</p>
+                    <p>・ <b>ㅜ</b> (u) ＋ 一笔 → <span class="highlight">ㅠ</span> (yu)</p>
+                </div>
+            </div>
+
+            <!-- 1-14. 모음 정리 (JP/CN) -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">13</span>
+                <h2>母音のまとめ</h2>
+                <ul class="summary-list">
+                    <li>✅ 縦長母音(ㅏ, ㅑ, ㅓ, ㅕ, ㅣ) ＝ 子音の<b>右側</b>に書く</li>
+                    <li>✅ 横長母音(ㅗ, ㅛ, ㅜ, ㅠ, ㅡ) ＝ 子音の<b>下側</b>に書く</li>
+                    <li>✅ 単独で発音する時は、前に「<b>ㅇ</b>」をつける (例: 아, 오)</li>
+                </ul>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">13</span>
+                <h2>元音小结</h2>
+                <ul class="summary-list">
+                    <li>✅ 竖直元音(ㅏ, ㅑ, ㅓ, ㅕ, ㅣ) ＝ 写在辅音的<b>右侧</b></li>
+                    <li>✅ 横向元音(ㅗ, ㅛ, ㅜ, ㅠ, ㅡ) ＝ 写在辅音的<b>下方</b></li>
+                    <li>✅ 独立发音时，需在前面加上不发音的“<b>ㅇ</b>” (例: 아, 오)</li>
+                </ul>
+            </div>
+
+            <!-- 1-4. 모음 문제 (JP) -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">04 / 05</span>
+                <h2>3. 母音クイズ (Quiz)</h2>
+                <p>子音のない「無音の子音 (ㅇ)」と組み合わせた文字です。読めるかな？</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.6rem;">
+                    [ ㅇ + ㅗ ] + [ ㅇ + ㅠ ] = ?
+                </p>
+                <button class="answer-btn" onclick="toggleAnswer('ans-vowel-jp')">答えを確認する</button>
+                <p id="ans-vowel-jp" class="highlight" style="display:none; font-size: 2rem; margin-top:12px;">오유 (o-yu = 牛乳)</p>
+            </div>
+
+            <!-- 1-4. 모음 문제 (CN) -->
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">04 / 05</span>
+                <h2>3. 元音小测试 (Quiz)</h2>
+                <p>加上不发音的辅音“ㅇ”组合成的单词，试着读读看：</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.6rem;">
+                    [ ㅇ + ㅗ ] + [ ㅇ + ㅠ ] = ?
+                </p>
+                <button class="answer-btn" onclick="toggleAnswer('ans-vowel-cn')">查看答案</button>
+                <p id="ans-vowel-cn" class="highlight" style="display:none; font-size: 2rem; margin-top:12px;">오유 (o-yu = 牛奶)</p>
+            </div>
+
+            <!-- 1-5. 모음 정리 (JP/CN) -->
+            <div class="slide topic-vowel lang-jp">
+                <span class="slide-number">05 / 05</span>
+                <h2>4. 母音のまとめ</h2>
+                <ul class="summary-list">
+                    <li>✅ 縦長母音(ㅏ, ㅑ, ㅓ, ㅕ, ㅣ) ＝ 子音の<b>右側</b>に書く</li>
+                    <li>✅ 横長母音(ㅗ, ㅛ, ㅜ, ㅠ, ㅡ) ＝ 子音의<b>下側</b>に書く</li>
+                    <li>✅ 単独で発音する時は、前に「<b>ㅇ</b>」をつける (例: 아, 오)</li>
+                </ul>
+            </div>
+            <div class="slide topic-vowel lang-cn">
+                <span class="slide-number">05 / 05</span>
+                <h2>4. 元音小结</h2>
+                <ul class="summary-list">
+                    <li>✅ 竖直元音(ㅏ, ㅑ, ㅓ, ㅕ, ㅣ) ＝ 写在辅音的<b>右侧</b></li>
+                    <li>✅ 横向元音(ㅗ, ㅛ, ㅜ, ㅠ, ㅡ) ＝ 写在辅音的<b>下方</b></li>
+                    <li>✅ 独立发音时，需在前面加上不发音的“<b>ㅇ</b>” (例: 아, 오)</li>
+                </ul>
+            </div>
+
+
+            <!-- ==============================================================
+                 SECTION 2. 글자 구조 & 받침 (structure) - 日本語 & 中文
+            ============================================================== -->
+            <!-- 2-1. 구조 표지 (JP/CN) -->
+            <div class="slide topic-structure lang-jp">
+                <span class="slide-number">01 / 05</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">文字の仕組み (Structure)</p>
+                <h1>文字構造とパッチム (終音)</h1>
+                <p>子音・母音の組み合わせと、パッチムの位置を学びます。</p>
+            </div>
+            <div class="slide topic-structure lang-cn">
+                <span class="slide-number">01 / 05</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">造字结构 (Structure)</p>
+                <h1>韩文构造与收音 (Batchim)</h1>
+                <p>掌握辅音、元音的拼写组合以及收音的具体位置！</p>
+            </div>
+
+            <!-- 2-2. 자음/모음 위치 (JP) -->
+            <div class="slide topic-structure lang-jp">
+                <span class="slide-number">02 / 05</span>
+                <h2>1. 子音と母音の位置関係</h2>
+                <p>母音の形によって、並べる位置が変わります！</p>
+                <div style="display: flex; gap: 30px; margin-top: 15px;">
+                    <div>
+                        <p style="font-size:0.95rem; font-weight:bold;">① 縦長母音 (ㅏ, ㅓ, ㅣ) → 左右配置</p>
+                        <div class="block-grid grid-side">
+                            <div class="block-item block-consonant">子音 (ㄱ)</div>
+                            <div class="block-item block-vowel">母音 (ㅏ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅏ = 가 (ga)</p>
+                    </div>
+                    <div>
+                        <p style="font-size:0.95rem; font-weight:bold;">② 横長母音 (ㅗ, ㅜ, ㅡ) → 上下配置</p>
+                        <div class="block-grid grid-topdown">
+                            <div class="block-item block-consonant">子音 (ㄱ)</div>
+                            <div class="block-item block-vowel">母音 (ㅗ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅗ = 고 (go)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2-2. 자음/모음 위치 (CN) -->
+            <div class="slide topic-structure lang-cn">
+                <span class="slide-number">02 / 05</span>
+                <h2>1. 辅音与元音的位置关系</h2>
+                <p>根据元音的形状，排列位置有所不同：</p>
+                <div style="display: flex; gap: 30px; margin-top: 15px;">
+                    <div>
+                        <p style="font-size:0.95rem; font-weight:bold;">① 竖直元音 (ㅏ, ㅓ, ㅣ) → 左右结构</p>
+                        <div class="block-grid grid-side">
+                            <div class="block-item block-consonant">辅音 (ㄱ)</div>
+                            <div class="block-item block-vowel">元音 (ㅏ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅏ = 가 (ga)</p>
+                    </div>
+                    <div>
+                        <p style="font-size:0.95rem; font-weight:bold;">② 横向元音 (ㅗ, ㅜ, ㅡ) → 上下结构</p>
+                        <div class="block-grid grid-topdown">
+                            <div class="block-item block-consonant">辅音 (ㄱ)</div>
+                            <div class="block-item block-vowel">元音 (ㅗ)</div>
+                        </div>
+                        <p style="font-size:1.2rem; font-weight:bold; color:#1e40af;">ㄱ + ㅗ = 고 (go)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2-3. 받침 위치 (JP/CN) -->
+            <div class="slide topic-structure lang-jp">
+                <span class="slide-number">03 / 05</span>
+                <h2>2. パッチム (終音) の位置</h2>
+                <p>文字の<b>「一番下 (底)」</b>に入る最後の子音を「パッチム」と呼びます。</p>
+                <div class="block-grid grid-batchim">
+                    <div class="block-item block-consonant">初声 (ㄱ)</div>
+                    <div class="block-item block-vowel">中声 (ㅏ)</div>
+                    <div class="block-item block-batchim">パッチム (ㅇ)</div>
+                </div>
+                <p style="font-size:1.3rem; font-weight:bold; color:#9d174d;">ㄱ + ㅏ + ㅇ = 강 (gang)</p>
+            </div>
+            <div class="slide topic-structure lang-cn">
+                <span class="slide-number">03 / 05</span>
+                <h2>2. 收音 (Batchim) 的位置</h2>
+                <p>位于韩文字<b>「最底部」</b>的最终辅音被称为“收音”。</p>
+                <div class="block-grid grid-batchim">
+                    <div class="block-item block-consonant">声母 (ㄱ)</div>
+                    <div class="block-item block-vowel">韵母 (ㅏ)</div>
+                    <div class="block-item block-batchim">收音 (ㅇ)</div>
+                </div>
+                <p style="font-size:1.3rem; font-weight:bold; color:#9d174d;">ㄱ + ㅏ + ㅇ = 강 (gang)</p>
+            </div>
+
+            <!-- 2-4. 받침 문제 (JP/CN) -->
+            <div class="slide topic-structure lang-jp">
+                <span class="slide-number">04 / 05</span>
+                <h2>3. パッチムクイズ (Quiz)</h2>
+                <p>次の組み立てで完成する文字は何でしょうか？</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.5rem;">[ ㄱ ] + [ ㅗ ] + [ ㅁ ] = ?</p>
+                <button class="answer-btn" onclick="toggleAnswer('ans-struct-jp')">答えを確認する</button>
+                <p id="ans-struct-jp" class="highlight" style="display:none; font-size: 2rem; margin-top:12px;">곰 (gom = クマ)</p>
+            </div>
+            <div class="slide topic-structure lang-cn">
+                <span class="slide-number">04 / 05</span>
+                <h2>3. 收音测试 (Quiz)</h2>
+                <p>请拼读以下组合拼出的韩文字：</p>
+                <p style="margin-top:15px; font-weight:bold; font-size:1.5rem;">[ ㄱ ] + [ ㅗ ] + [ ㅁ ] = ?</p>
+                <button class="answer-btn" onclick="toggleAnswer('ans-struct-cn')">查看答案</button>
+                <p id="ans-struct-cn" class="highlight" style="display:none; font-size: 2rem; margin-top:12px;">곰 (gom = 熊)</p>
+            </div>
+
+            <!-- 2-5. 정리 (JP/CN) -->
+            <div class="slide topic-structure lang-jp">
+                <span class="slide-number">05 / 05</span>
+                <h2>4. 本日のまとめ</h2>
+                <ul class="summary-list">
+                    <li>✅ 子音＋縦長母音 ＝ 左右に並べる</li>
+                    <li>✅ 子音＋横長母音 ＝ 上下に並べる</li>
+                    <li>✅ パッチム ＝ 必ず文字の<b>一番下</b>に配置する</li>
+                </ul>
+            </div>
+            <div class="slide topic-structure lang-cn">
+                <span class="slide-number">05 / 05</span>
+                <h2>4. 本课小结</h2>
+                <ul class="summary-list">
+                    <li>✅ 辅音＋竖直元音 ＝ 左右排列</li>
+                    <li>✅ 辅音＋横向元音 ＝ 上下排列</li>
+                    <li>✅ 收音 (Batchim) ＝ 永远放在文字的<b>最下方</b></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 슬라이드 바깥 화살표 버튼 -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <script>
+        let currentLang = 'jp';     // 'jp' 또는 'cn'
+        let currentTopic = 'vowel';  // 'vowel' 또는 'structure'
+        let currentSlideIndex = 0;
+
+        // 현재 선택된 [주제 + 언어]의 슬라이드만 필터링
+        function getActiveSlides() {
+            return document.querySelectorAll(`.topic-${currentTopic}.lang-${currentLang}`);
+        }
+
+        // 화면 갱신 함수
+        function showSlide(index) {
+            const activeSlides = getActiveSlides();
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            if (activeSlides[index]) {
+                activeSlides[index].classList.add('active');
+            }
+        }
+
+        // 이전/다음 슬라이드 이동
+        function changeSlide(direction) {
+            const activeSlides = getActiveSlides();
+            currentSlideIndex += direction;
+
+            if (currentSlideIndex < 0) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex >= activeSlides.length) {
+                currentSlideIndex = activeSlides.length - 1;
+            }
+            showSlide(currentSlideIndex);
+        }
+
+        // 주제 변경 (메뉴 버튼 클릭 시)
+        function switchTopic(topicName) {
+            currentTopic = topicName;
+            currentSlideIndex = 0;
+
+            document.getElementById('btn-vowel').classList.toggle('active', topicName === 'vowel');
+            document.getElementById('btn-structure').classList.toggle('active', topicName === 'structure');
+
+            showSlide(currentSlideIndex);
+        }
+
+        // 🌟 언어 전환 함수 (Ctrl + L 누를 때 실행)
+        function toggleLanguage() {
+            currentLang = (currentLang === 'jp') ? 'cn' : 'jp';
+            
+            // 상단 메뉴 언어 인디케이터 갱신
+            const langIndicator = document.getElementById('langIndicator');
+            langIndicator.innerText = (currentLang === 'jp') ? '🇯🇵 日本語版' : '🇨🇳 中文版';
+
+            // 현재 보고 있던 페이지 위치 유지하며 언어만 즉시 변경
+            showSlide(currentSlideIndex);
+        }
+
+        // 🔑 키보드 단축키 이벤트
+        document.addEventListener('keydown', (e) => {
+            const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+            // 1. Ctrl + M : 강사 컨트롤러 토글
+            if (isCtrlOrCmd && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
+                e.preventDefault();
+                const menu = document.getElementById('teacherMenu');
+                menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            }
+
+            // 2. Ctrl + L : 메뉴를 열지 않고 언어 즉시 전환 (일본어 ⇄ 중국어)
+            if (isCtrlOrCmd && (e.key === 'l' || e.key === 'L' || e.key === 'ㅣ')) {
+                e.preventDefault();
+                toggleLanguage();
+            }
+
+            // 3. 좌우 방향키 이동
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // 정답 보기 토글
+        function toggleAnswer(answerId) {
+            const answer = document.getElementById(answerId);
+            answer.style.display = (answer.style.display === 'none' || answer.style.display === '') ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

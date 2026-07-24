@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>외국인을 위한 일본어 기초 - 가타카나 연습</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', 'Noto Sans SC', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 🔑 [강사 컨트롤러] (Ctrl + M 토글) */
+        .teacher-menu {
+            display: none;
+            position: absolute;
+            top: 15px;
+            background-color: #ffffff;
+            padding: 12px 18px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            border: 2px solid #0284c7; /* 가타카나 테마: 시원한 블루 포인트 */
+            animation: fadeIn 0.3s ease;
+            width: 90vw;
+            max-width: 620px;
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .menu-title {
+            font-size: 0.85rem;
+            color: #475569;
+            font-weight: bold;
+        }
+
+        .lang-indicator {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #0284c7;
+            background-color: #e0f2fe;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .menu-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .topic-btn {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .topic-btn:hover { background-color: #e2e8f0; }
+        .topic-btn.active {
+            background-color: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+        }
+
+        /* 슬라이드 감싸는 래퍼 */
+        .wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1160px;
+            padding: 0 20px;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 80vw;
+            max-width: 1000px;
+            height: 72vh;
+            max-height: 620px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 45px 70px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            font-size: 0.95rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.6rem; color: #1e293b; margin-bottom: 12px; }
+        h2 {
+            font-size: 1.9rem;
+            color: #1e293b;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #0284c7;
+            padding-bottom: 8px;
+        }
+
+        p { font-size: 1.25rem; color: #444; line-height: 1.7; word-break: keep-all; }
+
+        .highlight { color: #0284c7; font-weight: bold; }
+
+        /* 🌟 인트로 시각 카드 스타일 */
+        .intro-card-grid {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 720px;
+        }
+
+        .intro-card {
+            flex: 1;
+            background-color: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .intro-card.active-card {
+            border-color: #0284c7;
+            background-color: #f0f9ff;
+        }
+
+        .intro-card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .intro-box-display {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #0369a1;
+            background-color: #ffffff;
+            border: 2px dashed #38bdf8;
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin: 8px 0;
+        }
+
+        /* 🌟 1글자 전용 카드 라이아웃 스타일 */
+        .single-char-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f9ff;
+            border: 3px solid #38bdf8;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 480px;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.12);
+        }
+
+        .big-char {
+            font-size: 6.5rem;
+            font-weight: 900;
+            color: #0369a1;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .pron-badge {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #075985;
+            background-color: #e0f2fe;
+            padding: 6px 22px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .char-desc {
+            font-size: 1.15rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .example-tag {
+            margin-top: 12px;
+            font-size: 1.05rem;
+            color: #0369a1;
+            font-weight: bold;
+            background-color: #e0f2fe;
+            padding: 6px 16px;
+            border-radius: 8px;
+        }
+
+        .compare-box {
+            background-color: #f8fafc;
+            border-left: 5px solid #0284c7;
+            padding: 16px 22px;
+            border-radius: 8px;
+            text-align: left;
+            width: 100%;
+            max-width: 680px;
+            margin-top: 10px;
+        }
+
+        .answer-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .answer-btn:hover { background-color: #0369a1; }
+
+        /* 외부 화살표 버튼 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            color: #2c3e50;
+            border: 1px solid #e2e8f0;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .nav-btn:hover {
+            background-color: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn { left: -10px; }
+        .next-btn { right: -10px; }
+
+        .summary-list { text-align: left; font-size: 1.15rem; line-height: 2; }
+
+        @media (max-width: 1100px) {
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+        }
+
+			/* ==========================================
+   🔵 가타카나 전용 섹션 표지 스타일 (파란색 테마)
+========================================== */
+
+			/* 1. 글자인식게임 (GAME 01): 시원한 스카이블루 그라데이션 */
+			.slide.bridge-slide-1 {
+				background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+				border: 2px solid #7dd3fc;
+			}
+
+				.slide.bridge-slide-1 h1 {
+					color: #0284c7 !important;
+					font-size: 3rem;
+					text-shadow: 0 2px 4px rgba(2, 132, 199, 0.1);
+				}
+
+				.slide.bridge-slide-1 p {
+					color: #0369a1 !important;
+				}
+
+			/* 2. 좀더 말해볼까요? (GAME 02): 선명하고 깊이감 있는 블루 그라데이션 */
+			.slide.bridge-slide-2 {
+				background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+				border: 2px solid #60a5fa;
+			}
+
+				.slide.bridge-slide-2 h1 {
+					color: #2563eb !important;
+					font-size: 3rem;
+					text-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+				}
+
+				.slide.bridge-slide-2 p {
+					color: #1d4ed8 !important;
+				}
+    </style>
+</head>
+<body>
+
+    <!-- 🔑 [강사 컨트롤러] (Ctrl + M 토글) -->
+    <div class="teacher-menu" id="teacherMenu">
+        <div class="menu-header">
+            <span class="menu-title">🎓 강사 컨트롤러 [Ctrl+M: 메뉴 토글 | Ctrl+L: 언어 전환]</span>
+            <span class="lang-indicator" id="langIndicator">🇰🇷 한국어판</span>
+        </div>
+        <div class="menu-btn-group">
+            <button class="topic-btn active" id="btn-intro" onclick="switchTopic('intro')">0. 인트로 (가타카나 원리)</button>
+            <button class="topic-btn" id="btn-gojyuon" onclick="switchTopic('gojyuon')">1. ア行 (기본 5음)</button>
+            <button class="topic-btn" id="btn-rules" onclick="switchTopic('rules')">2. 발음 규칙 (장음/외래어)</button>
+        </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="presentation-container">
+
+        <!-- ==============================================================
+       SECTION 0. 인트로 섹션 (intro) - 가타카나의 비밀과 원리
+  ============================================================== -->
+        <!-- Intro 1: 표지 (KR / CN) -->
+        <div class="slide topic-intro lang-kr active">
+          <span class="slide-number">01</span>
+          <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">재미있는 일본어 이야기 💡</p>
+          <h1>가타카나(カタカナ)는 왜 배울까요?</h1>
+          <p>히라가나와는 완전히 다른 모양! 가타카나만의 특징을 알아봅시다.</p>
+        </div>
+        <div class="slide topic-intro lang-cn">
+          <span class="slide-number">01</span>
+          <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">有趣的日文故事 💡</p>
+          <h1>为什么要学习片假名 (Katakana)？</h1>
+          <p>与平假名完全不同的外形！先了解片假名的独特性吧。</p>
+        </div>
+
+        <!-- Intro 2: 히라가나 vs 가타카나 모양 비교 (KR / CN) -->
+        <div class="slide topic-intro lang-kr">
+          <span class="slide-number">02</span>
+          <h2>1. 모양의 차이: [부드러운 곡선 vs 딱딱한 직선]</h2>
+          <p>히라가나는 동글동글 부드럽고, 가타카나는 <b>자로 잰 듯 뾰족뾰족</b>합니다!</p>
+
+          <div class="intro-card-grid">
+            <div class="intro-card">
+              <div class="intro-card-title">🌸 히라가나 (곡선)</div>
+              <p style="font-size: 0.95rem;">부드럽고 여성스러운 선</p>
+              <div class="intro-box-display" style="color:#991b1b; border-color:#fca5a5;">あ · か · さ</div>
+              <p style="font-size: 0.9rem; color: #64748b;">[고유어, 문법 요소 표기]</p>
+            </div>
+            <div class="intro-card active-card">
+              <div class="intro-card-title">⚡ 가타카나 (직선)</div>
+              <p style="font-size: 0.95rem;">각지고 직선적인 또박또박 선</p>
+              <div class="intro-box-display">ア · カ · サ</div>
+              <p style="font-size: 0.9rem; color: #0284c7;">[외래어, 강조, 의성어 표기!]</p>
+            </div>
+          </div>
+        </div>
+        <div class="slide topic-intro lang-cn">
+          <span class="slide-number">02</span>
+          <h2>1. 外形的差异：[柔和曲线 vs 刚硬直线]</h2>
+          <p>平假名线条圆润柔和，片假名则像<b>用尺子画出的刚硬直线</b>！</p>
+
+          <div class="intro-card-grid">
+            <div class="intro-card">
+              <div class="intro-card-title">🌸 平假名 (曲线)</div>
+              <p style="font-size: 0.95rem;">线条柔和与流畅</p>
+              <div class="intro-box-display" style="color:#991b1b; border-color:#fca5a5;">あ · か · さ</div>
+              <p style="font-size: 0.9rem; color: #64748b;">[用于固有词与语法]</p>
+            </div>
+            <div class="intro-card active-card">
+              <div class="intro-card-title">⚡ 片假名 (直线)</div>
+              <p style="font-size: 0.95rem;">棱角分明与刚硬</p>
+              <div class="intro-box-display">ア · カ · サ</div>
+              <p style="font-size: 0.9rem; color: #0284c7;">[用于外来语、强调词！]</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Intro 3: 가타카나는 언제 쓰나요? (KR / CN) -->
+        <div class="slide topic-intro lang-kr">
+          <span class="slide-number">03</span>
+          <h2>2. 가타카나는 언제 사용할까요?</h2>
+          <p>가타카나를 알면 일본 거리의 메뉴판과 간판이 읽힙니다!</p>
+          <div class="compare-box">
+            <p>🍕 <b>외래어 표기:</b> 커피 (コーヒー), 아이스크림 (アイス)</p>
+            <p>🏷️ <b>외국 이름/지명:</b> 한국 (コリア), 서울 (ソウル), 톰 (トム)</p>
+            <p>💥 <b>강조 및 의성어:</b> 멍멍 (ワンワン), 반짝반짝 (キラキラ)</p>
+          </div>
+        </div>
+        <div class="slide topic-intro lang-cn">
+          <span class="slide-number">03</span>
+          <h2>2. 片假名在什么时候使用？</h2>
+          <p>学会片假名，就能看懂日本街头的招牌与菜单！</p>
+          <div class="compare-box">
+            <p>🍕 <b>外来语 (外语词):</b> 咖啡 (コーヒー), 冰淇淋 (アイス)</p>
+            <p>🏷️ <b>外国人名/地名:</b> 中国 (チャイナ), 北京 (ペキン)</p>
+            <p>💥 <b>强调与拟声词:</b> 汪汪 (ワンワン), 闪硕 (キラキラ)</p>
+          </div>
+        </div>
+
+        <!-- Intro 4: 한자의 '조각'에서 탄생 (KR / CN) -->
+        <div class="slide topic-intro lang-kr">
+          <span class="slide-number">04</span>
+          <h2>3. 한자의 '조각(일부분)'을 떼어낸 글자!</h2>
+          <p>한자 전체를 흘려 쓴 히라가나와 달리, 한자의 일부분만 떼어내 만든 글자입니다.</p>
+          <div class="compare-box" style="text-align: center;">
+            <p style="font-size: 1.5rem; font-weight: bold; color: #1e293b;">伊 (저 이) ➡ 왼쪽 [亻(인변)] 조각만 추출 ➡ <span class="highlight" style="font-size: 2.2rem;">イ</span></p>
+            <p style="font-size: 1rem; color: #64748b; margin-top: 8px;">* 그래서 이름도 '조각/부분'이라는 뜻의 가타(片)카나랍니다!</p>
+          </div>
+          <p style="margin-top: 15px; font-weight: bold; color: #0284c7;">🚀 그럼 가장 기본인 [ア행]부터 시원하게 읽어볼까요?</p>
+        </div>
+        <div class="slide topic-intro lang-cn">
+          <span class="slide-number">04</span>
+          <h2>3. 从汉字的“局部偏旁”演变而来！</h2>
+          <p>与全字草写的平假名不同，片假名截取了汉字的一部分偏旁部首。</p>
+          <div class="compare-box" style="text-align: center;">
+            <p style="font-size: 1.5rem; font-weight: bold; color: #1e293b;">伊 (伊人) ➡ 取左侧 [亻(单人旁)] 部首 ➡ <span class="highlight" style="font-size: 2.2rem;">イ</span></p>
+            <p style="font-size: 1rem; color: #64748b; margin-top: 8px;">* “片”字本身就是“碎片、局部”的意思！</p>
+          </div>
+          <p style="margin-top: 15px; font-weight: bold; color: #0284c7;">🚀 那么，让我们从最基础的【ア行】开始学习吧！</p>
+        </div>
+
+
+        <!-- ==============================================================
+       SECTION 1. ア行 기본 글자 (gojyuon) - 한국어판 & 중국어판
+  ============================================================== -->
+        <!-- 1-1. 표지 (KR) -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">01</span>
+          <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">일본어 가타카나 (Katakana)</p>
+          <h1>ア行 (아행) 기초 마스터</h1>
+          <p>글자 하나씩 모양과 대표 외래어 단어를 연습해 봅시다!</p>
+        </div>
+        <!-- 1-1. 표지 (CN) -->
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">01</span>
+          <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">日文片假名 (Katakana)</p>
+          <h1>ア行 (A行) 基础掌握</h1>
+          <p>逐字学习字形与例词对比，轻松掌握！</p>
+        </div>
+
+        <!-- ---------------- ア ---------------- -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">02</span>
+          <h2>ア行 (1/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">ア</div>
+            <div class="pron-badge">아 (a)</div>
+            <div class="char-desc">언덕(阿) 한자의 변 모양에서 유래된 '아' 발음입니다.</div>
+            <div class="example-tag">단어 예시: アイス (아이스 = 아이스크림)</div>
+          </div>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">02</span>
+          <h2>ア行 (1/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">ア</div>
+            <div class="pron-badge">a (啊)</div>
+            <div class="char-desc">取自汉字“阿”的偏旁，发音为 "a"。</div>
+            <div class="example-tag">单词示例: アイス (aisu = 冰淇淋)</div>
+          </div>
+        </div>
+
+        <!-- ---------------- イ ---------------- -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">03</span>
+          <h2>ア行 (2/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">イ</div>
+            <div class="pron-badge">이 (i)</div>
+            <div class="char-desc">한자 '사람인 변(亻)' 모양과 똑같이 생긴 '이' 발음입니다.</div>
+            <div class="example-tag">단어 예시: インク (인쿠 = 잉크)</div>
+          </div>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">03</span>
+          <h2>ア行 (2/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">イ</div>
+            <div class="pron-badge">i (衣)</div>
+            <div class="char-desc">取自汉字“伊”的单人旁“亻”，发音为 "i"。</div>
+            <div class="example-tag">单词示例: インク (inku = 墨水)</div>
+          </div>
+        </div>
+
+        <!-- ---------------- ウ ---------------- -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">04</span>
+          <h2>ア行 (3/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">ウ</div>
+            <div class="pron-badge">우 (u)</div>
+            <div class="char-desc">한자 '갓머리(宀)' 상단 부분에서 유래된 '우' 발음입니다.</div>
+            <div class="example-tag">단어 예시: ウエイト (우에이토 = 웨이트/무게)</div>
+          </div>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">04</span>
+          <h2>ア行 (3/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">ウ</div>
+            <div class="pron-badge">u (乌)</div>
+            <div class="char-desc">取自汉字“宇”的宝盖头“宀”，发音为 "u"。</div>
+            <div class="example-tag">单词示例: ウエイト (ueito = 重量/健身)</div>
+          </div>
+        </div>
+
+        <!-- ---------------- エ ---------------- -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">05</span>
+          <h2>ア行 (4/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">エ</div>
+            <div class="pron-badge">에 (e)</div>
+            <div class="char-desc">한자 '장인 공(工)' 자와 똑같이 생긴 '에' 발음입니다.</div>
+            <div class="example-tag">단어 예시: エアコン (에아콘 = 에어컨)</div>
+          </div>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">05</span>
+          <h2>ア行 (4/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">エ</div>
+            <div class="pron-badge">e (诶)</div>
+            <div class="char-desc">与汉字“工”字外形完全相同，发音为 "e"。</div>
+            <div class="example-tag">单词示例: エアコン (eakon = 空调)</div>
+          </div>
+        </div>
+
+        <!-- ---------------- オ ---------------- -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">06</span>
+          <h2>ア行 (5/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">オ</div>
+            <div class="pron-badge">오 (o)</div>
+            <div class="char-desc">한자 '나 오(於)' 자의 좌측 부분에서 유래된 '오' 발음입니다.</div>
+            <div class="example-tag">단어 예시: オアシス (오아시스 = 오아시스)</div>
+          </div>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">06</span>
+          <h2>ア行 (5/5)</h2>
+          <div class="single-char-card">
+            <div class="big-char">オ</div>
+            <div class="pron-badge">o (喔)</div>
+            <div class="char-desc">取自汉字“於”的左侧笔画，发音为 "o"。</div>
+            <div class="example-tag">单词示例: オアシス (oasisu = 绿洲)</div>
+          </div>
+        </div>
+
+
+
+        <!-- 🎯 1글자 퀴즈 표지 (가타카나) -->
+        <div class="slide topic-gojyuon lang-kr bridge-slide-1">
+          <span class="slide-number">GAME 01</span>
+          <p style="font-size: 1.2rem; font-weight: bold;">말하는게 재미있다! 세모일본어 💡</p>
+          <h1>글자인식게임!</h1>
+          <p>배운 글자를 눈으로 보고 입으로 빠르게 외쳐봅시다!</p>
+        </div>
+
+
+
+        <!-- 🎲 1글자 랜덤 퀴즈 (KR / CN) -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">퀴즈</span>
+          <h2>뭐예요? (가타카나 1글자)</h2>
+          <p>배운 가타카나 글자를 보고 소리 내어 읽어보세요!</p>
+
+          <div class="single-char-card">
+            <div class="big-char" id="quiz-char-kr">エ</div>
+
+            <div id="quiz-answer-kr" style="display: none; width: 100%; margin-top: 10px;">
+              <div class="pron-badge" id="quiz-pron-kr" style="font-size: 1.1rem; line-height: 1.5;">에 (e)</div>
+              <div class="example-tag" id="quiz-word-kr">한자 '工(공)'자와 똑같이 생긴 글자입니다.</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button class="answer-btn" onclick="showQuizAnswer('kr')">정답 확인</button>
+            <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomQuiz()">🎲 다음 문제</button>
+          </div>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">测验</span>
+          <h2>这是什么？(片假名单字)</h2>
+          <p>看屏幕上的片假名，试着直接读出发音。</p>
+
+          <div class="single-char-card">
+            <div class="big-char" id="quiz-char-cn">エ</div>
+
+            <div id="quiz-answer-cn" style="display: none; width: 100%; margin-top: 10px;">
+              <div class="pron-badge" id="quiz-pron-cn" style="font-size: 1.1rem; line-height: 1.5;">e (诶)</div>
+              <div class="example-tag" id="quiz-word-cn">外形与汉字“工”完全相同。</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button class="answer-btn" onclick="showQuizAnswer('cn')">查看答案</button>
+            <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomQuiz()">🎲 下一题</button>
+          </div>
+        </div>
+
+
+
+        <!-- 🎯 [섹션 브릿지] 단어 퀴즈 시작 표지 (KR / CN) -->
+        <!-- 🎯 단어 퀴즈 표지 (가타카나) -->
+        <div class="slide topic-gojyuon lang-kr bridge-slide-2">
+          <span class="slide-number">GAME 02</span>
+          <p style="font-size: 1.2rem; font-weight: bold;">한 걸음 더! 레벨업 🚀</p>
+          <h1>좀더 말해볼까요?</h1>
+          <p>이제 2글자 이상 단어를 이어서 소리 내어 읽어봅시다!</p>
+        </div>
+        <div class="slide topic-gojyuon lang-cn bridge-slide-2">
+          <span class="slide-number">GAME 02</span>
+          <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">更进一步！ Level Up 🚀</p>
+          <h1>试着多说一点吧！</h1>
+          <p>现在来连读两个字以上的单词吧！</p>
+        </div>
+
+        <!-- 🎲 단어 랜덤 퀴즈 (KR / CN) -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">단어 퀴즈</span>
+          <h2>외래어 단어 읽기!</h2>
+          <p>화면에 나오는 가타카나 단어를 크게 발음해 보세요.</p>
+
+          <div class="single-char-card" style="max-width: 500px;">
+            <div class="big-char" id="word-char-kr" style="font-size: 4.5rem;">アイス</div>
+
+            <div id="word-answer-kr" style="display: none; width: 100%; margin-top: 10px;">
+              <div class="pron-badge" id="word-pron-kr">아이스 (a-i-su)</div>
+              <div class="example-tag" id="word-guide-kr">ア(아) + イ(이) + ス(스)를 매끄럽게 이어 읽습니다.</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button class="answer-btn" onclick="showWordAnswer('kr')">정답 확인</button>
+            <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomWord()">🎲 다음 단어</button>
+          </div>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">单词测验</span>
+          <h2>外来语单词朗读！</h2>
+          <p>看屏幕上的片假名单词，试着直接读出来。</p>
+
+          <div class="single-char-card" style="max-width: 500px;">
+            <div class="big-char" id="word-char-cn" style="font-size: 4.5rem;">アイス</div>
+
+            <div id="word-answer-cn" style="display: none; width: 100%; margin-top: 10px;">
+              <div class="pron-badge" id="word-pron-cn">a-i-su</div>
+              <div class="example-tag" id="word-guide-cn">顺畅连读 ア(a) + イ(i) + ス(su)。</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button class="answer-btn" onclick="showWordAnswer('cn')">查看答案</button>
+            <button class="answer-btn" style="background-color: #10b981;" onclick="nextRandomWord()">🎲 下一个单词</button>
+          </div>
+        </div>
+
+        <!-- 정리 (KR/CN) -->
+        <div class="slide topic-gojyuon lang-kr">
+          <span class="slide-number">08</span>
+          <h2>ア行 정리</h2>
+          <ul class="summary-list">
+            <li>✅ <b>ア (아)</b> : アイス (아이스크림)</li>
+            <li>✅ <b>イ (이)</b> : インク (잉크)</li>
+            <li>✅ <b>ウ (우)</b> : ウエイト (웨이트)</li>
+            <li>✅ <b>エ (에)</b> : エアコン (에어컨)</li>
+            <li>✅ <b>オ (오)</b> : オアシス (오아시스)</li>
+          </ul>
+        </div>
+        <div class="slide topic-gojyuon lang-cn">
+          <span class="slide-number">08</span>
+          <h2>ア行 小结</h2>
+          <ul class="summary-list">
+            <li>✅ <b>ア (a)</b> : アイス (冰淇淋)</li>
+            <li>✅ <b>イ (i)</b> : インク (墨水)</li>
+            <li>✅ <b>ウ (u)</b> : ウエイト (重量)</li>
+            <li>✅ <b>エ (e)</b> : エアコン (空调)</li>
+            <li>✅ <b>オ (o)</b> : オアシス (绿洲)</li>
+          </ul>
+        </div>
+
+
+        <!-- ==============================================================
+       SECTION 2. 가타카나 발음 규칙 (rules) - 장음표(ー) & 외래어
+  ============================================================== -->
+        <div class="slide topic-rules lang-kr">
+          <span class="slide-number">01</span>
+          <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">가타카나 특별 규칙 (Rules)</p>
+          <h1>가타카나의 장음표 (ー)</h1>
+          <p>가타카나 단어에서 자주 보이는 막대기(ー)의 비밀을 알아봅시다.</p>
+        </div>
+        <div class="slide topic-rules lang-cn">
+          <span class="slide-number">01</span>
+          <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">片假名特别规则 (Rules)</p>
+          <h1>片假名的长音符号 (ー)</h1>
+          <p>了解片假名外来语中极为常见的横线(ー)发音规则。</p>
+        </div>
+
+        <div class="slide topic-rules lang-kr">
+          <span class="slide-number">02</span>
+          <h2>1. 장음표 (ー) 란?</h2>
+          <p>앞 글자의 발음을 <b>1박자 길게 쭉 늘려서</b> 발음하는 표기입니다.</p>
+          <div class="compare-box">
+            <p>・ <b>ケーキ</b> (케-키) : 케이크 [케를 길게!]</p>
+            <p>・ <b>コーヒー</b> (코-히-) : 커피 [코와 히를 둘 다 길게!]</p>
+            <p>・ <b>タクシー</b> (타쿠시-) : 택시 [시를 길게!]</p>
+          </div>
+        </div>
+        <div class="slide topic-rules lang-cn">
+          <span class="slide-number">02</span>
+          <h2>1. 什么是长音符号 (ー)？</h2>
+          <p>表示将前一个假名的发音<b>拉长延伸一拍</b>：</p>
+          <div class="compare-box">
+            <p>・ <b>ケーキ</b> (ke-ki) : 蛋糕 [ke 拉长发音]</p>
+            <p>・ <b>コーヒー</b> (ko-hi-) : 咖啡 [ko 和 hi 均拉长]</p>
+            <p>・ <b>タクシー</b> (takushi-) : 出租车 [shi 拉长发音]</p>
+          </div>
+        </div>
+
+        <div class="slide topic-rules lang-kr">
+          <span class="slide-number">03</span>
+          <h2>가타카나 핵심 정리</h2>
+          <ul class="summary-list">
+            <li>✅ <b>가타카나</b> : 외래어, 외국인 이름, 강조 표시에 주로 사용</li>
+            <li>✅ <b>장음 (ー)</b> : 막대기 기호가 보이면 앞 소리를 길게 늘여 발음!</li>
+          </ul>
+        </div>
+        <div class="slide topic-rules lang-cn">
+          <span class="slide-number">03</span>
+          <h2>片假名要点小结</h2>
+          <ul class="summary-list">
+            <li>✅ <b>片假名</b> : 主要用于外来语、外国人名及强调表示</li>
+            <li>✅ <b>长音 (ー)</b> : 看到横线符号时，将前一个音节拉长一拍！</li>
+          </ul>
+        </div>
+
+      </div>
+
+        <!-- 슬라이드 바깥 화살표 버튼 -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <script>
+        let currentLang = 'kr';     // 'kr' 또는 'cn'
+        let currentTopic = 'intro'; // 기본 주제: 'intro'
+        let currentSlideIndex = 0;
+
+        function getActiveSlides() {
+            return document.querySelectorAll(`.topic-${currentTopic}.lang-${currentLang}`);
+        }
+
+        // 🌟 슬라이드 번호 자동 계산
+        function updateSlideNumbers() {
+            const activeSlides = getActiveSlides();
+            const total = activeSlides.length;
+
+            activeSlides.forEach((slide, index) => {
+                const numElem = slide.querySelector('.slide-number');
+                if (numElem) {
+                    const currentStr = String(index + 1).padStart(2, '0');
+                    const totalStr = String(total).padStart(2, '0');
+                    numElem.innerText = `${currentStr} / ${totalStr}`;
+                }
+            });
+        }
+
+        function showSlide(index) {
+            const activeSlides = getActiveSlides();
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            
+            if (activeSlides && activeSlides[index]) {
+                activeSlides[index].classList.add('active');
+            }
+            updateSlideNumbers();
+        }
+
+        function changeSlide(direction) {
+            const activeSlides = getActiveSlides();
+            if (activeSlides.length === 0) return;
+
+            currentSlideIndex += direction;
+
+            if (currentSlideIndex < 0) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex >= activeSlides.length) {
+                currentSlideIndex = activeSlides.length - 1;
+            }
+            showSlide(currentSlideIndex);
+        }
+
+        function switchTopic(topicName) {
+            currentTopic = topicName;
+            currentSlideIndex = 0;
+
+            const btnIntro = document.getElementById('btn-intro');
+            const btnGojyuon = document.getElementById('btn-gojyuon');
+            const btnRules = document.getElementById('btn-rules');
+
+            if (btnIntro) btnIntro.classList.toggle('active', topicName === 'intro');
+            if (btnGojyuon) btnGojyuon.classList.toggle('active', topicName === 'gojyuon');
+            if (btnRules) btnRules.classList.toggle('active', topicName === 'rules');
+
+            showSlide(currentSlideIndex);
+        }
+
+        function toggleLanguage() {
+            currentLang = (currentLang === 'kr') ? 'cn' : 'kr';
+            
+            const langIndicator = document.getElementById('langIndicator');
+            if (langIndicator) {
+                langIndicator.innerText = (currentLang === 'kr') ? '🇰🇷 한국어판' : '🇨🇳 중국어판';
+            }
+
+            showSlide(currentSlideIndex);
+        }
+
+        // 키보드 단축키
+        document.addEventListener('keydown', (e) => {
+            const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+            if (isCtrlOrCmd && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
+                e.preventDefault();
+                const menu = document.getElementById('teacherMenu');
+                if (menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            }
+
+            if (isCtrlOrCmd && (e.key === 'l' || e.key === 'L' || e.key === 'ㅣ')) {
+                e.preventDefault();
+                toggleLanguage();
+            }
+
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        function toggleAnswer(answerId) {
+            const answer = document.getElementById(answerId);
+            if (answer) {
+                answer.style.display = (answer.style.display === 'none' || answer.style.display === '') ? 'block' : 'none';
+            }
+        }
+
+        /* ==============================================================
+           📦 퀴즈 데이터 영역 (가타카나 버전)
+        ============================================================== */
+        // 1. 가타카나 1글자 퀴즈 데이터
+        const katakanaQuizData = [
+            {
+                char: "ア",
+                krPron: "아 (a)",
+                krWord: "언덕(阿) 한자의 변 모양에서 유래되었습니다.",
+                cnPron: "a (啊)",
+                cnWord: "取自汉字'阿'的偏旁。"
+            },
+            {
+                char: "イ",
+                krPron: "이 (i)",
+                krWord: "사람인 변(亻) 모양과 완전히 같습니다.",
+                cnPron: "i (衣)",
+                cnWord: "取自汉字'伊'的单人旁'亻'。"
+            },
+            {
+                char: "ウ",
+                krPron: "우 (u)",
+                krWord: "갓머리(宀) 부수 상단에서 유래되었습니다.",
+                cnPron: "u (乌)",
+                cnWord: "取自汉字'宇'的宝盖头'宀'。"
+            },
+            {
+                char: "エ",
+                krPron: "에 (e)",
+                krWord: "한자 '장인 공(工)' 자와 똑같이 생겼습니다.",
+                cnPron: "e (诶)",
+                cnWord: "与汉字'工'外形完全相同。"
+            },
+            {
+                char: "オ",
+                krPron: "오 (o)",
+                krWord: "한자 '於(어)' 자의 좌측 모양에서 유래되었습니다.",
+                cnPron: "o (喔)",
+                cnWord: "取自汉字'於'的左侧笔画。"
+            }
+        ];
+
+        // 2. 가타카나 단어 퀴즈 데이터
+        const wordQuizData = [
+            {
+                word: "アイス",
+                krPron: "아이스 (a-i-su)",
+                krWord: "ア(아) + イ(이) + ス(스)를 매끄럽게 이어 발음합니다.",
+                cnPron: "a-i-su",
+                cnWord: "顺畅连读 ア(a) + イ(i) + ス(su)。"
+            },
+            {
+                word: "インク",
+                krPron: "인쿠 (i-n-ku)",
+                krWord: "イ(이)에 받침 ン(ㄴ)을 붙여 인쿠라고 발음합니다.",
+                cnPron: "i-n-ku",
+                cnWord: "清晰读出 インク (墨水)。"
+            },
+            {
+                word: "エアコン",
+                krPron: "에아콘 (e-a-ko-n)",
+                krWord: "에어컨을 뜻하는 외래어 단어입니다.",
+                cnPron: "e-a-ko-n",
+                cnWord: "表示空调的外来语单词。"
+            },
+            {
+                word: "オアシス",
+                krPron: "오아시스 (o-a-si-su)",
+                krWord: "4글자를 박자에 맞춰 또박또박 읽어줍니다.",
+                cnPron: "o-a-si-su",
+                cnWord: "按节拍清晰连读四个假名。"
+            },
+            {
+                word: "ケーキ",
+                krPron: "케-키 (ke-ki)",
+                krWord: "중간의 막대기(ー)는 케를 1박자 길게 늘여 발음합니다.",
+                cnPron: "ke-ki",
+                cnWord: "中间的横线(ー)表示将 ke 拉长发音。"
+            }
+        ];
+
+        // 🎲 1글자 랜덤 퀴즈
+        function nextRandomQuiz() {
+            const randomIndex = Math.floor(Math.random() * katakanaQuizData.length);
+            const item = katakanaQuizData[randomIndex];
+
+            document.getElementById('quiz-char-kr').innerText = item.char;
+            document.getElementById('quiz-pron-kr').innerText = item.krPron;
+            document.getElementById('quiz-word-kr').innerText = item.krWord;
+            document.getElementById('quiz-answer-kr').style.display = 'none';
+
+            document.getElementById('quiz-char-cn').innerText = item.char;
+            document.getElementById('quiz-pron-cn').innerText = item.cnPron;
+            document.getElementById('quiz-word-cn').innerText = item.cnWord;
+            document.getElementById('quiz-answer-cn').style.display = 'none';
+        }
+
+        function showQuizAnswer(lang) {
+            document.getElementById(`quiz-answer-${lang}`).style.display = 'block';
+        }
+
+        // 🎲 단어 랜덤 퀴즈
+        function nextRandomWord() {
+            const randomIndex = Math.floor(Math.random() * wordQuizData.length);
+            const item = wordQuizData[randomIndex];
+
+            document.getElementById('word-char-kr').innerText = item.word;
+            document.getElementById('word-pron-kr').innerText = item.krPron;
+            document.getElementById('word-guide-kr').innerText = item.krWord;
+            document.getElementById('word-answer-kr').style.display = 'none';
+
+            document.getElementById('word-char-cn').innerText = item.word;
+            document.getElementById('word-pron-cn').innerText = item.cnPron;
+            document.getElementById('word-guide-cn').innerText = item.cnWord;
+            document.getElementById('word-answer-cn').style.display = 'none';
+        }
+
+        function showWordAnswer(lang) {
+            document.getElementById(`word-answer-${lang}`).style.display = 'block';
+        }
+
+        // 초기 세팅
+        window.addEventListener('DOMContentLoaded', () => {
+            nextRandomQuiz();
+            nextRandomWord();
+            showSlide(currentSlideIndex);
+        });
+    </script>
+</body>
+</html>

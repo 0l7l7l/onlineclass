@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일본어 기초 문법 슬라이드</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 🌟 [강사 전용 미니 메뉴판] 기본적으로 hidden 상태 */
+        .teacher-menu {
+    display: none; /* Ctrl + M 으로 토글 */
+    position: absolute;
+    top: 20px;
+    background-color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    border: 2px solid #3498db;
+    animation: fadeIn 0.3s ease;
+    
+    /* 🌟 크기 고정 핵심 설정 */
+    width: 90vw;
+    max-width: 520px;     /* 상자 최대 폭 고정 */
+    max-height: 160px;    /* 상자 최대 높이 고정 (넘치면 스크롤) */
+    overflow-y: auto;     /* 버튼이 많아지면 내부 스크롤 생성 */
+}
+
+.menu-title {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    position: sticky;
+    top: 0;
+}
+
+/* 주제 선택 드롭다운 스타일 */
+.topic-select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #2c3e50;
+    background-color: #f8fafc;
+    border: 1.5px solid #3498db;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.topic-select:focus {
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+        /* 버튼들을 촘촘하고 예쁘게 자동 배치 */
+.menu-btn-group {
+    display: flex;
+    flex-wrap: wrap; /* 버튼이 넘치면 자동으로 다음 줄로 내려감 */
+    gap: 8px;
+    justify-content: center;
+}
+
+.topic-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #475569;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap; /* 버튼 글자 줄바꿈 방지 */
+}
+
+.topic-btn:hover {
+    background-color: #e2e8f0;
+}
+
+.topic-btn.active {
+    background-color: #3498db;
+    color: #ffffff;
+    border-color: #3498db;
+}
+
+        /* 슬라이드 감싸는 외부 컨테이너 (화살표 외곽 배치용) */
+        .wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1160px;
+            padding: 0 20px;
+        }
+
+        /* 슬라이드 본체 컨테이너 */
+        .presentation-container {
+            position: relative;
+            width: 80vw;
+            max-width: 1000px;
+            height: 70vh;
+            max-height: 600px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* 슬라이드 개별 요소 */
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px 80px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 타이틀 및 텍스트 스타일 */
+        .slide-number {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.4rem;
+            color: #555;
+            line-height: 1.8;
+            word-break: keep-all;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .japanese {
+            font-size: 1.8rem;
+            color: #2980b9;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* 이미지 박스 */
+        .img-placeholder {
+            width: 200px;
+            height: 150px;
+            background-color: #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #718096;
+            font-weight: bold;
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+
+        /* 예문 박스 */
+        .example-box {
+            background-color: #f8fafc;
+            border-left: 5px solid #3498db;
+            padding: 20px 30px;
+            border-radius: 8px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 15px;
+        }
+
+        /* 정답 보기 버튼 */
+        .answer-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: bold;
+        }
+
+        .answer-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* 🌟 슬라이드 '바깥'으로 배치된 네비게이션 화살표 버튼 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ffffff;
+            color: #2c3e50;
+            border: 1px solid #e2e8f0;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .nav-btn:hover {
+            background-color: #3498db;
+            color: #ffffff;
+            border-color: #3498db;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn { left: -10px; }
+        .next-btn { right: -10px; }
+
+        /* 요약 리스트 */
+        .summary-list {
+            text-align: left;
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+
+        @media (max-width: 1100px) {
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔑 [강사 전용 메뉴판] (Ctrl + M 으로 토글) -->
+    <div class="teacher-menu" id="teacherMenu">
+        <div class="menu-title">🎓 강사 컨트롤러 (주제 전환)</div>
+        <div class="menu-btn-group">
+            <button class="topic-btn active" id="btn-topic1" onclick="switchTopic('desu')">1. ~です (~입니다)</button>
+            <button class="topic-btn" id="btn-topic2" onclick="switchTopic('desuka')">2. ~ですか (~입니까?)</button>
+<!-- 💡 주제가 늘어나면 아래처럼 버튼만 계속 추가하시면 됩니다! -->
+        <!-- <button class="topic-btn" id="btn-topic3" onclick="switchTopic('janai')">3. ~じゃないです</button> -->
+        <!-- <button class="topic-btn" id="btn-topic4" onclick="switchTopic('deshita')">4. ~でした</button> -->
+        </div>
+    </div>
+
+    <!-- 외부 감싸는 래퍼 -->
+    <div class="wrapper">
+        
+        <div class="presentation-container">
+            
+            <!-- ==========================================
+                 주제 1: ~です 슬라이드 세트 (topic-desu)
+            ========================================== -->
+            <div class="slide topic-desu active">
+                <span class="slide-number">01 / 06</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">오늘의 일본어 문법</p>
+                <h1>~です (~입니다)</h1>
+                <p>명사 뒤에 붙어 정중한 표현을 만드는 법을 알아봅시다.</p>
+            </div>
+
+            <div class="slide topic-desu">
+                <span class="slide-number">02 / 06</span>
+                <h2>1. 문법 설명</h2>
+                <p><span class="highlight">[명사] + です</span></p>
+                <p style="margin-top: 15px;">
+                    '~입니다'라는 뜻으로, 문장 끝에 붙어 단정을 나타내는 <b>정중형(존댓말)</b> 표현입니다.
+                </p>
+            </div>
+
+            <div class="slide topic-desu">
+                <span class="slide-number">03 / 06</span>
+                <h2>2. 오늘 배울 단어</h2>
+                <div class="img-placeholder">학생 이미지 👨‍🎓</div>
+                <p>학생 = <span class="japanese">がくせい (가쿠세-)</span></p>
+            </div>
+
+            <div class="slide topic-desu">
+                <span class="slide-number">04 / 06</span>
+                <h2>3. 예문 연습</h2>
+                <div class="example-box">
+                    <p><b>1-1. 한국어:</b> 저는 학생입니다.</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p><b>1-2. 일본어:</b> <span class="japanese" style="font-size: 1.4rem;">わたしは <span class="highlight">がくせい です</span>。</span></p>
+                    <p style="font-size: 0.95rem; color: #777; margin-top: 5px;">(와타시와 가쿠세-데스)</p>
+                </div>
+            </div>
+
+            <div class="slide topic-desu">
+                <span class="slide-number">05 / 06</span>
+                <h2>4. 확인 문제</h2>
+                <p>다음 문장을 일본어로 바꿔보세요.</p>
+                <p style="margin-top: 15px; font-weight: bold; font-size: 1.6rem;">"의사입니다." (의사 = いしゃ)</p>
+                
+                <button class="answer-btn" onclick="toggleAnswer('ans1')">정답 확인하기</button>
+                <p id="ans1" class="japanese" style="display: none; margin-top: 15px;">いしゃです。</p>
+            </div>
+
+            <div class="slide topic-desu">
+                <span class="slide-number">06 / 06</span>
+                <h2>5. 오늘 배운 내용 정리</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>~です</b> : ~입니다 (정중형)</li>
+                    <li>✅ <b>がくせい</b> : 학생</li>
+                    <li>✅ <b>がくせい です</b> : 학생입니다</li>
+                </ul>
+            </div>
+
+
+            <!-- ==========================================
+                 주제 2: ~ですか 슬라이드 세트 (topic-desuka)
+            ========================================== -->
+            <div class="slide topic-desuka">
+                <span class="slide-number">01 / 06</span>
+                <p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">오늘의 일본어 문법</p>
+                <h1>~ですか (~입니까?)</h1>
+                <p>질문(의문문)을 만드는 가장 쉬운 방법을 알아봅시다.</p>
+            </div>
+
+            <div class="slide topic-desuka">
+                <span class="slide-number">02 / 06</span>
+                <h2>1. 문법 설명</h2>
+                <p><span class="highlight">[명사] + ですか</span></p>
+                <p style="margin-top: 15px;">
+                    '~입니다'라는 정중형 표현 뒤에 질문을 뜻하는 조사 <span class="highlight">か(카)</span>를 붙이면<br>
+                    <b>'~입니까?'</b>라는 정중한 질문(의문문)이 됩니다.
+                </p>
+            </div>
+
+            <div class="slide topic-desuka">
+                <span class="slide-number">03 / 06</span>
+                <h2>2. 오늘 배울 단어</h2>
+                <div class="img-placeholder">선생님 이미지 👩‍🏫</div>
+                <p>선생님 = <span class="japanese">せんせい (센세-)</span></p>
+            </div>
+
+            <div class="slide topic-desuka">
+                <span class="slide-number">04 / 06</span>
+                <h2>3. 예문 연습</h2>
+                <div class="example-box">
+                    <p><b>1-1. 한국어:</b> 선생님입니까?</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e2e8f0;">
+                    <p><b>1-2. 일본어:</b> <span class="japanese" style="font-size: 1.4rem;">せんせい <span class="highlight">ですか</span>。</span></p>
+                    <p style="font-size: 0.95rem; color: #777; margin-top: 5px;">(센세- 데스카?)</p>
+                </div>
+            </div>
+
+            <div class="slide topic-desuka">
+                <span class="slide-number">05 / 06</span>
+                <h2>4. 확인 문제</h2>
+                <p>다음 문장을 일본어로 바꿔보세요.</p>
+                <p style="margin-top: 15px; font-weight: bold; font-size: 1.6rem;">"학생입니까?" (학생 = がくせい)</p>
+                
+                <button class="answer-btn" onclick="toggleAnswer('ans2')">정답 확인하기</button>
+                <p id="ans2" class="japanese" style="display: none; margin-top: 15px;">がくせい ですか。</p>
+            </div>
+
+            <div class="slide topic-desuka">
+                <span class="slide-number">06 / 06</span>
+                <h2>5. 오늘 배운 내용 정리</h2>
+                <ul class="summary-list">
+                    <li>✅ <b>~ですか</b> : ~입니까? (의문문)</li>
+                    <li>✅ <b>せんせい</b> : 선생님</li>
+                    <li>✅ <b>せんせい ですか</b> : 선생님입니까?</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 슬라이드 박스 '바깥'의 화살표 버튼 -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+
+    </div>
+
+    <script>
+        let currentTopic = 'desu'; // 기본 주제
+        let currentSlideIndex = 0; // 현재 슬라이드 번호
+
+        // 현재 활성화된 주제의 슬라이드 목록만 가져오는 함수
+        function getActiveSlides() {
+            return document.querySelectorAll(`.topic-${currentTopic}`);
+        }
+
+        // 슬라이드 화면에 보여주기
+        function showSlide(index) {
+            const activeSlides = getActiveSlides();
+            
+            // 모든 슬라이드 우선 비활성화
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            
+            // 지정된 인덱스의 슬라이드 활성화
+            if (activeSlides[index]) {
+                activeSlides[index].classList.add('active');
+            }
+        }
+
+        // 이전/다음 버튼 클릭 시
+        function changeSlide(direction) {
+            const activeSlides = getActiveSlides();
+            currentSlideIndex += direction;
+
+            if (currentSlideIndex < 0) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex >= activeSlides.length) {
+                currentSlideIndex = activeSlides.length - 1;
+            }
+            showSlide(currentSlideIndex);
+        }
+
+        // 🌟 주제 변경 함수 (메뉴판 클릭 시 호출)
+        function switchTopic(topicName) {
+            currentTopic = topicName;
+            currentSlideIndex = 0; // 첫 슬라이드로 리셋
+
+            // 버튼 스타일 제어
+            // 모든 주제 버튼 활성화 해제 후 선택된 버튼만 강조
+    document.querySelectorAll('.topic-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+            // 슬라이드 다시 보여주기
+            showSlide(currentSlideIndex);
+        }
+
+        // 🔑 키보드 단축키 이벤트 (Ctrl + M 및 방향키)
+        document.addEventListener('keydown', (e) => {
+            // Ctrl + M 또는 Cmd + M (맥북 대응) 눌렀을 때 강사 메뉴 토글
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
+                e.preventDefault(); // 기본 브라우저 기능 방지
+                const menu = document.getElementById('teacherMenu');
+                if (menu.style.display === 'block') {
+                    menu.style.display = 'none';
+                } else {
+                    menu.style.display = 'block';
+                }
+            }
+
+            // 좌우 방향키 넘기기
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // 정답 보기 토글 기능
+        function toggleAnswer(answerId) {
+            const answer = document.getElementById(answerId);
+            if (answer.style.display === 'none' || answer.style.display === '') {
+                answer.style.display = 'block';
+            } else {
+                answer.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
