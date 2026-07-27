@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>명가(銘烤) 프리미엄 K-BBQ QR 주문</title>
+    <style>
+        /* ==========================================================================
+           RESET & DESIGN SYSTEM
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        :root {
+            --bg-color: #0d0d0f;
+            --surface-color: #17171c;
+            --surface-card: #202026;
+            --surface-hover: #2a2a32;
+            --gold-primary: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-gradient: linear-gradient(135deg, #e6c200 0%, #d4af37 50%, #aa7c11 100%);
+            --text-white: #ffffff;
+            --text-sub: #a0a0ab;
+            --text-muted: #6e6e7a;
+            --border-color: rgba(212, 175, 55, 0.2);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --shadow-gold: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+
+        body {
+            background-color: #050506;
+            color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Mobile Container Frame */
+        .app-viewport {
+            width: 100%;
+            max-width: 430px;
+            height: 100vh;
+            max-height: 932px;
+            background-color: var(--bg-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        @media (min-width: 480px) {
+            .app-viewport {
+                height: 880px;
+                border-radius: 40px;
+                border: 8px solid #222;
+                margin: 20px 0;
+            }
+        }
+
+        /* Utility Classes */
+        .gold-text {
+            color: var(--gold-primary);
+        }
+        .gold-gradient-text {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .badge-gold {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold-primary);
+            border: 1px solid var(--gold-primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        /* ==========================================================================
+           HEADER SECTION
+           ========================================================================== */
+        .app-header {
+            background: rgba(23, 23, 28, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 16px 20px 12px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: var(--surface-card);
+            border: 1px solid var(--gold-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--gold-primary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .brand-info h1 {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .table-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--gold-light);
+            background: rgba(212, 175, 55, 0.12);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-header-call {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-header-call:active {
+            transform: scale(0.95);
+            background: var(--gold-primary);
+            color: #000;
+        }
+
+        .btn-icon-secondary {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-white);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* ==========================================================================
+           CATEGORY TABS
+           ========================================================================== */
+        .category-nav {
+            background: var(--bg-color);
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 67px;
+            z-index: 40;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--surface-color);
+            color: var(--text-sub);
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .category-tab.active {
+            background: var(--gold-gradient);
+            color: #0d0d0f;
+            font-weight: 800;
+            box-shadow: var(--shadow-gold);
+            border-color: transparent;
+        }
+
+        /* ==========================================================================
+           MAIN SCROLL AREA & MENU CARDS
+           ========================================================================== */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 16px 120px;
+            scroll-behavior: smooth;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 16px 4px 12px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .menu-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            display: flex;
+            gap: 14px;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .menu-card:active {
+            transform: scale(0.98);
+        }
+
+        .menu-card.selected {
+            border-color: var(--gold-primary);
+            background: linear-gradient(180deg, #24242c 0%, #1c1c22 100%);
+        }
+
+        .menu-img-wrap {
+            width: 96px;
+            height: 96px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            background: #2a2a32;
+        }
+
+        .menu-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .menu-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+        }
+
+        .menu-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-white);
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .menu-desc {
+            font-size: 12px;
+            color: var(--text-sub);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .menu-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 4px;
+        }
+
+        .menu-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--gold-primary);
+        }
+
+        /* Quantity Counter Component */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 3px;
+            border: 1px solid var(--border-subtle);
+            gap: 6px;
+        }
+
+        .btn-qty {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--surface-card);
+            color: var(--text-white);
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-qty.active-minus {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold-primary);
+            border: 1px solid var(--gold-primary);
+        }
+
+        .btn-qty.btn-plus {
+            background: var(--gold-gradient);
+            color: #000;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        .qty-num {
+            font-size: 14px;
+            font-weight: 800;
+            min-width: 18px;
+            text-align: center;
+            color: var(--text-white);
+        }
+
+        /* ==========================================================================
+           FIXED BOTTOM CART BAR
+           ========================================================================== */
+        .bottom-cart-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 14px 16px 24px;
+            background: rgba(13, 13, 15, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-color);
+            z-index: 60;
+            transform: translateY(0);
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .cart-bar-inner {
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-card);
+        }
+
+        .cart-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cart-count-badge {
+            background: var(--gold-gradient);
+            color: #000;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cart-total-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-total-label {
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+
+        .cart-total-amount {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--text-white);
+        }
+
+        .btn-order-submit {
+            background: var(--gold-gradient);
+            color: #0d0d0f;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: var(--shadow-gold);
+            transition: transform 0.15s ease;
+        }
+
+        .btn-order-submit:active {
+            transform: scale(0.96);
+        }
+
+        /* ==========================================================================
+           MODALS & BOTTOM SHEETS
+           ========================================================================== */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-sheet {
+            background: var(--surface-color);
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            border-top: 1px solid var(--border-color);
+            max-height: 88vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.15, 0.85, 0.35, 1.2);
+            padding: 20px 20px 30px;
+            position: relative;
+        }
+
+        .modal-overlay.active .bottom-sheet {
+            transform: translateY(0);
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .sheet-close {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-white);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Detail Modal Specifics */
+        .detail-hero-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+        }
+
+        .detail-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .meta-box {
+            background: var(--surface-card);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .meta-box-label {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-bottom: 2px;
+        }
+
+        .meta-box-val {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+
+        .pairing-card {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px dashed var(--gold-primary);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Call Staff Modal Specifics */
+        .call-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .call-item {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .call-item:active {
+            border-color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .call-item-icon {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .call-item-title {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Welcome Landing View Overlay */
+        .landing-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(13,13,15,0.4) 0%, rgba(13,13,15,0.95) 70%, #0d0d0f 100%),
+                        url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80') center/cover;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px 24px;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .landing-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .landing-logo-badge {
+            width: 70px;
+            height: 70px;
+            background: rgba(23, 23, 28, 0.9);
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .landing-title {
+            font-size: 28px;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .landing-sub {
+            font-size: 14px;
+            color: var(--text-sub);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .landing-table-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .btn-start-order {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            font-size: 17px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: var(--shadow-gold);
+            text-align: center;
+        }
+
+        /* Toast notification */
+        .toast-msg {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: var(--gold-gradient);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 800;
+            z-index: 300;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast-msg.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Order items list in modal */
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .cart-item-title {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .cart-item-sub {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-viewport">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-msg">주방으로 주문이 전송되었습니다!</div>
+
+    <!-- 1. LANDING WELCOME OVERLAY -->
+    <div id="landingOverlay" class="landing-overlay">
+        <div class="landing-logo-badge">銘</div>
+        <h1 class="landing-title">돈우 (銘烤)<br><span class="gold-gradient-text">프리미엄 한우 구이</span></h1>
+        <p class="landing-sub">최상급 1++ 숙성 한우와 정갈한 식사를 편안하게 모바일로 주문해 보세요.</p>
+        
+        <div class="landing-table-card">
+            <div>
+                <div style="font-size: 11px; color: var(--text-sub);">현재 이용 테이블</div>
+                <div style="font-size: 18px; font-weight: 800; color: var(--gold-light);">테이블 05번</div>
+            </div>
+            <span class="badge-gold">인원 4명</span>
+        </div>
+
+        <button class="btn-start-order" onclick="closeLanding()">메뉴판 둘러보기 ➔</button>
+    </div>
+
+    <!-- APP HEADER -->
+    <header class="app-header">
+        <div class="header-brand">
+            <div class="brand-logo">돈</div>
+            <div class="brand-info">
+                <h1>돈우 <span class="gold-text">돈우</span></h1>
+                <div class="table-chip">📍 테이블 05</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn-icon-secondary" onclick="openOrderHistory()" title="주문내역">📜</button>
+            <button class="btn-icon-secondary" onclick="openCheckout()" title="결제안내">💳</button>
+            <button class="btn-header-call" onclick="openModal('staffModal')">
+                <span>🔔</span> 직원호출
+            </button>
+        </div>
+    </header>
+
+    <!-- CATEGORY TABS -->
+    <nav class="category-nav">
+        <button class="category-tab active" onclick="filterCategory(this, 'all')">🥩 전체</button>
+        <button class="category-tab" onclick="filterCategory(this, 'meat')">🥩 고기류</button>
+        <button class="category-tab" onclick="filterCategory(this, 'meal')">🍲 식사류</button>
+        <button class="category-tab" onclick="filterCategory(this, 'drink')">🍺 음료/주류</button>
+        <button class="category-tab" onclick="filterCategory(this, 'side')">🥗 사이드</button>
+        <button class="category-tab" onclick="filterCategory(this, 'set')">🎁 세트메뉴</button>
+    </nav>
+
+    <!-- MAIN MENU LIST -->
+    <main class="content-scroll">
+        <div class="section-header">
+            <span class="section-title">🔥 프리미엄 추천 메뉴</span>
+            <span style="font-size: 12px; color: var(--text-sub);">VAT 포함</span>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+            <!-- Dynamically Rendered via JS -->
+        </div>
+    </main>
+
+    <!-- FIXED BOTTOM CART BAR -->
+    <div class="bottom-cart-bar" id="bottomCartBar">
+        <div class="cart-bar-inner">
+            <div class="cart-info" onclick="openCartModal()" style="cursor: pointer;">
+                <div class="cart-count-badge">
+                    <span>🛒</span> <span id="cartTotalCount">0</span>개 선택
+                </div>
+                <div class="cart-total-price">
+                    <span class="cart-total-label">총 결제 예정 금액</span>
+                    <span class="cart-total-amount" id="cartTotalAmount">₩0</span>
+                </div>
+            </div>
+            <button class="btn-order-submit" onclick="openCartModal()">주문하기 ➔</button>
+        </div>
+    </div>
+
+    <!-- 3. MENU DETAIL MODAL -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" onclick="closeModal('detailModal')">✕</button>
+            
+            <img id="detailImg" class="detail-hero-img" src="" alt="메뉴 이미지">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <span id="detailBadge" class="badge-gold" style="margin-bottom: 6px;">BEST</span>
+                    <h2 id="detailTitle" style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">-</h2>
+                </div>
+                <div id="detailPrice" style="font-size: 20px; font-weight: 900; color: var(--gold-primary);">-</div>
+            </div>
+
+            <p id="detailDesc" style="font-size: 13px; color: var(--text-sub); margin-top: 10px; line-height: 1.5;">-</p>
+
+            <div class="detail-meta-grid">
+                <div class="meta-box">
+                    <div class="meta-box-label">원산지</div>
+                    <div class="meta-box-val" id="detailOrigin">국내산 한우 1++</div>
+                </div>
+                <div class="meta-box">
+                    <div class="meta-box-label">기준 중량</div>
+                    <div class="meta-box-val" id="detailWeight">180g</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 14px; font-size: 12px; color: var(--text-sub);">
+                <strong>⚠️ 알레르기 유발 정보:</strong> <span id="detailAllergy">소고기, 대두 함유</span>
+            </div>
+
+            <div class="pairing-card">
+                <div>
+                    <div style="font-size: 11px; color: var(--gold-light); font-weight: bold;">🍷 추천 페어링</div>
+                    <div style="font-size: 13px; font-weight: 700; margin-top: 2px;">화요 25도 & 명가 특제 굵은소금</div>
+                </div>
+                <span style="font-size: 12px; color: var(--text-sub);">강력 추천</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
+                <div style="font-size: 15px; font-weight: 800;">수량 선택</div>
+                <div class="quantity-control" style="transform: scale(1.1);">
+                    <button class="btn-qty" id="detailMinus" onclick="updateDetailQty(-1)">-</button>
+                    <span class="qty-num" id="detailQty">1</span>
+                    <button class="btn-qty btn-plus" onclick="updateDetailQty(1)">+</button>
+                </div>
+            </div>
+
+            <button class="btn-order-submit" style="width: 100%; margin-top: 20px; padding: 16px; font-size: 16px;" onclick="addDetailToCart()">
+                장바구니 담기 (<span id="detailTotalCalc">₩0</span>)
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. CART & ORDER CONFIRM MODAL -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" onclick="closeModal('cartModal')">✕</button>
+
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <span>🛒</span> 선택한 주문 내역 (테이블 05)
+            </h3>
+
+            <div id="cartItemsList" style="max-height: 280px; overflow-y: auto;">
+                <!-- Cart rows injected JS -->
+            </div>
+
+            <div style="background: var(--surface-card); padding: 14px; border-radius: var(--radius-md); margin-top: 16px;">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-sub); margin-bottom: 6px;">
+                    <span>주문 금액</span>
+                    <span id="cartSubtotal">₩0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-sub); margin-bottom: 8px;">
+                    <span>부가가치세 (10%)</span>
+                    <span>포함</span>
+                </div>
+                <div style="border-top: 1px solid var(--border-subtle); padding-top: 8px; display: flex; justify-content: space-between; font-size: 17px; font-weight: 900;">
+                    <span>최종 합계</span>
+                    <span id="cartFinalTotal" class="gold-text">₩0</span>
+                </div>
+            </div>
+
+            <button class="btn-order-submit" style="width: 100%; margin-top: 20px; padding: 16px; font-size: 16px;" onclick="submitOrder()">
+                주방으로 주문 전송하기 ➔
+            </button>
+        </div>
+    </div>
+
+    <!-- 6. CALL STAFF MODAL -->
+    <div class="modal-overlay" id="staffModal">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" onclick="closeModal('staffModal')">✕</button>
+
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; text-align: center;">🔔 직원 호출</h3>
+            <p style="font-size: 12px; color: var(--text-sub); text-align: center;">필요하신 서비스를 선택하시면 직원이 즉시 찾아갑니다.</p>
+
+            <div class="call-grid">
+                <div class="call-item" onclick="requestStaff('불판 교체')">
+                    <div class="call-item-icon">🔥</div>
+                    <div class="call-item-title">불판 교체</div>
+                </div>
+                <div class="call-item" onclick="requestStaff('시원한 얼음물')">
+                    <div class="call-item-icon">🧊</div>
+                    <div class="call-item-title">얼음물 요청</div>
+                </div>
+                <div class="call-item" onclick="requestStaff('야채/쌈채소 리필')">
+                    <div class="call-item-icon">🥬</div>
+                    <div class="call-item-title">야채 리필</div>
+                </div>
+                <div class="call-item" onclick="requestStaff('물티슈 & 수저')">
+                    <div class="call-item-icon">🥣</div>
+                    <div class="call-item-title">물티슈/수저</div>
+                </div>
+                <div class="call-item" onclick="requestStaff('숯불 조절')">
+                    <div class="call-item-icon">💨</div>
+                    <div class="call-item-title">숯불 조절</div>
+                </div>
+                <div class="call-item" onclick="requestStaff('직원 직접 호출')" style="border-color: var(--gold-primary); background: rgba(212, 175, 55, 0.1);">
+                    <div class="call-item-icon">🙋‍♂️</div>
+                    <div class="call-item-title gold-text">직원 직접 호출</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. ORDER HISTORY MODAL -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" onclick="closeModal('historyModal')">✕</button>
+
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;">📜 현재 누적 주문 내역</h3>
+
+            <div id="historyList" style="max-height: 300px; overflow-y: auto;">
+                <!-- Dynamically updated -->
+            </div>
+
+            <div style="background: var(--surface-card); padding: 14px; border-radius: var(--radius-md); margin-top: 16px; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px;">
+                    <span>총 이용 금액</span>
+                    <span id="historyTotal" style="font-weight: 900;" class="gold-text">₩0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sub);">
+                    <span>1인당 예상 금액 (4인 기준)</span>
+                    <span id="historyPerPerson">₩0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. CHECKOUT INFO MODAL -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="bottom-sheet" style="text-align: center;">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" onclick="closeModal('checkoutModal')">✕</button>
+
+            <div style="font-size: 40px; margin-bottom: 10px;">💳</div>
+            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">식사가 완료되셨나요?</h3>
+            <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px;">
+                계산대에서 아래 바코드를 보여주시거나<br><strong class="gold-text">테이블 05번</strong>이라고 말씀해 주세요.
+            </p>
+
+            <div style="background: #fff; padding: 20px; border-radius: var(--radius-md); display: inline-block; margin-bottom: 20px;">
+                <!-- Barcode visual representation -->
+                <div style="width: 200px; height: 60px; background: repeating-linear-gradient(90deg, #000, #000 3px, #fff 3px, #fff 7px, #000 7px, #000 12px);"></div>
+                <div style="color: #000; font-family: monospace; font-weight: bold; font-size: 14px; margin-top: 8px; letter-spacing: 2px;">TBL-05-8832</div>
+            </div>
+
+            <div style="font-size: 14px; font-weight: 800; margin-bottom: 16px;">
+                총 정산 예정 금액: <span id="checkoutTotalAmount" class="gold-text">₩0</span>
+            </div>
+
+            <button class="btn-order-submit" style="width: 100%; padding: 14px;" onclick="closeModal('checkoutModal')">
+                확인
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ==========================================================================
+     JAVASCRIPT LOGIC
+     ========================================================================== -->
+<script>
+    // Menu Data
+    const MENU_DATA = [
+        {
+            id: 1,
+            category: 'meat',
+            name: '1++ 숙성 한우 꽃등심',
+            desc: '최상급 1++ 한우의 깊은 풍미와 환상적인 마블링을 경험해보세요.',
+            price: 48000,
+            badge: 'BEST',
+            origin: '국내산 한우 1++',
+            weight: '180g',
+            allergy: '소고기 함유',
+            img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80'
+        },
+        {
+            id: 2,
+            category: 'meat',
+            name: '1++ 한우 안심',
+            desc: '부드러운 식감과 담백한 육즙이 일품인 최고급 안심 부위입니다.',
+            price: 52000,
+            badge: '추천',
+            origin: '국내산 한우 1++',
+            weight: '180g',
+            allergy: '소고기 함유',
+            img: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=400&q=80'
+        },
+        {
+            id: 3,
+            category: 'meat',
+            name: '명가 양념 소갈비',
+            desc: '비법 수제 양념에 48시간 숙성하여 달콤하고 부드러운 갈비.',
+            price: 38000,
+            badge: 'HIT',
+            origin: '미국산 프라임',
+            weight: '250g',
+            allergy: '소고기, 대두, 밀 함유',
+            img: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=400&q=80'
+        },
+        {
+            id: 4,
+            category: 'meal',
+            name: '돈우 물냉면',
+            desc: '깊고 시원한 동치미 육수와 쫄깃한 함흥 면발의 조화.',
+            price: 9000,
+            badge: null,
+            origin: '국내산 육수',
+            weight: '1인분',
+            allergy: '메밀, 대두, 소고기 함유',
+            img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+				id: 5,
+				category: 'meal',
+				name: '돈우 냉우동',
+				desc: '깊고 시원한 돈우만의 특제 육수와 쫄깃한 면발의 조화.',
+				price: 9000,
+				badge: null,
+				origin: '돈우특제 육수',
+				weight: '1인분',
+				allergy: '메밀, 대두, 소고기 함유',
+				img: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80'
+			},
+        {
+            id: 6,
+            category: 'meal',
+            name: '차돌 된장찌개 (공기밥 포함)',
+            desc: '고소한 한우 차돌박이를 넣어 깊게 끓여낸 시골 된장찌개.',
+            price: 10000,
+            badge: '인기',
+            origin: '국내산 콩, 한우 차돌',
+            weight: '1인분',
+            allergy: '대두, 소고기 함유',
+            img: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=400&q=80'
+        },
+        {
+            id: 7,
+            category: 'drink',
+            name: '프리미엄 화요 25도',
+            desc: '우리 쌀 100%로 만든 증류식 프리미엄 소주.',
+            price: 25000,
+            badge: '추천',
+            origin: '국내산',
+            weight: '375ml',
+            allergy: '알코올 25%',
+            img: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=400&q=80'
+        },
+        {
+            id: 8,
+            category: 'side',
+            name: '한우 육회 (150g)',
+            desc: '신선한 1++ 한우 우둔살에 특제 양념과 계란 노른자.',
+            price: 28000,
+            badge: 'BEST',
+            origin: '국내산 한우 1++',
+            weight: '150g',
+            allergy: '소고기, 계란, 참기름 함유',
+            img: 'https://images.unsplash.com/photo-1608897013039-887f21d8c804?auto=format&fit=crop&w=400&q=80'
+        },
+        {
+            id: 9,
+            category: 'set',
+            name: '[2인] 명품 한우 세트',
+            desc: '꽃등심(180g) + 안심(180g) + 차돌된장찌개 + 소주/음료 1병',
+            price: 108000,
+            badge: '세트할인',
+            origin: '국내산 한우 1++',
+            weight: '2인 세트',
+            allergy: '소고기, 대두 함유',
+            img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80'
+        }
+    ];
+
+    // State Management
+    let cart = {}; // { itemId: quantity }
+    let activeDetailId = null;
+    let detailQty = 1;
+    let orderHistory = [];
+
+    // Format currency
+    function formatWon(amount) {
+        return '₩' + amount.toLocaleString('ko-KR');
+    }
+
+    // Initialize Menu
+    function renderMenu(categoryFilter = 'all') {
+        const grid = document.getElementById('menuGrid');
+        grid.innerHTML = '';
+
+        const filtered = categoryFilter === 'all' 
+            ? MENU_DATA 
+            : MENU_DATA.filter(item => item.category === categoryFilter);
+
+        filtered.forEach(item => {
+            const qty = cart[item.id] || 0;
+            const isSelected = qty > 0;
+
+            const card = document.createElement('div');
+            card.className = `menu-card ${isSelected ? 'selected' : ''}`;
+            card.onclick = (e) => {
+                // If clicked quantity buttons, don't open detail
+                if (e.target.closest('.quantity-control')) return;
+                openDetailModal(item.id);
+            };
+
+            card.innerHTML = `
+                <div class="menu-img-wrap">
+                    <img src="${item.img}" class="menu-img" alt="${item.name}">
+                    ${item.badge ? `<span class="menu-badge badge-gold">${item.badge}</span>` : ''}
+                </div>
+                <div class="menu-info">
+                    <div>
+                        <div class="menu-title">${item.name}</div>
+                        <div class="menu-desc">${item.desc}</div>
+                    </div>
+                    <div class="menu-bottom">
+                        <div class="menu-price">${formatWon(item.price)}</div>
+                        <div class="quantity-control">
+                            <button class="btn-qty ${qty > 0 ? 'active-minus' : ''}" onclick="changeCartQty(${item.id}, -1, event)">-</button>
+                            <span class="qty-num">${qty}</span>
+                            <button class="btn-qty btn-plus" onclick="changeCartQty(${item.id}, 1, event)">+</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // Category Switching
+    function filterCategory(el, cat) {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        renderMenu(cat);
+    }
+
+    // Update Cart Quantity directly
+    function changeCartQty(id, delta, e) {
+        if (e) e.stopPropagation();
+        const current = cart[id] || 0;
+        const next = Math.max(0, current + delta);
+        if (next === 0) {
+            delete cart[id];
+        } else {
+            cart[id] = next;
+        }
+        updateCartBar();
+        renderMenu(getActiveCategory());
+    }
+
+    function getActiveCategory() {
+        const activeTab = document.querySelector('.category-tab.active');
+        if (!activeTab) return 'all';
+        const text = activeTab.innerText;
+        if (text.includes('고기')) return 'meat';
+        if (text.includes('식사')) return 'meal';
+        if (text.includes('음료')) return 'drink';
+        if (text.includes('사이드')) return 'side';
+        if (text.includes('세트')) return 'set';
+        return 'all';
+    }
+
+    // Update Bottom Sticky Bar
+    function updateCartBar() {
+        let totalCount = 0;
+        let totalPrice = 0;
+
+        for (const [id, qty] of Object.entries(cart)) {
+            const item = MENU_DATA.find(m => m.id === parseInt(id));
+            if (item) {
+                totalCount += qty;
+                totalPrice += item.price * qty;
+            }
+        }
+
+        document.getElementById('cartTotalCount').innerText = totalCount;
+        document.getElementById('cartTotalAmount').innerText = formatWon(totalPrice);
+    }
+
+    // Detail Modal Operations
+    function openDetailModal(id) {
+        const item = MENU_DATA.find(m => m.id === id);
+        if (!item) return;
+
+        activeDetailId = id;
+        detailQty = cart[id] || 1;
+
+        document.getElementById('detailImg').src = item.img;
+        document.getElementById('detailTitle').innerText = item.name;
+        document.getElementById('detailPrice').innerText = formatWon(item.price);
+        document.getElementById('detailDesc').innerText = item.desc;
+        document.getElementById('detailOrigin').innerText = item.origin;
+        document.getElementById('detailWeight').innerText = item.weight;
+        document.getElementById('detailAllergy').innerText = item.allergy;
+        
+        const badgeEl = document.getElementById('detailBadge');
+        if (item.badge) {
+            badgeEl.innerText = item.badge;
+            badgeEl.style.display = 'inline-block';
+        } else {
+            badgeEl.style.display = 'none';
+        }
+
+        updateDetailQtyDisplay();
+        openModal('detailModal');
+    }
+
+    function updateDetailQty(delta) {
+        detailQty = Math.max(1, detailQty + delta);
+        updateDetailQtyDisplay();
+    }
+
+    function updateDetailQtyDisplay() {
+        document.getElementById('detailQty').innerText = detailQty;
+        const item = MENU_DATA.find(m => m.id === activeDetailId);
+        if (item) {
+            document.getElementById('detailTotalCalc').innerText = formatWon(item.price * detailQty);
+        }
+    }
+
+    function addDetailToCart() {
+        if (activeDetailId) {
+            cart[activeDetailId] = detailQty;
+            updateCartBar();
+            renderMenu(getActiveCategory());
+            closeModal('detailModal');
+            showToast('장바구니에 메뉴가 담겼습니다.');
+        }
+    }
+
+    // Cart Modal Render
+    function openCartModal() {
+        const listEl = document.getElementById('cartItemsList');
+        listEl.innerHTML = '';
+
+        let subtotal = 0;
+        const entries = Object.entries(cart);
+
+        if (entries.length === 0) {
+            listEl.innerHTML = '<div style="text-align:center; padding: 30px; color: var(--text-sub);">장바구니에 담긴 메뉴가 없습니다.</div>';
+            document.getElementById('cartSubtotal').innerText = '₩0';
+            document.getElementById('cartFinalTotal').innerText = '₩0';
+        } else {
+            entries.forEach(([id, qty]) => {
+                const item = MENU_DATA.find(m => m.id === parseInt(id));
+                if (item) {
+                    const itemTotal = item.price * qty;
+                    subtotal += itemTotal;
+
+                    const row = document.createElement('div');
+                    row.className = 'cart-item-row';
+                    row.innerHTML = `
+                        <div>
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-sub">${formatWon(item.price)} × ${qty}개</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="font-weight: 800; color: var(--gold-primary);">${formatWon(itemTotal)}</div>
+                            <div class="quantity-control">
+                                <button class="btn-qty" onclick="changeCartQty(${item.id}, -1); openCartModal();">-</button>
+                                <span class="qty-num">${qty}</span>
+                                <button class="btn-qty btn-plus" onclick="changeCartQty(${item.id}, 1); openCartModal();">+</button>
+                            </div>
+                        </div>
+                    `;
+                    listEl.appendChild(row);
+                }
+            });
+
+            document.getElementById('cartSubtotal').innerText = formatWon(subtotal);
+            document.getElementById('cartFinalTotal').innerText = formatWon(subtotal);
+        }
+
+        openModal('cartModal');
+    }
+
+    // Submit Order Action
+    function submitOrder() {
+        if (Object.keys(cart).length === 0) {
+            alert('장바구니에 담긴 항목이 없습니다.');
+            return;
+        }
+
+        // Add to history
+        for (const [id, qty] of Object.entries(cart)) {
+            const item = MENU_DATA.find(m => m.id === parseInt(id));
+            if (item) {
+                orderHistory.push({
+                    name: item.name,
+                    qty: qty,
+                    price: item.price * qty,
+                    time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+                });
+            }
+        }
+
+        cart = {};
+        updateCartBar();
+        renderMenu(getActiveCategory());
+        closeModal('cartModal');
+        showToast('🔥 주문이 주방으로 성공적으로 전달되었습니다!');
+    }
+
+    // Staff Call
+    function requestStaff(item) {
+        closeModal('staffModal');
+        showToast(`🔔 '${item}' 요청이 직원에게 전달되었습니다.`);
+    }
+
+    // History Modal
+    function openOrderHistory() {
+        const list = document.getElementById('historyList');
+        list.innerHTML = '';
+
+        let total = 0;
+        if (orderHistory.length === 0) {
+            list.innerHTML = '<div style="text-align:center; padding:30px; color: var(--text-sub);">아직 주문된 내역이 없습니다.</div>';
+        } else {
+            orderHistory.forEach(ord => {
+                total += ord.price;
+                const row = document.createElement('div');
+                row.className = 'cart-item-row';
+                row.innerHTML = `
+                    <div>
+                        <div class="cart-item-title">${ord.name} (${ord.qty}개)</div>
+                        <div class="cart-item-sub">주문시각: ${ord.time}</div>
+                    </div>
+                    <div style="font-weight:800; color:var(--gold-primary);">${formatWon(ord.price)}</div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        document.getElementById('historyTotal').innerText = formatWon(total);
+        document.getElementById('historyPerPerson').innerText = formatWon(Math.round(total / 4));
+        openModal('historyModal');
+    }
+
+    // Checkout Modal
+    function openCheckout() {
+        let total = orderHistory.reduce((acc, item) => acc + item.price, 0);
+        document.getElementById('checkoutTotalAmount').innerText = formatWon(total);
+        openModal('checkoutModal');
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    function closeLanding() {
+        document.getElementById('landingOverlay').classList.add('hidden');
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2500);
+    }
+
+    // Initialize App
+    window.onload = () => {
+        renderMenu('all');
+        updateCartBar();
+    };
+</script>
+</body>
+</html>
