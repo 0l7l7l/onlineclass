@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>単語暗記 - 色あわせゲーム</title>
+  <style>
+    /* ==========================================================================
+       1. 変数および基本スタイル (Material / Pastel Theme)
+       ========================================================================== */
+    :root {
+      --bg-color: #f7f9fc;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --primary: #6c5ce7;
+      --primary-hover: #5b4bc4;
+      --accent: #fd79a8;
+      --text-main: #2d3436;
+      --text-sub: #636e72;
+      --shadow-color: rgba(108, 92, 231, 0.2);
+      --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+      font-family: var(--font-family);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* モバイルフレーム容器 */
+    #game-container {
+      position: relative;
+      width: 100%;
+      max-width: 450px;
+      height: 100%;
+      max-height: 920px;
+      background: var(--bg-color);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 480px) {
+      #game-container {
+        height: 95vh;
+        border-radius: 32px;
+        border: 4px solid rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    /* ==========================================================================
+       2. 上部 HUD (スコア, ライフ, ハイスコア)
+       ========================================================================== */
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(247,249,252,0.9) 0%, rgba(247,249,252,0) 100%);
+      pointer-events: none;
+    }
+
+    .hud-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hud-label {
+      font-size: 11px;
+      color: var(--text-sub);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .hud-value {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    #lives {
+      font-size: 22px;
+      letter-spacing: 2px;
+      filter: drop-shadow(0 2px 4px rgba(255,107,107,0.3));
+    }
+
+    /* ==========================================================================
+       3. プレイエリア & コンボ / フローティングテキスト
+       ========================================================================== */
+    #play-area {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* コンボバナー */
+    #combo-banner {
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      font-size: 28px;
+      font-weight: 900;
+      font-style: italic;
+      color: #ff3f34;
+      text-shadow: 0 0 10px rgba(255, 63, 52, 0.4), 2px 2px 0 #fff;
+      pointer-events: none;
+      z-index: 15;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #combo-banner.active {
+      transform: translateX(-50%) scale(1.2);
+    }
+
+    /* float-up アニメーション (スコア獲得時) */
+    .float-text {
+      position: absolute;
+      font-weight: 900;
+      font-size: 22px;
+      pointer-events: none;
+      z-index: 20;
+      animation: floatUp 0.8s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-40px) scale(1.3); }
+    }
+
+    /* ==========================================================================
+       4. 落下ブロックのスタイルおよびアニメーション
+       ========================================================================== */
+    .block {
+      position: absolute;
+      width: 100px;
+      height: 55px;
+      border-radius: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 0.1s ease;
+      z-index: 5;
+    }
+
+    .block:active {
+      transform: scale(0.92);
+    }
+
+    /* ブロック破壊アニメーション */
+    @keyframes blockPop {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.8; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .block.pop {
+      animation: blockPop 0.25s ease-out forwards;
+      pointer-events: none;
+    }
+
+    /* 被弾(画面シェイク)アニメーション */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    /* ==========================================================================
+       5. オーバーレイ画面 (スタート / ゲームオーバー / ローディング)
+       ========================================================================== */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(247, 249, 252, 0.95);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 32px;
+      z-index: 30;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .game-title {
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .game-subtitle {
+      font-size: 14px;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .rule-card {
+      background: #ffffff;
+      padding: 16px 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 32px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .rule-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .rule-item:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ボタン */
+    .btn {
+      width: 100%;
+      max-width: 280px;
+      height: 60px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--primary) 0%, #a29bfe 100%);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      box-shadow: 0 8px 20px var(--shadow-color);
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 10px var(--shadow-color);
+    }
+
+    /* ゲームオーバースコアボード */
+    .score-board {
+      background: #fff;
+      border-radius: 24px;
+      padding: 24px;
+      width: 100%;
+      max-width: 320px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .score-board-title {
+      font-size: 14px;
+      color: var(--text-sub);
+      font-weight: 700;
+    }
+
+    .score-board-value {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--primary);
+      margin: 8px 0 16px 0;
+    }
+
+    .best-score-badge {
+      display: inline-block;
+      background: #ffeaa7;
+      color: #d63031;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 12px;
+    }
+
+    /* ==========================================================================
+       6. ローディング画面 & 名言 UI
+       ========================================================================== */
+    #loading-screen {
+      z-index: 40;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid rgba(108, 92, 231, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 30px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .quote-card {
+      background: #ffffff;
+      padding: 20px 24px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+    }
+
+    .quote-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.5;
+      margin-bottom: 10px;
+      word-break: keep-all;
+    }
+
+    .quote-author {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    <!-- 上部 HUD -->
+    <div id="hud">
+      <div class="hud-card">
+        <span class="hud-label">SCORE</span>
+        <span id="score" class="hud-value">0</span>
+      </div>
+      <div id="lives">❤️❤️❤️</div>
+      <div class="hud-card">
+        <span class="hud-label">BEST</span>
+        <span id="best-score" class="hud-value">0</span>
+      </div>
+    </div>
+
+    <!-- プレイエリア -->
+    <div id="play-area">
+      <div id="combo-banner">5 COMBO! 2X</div>
+    </div>
+
+    <!-- スタート画面 -->
+    <div id="start-screen" class="overlay">
+      <h1 class="game-title">単語暗記<br><span style="font-size: 20px; color: var(--accent);">🎨 色あわせゲーム</span></h1>
+      <p class="game-subtitle">背景色と一致する文字のブロックだけをタップ！</p>
+      
+      <div class="rule-card">
+        <div class="rule-item">⭕ <span style="color:#2ed573;">赤背景 + "빨강"</span> = タップ！</div>
+        <div class="rule-item">❌ <span style="color:#ff4757;">赤背景 + "노랑"</span> = スルー！</div>
+        <div class="rule-item">🔥 5コンボごとに獲得スコア2倍</div>
+      </div>
+
+      <button id="start-btn" class="btn">ゲームスタート 🚀</button>
+    </div>
+
+    <!-- ローディング（名言表示）画面 -->
+    <div id="loading-screen" class="overlay hidden">
+      <div class="spinner"></div>
+      <div class="quote-card">
+        <div id="quote-text" class="quote-text">"名言がここに表示されます。"</div>
+        <div id="quote-author" class="quote-author">- 偉人 -</div>
+      </div>
+    </div>
+
+    <!-- ゲームオーバー画面 -->
+    <div id="game-over-screen" class="overlay hidden">
+      <h1 class="game-title" style="color: #ff4757;">GAME OVER</h1>
+      <p class="game-subtitle">残念！もう一度挑戦してみよう。</p>
+
+      <div class="score-board">
+        <div class="score-board-title">最終スコア</div>
+        <div id="final-score" class="score-board-value">0</div>
+        <div class="best-score-badge">🏆 ハイスコア: <span id="board-best-score">0</span></div>
+      </div>
+
+      <button id="restart-btn" class="btn">もう一度プレイ 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. 単語データセット（拡張可能な構造）
+       - 韓国語の色の名前とカラーコードの対応表です。
+       ========================================================================== */
+    const COLOR_DATASET = [
+      { name: "빨강", hex: "#ff4757" }, // 赤
+      { name: "파랑", hex: "#1e90ff" }, // 青
+      { name: "노랑", hex: "#ffa502" }, // 黄
+      { name: "초록", hex: "#2ed573" }, // 緑
+      { name: "보라", hex: "#9b59b6" }, // 紫
+      { name: "주황", hex: "#ff7f50" }, // オレンジ
+      { name: "분홍", hex: "#ff6b81" }  // ピンク
+    ];
+
+    /* ==========================================================================
+       2. ローディング用 名言データセット
+       ========================================================================== */
+    const QUOTES = [
+      { text: "準備を怠る者は、不履行を準備しているのだ。", author: "- ベンジャミン・フランクリン -" },
+      { text: "天才とは、1％のひらめきと99％の努力である。", author: "- トーマス・エジソン -" },
+      { text: "速度を上げるばかりが、人生ではない。", author: "- マハトマ・ガンジー -" },
+      { text: "小さなことを積み重ねることが、とんでもないところへ行く唯一の道。", author: "- イチロー -" },
+      { text: "失敗したことのない人間は、何も新しいことに挑戦したことがない人間だ。", author: "- アルベルト・アインシュタイン -" },
+      { text: "学び続ける限り、人は若くあり続けることができる。", author: "- ヘンリー・フォード -" }
+    ];
+
+    /* ==========================================================================
+       3. ゲーム状態およびグローバル変数
+       ========================================================================== */
+    const CONFIG = {
+      initialLives: 3,
+      baseSpeed: 2.0,        // 初期ブロック落下速度
+      spawnInterval: 1400,   // 初期ブロック生成間隔 (ms)
+      blockWidth: 100,       // ブロック横幅 (px)
+      blockHeight: 55        // ブロック縦幅 (px)
+    };
+
+    let gameState = {
+      score: 0,
+      lives: CONFIG.initialLives,
+      combo: 0,
+      bestScore: 0,
+      isPlaying: false,
+      speedMultiplier: 1.0,
+      lastSpawnTime: 0,
+      blocks: [],
+      animationFrameId: null
+    };
+
+    // DOM要素
+    const playArea = document.getElementById('play-area');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const bestScoreEl = document.getElementById('best-score');
+    const comboBanner = document.getElementById('combo-banner');
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const loadingScreen = document.getElementById('loading-screen');
+    const quoteTextEl = document.getElementById('quote-text');
+    const quoteAuthorEl = document.getElementById('quote-author');
+    const finalScoreEl = document.getElementById('final-score');
+    const boardBestScoreEl = document.getElementById('board-best-score');
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const gameContainer = document.getElementById('game-container');
+
+    /* ==========================================================================
+       4. 初期化およびイベントリスナー
+       ========================================================================== */
+    function init() {
+      // localStorageからハイスコアを読み込み
+      gameState.bestScore = parseInt(localStorage.getItem('color_game_best_score')) || 0;
+      updateHUD();
+
+      startBtn.addEventListener('click', showLoadingAndStart);
+      restartBtn.addEventListener('click', showLoadingAndStart);
+
+      // リサイズ時に領域再計算
+      window.addEventListener('resize', () => {
+        if (gameState.isPlaying) updateBounds();
+      });
+    }
+
+    let playAreaBounds = { width: 0, height: 0 };
+    function updateBounds() {
+      playAreaBounds.width = playArea.clientWidth;
+      playAreaBounds.height = playArea.clientHeight;
+    }
+
+    /* ==========================================================================
+       5. ローディング画面 & ゲームスタート
+       ========================================================================== */
+    function showLoadingAndStart() {
+      // ランダム名言をセット
+      const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      quoteTextEl.innerText = `"${randomQuote.text}"`;
+      quoteAuthorEl.innerText = randomQuote.author;
+
+      // オーバーレイ表示切り替え
+      startScreen.classList.add('hidden');
+      gameOverScreen.classList.add('hidden');
+      loadingScreen.classList.remove('hidden');
+
+      // 1.5秒後にゲームを開始
+      setTimeout(() => {
+        loadingScreen.classList.add('hidden');
+        startGame();
+      }, 1500);
+    }
+
+    function startGame() {
+      // 既存ブロックと状態の初期化
+      playArea.querySelectorAll('.block').forEach(b => b.remove());
+      gameState.blocks = [];
+      gameState.score = 0;
+      gameState.lives = CONFIG.initialLives;
+      gameState.combo = 0;
+      gameState.speedMultiplier = 1.0;
+      gameState.lastSpawnTime = performance.now();
+      gameState.isPlaying = true;
+
+      updateHUD();
+      updateBounds();
+
+      // メインループ開始
+      requestAnimationFrame(gameLoop);
+    }
+
+    /* ==========================================================================
+       6. メインゲームループ
+       ========================================================================== */
+    function gameLoop(timestamp) {
+      if (!gameState.isPlaying) return;
+
+      // 難易度調整 (時間の経過とともに速度と生成間隔が高速化)
+      gameState.speedMultiplier += 0.00015;
+      
+      // ブロック生成チェック
+      const currentSpawnInterval = Math.max(600, CONFIG.spawnInterval / (1 + (gameState.speedMultiplier - 1) * 1.5));
+      if (timestamp - gameState.lastSpawnTime > currentSpawnInterval) {
+        spawnBlock();
+        gameState.lastSpawnTime = timestamp;
+      }
+
+      // ブロックの位置更新および判定
+      updateBlocks();
+
+      gameState.animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    /* ==========================================================================
+       7. ブロック生成および位置更新
+       ========================================================================== */
+    function spawnBlock() {
+      // 1) 背景色と文字をランダムに決定
+      const bgData = COLOR_DATASET[Math.floor(Math.random() * COLOR_DATASET.length)];
+      
+      // 50%の確率で正解（背景色＝文字）
+      const isCorrect = Math.random() < 0.5;
+      let textData;
+      
+      if (isCorrect) {
+        textData = bgData;
+      } else {
+        const wrongDataset = COLOR_DATASET.filter(d => d.name !== bgData.name);
+        textData = wrongDataset[Math.floor(Math.random() * wrongDataset.length)];
+      }
+
+      // 2) X座標の計算
+      const maxX = playAreaBounds.width - CONFIG.blockWidth - 20;
+      const x = Math.max(20, Math.floor(Math.random() * maxX));
+
+      // 3) DOM要素作成
+      const blockEl = document.createElement('div');
+      blockEl.className = 'block';
+      blockEl.style.backgroundColor = bgData.hex;
+      blockEl.innerText = textData.name;
+      blockEl.style.left = `${x}px`;
+      blockEl.style.top = `-${CONFIG.blockHeight}px`;
+
+      playArea.appendChild(blockEl);
+
+      const blockObj = {
+        el: blockEl,
+        x: x,
+        y: -CONFIG.blockHeight,
+        isCorrect: isCorrect,
+        isClicked: false
+      };
+
+      // タップ/クリックイベント
+      blockEl.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        handleBlockClick(blockObj, e.clientX, e.clientY);
+      });
+
+      gameState.blocks.push(blockObj);
+    }
+
+    function updateBlocks() {
+      const currentSpeed = CONFIG.baseSpeed * gameState.speedMultiplier;
+
+      for (let i = gameState.blocks.length - 1; i >= 0; i--) {
+        const block = gameState.blocks[i];
+        
+        if (block.isClicked) continue;
+
+        // 位置移動
+        block.y += currentSpeed;
+        block.el.style.top = `${block.y}px`;
+
+        // 画面下に到達した場合の処理
+        if (block.y > playAreaBounds.height) {
+          // 正解のブロックを見逃した場合 -> ライフ減少
+          if (block.isCorrect) {
+            onMiss();
+          }
+          block.el.remove();
+          gameState.blocks.splice(i, 1);
+        }
+      }
+    }
+
+    /* ==========================================================================
+       8. タップ判定および効果
+       ========================================================================== */
+    function handleBlockClick(block, clickX, clickY) {
+      if (block.isClicked || !gameState.isPlaying) return;
+
+      block.isClicked = true;
+
+      if (block.isCorrect) {
+        // 【正解】タップ成功
+        gameState.combo++;
+        
+        // 5コンボごとにボーナス点
+        const isDouble = gameState.combo > 0 && gameState.combo % 5 === 0;
+        const addedScore = isDouble ? 20 : 10;
+        
+        gameState.score += addedScore;
+
+        if (isDouble) showComboEffect();
+        showFloatText(`+${addedScore}`, clickX, clickY, isDouble ? '#ff3f34' : '#2ed573');
+        
+        block.el.classList.add('pop');
+        setTimeout(() => block.el.remove(), 250);
+
+      } else {
+        // 【不正解】違う色の文字をタップ
+        showFloatText('X', clickX, clickY, '#ff4757');
+        block.el.classList.add('pop');
+        setTimeout(() => block.el.remove(), 250);
+        
+        onMiss();
+      }
+
+      updateHUD();
+    }
+
+    // ミス時の処理
+    function onMiss() {
+      gameState.lives--;
+      gameState.combo = 0; // コンボリセット
+      
+      // 画面シェイクエフェクト
+      gameContainer.classList.remove('shake');
+      void gameContainer.offsetWidth; // Reflowを発生させてアニメーションリセット
+      gameContainer.classList.add('shake');
+
+      updateHUD();
+
+      if (gameState.lives <= 0) {
+        gameOver();
+      }
+    }
+
+    /* ==========================================================================
+       9. UI更新およびエフェクト
+       ========================================================================== */
+    function updateHUD() {
+      scoreEl.innerText = gameState.score;
+      bestScoreEl.innerText = gameState.bestScore;
+
+      // ライフ（ハート）表示更新
+      let hearts = '';
+      for (let i = 0; i < CONFIG.initialLives; i++) {
+        hearts += (i < gameState.lives) ? '❤️' : '🖤';
+      }
+      livesEl.innerText = hearts;
+    }
+
+    // スコア獲得時のフローティングテキスト
+    function showFloatText(text, x, y, color) {
+      const floatEl = document.createElement('div');
+      floatEl.className = 'float-text';
+      floatEl.innerText = text;
+      floatEl.style.color = color;
+
+      const rect = playArea.getBoundingClientRect();
+      const relativeX = x - rect.left - 10;
+      const relativeY = y - rect.top - 20;
+
+      floatEl.style.left = `${relativeX}px`;
+      floatEl.style.top = `${relativeY}px`;
+
+      playArea.appendChild(floatEl);
+
+      setTimeout(() => floatEl.remove(), 800);
+    }
+
+    // コンボ表示エフェクト
+    function showComboEffect() {
+      comboBanner.innerText = `${gameState.combo} COMBO! 2X 🔥`;
+      comboBanner.classList.add('active');
+
+      setTimeout(() => {
+        comboBanner.classList.remove('active');
+      }, 1000);
+    }
+
+    // ゲームオーバー処理
+    function gameOver() {
+      gameState.isPlaying = false;
+      cancelAnimationFrame(gameState.animationFrameId);
+
+      // ハイスコア更新
+      if (gameState.score > gameState.bestScore) {
+        gameState.bestScore = gameState.score;
+        localStorage.setItem('color_game_best_score', gameState.bestScore);
+      }
+
+      finalScoreEl.innerText = gameState.score;
+      boardBestScoreEl.innerText = gameState.bestScore;
+      
+      gameOverScreen.classList.remove('hidden');
+    }
+
+    // 起動時の初期化
+    window.onload = init;
+  </script>
+</body>
+</html>

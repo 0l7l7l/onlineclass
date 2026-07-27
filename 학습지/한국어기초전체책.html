@@ -1,0 +1,864 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語初級文法 - Grammar 02 〜이에요 / 예요</title>
+	<style>
+		 /* ==========================================================================
+		1. 基本スタイル初期化およびレスポンシブ設定
+		========================================================================== */
+		 * {
+			 box-sizing: border-box;
+			 margin: 0;
+			 padding: 0;
+			 font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		 }
+
+		 body {
+			 background-color: #f4f6f9;
+			 display: flex;
+			 justify-content: center;
+			 align-items: center;
+			 min-height: 100vh;
+			 padding: 40px 20px;
+			 color: #333;
+			 overflow-x: hidden;
+		 }
+
+		 .book-wrapper {
+			 display: flex;
+			 flex-direction: column;
+			 gap: 40px;
+			 zoom: var(--book-scale, 0.75);
+			 transition: zoom 0.2s ease;
+		 }
+
+		 :root {
+			 --book-scale: 0.75;
+		 }
+
+		 @media (max-width: 1500px) {
+			 :root {
+				 --book-scale: 0.65;
+			 }
+		 }
+
+		 @media (max-width: 1300px) {
+			 :root {
+				 --book-scale: 0.55;
+			 }
+		 }
+
+		 @media (max-width: 1100px) {
+			 :root {
+				 --book-scale: 0.45;
+			 }
+		 }
+
+		 /* ==========================================================================
+		2. 見開き本構造
+		========================================================================== */
+		 .book-container {
+			 display: flex;
+			 width: 364mm;
+			 height: 257mm;
+			 background-color: #fff;
+			 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			 border-radius: 12px;
+			 overflow: hidden;
+			 position: relative;
+		 }
+
+			 .book-container::after {
+				 content: "";
+				 position: absolute;
+				 left: 50%;
+				 top: 5%;
+				 width: 1px;
+				 height: 90%;
+				 background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.01));
+				 z-index: 10;
+			 }
+
+		 .page {
+			 width: 182mm;
+			 height: 257mm;
+			 padding: 22mm 20mm 20mm 20mm;
+			 position: relative;
+			 display: flex;
+			 flex-direction: column;
+			 background-color: #fff;
+		 }
+
+		 .footer {
+			 position: absolute;
+			 bottom: 15mm;
+			 font-size: 13px;
+			 color: #888;
+			 font-weight: bold;
+		 }
+
+		 .left-page .footer {
+			 left: 20mm;
+		 }
+
+		 .right-page .footer {
+			 right: 20mm;
+		 }
+
+		 .grammar-no {
+			 position: absolute;
+			 top: 15mm;
+			 font-size: 13px;
+			 color: #2563eb;
+			 font-weight: bold;
+			 letter-spacing: 1px;
+		 }
+
+		 .left-page .grammar-no {
+			 left: 20mm;
+		 }
+
+		 .right-page .grammar-no {
+			 right: 20mm;
+			 text-align: right;
+		 }
+
+		 /* ==========================================================================
+		3. コンテンツ用デザイン（インディゴ & ブルー）
+		========================================================================== */
+		 .main-title {
+			 font-size: 26px;
+			 color: #1e3a8a;
+			 margin-top: 10px;
+			 margin-bottom: 18px;
+			 font-weight: 800;
+			 padding-left: 12px;
+			 border-left: 5px solid #1e3a8a;
+			 line-height: 1.2;
+		 }
+
+		 .sub-title {
+			 font-size: 16px;
+			 color: #1e3a8a;
+			 font-weight: 700;
+			 margin-top: 14px;
+			 margin-bottom: 8px;
+			 padding-bottom: 4px;
+			 border-bottom: 1px solid #dbeafe;
+		 }
+
+		 p {
+			 font-size: 14px;
+			 line-height: 1.6;
+			 color: #334155;
+		 }
+
+		 ul {
+			 padding-left: 18px;
+			 margin-top: 6px;
+		 }
+
+		 li {
+			 font-size: 13.5px;
+			 line-height: 1.6;
+			 color: #334155;
+			 margin-bottom: 6px;
+		 }
+
+		 .highlight {
+			 color: #2563eb;
+			 font-weight: bold;
+		 }
+
+		 .point-box {
+			 background-color: #eff6ff;
+			 border-left: 5px solid #2563eb;
+			 padding: 12px 16px;
+			 border-radius: 4px;
+			 margin: 12px 0;
+		 }
+
+			 .point-box h4 {
+				 font-size: 15px;
+				 color: #1e293b;
+				 margin-bottom: 6px;
+			 }
+
+			 .point-box ul {
+				 list-style: none;
+				 padding-left: 0;
+			 }
+
+			 .point-box li {
+				 font-size: 14px;
+				 margin-bottom: 4px;
+			 }
+
+		 /* 例文スタイル */
+		 .example-item {
+			 background-color: #f8fafc;
+			 border: 1px solid #e2e8f0;
+			 border-radius: 6px;
+			 padding: 8px 12px;
+			 margin-bottom: 8px;
+		 }
+
+		 .ex-ko {
+			 font-size: 15px;
+			 font-weight: 600;
+			 color: #0f172a;
+		 }
+
+		 .ex-ja {
+			 font-size: 12.5px;
+			 color: #64748b;
+			 margin-top: 2px;
+		 }
+
+		 /* 単語テーブル */
+		 .word-table {
+			 width: 100%;
+			 border-collapse: collapse;
+			 margin: 10px 0;
+			 font-size: 13px;
+		 }
+
+			 .word-table th, .word-table td {
+				 border: 1px solid #dbeafe;
+				 padding: 7px 10px;
+				 text-align: center;
+			 }
+
+			 .word-table th {
+				 background-color: #bfdbfe;
+				 color: #1e3a8a;
+				 font-weight: bold;
+			 }
+
+		 /* 練習問題 */
+		 .quiz-item {
+			 margin-bottom: 10px;
+			 background-color: #fafafa;
+			 padding: 8px 12px;
+			 border-radius: 6px;
+		 }
+
+		 .quiz-q {
+			 font-size: 13.5px;
+			 font-weight: 600;
+			 color: #1e293b;
+		 }
+
+		 .quiz-item p {
+			 font-size: 14px;
+			 color: #334155;
+			 margin-top: 2px;
+		 }
+
+		 .quiz-line {
+			 display: inline-block;
+			 width: 70px;
+			 border-bottom: 2px solid #2563eb;
+			 text-align: center;
+			 margin: 0 4px;
+		 }
+
+		 /* ==========================================================================
+		4. レスポンシブ (モバイル対応)
+		========================================================================== */
+		 @media (max-width: 900px) {
+			 body {
+				 padding: 10px;
+			 }
+
+			 .book-wrapper {
+				 zoom: 1 !important;
+				 width: 100%;
+				 gap: 20px;
+			 }
+
+			 .book-container {
+				 flex-direction: column;
+				 width: 100%;
+				 height: auto;
+				 box-shadow: none;
+			 }
+
+				 .book-container::after {
+					 display: none;
+				 }
+
+			 .page {
+				 width: 100%;
+				 height: auto;
+				 padding: 40px 20px 30px 20px;
+				 border-bottom: 2px dashed #e2e8f0;
+			 }
+
+				 .page:last-child {
+					 border-bottom: none;
+				 }
+
+			 .grammar-no {
+				 position: relative;
+				 top: 0;
+				 left: 0 !important;
+				 margin-bottom: 10px;
+			 }
+
+			 .right-page .grammar-no {
+				 text-align: left;
+			 }
+
+			 .footer {
+				 position: relative;
+				 bottom: 0;
+				 margin-top: 30px;
+				 text-align: center;
+			 }
+		 }
+
+		 /* ==========================================================================
+		5. 印刷用設定
+		========================================================================== */
+		 @media print {
+			 @page {
+				 size: 364mm 257mm;
+				 margin: 0;
+			 }
+
+			 body {
+				 background-color: #fff;
+				 padding: 0;
+				 margin: 0;
+			 }
+
+			 .book-wrapper {
+				 gap: 0;
+				 zoom: 1 !important;
+			 }
+
+			 .book-container {
+				 display: flex !important;
+				 flex-direction: row !important;
+				 width: 364mm;
+				 height: 257mm;
+				 page-break-after: always;
+				 box-shadow: none;
+				 border: none;
+			 }
+
+				 .book-container::after {
+					 display: none;
+				 }
+
+			 .page {
+				 width: 182mm !important;
+				 height: 257mm !important;
+			 }
+
+			 * {
+				 -webkit-print-color-adjust: exact !important;
+				 print-color-adjust: exact !important;
+			 }
+		 }
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+		<div class="book-container">
+
+			<!-- 1ページ目: 文法解説 -->
+			<div class="page left-page">
+				<div class="grammar-no">文法 02</div>
+				<h1 class="main-title">〜이에요 / 예요</h1>
+
+				<div class="sub-title">1. 意味</div>
+				<p>名詞の後ろについて<strong>「〜です」</strong>という意味を表す述語語尾です。主に日常会話において、丁寧にご自身や物事を紹介するときに使われます。</p>
+
+				<div class="sub-title">2. 使い分けルール</div>
+				<p>名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって形が変わります。</p>
+
+				<div class="point-box">
+					<h4>💡 接続公式</h4>
+					<ul>
+						<li><strong>パッチムあり</strong> ＋ <span class="highlight">이에요</span></li>
+						<li><strong>パッチムなし</strong> ＋ <span class="highlight">예요</span></li>
+					</ul>
+				</div>
+
+				<div class="sub-title">3. 詳しい解説</div>
+				<ul>
+					<li><strong>학생（学生 / パッチムあり）:</strong> 最後の文字「생」に「ㅇ」パッチムがあるため、<strong>학생 ＋ 이에요 ＝ 학생이에요.</strong>（学生です）になります。連音化により［학새기에용］のようにスムーズに発音されます。</li>
+					<li><strong>친구（友達 / パッチムなし）:</strong> 最後の文字「구」にパッチムがないため、<strong>친구 ＋ 예요 ＝ 친구예요.</strong>（友達です）になります。</li>
+				</ul>
+
+				<div class="sub-title">4. 例文</div>
+				<div class="example-item">
+					<p class="ex-ko">저는 한국 사람<span class="highlight">이에요</span>.</p>
+					<p class="ex-ja">私は韓国人です。</p>
+				</div>
+				<div class="example-item">
+					<p class="ex-ko">이것은 제 휴대폰<span class="highlight">이에요</span>.</p>
+					<p class="ex-ja">これは私の携帯電話です。</p>
+				</div>
+				<div class="example-item">
+					<p class="ex-ko">여기가 우리 회사<span class="highlight">예요</span>.</p>
+					<p class="ex-ja">ここが私たちの会社です。</p>
+				</div>
+
+				<div class="footer">Page 1 (解説)</div>
+			</div>
+
+			<!-- 2ページ目: 単語帳 & 練習問題 -->
+			<div class="page right-page">
+				<div class="grammar-no">文法 02</div>
+				<h1 class="main-title">単語帳 ＆ 練習問題</h1>
+
+				<div class="sub-title">1. おすすめ単語</div>
+				<p style="font-size: 13px; margin-bottom: 6px;">以下の単語を使って文章を作ってみましょう。</p>
+
+				<table class="word-table">
+					<thead>
+						<tr>
+							<th style="width: 40%;">単語（名詞）</th>
+							<th style="width: 30%;">パッチムの有無</th>
+							<th style="width: 30%;">意味</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><strong>일본 사람</strong>（イルボン サラム）</td>
+							<td><span class="highlight">あり</span> (ㅁ)</td>
+							<td>日本人</td>
+						</tr>
+						<tr>
+							<td><strong>회사원</strong>（フェサウォン）</td>
+							<td><span class="highlight">あり</span> (ㄴ)</td>
+							<td>会社員</td>
+						</tr>
+						<tr>
+							<td><strong>선생님</strong>（ソンセンニム）</td>
+							<td><span class="highlight">あり</span> (ㅁ)</td>
+							<td>先生</td>
+						</tr>
+						<tr>
+							<td><strong>의사</strong>（ウィサ）</td>
+							<td>なし</td>
+							<td>医者</td>
+						</tr>
+						<tr>
+							<td><strong>커피</strong>（コピ）</td>
+							<td>なし</td>
+							<td>コーヒー</td>
+						</tr>
+						<tr>
+							<td><strong>모자</strong>（モジャ）</td>
+							<td>なし</td>
+							<td>帽子</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="sub-title">2. 練習問題</div>
+				<p style="font-size:12px; color:#666; margin-bottom: 8px;">【例】を参考にして、適切な形を選び文章を完成させましょう。<br>（例: 학생 → 학생이에요 / 친구 → 친구예요）</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q1. 일본 사람 ＋ ( 이에요 / 예요 )</div>
+					<p>→ 저는 일본 사람<span class="quiz-line"></span>.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q2. 의사 ＋ ( 이에요 / 예요 )</div>
+					<p>→ 동생은 의사<span class="quiz-line"></span>.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q3. 선생님 ＋ ( 이에요 / 예요 )</div>
+					<p>→ 그분은 우리 선생님<span class="quiz-line"></span>.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q4. 커피 ＋ ( 이에요 / 예요 )</div>
+					<p>→ 이것은 따뜻한 커피<span class="quiz-line"></span>.</p>
+				</div>
+
+				<div class="sub-title" style="margin-top:12px;">🔑 解答</div>
+				<p style="font-size: 12.5px; color: #555;">
+					Q1. <strong>이에요</strong> (사람) / Q2. <strong>예요</strong> (의사)<br>
+					Q3. <strong>이에요</strong> (선생님) / Q4. <strong>예요</strong> (커피)
+				</p>
+
+				<div class="footer">Page 2 (練習)</div>
+			</div>
+		</div>
+
+			<!-- ==========================================================================
+				 【見開き 1】 1〜2ページ：基本文法解説 & 導入練習
+				 ========================================================================== -->
+			<div class="book-container">
+				<!-- 1ページ目: 文法解説 -->
+				<div class="page left-page">
+					<div class="grammar-no">文法 02</div>
+					<h1 class="main-title">〜이에요 / 예요</h1>
+
+					<div class="sub-title">1. 意味</div>
+					<p>名詞の後ろについて<strong>「〜です」</strong>という意味を表す述語語尾です。主に日常会話において、丁寧にご自身や物事を紹介するときに使われます。</p>
+
+					<div class="sub-title">2. 使い分けルール</div>
+					<p>名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって形が変わります。</p>
+
+					<div class="point-box">
+						<h4>💡 接続公式</h4>
+						<ul>
+							<li><strong>パッチムあり</strong> ＋ <span class="highlight">이에요</span></li>
+							<li><strong>パッチムなし</strong> ＋ <span class="highlight">예요</span></li>
+						</ul>
+					</div>
+
+					<div class="sub-title">3. 詳しい解説</div>
+					<ul>
+						<li><strong>학생（学生 / パッチムあり）:</strong> 最後の文字「생」に「ㅇ」パッチムがあるため、<strong>학생 ＋ 이에요 ＝ 학생이에요.</strong>（学生です）になります。</li>
+						<li><strong>친구（友達 / パッチムなし）:</strong> 最後の文字「구」にパッチムがないため、<strong>친구 ＋ 예요 ＝ 친구예요.</strong>（友達です）になります。</li>
+					</ul>
+
+					<div class="sub-title">4. 例文</div>
+					<div class="example-item">
+						<p class="ex-ko">저는 한국 사람<span class="highlight">이에요</span>.</p>
+						<p class="ex-ja">私は韓国人です。</p>
+					</div>
+					<div class="example-item">
+						<p class="ex-ko">여기가 우리 회사<span class="highlight">예요</span>.</p>
+						<p class="ex-ja">ここが私たちの会社です。</p>
+					</div>
+
+					<div class="footer">Page 1 (解説)</div>
+				</div>
+
+				<!-- 2ページ目: 導入練習問題 -->
+				<div class="page right-page">
+					<div class="grammar-no">文法 02</div>
+					<h1 class="main-title">基本練習</h1>
+
+					<div class="sub-title">1. パッチム確認チェック</div>
+					<table class="word-table">
+						<thead>
+							<tr>
+								<th style="width: 35%;">単語</th>
+								<th style="width: 30%;">パッチムの有無</th>
+								<th style="width: 35%;">結合形</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>학생</strong>（学生）</td>
+								<td><span class="highlight">あり</span> (ㅇ)</td>
+								<td>학생<strong>이에요</strong></td>
+							</tr>
+							<tr>
+								<td><strong>친구</strong>（友達）</td>
+								<td>なし</td>
+								<td>친구<strong>예요</strong></td>
+							</tr>
+							<tr>
+								<td><strong>책</strong>（本）</td>
+								<td><span class="highlight">あり</span> (ㄱ)</td>
+								<td>책<strong>이에요</strong></td>
+							</tr>
+							<tr>
+								<td><strong>시계</strong>（時計）</td>
+								<td>なし</td>
+								<td>시계<strong>예요</strong></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="sub-title">2. 基礎ウォームアップ (4問)</div>
+					<div class="quiz-grid">
+						<div class="quiz-item">
+							<div class="quiz-q">Q1. 학생 ＋ ( 이에요 / 예요 )</div>
+							<p>→ 저는 학생<span class="quiz-line"></span>.</p>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-q">Q2. 친구 ＋ ( 이에요 / 예요 )</div>
+							<p>→ 민수 씨는 제 친구<span class="quiz-line"></span>.</p>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-q">Q3. 책 ＋ ( 이에요 / 예요 )</div>
+							<p>→ 이것은 책<span class="quiz-line"></span>.</p>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-q">4. 시계 ＋ ( 이에요 / 예요 )</div>
+							<p>→ 이것은 시계<span class="quiz-line"></span>.</p>
+						</div>
+					</div>
+
+					<div class="answer-box">
+						🔑 <strong>解答:</strong> Q1. 이에요 / Q2. 예요 / Q3. 이에요 / Q4. 예요
+					</div>
+
+					<div class="footer">Page 2 (練習)</div>
+				</div>
+			</div>
+
+
+			<!-- ==========================================================================
+				 【見開き 2】 3〜4ページ：テーマ① 国名 ＆ 質問フレーズ ＆ 10問問題
+				 ========================================================================== -->
+			<div class="book-container">
+				<!-- 3ページ目: 単語（国） & 質問フレーズ -->
+				<div class="page left-page">
+					<div class="grammar-no">テーマ 01</div>
+					<h1 class="main-title">国名・出身を表す</h1>
+
+					<div class="sub-title">1. 国名の単語リスト</div>
+					<table class="word-table">
+						<thead>
+							<tr>
+								<th>国名 (韓国語)</th>
+								<th>読み方</th>
+								<th>パッチム</th>
+								<th>意味</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><strong>일본</strong></td><td>イルボン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>日本</td></tr>
+							<tr><td><strong>한국</strong></td><td>ハングク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>韓国</td></tr>
+							<tr><td><strong>중국</strong></td><td>チュングク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>中国</td></tr>
+							<tr><td><strong>미국</strong></td><td>ミグク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>アメリカ</td></tr>
+							<tr><td><strong>영국</strong></td><td>ヨングク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>イギリス</td></tr>
+							<tr><td><strong>독일</strong></td><td>トギル</td><td><span class="highlight">あり</span> (ㄹ)</td><td>ドイツ</td></tr>
+							<tr><td><strong>태국</strong></td><td>テグク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>タイ</td></tr>
+							<tr><td><strong>캐나다</strong></td><td>ケナダ</td><td>なし</td><td>カナダ</td></tr>
+							<tr><td><strong>호주</strong></td><td>ホジュ</td><td>なし</td><td>オーストラリア</td></tr>
+							<tr><td><strong>프랑스</strong></td><td>フランス</td><td>なし</td><td>フランス</td></tr>
+						</tbody>
+					</table>
+
+					<div class="sub-title">2. 質問・会話フレーズ</div>
+					<div class="phrase-box">
+						<h4>💬 質問するとき</h4>
+						<div class="phrase-item">
+							<div class="phrase-ko">어느 나라 사람이에요?</div>
+							<div class="phrase-ja">どこの国の人ですか？</div>
+						</div>
+					</div>
+
+					<div class="phrase-box" style="background-color: #eff6ff; border-color: #bfdbfe;">
+						<h4 style="color: #1e3a8a;">💬 答えるとき（「〜人です」）</h4>
+						<div class="phrase-item">
+							<div class="phrase-ko">[国名] 사람이에요. <small style="font-weight:normal; color:#555;">(※사람にパッチムがあるため常に이에요)</small></div>
+							<div class="phrase-ja">例：일본 사람이에요.（日本人です）</div>
+						</div>
+					</div>
+
+					<div class="footer">Page 3 (単語・フレーズ)</div>
+				</div>
+
+				<!-- 4ページ目: 練習問題 10問（国） -->
+				<div class="page right-page">
+					<div class="grammar-no">テーマ 01</div>
+					<h1 class="main-title">練習問題 (国名 10問)</h1>
+					<p style="font-size: 12px; color: #666; margin-bottom: 6px;">【例】를 参考にして、適切な形（이에요 / 예요）を選び完成させましょう。<br>(例: 일본 사람 → 일본 사람이에요 / 캐나다 → 캐나다예요)</p>
+
+					<div class="quiz-grid">
+						<div class="quiz-item"><div class="quiz-q">Q1. 저는 일본 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q2. 마이클 씨는 미국 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q3. 여기는 한국 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q4. 저분은 호주 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q5. 고향이 캐나다 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )?</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q6. 왕웨이 씨는 중국 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q7. 친구는 영국 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q8. 여기는 독일 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q9. 톰 씨는 프랑스 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q10. 여행지는 태국 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+					</div>
+
+					<div class="answer-box">
+						🔑 <strong>解答:</strong><br>
+						Q1~Q4: 이에요 / 이에요 / 이에요 / 이에요<br>
+						Q5~Q10: 예요 / 이에요 / 이에요 / 이에요 / 이에요 / 이에요
+					</div>
+
+					<div class="footer">Page 4 (練習問題)</div>
+				</div>
+			</div>
+
+
+			<!-- ==========================================================================
+				 【見開き 3】 5〜6ページ：テーマ② 職業 ＆ 質問フレーズ ＆ 10問問題
+				 ========================================================================== -->
+			<div class="book-container">
+				<!-- 5ページ目: 単語（職業） & 質問フレーズ -->
+				<div class="page left-page">
+					<div class="grammar-no">テーマ 02</div>
+					<h1 class="main-title">職業を表す</h1>
+
+					<div class="sub-title">1. 職業の単語リスト</div>
+					<table class="word-table">
+						<thead>
+							<tr>
+								<th>職業 (韓国語)</th>
+								<th>読み方</th>
+								<th>パッチム</th>
+								<th>意味</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><strong>학생</strong></td><td>ハクセイ</td><td><span class="highlight">あり</span> (ㅇ)</td><td>学生</td></tr>
+							<tr><td><strong>회사원</strong></td><td>フェサウォン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>会社員</td></tr>
+							<tr><td><strong>선생님</strong></td><td>ソンセンニム</td><td><span class="highlight">あり</span> (ㅁ)</td><td>先生</td></tr>
+							<tr><td><strong>공무원</strong></td><td>コンムウォン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>公務員</td></tr>
+							<tr><td><strong>은행원</strong></td><td>ウネンウォン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>銀行員</td></tr>
+							<tr><td><strong>의사</strong></td><td>ウィサ</td><td>なし</td><td>医師・医者</td></tr>
+							<tr><td><strong>간호사</strong></td><td>カノサ</td><td>なし</td><td>看護師</td></tr>
+							<tr><td><strong>요리사</strong></td><td>ヨリサ</td><td>なし</td><td>料理人・シェフ</td></tr>
+							<tr><td><strong>경찰</strong></td><td>キョンチャル</td><td><span class="highlight">あり</span> (ㄹ)</td><td>警察官</td></tr>
+							<tr><td><strong>가수</strong></td><td>カス</td><td>なし</td><td>歌手</td></tr>
+						</tbody>
+					</table>
+
+					<div class="sub-title">2. 質問・会話フレーズ</div>
+					<div class="phrase-box">
+						<h4>💬 質問するとき</h4>
+						<div class="phrase-item">
+							<div class="phrase-ko">직업이 무엇이에요? / 무슨 일 하세요?</div>
+							<div class="phrase-ja">お仕事は何ですか？ / どんなお仕事をされていますか？</div>
+						</div>
+					</div>
+
+					<div class="phrase-box" style="background-color: #eff6ff; border-color: #bfdbfe;">
+						<h4 style="color: #1e3a8a;">💬 答えるとき（「〜です」）</h4>
+						<div class="phrase-item">
+							<div class="phrase-ko">저는 [職業] 이에요 / 예요.</div>
+							<div class="phrase-ja">例：저는 회사원이에요. / 저는 의사예요.</div>
+						</div>
+					</div>
+
+					<div class="footer">Page 5 (単語・フレーズ)</div>
+				</div>
+
+				<!-- 6ページ目: 練習問題 10問（職業） -->
+				<div class="page right-page">
+					<div class="grammar-no">テーマ 02</div>
+					<h1 class="main-title">練習問題 (職業 10問)</h1>
+					<p style="font-size: 12px; color: #666; margin-bottom: 6px;">【例】를 参考にして、適切な形（이에요 / 예요）を選び完成させましょう。<br>(例: 학생 → 학생이에요 / 의사 → 의사예요)</p>
+
+					<div class="quiz-grid">
+						<div class="quiz-item"><div class="quiz-q">Q1. 저는 대학생 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q2. 언니는 간호사 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q3. 아버지는 회사원 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q4. 어머니는 선생님 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q5. 동생은 가수 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q6. 삼촌은 경찰 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q7. 친구는 요리사 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q8. 저분은 의사 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q9. 제 남동생은 은행원 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+						<div class="quiz-item"><div class="quiz-q">Q10. 제 이모는 공무원 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+					</div>
+
+					<div class="answer-box">
+						🔑 <strong>解答:</strong><br>
+						Q1. 이에요 / Q2. 예요 / Q3. 이에요 / Q4. 이에요 / Q5. 예요<br>
+						Q6. 이에요 / Q7. 예요 / Q8. 예요 / Q9. 이에요 / Q10. 이에요
+					</div>
+
+					<div class="footer">Page 6 (練習問題)</div>
+				</div>
+			</div>
+
+
+			<!-- ==========================================================================
+				 【見開き 4】 7〜8ページ：否定形「이/가 아니에요」解説 ＆ 単語と練習問題
+				 ========================================================================== -->
+			<div class="book-container">
+				<!-- 7ページ目: 否定形「이/가 아니에요」文法解説 -->
+				<div class="page left-page">
+					<div class="grammar-no">文法 03</div>
+					<h1 class="main-title">〜이 / 가 아니에요</h1>
+
+					<div class="sub-title">1. 意味</div>
+					<p>名詞の後ろについて<strong>「〜ではありません / 〜じゃないです」</strong>という意味を表す否定形です。「〜이에요/예요（〜です）」の反対の表現になります。</p>
+
+					<div class="sub-title">2. 使い分けルール</div>
+					<p>主語につく助詞<strong>「이 / 가」</strong>を使い分けた後に、否定の<strong>「아니에요」</strong>を接続します。</p>
+
+					<div class="point-box" style="background-color: #fef2f2; border-color: #ef4444;">
+						<h4 style="color: #991b1b;">💡 接続公式</h4>
+						<ul>
+							<li><strong>パッチムあり</strong> ＋ <span class="highlight" style="color: #dc2626;">이 아니에요</span></li>
+							<li><strong>パッチムなし</strong> ＋ <span class="highlight" style="color: #dc2626;">가 아니에요</span></li>
+						</ul>
+					</div>
+
+					<div class="sub-title">3. 詳しい解説と対比</div>
+					<ul>
+						<li><strong>학생（学生 / パッチムあり）:</strong> <br>학생 ＋ <strong>이 아니에요</strong> ＝ <strong>학생이 아니에요.</strong>（学生ではありません）</li>
+						<li><strong>의사（医者 / パッチムなし）:</strong> <br>의사 ＋ <strong>가 아니에요</strong> ＝ <strong>의사가 아니에요.</strong>（医者ではありません）</li>
+					</ul>
+
+					<div class="sub-title">4. 例文</div>
+					<div class="example-item">
+						<p class="ex-ko">저는 일본 사람<span class="highlight" style="color:#dc2626;">이 아니에요</span>.</p>
+						<p class="ex-ja">私は日本人ではありません。（韓国人です）</p>
+					</div>
+					<div class="example-item">
+						<p class="ex-ko">이것은 제 모자<span class="highlight" style="color:#dc2626;">가 아니에요</span>.</p>
+						<p class="ex-ja">これは私の帽子ではありません。</p>
+					</div>
+
+					<div class="footer">Page 7 (否定表現 解説)</div>
+				</div>
+
+				<!-- 8ページ目: 否定形 単語 & 練習問題 -->
+				<div class="page right-page">
+					<div class="grammar-no">文法 03</div>
+					<h1 class="main-title">否定形 単語 ＆ 練習問題</h1>
+
+					<div class="sub-title">1. 練習用単語リスト</div>
+					<table class="word-table">
+						<thead>
+							<tr>
+								<th>単語</th>
+								<th>意味</th>
+								<th>パッチム</th>
+								<th>否定形 (〜ではありません)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><strong>선생님</strong></td><td>先生</td><td><span class="highlight">あり</span></td><td>선생님<strong>이 아니에요</strong></td></tr>
+							<tr><td><strong>의사</strong></td><td>医者</td><td>なし</td><td>의사<strong>가 아니에요</strong></td></tr>
+							<tr><td><strong>한국 사람</strong></td><td>韓国人</td><td><span class="highlight">あり</span></td><td>한국 사람<strong>이 아니에요</strong></td></tr>
+							<tr><td><strong>가수</strong></td><td>歌手</td><td>なし</td><td>가수<strong>가 아니에요</strong></td></tr>
+						</tbody>
+					</table>
+
+					<div class="sub-title">2. 練習問題 (이 아니에요 / 가 아니에요)</div>
+					<p style="font-size: 12px; color: #666; margin-bottom: 6px;">【例】を参考にして、否定文を完成させましょう。<br>(例: 학생 → 학생이 아니에요 / 의사 → 의사가 아니에요)</p>
+
+					<div class="quiz-grid">
+						<div class="quiz-item"><div class="quiz-q">Q1. 저는 일본 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(日本人ではありません)</span></div></div>
+						<div class="quiz-item"><div class="quiz-q">Q2. 저분은 의사 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(医者ではありません)</span></div></div>
+						<div class="quiz-item"><div class="quiz-q">Q3. 저는 학생 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(学生ではありません)</span></div></div>
+						<div class="quiz-item"><div class="quiz-q">Q4. 이것은 커피 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(コーヒーではありません)</span></div></div>
+						<div class="quiz-item"><div class="quiz-q">Q5. 제 친구는 가수 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(歌手ではありません)</span></div></div>
+						<div class="quiz-item"><div class="quiz-q">Q6. 동생은 회사원 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(会社員ではありません)</span></div></div>
+					</div>
+
+					<div class="answer-box">
+						🔑 <strong>解答:</strong><br>
+						Q1. 이 아니에요 / Q2. 가 아니에요 / Q3. 이 아니에요<br>
+						Q4. 가 아니에요 / Q5. 가 아니에요 / Q6. 이 아니에요
+					</div>
+
+					<div class="footer">Page 8 (否定形 練習)</div>
+				</div>
+			</div>
+
+		</div> 
+
+</body>
+</html>

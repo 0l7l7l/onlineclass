@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>韓国語初級文法 - 助詞マスター（全8ページ）</title>
+    <style>
+/* ==========================================================================
+   1. 基本スタイル初期化およびレスポンシブ設定
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+}
+
+body {
+    background-color: #f4f6f9; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: #333;
+    overflow-x: hidden;
+}
+
+.book-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 50px; /* 見開きごとの間隔 */
+    zoom: var(--book-scale, 0.75);
+    transition: zoom 0.2s ease;
+}
+
+:root {
+    --book-scale: 0.75;
+}
+
+@media (max-width: 1500px) { :root { --book-scale: 0.65; } }
+@media (max-width: 1300px) { :root { --book-scale: 0.55; } }
+@media (max-width: 1100px) { :root { --book-scale: 0.45; } }
+
+/* ==========================================================================
+   2. 見開き本構造
+   ========================================================================== */
+.book-container {
+    display: flex;
+    width: 364mm; 
+    height: 257mm; 
+    background-color: #fff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.book-container::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    width: 1px;
+    height: 90%; 
+    background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.01));
+    z-index: 10;
+}
+
+.page {
+    width: 182mm;
+    height: 257mm;
+    padding: 25mm 20mm 20mm 20mm; 
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 15mm;
+    font-size: 14px;
+    color: #888;
+    font-weight: bold;
+}
+.left-page .page-number { left: 20mm; }
+.right-page .page-number { right: 20mm; }
+
+.chapter-title {
+    position: absolute;
+    top: 15mm;
+    font-size: 13px;
+    color: #999;
+    letter-spacing: 1px;
+}
+.left-page .chapter-title { left: 20mm; }
+.right-page .chapter-title { right: 20mm; text-align: right; width: calc(100% - 40mm); }
+
+/* ==========================================================================
+   3. デザインテーマカラー（インディゴ ＆ エメラルド ＆ オレンジ）
+   ========================================================================== */
+.main-title {
+    font-size: 26px;
+    color: #1e3a8a;
+    margin-bottom: 5px;
+    font-weight: 800;
+    padding-left: 12px;
+    border-left: 5px solid #1e3a8a;
+    line-height: 1.2;
+}
+
+.sub-title {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 20px;
+    padding-left: 12px; 
+}
+
+.grammar-box {
+    background-color: #eff6ff; 
+    border-left: 5px solid #2563eb;
+    padding: 15px 18px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.grammar-box h3 {
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: #1e293b;
+}
+
+.grammar-box p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #334155;
+}
+
+/* パッチム解説ボックス */
+.patchim-box {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.patchim-card {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+}
+
+.patchim-card .title {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.patchim-card .particle {
+    font-size: 22px;
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.patchim-card .example {
+    font-size: 13px;
+    color: #334155;
+    margin-top: 4px;
+}
+
+/* 表デザイン */
+.grammar-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+}
+
+.grammar-table th, .grammar-table td {
+    border: 1px solid #dbeafe;
+    padding: 10px;
+    text-align: center;
+}
+
+.grammar-table th {
+    background-color: #bfdbfe;
+    color: #1e3a8a;
+    font-weight: bold;
+}
+
+.korean {
+    font-size: 17px;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.highlight {
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.section-title {
+    font-size: 17px;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 4px;
+    font-weight: 700;
+}
+
+.example-list { list-style: none; }
+.example-item {
+    margin-bottom: 15px;
+    padding-left: 15px;
+    position: relative;
+}
+.example-item::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.example-kr {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+}
+.example-jp {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* 単語帳吹き出しデザイン */
+.bubble-container {
+    position: relative;
+    background: #ecfdf5;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border: 2px solid #a7f3d0;
+}
+
+.bubble-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #047857;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.word-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.word-item {
+    font-size: 13px;
+    color: #064e3b;
+}
+
+.word-item strong {
+    color: #059669;
+    font-size: 15px;
+}
+
+/* 問題エリア */
+.quiz-container { flex-grow: 1; }
+.quiz-item { margin-bottom: 14px; }
+.quiz-q {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.quiz-blank {
+    display: inline-block;
+    width: 60px;
+    border-bottom: 2px solid #2563eb;
+    text-align: center;
+    margin: 0 5px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.quiz-hint {
+    font-size: 12px;
+    color: #718096;
+    margin-left: 5px;
+}
+
+/* ==========================================================================
+   4. レスポンシブ (モバイル対応)
+   ========================================================================== */
+@media (max-width: 900px) {
+    body { padding: 10px; }
+    .book-wrapper { zoom: 1 !important; width: 100%; gap: 20px; }
+    .book-container { flex-direction: column; width: 100%; height: auto; box-shadow: none; }
+    .book-container::after { display: none; }
+    .page { width: 100%; height: auto; padding: 40px 20px 30px 20px; border-bottom: 2px dashed #e2e8f0; }
+    .page:last-child { border-bottom: none; }
+    .chapter-title { position: relative; top: 0; left: 0 !important; margin-bottom: 15px; }
+    .right-page .chapter-title { text-align: left; width: 100%; }
+    .page-number { position: relative; bottom: 0; margin-top: 30px; text-align: center; }
+}
+
+/* ==========================================================================
+   5. 印刷用設定
+   ========================================================================== */
+@media print {
+    @page { size: 364mm 257mm; margin: 0; }
+    body { background-color: #fff; padding: 0; margin: 0; }
+    .book-wrapper { gap: 0; zoom: 1 !important; }
+    .book-container { display: flex !important; flex-direction: row !important; width: 364mm; height: 257mm; page-break-after: always; box-shadow: none; border: none; }
+    .book-container::after { display: none; }
+    .page { width: 182mm !important; height: 257mm !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+    </style>
+</head>
+<body>
+
+<div class="book-wrapper">
+
+    <!-- ==========================================================================
+         【見開き 1】 1〜2ページ：主題・話題の助詞「은 / 는」
+         ========================================================================== -->
+    <div class="book-container">
+        <!-- 1ページ目 -->
+        <div class="page left-page">
+            <span class="chapter-title">CHAPTER 01 · 主題の助詞</span>
+            <h1 class="main-title">은 / 는（〜は）</h1>
+            <p class="sub-title">話題の提示・自己紹介・対比を表す助詞</p>
+
+            <div class="grammar-box">
+                <h3>💡 「은 / 는」のポイント</h3>
+                <p>文のテーマ（〜は）を表す最も基本の助詞です。自己紹介や「これとあれを比べる（対比）」ときに使われます。</p>
+            </div>
+
+            <div class="section-title">🔍 パッチムによる使い分け</div>
+            <div class="patchim-box">
+                <div class="patchim-card">
+                    <div class="title">パッチム あり (有)</div>
+                    <div class="particle">은</div>
+                    <div class="example">학생 + 은 ➔ <b>학생은</b><br>(学生は)</div>
+                </div>
+                <div class="patchim-card">
+                    <div class="title">パッチム なし (無)</div>
+                    <div class="particle">는</div>
+                    <div class="example">저 + 는 ➔ <b>저는</b><br>(私は)</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <div class="section-title">📌 主なニュアンス・使い所</div>
+                <ul class="example-list">
+                    <li class="example-item">
+                        <b>自己紹介・主題:</b> 「私は〜です」などの話題提示。<br>
+                        <small style="color: #666;">（例：私は韓国人です / 今日は暑いです）</small>
+                    </li>
+                    <li class="example-item">
+                        <b>対比（〜は〜だけど）:</b> 2つ以上を比べる時。<br>
+                        <small style="color: #666;">（例：りんごは好きですが、バナナは嫌いです）</small>
+                    </li>
+                </ul>
+            </div>
+
+            <span class="page-number">01</span>
+        </div>
+
+        <!-- 2ページ目 -->
+        <div class="page right-page">
+            <span class="chapter-title">CHAPTER 01 · 은 / 는 練習</span>
+
+            <div class="section-title">📌 例文で慣れよう</div>
+            <ul class="example-list" style="margin-bottom: 20px;">
+                <li class="example-item">
+                    <div class="example-kr">저<span class="highlight">는</span> 한국 사람이에요.</div>
+                    <div class="example-jp">私<u>は</u>韓国人です。</div>
+                </li>
+                <li class="example-item">
+                    <div class="example-kr">이것<span class="highlight">은</span> 책이에요.</div>
+                    <div class="example-jp">これ<u>は</u>本です。</div>
+                </li>
+                <li class="example-item">
+                    <div class="example-kr">오늘<span class="highlight">은</span> 날씨가 좋아요.</div>
+                    <div class="example-jp">今日<u>は</u>天気が良いです。</div>
+                </li>
+            </ul>
+
+            <div class="bubble-container">
+                <div class="bubble-title">Vocabulary · 単語帳</div>
+                <div class="word-grid">
+                    <div class="word-item"><strong>저</strong> 私</div>
+                    <div class="word-item"><strong>이것</strong> これ</div>
+                    <div class="word-item"><strong>오늘</strong> 今日</div>
+                    <div class="word-item"><strong>사람</strong> 人</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="section-title">✏️ 練習問題（은 / 는 を入れましょう）</div>
+                
+                <div class="quiz-item">
+                    <div class="quiz-q">1. 나<span class="quiz-blank"></span> 일본 사람이에요. <span class="quiz-hint">(私「は」日本人です)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">2. 선생님<span class="quiz-blank"></span> 친절해요. <span class="quiz-hint">(先生「は」親切です)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">3. 이름<span class="quiz-blank"></span> 무엇이에요? <span class="quiz-hint">(名前「は」何ですか？)</span></div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: #aaa; text-align: right; margin-top: 10px;">
+                【解答】 1. 는 / 2. 은 / 3. 은
+            </div>
+
+            <span class="page-number">02</span>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+         【見開き 2】 3〜4ページ：主語の助詞「이 / 가」
+         ========================================================================== -->
+    <div class="book-container">
+        <!-- 3ページ目 -->
+        <div class="page left-page">
+            <span class="chapter-title">CHAPTER 02 · 主語の助詞</span>
+            <h1 class="main-title">이 / 가（〜が）</h1>
+            <p class="sub-title">動作や状態の主体（主語）を表す助詞</p>
+
+            <div class="grammar-box">
+                <h3>💡 「이 / 가」のポイント</h3>
+                <p>「誰が？何が？」という主語をはっきり指し示します。現象の描写や「〜ではありません（아니에요）」の前にも使われます。</p>
+            </div>
+
+            <div class="section-title">🔍 パッチムによる使い分け</div>
+            <div class="patchim-box">
+                <div class="patchim-card">
+                    <div class="title">パッチム あり (有)</div>
+                    <div class="particle">이</div>
+                    <div class="example">물 + 이 ➔ <b>물이</b><br>(水が)</div>
+                </div>
+                <div class="patchim-card">
+                    <div class="title">パッチム なし (無)</div>
+                    <div class="particle">가</div>
+                    <div class="example">비 + 가 ➔ <b>비가</b><br>(雨が)</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <div class="section-title">📌 主なニュアンス・使い所</div>
+                <ul class="example-list">
+                    <li class="example-item">
+                        <b>新情報・描写:</b> 目に見えた現象をそのまま伝える時。<br>
+                        <small style="color: #666;">（例：あ！雨が降ってきた！ / 電車が来ます）</small>
+                    </li>
+                    <li class="example-item">
+                        <b>指定・疑問詞を受ける:</b> 「誰が・何が」の回答。<br>
+                        <small style="color: #666;">（例：誰が来ましたか？ ➔ 田中さんが来ました）</small>
+                    </li>
+                </ul>
+            </div>
+
+            <span class="page-number">03</span>
+        </div>
+
+        <!-- 4ページ目 -->
+        <div class="page right-page">
+            <span class="chapter-title">CHAPTER 02 · 이 / 가 練習</span>
+
+            <div class="section-title">📌 例文で慣れよう</div>
+            <ul class="example-list" style="margin-bottom: 20px;">
+                <li class="example-item">
+                    <div class="example-kr">비<span class="highlight">가</span> 와요.</div>
+                    <div class="example-jp">雨<u>が</u>降ります。</div>
+                </li>
+                <li class="example-item">
+                    <div class="example-kr">시간<span class="highlight">이</span> 있어요?</div>
+                    <div class="example-jp">時間<u>が</u>ありますか？</div>
+                </li>
+                <li class="example-item">
+                    <div class="example-kr">내가<span class="highlight">가</span>（※내+가） 할게요.</div>
+                    <div class="example-jp">私<u>が</u>やります。（※내가, 제 가 など変化に注意）</div>
+                </li>
+            </ul>
+
+            <div class="bubble-container">
+                <div class="bubble-title">Vocabulary · 単語帳</div>
+                <div class="word-grid">
+                    <div class="word-item"><strong>비</strong> 雨</div>
+                    <div class="word-item"><strong>시간</strong> 時間</div>
+                    <div class="word-item"><strong>돈</strong> お金</div>
+                    <div class="word-item"><strong>친구</strong> 友達</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="section-title">✏️ 練習問題（이 / 가 を入れましょう）</div>
+                
+                <div class="quiz-item">
+                    <div class="quiz-q">1. 돈<span class="quiz-blank"></span> 없어요. <span class="quiz-hint">(お金「が」ありません)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">2. 친구<span class="quiz-blank"></span> 왔어요. <span class="quiz-hint">(友達「が」来ました)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">3. 버스<span class="quiz-blank"></span> 출발해요. <span class="quiz-hint">(バス「が」出発します)</span></div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: #aaa; text-align: right; margin-top: 10px;">
+                【解答】 1. 이 / 2. 가 / 3. 가
+            </div>
+
+            <span class="page-number">04</span>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+         【見開き 3】 5〜6ページ：目的語の助詞「을 / 를」
+         ========================================================================== -->
+    <div class="book-container">
+        <!-- 5ページ目 -->
+        <div class="page left-page">
+            <span class="chapter-title">CHAPTER 03 · 目的語の助詞</span>
+            <h1 class="main-title">을 / 를（〜を）</h1>
+            <p class="sub-title">動作の対象（〜を）を表す助詞</p>
+
+            <div class="grammar-box">
+                <h3>💡 「을 / 를」のポイント</h3>
+                <p>「何を食べる？何を観る？」など、動詞の目的語（動作がかかる対象）につける助詞です。</p>
+            </div>
+
+            <div class="section-title">🔍 パッチムによる使い分け</div>
+            <div class="patchim-box">
+                <div class="patchim-card">
+                    <div class="title">パッチム あり (有)</div>
+                    <div class="particle">을</div>
+                    <div class="example">밥 + 을 ➔ <b>밥을</b><br>(ご飯を)</div>
+                </div>
+                <div class="patchim-card">
+                    <div class="title">パッチム なし (無)</div>
+                    <div class="particle">를</div>
+                    <div class="example">영화 + 를 ➔ <b>영화를</b><br>(映画を)</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <div class="section-title">📌 日本語との違いに注意！</div>
+                <ul class="example-list">
+                    <li class="example-item">
+                        <b>「〜に会う」は韓国語で「〜を会う」:</b><br>
+                        日本語では「友達<u>に</u>会う」ですが、韓国語では <span class="korean">친구<u>를</u> 만나다</span>（友達<u>を</u>会う）と言います。
+                    </li>
+                    <li class="example-item">
+                        <b>「〜が好き・嫌い」も「〜を」を使うことがある:</b><br>
+                        <span class="korean">좋아하다</span>（好む）を使う時は <span class="korean">BTS<u>를</u> 좋아해요</span>（BTS<u>を</u>好きです）になります。
+                    </li>
+                </ul>
+            </div>
+
+            <span class="page-number">05</span>
+        </div>
+
+        <!-- 6ページ目 -->
+        <div class="page right-page">
+            <span class="chapter-title">CHAPTER 03 · 을 / 를 練習</span>
+
+            <div class="section-title">📌 例文で慣れよう</div>
+            <ul class="example-list" style="margin-bottom: 20px;">
+                <li class="example-item">
+                    <div class="example-kr">밥<span class="highlight">을</span> 먹어요.</div>
+                    <div class="example-jp">ご飯<u>を</u>食べます。</div>
+                </li>
+                <li class="example-item">
+                    <div class="example-kr">커피<span class="highlight">를</span> 마셔요.</div>
+                    <div class="example-jp">コーヒー<u>を</u>飲みます。</div>
+                </li>
+                <li class="example-item">
+                    <div class="example-kr">한국어<span class="highlight">를</span> 공부해요.</div>
+                    <div class="example-jp">韓国語<u>を</u>勉強します。</div>
+                </li>
+            </ul>
+
+            <div class="bubble-container">
+                <div class="bubble-title">Vocabulary · 単語帳</div>
+                <div class="word-grid">
+                    <div class="word-item"><strong>밥</strong> ご飯</div>
+                    <div class="word-item"><strong>커피</strong> コーヒー</div>
+                    <div class="word-item"><strong>책</strong> 本</div>
+                    <div class="word-item"><strong>음악</strong> 音楽</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="section-title">✏️ 練習問題（을 / 를 を入れましょう）</div>
+                
+                <div class="quiz-item">
+                    <div class="quiz-q">1. 책<span class="quiz-blank"></span> 읽어요. <span class="quiz-hint">(本「を」読みます)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">2. 음악<span class="quiz-blank"></span> 들어요. <span class="quiz-hint">(音楽「を」聴きます)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">3. 사과<span class="quiz-blank"></span> 사요. <span class="quiz-hint">(リンゴ「を」買います)</span></div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: #aaa; text-align: right; margin-top: 10px;">
+                【解答】 1. 을 / 2. 을 / 3. 를
+            </div>
+
+            <span class="page-number">06</span>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+         【見開き 4】 7〜8ページ：総合復習（比較・まとめテスト）
+         ========================================================================== -->
+    <div class="book-container">
+        <!-- 7ページ目 -->
+        <div class="page left-page">
+            <span class="chapter-title">CHAPTER 04 · 総合まとめ</span>
+            <h1 class="main-title">助詞の使い分け比較</h1>
+            <p class="sub-title">「은/는」「이/가」「을/를」を総復習！</p>
+
+            <div class="grammar-box">
+                <h3>💡 「은/는」vs「이/가」の違いの整理</h3>
+                <p><b>은/는（〜は）：</b>相手に「〜について話すよ」と主題を提示する。<br>
+                <b>이/가（〜が）：</b>「誰が？何が？」という主語を特定・強調する。</p>
+            </div>
+
+            <div class="section-title">🔍 一覧で比べるパッチム法則</div>
+            <table class="grammar-table">
+                <thead>
+                    <tr>
+                        <th>助詞の役割</th>
+                        <th>パッチムあり (有)</th>
+                        <th>パッチムなし (無)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>〜は (主題)</b></td>
+                        <td><span class="korean">은</span></td>
+                        <td><span class="korean">는</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>〜が (主語)</b></td>
+                        <td><span class="korean">이</span></td>
+                        <td><span class="korean">가</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>〜を (目的語)</b></td>
+                        <td><span class="korean">을</span></td>
+                        <td><span class="korean">를</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 10px;">
+                <div class="section-title">📌 ニュアンス比較の例文</div>
+                <p style="font-size: 13px; line-height: 1.6; color: #475569;">
+                    • <b>이것은 책이에요.</b>（これは本です ➔ 「これ」について説明）<br>
+                    • <b>이것이 책이에요.</b>（これが本です ➔ 「これが！」と指定）
+                </p>
+            </div>
+
+            <span class="page-number">07</span>
+        </div>
+
+        <!-- 8ページ目 -->
+        <div class="page right-page">
+            <span class="chapter-title">CHAPTER 04 · 総まとめテスト</span>
+
+            <div class="quiz-container">
+                <div class="section-title">✏️ 総合クリアテスト</div>
+                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">文脈に合わせて正しい助詞を選んで書き入れましょう。</p>
+                
+                <div class="quiz-item">
+                    <div class="quiz-q">1. 저<span class="quiz-blank"></span> Tanaka예요. <span class="quiz-hint">(私「は」田中です)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">2. 비<span class="quiz-blank"></span> 와요. <span class="quiz-hint">(雨「が」降ります)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">3. 밥<span class="quiz-blank"></span> 먹었어요. <span class="quiz-hint">(ご飯「を」食べました)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">4. 친구<span class="quiz-blank"></span> 만나요. <span class="quiz-hint">(友達「に/を」会います)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">5. 학생<span class="quiz-blank"></span> 아니에요. <span class="quiz-hint">(学生「では」ありません ※이/가を使う)</span></div>
+                </div>
+                <div class="quiz-item">
+                    <div class="quiz-q">6. 영화<span class="quiz-blank"></span> 봐요. <span class="quiz-hint">(映画「を」見ます)</span></div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: #888; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 15px;">
+                <b>【解答・解説】</b><br>
+                1. <b>는</b>（自己紹介の「は」） / 2. <b>가</b>（現象の描写「が」）<br>
+                3. <b>을</b>（目的語「を」） / 4. <b>를</b>（韓国語では「友達を会う」）<br>
+                5. <b>이</b>（〜ではない「아니에요」の前は이/가） / 6. <b>를</b>（目的語「を」）
+            </div>
+
+            <span class="page-number">08</span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
