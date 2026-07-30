@@ -172,6 +172,29 @@
             text-align: center;
         }
 
+		.option-row {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+			margin: 0 0 10px;
+		}
+
+		.option-row .word-card {
+			min-width: 64px;
+			padding: 10px 14px;
+		}
+
+				/* 퀴즈 선택지(슬라이드 직계 word-card)는 가로 정렬 */
+				.slide > .word-card {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						min-width: 78px;
+						margin: 0 6px 10px;
+						padding: 12px 14px;
+				}
+
         .word-card:hover {
             border-color: #3498db;
             transform: translateY(-3px);
@@ -350,1034 +373,1360 @@
 </head>
 <body>
 
-    <!-- 🔑 [강사 컨트롤러] (Ctrl + M 토글) -->
-    <div class="teacher-menu" id="teacherMenu">
-        <div class="menu-header">
-            <span class="menu-title">🎓 コントローラー [Ctrl+M: メニュー切替]</span>
-            <span class="lang-indicator">日本語版</span>
-        </div>
-        <div class="menu-btn-group">
-            <button class="topic-btn active" id="btn-vocab" onclick="switchTopic('vocab')">1. 副詞単語学習 (19語)</button>
-            <button class="topic-btn" id="btn-quiz" onclick="switchTopic('quiz')">2. 練習問題 (Quiz)</button>
-        </div>
-    </div>
+	<!-- 🔑 [강사 컨트롤러] (Ctrl + M 토글) -->
+	<div class="teacher-menu" id="teacherMenu">
+		<div class="menu-header">
+			<span class="menu-title">🎓 コントローラー [Ctrl+M: メニュー切替]</span>
+			<span class="lang-indicator">日本語版</span>
+		</div>
+		<div class="menu-btn-group">
+			<button class="topic-btn active" id="btn-vocab" onclick="switchTopic('vocab')">1. 副詞単語学習 (19語)</button>
+			<button class="topic-btn" id="btn-quiz" onclick="switchTopic('quiz')">2. 練習問題 (Quiz)</button>
+		</div>
+	</div>
 
-		<div class="wrapper">
-			<div class="presentation-container">
+	<div class="wrapper">
+		<div class="presentation-container">
 
-				<!-- ==============================================================
+			<!-- ==============================================================
 	SECTION 1. 단어 학습 슬라이드 (Topic: vocab)
 	============================================================== -->
-				<!-- 1-1. 메인 타이틀 -->
-				<div class="slide topic-vocab active">
-					<span class="slide-number">01 / 07</span>
-					<p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韓国語の副詞</p>
-					<h1>必須副詞</h1>
-					<p>よく使う副詞をグループ別に分けて覚えましょう！</p>
-				</div>
-
-				<!-- 1-2. 시간 부사 1 (아직, 이미, 벌써, 방금, 금방, 곧) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>1. 時間に関する副詞</h2>
-					<div class="word-grid">
-
-						<div class="word-card">
-							<div class="kor-word">이미</div>
-							<div class="jp-word">すでに</div>
-							<div class="example-box">이미 끝났어요.<span>(すでに終わりました)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">벌써</div>
-							<div class="jp-word">もう / 早くも</div>
-							<div class="example-box">벌써 12시예요?<span>(もう12時ですか？)</span></div>
-						</div>
-
-					</div>
-				</div>
-
-				<!-- 1-2. 시간 부사 1 (아직, 이미, 벌써, 방금, 금방, 곧) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>💡 이미 vs 벌써</h2>
-
-
-					<div class="compare-box">
-						<p>
-							<b>이미</b> = 「すでに」<br>
-							事実として完了していることを伝える
-						</p>
-						<div class="example-box">
-							이미 숙제를 했어요.
-							<span>(すでに宿題をしました)</span>
-						</div>
-
-						<p>
-							<b>벌써</b> = 「もう・早くも」<br>
-							予想より早いことへの驚きや意外な気持ちを含む
-						</p>
-						<div class="example-box">
-							벌써 숙제를 했어요?
-							<span>(もう宿題をしたんですか？)</span>
-						</div>
-
-						<div class="tip-box">
-							✅ 이미 → 完了の事実（すでに）<br>  ✅ 벌써 → 驚き・意外性（もう！）
-						</div>
-					</div>
-				</div>
-				<!-- 問題 (아직, 이미, 벌써, 방금, 금방, 곧) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q1. 👉 [ &nbsp;&nbsp; ] 집에 왔어요?</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 의외성 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">もう家に着いたんですか？</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">「아직 / 이미 / 벌써」</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q99')">정답 확인하기</button>
-					<div id="ans-q99" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">벌써</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q2. 👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 다 먹었어요.</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작의 완료 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「もう全部食べ終わりました。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">아직 / 이미 / 벌써</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q98')">정답 확인하기</button>
-					<div id="ans-q98" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">이미</div>
-				</div>
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q3. 👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 8월이에요?</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 의외성 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「もう8月ですか？」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">아직 / 이미 / 벌써</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q97')">정답 확인하기</button>
-					<div id="ans-q97" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">벌써</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q4. 👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요.</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작이 아직 안 끝난 부정문 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「まだ食べていません」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">아직 / 이미 / 벌써</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q96')">정답 확인하기</button>
-					<div id="ans-q96" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">아직</div>
-				</div>
-
-
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>1. 時間に関する副詞</h2>
-					<div class="word-grid">
-
-						<div class="word-card">
-							<div class="kor-word">방금</div>
-							<div class="jp-word">たった今</div>
-							<div class="example-box">방금 왔어요.<span>(たった今来ました)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">금방</div>
-							<div class="jp-word">すぐ / まもなく</div>
-							<div class="example-box">금방갈게요.<span>(すぐ行きます)</span></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>💡 방금 vs 금방</h2>
-
-					<div class="compare-box">
-
-						<p>
-							<b>방금</b> = 「たった今」<br>
-							少し前の出来事（過去）
-						</p>
-
-						<div class="example-box">
-							방금 왔어요.
-							<span>(たった今来ました)</span>
-						</div>
-
-						<p>
-							<b>금방</b> = 「すぐ」<br>
-							このあとすぐの出来事（未来）
-						</p>
-
-						<div class="example-box">
-							금방 갈게요.
-							<span>(すぐ行きます)</span>
-						</div>
-
-						<div class="tip-box">
-							✅ 방금 = 「たった今」 ✅ 금방 = 「すぐ」<br> 少し前の出来事（過去）    このあとすぐの出来事（未来）
-						</div>
-					</div>
-				</div>
-
-
-
-
-				<!-- 問題 (방금/금방) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q1. 뉘앙스에 맞는 단어를 고르세요</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작의 완료 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐ終わります」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 끝나요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q95')">정답 확인하기</button>
-					<div id="ans-q95" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q2. 뉘앙스에 맞는 단어를 고르세요</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 時間があまり過ぎてない ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「さき、何と言いましたか？」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 뭐라고 했어요?</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q94')">정답 확인하기</button>
-					<div id="ans-q94" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">방금</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q3. 뉘앙스에 맞는 단어를 고르세요</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: このあとすぐのできこと ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐ着きます！」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 갈게요!!</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q93')">정답 확인하기</button>
-					<div id="ans-q93" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q4. 뉘앙스에 맞는 단어를 고르세요</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 時間があまり過ぎてない ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「先何しましたか」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 뭐 했어요?.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q92')">정답 확인하기</button>
-					<div id="ans-q92" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">방금</div>
-				</div>
-
-
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>1. 時間に関する副詞</h2>
-					<div class="word-grid">
-						<div class="word-card">
-							<div class="kor-word">금방</div>
-							<div class="jp-word">すぐ / まもなく</div>
-							<div class="example-box">금방갈게요.<span>(すぐ行きます)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">곧</div>
-							<div class="jp-word">まもなく / すぐに</div>
-							<div class="example-box">곧 시작해요.<span>(まもなく始まります)</span></div>
-						</div>
-					</div>
-				</div>
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>💡 금방 vs 곧</h2>
-					<div class="compare-box">
-						<p>
-							둘 다 「すぐ・まもなく」의 뜻이지만 느낌이 다릅니다.
-						</p>
-
-						<p>
-							<b>금방</b><br>
-							時間がとても短い
-						</p>
-
-						<div class="example-box">
-							금방 갈게요.
-							<span>(すぐ行きます)</span>
-						</div>
-
-						<p>
-							<b>곧</b><br>
-							近い未来を表す
-						</p>
-
-						<div class="example-box">
-							곧 시작해요.
-							<span>(まもなく始まります)</span>
-						</div>
-
-						<div class="tip-box">
-							✅ 금방 = 時間がとても短い<br>
-							✅ 곧 = 近い未来を表す
-						</div>
-					</div>
-				</div>
-
-
-
-				<!-- 問題 (방금/금방) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q1. 뉘앙스에 맞는 단어를 고르세요</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작의 완료 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐ終わります」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 끝나요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 곧</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q91')">정답 확인하기</button>
-					<div id="ans-q91" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q2. 뉘앙스에 맞는 단어를 고르세요</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 近い未来を表す ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「まもなく始まります」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 시작해요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b>금방 / 곧</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q90')">정답 확인하기</button>
-					<div id="ans-q90" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">곧</div>
-				</div>
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>Q3. 뉘앙스에 맞는 단어를 고르세요</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: すぐ後のこと ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐできます」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 할 수 있어요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 금방 / 곧</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q89')">정답 확인하기</button>
-					<div id="ans-q89" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
-				</div>
-
-
-
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>【覚え方】</h2>
-					<div class="word-grid">
-						<div class="word-card">
-
-							이미 = すでに<br>
-							벌써 = もう！<br><br>
-
-							방금 = たった今<br>
-							금방 = すぐ<br><br>
-
-							금방 = 今すぐ<br>
-							곧 = もうすぐ
-
-						</div>
-					</div>
-				</div>
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 07</span>
-					<h2>1. 時間に関する副詞否定動詞</h2>
-					<div class="word-grid">
-
-
-						<div class="word-card">
-							<div class="kor-word">아직</div>
-							<div class="jp-word">まだ</div>
-							<div class="example-box">아직 안 먹었어요.<span>(まだ食べていません)</span></div>
-						</div>
-					</div>
-				</div>
-
-				<!-- 1-3. 빈도 부사 (항상, 자주, 가끔, 종종, 보통, 거의) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">03 / 07</span>
-					<h2>2. 頻度(ひんど)に関する副詞</h2>
-					<div class="word-grid">
-						<div class="word-card">
-							<div class="kor-word">항상</div>
-							<div class="jp-word">いつも / 常に</div>
-							<div class="example-box">항상 고마워요.<span>(いつもありがとう)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">자주</div>
-							<div class="jp-word">しょっちゅう / よく</div>
-							<div class="example-box">자주 만나요.<span>(よく会います)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">가끔</div>
-							<div class="jp-word">たまに / 時々</div>
-							<div class="example-box">가끔 운동해요.<span>(たまに運動します)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">종종</div>
-							<div class="jp-word">しばしば / たまに</div>
-							<div class="example-box">종종 가요.<span>(しばしば行きます)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">보통</div>
-							<div class="jp-word">ふつう / たいてい</div>
-							<div class="example-box">보통 집에서 쉬어요.<span>(たいてい家で休んでます)</span></div>
-						</div>
-					</div>
-				</div>
-				<div class="slide topic-vocab">
-					<span class="slide-number">03 / 07</span>
-					<h2>2. 頻度(ひんど)に関する副詞</h2>
-					<div class="word-grid">
-						<div class="word-card">
-							<div class="kor-word">보통</div>
-							<div class="jp-word">ふつう / たいてい</div>
-							<div class="example-box">보통 집에서는 안먹어요.<span>(たいてい家では食べまないです。)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">거의</div>
-							<div class="jp-word">ほとんど</div>
-							<div class="example-box">거의 안 해요.<span>(ほとんどしません。)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">전혀</div>
-							<div class="jp-word">全く</div>
-							<div class="example-box">전혀 못 해요.<span>(全くできません。)</span></div>
-						</div>
-					</div>
-				</div>
-				<div class="slide topic-vocab">
-					<span class="slide-number">03 / 07</span>
-					<h2>2. 頻度(ひんど)に関する副詞</h2>
-					<div class="word-grid">
-						<div class="word-card">
-							<div class="kor-word">자주</div>
-							<div class="jp-word">しょっちゅう / よく</div>
-							<div class="example-box">자주 만나요.<span>(よく会います)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">가끔</div>
-							<div class="jp-word">たまに / 時々</div>
-							<div class="example-box">가끔 운동해요.<span>(たまに運動します)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">보통</div>
-							<div class="jp-word">ふつう / たいてい</div>
-							<div class="example-box">보통 집에서 쉬어요.<span>(たいてい家で休んでます)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">거의</div>
-							<div class="jp-word">ほとんど</div>
-							<div class="example-box">거의 다 왔어요.<span>(ほとんど着きました)</span></div>
-						</div>
-					</div>
-				</div>
-
-				<!-- 1-4. 정도 부사 (정말, 너무, 아주, 꽤, 전혀) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">04 / 07</span>
-					<h2>3. 程度に関する副詞</h2>
-					<div class="word-grid">
-						<div class="word-card">
-							<div class="kor-word">정말</div>
-							<div class="jp-word">本当に / とても</div>
-							<div class="example-box">정말 맛있어요!<span>(本当に美味しいです！)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">너무</div>
-							<div class="jp-word">とても / あまりに</div>
-							<div class="example-box">너무 좋아요.<span>(とても好きです)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">아주</div>
-							<div class="jp-word">大変 / とても</div>
-							<div class="example-box">아주 잘했어요.<span>(大変よくできました)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">꽤</div>
-							<div class="jp-word">かなり / 相当</div>
-							<div class="example-box">꽤 비싸네요.<span>(かなり高いですね)</span></div>
-						</div>
-						<div class="word-card" style="grid-column: span 2;">
-							<div class="kor-word">전혀 (+否定)</div>
-							<div class="jp-word">全く (〜ない)</div>
-							<div class="example-box">전혀 안 힘들어요.<span>(全く大変じゃないです)</span></div>
-						</div>
-					</div>
-				</div>
-
-				<!-- 1-5. 순서 부사 (먼저, 다음에) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">05 / 07</span>
-					<h2>4. 順序に関する副詞</h2>
-					<div class="word-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 600px;">
-						<div class="word-card">
-							<div class="kor-word">먼저</div>
-							<div class="jp-word">まず / お先に</div>
-							<div class="example-box">먼저 가세요.<span>(お先に行ってください)</span></div>
-						</div>
-						<div class="word-card">
-							<div class="kor-word">다음에</div>
-							<div class="jp-word">今度に / 次に</div>
-							<div class="example-box">다음에 또 만나요.<span>(今度また会いましょう)</span></div>
-						</div>
-					</div>
-				</div>
-
-
-
-				<!-- 問題 (먼저, 다음에) -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">06 / 07</span>
-					<h2>Q1. 손을 [    ] 씻고 밥을 먹어요.</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「手を先に洗ってご飯を食べます。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q88')">정답 확인하기</button>
-					<div id="ans-q88" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
-				</div>
-				<div class="slide topic-vocab">
-					<span class="slide-number">06 / 07</span>
-					<h2>Q1. 손을 [먼저] 씻고 밥을 먹어요.</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「手を先に洗ってご飯を食べます。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q87')">정답 확인하기</button>
-					<div id="ans-q87" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
-				</div>
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 06</span>
-					<h2>Q2. [       ] 또 만나요.</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今度また会いましょう。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q85')">정답 확인하기</button>
-					<div id="ans-q85" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
-				</div>
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 06</span>
-					<h2>Q2. [다음에] 또 만나요.</h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今度また会いましょう。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q86')">정답 확인하기</button>
-					<div id="ans-q86" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
-				</div>
-
-
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 06</span>
-					<h2>Q3. [        ] 들어가세요. 저는 조금 더 있다가 갈게요. </h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「お先にどうぞ。私はもう少ししてから行きます。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q84')">정답 확인하기</button>
-					<div id="ans-q84" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
-				</div>
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 06</span>
-					<h2>Q3. [먼저] 들어가세요. 저는 조금 더 있다가 갈게요. </h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「お先にどうぞ。私はもう少ししてから行きます。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q83')">정답 확인하기</button>
-					<div id="ans-q83" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
-				</div>
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 06</span>
-					<h2>Q4. 이번에는 바쁘니까 [       ] 같이 영화 봐요. </h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今回は忙しいので今度一緒に映画を見ましょう。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q82')">정답 확인하기</button>
-					<div id="ans-q82" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
-				</div>
-				<div class="slide topic-vocab">
-					<span class="slide-number">02 / 06</span>
-					<h2>Q4. 이번에는 바쁘니까 [다음에] 같이 영화 봐요. </h2>
-
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今回は忙しいので今度一緒に映画を見ましょう。」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 먼저 / 다음에</p>
-					</div><br>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q81')">정답 확인하기</button>
-					<div id="ans-q81" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
-				</div>
-
-				<!-- 1-6. 단어 요약 슬라이드 -->
-				<div class="slide topic-vocab">
-					<span class="slide-number">06 / 06</span>
-					<h2>本日の副詞 一覧</h2>
-					<div style="font-size: 1.05rem; line-height: 1.9; text-align: left; background-color: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #cbd5e1;">
-						<p><b>・時間：</b> 아직(まだ), 이미(すでに), 벌써(もう), 방금(たった今), 금방(すぐ), 곧(まもなく)</p>
-						<p><b>・頻度：</b> 항상(いつも), 자주(よく), 가끔(たまに), 종종(しばしば), 보통(ふつう), 거의(ほとんど)</p>
-						<p><b>・程度：</b> 정말(本当に), 너무(とても), 아주(大変), 꽤(かなり), 전혀(全く〜ない)</p>
-						<p><b>・順序：</b> 먼저(まず/お先に), 다음에(今度に)</p>
-					</div>
-				</div>
-
-
-				<!-- ==============================================================
-	SECTION 2. 헷갈림 방지! 뉘앙스 힌트가 포함된 1P 1문제 연습문제
-		 ============================================================== -->
-				<!-- 퀴즈 1번: 아직 vs 이미 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">01 / 06</span>
-					<div style="font-size: 3.5rem; margin-bottom: 5px;">⌛</div>
-					<h2>Q1. 뉘앙스에 맞는 단어를 고르세요</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작이 아직 안 끝난 부정문 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「まだ食べていません」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 아직 / 이미 / 벌써</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q1')">정답 확인하기</button>
-					<div id="ans-q1" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">아직</div>
-				</div>
-
-				<!-- 퀴즈 2번: 이미 vs 벌써 (놀람/예상보다 빠름) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">02 / 06</span>
-					<div style="font-size: 3.5rem; margin-bottom: 5px;">😲</div>
-					<h2>Q2. 뉘앙스에 맞는 단어를 고르세요</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: "생각보다 시간이 너무 빠르네!" 하고 놀랄 때 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「もう12時ですか！？」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 12시예요?</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 아직 / 이미 / 벌써</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q2')">정답 확인하기</button>
-					<div id="ans-q2" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">벌써</div>
-				</div>
-
-				<!-- 퀴즈 3번: 방금 (과거시점) vs 금방 (미래시점) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">03 / 06</span>
-					<div style="font-size: 3.5rem; margin-bottom: 5px;">🔙</div>
-					<h2>Q3. 과거/미래 시점에 주의하세요</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: '과거(왔어요)'에 일어난 아주 조금 전 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「たった今着きました」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 왔어요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방 / 곧</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q3')">정답 확인하기</button>
-					<div id="ans-q3" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">방금</div>
-				</div>
-
-				<!-- 퀴즈 4번: 금방 (미래시점) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">04 / 06</span>
-					<div style="font-size: 3.5rem; margin-bottom: 5px;">🔜</div>
-					<h2>Q4. 과거/미래 시점에 주의하세요</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 앞으로 '미래(갈게요)'에 바로 하겠다는 약속 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐに行きます」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 갈게요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방 / 벌써</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q4')">정답 확인하기</button>
-					<div id="ans-q4" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
-				</div>
-
-				<!-- 퀴즈 5번: 빈도 (항상 vs 가끔) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">05 / 06</span>
-					<div style="font-size: 3.5rem; margin-bottom: 5px;">💯</div>
-					<h2>Q5. 빈도(횟수)를 구별하세요</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 100% 매일매일 빠짐없이 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「いつも感謝しています」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 감사해요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 항상 / 가끔 / 보통</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q5')">정답 확인하기</button>
-					<div id="ans-q5" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">항상</div>
-				</div>
-
-				<!-- 퀴즈 6번: 정도 (정말 vs 전혀) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">06 / 16</span>
-					<div style="font-size: 3.5rem; margin-bottom: 5px;">❌</div>
-					<h2>Q6. 뒤에 오는 말(부정문)과의 짝꿍!</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 15px;">
-						<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 뒤에 '모르겠어요(否定)'와 찰떡 짝꿍인 단어 ]</p>
-						<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「全く分かりません」</p>
-						<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 모르겠어요.</p>
-						<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 정말 / 아주 / 전혀</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q6')">정답 확인하기</button>
-					<div id="ans-q6" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">전혀</div>
-				</div>
-
-				<!-- ==============================================================
-	SECTION 2. 연습문제 슬라이드 (Topic: quiz)
-	============================================================== -->
-				<!-- 2-1. 퀴즈 Part 1 (시간 & 빈도) -->
-				<!-- ==============================================================
-	SECTION 2. 1P 1문제 전용 연습문제 슬라이드 (Topic: quiz)
-	============================================================== -->
-				<!-- 퀴즈 1번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">07 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">⏳</div>
-					<h2>Q7. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「まだ」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: まだ食べていません ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q7')">答えを確認する</button>
-					<div id="ans-q7" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">아직</div>
-				</div>
-
-
-				<!-- 퀴즈 2번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">08 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">⚡</div>
-					<h2>Q8. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「たった今」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: たった今来ました ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 왔어요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q8')">答えを確認する</button>
-					<div id="ans-q8" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">방금</div>
-				</div>
-
-				<!-- 퀴즈 3번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">09 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">🏃‍♂️</div>
-					<h2>Q9. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「すぐ / まもなく」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: すぐ行きます ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 갈게요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q9')">答えを確認する</button>
-					<div id="ans-q9" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">금방 <span style="font-size:1.5rem; color:#666;">(또는 곧)</span></div>
-				</div>
-
-				<!-- 퀴즈 4번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">10 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">❤️</div>
-					<h2>Q10. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「いつも / 常(つね)に」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: いつも感謝しています ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 감사해요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q10')">答えを確認する</button>
-					<div id="ans-q10" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">항상</div>
-				</div>
-
-				<!-- 퀴즈 5번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">11 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">🔄</div>
-					<h2>11. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「よく / しょっちゅう」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: よく会います ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 만나요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q11')">答えを確認する</button>
-					<div id="ans-q11" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">자주</div>
-				</div>
-
-				<!-- 퀴즈 6번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">12 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">☕</div>
-					<h2>12. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「たまに / 時々」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: たまに飲んでます ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 마셔요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q12')">答えを確認する</button>
-					<div id="ans-q12" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">가끔 <span style="font-size:1.5rem; color:#666;">(또는 종종)</span></div>
-				</div>
-
-				<!-- 퀴즈 7번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">13 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">😋</div>
-					<h2>13. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「本当に / とても」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: 本当に美味しいです！ ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 맛있어요! )</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q13')">答えを確認する</button>
-					<div id="ans-q13" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">정말 <span style="font-size:1.5rem; color:#666;">(또는 너무/아주)</span></div>
-				</div>
-
-				<!-- 퀴즈 8번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">14 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">🚫</div>
-					<h2>14. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「全く (〜ない)」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: 全くわかりません ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 모르겠어요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q14')">答えを確認する</button>
-					<div id="ans-q14" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">전혀</div>
-				</div>
-
-				<!-- 퀴즈 9번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">15 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">👉</div>
-					<h2>15. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「まず / お先に」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: お先に行ってください ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 가세요)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q15')">答えを確認する</button>
-					<div id="ans-q15" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">먼저</div>
-				</div>
-
-				<!-- 퀴즈 10번 -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">16 / 16</span>
-					<div style="font-size: 4rem; margin-bottom: 10px;">🤝</div>
-					<h2>Q16. 韓国語に変えてみましょう</h2>
-					<div class="quiz-container" style="text-align: center; margin-top: 20px;">
-						<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「今度 / 次に」</p>
-						<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: 今度また会いましょう！ ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 또 만나요!)</p>
-					</div>
-					<button class="answer-btn" onclick="toggleAnswer('ans-q16')">答えを確認する</button>
-					<div id="ans-q16" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">다음에</div>
-				</div>
-
-				<!-- 2-1. 퀴즈 Part 1 (시간 & 빈도) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">01 / 04</span>
-					<h2>練習問題 (Part 1: 時間 & 頻度)</h2>
-					<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">カッコに入る適切な副詞を選びましょう。</p>
-
-					<div class="quiz-container">
-						<div class="quiz-item">
-							<div class="quiz-q">1. A: 밥 먹었어요? (ご飯食べましたか？)<br>&nbsp;&nbsp;&nbsp;&nbsp;B: 아니요, [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요. (いいえ、まだ食べていません。)</div>
-						</div>
-						<div class="quiz-item">
-							<div class="quiz-q">2. 저는 한국 음식을 좋아해서 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 먹어요.<br>&nbsp;&nbsp;&nbsp;&nbsp;(私は韓国料理が好きで、よく食べます。)</div>
-						</div>
-						<div class="quiz-item">
-							<div class="quiz-q">3. [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 출발하니까 조금만 기다리세요.<br>&nbsp;&nbsp;&nbsp;&nbsp;(すぐに出発するから、少しだけ待ってください。)</div>
-						</div>
-					</div>
-
-					<button class="answer-btn" onclick="toggleAnswer('ans-quiz-1')">答えを確認する</button>
-					<div id="ans-quiz-1" class="highlight" style="display:none; font-size: 1.2rem; margin-top:12px; text-align: left;">
-						1. <b>아직</b> (まだ)<br>
-						2. <b>자주</b> (よく) [または <b>항상</b> (いつも)]<br>
-						3. <b>곧</b> (まもなく/すぐに) [または <b>금방</b>]
-					</div>
-				</div>
-
-				<!-- 2-2. 퀴즈 Part 2 (정도 & 순서) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">02 / 04</span>
-					<h2>練習問題 (Part 2: 程度 & 順序)</h2>
-					<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">カッコに入る適切な副詞を選びましょう。</p>
-
-					<div class="quiz-container">
-						<div class="quiz-item">
-							<div class="quiz-q">1. 이 영화는 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 재미있어요! (この映画は本当に面白いです！)</div>
-						</div>
-						<div class="quiz-item">
-							<div class="quiz-q">2. 매운 음식을 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 못 먹어요. (辛い食べ物が全く食べられません。)</div>
-						</div>
-						<div class="quiz-item">
-							<div class="quiz-q">3. 시간이 없으니까 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 가세요. (時間がないから、お先に行ってください。)</div>
-						</div>
-					</div>
-
-					<button class="answer-btn" onclick="toggleAnswer('ans-quiz-2')">答えを確認する</button>
-					<div id="ans-quiz-2" class="highlight" style="display:none; font-size: 1.2rem; margin-top:12px; text-align: left;">
-						1. <b>정말</b> (本当に) [または <b>너무 / 아주</b>]<br>
-						2. <b>전혀</b> (全く 〜ない)<br>
-						3. <b>먼저</b> (まず/お先に)
-					</div>
-				</div>
-
-				<!-- 🌟 [신규 추가] 2-3. 퀴즈 Part 3 (日 ➔ 韓 단어 번역 연습) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">03 / 04</span>
-					<h2>日 ➔ 韓 単語翻訳テスト (Part 3)</h2>
-					<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">日本語を見て、対応する韓国語の副詞を口に出してみましょう。</p>
-
-					<div class="quiz-container">
-						<div class="quiz-item" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-							<div class="quiz-q">1. まだ ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
-							<div class="quiz-q">2. たった今 ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
-							<div class="quiz-q">3. たまに ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
-							<div class="quiz-q">4. 本当に ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
-							<div class="quiz-q">5. まず / お先に ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
-							<div class="quiz-q">6. 今度に / 次に ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
-						</div>
-					</div>
-
-					<button class="answer-btn" onclick="toggleAnswer('ans-quiz-3')">答えを確認する</button>
-					<div id="ans-quiz-3" class="highlight" style="display:none; font-size: 1.15rem; margin-top:10px; text-align: left; line-height: 1.8;">
-						1. <b>아직</b> &nbsp;&nbsp;&nbsp;&nbsp; 2. <b>방금</b> &nbsp;&nbsp;&nbsp;&nbsp; 3. <b>가끔</b> (또는 종종)<br>
-						4. <b>정말</b> &nbsp;&nbsp;&nbsp;&nbsp; 5. <b>먼저</b> &nbsp;&nbsp;&nbsp;&nbsp; 6. <b>다음에</b>
-					</div>
-				</div>
-
-				<!-- 🌟 [신규 추가] 2-4. 퀴즈 Part 4 (日 ➔ 韓 문장 번역 연습) -->
-				<div class="slide topic-quiz">
-					<span class="slide-number">04 / 04</span>
-					<h2>日 ➔ 韓 文章翻訳テスト (Part 4)</h2>
-					<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">日本語の文を韓国語に変えてみましょう。</p>
-
-					<div class="quiz-container">
-						<div class="quiz-item">
-							<div class="quiz-q">1. 「とても美味しいです！」<br>&nbsp;&nbsp;&nbsp;&nbsp;➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 맛있어요!</div>
-						</div>
-						<div class="quiz-item">
-							<div class="quiz-q">2. 「いつもありがとうございます。」<br>&nbsp;&nbsp;&nbsp;&nbsp;➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 고맙습니다.</div>
-						</div>
-						<div class="quiz-item">
-							<div class="quiz-q">3. 「今度また会いましょう！」<br>&nbsp;&nbsp;&nbsp;&nbsp;➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 또 만나요!</div>
-						</div>
-					</div>
-
-					<button class="answer-btn" onclick="toggleAnswer('ans-quiz-4')">答えを確認する</button>
-					<div id="ans-quiz-4" class="highlight" style="display:none; font-size: 1.15rem; margin-top:10px; text-align: left;">
-						1. <b>정말</b> (또는 <b>너무 / 아주</b>) 맛있어요!<br>
-						2. <b>항상</b> 고맙습니다.<br>
-						3. <b>다음에</b> 또 만나요!
-					</div>
-				</div>
-
+			<!-- 1-1. 메인 타이틀 -->
+			<div class="slide topic-vocab active">
+				<span class="slide-number">01 / 07</span>
+				<p style="font-size: 1.2rem; color: #3498db; font-weight: bold;">韓国語の副詞</p>
+				<h1>必須副詞</h1>
+				<p>よく使う副詞をグループ別に分けて覚えましょう！</p>
 			</div>
 
-					<!-- 슬라이드 바깥 화살표 버튼 -->
-					<button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
-					<button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+			<!-- 1-2. 시간 부사 1 (아직, 이미, 벌써, 방금, 금방, 곧) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>1. 時間に関する副詞</h2>
+				<div class="word-grid">
+
+					<div class="word-card">
+						<div class="kor-word">이미</div>
+						<div class="jp-word">すでに</div>
+						<div class="example-box">이미 끝났어요.<span>(すでに終わりました)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">벌써</div>
+						<div class="jp-word">もう / 早くも</div>
+						<div class="example-box">벌써 12시예요?<span>(もう12時ですか？)</span></div>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- 1-2. 시간 부사 1 (아직, 이미, 벌써, 방금, 금방, 곧) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>💡 이미 vs 벌써</h2>
+
+
+				<div class="compare-box">
+					<p>
+						<b>이미</b> = 「すでに」<br>
+						事実として完了していることを伝える
+					</p>
+					<div class="example-box">
+						이미 숙제를 했어요.
+						<span>(すでに宿題をしました)</span>
+					</div>
+
+					<p>
+						<b>벌써</b> = 「もう・早くも」<br>
+						予想より早いことへの驚きや意外な気持ちを含む
+					</p>
+					<div class="example-box">
+						벌써 숙제를 했어요?
+						<span>(もう宿題をしたんですか？)</span>
+					</div>
+
+					<div class="tip-box">
+						✅ 이미 → 完了の事実（すでに）<br>  ✅ 벌써 → 驚き・意外性（もう！）
+					</div>
+				</div>
+			</div>
+			<!-- 問題 (아직, 이미, 벌써 ) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q1. 👉 [ &nbsp;&nbsp; ] 집에 왔어요?</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 의외성 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">もう家に着いたんですか？</p>
+					<!--<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">「아직 / 이미 / 벌써」</p>-->
+				</div><br>
+				<div class="option-row"><div class="word-card">아직 </div><div class="word-card">이미 </div><div class="word-card">벌써 </div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q99')">정답 확인하기</button>
+				<div id="ans-q99" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">벌써</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q2. 👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 다 먹었어요.</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작의 완료 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「もう全部食べ終わりました。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">아직 </div><div class="word-card">이미 </div><div class="word-card">벌써 </div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q98')">정답 확인하기</button>
+				<div id="ans-q98" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">이미</div>
+			</div>
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q3. 👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 8월이에요?</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 의외성 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「もう8月ですか？」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">아직 </div><div class="word-card">이미 </div><div class="word-card">벌써 </div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q97')">정답 확인하기</button>
+				<div id="ans-q97" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">벌써</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q4. 👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요.</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작이 아직 안 끝난 부정문 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「まだ食べていません」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">아직 </div><div class="word-card">이미 </div><div class="word-card">벌써 </div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q96')">정답 확인하기</button>
+				<div id="ans-q96" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">아직</div>
+			</div>
+
+
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>1. 時間に関する副詞</h2>
+				<div class="word-grid">
+
+					<div class="word-card">
+						<div class="kor-word">방금</div>
+						<div class="jp-word">たった今</div>
+						<div class="example-box">방금 왔어요.<span>(たった今来ました)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">금방</div>
+						<div class="jp-word">すぐ / まもなく</div>
+						<div class="example-box">금방갈게요.<span>(すぐ行きます)</span></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>💡 방금 vs 금방</h2>
+
+				<div class="compare-box">
+
+					<p>
+						<b>방금</b> = 「たった今」<br>
+						少し前の出来事（過去）
+					</p>
+
+					<div class="example-box">
+						방금 왔어요.
+						<span>(たった今来ました)</span>
+					</div>
+
+					<p>
+						<b>금방</b> = 「すぐ」<br>
+						このあとすぐの出来事（未来）
+					</p>
+
+					<div class="example-box">
+						금방 갈게요.
+						<span>(すぐ行きます)</span>
+					</div>
+
+					<div class="tip-box">
+						✅ 방금 = 「たった今」 ✅ 금방 = 「すぐ」<br> 少し前の出来事（過去）    このあとすぐの出来事（未来）
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- 問題 (방금/금방) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q1. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작의 완료 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐ終わります」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 끝나요.</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">방금 </div><div class="word-card">금방 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q95')">정답 확인하기</button>
+				<div id="ans-q95" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q2. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 時間があまり過ぎてない ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「さき、何と言いましたか？」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 뭐라고 했어요?</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">방금 </div><div class="word-card">금방 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q94')">정답 확인하기</button>
+				<div id="ans-q94" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">방금</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q3. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: このあとすぐのできこと ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐ着きます！」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 갈게요!!</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">방금 </div><div class="word-card">금방 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q93')">정답 확인하기</button>
+				<div id="ans-q93" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q4. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 時間があまり過ぎてない ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「先何しましたか」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 뭐 했어요?.</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">방금 </div><div class="word-card">금방 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q92')">정답 확인하기</button>
+				<div id="ans-q92" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">방금</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q1. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작의 완료 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐ終わります」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 끝나요.</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">방금 </div><div class="word-card">금방 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q91')">정답 확인하기</button>
+				<div id="ans-q91" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
+			</div>
+
+
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>💡 금방 vs 곧</h2>
+				<div class="compare-box">
+					<p>
+						둘 다 「すぐ・まもなく」의 뜻이지만 느낌이 다릅니다.
+					</p>
+
+					<p>
+						<b>금방</b><br>
+						時間がとても短い
+					</p>
+
+					<div class="example-box">
+						금방 갈게요.
+						<span>(すぐ行きます)</span>
+					</div>
+
+					<p>
+						<b>곧</b><br>
+						近い未来を表す
+					</p>
+
+					<div class="example-box">
+						곧 시작해요.
+						<span>(まもなく始まります)</span>
+					</div>
+
+					<div class="tip-box">
+						✅ 금방 = 時間がとても短い<br>
+						✅ 곧 = 近い未来を表す
+					</div>
+				</div>
+			</div>
+
+
+
+			<!-- 問題 (방금/금방) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q1. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작의 완료 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐ終わります」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 끝나요.</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">금방 </div><div class="word-card">곧 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q91')">정답 확인하기</button>
+				<div id="ans-q91" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q2. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 近い未来を表す ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「まもなく始まります」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 시작해요.</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">금방 </div><div class="word-card">곧 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q90')">정답 확인하기</button>
+				<div id="ans-q90" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">곧</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>Q3. 뉘앙스에 맞는 단어를 고르세요</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: すぐ後のこと ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐできます」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 할 수 있어요.</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">금방 </div><div class="word-card">곧 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q89')">정답 확인하기</button>
+				<div id="ans-q89" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
+			</div>
+
+
+
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 07</span>
+				<h2>【覚え方】</h2>
+				<div class="word-grid">
+					<div class="word-card">
+
+						이미 = すでに<br>
+						벌써 = もう！<br><br>
+
+						방금 = たった今<br>
+						금방 = すぐ<br><br>
+
+						금방 = 今すぐ<br>
+						곧 = もうすぐ
+
+					</div>
+				</div>
+			</div>
+
+
+			<!-- 1-3. 빈도 부사 (항상, 자주,보통 ) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">03 / 07</span>
+				<h2>2. 頻度(ひんど)に関する副詞</h2>
+				<div class="word-grid">
+					<div class="word-card">
+						<div class="kor-word">항상</div>
+						<div class="jp-word">いつも / 常に</div>
+						<div class="example-box">항상 고마워요.<span>(いつもありがとう)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">자주</div>
+						<div class="jp-word">しょっちゅう / よく</div>
+						<div class="example-box">자주 만나요.<span>(よく会います)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">보통</div>
+						<div class="jp-word">ふつう / たいてい</div>
+						<div class="example-box">보통 집에서 쉬어요.<span>(たいてい家で休んでます)</span></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!---문제집---->
+			<div class="slide topic-vocab">
+				<span class="slide-number">04 / 10</span>
+				<h2>Q1. 저는 [　　　] 아침을 먹어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私はいつも朝ご飯を食べます。」</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">항상 </div><div class="word-card">자주</div><div class="word-card">보통 </div> </div>
+
+				<button class="answer-btn" onclick="toggleAnswer('ans-q1')">정답 확인하기</button>
+				<div id="ans-q1" class="highlight" style="display:none; font-size: 2.2rem;">항상</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">06 / 10</span>
+				<h2>Q3. 친구를 [　　　] 만나요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「友達によく会います。」</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">항상 </div><div class="word-card">자주</div><div class="word-card">보통 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q3')">정답 확인하기</button>
+				<div id="ans-q3" class="highlight" style="display:none; font-size: 2.2rem;">자주</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">07 / 10</span>
+				<h2>Q4. 저는 [　　　] 영화를 봐요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私はよく映画を見ます。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">항상 </div><div class="word-card">자주</div><div class="word-card">보통 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q4')">정답 확인하기</button>
+				<div id="ans-q4" class="highlight" style="display:none; font-size: 2.2rem;">자주</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">08 / 10</span>
+				<h2>Q5. 주말에는 [　　　] 집에서 쉬어요.</h2> <br> 	<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「週末はたいてい家で休みます。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">항상 </div><div class="word-card">자주</div><div class="word-card">보통 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q5')">정답 확인하기</button>
+				<div id="ans-q5" class="highlight" style="display:none; font-size: 2.2rem;">보통</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">09 / 10</span>
+				<h2>Q6. 저는 점심을 [　　　] 회사에서 먹어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私はたいてい会社で昼ご飯を食べます。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">항상 </div><div class="word-card">자주</div><div class="word-card">보통 </div> </div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q6')">정답 확인하기</button>
+				<div id="ans-q6" class="highlight" style="display:none; font-size: 2.2rem;">보통</div>
+			</div>
+
+			<!-- 1-3. 빈도 부사 ( 가끔, 종종 ) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">03 / 07</span>
+				<h2>2. 頻度(ひんど)に関する副詞</h2>
+				<div class="word-grid">
+					<div class="word-card">
+						<div class="kor-word">가끔</div>
+						<div class="jp-word">たまに / 時々</div>
+						<div class="example-box">가끔 운동해요.<span>(たまに運動します)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">종종</div>
+						<div class="jp-word">しばしば / たまに</div>
+						<div class="example-box">종종 가요.<span>(しばしば行きます)</span></div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!---문제집 \(가끔 , 종종)---->
+			<div class="slide topic-vocab">
+				<span class="slide-number">10 / 12</span>
+				<h2>Q7. 저는 [　　　] 커피를 마셔요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私はたまにコーヒーを飲みます。」</p>
+				</div><br>
+
+				<div class="option-row"><div class="word-card">가끔</div><div class="word-card">종종</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q7')">정답 확인하기</button>
+				<div id="ans-q7" class="highlight" style="display:none; font-size: 2.2rem;">가끔</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">11 / 12</span>
+				<h2>Q8. 주말에 [　　　] 산책해요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「週末にたまに散歩します。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">가끔</div><div class="word-card">종종</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q8')">정답 확인하기</button>
+				<div id="ans-q8" class="highlight" style="display:none; font-size: 2.2rem;">가끔</div>
+			</div>
+			<div class="slide topic-vocab">
+				<span class="slide-number">12 / 12</span>
+				<h2>Q9. 저는 [　　　] 야근을 해요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私は時々残業をします。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">가끔</div><div class="word-card">종종</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q9')">정답 확인하기</button>
+				<div id="ans-q9" class="highlight" style="display:none; font-size: 2.2rem;">종종</div>
+			</div>
+			<div class="slide topic-vocab">
+				<span class="slide-number">13 / 12</span>
+				<h2>Q10. 친구들과 [　　　] 저녁을 먹어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「友達と時々夕食を食べます。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">가끔</div><div class="word-card">종종</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q10')">정답 확인하기</button>
+				<div id="ans-q10" class="highlight" style="display:none; font-size: 2.2rem;">종종</div>
+			</div>
+
+
+			<!-- 1-3. 빈도 부사 (항상, 자주, 가끔, 종종, 보통, 거의) -->
+			<!--<div class="slide topic-vocab">
+		<span class="slide-number">03 / 07</span>
+		<h2>2. 頻度(ひんど)に関する副詞</h2>
+		<div class="word-grid">
+			<div class="word-card">
+				<div class="kor-word">항상</div>
+				<div class="jp-word">いつも / 常に</div>
+				<div class="example-box">항상 고마워요.<span>(いつもありがとう)</span></div>
+			</div>
+			<div class="word-card">
+				<div class="kor-word">자주</div>
+				<div class="jp-word">しょっちゅう / よく</div>
+				<div class="example-box">자주 만나요.<span>(よく会います)</span></div>
+			</div>
+			<div class="word-card">
+				<div class="kor-word">가끔</div>
+				<div class="jp-word">たまに / 時々</div>
+				<div class="example-box">가끔 운동해요.<span>(たまに運動します)</span></div>
+			</div>
+			<div class="word-card">
+				<div class="kor-word">종종</div>
+				<div class="jp-word">しばしば / たまに</div>
+				<div class="example-box">종종 가요.<span>(しばしば行きます)</span></div>
+			</div>
+			<div class="word-card">
+				<div class="kor-word">보통</div>
+				<div class="jp-word">ふつう / たいてい</div>
+				<div class="example-box">보통 집에서 쉬어요.<span>(たいてい家で休んでます)</span></div>
+			</div>
+		</div>
+	</div>-->
+
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">03 / 07</span>
+				<h2> 副詞否定動詞</h2>
+				<div class="word-grid">
+					<div class="word-card">
+						<div class="kor-word">보통</div>
+						<div class="jp-word">ふつう / たいてい</div>
+						<div class="example-box">보통 집에서는 안먹어요.<span>(たいてい家では食べまないです。)</span></div>
+					</div>
+
+					<div class="word-card">
+						<div class="kor-word">아직</div>
+						<div class="jp-word">まだ</div>
+						<div class="example-box">아직 안 먹었어요.<span>(まだ食べていません)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">거의</div>
+						<div class="jp-word">ほとんど</div>
+						<div class="example-box">거의 안 해요.<span>(ほとんどしません。)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">전혀</div>
+						<div class="jp-word">全く</div>
+						<div class="example-box">전혀 못 해요.<span>(全くできません。)</span></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- 보통 -->
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">01 / 08</span>
+				<h2>Q1. 저는 점심을 [　　　] 회사에서 먹어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私はたいてい会社で昼ご飯を食べます。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">보통</div><div class="word-card">아직</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q1')">정답 확인하기</button>
+				<div id="ans-q1" class="highlight" style="display:none; font-size: 2.2rem;">보통</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 08</span>
+				<h2>Q2. 주말에는 [　　　] 집에서 쉬어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「週末はたいてい家で休みます。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">보통</div><div class="word-card">거의</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q2')">정답 확인하기</button>
+				<div id="ans-q2" class="highlight" style="display:none; font-size: 2.2rem;">보통</div>
+			</div>
+
+			<!-- 아직 -->
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">03 / 08</span>
+				<h2>Q3. 저는 [　　　] 숙제를 안 했어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私はまだ宿題をしていません。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">아직</div><div class="word-card">전혀</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q3')">정답 확인하기</button>
+				<div id="ans-q3" class="highlight" style="display:none; font-size: 2.2rem;">아직</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">04 / 08</span>
+				<h2>Q4. 동생은 [　　　] 안 왔어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「弟（妹）はまだ来ていません。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">아직</div><div class="word-card">보통</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q4')">정답 확인하기</button>
+				<div id="ans-q4" class="highlight" style="display:none; font-size: 2.2rem;">아직</div>
+			</div>
+
+			<!-- 거의 -->
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">05 / 08</span>
+				<h2>Q5. 저는 술을 [　　　] 안 마셔요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私はお酒をほとんど飲みません。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">거의</div><div class="word-card">전혀</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q5')">정답 확인하기</button>
+				<div id="ans-q5" class="highlight" style="display:none; font-size: 2.2rem;">거의</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">06 / 08</span>
+				<h2>Q6. 요즘은 [　　　] 외식을 안 해요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「最近はほとんど外食をしません。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">거의</div><div class="word-card">아직</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q6')">정답 확인하기</button>
+				<div id="ans-q6" class="highlight" style="display:none; font-size: 2.2rem;">거의</div>
+			</div>
+
+			<!-- 전혀 -->
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">07 / 08</span>
+				<h2>Q7. 저는 매운 음식을 [　　　] 못 먹어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「私は辛い食べ物が全然食べられません。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">전혀</div><div class="word-card">거의</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q7')">정답 확인하기</button>
+				<div id="ans-q7" class="highlight" style="display:none; font-size: 2.2rem;">전혀</div>
+			</div>
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">08 / 08</span>
+				<h2>Q8. 돈이 [　　　] 없어요.</h2>
+				<br>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a;">「お金が全然ありません。」</p>
+				</div><br>
+				<div class="option-row"><div class="word-card">전혀</div><div class="word-card">보통</div></div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q8')">정답 확인하기</button>
+				<div id="ans-q8" class="highlight" style="display:none; font-size: 2.2rem;">전혀</div>
+			</div>
+
+
+
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">03 / 07</span>
+				<h2>2. 頻度に関する副詞</h2>
+				<div class="word-grid">
+					<div class="word-card">
+						<div class="kor-word">자주</div>
+						<div class="jp-word">しょっちゅう / よく</div>
+						<div class="example-box">자주 만나요.<span>(よく会います)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">가끔</div>
+						<div class="jp-word">たまに / 時々</div>
+						<div class="example-box">가끔 운동해요.<span>(たまに運動します)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">보통</div>
+						<div class="jp-word">ふつう / たいてい</div>
+						<div class="example-box">보통 집에서 쉬어요.<span>(たいてい家で休んでます)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">거의</div>
+						<div class="jp-word">ほとんど</div>
+						<div class="example-box">거의 다 왔어요.<span>(ほとんど着きました)</span></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 1-4. 정도 부사 (정말, 너무, 아주, 꽤, 전혀) -->
+			<!--<div class="slide topic-vocab">
+		<span class="slide-number">04 / 07</span>
+		<h2>3. 程度に関する副詞</h2>
+		<div class="word-grid">
+			<div class="word-card">
+				<div class="kor-word">정말</div>
+				<div class="jp-word">本当に / とても</div>
+				<div class="example-box">정말 맛있어요!<span>(本当に美味しいです！)</span></div>
+			</div>
+			<div class="word-card">
+				<div class="kor-word">너무</div>
+				<div class="jp-word">とても / あまりに</div>
+				<div class="example-box">너무 좋아요.<span>(とても好きです)</span></div>
+			</div>
+			<div class="word-card">
+				<div class="kor-word">아주</div>
+				<div class="jp-word">大変 / とても</div>
+				<div class="example-box">아주 잘했어요.<span>(大変よくできました)</span></div>
+			</div>
+			<div class="word-card">
+				<div class="kor-word">꽤</div>
+				<div class="jp-word">かなり / 相当</div>
+				<div class="example-box">꽤 비싸네요.<span>(かなり高いですね)</span></div>
+			</div>
+			<div class="word-card" style="grid-column: span 2;">
+				<div class="kor-word">전혀 (+否定)</div>
+				<div class="jp-word">全く (〜ない)</div>
+				<div class="example-box">전혀 안 힘들어요.<span>(全く大変じゃないです)</span></div>
+			</div>
+		</div>
+	</div>-->
+			<!-- 1-5. 순서 부사 (먼저, 다음에) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">05 / 07</span>
+				<h2>4. 順序に関する副詞</h2>
+				<div class="word-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 600px;">
+					<div class="word-card">
+						<div class="kor-word">먼저</div>
+						<div class="jp-word">まず / お先に</div>
+						<div class="example-box">먼저 가세요.<span>(お先に行ってください)</span></div>
+					</div>
+					<div class="word-card">
+						<div class="kor-word">다음에</div>
+						<div class="jp-word">今度に / 次に</div>
+						<div class="example-box">다음에 또 만나요.<span>(今度また会いましょう)</span></div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<!-- 問題 (먼저, 다음에) -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">06 / 07</span>
+				<h2>Q1. 손을 [    ] 씻고 밥을 먹어요.</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「手を先に洗ってご飯を食べます。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q88')">정답 확인하기</button>
+				<div id="ans-q88" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
+			</div>
+			<div class="slide topic-vocab">
+				<span class="slide-number">06 / 07</span>
+				<h2>Q1. 손을 [먼저] 씻고 밥을 먹어요.</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「手を先に洗ってご飯を食べます。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q87')">정답 확인하기</button>
+				<div id="ans-q87" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
+			</div>
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 06</span>
+				<h2>Q2. [       ] 또 만나요.</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今度また会いましょう。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q85')">정답 확인하기</button>
+				<div id="ans-q85" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
+			</div>
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 06</span>
+				<h2>Q2. [다음에] 또 만나요.</h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今度また会いましょう。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q86')">정답 확인하기</button>
+				<div id="ans-q86" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
+			</div>
+
+
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 06</span>
+				<h2>Q3. [        ] 들어가세요. 저는 조금 더 있다가 갈게요. </h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「お先にどうぞ。私はもう少ししてから行きます。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q84')">정답 확인하기</button>
+				<div id="ans-q84" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
+			</div>
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 06</span>
+				<h2>Q3. [먼저] 들어가세요. 저는 조금 더 있다가 갈게요. </h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「お先にどうぞ。私はもう少ししてから行きます。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q83')">정답 확인하기</button>
+				<div id="ans-q83" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">먼저</div>
+			</div>
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 06</span>
+				<h2>Q4. 이번에는 바쁘니까 [       ] 같이 영화 봐요. </h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今回は忙しいので今度一緒に映画を見ましょう。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q82')">정답 확인하기</button>
+				<div id="ans-q82" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
+			</div>
+			<div class="slide topic-vocab">
+				<span class="slide-number">02 / 06</span>
+				<h2>Q4. 이번에는 바쁘니까 [다음에] 같이 영화 봐요. </h2>
+
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「今回は忙しいので今度一緒に映画を見ましょう。」</p>
+				</div><br>
+
+				<div class="word-card">먼저</div><div class="word-card">다음에</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q81')">정답 확인하기</button>
+				<div id="ans-q81" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">다음에</div>
+			</div>
+
+			<!-- 1-6. 단어 요약 슬라이드 -->
+			<div class="slide topic-vocab">
+				<span class="slide-number">06 / 06</span>
+				<h2>本日の副詞 一覧</h2>
+				<div style="font-size: 1.05rem; line-height: 1.9; text-align: left; background-color: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #cbd5e1;">
+					<p><b>・時間：</b> 아직(まだ), 이미(すでに), 벌써(もう), 방금(たった今), 금방(すぐ), 곧(まもなく)</p>
+					<p><b>・頻度：</b> 항상(いつも), 자주(よく), 가끔(たまに), 종종(しばしば), 보통(ふつう), 거의(ほとんど)</p>
+					<p><b>・程度：</b> 정말(本当に), 너무(とても), 아주(大変), 꽤(かなり), 전혀(全く〜ない)</p>
+					<p><b>・順序：</b> 먼저(まず/お先に), 다음에(今度に)</p>
+				</div>
+			</div>
+
+
+			<!-- ==============================================================
+	SECTION 2. 헷갈림 방지! 뉘앙스 힌트가 포함된 1P 1문제 연습문제
+		 ============================================================== -->
+			<!-- 퀴즈 1번: 아직 vs 이미 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">01 / 06</span>
+				<div style="font-size: 3.5rem; margin-bottom: 5px;">⌛</div>
+				<h2>Q1. 뉘앙스에 맞는 단어를 고르세요</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 동작이 아직 안 끝난 부정문 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「まだ食べていません」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요.</p>
+					<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 아직 / 이미 / 벌써</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q1')">정답 확인하기</button>
+				<div id="ans-q1" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">아직</div>
+			</div>
+
+			<!-- 퀴즈 2번: 이미 vs 벌써 (놀람/예상보다 빠름) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">02 / 06</span>
+				<div style="font-size: 3.5rem; margin-bottom: 5px;">😲</div>
+				<h2>Q2. 뉘앙스에 맞는 단어를 고르세요</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: "생각보다 시간이 너무 빠르네!" 하고 놀랄 때 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「もう12時ですか！？」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 12시예요?</p>
+					<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 아직 / 이미 / 벌써</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q2')">정답 확인하기</button>
+				<div id="ans-q2" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">벌써</div>
+			</div>
+
+			<!-- 퀴즈 3번: 방금 (과거시점) vs 금방 (미래시점) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">03 / 06</span>
+				<div style="font-size: 3.5rem; margin-bottom: 5px;">🔙</div>
+				<h2>Q3. 과거/미래 시점에 주의하세요</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: '과거(왔어요)'에 일어난 아주 조금 전 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「たった今着きました」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 왔어요.</p>
+					<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방 / 곧</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q3')">정답 확인하기</button>
+				<div id="ans-q3" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">방금</div>
+			</div>
+
+			<!-- 퀴즈 4번: 금방 (미래시점) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">04 / 06</span>
+				<div style="font-size: 3.5rem; margin-bottom: 5px;">🔜</div>
+				<h2>Q4. 과거/미래 시점에 주의하세요</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 앞으로 '미래(갈게요)'에 바로 하겠다는 약속 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「すぐに行きます」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 갈게요.</p>
+					<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 방금 / 금방 / 벌써</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q4')">정답 확인하기</button>
+				<div id="ans-q4" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">금방</div>
+			</div>
+
+			<!-- 퀴즈 5번: 빈도 (항상 vs 가끔) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">05 / 06</span>
+				<div style="font-size: 3.5rem; margin-bottom: 5px;">💯</div>
+				<h2>Q5. 빈도(횟수)를 구별하세요</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 100% 매일매일 빠짐없이 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「いつも感謝しています」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 감사해요.</p>
+					<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 항상 / 가끔 / 보통</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q5')">정답 확인하기</button>
+				<div id="ans-q5" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">항상</div>
+			</div>
+
+			<!-- 퀴즈 6번: 정도 (정말 vs 전혀) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">06 / 16</span>
+				<div style="font-size: 3.5rem; margin-bottom: 5px;">❌</div>
+				<h2>Q6. 뒤에 오는 말(부정문)과의 짝꿍!</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 1.1rem; color: #d97706; font-weight: bold;">[ 힌트: 뒤에 '모르겠어요(否定)'와 찰떡 짝꿍인 단어 ]</p>
+					<p style="font-size: 1.8rem; font-weight: bold; color: #1e3a8a; margin-top: 10px;">「全く分かりません」</p>
+					<p style="font-size: 1.3rem; color: #334155; margin-top: 15px;">👉 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 모르겠어요.</p>
+					<p style="font-size: 1rem; color: #64748b; margin-top: 15px;"><b>보기:</b> 정말 / 아주 / 전혀</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q6')">정답 확인하기</button>
+				<div id="ans-q6" class="highlight" style="display:none; font-size: 2.2rem; margin-top: 15px;">전혀</div>
+			</div>
+			<!-- ==============================================================
+	SECTION 2. 연습문제 슬라이드 (Topic: quiz)
+	============================================================== -->
+			<!-- 2-1. 퀴즈 Part 1 (시간 & 빈도) -->
+			<!-- ==============================================================
+	SECTION 2. 1P 1문제 전용 연습문제 슬라이드 (Topic: quiz)
+	============================================================== -->
+			<!-- 퀴즈 1번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">07 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">⏳</div>
+				<h2>Q7. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「まだ」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: まだ食べていません ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q7')">答えを確認する</button>
+				<div id="ans-q7" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">아직</div>
+			</div>
+
+
+			<!-- 퀴즈 2번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">08 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">⚡</div>
+				<h2>Q8. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「たった今」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: たった今来ました ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 왔어요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q8')">答えを確認する</button>
+				<div id="ans-q8" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">방금</div>
+			</div>
+
+			<!-- 퀴즈 3번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">09 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">🏃‍♂️</div>
+				<h2>Q9. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「すぐ / まもなく」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: すぐ行きます ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 갈게요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q9')">答えを確認する</button>
+				<div id="ans-q9" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">금방 <span style="font-size:1.5rem; color:#666;">(또는 곧)</span></div>
+			</div>
+
+			<!-- 퀴즈 4번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">10 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">❤️</div>
+				<h2>Q10. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「いつも / 常(つね)に」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: いつも感謝しています ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 감사해요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q10')">答えを確認する</button>
+				<div id="ans-q10" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">항상</div>
+			</div>
+
+			<!-- 퀴즈 5번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">11 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">🔄</div>
+				<h2>11. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「よく / しょっちゅう」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: よく会います ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 만나요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q11')">答えを確認する</button>
+				<div id="ans-q11" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">자주</div>
+			</div>
+
+			<!-- 퀴즈 6번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">12 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">☕</div>
+				<h2>12. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「たまに / 時々」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: たまに飲んでます ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 마셔요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q12')">答えを確認する</button>
+				<div id="ans-q12" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">가끔 <span style="font-size:1.5rem; color:#666;">(또는 종종)</span></div>
+			</div>
+
+			<!-- 퀴즈 7번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">13 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">😋</div>
+				<h2>13. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「本当に / とても」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: 本当に美味しいです！ ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 맛있어요! )</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q13')">答えを確認する</button>
+				<div id="ans-q13" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">정말 <span style="font-size:1.5rem; color:#666;">(또는 너무/아주)</span></div>
+			</div>
+
+			<!-- 퀴즈 8번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">14 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">🚫</div>
+				<h2>14. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「全く (〜ない)」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: 全くわかりません ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 모르겠어요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q14')">答えを確認する</button>
+				<div id="ans-q14" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">전혀</div>
+			</div>
+
+			<!-- 퀴즈 9번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">15 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">👉</div>
+				<h2>15. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「まず / お先に」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: お先に行ってください ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 가세요)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q15')">答えを確認する</button>
+				<div id="ans-q15" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">먼저</div>
+			</div>
+
+			<!-- 퀴즈 10번 -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">16 / 16</span>
+				<div style="font-size: 4rem; margin-bottom: 10px;">🤝</div>
+				<h2>Q16. 韓国語に変えてみましょう</h2>
+				<div class="quiz-container" style="text-align: center; margin-top: 20px;">
+					<p style="font-size: 2.2rem; font-weight: bold; color: #1e3a8a;">「今度 / 次に」</p>
+					<p style="font-size: 1.1rem; color: #64748b; margin-top: 10px;">例: 今度また会いましょう！ ( [ &nbsp;&nbsp;&nbsp;&nbsp; ] 또 만나요!)</p>
+				</div>
+				<button class="answer-btn" onclick="toggleAnswer('ans-q16')">答えを確認する</button>
+				<div id="ans-q16" class="highlight" style="display:none; font-size: 2.5rem; margin-top: 20px;">다음에</div>
+			</div>
+
+			<!-- 2-1. 퀴즈 Part 1 (시간 & 빈도) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">01 / 04</span>
+				<h2>練習問題 (Part 1: 時間 & 頻度)</h2>
+				<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">カッコに入る適切な副詞を選びましょう。</p>
+
+				<div class="quiz-container">
+					<div class="quiz-item">
+						<div class="quiz-q">1. A: 밥 먹었어요? (ご飯食べましたか？)<br>&nbsp;&nbsp;&nbsp;&nbsp;B: 아니요, [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 안 먹었어요. (いいえ、まだ食べていません。)</div>
+					</div>
+					<div class="quiz-item">
+						<div class="quiz-q">2. 저는 한국 음식을 좋아해서 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 먹어요.<br>&nbsp;&nbsp;&nbsp;&nbsp;(私は韓国料理が好きで、よく食べます。)</div>
+					</div>
+					<div class="quiz-item">
+						<div class="quiz-q">3. [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 출발하니까 조금만 기다리세요.<br>&nbsp;&nbsp;&nbsp;&nbsp;(すぐに出発するから、少しだけ待ってください。)</div>
+					</div>
 				</div>
 
-				<script>
-					let currentTopic = 'vocab';  // 'vocab' 또는 'quiz'
-					let currentSlideIndex = 0;
+				<button class="answer-btn" onclick="toggleAnswer('ans-quiz-1')">答えを確認する</button>
+				<div id="ans-quiz-1" class="highlight" style="display:none; font-size: 1.2rem; margin-top:12px; text-align: left;">
+					1. <b>아직</b> (まだ)<br>
+					2. <b>자주</b> (よく) [または <b>항상</b> (いつも)]<br>
+					3. <b>곧</b> (まもなく/すぐに) [または <b>금방</b>]
+				</div>
+			</div>
 
-					// 현재 주제에 해당하는 슬라이드 구하기
-					function getActiveSlides() {
-						return document.querySelectorAll(`.topic-${currentTopic}`);
+			<!-- 퀴즈 Part 2 (정도 & 순서) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">02 / 04</span>
+				<h2>練習問題 (Part 2: 程度 & 順序)</h2>
+				<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">カッコに入る適切な副詞を選びましょう。</p>
+
+				<div class="quiz-container">
+					<div class="quiz-item">
+						<div class="quiz-q">1. 이 영화는 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 재미있어요! (この映画は本当に面白いです！)</div>
+					</div>
+					<div class="quiz-item">
+						<div class="quiz-q">2. 매운 음식을 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 못 먹어요. (辛い食べ物が全く食べられません。)</div>
+					</div>
+					<div class="quiz-item">
+						<div class="quiz-q">3. 시간이 없으니까 [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 가세요. (時間がないから、お先に行ってください。)</div>
+					</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer('ans-quiz-2')">答えを確認する</button>
+				<div id="ans-quiz-2" class="highlight" style="display:none; font-size: 1.2rem; margin-top:12px; text-align: left;">
+					1. <b>정말</b> (本当に) [または <b>너무 / 아주</b>]<br>
+					2. <b>전혀</b> (全く 〜ない)<br>
+					3. <b>먼저</b> (まず/お先に)
+				</div>
+			</div>
+
+			<!-- 🌟 퀴즈 Part 3 (日 ➔ 韓 단어 번역 연습) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">03 / 04</span>
+				<h2>日 ➔ 韓 単語翻訳テスト (Part 3)</h2>
+				<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">日本語を見て、対応する韓国語の副詞を口に出してみましょう。</p>
+
+				<div class="quiz-container">
+					<div class="quiz-item" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+						<div class="quiz-q">1. まだ ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
+						<div class="quiz-q">2. たった今 ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
+						<div class="quiz-q">3. たまに ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
+						<div class="quiz-q">4. 本当に ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
+						<div class="quiz-q">5. まず / お先に ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
+						<div class="quiz-q">6. 今度に / 次に ➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]</div>
+					</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer('ans-quiz-3')">答えを確認する</button>
+				<div id="ans-quiz-3" class="highlight" style="display:none; font-size: 1.15rem; margin-top:10px; text-align: left; line-height: 1.8;">
+					1. <b>아직</b> &nbsp;&nbsp;&nbsp;&nbsp; 2. <b>방금</b> &nbsp;&nbsp;&nbsp;&nbsp; 3. <b>가끔</b> (또는 종종)<br>
+					4. <b>정말</b> &nbsp;&nbsp;&nbsp;&nbsp; 5. <b>먼저</b> &nbsp;&nbsp;&nbsp;&nbsp; 6. <b>다음에</b>
+				</div>
+			</div>
+
+			<!-- 🌟2-4. 퀴즈 Part 4 (日 ➔ 韓 문장 번역 연습) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">04 / 04</span>
+				<h2>日 ➔ 韓 文章翻訳テスト (Part 4)</h2>
+				<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">日本語の文を韓国語に変えてみましょう。</p>
+
+				<div class="quiz-container">
+					<div class="quiz-item">
+						<div class="quiz-q">1. 「とても美味しいです！」<br>&nbsp;&nbsp;&nbsp;&nbsp;➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 맛있어요!</div>
+					</div>
+					<div class="quiz-item">
+						<div class="quiz-q">2. 「いつもありがとうございます。」<br>&nbsp;&nbsp;&nbsp;&nbsp;➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 고맙습니다.</div>
+					</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer('ans-quiz-4')">答えを確認する</button>
+				<div id="ans-quiz-4" class="highlight" style="display:none; font-size: 1.15rem; margin-top:10px; text-align: left;">
+					1. <b>정말</b> (또는 <b>너무 / 아주</b>) 맛있어요!<br>
+					2. <b>항상</b> 고맙습니다.
+				</div>
+			</div>
+
+			<!-- 🌟 퀴즈 (日 ➔ 韓 문장 번역 연습) -->
+			<div class="slide topic-quiz">
+				<span class="slide-number">04 / 04</span>
+				<h2>日 ➔ 韓 文章翻訳テスト (Part 5)</h2>
+				<p style="font-size: 0.95rem; color: #666; margin-bottom: 10px;">日本語の文を韓国語に変えてみましょう。</p>
+
+				<div class="quiz-container">
+					<div class="quiz-item">
+						<div class="quiz-q">3. 「今度また会いましょう！」<br>&nbsp;&nbsp;&nbsp;&nbsp;➔ [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] 또 만나요!</div>
+					</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer('ans-quiz-5')">答えを確認する</button>
+				<div id="ans-quiz-5" class="highlight" style="display:none; font-size: 1.15rem; margin-top:10px; text-align: left;">
+					3. <b>다음에</b> 또 만나요!
+				</div>
+			</div>
+
+		</div>
+		</div>
+	<div>
+		<!-- 슬라이드 바깥 화살표 버튼 -->
+		<button class="nav-btn prev-btn" onclick="changeSlide(-1)">&#10094;</button>
+		<button class="nav-btn next-btn" onclick="changeSlide(1)">&#10095;</button>
+	</div>
+
+	<script>
+		let currentTopic = 'vocab';  // 'vocab' 또는 'quiz'
+		let currentSlideIndex = 0;
+
+		function updateSlideNumbers() {
+			['vocab', 'quiz'].forEach(topic => {
+				const slides = document.querySelectorAll(`.topic-${topic}`);
+				const total = slides.length;
+				slides.forEach((slide, index) => {
+					const numberEl = slide.querySelector('.slide-number');
+					if (numberEl) {
+						numberEl.textContent = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
 					}
+				});
+			});
+		}
 
-					// 슬라이드 표시
-					function showSlide(index) {
-						const activeSlides = getActiveSlides();
-						document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-						if (activeSlides[index]) {
-							activeSlides[index].classList.add('active');
-						}
-					}
+		// 현재 주제에 해당하는 슬라이드 구하기
+		function getActiveSlides() {
+			return document.querySelectorAll(`.topic-${currentTopic}`);
+		}
 
-					// 슬라이드 이동
-					function changeSlide(direction) {
-						const activeSlides = getActiveSlides();
-						currentSlideIndex += direction;
+		// 슬라이드 표시
+		function showSlide(index) {
+			const activeSlides = getActiveSlides();
+			document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+			if (activeSlides[index]) {
+				activeSlides[index].classList.add('active');
+       const numberEl = activeSlides[index].querySelector('.slide-number');
+				if (numberEl) {
+					numberEl.textContent = `${String(index + 1).padStart(2, '0')} / ${String(activeSlides.length).padStart(2, '0')}`;
+				}
+			}
+		}
 
-						if (currentSlideIndex < 0) {
-							currentSlideIndex = 0;
-						} else if (currentSlideIndex >= activeSlides.length) {
-							currentSlideIndex = activeSlides.length - 1;
-						}
-						showSlide(currentSlideIndex);
-					}
+		// 슬라이드 이동
+		function changeSlide(direction) {
+			const activeSlides = getActiveSlides();
+			currentSlideIndex += direction;
 
-					// 주제 변경 (메뉴 버튼 클릭)
-					function switchTopic(topicName) {
-						currentTopic = topicName;
-						currentSlideIndex = 0;
+			if (currentSlideIndex < 0) {
+				currentSlideIndex = 0;
+			} else if (currentSlideIndex >= activeSlides.length) {
+				currentSlideIndex = activeSlides.length - 1;
+			}
+			showSlide(currentSlideIndex);
+		}
 
-						document.getElementById('btn-vocab').classList.toggle('active', topicName === 'vocab');
-						document.getElementById('btn-quiz').classList.toggle('active', topicName === 'quiz');
+		// 주제 변경 (메뉴 버튼 클릭)
+		function switchTopic(topicName) {
+			currentTopic = topicName;
+			currentSlideIndex = 0;
 
-						showSlide(currentSlideIndex);
-					}
+			document.getElementById('btn-vocab').classList.toggle('active', topicName === 'vocab');
+			document.getElementById('btn-quiz').classList.toggle('active', topicName === 'quiz');
 
-					// 키보드 이벤트 (Ctrl + M 토글, 좌우 화살표 이동)
-					document.addEventListener('keydown', (e) => {
-						const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+			showSlide(currentSlideIndex);
+		}
 
-						// Ctrl + M : 강사 컨트롤러 토글
-						if (isCtrlOrCmd && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
-							e.preventDefault();
-							const menu = document.getElementById('teacherMenu');
-							menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-						}
+		// 키보드 이벤트 (Ctrl + M 토글, 좌우 화살표 이동)
+		document.addEventListener('keydown', (e) => {
+			const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
-						// 좌우 방향키 이동
-						if (e.key === 'ArrowLeft') {
-							changeSlide(-1);
-						} else if (e.key === 'ArrowRight') {
-							changeSlide(1);
-						}
-					});
+			// Ctrl + M : 강사 컨트롤러 토글
+			if (isCtrlOrCmd && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
+				e.preventDefault();
+				const menu = document.getElementById('teacherMenu');
+				menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+			}
 
-					// 정답 토글
-					function toggleAnswer(answerId) {
-						const answer = document.getElementById(answerId);
-						answer.style.display = (answer.style.display === 'none' || answer.style.display === '') ? 'block' : 'none';
-					}
-				</script>
+			// 좌우 방향키 이동
+			if (e.key === 'ArrowLeft') {
+				changeSlide(-1);
+			} else if (e.key === 'ArrowRight') {
+				changeSlide(1);
+			}
+		});
+
+		// 정답 토글
+		function toggleAnswer(answerId) {
+			const answer = document.getElementById(answerId);
+     if (!answer) return;
+			answer.style.display = (answer.style.display === 'none' || answer.style.display === '') ? 'block' : 'none';
+		}
+
+		function initAnswerBindings() {
+			const buttons = document.querySelectorAll('.answer-btn');
+			let seq = 1;
+
+			buttons.forEach((btn) => {
+				let answer = btn.nextElementSibling;
+				while (answer && !(answer.classList && answer.classList.contains('highlight'))) {
+					answer = answer.nextElementSibling;
+				}
+
+				if (!answer) return;
+
+				const uniqueId = `ans-auto-${String(seq++).padStart(3, '0')}`;
+				answer.id = uniqueId;
+				btn.setAttribute('onclick', `toggleAnswer('${uniqueId}')`);
+			});
+		}
+
+   initAnswerBindings();
+		updateSlideNumbers();
+		showSlide(currentSlideIndex);
+	</script>
 </body>
 </html>

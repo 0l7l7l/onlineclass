@@ -7,21 +7,27 @@ header('Content-Type: application/json; charset=utf-8');
 function ensureTicketProduct(PDO $pdo, int $productId): array
 {
     $catalog = [
-        101 => ['title' => '1회 체험권', 'price' => 4500, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
-        102 => ['title' => '4회 수강권', 'price' => 20000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90, 'per_week' => 0],
-        103 => ['title' => '8회 수강권', 'price' => 38000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 0],
-        201 => ['title' => '듀오 1회 체험권', 'price' => 2500, 'class_type' => 'DUO', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
-        202 => ['title' => '듀오 4회 수강권', 'price' => 11500, 'class_type' => 'DUO', 'total_count' => 4, 'expiry_days' => 90, 'per_week' => 0],
-        203 => ['title' => '듀오 8회 수강권', 'price' => 21000, 'class_type' => 'DUO', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 0],
-        301 => ['title' => '그룹 이벤트', 'price' => 15800, 'class_type' => 'GROUP', 'total_count' => 5, 'expiry_days' => 90, 'per_week' => 1],
-        302 => ['title' => '그룹 4회 수강권', 'price' => 9900, 'class_type' => 'GROUP', 'total_count' => 4, 'expiry_days' => 90, 'per_week' => 1],
-        303 => ['title' => '그룹 8회 수강권', 'price' => 15800, 'class_type' => 'GROUP', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 2],
+        // PRIVATE (개인수업)
+        101 => ['title' => '1회 체험권', 'price' => 5000, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
+        102 => ['title' => '4회 수강권(1개월)', 'price' => 20000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 30, 'per_week' => 0],
+        103 => ['title' => '8회 수강권(2개월)', 'price' => 36000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 60, 'per_week' => 0],
+        104 => ['title' => '12회 수강권(3개월)', 'price' => 48000, 'class_type' => 'PRIVATE', 'total_count' => 12, 'expiry_days' => 90, 'per_week' => 0],
+        105 => ['title' => '16회 수강권(4개월)', 'price' => 56000, 'class_type' => 'PRIVATE', 'total_count' => 16, 'expiry_days' => 120, 'per_week' => 0],
+        
+        // DUO (듀오수업, 1명당 가격)
+        201 => ['title' => '듀오 1회 체험권', 'price' => 4500, 'class_type' => 'DUO', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
+        202 => ['title' => '듀오 4회 수강권(1개월)', 'price' => 18000, 'class_type' => 'DUO', 'total_count' => 4, 'expiry_days' => 30, 'per_week' => 0],
+        203 => ['title' => '듀오 8회 수강권(2개월)', 'price' => 48000, 'class_type' => 'DUO', 'total_count' => 8, 'expiry_days' => 60, 'per_week' => 0],
+        204 => ['title' => '듀오 6회 수강권(3개월)', 'price' => 42000, 'class_type' => 'DUO', 'total_count' => 6, 'expiry_days' => 90, 'per_week' => 0],
+        
+        // GROUP (그룹수업)
+        301 => ['title' => '그룹 5회 수강권(1개월)', 'price' => 15000, 'class_type' => 'GROUP', 'total_count' => 5, 'expiry_days' => 30, 'per_week' => 1],
+        302 => ['title' => '그룹 8회 수강권(1개월)', 'price' => 18000, 'class_type' => 'GROUP', 'total_count' => 8, 'expiry_days' => 30, 'per_week' => 2],
+        303 => ['title' => '그룹 무제한(3개월)', 'price' => 20000, 'class_type' => 'GROUP', 'total_count' => 99, 'expiry_days' => 90, 'per_week' => 99],
         304 => ['title' => '그룹 1회 체험권(무료)', 'price' => 0, 'class_type' => 'GROUP', 'total_count' => 1, 'expiry_days' => 7, 'per_week' => 0],
 
-        // 패키지 상품(결제 전용): 실제 사용 티켓은 구매 시 101 + 302로 분리 발급
-        401 => ['title' => '특별할인 패키지(개인1+그룹4)', 'price' => 15800, 'class_type' => 'PRIVATE', 'total_count' => 1, 'expiry_days' => 30, 'per_week' => 0],
-        402 => ['title' => '패키지 4회 수강권', 'price' => 14900, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 90, 'per_week' => 0],
-        //403 => ['title' => '패키지 8회 수강권', 'price' => 49000, 'class_type' => 'PRIVATE', 'total_count' => 8, 'expiry_days' => 180, 'per_week' => 0],
+        // 패키지 상품(결제 전용): 실제 사용 티켓은 구매 시 분리 발급
+        401 => ['title' => '특별할인 패키지(개인4+그룹8)', 'price' => 38000, 'class_type' => 'PRIVATE', 'total_count' => 4, 'expiry_days' => 30, 'per_week' => 0],
     ];
 
     if (!isset($catalog[$productId])) {
@@ -144,14 +150,14 @@ try {
         VALUES (?, ?, ?, 'ACTIVE', DATE_ADD(NOW(), INTERVAL ? DAY), ?)
     ");
 
-    //  특별할인패키지(401) => 개인1(101) + 그룹4(302) 분리 발급
+    //  특별할인패키지(401) => 개인4회(102) + 그룹8회(302) 분리 발급
     if ($product_id === 401) {
-        $privateProduct = ensureTicketProduct($pdo, 101);
+        $privateProduct = ensureTicketProduct($pdo, 102);
         $groupProduct = ensureTicketProduct($pdo, 302);
 
         $ticketInsert->execute([
             $user_id,
-            101,
+            102,
             (int)$privateProduct['total_count'],
             (int)$privateProduct['expiry_days'],
             (int)($privateProduct['per_week'] ?? 0)
@@ -169,7 +175,7 @@ try {
 
         echo json_encode([
             'success' => true,
-            'message' => '특별할인 패키지 구매 완료: 개인 1회 + 그룹 4회 티켓이 발급되었습니다.',
+            'message' => '특별할인 패키지 구매 완료: 개인 4회 + 그룹 8회 티켓이 발급되었습니다.',
             'data' => [
                 'balance' => $new_balance
             ]
