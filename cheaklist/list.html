@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<!-- saved from url=(0064)file:///C:/Users/445215/Downloads/gemini-code-1785481167863.html -->
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>한국어 문법 체크리스트 (초급 A1)</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+			background-color: #f8fafc;
+			color: #1e293b;
+			padding: 40px 20px;
+			display: flex;
+			justify-content: center;
+		}
+
+		.page {
+			width: 100%;
+			max-width: 920px;
+			background: #ffffff;
+			padding: 40px;
+			border-radius: 16px;
+			border: 1px solid #e2e8f0;
+			box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+		}
+
+		/* 모던 아웃라인 버튼 */
+		.btn-outline {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			padding: 10px 20px;
+			background-color: transparent;
+			color: #2563eb;
+			border: 2px solid #2563eb;
+			border-radius: 8px;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+			.btn-outline:hover {
+				background-color: #2563eb;
+				color: #ffffff;
+				box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+			}
+
+		.header-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 24px;
+			border-bottom: 2px solid #f1f5f9;
+			padding-bottom: 20px;
+		}
+
+		h1 {
+			font-size: 22px;
+			font-weight: 700;
+			color: #0f172a;
+			letter-spacing: -0.5px;
+		}
+
+		/* 기본 정보 모던 레이아웃 */
+		.info-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 16px;
+			margin-bottom: 24px;
+		}
+
+		.info-item {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+			.info-item label {
+				font-size: 12px;
+				font-weight: 600;
+				color: #64748b;
+				text-transform: uppercase;
+			}
+
+		/* 모던 드롭다운 & 인풋 스타일 */
+		.modern-select, .modern-input {
+			width: 100%;
+			padding: 8px 12px;
+			background-color: transparent;
+			border: 1.5px solid #cbd5e1;
+			border-radius: 6px;
+			font-size: 14px;
+			color: #0f172a;
+			outline: none;
+			transition: border-color 0.2s;
+		}
+
+			.modern-select:focus, .modern-input:focus {
+				border-color: #2563eb;
+			}
+
+		/* 가이드 박스 */
+		.guide-box {
+			border: 1.5px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 16px;
+			margin-bottom: 24px;
+			font-size: 13px;
+		}
+
+		.guide-title {
+			font-weight: 700;
+			color: #2563eb;
+			margin-bottom: 8px;
+		}
+
+		.guide-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 8px;
+			color: #475569;
+		}
+
+		/* 모던 테이블 스타일 */
+		table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 0;
+			margin-bottom: 20px;
+			font-size: 13.5px;
+		}
+
+		th {
+			background-color: #f8fafc;
+			color: #475569;
+			font-weight: 600;
+			text-align: center;
+			padding: 10px;
+			border-top: 1px solid #e2e8f0;
+			border-bottom: 2px solid #e2e8f0;
+		}
+
+		td {
+			padding: 10px;
+			border-bottom: 1px solid #f1f5f9;
+			text-align: center;
+			color: #334155;
+		}
+
+		.category-header td {
+			background-color: #f1f5f9;
+			color: #1e293b;
+			font-weight: 700;
+			text-align: left;
+			padding-left: 14px;
+			border-top: 1px solid #e2e8f0;
+		}
+
+		td.grammar {
+			font-weight: 600;
+			color: #2563eb;
+			text-align: left;
+			padding-left: 14px;
+		}
+
+		td.desc {
+			text-align: left;
+			color: #64748b;
+		}
+
+		/* 모던 체크박스 커스텀 */
+		input[type="checkbox"] {
+			appearance: none;
+			width: 18px;
+			height: 18px;
+			border: 1.5px solid #94a3b8;
+			border-radius: 4px;
+			outline: none;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			position: relative;
+			vertical-align: middle;
+		}
+
+			input[type="checkbox"]:checked {
+				background-color: #2563eb;
+				border-color: #2563eb;
+			}
+
+				input[type="checkbox"]:checked::after {
+					content: '✓';
+					color: white;
+					font-size: 12px;
+					font-weight: bold;
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+				}
+
+		/* 인쇄 설정 */
+		@media print {
+			body {
+				background: none;
+				padding: 0;
+			}
+
+			.page {
+				border: none;
+				box-shadow: none;
+				padding: 0;
+				width: 100%;
+			}
+
+			.no-print {
+				display: none !important;
+			}
+
+			.modern-select, .modern-input {
+				border: none;
+				padding: 0;
+			}
+
+			.modern-select {
+				appearance: none;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="page">
+		<!-- 헤더 및 저장 버튼 -->
+		<div class="header-container">
+			<h1>한국어 문법 체크리스트 (초급 A1)</h1>
+			<!-- 아웃라인 버튼 디자인 적용 -->
+			<button class="btn-outline no-print" onclick="window.print()">
+				💾 저장 / PDF (Ctrl+S)
+			</button>
+		</div>
+
+		<!-- 기본 정보 (학생명 드롭다운 선택) -->
+		<div class="info-grid">
+			<div class="info-item">
+				<label>학생명</label>
+				<select class="modern-select">
+					<option value="">학생을 선택하세요</option>
+					<option value="김철수">김철수</option>
+					<option value="이영희">이영희</option>
+					<option value="John Doe">John Doe</option>
+					<option value="Tanaka">Tanaka</option>
+				</select>
+			</div>
+			<div class="info-item">
+				<label>시작일</label>
+				<input type="date" class="modern-input">
+			</div>
+			<div class="info-item">
+				<label>담당교사</label>
+				<input type="text" class="modern-input" placeholder="교사명 입력">
+			</div>
+		</div>
+
+		<!-- 체크 기준 가이드 -->
+		<div class="guide-box">
+			<div class="guide-title">📌 체크 기준 (4단계)</div>
+			<div class="guide-grid">
+				<div><b>[1] 설명 이해:</b> 문법 설명을 들었다.</div>
+				<div><b>[2] 예문 가능:</b> 스스로 예문을 만들 수 있다.</div>
+				<div><b>[3] 회화 가능:</b> 대화에서 자연스럽게 사용했다.</div>
+				<div><b>[4] 복습/완료:</b> 더 이상 틀리지 않는다.</div>
+			</div>
+		</div>
+
+		<!-- 체크리스트 테이블 -->
+		<table>
+			<thead>
+				<tr>
+					<th style="width: 6%;">No</th>
+					<th style="width: 24%;">문법</th>
+					<th style="width: 30%;">설명</th>
+					<th style="width: 10%;">설명 이해</th>
+					<th style="width: 10%;">예문 가능</th>
+					<th style="width: 10%;">회화 가능</th>
+					<th style="width: 10%;">복습/완료</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- 기초 문법 -->
+				<tr class="category-header"><td colspan="7">기초 문법 &amp; 의문사</td></tr>
+				<tr><td>1</td><td class="grammar">이에요 / 예요</td><td class="desc">~입니다</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>2</td><td class="grammar">이/가</td><td class="desc">주격조사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>3</td><td class="grammar">은/는</td><td class="desc">주제조사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>4</td><td class="grammar">을/를</td><td class="desc">목적격조사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>5</td><td class="grammar">도</td><td class="desc">~도</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>6</td><td class="grammar">와/과, 하고</td><td class="desc">그리고</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>7</td><td class="grammar">있습니다 / 없습니다</td><td class="desc">있다, 없다</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>8</td><td class="grammar">있어요 / 없어요</td><td class="desc">회화형</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>9</td><td class="grammar">이것/그것/저것</td><td class="desc">지시대명사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>10</td><td class="grammar">누구 / 무엇</td><td class="desc">의문사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>11</td><td class="grammar">어디</td><td class="desc">장소</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>12</td><td class="grammar">언제</td><td class="desc">시간</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>13</td><td class="grammar">왜</td><td class="desc">이유</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>14</td><td class="grammar">어떻게</td><td class="desc">방법</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>15</td><td class="grammar">몇 / 몇 시</td><td class="desc">숫자</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>16</td><td class="grammar">어느</td><td class="desc">어느 것</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 동사 현재형 -->
+				<tr class="category-header"><td colspan="7">동사 현재형 &amp; 부정</td></tr>
+				<tr><td>17</td><td class="grammar">-아요</td><td class="desc">현재형 (양성)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>18</td><td class="grammar">-어요</td><td class="desc">현재형 (음성)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>19</td><td class="grammar">-해요</td><td class="desc">하다 동사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>20</td><td class="grammar">안 + 동사</td><td class="desc">단순 부정</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>21</td><td class="grammar">못 + 동사</td><td class="desc">능력 부정</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 과거 -->
+				<tr class="category-header"><td colspan="7">과거 시제</td></tr>
+				<tr><td>22</td><td class="grammar">-았어요</td><td class="desc">과거형 (양성)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>23</td><td class="grammar">-었어요</td><td class="desc">과거형 (음성)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>24</td><td class="grammar">-했어요</td><td class="desc">과거형 (하다)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 미래 & 희망 & 진행 -->
+				<tr class="category-header"><td colspan="7">미래 / 희망 / 진행</td></tr>
+				<tr><td>25</td><td class="grammar">-(으)ㄹ 거예요</td><td class="desc">미래 시제 / 추측</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>26</td><td class="grammar">-(으)려고 해요</td><td class="desc">의도 / 계획</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>27</td><td class="grammar">-고 싶어요</td><td class="desc">희망</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>28</td><td class="grammar">-고 싶지 않아요</td><td class="desc">희망 부정</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>29</td><td class="grammar">-고 있어요</td><td class="desc">동작의 진행</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>30</td><td class="grammar">아직</td><td class="desc">부정문과 결합</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>31</td><td class="grammar">벌써</td><td class="desc">생각보다 빠르게</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>32</td><td class="grammar">이미</td><td class="desc">완료된 상태</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 연결 & 이유 -->
+				<tr class="category-header"><td colspan="7">접속사 &amp; 이유</td></tr>
+				<tr><td>33</td><td class="grammar">그리고</td><td class="desc">나열 / 순서</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>34</td><td class="grammar">하지만</td><td class="desc">대조 / 반대</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>35</td><td class="grammar">그래서</td><td class="desc">원인 / 결과</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>36</td><td class="grammar">그런데</td><td class="desc">전환 / 대조</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>37</td><td class="grammar">-아서/어서</td><td class="desc">이유 / 원인</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>38</td><td class="grammar">때문에 / N 때문에</td><td class="desc">명확한 이유</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 부탁 & 경험 & 가능 & 의무 -->
+				<tr class="category-header"><td colspan="7">부탁 / 경험 / 가능 / 의무</td></tr>
+				<tr><td>39</td><td class="grammar">주세요</td><td class="desc">요청하기</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>40</td><td class="grammar">-(으)세요</td><td class="desc">명령 / 정중한 권유</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>41</td><td class="grammar">-(으)십시오</td><td class="desc">격식체 명령</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>42</td><td class="grammar">-아/어 봤어요</td><td class="desc">경험 나타내기</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>43</td><td class="grammar">-(으)ㄹ 수 있어요</td><td class="desc">가능</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>44</td><td class="grammar">-(으)ㄹ 수 없어요</td><td class="desc">불가능</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>45</td><td class="grammar">-아/어야 해요</td><td class="desc">의무 / 필요</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>46</td><td class="grammar">-지 않아도 돼요</td><td class="desc">허용 / 불필요</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 제안 & 권유 & 비교 -->
+				<tr class="category-header"><td colspan="7">제안 / 권유 / 비교</td></tr>
+				<tr><td>47</td><td class="grammar">-(으)ㄹ까요?</td><td class="desc">의견 묻기 / 제안</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>48</td><td class="grammar">-아/어요?</td><td class="desc">부드러운 제안</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>49</td><td class="grammar">-(으)ㅂ시다</td><td class="desc">같이 하기 (격식체)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>50</td><td class="grammar">같이 / 함께</td><td class="desc">동합 부사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>51</td><td class="grammar">더</td><td class="desc">비교 부사</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>52</td><td class="grammar">가장 / 제일</td><td class="desc">최상급 표현</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 시간 & 순서 & 목표 -->
+				<tr class="category-header"><td colspan="7">시간 / 순서 / 목표</td></tr>
+				<tr><td>53</td><td class="grammar">-기 전에</td><td class="desc">~하기 이전</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>54</td><td class="grammar">-(으)ㄴ 후에</td><td class="desc">~한 이후</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>55</td><td class="grammar">-면서</td><td class="desc">동시 동작</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>56</td><td class="grammar">-고</td><td class="desc">시간적 나열</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>57</td><td class="grammar">-아서/어서</td><td class="desc">밀접한 선후 관계</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>58</td><td class="grammar">-(으)면</td><td class="desc">조건 / 가정</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>59</td><td class="grammar">-(으)러 가다</td><td class="desc">목적 + 가다</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>60</td><td class="grammar">-(으)러 오다</td><td class="desc">목적 + 오다</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+
+				<!-- 초급 최종 종합 -->
+				<tr class="category-header"><td colspan="7">초급 최종 종합 문법</td></tr>
+				<tr><td>61</td><td class="grammar">-(으)니까</td><td class="desc">이유 / 판단의 근거</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>62</td><td class="grammar">-지만</td><td class="desc">역접 (반대)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>63</td><td class="grammar">-(으)ㄹ 때</td><td class="desc">시간의 한 시점</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+				<tr><td>64</td><td class="grammar">-(으)ㄹ 거예요</td><td class="desc">미래 계획 / 확신</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Ctrl + S 누르면 바로 저장/인쇄 기능 실행 -->
+	<script>document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault(); // 브라우저의 웹페이지 다운로드 방지
+                window.print();     // PDF 저장/인쇄 다이얼로그 실행
+            }
+        });</script>
+
+</body>
+</html>

@@ -1,0 +1,4430 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국어</title>
+  <style>
+    /* ==========================================================================
+     1. 변수 정의 & 기본 스타일 초기화
+     ========================================================================== */
+    :root {
+      --book-scale: 0.75;
+      --primary-blue: #2563eb;
+      --dark-blue: #1e3a8a;
+      --light-blue-bg: #eff6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .book-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      zoom: var(--book-scale);
+      transition: zoom 0.2s ease;
+    }
+
+    /* 스케일링 반응형 설정 */
+    @media (max-width: 1500px) {
+      :root {
+        --book-scale: 0.65;
+      }
+    }
+
+    @media (max-width: 1300px) {
+      :root {
+        --book-scale: 0.55;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      :root {
+        --book-scale: 0.45;
+      }
+    }
+
+    /* ==========================================================================
+     2. 펼침면(Book) 기본 구조 & 레이아웃
+     ========================================================================== */
+    .book-container {
+      display: flex;
+      width: 364mm;
+      height: 257mm;
+      background-color: #fff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+      /* 책 중앙 접힘선 효과 */
+      .book-container::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 3%;
+        width: 1px;
+        height: 94%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+        z-index: 10;
+      }
+
+    .page {
+      width: 182mm;
+      height: 257mm;
+      padding: 20mm;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 12mm;
+      font-size: 12px;
+      color: #a1a1aa;
+      font-weight: bold;
+    }
+
+    .left-page .footer {
+      left: 20mm;
+    }
+
+    .right-page .footer {
+      right: 20mm;
+    }
+
+    .grammar-no {
+      position: absolute;
+      top: 15mm;
+      font-size: 13px;
+      color: var(--primary-blue);
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .left-page .grammar-no {
+      left: 20mm;
+    }
+
+    .right-page .grammar-no {
+      right: 20mm;
+      text-align: right;
+    }
+
+    /* ==========================================================================
+     🏷️ 상단 굵은 띠 배지 (.lesson-band)
+     ========================================================================== */
+    .lesson-band {
+      display: inline-block;
+      align-self: flex-start;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 6px 18px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+    }
+
+    /* ==========================================================================
+     3. 본문 타이틀 & 공통 요소
+     ========================================================================== */
+    /* 메인 타이틀 (강조 스타일) */ 
+		.main-title {
+			font-size: 24px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 12px;
+			border-bottom: 3px solid var(--primary-blue); /* 👈 단원 제목 아래 파란 선 */
+			padding-bottom: 8px;
+		}
+
+		/* ✨ 파란 선 밑에 들어갈 문법 제목 (h3) */
+		h3.grammar-title {
+			font-size: 32px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+
+    /* 서브 타이틀 */
+		.sub-title {
+			font-size: 16px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-top: 14px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border-bottom: 1px solid #dbeafe; /* 👈 이미지의 얇은 하늘색 실선  */
+		}
+
+      .sub-title::before {
+        content: "📌";
+        font-size: 14px;
+      }
+
+    p, li {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .highlight {
+      color: var(--primary-blue);
+      font-weight: bold;
+    }
+
+    /* 포인트 설명 박스 */
+    .point-box {
+      background-color: var(--light-blue-bg);
+      border-left: 5px solid var(--primary-blue);
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin: 12px 0;
+    }
+
+      .point-box h4 {
+        font-size: 15px;
+        color: #1e293b;
+        margin-bottom: 6px;
+      }
+
+      .point-box ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .point-box li {
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+    /* ==========================================================================
+     💬 말풍선 (Speech Bubble) + 규칙 비주얼 표
+     ========================================================================== */
+    .speech-bubble-box {
+      position: relative;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin: 12px 0 16px 0;
+    }
+
+      .speech-bubble-box::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 24px;
+        border-width: 0 10px 10px;
+        border-style: solid;
+        border-color: #bfdbfe transparent;
+        display: block;
+        width: 0;
+      }
+
+      .speech-bubble-box h4 {
+        font-size: 14px;
+        color: var(--dark-blue);
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+    .rule-visual-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 6px;
+      margin-top: 4px;
+    }
+
+      .rule-visual-table th {
+        padding: 6px;
+        font-size: 13px;
+        font-weight: 800;
+        border-radius: 8px;
+        color: #ffffff;
+        text-align: center;
+      }
+
+        .rule-visual-table th.has-patchim {
+          background-color: #2563eb;
+        }
+
+        .rule-visual-table th.no-patchim {
+          background-color: #0284c7;
+        }
+
+      .rule-visual-table td {
+        background-color: #ffffff;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+    .rule-example {
+      font-weight: 700;
+      color: #334155;
+      font-size: 14px;
+    }
+
+    .rule-plus {
+      color: #94a3b8;
+      font-size: 12px;
+      margin: 0 2px;
+    }
+
+    .rule-target {
+      font-weight: 900;
+      color: #2563eb;
+      font-size: 15px;
+    }
+
+    .rule-result-row td {
+      background-color: #f8fafc;
+      font-size: 13px;
+      color: #1e3a8a;
+    }
+
+    /* ==========================================================================
+     📝 예문 카드 & 단어 테이블 & 연습문제
+     ========================================================================== */
+    /* 예문 카드 스타일 */
+    .example-card {
+      background-color: #f8fafc;
+      border-left: 4px solid var(--primary-blue);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .ex-ko {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .ex-ja {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* 단어장 테이블 */
+    .word-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 16px 0;
+      font-size: 13px;
+    }
+
+      .word-table th, .word-table td {
+        border: 1px solid #dbeafe;
+        padding: 6px 10px;
+        text-align: center;
+      }
+
+      .word-table th {
+        background-color: #dbeafe;
+        color: var(--dark-blue);
+        font-weight: bold;
+      }
+
+    /* 연습문제 */
+    .quiz-item {
+      margin-bottom: 10px;
+      background-color: #fafafa;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .quiz-q {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .quiz-line {
+      display: inline-block;
+      width: 80px;
+      border-bottom: 2px solid var(--primary-blue);
+      text-align: center;
+      margin: 0 4px;
+    }
+
+    /* ==========================================================================
+     🔑 정답 박스 & 버튼 스타일
+     ========================================================================== */
+    .answer-btn {
+      margin-top: 8px;
+      padding: 6px 14px;
+      background-color: transparent;
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+      .answer-btn:hover {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        border-color: #1d4ed8;
+      }
+
+    .answer-box {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border: 2px solid var(--primary-blue);
+      border-radius: 8px;
+      display: none;
+    }
+
+      .answer-box.show {
+        display: block;
+      }
+
+    .answer-content {
+      font-size: 13px;
+      color: var(--dark-blue);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+     📘 표지(Cover) & 단원 구분(Divider) 전용 스타일
+     ========================================================================== */
+    .page.cover-page {
+      background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      padding: 35mm 20mm 20mm 20mm;
+    }
+
+    .cover-header {
+      margin-top: 10px;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background-color: #e0f2fe;
+      color: #0284c7;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+    }
+
+    .cover-title {
+      font-size: 34px;
+      color: #1e293b;
+      font-weight: 900;
+      line-height: 1.3;
+    }
+
+    .cover-subtitle {
+      font-size: 16px;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    .cover-image-box {
+      width: 140px;
+      height: 140px;
+      background-color: #ffffff;
+      border: 2px dashed #cbd5e1;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    }
+
+      .cover-image-box span {
+        font-size: 36px;
+        margin-bottom: 4px;
+      }
+
+      .cover-image-box p {
+        font-size: 11px;
+        color: #94a3b8;
+      }
+
+    .cover-footer-info {
+      margin-bottom: 10px;
+    }
+
+    .cover-author {
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .cover-copy {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* 단원 구분(Divider) */
+    .page.divider-page {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30mm 20mm;
+    }
+
+    .divider-badge {
+      background-color: var(--primary-blue);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .divider-title {
+      font-size: 32px;
+      color: var(--dark-blue);
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .divider-subtitle {
+      font-size: 18px;
+      color: #3b82f6;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    /* ==========================================================================
+     📱 모바일 & 🖨️ 인쇄(Print) 대응
+     ========================================================================== */
+    @media (max-width: 900px) {
+      body {
+        padding: 10px;
+      }
+
+      .book-wrapper {
+        zoom: 1 !important;
+        width: 100%;
+        gap: 20px;
+      }
+
+      .book-container {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+      }
+
+        .book-container::after {
+          display: none;
+        }
+
+      .page {
+        width: 100%;
+        height: auto;
+        padding: 30px 20px;
+        border-bottom: 2px dashed #e2e8f0;
+      }
+
+      .footer {
+        position: relative;
+        bottom: 0;
+        margin-top: 20px;
+        text-align: center;
+      }
+    }
+
+    @media print {
+      @page {
+        size: 364mm 257mm;
+        margin: 0;
+      }
+
+      body {
+        background-color: #fff;
+        padding: 0;
+      }
+
+      .book-wrapper {
+        gap: 0;
+        zoom: 1 !important;
+      }
+
+      .book-container {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 364mm;
+        height: 257mm;
+        page-break-after: always;
+        box-shadow: none;
+        border: none;
+      }
+
+        .book-container::after {
+          display: none;
+        }
+
+      .page {
+        width: 182mm !important;
+        height: 257mm !important;
+      }
+
+      .answer-btn {
+        display: none;
+      }
+
+      .answer-box {
+        display: block !important;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 📘 [첫 번째 책 펼침면] 왼쪽: 표지 | 오른쪽: 머리말(또는 목차) -->
+  <div class="book-wrapper">
+    <div class="book-container">
+      <!-- (왼쪽 페이지) -->
+      <div class="page left-page cover-page">
+        <div class="cover-header">
+          <span class="cover-badge">KOREAN</span>
+          <h1 class="cover-title">설레는 첫 걸음<br>한국어 회화</h1>
+          <p class="cover-subtitle">하루 10분으로 완성하는 기초 문법</p>
+        </div>
+        <!-- 나중에 <img src="그림경로.png"> 태그로 바꿔 넣으시면 됩니다! -->
+        <div class="cover-image-box">
+          <span>🐣</span>
+        </div>
+        <!--  하단 지은이/브랜드 정보 -->
+        <div class="cover-footer-info">
+          <p class="cover-author">Designed by. 세모일본어</p>
+          <p class="cover-copy">Self-Study Grammar Book</p>
+        </div>
+        <!-- 자동 페이지 번호 -->
+        <div class="footer" data-label="Cover"></div>
+      </div>
+      <!-- 프롤로그 / 교재 사용법 (오른쪽 페이지) -->
+      <div class="page right-page">
+        <div class="grammar-no">PROLOGUE</div>
+        <h1 class="main-title">이렇게 공부해보세요!</h1>
+        <div class="sub-title">1. 부담 없이 하루 한 장</div>
+        <p>문법을 외우려고 하지 말고, 눈으로 편안하게 읽으며 입으로 소리 내어 따라 해보세요.</p>
+        <div class="sub-title">2. 직접 정답을 확인하는 재미</div>
+        <p>연습 문제를 풀고 난 뒤 <strong>[正解を確認する]</strong> 버튼을 눌러 바로바로 정답을 체크해 보세요.</p>
+        <div class="point-box" style="margin-top: 25px;">
+          <h4>💡 교재 특징</h4>
+          <ul>
+            <li>내가 말할수있도록 자주쓰는한국어 위주 구성</li>
+            <li>한눈에 들어오는 설명</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--==========================================================================
+  ===============================빈페이지===================================
+  ========================================================================== */-->
+    <div class="book-container">
+      <div class="page left-page">
+        <div class="grammar-no">文法</div>
+        <h1 class="main-title">시작이에요!</h1>
+      </div>
+
+      <!-- 2ページ目: 単語帳 & 練習問題 -->
+      <div class="page right-page"></div>
+    </div>
+
+
+    <!--==========================================================================
+  ===============================빈페이지===================================
+  ========================================================================== */-->
+    <div class="book-container">
+      <!-- 📌 [왼쪽] 단원 구분(区切り) 페이지 -->
+      <div class="page left-page divider-page">
+        <span class="divider-badge">LESSON 01</span>
+        <p class="divider-subtitle">할 수 있어요!</p>
+      </div>
+      <!-- 2ページ目: 文法解説 -->
+      <div class="page left-page">
+        <p class="divider-subtitle">主に日常会話において、丁寧にご自身や物事を紹介する</p>
+      </div>
+    </div>
+
+
+    <!--==========================================================================
+  ===============================페이지시작===================================
+  ========================================================================== */-->
+
+    <div class="book-container">
+      <!-- 📄 1페이지: 문법 설명 -->
+      <div class="page left-page" data-lesson="1">
+        <!-- 맨 위 상단 띠 -->
+        <div class="lesson-band">1과</div>
+        <!-- 문법 제목 -->
+        <h1 class="main-title">소개하기</h1>
+        <h3 class="grammar-title">이에요 / 예요</h3>
+
+        <!-- 1. 意味 -->
+        <div class="sub-title">意味</div>
+        <p>名詞の後ろについて<strong>「〜です」</strong>という意味を表す述語語尾です。主に日常会話において、丁寧にご自身や物事を紹介するときに使われます。</p>
+
+        <!-- 2. 使い分けルール (말풍선 + 비주얼 표 디자인) -->
+        <div class="sub-title">💡 接続公式</div>
+
+        <h4>💬 パッチムの有無による接続ルール</h4>
+        <p>名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって形が変わります。</p>
+        <table class="rule-visual-table">
+          <thead>
+            <tr>
+              <th class="has-patchim">パッチム あり ⭕</th>
+              <th class="no-patchim">パッチム なし ❌</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="rule-example">학생</span>
+                <span class="rule-plus">＋</span>
+                <span class="rule-target">이에요</span>
+              </td>
+              <td>
+                <span class="rule-example">친구</span>
+                <span class="rule-plus">＋</span>
+                <span class="rule-target">예요</span>
+              </td>
+            </tr>
+            <tr class="rule-result-row">
+              <td><strong>학생이에요</strong></td>
+              <td><strong>친구예요</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 3. 解説 -->
+        <div class="sub-title">Point</div>
+        <div class="speech-bubble-box">
+          <ul>
+            <li><strong>일본 사람（日本人 / パッチムあり）:</strong> 最後の文字「람」に「ㅁ」パッチムがあるため、<strong>일본 사람 ＋ 이에요 ＝ 일본 사람이에요.</strong>（日本人です）になります。連音化により［일본사라'미'에요］のようにスムーズに発音されます。</li>
+            <li><strong>친구（友達 / パッチムなし）:</strong> 最後の文字「구」にパッチムがないため、<strong>친구 ＋ 예요 ＝ 친구예요.</strong>（友達です）になります。</li>
+          </ul>
+        </div>
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+      <!-- 📄 2페이지: 예문 전용 -->
+      <div class="page right-page">
+        <div class="lesson-band">1과</div>
+        <h1 class="main-title">例文 (例文で覚える)</h1>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">声に出して何度も読んでみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko">한국 사람<span class="highlight">이에요</span>.</p><p class="ex-ja">韓国人です。</p><br>
+          <p class="ex-ko">고양이<span class="highlight">예요</span>.</p><p class="ex-ja">猫です。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">휴대폰<span class="highlight">이에요</span>.</p><p class="ex-ja">携帯電話です。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">학생<span class="highlight">이에요</span>.</p><p class="ex-ja">学生です。</p><br>
+          <p class="ex-ko">의사<span class="highlight">예요</span>.</p><p class="ex-ja">医者です。</p>
+        </div>
+        <div class="example-card">
+          <p class="ex-ko">회사<span class="highlight">예요</span>.</p>
+          <p class="ex-ja">会社です。</p>
+        </div>
+        <div class="sub-title">2. 質問・会話フレーズ</div>
+        <div class="phrase-box">
+          <h4>💬 質問するとき</h4>
+          <div class="phrase-item">
+            <div class="phrase-ko">직업이 무엇이에요? / 무슨 일 하세요?</div>
+            <div class="phrase-ja">お仕事は何ですか？ / どんなお仕事をされていますか？</div>
+          </div>
+        </div>
+
+        <div class="phrase-box" style="background-color: #eff6ff; border-color: #bfdbfe;">
+          <h4 style="color: #1e3a8a;">💬 答えるとき（「〜です」）</h4>
+          <div class="phrase-item">
+            <div class="phrase-ko">저는 [職業] 이에요 / 예요.</div>
+            <div class="phrase-ja">例：저는 회사원이에요. / 저는 의사예요.</div>
+          </div>
+        </div>
+
+        <div class="footer">Page 2 (例文)</div>
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================================================
+  📖 [두 번째 펼침면] 3페이지(단어+연습문제1) + 4페이지(단어+연습문제2)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 📄 3페이지: 사용할 단어 (상단) + 연습문제 1 (하단) -->
+      <div class="page left-page">
+        <h1 class="main-title">練習問題 STEP 1</h1>
+
+        <!-- 상단: 사용할 단어 -->
+        <div class="lesson-band">単語帳</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th>単語（名詞）</th>
+              <th>パッチム</th>
+              <th>意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>어느나라</strong></td>
+              <td>なし</td>
+              <td>どの国</td>
+            </tr>
+            <tr>
+              <td><strong>사람</strong></td>
+              <td><span class="highlight">あり</span> (ㅁ)</td>
+              <td>人</td>
+            </tr>
+            <tr>
+              <td><strong>일본 사람</strong></td>
+              <td><span class="highlight">あり</span> (ㅁ)</td>
+              <td>日本人</td>
+            </tr>
+            <tr>
+              <td><strong>한국사람</strong></td>
+              <td><span class="highlight">あり</span> (ㅁ)</td>
+              <td>韓国人</td>
+            </tr>
+            <tr>
+              <td><strong>캐나다</strong></td>
+              <td>なし</td>
+              <td>カナダ</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 하단: 연습문제 -->
+        <div class="sub-title">練習問題</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な形を選び文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 어느나라 ＋ ( 이에요 / 예요 )?</div>
+          <p>→ 어느나라<span class="quiz-line"></span>?</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 어느나라 사람 ＋ ( 이에요 / 예요 )?</div>
+          <p>→ 어느나라 사람<span class="quiz-line"></span>?</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 일본 사람 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 일본 사람<span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 한국 사람 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 한국 사람<span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>예요</strong> (어느나라 예요?)<br>
+            Q2. <strong>이에요</strong> (어느나라 사람이에요?)<br>
+            Q3. <strong>이에요</strong> (일본사람이에요)<br>
+            Q4. <strong>이에요</strong> (한국사람이에요.)<br>
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (練習 1)</div>
+      </div>
+
+      <!-- 📄 4페이지: 사용할 단어 (상단) + 연습문제 2 (하단) -->
+      <div class="page right-page">
+        <h1 class="main-title">練習問題 STEP 2</h1>
+
+        <!-- 상단: 사용할 단어 -->
+        <div class="lesson-band">単語帳</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th>単語（名詞）</th>
+              <th>パッチム</th>
+              <th>意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>직업</strong></td><td><span class="highlight">あり</span> (ㅂ)</td><td>職業・仕事</td> </tr>
+            <tr><td><strong>뭐</strong></td><td>なし</td><td>何</td></tr>
+            <tr><td><strong>학생</strong></td><td>あり</td><td>学生</td></tr>
+            <tr><td><strong>회사원</strong></td><td><span class="highlight">あり</span> (ㄴ)</td><td>会社員</td></tr>
+            <tr><td><strong>선생님</strong></td><td><span class="highlight">あり</span> (ㅁ)</td><td>先生</td></tr>
+            <tr><td><strong>공무원</strong></td><td><span class="highlight">あり</span> (ㄴ)</td><td>公務員</td></tr>
+            <tr><td><strong>은행원</strong></td><td><span class="highlight">あり</span> (ㄴ)</td><td>銀行員</td></tr>
+            <tr><td><strong>의사</strong></td><td>なし</td><td>医師・医者</td></tr>
+            <tr><td><strong>간호사</strong></td><td>なし</td><td>看護師</td></tr>
+            <tr><td><strong>요리사</strong></td><td>なし</td><td>料理人・シェフ</td></tr>
+            <tr><td><strong>경찰</strong></td><td><span class="highlight">あり</span> (ㄹ)</td><td>警察官</td></tr>
+            <tr><td><strong>가수</strong></td><<td>なし</td><td>歌手</td></tr>
+          </tbody>
+        </table>
+
+        <!-- 하단: 연습문제 -->
+        <div class="sub-title">練習問題</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な形を選び文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 선생님 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 선생님<span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q6. 학생 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 학생<span class="quiz-line"></span>.</p>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-q">Q7. 회사원 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 회사원<span class="quiz-line"></span>.</p>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-q">Q8. 의사 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 학생<span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q9. 경찰 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 경찰<span class="quiz-line"></span>.</p>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-q">Q10. 주부 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 주부<span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q5. <strong>이에요</strong> (선생님이에요)<br>
+            Q6. <strong>이에요</strong> (학생예요)<br>
+            Q7. <strong>이에요</strong> (회사원예요)<br>
+            Q8. <strong>예요</strong> (의사예요)<br>
+            Q9. <strong>이에요</strong> (경찰예요)<br>
+            Q10. <strong>예요</strong> (주부예요)<br>
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習 2)</div>
+      </div>
+
+    </div>
+
+
+    <!--==========================================================================
+  ===============================정리문제===================================
+  ========================================================================== */-->
+
+    <div class="book-container">
+      <!-- 1ページ目: 文法解説 -->
+      <div class="page left-page">
+        <h1 class="main-title">練習問題 STEP 3</h1>
+
+        <!-- 상단: 사용할 단어 -->
+        <div class="lesson-band">単語帳</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th>単語（名詞）</th>
+              <th>パッチム</th>
+              <th>意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>일본 사람</strong></td>
+              <td><span class="highlight">あり</span> (ㅁ)</td>
+              <td>日本人</td>
+            </tr>
+            <tr>
+              <td><strong>한국사람</strong></td>
+              <td><span class="highlight">あり</span> (ㅁ)</td>
+              <td>韓国人</td>
+            </tr>
+            <tr>
+              <td><strong>캐나다</strong></td>
+              <td>なし</td>
+              <td>カナダ</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 하단: 연습문제 -->
+        <div class="sub-title">練習問題</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な形を選び文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 일본 사람 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 일본 사람<span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 한국 사람 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 한국 사람<span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>예요</strong> (어느나라 예요?)<br>
+            Q2. <strong>이에요</strong> (어느나라 사람이에요?)<br>
+            Q3. <strong>이에요</strong> (일본사람이에요)<br>
+            Q4. <strong>이에요</strong> (한국사람이에요.)<br>
+          </div>
+        </div>
+      </div>
+
+      <div class="page right-page">
+        <div class="lesson-band">1과</div>
+        <h1 class="main-title">例文 (例文で覚える)</h1>
+        <div class="sub-title">練習問題</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">【例】を参考にして、適切な形を選び文章を完成させましょう。<br>（例: 학생 → 학생이에요 / 친구 → 친구예요）</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 일본 사람 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 일본 사람<span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 의사 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 의사<span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 선생님 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 선생님<span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 뭐 ＋ ( 이에요 / 예요 )</div>
+          <p>→ 뭐<span class="quiz-line"></span>.</p>
+        </div>
+
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+        <div class="answer-box">
+          <div class="sub-title answer-title">🔑 解答</div>
+          <p class="answer-content">
+            Q1. <strong>이에요</strong><br>
+            Q2. <strong>예요</strong><br>
+            Q3. <strong>이에요</strong><br>
+            Q4. <strong>예요</strong>
+          </p>
+        </div>
+
+        <div class="footer">Page 2 (練習)</div>
+      </div>
+    </div>
+
+
+    <!-- 文法03: 〜은 / 는 (3ページ目 & 4ページ目) -->
+    <div class="book-container">
+      <!-- 3ページ目: 文法解説 -->
+      <div class="page left-page">
+        <div class="grammar-no">文法 03</div>
+        <h1 class="main-title">은 / 는</h1>
+
+        <div class="sub-title">意味</div>
+        <p>名詞の後ろについて<strong>「〜は」</strong>という意味を表す主題・対比の助詞です。自己紹介や話題を提示するときに頻繁に使われます。</p>
+
+        <!-- ✨ 修正部分：吹き出し＋ビジュアル表デザイン -->
+        <div class="sub-title">使い分けルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 パッチムの有無による接続ルール</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって形が変わります。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim">パッチム あり ⭕</th>
+                <th class="no-patchim">パッチム なし ❌</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">이름</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">은</span>
+                </td>
+                <td>
+                  <span class="rule-example">저</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">는</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td><strong>이름은</strong></td>
+                <td><strong>저는</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説</div>
+        <ul>
+          <li><strong>이름（名前 / パッチムあり）:</strong> 最後の文字「름」に「ㅁ」パッチムがあるため、<strong>이름 ＋ 은 ＝ 이름은</strong>（名前は）になります。連音化により［이르믄］と発音されます。</li>
+          <li><strong>저（私 / パッチムなし）:</strong> 最後の文字「저」にパッチムがないため、<strong>저 ＋ 는 ＝ 저는</strong>（私は）になります。</li>
+        </ul>
+
+        <div class="sub-title">例文</div>
+        <div class="example-item">
+          <p class="ex-ko"><span class="highlight">저</span>는 학생이에요.</p>
+          <p class="ex-ja">私は学生です。</p>
+        </div>
+        <div class="example-item">
+          <p class="ex-ko"><span class="highlight">이름</span>은 김민수예요.</p>
+          <p class="ex-ja">名前はキム・ミンスです。</p>
+        </div>
+        <div class="example-item">
+          <p class="ex-ko"><span class="highlight">직업</span>은 의사예요.</p>
+          <p class="ex-ja">職業は医師です。</p>
+        </div>
+
+        <div class="footer">Page 3 (解説)</div>
+      </div>
+
+
+      <!-- 4ページ目: 単語帳 & 練習問題 -->
+      <div class="page right-page">
+        <div class="grammar-no">文法 03</div>
+        <h1 class="main-title">単語帳 ＆ 練習問題</h1>
+
+        <div class="sub-title">単語</div>
+        <p style="font-size: 13px; margin-bottom: 6px;">以下の基礎単語を使って文章を作ってみましょう。</p>
+
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>저</strong>（チョ）</td>
+              <td>なし</td>
+              <td>私（へくだけた表現）</td>
+            </tr>
+            <tr>
+              <td><strong>이름</strong>（イルム）</td>
+              <td><span class="highlight">あり</span> (ㅁ)</td>
+              <td>名前</td>
+            </tr>
+            <tr>
+              <td><strong>나라</strong>（나라）</td>
+              <td>なし</td>
+              <td>国</td>
+            </tr>
+            <tr>
+              <td><strong>직업</strong>（チゴプ）</td>
+              <td><span class="highlight">あり</span> (ㅂ)</td>
+              <td>職業</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">練習問題</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">【例】を参考にして、適切な助詞（은 / 는）を選び文章を完成させましょう。<br>（例: 저 → 저는 / 이름 → 이름은）</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 저 ＋ ( 은 / 는 )</div>
+          <p>→ 저<span class="quiz-line"></span> 일본 사람이에요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 이름 ＋ ( 은 / 는 )</div>
+          <p>→ 이름<span class="quiz-line"></span> 무엇이에요?</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 직업 ＋ ( 은 / 는 )</div>
+          <p>→ 직업<span class="quiz-line"></span> 선생님이에요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 나라 ＋ ( 은 / 는 )</div>
+          <p>→ 나라<span class="quiz-line"></span> 한국이에요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>는</strong><br>
+            Q2. <strong>은</strong><br>
+            Q3. <strong>은</strong><br>
+            Q4. <strong>는</strong>
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習)</div>
+      </div>
+    </div>
+
+
+    <!-- 새로운 단원 시작 부분 -->
+    <div class="book-container">
+
+      <!-- 📌 [왼쪽] 단원 구분(区切り) 페이지 -->
+      <div class="page left-page divider-page">
+        <span class="divider-badge">LESSON 03</span>
+        <h1 class="divider-title">이 / 가 아니에요</h1>
+        <p class="divider-subtitle">名詞の否定形（〜ではありません）</p>
+
+        <div class="divider-summary">
+          <h4>💡 この課で学ぶこと (이 단원에서 배우는 것)</h4>
+          <ul>
+            <li>「〜ではありません」という否定表現</li>
+            <li>パッチムの有無による「이 / 가」の使い分け</li>
+            <li>日常会話でよく使う否定の応答パターン</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 📌 [오른쪽] 본격적인 문법 설명 페이지 -->
+      <div class="page right-page">
+        <div class="grammar-no">文法 03</div>
+        <h1 class="main-title">이 / 가 아니에요</h1>
+        <div class="sub-title">1. 意味</div>
+        <div class="sub-title">1. 意味</div>
+        <p>名詞の後ろについて<strong>「〜ではありません / 〜じゃないです」</strong>という意味を表す否定形です。「-이에요/예요（〜です）」の反対の表現になります。</p>
+
+        <div class="sub-title">2. 使い分けルール</div>
+        <p>主語につく助詞<strong>「이 / 가」</strong>を使い分けた後に、否定の<strong>「아니에요」</strong>を接続します。</p>
+
+        <div class="point-box" style="background-color: #fef2f2; border-color: #ef4444;">
+          <h4 style="color: #991b1b;">💡 接続公式</h4>
+          <ul>
+            <li><strong>パッチムあり</strong> ＋ <span class="highlight" style="color: #dc2626;">이 아니에요</span></li>
+            <li><strong>パッチムなし</strong> ＋ <span class="highlight" style="color: #dc2626;">가 아니에요</span></li>
+          </ul>
+        </div>
+
+        <div class="sub-title">3. 詳しい解説と対比</div>
+        <ul>
+          <li><strong>학생（学生 / パッチムあり）:</strong> <br>학생 ＋ <strong>이 아니에요</strong> ＝ <strong>학생이 아니에요.</strong>（学生ではありません）</li>
+          <li><strong>의사（医者 / パッチムなし）:</strong> <br>의사 ＋ <strong>가 아니에요</strong> ＝ <strong>의사가 아니에요.</strong>（医者ではありません）</li>
+        </ul>
+
+        <div class="sub-title">4. 例文</div>
+        <div class="example-item">
+          <p class="ex-ko">저는 일본 사람<span class="highlight" style="color:#dc2626;">이 아니에요</span>.</p>
+          <p class="ex-ja">私は日本人ではありません。（韓国人です）</p>
+        </div>
+        <div class="example-item">
+          <p class="ex-ko">이것은 제 모자<span class="highlight" style="color:#dc2626;">가 아니에요</span>.</p>
+          <p class="ex-ja">これは私の帽子ではありません。</p>
+        </div>
+
+
+        <div class="footer" data-label="解説"></div>
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================================================
+  【見開き 2】 3〜4ページ：テーマ① 国名 ＆ 質問フレーズ ＆ 10問問題
+  ========================================================================== -->
+    <div class="book-container">
+      <!-- 3ページ目: 単語（国） & 質問フレーズ -->
+      <div class="page left-page">
+        <div class="grammar-no">テーマ 01</div>
+        <h1 class="main-title">国名・出身を表す</h1>
+
+        <div class="sub-title">1. 国名の単語リスト</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th>
+                国名
+                /th>
+              <th>読み方</th>
+              <th>パッチム</th>
+              <th>意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>일본</strong></td><td>イルボン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>日本</td></tr>
+            <tr><td><strong>한국</strong></td><td>ハングク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>韓国</td></tr>
+            <tr><td><strong>중국</strong></td><td>チュングク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>中国</td></tr>
+            <tr><td><strong>미국</strong></td><td>ミグク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>アメリカ</td></tr>
+            <tr><td><strong>영국</strong></td><td>ヨングク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>イギリス</td></tr>
+            <tr><td><strong>독일</strong></td><td>トギル</td><td><span class="highlight">あり</span> (ㄹ)</td><td>ドイツ</td></tr>
+            <tr><td><strong>태국</strong></td><td>テグク</td><td><span class="highlight">あり</span> (ㄱ)</td><td>タイ</td></tr>
+            <tr><td><strong>캐나다</strong></td><td>ケナダ</td><td>なし</td><td>カナダ</td></tr>
+            <tr><td><strong>호주</strong></td><td>ホジュ</td><td>なし</td><td>オーストラリア</td></tr>
+            <tr><td><strong>프랑스</strong></td><td>フランス</td><td>なし</td><td>フランス</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">2. 質問・会話フレーズ</div>
+        <div class="phrase-box">
+          <h4>💬 質問するとき</h4>
+          <div class="phrase-item">
+            <div class="phrase-ko">어느 나라 사람이에요?</div>
+            <div class="phrase-ja">どこの国の人ですか？</div>
+          </div>
+        </div>
+
+        <div class="phrase-box" style="background-color: #eff6ff; border-color: #bfdbfe;">
+          <h4 style="color: #1e3a8a;">💬 答えるとき（「〜人です」）</h4>
+          <div class="phrase-item">
+            <div class="phrase-ko">[国名] 사람이에요. <small style="font-weight:normal; color:#555;">(※사람にパッチムがあるため常に이에요)</small></div>
+            <div class="phrase-ja">例：일본 사람이에요.（日本人です）</div>
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (単語・フレーズ)</div>
+      </div>
+
+      <!-- 4ページ目: 練習問題 10問（国） -->
+      <div class="page right-page">
+        <div class="grammar-no">テーマ 01</div>
+        <h1 class="main-title">練習問題 (国名 10問)</h1>
+        <p style="font-size: 12px; color: #666; margin-bottom: 6px;">【例】를 参考にして、適切な形（이에요 / 예요）を選び完成させましょう。<br>(例: 일본 사람 → 일본 사람이에요 / 캐나다 → 캐나다예요)</p>
+
+        <div class="quiz-grid">
+          <div class="quiz-item"><div class="quiz-q">Q1. 저는 일본 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q2. 유씨는 미국 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q3. 여기는 한국 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q4. 저분은 호주 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q5. 캐나다 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )?</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q6. 왕웨이 씨는 중국 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q7. 친구는 영국 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q8. 여기는 독일 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q9. 톰 씨는 프랑스 사람 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q10.태국 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+        </div>
+
+        <div class="answer-box">
+          🔑 <strong>解答:</strong><br>
+          Q1~Q4: 이에요 / 이에요 / 이에요 / 이에요<br>
+          Q5~Q10: 예요 / 이에요 / 이에요 / 이에요 / 이에요 / 이에요
+        </div>
+
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+        <div class="answer-box">
+          <div class="sub-title answer-title">🔑 解答</div>
+          <p class="answer-content">
+            Q1~Q4. <strong>이에요</strong><br>
+            Q5. <strong>예요</strong><br>
+            Q6-10. <strong>이에요</strong>
+          </p>
+        </div>
+
+        <div class="footer">Page 4 (練習問題)</div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================================================
+  【見開き 4】 7〜8ページ：否定形「이/가 아니에요」解説 ＆ 単語と練習問題
+  ========================================================================== -->
+
+    <div class="book-container">
+      <!-- 5ページ目: 単語（職業） & 質問フレーズ -->
+      <div class="page left-page">
+        <div class="grammar-no">テーマ 02</div>
+        <h1 class="main-title">職業を表す</h1>
+
+        <div class="sub-title">1. 職業の単語リスト</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th>職業 (韓国語)</th>
+              <th>読み方</th>
+              <th>パッチム</th>
+              <th>意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>학생</strong></td><td>ハクセイ</td><td><span class="highlight">あり</span> (ㅇ)</td><td>学生</td></tr>
+            <tr><td><strong>회사원</strong></td><td>フェサウォン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>会社員</td></tr>
+            <tr><td><strong>선생님</strong></td><td>ソンセンニム</td><td><span class="highlight">あり</span> (ㅁ)</td><td>先生</td></tr>
+            <tr><td><strong>공무원</strong></td><td>コンムウォン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>公務員</td></tr>
+            <tr><td><strong>은행원</strong></td><td>ウネンウォン</td><td><span class="highlight">あり</span> (ㄴ)</td><td>銀行員</td></tr>
+            <tr><td><strong>의사</strong></td><td>ウィサ</td><td>なし</td><td>医師・医者</td></tr>
+            <tr><td><strong>간호사</strong></td><td>カノサ</td><td>なし</td><td>看護師</td></tr>
+            <tr><td><strong>요리사</strong></td><td>ヨリサ</td><td>なし</td><td>料理人・シェフ</td></tr>
+            <tr><td><strong>경찰</strong></td><td>キョンチャル</td><td><span class="highlight">あり</span> (ㄹ)</td><td>警察官</td></tr>
+            <tr><td><strong>가수</strong></td><td>カス</td><td>なし</td><td>歌手</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">2. 質問・会話フレーズ</div>
+        <div class="phrase-box">
+          <h4>💬 質問するとき</h4>
+          <div class="phrase-item">
+            <div class="phrase-ko">직업이 무엇이에요? / 무슨 일 하세요?</div>
+            <div class="phrase-ja">お仕事は何ですか？ / どんなお仕事をされていますか？</div>
+          </div>
+        </div>
+
+        <div class="phrase-box" style="background-color: #eff6ff; border-color: #bfdbfe;">
+          <h4 style="color: #1e3a8a;">💬 答えるとき（「〜です」）</h4>
+          <div class="phrase-item">
+            <div class="phrase-ko">저는 [職業] 이에요 / 예요.</div>
+            <div class="phrase-ja">例：저는 회사원이에요. / 저는 의사예요.</div>
+          </div>
+        </div>
+
+        <div class="footer">Page 5 (単語・フレーズ)</div>
+      </div>
+
+      <!-- 6ページ目: 練習問題 10問（職業） -->
+      <div class="page right-page">
+        <div class="grammar-no">テーマ 02</div>
+        <h1 class="main-title">練習問題 (職業 10問)</h1>
+        <p style="font-size: 12px; color: #666; margin-bottom: 6px;">【例】를 参考にして、適切な形（이에요 / 예요）を選び完成させましょう。<br>(例: 학생 → 학생이에요 / 의사 → 의사예요)</p>
+
+        <div class="quiz-grid">
+          <div class="quiz-item"><div class="quiz-q">Q1. 저는 대학생 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q2. 언니는 간호사 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q3. 아버지는 회사원 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q4. 어머니는 선생님 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q5. 동생은 가수 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q6. 삼촌은 경찰 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q7. 친구는 요리사 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q8. 저분은 의사 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q9. 제 남동생은 은행원 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+          <div class="quiz-item"><div class="quiz-q">Q10. 제 이모는 공무원 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).</div></div>
+        </div>
+
+        <div class="answer-box">
+          🔑 <strong>解答:</strong><br>
+          Q1. 이에요 / Q2. 예요 / Q3. 이에요 / Q4. 이에요 / Q5. 예요<br>
+          Q6. 이에요 / Q7. 예요 / Q8. 예요 / Q9. 이에요 / Q10. 이에요
+        </div>
+
+        <div class="footer">Page 6 (練習問題)</div>
+      </div>
+    </div>
+
+
+    <!-- [책 펼침면] 새로운 단원 시작 부분 -->
+    <div class="book-container">
+
+      <!-- 📌 [왼쪽] 단원 구분(区切り) 페이지 -->
+      <div class="page left-page divider-page">
+        <span class="divider-badge">LESSON 03</span>
+        <h1 class="divider-title">存在</h1>
+        <p class="divider-subtitle">名詞の存在（-がいます・あります。）</p>
+        <p class="divider-subtitle">名詞の存在（-がいません。・ありません。。）</p>
+
+        <div class="divider-summary">
+          <h4>💡 この課で学ぶこと</h4>
+          <ul>
+            <li>「もの・生き物」が存在しているかいないかの表現</li>
+            <li>パッチムの有無による「이 / 가」の使い分け</li>
+            <li>日常会話でよく使う表現の応答パターン</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 📌 [오른쪽] 본격적인 문법 설명 페이지 -->
+      <!-- 9ページ目: 存在形「이/가 있어요 / 없어요」文法解説 -->
+      <div class="page left-page">
+        <div class="grammar-no">文法 04</div>
+        <h1 class="main-title">이 / 가 있어요 / 없어요</h1>
+
+        <div class="sub-title">1. 意味</div>
+        <p>名詞の後ろについて<strong>「〜が あります / います」</strong>（存在）および<strong>「〜が ありません / いません」</strong>（不在）を表す表現です。人物や動物、物、家族の有無などを話す時に使います。</p>
+
+        <div class="sub-title">2. 使い分けルール</div>
+        <p>パッチムの有無によって助詞<strong>「이 / 가」</strong>を使い分けた後に、<strong>「있어요」</strong>または<strong>「없어요」</strong>を接続します。</p>
+
+        <div class="point-box" style="background-color: #f0fdf4; border-color: #22c55e;">
+          <h4 style="color: #15803d;">💡 接続公式</h4>
+          <ul>
+            <li><strong>パッチムあり</strong> ＋ <span class="highlight" style="color: #16a34a;">이 있어요 / 없어요</span></li>
+            <li><strong>パッチムなし</strong> ＋ <span class="highlight" style="color: #16a34a;">가 있어요 / 없어요</span></li>
+          </ul>
+        </div>
+
+        <div class="sub-title">3. 詳しい解説と対比</div>
+        <ul>
+          <li><strong>동생（弟・妹 / パッチムあり）:</strong> <br>동생 ＋ <strong>이 있어요</strong> ＝ <strong>동생이 있어요.</strong>（弟/妹がいます）</li>
+          <li><strong>누나（姉 / パッチムなし）:</strong> <br>누나 ＋ <strong>가 없어요</strong> ＝ <strong>누나가 없어요.</strong>（姉がいません）</li>
+        </ul>
+
+        <div class="sub-title">4. 例文</div>
+        <div class="example-item">
+          <p class="ex-ko">저는 형<span class="highlight" style="color:#16a34a;">이 있어요</span>.</p>
+          <p class="ex-ja">私には兄（男性から見た）がいます。</p>
+        </div>
+        <div class="example-item">
+          <p class="ex-ko">언니<span class="highlight" style="color:#16a34a;">가 없어요</span>.</p>
+          <p class="ex-ja">姉（女性から見た）がいません。</p>
+        </div>
+
+        <div class="footer">Page 9 (存在表現 解説)</div>
+
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+  【見開き 5】 9〜10ページ：存在形「이/가 있어요/없어요」解説 ＆ 家族の単語と練習問題
+  ========================================================================== -->
+    <div class="book-container">
+      <div class="page right-page">
+        <div class="grammar-no">文法 04</div>
+        <h1 class="main-title">家族の単語 ＆ 練習問題</h1>
+
+        <div class="sub-title">1. 練習用単語リスト（家族）</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th>単語</th>
+              <th>意味</th>
+              <th>パッチム</th>
+              <th>肯定形 (〜がいます)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>부모님</strong></td><td>両親</td><td><span class="highlight">あり</span></td><td>부모님<strong>이 있어요</strong></td></tr>
+            <tr><td><strong>아버지</strong></td><td>父</td><td>なし</td><td>아버지<strong>가 있어요</strong></td></tr>
+            <tr><td><strong>어머니</strong></td><td>母</td><td>なし</td><td>어머니<strong>가 있어요</strong></td></tr>
+            <tr><td><strong>형</strong></td><td>兄（男性称）</td><td><span class="highlight">あり</span></td><td>형<strong>이 있어요</strong></td></tr>
+            <tr><td><strong>오빠</strong></td><td>兄（女性称）</td><td>なし</td><td>오빠<strong>가 있어요</strong></td></tr>
+            <tr><td><strong>누나</strong></td><td>姉（男性称）</td><td>なし</td><td>누나<strong>가 있어요</strong></td></tr>
+            <tr><td><strong>언니</strong></td><td>姉（女性称）</td><td>なし</td><td>언니<strong>가 있어요</strong></td></tr>
+            <tr><td><strong>동생</strong></td><td>弟・妹</td><td><span class="highlight">あり</span></td><td>동생<strong>이 있어요</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">2. 練習問題 (이 있어요 / 가 있어요 / 없어요)</div>
+        <p style="font-size: 12px; color: #666; margin-bottom: 6px;">【例】を参考にして、カッコ内に適切な助詞を含めた表現を入れましょう。<br>(例: 형 → 형이 있어요 / 누나 → 누나가 있어요)</p>
+
+        <div class="quiz-grid">
+          <div class="quiz-item"><div class="quiz-q">Q1. 저는 동생 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(弟/妹がいます)</span></div></div>
+          <div class="quiz-item"><div class="quiz-q">Q2. 저는 언니 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(姉がいません)</span></div></div>
+          <div class="quiz-item"><div class="quiz-q">Q3. 형 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )? <span style="font-size:11px; color:#888;">(兄はいますか？)</span></div></div>
+          <div class="quiz-item"><div class="quiz-q">Q4. 저는 오빠 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(兄がいます)</span></div></div>
+          <div class="quiz-item"><div class="quiz-q">Q5. 부모님 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(両親がいます)</span></div></div>
+          <div class="quiz-item"><div class="quiz-q">Q6. 저는 누나 ( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ). <span style="font-size:11px; color:#888;">(姉がいません)</span></div></div>
+        </div>
+
+        <div class="answer-box">
+          🔑 <strong>解答:</strong><br>
+          Q1. 이 있어요 / Q2. 가 없어요 / Q3. 이 있어요<br>
+          Q4. 가 있어요 / Q5. 이 있어요 / Q6. 가 없어요
+        </div>
+
+        <div class="footer">Page 10 (存在形 練習)</div>
+
+      </div>
+
+      <!-- 아직아무것도없음 -->
+      <div class="page left-page"></div>
+    </div>
+
+    <!-- ==========================================================================
+  📖 [見開き 1] 1ページ目(解説) ＋ 2ページ目(例文)
+  ========================================================================== -->
+    <div class="book-container">
+      <!-- 1ページ目: 文法解説 -->
+      <div class="page left-page" data-lesson="2">
+        <div class="lesson-band">2과</div>
+        <div class="grammar-no">文法 04</div>
+        <h1 class="main-title">家族</h1>
+        <h3 class="grammar-title">이 / 가 있어요</h3>
+
+        <div class="sub-title">意味</div>
+        <p>名詞の後ろについて<strong>「〜がいます／あります」</strong>という意味を表します。人や動物などの存在、または所有（〜を持っています）を表すときに使います。</p>
+
+        <!-- 使い分けルール (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">使い分けルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 パッチムの有無による接続ルール</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって「이」と「가」を使い分けます。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim">パッチム あり ⭕</th>
+                <th class="no-patchim">パッチム なし ❌</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">동생</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">이 있어요</span>
+                </td>
+                <td>
+                  <span class="rule-example">언니</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">가 있어요</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td><strong>동생이 있어요</strong></td>
+                <td><strong>언니가 있어요</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説</div>
+        <ul>
+          <li><strong>동생（妹・弟 / パッチムあり）:</strong> 最後の文字「생」に「ㅇ」パッチムがあるため、<strong>동생 ＋ 이 있어요 ＝ 동생이 있어요</strong>（妹/弟がいます）になります。連音化により［동생이］と発音されます。</li>
+          <li><strong>언니（姉 / パッチムなし）:</strong> 最後の文字「니」にパッチムがないため、<strong>언니 ＋ 가 있어요 ＝ 언니가 있어요</strong>（姉がいます）になります。</li>
+        </ul>
+
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+      <!-- 2ページ目: 例文 -->
+      <div class="page right-page" data-lesson="2">
+        <div class="lesson-band">2과</div>
+        <h1 class="main-title">例文</h1>
+        <h3 class="grammar-title">例文で覚える</h3>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">声に出して何度も読んでみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko">형<span class="highlight">이 있어요</span>.</p>
+          <p class="ex-ja">（男性から見て）兄がいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">동생<span class="highlight">이 있어요</span>.</p>
+          <p class="ex-ja">妹/弟がいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">남동생<span class="highlight">이 있어요</span>.</p>
+          <p class="ex-ja">弟がいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">언니<span class="highlight">가 있어요</span>.</p>
+          <p class="ex-ja">（女性から見て）姉がいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">누나<span class="highlight">가 있어요</span>.</p>
+          <p class="ex-ja">（男性から見て）姉がいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">오빠<span class="highlight">가 있어요</span>.</p>
+          <p class="ex-ja">（女性から見て）兄がいます。</p>
+        </div>
+
+        <div class="footer">Page 2 (例文)</div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================================================
+  📖 [見開き 2] 3ページ目(単語＋練習1) ＋ 4페이지目(単語＋練習2)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 3ページ目: 単語帳 & 練習問題 STEP 1 -->
+      <div class="page left-page" data-lesson="2">
+        <div class="lesson-band">2과</div>
+        <h1 class="main-title">練習問題 STEP 1</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>형</strong>（ヒョン）</td>
+              <td><span class="highlight">あり</span> (ㅇ)</td>
+              <td>兄（男性称）</td>
+            </tr>
+            <tr>
+              <td><strong>동생</strong>（トンセン）</td>
+              <td><span class="highlight">あり</span> (ㅇ)</td>
+              <td>妹・弟</td>
+            </tr>
+            <tr>
+              <td><strong>언니</strong>（オンニ）</td>
+              <td>なし</td>
+              <td>姉（女性称）</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び「〜がいます」という文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 형 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 형<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 언니 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 언니<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>이</strong> (형이 있어요)<br>
+            Q2. <strong>가</strong> (언니가 있어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (練習 1)</div>
+      </div>
+
+      <!-- 4ページ目: 単語帳 & 練習問題 STEP 2 -->
+      <div class="page right-page" data-lesson="2">
+        <div class="lesson-band">2과</div>
+        <h1 class="main-title">練習問題 STEP 2</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>오빠</strong>（オッパ）</td>
+              <td>なし</td>
+              <td>兄（女性称）</td>
+            </tr>
+            <tr>
+              <td><strong>누나</strong>（ヌナ）</td>
+              <td>なし</td>
+              <td>姉（男性称）</td>
+            </tr>
+            <tr>
+              <td><strong>남동생</strong>（ナムドンセン）</td>
+              <td><span class="highlight">あり</span> (ㅇ)</td>
+              <td>弟</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び「〜がいます」という文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 오빠 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 오빠<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 남동생 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 남동생<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q3. <strong>가</strong> (오빠가 있어요)<br>
+            Q4. <strong>이</strong> (남동생이 있어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習 2)</div>
+      </div>
+    </div>
+    <!-- ==========================================================================
+  📖 [見開き 1] 1ページ目(解説) ＋ 2ページ目(例文)
+  ========================================================================== -->
+    <div class="book-container">
+      <!-- 1ページ目: 文法解説 -->
+      <div class="page left-page" data-lesson="3">
+        <div class="lesson-band">3과</div>
+        <div class="grammar-no">文法 05</div>
+        <h1 class="main-title">モノ</h1>
+        <h3 class="grammar-title">이 / 가 있어요</h3>
+
+        <div class="sub-title">意味</div>
+        <p>名詞の後ろについて<strong>「〜があります／持っています」</strong>という意味を表します。モノの存在や所有を表すときに使います。</p>
+
+        <!-- 使い分けルール (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">使い分けルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 パッチムの有無による接続ルール</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって「이」と「가」を使い分けます。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim">パッチム あり ⭕</th>
+                <th class="no-patchim">パッチム なし ❌</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">책</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">이 있어요</span>
+                </td>
+                <td>
+                  <span class="rule-example">시계</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">가 있어요</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td><strong>책이 있어요</strong></td>
+                <td><strong>시계가 있어요</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説</div>
+        <ul>
+          <li><strong>책（本 / パッチムあり）:</strong> 最後の文字「책」に「ㄱ」パッチムがあるため、<strong>책 ＋ 이 있어요 ＝ 책이 있어요</strong>（本があります）になります。連音化により［채기］と発音されます。</li>
+          <li><strong>시계（時計 / パッチムなし）:</strong> 最後の文字「계」にパッチムがないため、<strong>시계 ＋ 가 있어요 ＝ 시계가 있어요</strong>（時計があります）になります。</li>
+        </ul>
+
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+      <!-- 2ページ目: 例文 -->
+      <div class="page right-page" data-lesson="3">
+        <div class="lesson-band">3과</div>
+        <h1 class="main-title">例文</h1>
+        <h3 class="grammar-title">例文で覚える</h3>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">声に出して何度も読んでみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko">핸드폰<span class="highlight">이 있어요</span>.</p>
+          <p class="ex-ja">携帯電話があります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">가방<span class="highlight">이 있어요</span>.</p>
+          <p class="ex-ja">カバンがあります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">우산<span class="highlight">이 있어요</span>.</p>
+          <p class="ex-ja">傘があります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">모자<span class="highlight">가 있어요</span>.</p>
+          <p class="ex-ja">帽子があります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">시계<span class="highlight">가 있어요</span>.</p>
+          <p class="ex-ja">時計があります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">자전거<span class="highlight">가 있어요</span>.</p>
+          <p class="ex-ja">自転車があります。</p>
+        </div>
+
+        <div class="footer">Page 2 (例文)</div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================================================
+  📖 [見開き 2] 3ページ目(単語＋練習1) ＋ 4ページ目(単語＋練習2)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 3ページ目: 単語帳 & 練習問題 STEP 1 -->
+      <div class="page left-page" data-lesson="3">
+        <div class="lesson-band">3과</div>
+        <h1 class="main-title">練習問題 STEP 1</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>책</strong>（チェク）</td>
+              <td><span class="highlight">あり</span> (ㄱ)</td>
+              <td>本</td>
+            </tr>
+            <tr>
+              <td><strong>지갑</strong>（チガプ）</td>
+              <td><span class="highlight">あり</span> (ㅂ)</td>
+              <td>財布</td>
+            </tr>
+            <tr>
+              <td><strong>펜</strong>（ペン）</td>
+              <td><span class="highlight">あり</span> (ㄴ)</td>
+              <td>ペン</td>
+            </tr>
+            <tr>
+              <td><strong>의자</strong>（ウィジャ）</td>
+              <td>なし</td>
+              <td>椅子</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び「〜があります」という文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 책 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 책<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 지갑 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 지갑<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 의자 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 의자<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>이</strong> (책이 있어요)<br>
+            Q2. <strong>이</strong> (지갑이 있어요)<br>
+            Q3. <strong>가</strong> (의자가 있어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (練習 1)</div>
+      </div>
+
+      <!-- 4ページ目: 単語帳 & 練習問題 STEP 2 -->
+      <div class="page right-page" data-lesson="3">
+        <div class="lesson-band">3과</div>
+        <h1 class="main-title">練習問題 STEP 2</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>책상</strong>（チェクサン）</td>
+              <td><span class="highlight">あり</span> (ㅇ)</td>
+              <td>机</td>
+            </tr>
+            <tr>
+              <td><strong>사진</strong>（サジン）</td>
+              <td><span class="highlight">あり</span> (ㄴ)</td>
+              <td>写真</td>
+            </tr>
+            <tr>
+              <td><strong>침대</strong>（チムデ）</td>
+              <td>なし</td>
+              <td>ベッド</td>
+            </tr>
+            <tr>
+              <td><strong>컴퓨터</strong>（コンピュータ）</td>
+              <td>なし</td>
+              <td>パソコン</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び「〜があります」という文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 사진 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 사진<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 침대 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 침대<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q6. 컴퓨터 ＋ ( 이 / 가 ) 있어요</div>
+          <p>→ 컴퓨터<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q4. <strong>이</strong> (사진이 있어요)<br>
+            Q5. <strong>가</strong> (침대가 있어요)<br>
+            Q6. <strong>가</strong> (컴퓨터가 있어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習 2)</div>
+      </div>
+    </div>
+    <!-- ==========================================================================
+  📖 [見開き 1] 1ページ目(解説) ＋ 2ページ目(例文)
+  ========================================================================== -->
+    <div class="book-container">
+      <!-- 1ページ目: 文法解説 -->
+      <div class="page left-page" data-lesson="4">
+        <div class="lesson-band">4과</div>
+        <div class="grammar-no">文法 06</div>
+        <h1 class="main-title">存在・否定</h1>
+        <h3 class="grammar-title">이 / 가 없어요</h3>
+
+        <div class="sub-title">意味</div>
+        <p>名詞の後ろについて<strong>「〜がいません／ありません」</strong>という意味を表します。人やモノの不在、または所有していないこと（〜を持っていません）を表すときに使います。</p>
+
+        <!-- 使い分けルール (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">使い分けルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 パッチムの有無による接続ルール</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって「이」と「가」を使い分けます。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim">パッチム あり ⭕</th>
+                <th class="no-patchim">パッチム なし ❌</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">시간</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">이 없어요</span>
+                </td>
+                <td>
+                  <span class="rule-example">돈</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">이 없어요</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="rule-example">우산</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">이 없어요</span>
+                </td>
+                <td>
+                  <span class="rule-example">차</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">가 없어요</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td><strong>시간이 없어요</strong></td>
+                <td><strong>차가 없어요</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説</div>
+        <ul>
+          <li><strong>시간（時間 / パッチムあり）:</strong> 最後の文字「간」に「ㄴ」パッチムがあるため、<strong>시간 ＋ 이 없어요 ＝ 시간이 없어요</strong>（時間がありません）になります。連音化により［시간이］と発音されます。</li>
+          <li><strong>차（車 / パッチムなし）:</strong> 最後の文字「차」にパッチムがないため、<strong>차 ＋ 가 없어요 ＝ 차가 없어요</strong>（車がありません）になります。</li>
+        </ul>
+
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+      <!-- 2ページ目: 例文 -->
+      <div class="page right-page" data-lesson="4">
+        <div class="lesson-band">4과</div>
+        <h1 class="main-title">例文</h1>
+        <h3 class="grammar-title">例文で覚える</h3>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">声に出して何度も読んでみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko">시간<span class="highlight">이 없어요</span>.</p>
+          <p class="ex-ja">時間がありません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">집<span class="highlight">이 없어요</span>.</p>
+          <p class="ex-ja">家がありません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">질문<span class="highlight">이 없어요</span>.</p>
+          <p class="ex-ja">質問がありません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">차<span class="highlight">가 없어요</span>.</p>
+          <p class="ex-ja">車がありません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">지갑<span class="highlight">이 없어요</span>.</p>
+          <p class="ex-ja">財布がありません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">휴일<span class="highlight">이 없어요</span>.</p>
+          <p class="ex-ja">休みにありません。</p>
+        </div>
+
+        <div class="footer">Page 2 (例文)</div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================================================
+  📖 [見開き 2] 3ページ目(単語＋練習1) ＋ 4ページ目(単語＋練習2)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 3ページ目: 単語帳 & 練習問題 STEP 1 -->
+      <div class="page left-page" data-lesson="4">
+        <div class="lesson-band">4과</div>
+        <h1 class="main-title">練習問題 STEP 1</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>시간</strong>（シガン）</td>
+              <td><span class="highlight">あり</span> (ㄴ)</td>
+              <td>時間</td>
+            </tr>
+            <tr>
+              <td><strong>돈</strong>（トン）</td>
+              <td><span class="highlight">あり</span> (ㄴ)</td>
+              <td>お金</td>
+            </tr>
+            <tr>
+              <td><strong>차</strong>（チャ）</td>
+              <td>なし</td>
+              <td>車</td>
+            </tr>
+            <tr>
+              <td><strong>친구</strong>（チング）</td>
+              <td>なし</td>
+              <td>友達</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び「〜がありません/いません」という文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 시간 ＋ ( 이 / 가 ) 없어요</div>
+          <p>→ 시간<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 차 ＋ ( 이 / 가 ) 없어요</div>
+          <p>→ 차<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 친구 ＋ ( 이 / 가 ) 없어요</div>
+          <p>→ 친구<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>이</strong> (시간이 없어요)<br>
+            Q2. <strong>가</strong> (차가 없어요)<br>
+            Q3. <strong>가</strong> (친구가 없어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (練習 1)</div>
+      </div>
+
+      <!-- 4ページ目: 単語帳 & 練習問題 STEP 2 -->
+      <div class="page right-page" data-lesson="4">
+        <div class="lesson-band">4과</div>
+        <h1 class="main-title">練習問題 STEP 2</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>질문</strong>（チルムン）</td>
+              <td><span class="highlight">あり</span> (ㄴ)</td>
+              <td>質問</td>
+            </tr>
+            <tr>
+              <td><strong>우산</strong>（ウサン）</td>
+              <td><span class="highlight">あり</span> (ㄴ)</td>
+              <td>傘</td>
+            </tr>
+            <tr>
+              <td><strong>약속</strong>（ヤクソク）</td>
+              <td><span class="highlight">あり</span> (ㄱ)</td>
+              <td>約束</td>
+            </tr>
+            <tr>
+              <td><strong>휴일</strong>（ヒュイル）</td>
+              <td><span class="highlight">あり</span> (ㄹ)</td>
+              <td>休日</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び「〜がありません」という文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 질문 ＋ ( 이 / 가 ) 없어요</div>
+          <p>→ 질문<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 우산 ＋ ( 이 / 가 ) 없어요</div>
+          <p>→ 우산<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q6. 약속 ＋ ( 이 / 가 ) 없어요</div>
+          <p>→ 약속<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q4. <strong>이</strong> (질문이 없어요)<br>
+            Q5. <strong>이</strong> (우산이 없어요)<br>
+            Q6. <strong>이</strong> (약속이 없어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習 2)</div>
+      </div>
+    </div>
+    <!-- ==========================================================================
+  📖 [見開き 5] 9ページ目(まとめ問題 STEP 1) ＋ 10ページ目(まとめ問題 STEP 2)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 9ページ目: まとめ問題 STEP 1 (기초 Check) -->
+      <div class="page left-page" data-lesson="5">
+        <div class="lesson-band">5과</div>
+        <div class="grammar-no">REVIEW</div>
+        <h1 class="main-title">まとめ問題</h1>
+        <h3 class="grammar-title">総合復習テスト STEP 1</h3>
+
+        <div class="sub-title">1. 助詞の使い分け (은/는 & 이/가)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">カッコの中から適切な方を選んで文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 저 ( 은 / 는 ) 일본 사람이에요.</div>
+          <p>→ 저는 <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 이름 ( 은 / 는 ) 김민수예요.</div>
+          <p>→ 이름 <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 동생 ( 이 / 가 ) 있어요.</div>
+          <p>→ 동생 <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 차 ( 이 / 가 ) 없어요.</div>
+          <p>→ 차 <span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>는</strong> (저는 일본 사람이에요)<br>
+            Q2. <strong>은</strong> (이름은 김민수예요)<br>
+            Q3. <strong>이</strong> (동생이 있어요)<br>
+            Q4. <strong>가</strong> (차가 없어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 9 (まとめ 1)</div>
+      </div>
+
+      <!-- 10ページ目: まとめ問題 STEP 2 (応用 Check) -->
+      <div class="page right-page" data-lesson="5">
+        <div class="lesson-band">5과</div>
+        <h1 class="main-title">まとめ問題</h1>
+        <h3 class="grammar-title">総合復習テスト STEP 2</h3>
+
+        <div class="sub-title">2. 語尾の使い分け (이에요/예요 & 있어요/없어요)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">日本語に合わせて適切な韓国語を作りましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 韓国人です。（한국 사람 ＋ ?）</div>
+          <p>→ 한국 사람 <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q6. 会社です。（회사 ＋ ?）</div>
+          <p>→ 회사 <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q7. 時間がありません。（시간 ＋ 이/가 ＋ ?）</div>
+          <p>→ 시간 <span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q8. 姉（女性称）がいます。（언니 ＋ 이/가 ＋ ?）</div>
+          <p>→ 언니 <span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q5. <strong>이에요</strong> (한국 사람이에요)<br>
+            Q6. <strong>예요</strong> (회사예요)<br>
+            Q7. <strong>이 없어요</strong> (시간이 없어요)<br>
+            Q8. <strong>가 있어요</strong> (언니가 있어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 10 (まとめ 2)</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+  📖 [見開き 1] 1ページ目(解説) ＋ 2ページ目(例文)
+  ========================================================================== -->
+    <div class="book-container">
+      <!-- 1ページ目: 文法解説 -->
+      <div class="page left-page" data-lesson="5">
+        <div class="lesson-band">5과</div>
+        <div class="grammar-no">文法 07</div>
+        <h1 class="main-title">場所</h1>
+        <h3 class="grammar-title">에 있어요 / 없어요</h3>
+
+        <div class="sub-title">意味</div>
+        <p>場所を表す名詞の後ろについて<strong>「〜にあります・います／〜にありません・いません」</strong>という意味を表します。人やモノが存在する場所（位置）を言いたいときに使います。</p>
+
+        <!-- 使い分けルール (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">使い分けルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 接続ルール（パッチムに関わらず一定）</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">助詞「에」は、名詞の最後の文字に<strong>パッチムがあってもなくても、そのまま「에」を接続</strong>します。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim">パッチム あり ⭕</th>
+                <th class="no-patchim">パッチム なし ❌</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">집</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">에 있어요</span>
+                </td>
+                <td>
+                  <span class="rule-example">학교</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">에 있어요</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td><strong>집에 있어요</strong>（家にいます）</td>
+                <td><strong>학교에 있어요</strong>（学校にいます）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説</div>
+        <ul>
+          <li><strong>집（家 / パッチムあり）:</strong> <strong>집 ＋ 에 있어요 ＝ 집에 있어요</strong>（家にいます/あります）になります。連音化により［지베］と発音されます。</li>
+          <li><strong>학교（学校 / パッチムなし）:</strong> <strong>학교 ＋ 에 없어요 ＝ 학교에 없어요</strong>（学校にいません/ありません）になります。</li>
+        </ul>
+
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+      <!-- 2ページ目: 例文 -->
+      <div class="page right-page" data-lesson="5">
+        <div class="lesson-band">5과</div>
+        <h1 class="main-title">例文</h1>
+        <h3 class="grammar-title">例文で覚える</h3>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">声に出して何度も読んでみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko">집<span class="highlight">에 있어요</span>.</p>
+          <p class="ex-ja">家にいます / 家にあります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">회사<span class="highlight">에 있어요</span>.</p>
+          <p class="ex-ja">会社にいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">방<span class="highlight">에 있어요</span>.</p>
+          <p class="ex-ja">部屋にあります / 部屋にいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">학교<span class="highlight">에 없어요</span>.</p>
+          <p class="ex-ja">学校にいません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">화장실<span class="highlight">에 없어요</span>.</p>
+          <p class="ex-ja">お手洗いにありません / いません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">식당<span class="highlight">에 없어요</span>.</p>
+          <p class="ex-ja">食堂（レストラン）にいません。</p>
+        </div>
+
+        <div class="footer">Page 2 (例文)</div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================================================
+  📖 [見開き 2] 3ページ目(単語＋練習1) ＋ 4ページ目(単語＋練習2)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 3ページ目: 単語帳 & 練習問題 STEP 1 -->
+      <div class="page left-page" data-lesson="5">
+        <div class="lesson-band">5과</div>
+        <h1 class="main-title">練習問題 STEP 1</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>집</strong>（チプ）</td>
+              <td><span class="highlight">あり</span> (ㅂ)</td>
+              <td>家</td>
+            </tr>
+            <tr>
+              <td><strong>회사</strong>（フェサ）</td>
+              <td>なし</td>
+              <td>会社</td>
+            </tr>
+            <tr>
+              <td><strong>학교</strong>（ハッキョ）</td>
+              <td>なし</td>
+              <td>学校</td>
+            </tr>
+            <tr>
+              <td><strong>방</strong>（パン）</td>
+              <td><span class="highlight">あり</span> (ㅇ)</td>
+              <td>部屋</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">助詞「에」と「있어요/없어요」を使って文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 家にいます。（집 ＋ 에 있어요）</div>
+          <p>→ 집<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 会社にいます。（회사 ＋ 에 있어요）</div>
+          <p>→ 회사<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 学校にいません。（학교 ＋ 에 없어요）</div>
+          <p>→ 학교<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>에</strong> (집에 있어요)<br>
+            Q2. <strong>에</strong> (회사에 있어요)<br>
+            Q3. <strong>에</strong> (학교에 없어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (練習 1)</div>
+      </div>
+
+      <!-- 4ページ目: 単語帳 & 練習問題 STEP 2 -->
+      <div class="page right-page" data-lesson="5">
+        <div class="lesson-band">5과</div>
+        <h1 class="main-title">練習問題 STEP 2</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>화장실</strong>（ファジャンシル）</td>
+              <td><span class="highlight">あり</span> (ㄹ)</td>
+              <td>お手洗い・トイレ</td>
+            </tr>
+            <tr>
+              <td><strong>식당</strong>（シクタン）</td>
+              <td><span class="highlight">あり</span> (ㅇ)</td>
+              <td>食堂・レストラン</td>
+            </tr>
+            <tr>
+              <td><strong>카페</strong>（カフェ）</td>
+              <td>なし</td>
+              <td>カフェ</td>
+            </tr>
+            <tr>
+              <td><strong>공원</strong>（コンウォン）</td>
+              <td><span class="highlight">あり</span> (ㄴ)</td>
+              <td>公園</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">日本語の意味に合うようにカッコに適切な言葉を入れましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. カフェにいます。（카페 ＋ ?）</div>
+          <p>→ 카페<span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. お手洗いにありません。（화장실 ＋ ?）</div>
+          <p>→ 화장실<span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q6. 公園にいません。（공원 ＋ ?）</div>
+          <p>→ 공원<span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q4. <strong>에 있어요</strong> (카페에 있어요)<br>
+            Q5. <strong>에 없어요</strong> (화장실에 없어요)<br>
+            Q6. <strong>에 없어요</strong> (공원에 없어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習 2)</div>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+  📖 [見開き] 場所 ＋ 에 物이/가 있어요 / 없어요 (2ページ分)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 1ページ目: 場所＋에 物이/가 있어요/없어요 解説 -->
+      <div class="page left-page" data-lesson="8">
+        <div class="lesson-band">8과</div>
+        <div class="grammar-no">APPLY 02</div>
+        <h1 class="main-title">場所と存在</h1>
+        <h3 class="grammar-title">場所 ＋ 에 物이/가 있어요 / 없어요</h3>
+
+        <div class="sub-title">意味と語順</div>
+        <p>「場所 ＋ 에（〜に）」を文頭に置くことで、<strong>「〜（場所）に〜（モノ/人）があります・います / ありません・いません」</strong>という、場所を中心にした存在の文章を作ることができます。</p>
+
+        <!-- 組み立て公式 (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">文の組み立て公式</div>
+        <div class="speech-bubble-box">
+          <h4>💬 「場所」から始まる文章の順番</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">「どこに ➔ 何が ➔ あります/ありません」の順番で並べます。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim" style="background-color: #2563eb;">① 場所 ＋ 에</th>
+                <th class="no-patchim" style="background-color: #0284c7;">② モノ/人 ＋ 이/가</th>
+                <th class="has-patchim" style="background-color: #1e3a8a;">③ 存在・否定</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">방에</span><br>
+                  <span style="font-size:11px; color:#64748b;">(部屋に)</span>
+                </td>
+                <td>
+                  <span class="rule-example">침대가</span><br>
+                  <span style="font-size:11px; color:#64748b;">(ベッドが)</span>
+                </td>
+                <td>
+                  <span class="rule-target">있어요</span><br>
+                  <span style="font-size:11px; color:#2563eb;">(あります)</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="rule-example">냉장고에</span><br>
+                  <span style="font-size:11px; color:#64748b;">(冷蔵庫に)</span>
+                </td>
+                <td>
+                  <span class="rule-example">우유가</span><br>
+                  <span style="font-size:11px; color:#64748b;">(牛乳が)</span>
+                </td>
+                <td>
+                  <span class="rule-target">없어요</span><br>
+                  <span style="font-size:11px; color:#2563eb;">(ありません)</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td colspan="3"><strong>방에 침대가 있어요.</strong> （部屋にベッドがあります）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">例文</div>
+        <div class="example-card">
+          <p class="ex-ko">집<span class="highlight">에</span> 강아지<span class="highlight">가 있어요</span>.</p>
+          <p class="ex-ja">家に子犬がいます。</p>
+        </div>
+        <div class="example-card">
+          <p class="ex-ko">학교<span class="highlight">에</span> 선생님<span class="highlight">이 계세요/있어요</span>.</p>
+          <p class="ex-ja">学校に先生がいます。</p>
+        </div>
+        <div class="example-card">
+          <p class="ex-ko">카페<span class="highlight">에</span> 자리<span class="highlight">가 없어요</span>.</p>
+          <p class="ex-ja">カフェに席がありません（満席です）。</p>
+        </div>
+
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+
+      <!-- 2ページ目: 単語帳 & 練習問題 -->
+      <div class="page right-page" data-lesson="8">
+        <div class="lesson-band">8과</div>
+        <h1 class="main-title">練習問題</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 35%;">単語（場所・モノ）</th>
+              <th style="width: 30%;">パッチムの有無</th>
+              <th style="width: 35%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>냉장고</strong>（ネンジャンゴ）</td>
+              <td>なし</td>
+              <td>冷蔵庫</td>
+            </tr>
+            <tr>
+              <td><strong>물</strong>（ムル）</td>
+              <td><span class="highlight">あり</span> (ㄹ)</td>
+              <td>水</td>
+            </tr>
+            <tr>
+              <td><strong>지하철</strong>（チハチョル）</td>
+              <td><span class="highlight">あり</span> (ㄹ)</td>
+              <td>地下鉄</td>
+            </tr>
+            <tr>
+              <td><strong>사람</strong>（サラム）</td>
+              <td><span class="highlight">あり</span> (ㅁ)</td>
+              <td>人</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">日本語の意味に合うようにカッコに適切な助詞・語尾を入れましょう。</p>
+
+        <!-- Q1 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 冷蔵庫に水があります。</div>
+          <p>→ 냉장고<span class="quiz-line"></span> 물<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 地下鉄に人が多いです/います。</div>
+          <p>→ 지하철<span class="quiz-line"></span> 사람<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 部屋にテレビがありません。</div>
+          <p>→ 방<span class="quiz-line"></span> TV<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. カフェに友達がいます。</div>
+          <p>→ 카페<span class="quiz-line"></span> 친구<span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 家に誰もいません（人がいません）。</div>
+          <p>→ 집<span class="quiz-line"></span> 사람<span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>에 / 이</strong> (냉장고에 물이 있어요)<br>
+            Q2. <strong>에 / 이</strong> (지하철에 사람이 있어요)<br>
+            Q3. <strong>에 / 가</strong> (방에 TV가 없어요)<br>
+            Q4. <strong>에 / 가 / 있어요</strong> (카페에 친구가 있어요)<br>
+            Q5. <strong>에 / 이 / 없어요</strong> (집에 사람이 없어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 2 (練習)</div>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+  📖 [特別ページ] 日本語の「の」と韓国語「의」の解説 ＋ 練習問題
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 1ページ目: 解説（日本語の「の」はどう訳す？） -->
+      <div class="page left-page" data-lesson="SP">
+        <div class="lesson-band">特別コラム</div>
+        <div class="grammar-no">SPECIAL</div>
+        <h1 class="main-title">日本語の「の」</h1>
+        <h3 class="grammar-title">韓国語の「의」と省略のルール</h3>
+
+        <div class="sub-title">意味と使い方</div>
+        <p>日本語の「〜の」は韓国語で <strong>의［의 / 에］</strong> と書きますが、日常会話では<strong>「省略する」</strong>か<strong>「他の言葉に言い換える」</strong>ことがとても多いです。</p>
+
+        <!-- ルール解説 (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">3つのパターン</div>
+        <div class="speech-bubble-box">
+          <h4>💬 日本語の「の」のパターン別変化</h4>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim" style="background-color: #2563eb;">パターン</th>
+                <th class="no-patchim" style="background-color: #0284c7;">韓国語での表現</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>① 所有（〜のもの）</strong></td>
+                <td>
+                  そのまま <strong>의</strong> を使う<br>
+                  <span style="font-size:11px; color:#64748b;">(会話では省略も多い)</span>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>② 名詞 ＋ 名詞</strong></td>
+                <td>
+                  「의」を <strong>省略する</strong><br>
+                  <span style="font-size:11px; color:#0284c7;">そのまま並べるだけでOK！</span>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>③ 場所 ＋ の ＋ モノ</strong></td>
+                <td>
+                  <strong>에（〜に）</strong> または<br>
+                  <strong>에 있는（〜にある）</strong> に変える
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説＆例文</div>
+        <ul>
+          <li><strong>① 所有:</strong> <br>저<strong>의</strong> 책（私<strong>の</strong>本）➔ 会話では <strong>제 책</strong> に縮約されます。</li>
+          <li><strong>② 名詞の連続（省略）:</strong> <br>한국<strong>의</strong> 친구（×）➔ <strong>한국 친구</strong>（〇 韓国<strong>の</strong>友達）のように「의」を消す方が自然です。</li>
+          <li><strong>③ 場所の「の」:</strong> <br>책상 위<strong>의</strong> 책（×）➔ <strong>책상 위에 있는 책</strong>（〇 机の上<strong>にある</strong>本）と言います。</li>
+        </ul>
+
+        <div class="footer">Page Special 1 (解説)</div>
+      </div>
+
+
+      <!-- 2ページ目: 練習問題 -->
+      <div class="page right-page" data-lesson="SP">
+        <div class="lesson-band">特別コラム</div>
+        <h1 class="main-title">練習問題</h1>
+        <h3 class="grammar-title">「の」の言い換え Check!</h3>
+
+        <div class="sub-title">自然な韓国語に直してみよう！</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">日本語に合わせて、適切な形（의 を使う / 省略する / 에 있는）を選びましょう。</p>
+
+        <!-- 問題 1 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 韓国の友達（名詞 ＋ 名詞 ➔ 「의」は？）</div>
+          <p>→ 한국 <span class="quiz-line"></span> 친구 ( 正解：<span class="highlight">의 をつけない/省略</span> )</p>
+        </div>
+
+        <!-- 問題 2 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 私の本（所有 ➔ 「저의」を縮約すると？）</div>
+          <p>→ <span class="quiz-line"></span> 책 ( 저의 ➔ <span class="highlight">?</span> )</p>
+        </div>
+
+        <!-- 問題 3 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 日本の料理（名詞 ＋ 名詞 ➔ 「의」は？）</div>
+          <p>→ 일본 <span class="quiz-line"></span> 요리</p>
+        </div>
+
+        <!-- 問題 4 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 机の上にある本（場所の「の」）</div>
+          <p>→ 책상 위<span class="quiz-line"></span> 책</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>한국 친구</strong> (의 を省略するのが自然！)<br>
+            Q2. <strong>제 책</strong> (저의 は「제」に縮約されます)<br>
+            Q3. <strong>일본 요리</strong> (의 を省略して「일본 요리」と言います)<br>
+            Q4. <strong>에 있는</strong> (책상 위에 있는 책 = 机の上にある本)
+          </div>
+        </div>
+
+        <div class="footer">Page Special 2 (練習)</div>
+      </div>
+
+    </div>
+    <!-- ==========================================================================
+  📖 [見開き 1] 1ページ目(解説) ＋ 2ページ目(例文)
+  ========================================================================== -->
+    <div class="book-container">
+      <!-- 1ページ目: 文法解説 -->
+      <div class="page left-page" data-lesson="6">
+        <div class="lesson-band">6과</div>
+        <div class="grammar-no">文法 08</div>
+        <h1 class="main-title">位置</h1>
+        <h3 class="grammar-title">位置 ＋ 에 있어요 / 없어요</h3>
+
+        <div class="sub-title">意味</div>
+        <p>位置を表す名詞（上・下・横など）の後ろに助詞「에」をつけて<strong>「〜（位置）にあります・います／〜（位置）にありません・いません」</strong>という意味を表します。具体的なモノや人の場所・位置関係を伝えるときに使います。</p>
+
+        <!-- 使い分けルール (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">使い分けルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 位置を表す単語と助詞「에」の接続</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">「名詞 ＋ 位置単語 ＋ 에 있어요/없어요」の順で組み合わせて使います。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim" style="background-color: #2563eb;">[名詞] ＋ [位置]</th>
+                <th class="no-patchim" style="background-color: #0284c7;">＋ [助詞] ＋ [存在]</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">책상 위</span> (机の上)
+                </td>
+                <td>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">에 있어요</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="rule-example">가방 안</span> (カバンの we/中)
+                </td>
+                <td>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">에 없어요</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td><strong>책상 위에 있어요</strong></td>
+                <td><strong>가방 안에 없어요</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説</div>
+        <ul>
+          <li><strong>위（上）/ 아래（下）/ 옆（横・隣）:</strong> 位置単語の直後に「에」をつけます（例：위 ＋ 에 ➔ 위에［위에］）。</li>
+          <li><strong>連音化（発音の注意）:</strong> 「위/아래/옆/앞/뒤/안/밖」に「에」がつくときは音の変化（連音化）に注意しましょう。（例：옆에［여페］, 앞에［아페］, 안에［아네］, 밖에［바께］）</li>
+        </ul>
+
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+      <!-- 2ページ目: 例文 -->
+      <div class="page right-page" data-lesson="6">
+        <div class="lesson-band">6과</div>
+        <h1 class="main-title">例文</h1>
+        <h3 class="grammar-title">例文で覚える</h3>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">声に出して何度も読んでみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko">책상 <span class="highlight">위에 있어요</span>.</p>
+          <p class="ex-ja">机の上にあります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">의자 <span class="highlight">아래에 있어요</span>.</p>
+          <p class="ex-ja">椅子の下にあります。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">친구 <span class="highlight">옆에 있어요</span>.</p>
+          <p class="ex-ja">友達の横（隣）にいます。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">학교 <span class="highlight">앞에 있어요</span>.</p>
+          <p class="ex-ja">学校の前にあります / います。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">집 <span class="highlight">뒤에 없어요</span>.</p>
+          <p class="ex-ja">家の後ろにありません。</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">가방 <span class="highlight">안에 없어요</span>.</p>
+          <p class="ex-ja">カバンの中にありません。</p>
+        </div>
+
+        <div class="footer">Page 2 (例文)</div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================================================
+  📖 [見開き 2] 3ページ目(単語＋練習1) ＋ 4ページ目(単語＋練習2)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 3ページ目: 単語帳 & 練習問題 STEP 1 -->
+      <div class="page left-page" data-lesson="6">
+        <div class="lesson-band">6과</div>
+        <h1 class="main-title">練習問題 STEP 1</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (位置を表す単語)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 35%;">位置（韓国語）</th>
+              <th style="width: 30%;">発音</th>
+              <th style="width: 35%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>위</strong></td>
+              <td>ウィ</td>
+              <td>上</td>
+            </tr>
+            <tr>
+              <td><strong>아래 / 밑</strong></td>
+              <td>アレ / ミッ</td>
+              <td>下</td>
+            </tr>
+            <tr>
+              <td><strong>옆</strong></td>
+              <td>ヨプ</td>
+              <td>横・隣</td>
+            </tr>
+            <tr>
+              <td><strong>앞</strong></td>
+              <td>アプ</td>
+              <td>前</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">日本語に合わせて適切な位置単語と「에 있어요」を入れましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 机の上にあります。（책상 ＋ 上 ＋ 에 있어요）</div>
+          <p>→ 책상 <span class="quiz-line"></span>에 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 椅子の下にあります。（의자 ＋ 下 ＋ 에 있어요）</div>
+          <p>→ 의자 <span class="quiz-line"></span>에 있어요.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 会社の前にあります。（회사 ＋ 前 ＋ 에 있어요）</div>
+          <p>→ 회사 <span class="quiz-line"></span>에 있어요.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>위</strong> (책상 위에 있어요)<br>
+            Q2. <strong>아래</strong> [または <strong>밑</strong>] (의자 아래에 있어요)<br>
+            Q3. <strong>앞</strong> (회사 앞에 있어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (練習 1)</div>
+      </div>
+
+      <!-- 4ページ目: 単語帳 & 練習問題 STEP 2 -->
+      <div class="page right-page" data-lesson="6">
+        <div class="lesson-band">6과</div>
+        <h1 class="main-title">練習問題 STEP 2</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (位置を表す単語)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 35%;">位置（韓国語）</th>
+              <th style="width: 30%;">発音</th>
+              <th style="width: 35%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>뒤</strong></td>
+              <td>トゥイ</td>
+              <td>後ろ・裏</td>
+            </tr>
+            <tr>
+              <td><strong>안 / 속</strong></td>
+              <td>アン / ソク</td>
+              <td>中・内</td>
+            </tr>
+            <tr>
+              <td><strong>밖</strong></td>
+              <td>パク</td>
+              <td>外</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">日本語に合わせて適切な表現（位置＋에 있어요/없어요）を選びましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. カバンの中にあります。（가방 ＋ 中 ＋ 에 있어요）</div>
+          <p>→ 가방 <span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 家の後ろにありません。（집 ＋ 後ろ ＋ 에 없어요）</div>
+          <p>→ 집 <span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q6. 部屋の外にいます。（방 ＋ 外 ＋ 에 있어요）</div>
+          <p>→ 방 <span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q4. <strong>안에 있어요</strong> [または <strong>속에 있어요</strong>]<br>
+            Q5. <strong>뒤에 없어요</strong><br>
+            Q6. <strong>밖에 있어요</strong>
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習 2)</div>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+  📖 [見開き] 長文作成：モノ・家族 ＋ 位置 ＋ 있어요/없어요 (2ページ分)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 1ページ目: 長文の plural/組み立てルール解説 -->
+      <div class="page left-page" data-lesson="7">
+        <div class="lesson-band">7과</div>
+        <div class="grammar-no">APPLY</div>
+        <h1 class="main-title">応用：もっと長く言ってみよう！</h1>
+
+        <div class="sub-title">文の組み立て方</div>
+        <p>これまでに習ったパーツを順番に並べるだけで、<strong>「〜は / 〜が / 〜（場所）の〜（位置）に / あります・ないです」</strong>という長い文章を作ることができます！</p>
+
+        <!-- 組み立て公式 (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">長文の公式</div>
+        <div class="speech-bubble-box">
+          <h4>💬 単語を並べる順番（語順）</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">日本語と語順が全く同じなので、そのまま順番に当てはめればOKです！</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim" style="background-color: #2563eb;">① 主語（モノ/人）</th>
+                <th class="no-patchim" style="background-color: #0284c7;">② 場所 ＋ 位置</th>
+                <th class="has-patchim" style="background-color: #1e3a8a;">③ 存在・否定</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">책이</span><br>
+                  <span style="font-size:11px; color:#64748b;">(本が)</span>
+                </td>
+                <td>
+                  <span class="rule-example">책상 위에</span><br>
+                  <span style="font-size:11px; color:#64748b;">(机の上に)</span>
+                </td>
+                <td>
+                  <span class="rule-target">있어요</span><br>
+                  <span style="font-size:11px; color:#2563eb;">(あります)</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="rule-example">동생이</span><br>
+                  <span style="font-size:11px; color:#64748b;">(妹が)</span>
+                </td>
+                <td>
+                  <span class="rule-example">방 안에서/안에</span><br>
+                  <span style="font-size:11px; color:#64748b;">(部屋の中に)</span>
+                </td>
+                <td>
+                  <span class="rule-target">없어요</span><br>
+                  <span style="font-size:11px; color:#2563eb;">(いません)</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td colspan="3"><strong>책이 책상 위에 있어요.</strong> （本が机の上にあります）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">長文の例文</div>
+        <div class="example-card">
+          <p class="ex-ko">핸드폰<span class="highlight">이</span> 가방 안<span class="highlight">에 있어요</span>.</p>
+          <p class="ex-ja">携帯電話がカバンの中にあります。</p>
+        </div>
+        <div class="example-card">
+          <p class="ex-ko">언니<span class="highlight">가</span> 회사 앞<span class="highlight">에 있어요</span>.</p>
+          <p class="ex-ja">姉が会社の前にいます。</p>
+        </div>
+        <div class="example-card">
+          <p class="ex-ko">고양이<span class="highlight">가</span> 의자 아래<span class="highlight">에 없어요</span>.</p>
+          <p class="ex-ja">猫が椅子の下にいません。</p>
+        </div>
+
+        <div class="footer">Page 1 (長文解説)</div>
+      </div>
+
+
+      <!-- 2ページ目: 長文練習問題 -->
+      <div class="page right-page" data-lesson="7">
+        <div class="lesson-band">7과</div>
+        <h1 class="main-title">練習・長い文章を作ってみよう！</h1>
+
+        <div class="sub-title">練習問題</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">日本語の意味に合うように、カッコに入る適切な韓国語（助詞・位置・語尾）を完成させましょう。</p>
+
+        <!-- Q1 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 時計が机の上にあります。</div>
+          <p>→ 시계<span class="quiz-line"></span> 책상 위<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 財布がカバンの中にありません。</div>
+          <p>→ 지갑<span class="quiz-line"></span> 가방 안<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 弟が学校の前にいます。</div>
+          <p>→ 남동생<span class="quiz-line"></span> 학교 앞<span class="quiz-line"></span> 있어요.</p>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 鍵（열쇠）が椅子の下にありません。</div>
+          <p>→ 열쇠<span class="quiz-line"></span> 의자 아래<span class="quiz-line"></span> 없어요.</p>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 友達がカフェの隣にいます。</div>
+          <p>→ 친구<span class="quiz-line"></span> 카페 옆<span class="quiz-line"></span> <span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>가 / 에</strong> (시계가 책상 위에 있어요)<br>
+            Q2. <strong>이 / 에</strong> (지갑이 가방 안에 없어요)<br>
+            Q3. <strong>이 / 에</strong> (남동생이 학교 앞에 있어요)<br>
+            Q4. <strong>가 / 에</strong> (열쇠가 의자 아래에 없어요)<br>
+            Q5. <strong>가 / 에 / 있어요</strong> (친구가 카페 옆에 있어요)
+          </div>
+        </div>
+
+        <div class="footer">Page 2 (長文練習)</div>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+  📖 [見開き] 漢数詞（買い物の数字）読み方・暗記法 ＆ 練習問題 (2ページ分)
+  ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 1ページ目: 漢数詞の読み方・買い物の連音化・暗記法 -->
+      <div class="page left-page" data-lesson="9">
+        <div class="lesson-band">9과</div>
+        <div class="grammar-no">NUMBERS 01</div>
+        <h1 class="main-title">買い物の数字</h1>
+        <h3 class="grammar-title">漢数詞 ＆ 値段の読み方</h3>
+
+        <div class="sub-title">1. 基本の漢数詞（1〜10、桁）</div>
+        <table class="word-table" style="margin-bottom: 12px;">
+          <thead>
+            <tr>
+              <th>1〜5</th>
+              <th>6〜10</th>
+              <th>百・千・万</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1 : <strong>일</strong>（イル）<br>2 : <strong>이</strong>（イ）<br>3 : <strong>삼</strong>（サム）<br>4 : <strong>사</strong>（サ）<br>5 : <strong>오</strong>（オ）</td>
+              <td>6 : <strong>육</strong>（ユク）<br>7 : <strong>칠</strong>（チル）<br>8 : <strong>팔</strong>（パル）<br>9 : <strong>구</strong>（ク）<br>10 : <strong>십</strong>（シップ）</td>
+              <td>100 : <strong>백</strong>（ペク）<br>1,000 : <strong>천</strong>（チョン）<br>10,000 : <strong>만</strong>（マン）</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 暗記のコツ 吹き出し -->
+        <div class="sub-title">💡 漢数詞の超カンタン暗記法</div>
+        <div class="point-box" style="margin: 8px 0; background-color: #f0fdf4; border-left-color: #16a34a;">
+          <h4 style="color: #15803d;">🧠 覚える順番のコツ</h4>
+          <ul style="padding-left: 16px;">
+            <li><strong>1〜4:</strong> 「일-이-삼-사（イル・イ・サム・サ）」➔ リズムに乗せて一気に唱える！</li>
+            <li><strong>日本語とそっくりな数字:</strong> 3（삼=三）, 4（사=四）, 6（육=六）, 10（십=十）は日本語の音読みとほぼ同じ！</li>
+            <li><strong>桁（けた）:</strong> 百（백=ペク）, 千（천=チョン）, 万（만=マン）も日本語の漢字音と親戚！</li>
+          </ul>
+        </div>
+
+
+
+        <div class="footer">Page 1 (漢数詞解説)</div>
+      </div>
+
+
+      <!-- 2ページ目: 買い物値段の練習問題 -->
+      <div class="page right-page" data-lesson="9">
+        <div class="lesson-band">9과</div>
+        <h1 class="main-title">練習問題</h1>
+        <h3 class="grammar-title">いくらですか？（値段の読み方）</h3>
+        <!-- 買い物の最大の難所：連音化ルール -->
+        <div class="sub-title">2. 買い物で一番大事！「~원（ウォン）」の発音ルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 連音化で「〜ノン」になる！</h4>
+          <p style="font-size: 12px; color: #475569; margin-bottom: 6px;">パッチムがある数字に「원（ウォン）」がつくと、音が繋がって発音が変化します。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim">金額</th>
+                <th class="no-patchim">ハングル表記</th>
+                <th class="has-patchim" style="background-color: #1e3a8a;">実際の発音</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1,000원</strong></td>
+                <td>천 원</td>
+                <td><strong style="color: #2563eb;">［처논（チョノン）］</strong></td>
+              </tr>
+              <tr>
+                <td><strong>10,000원</strong></td>
+                <td>만 원</td>
+                <td><strong style="color: #2563eb;">［마논（マノン）］</strong></td>
+              </tr>
+              <tr>
+                <td><strong>100원</strong></td>
+                <td>백 원</td>
+                <td><strong style="color: #2563eb;">［배권（ペグォン）］</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="footer">Page 2 (漢数詞練習)</div>
+      </div>
+    </div>
+
+
+    <div class="book-container">
+      <div class="page left-page" data-lesson="9">
+        <div class="lesson-band"></div>
+      </div>
+      <!-- 2ページ目: 買い物値段の練習問題 -->
+      <div class="page right-page" data-lesson="9">
+        <div class="lesson-band">9과</div>
+        <h1 class="main-title">練習問題</h1>
+        <h3 class="grammar-title">いくらですか？（値段の読み方）</h3>
+
+        <div class="sub-title">1. 金額をハングルで書いてみよう！</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">数字を漢数詞に直して「~원（ウォン）」をつけてみましょう。</p>
+
+        <!-- Q1 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 500ウォン（500 ＋ 원）</div>
+          <p>→ <span class="quiz-line" style="width: 120px;"></span> 원 ［発音: 오배권］</p>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 1,000ウォン（1,000 ＋ 원）</div>
+          <p>→ <span class="quiz-line" style="width: 120px;"></span> 원 ［発音: 처논］</p>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 1,500ウォン（1,000 ＋ 500 ＋ 원）</div>
+          <p>→ <span class="quiz-line" style="width: 140px;"></span> 원 ［発音: 천오배권］</p>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 10,000ウォン（10,000 ＋ 원）</div>
+          <p>→ <span class="quiz-line" style="width: 120px;"></span> 원 ［発音: 마논］</p>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 12,000ウォン（10,000 ＋ 2,000 ＋ 원）</div>
+          <p>→ <span class="quiz-line" style="width: 140px;"></span> 원 ［発音: 만이처논］</p>
+        </div>
+
+        <!-- Q6 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q6. 35,000ウォン（30,000 ＋ 5,000 ＋ 원）</div>
+          <p>→ <span class="quiz-line" style="width: 160px;"></span> 원 ［発音: 삼만오처논］</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>오백</strong> 원（500ウォン）<br>
+            Q2. <strong>천</strong> 원（1,000ウォン）<br>
+            Q3. <strong>천오백</strong> 원（1,500ウォン）<br>
+            Q4. <strong>만</strong> 원（10,000ウォン）<br>
+            Q5. <strong>만 이천</strong> 원（12,000ウォン）<br>
+            Q6. <strong>삼만 오천</strong> 원（35,000ウォン）
+          </div>
+        </div>
+
+        <div class="footer">Page 2 (漢数詞練習)</div>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+  📖 [見開き 1] 指示代名詞（이거/그거/저거）＋ 얼마예요? (解説 ＆ 例文)
+  ========================================================================== -->
+    <div class="book-container">
+      <!-- 1ページ目: 指示代名詞 ＆ 얼마예요? 解説 -->
+      <div class="page left-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <div class="grammar-no">SHOPPING 01</div>
+        <h1 class="main-title">買い物表現</h1>
+        <h3 class="grammar-title">이거 / 그거 / 저거 ＋ 얼마예요?</h3>
+
+        <div class="sub-title">1. 指示代名詞（これ・それ・あれ）</div>
+        <p>会話で頻繁に使われる「これ・それ・あれ」の口語（話し言葉）表現です。</p>
+
+        <table class="word-table" style="margin-bottom: 12px;">
+          <thead>
+            <tr>
+              <th>韓国語</th>
+              <th>日本語</th>
+              <th>距離感の目安</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>이거</strong>［イゴ］</td>
+              <td>これ</td>
+              <td>話し手の近くにあるもの</td>
+            </tr>
+            <tr>
+              <td><strong>그거</strong>［クゴ］</td>
+              <td>それ</td>
+              <td>聞き手の近くにあるもの</td>
+            </tr>
+            <tr>
+              <td><strong>저거</strong>［チョゴ］</td>
+              <td>あれ</td>
+              <td>お互いから離れているもの</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 2. いくらですか？ 吹き出し -->
+        <div class="sub-title">2. 「〜はいくらですか？」の接続公式</div>
+        <div class="speech-bubble-box">
+          <h4>💬 이거 / 그거 / 저거 ＋ 이/가 얼마예요?</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">「이거/그거/저거」はすべてパッチムがないため、助詞は <strong>「가」</strong> または <strong>「는」</strong> がつきます。（※会話では助詞を省略することも多いです！）</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="no-patchim">指示代名詞 ＋ 助詞</th>
+                <th class="has-patchim" style="background-color: #1e3a8a;">値段を聞く表現</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">이거가 ➔ <strong>이게</strong></span><br>
+                  <span class="rule-example">이거는 ➔ <strong>이건</strong></span>
+                </td>
+                <td>
+                  <span class="rule-target">얼마예요?</span><br>
+                  <span style="font-size:11px; color:#2563eb;">(いくらですか？)</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td colspan="2"><strong>이거 얼마예요?</strong>（これ、いくらですか？）※助詞省略が一番自然！</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説＆ポイント</div>
+        <ul>
+          <li><strong>モノの名前 ＋ 얼마예요?:</strong> 指示代名詞だけでなく、「가방（カバン）＋ 이 얼마예요?」のように直接モノの名前を入れて聞くこともできます。</li>
+          <li><strong>助詞の縮約:</strong> 会話では「이거가 ➔ <strong>이게</strong>」「이거는 ➔ <strong>이건</strong>」と縮めて言うことも非常に多いです。</li>
+        </ul>
+
+        <div class="footer">Page 1 (ショッピング解説)</div>
+      </div>
+
+      <!-- 2ページ目: 例文 -->
+      <div class="page right-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <h1 class="main-title">例文</h1>
+        <h3 class="grammar-title">値段を聞くフレーズ</h3>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">指をさしながら声に出して言ってみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko"><span class="highlight">이거</span> 얼마예요?</p>
+          <p class="ex-ja">これ、いくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko"><span class="highlight">그거</span> 얼마예요?</p>
+          <p class="ex-ja">それ、いくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko"><span class="highlight">저거</span> 얼마예요?</p>
+          <p class="ex-ja">あれ、いくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko"><span class="highlight">이 옷</span>이 얼마예요?</p>
+          <p class="ex-ja">この服はいくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko"><span class="highlight">이 가방</span>이 얼마예요?</p>
+          <p class="ex-ja">このカバンはいくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko"><span class="highlight">이 모자</span>가 얼마예요?</p>
+          <p class="ex-ja">この帽子はいくらですか？</p>
+        </div>
+
+        <div class="footer">Page 2 (ショッピング例文)</div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+   📖 [セット1：見開き1] 1ページ目(解説) ＋ 2ページ目(例文)
+   ========================================================================== -->
+    <div class="book-container">
+      <!-- 1ページ目: 文法解説 -->
+      <div class="page left-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <div class="grammar-no">SHOPPING 01</div>
+        <h1 class="main-title">物の値段</h1>
+        <h3 class="grammar-title">物 ＋ 이 / 가 얼마예요?</h3>
+
+        <div class="sub-title">意味</div>
+        <p>名詞（物の名前）の後ろに助詞をつけて<strong>「（物）はいくらですか？」</strong>と値段を尋ねる表現です。</p>
+
+        <!-- 使い分けルール (吹き出し＋ビジュアル表) -->
+        <div class="sub-title">使い分けルール</div>
+        <div class="speech-bubble-box">
+          <h4>💬 パッチムの有無による接続ルール</h4>
+          <p style="font-size: 12.5px; color: #475569; margin-bottom: 8px;">物の名前の最後の文字に<strong>パッチムがあるかないか</strong>で「이」と「가」を選びます。</p>
+
+          <table class="rule-visual-table">
+            <thead>
+              <tr>
+                <th class="has-patchim">パッチム あり ⭕</th>
+                <th class="no-patchim">パッチム なし ❌</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="rule-example">가방</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">이 얼마예요?</span>
+                </td>
+                <td>
+                  <span class="rule-example">모자</span>
+                  <span class="rule-plus">＋</span>
+                  <span class="rule-target">가 얼마예요?</span>
+                </td>
+              </tr>
+              <tr class="rule-result-row">
+                <td><strong>가방이 얼마예요?</strong>（カバンはいくらですか？）</td>
+                <td><strong>모자가 얼마예요?</strong>（帽子はいくらですか？）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-title">解説</div>
+        <ul>
+          <li><strong>가방（カバン / パッチムあり）:</strong> 最後の「방」に「ㅇ」パッチムがあるので ➔ <strong>가방이 얼마예요?</strong></li>
+          <li><strong>모자（帽子 / パッチムなし）:</strong> 最後の「자」にパッチムがないので ➔ <strong>모자가 얼마예요?</strong></li>
+        </ul>
+
+        <div class="footer">Page 1 (解説)</div>
+      </div>
+
+      <!-- 2ページ目: 例文 -->
+      <div class="page right-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <h1 class="main-title">例文</h1>
+        <h3 class="grammar-title">例文で覚える</h3>
+        <p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">物の名前を入れて質問してみましょう！</p>
+
+        <div class="example-card">
+          <p class="ex-ko">가방<span class="highlight">이 얼마예요</span>?</p>
+          <p class="ex-ja">カバンはいくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">옷<span class="highlight">이 얼마예요</span>?</p>
+          <p class="ex-ja">服はいくらですか？</p>
+
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">책<span class="highlight">이 얼마예요</span>?</p>
+          <p class="ex-ja">本はいくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">모자<span class="highlight">가 얼마예요</span>?</p>
+          <p class="ex-ja">帽子はいくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">시계<span class="highlight">가 얼마예요</span>?</p>
+          <p class="ex-ja">時計はいくらですか？</p>
+        </div>
+
+        <div class="example-card">
+          <p class="ex-ko">구두<span class="highlight">가 얼마예요</span>?</p>
+          <p class="ex-ja">靴はいくらですか？</p>
+        </div>
+
+        <div class="footer">Page 2 (例文)</div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================================================
+       📖 [セット1：見開き2] 3ページ目(単語＋練習1) ＋ 4ページ目(単語＋練習2)
+       ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 3ページ目: 単語帳 & 練習問題 STEP 1 -->
+      <div class="page left-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <h1 class="main-title">練習問題 STEP 1</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチム</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>가방</strong>（カバン）</td>
+              <td><span class="highlight">あり</span> (ㅇ)</td>
+              <td>カバン</td>
+            </tr>
+            <tr>
+              <td><strong>옷</strong>（オッ）</td>
+              <td><span class="highlight">あり</span> (ㅅ)</td>
+              <td>服</td>
+            </tr>
+            <tr>
+              <td><strong>모자</strong>（モジャ）</td>
+              <td>なし</td>
+              <td>帽子</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. 가방 ＋ ( 이 / 가 ) 얼마예요?</div>
+          <p>→ 가방<span class="quiz-line"></span> 얼마예요?</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. 모자 ＋ ( 이 / 가 ) 얼마예요?</div>
+          <p>→ 모자<span class="quiz-line"></span> 얼마예요?</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>이</strong> (가방이 얼마예요?)<br>
+            Q2. <strong>가</strong> (모자가 얼마예요?)
+          </div>
+        </div>
+
+        <div class="footer">Page 3 (練習 1)</div>
+      </div>
+
+      <!-- 4ページ目: 単語帳 & 練習問題 STEP 2 -->
+      <div class="page right-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <h1 class="main-title">練習問題 STEP 2</h1>
+        <h3 class="grammar-title">単語帳 ＆ 練習問題</h3>
+
+        <div class="sub-title">사용할 단어 (単語帳)</div>
+        <table class="word-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">単語（名詞）</th>
+              <th style="width: 30%;">パッチム</th>
+              <th style="width: 30%;">意味</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>책</strong>（チェク）</td>
+              <td><span class="highlight">あり</span> (ㄱ)</td>
+              <td>本</td>
+            </tr>
+            <tr>
+              <td><strong>시계</strong>（シゲ）</td>
+              <td>なし</td>
+              <td>時計</td>
+            </tr>
+            <tr>
+              <td><strong>구두</strong>（クドゥ）</td>
+              <td>なし</td>
+              <td>靴・革靴</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="sub-title">연습문제 (練習問題)</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な助詞（이 / 가）を選び文章を完成させましょう。</p>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 책 ＋ ( 이 / 가 ) 얼마예요?</div>
+          <p>→ 책<span class="quiz-line"></span> 얼마예요?</p>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 시계 ＋ ( 이 / 가 ) 얼마예요?</div>
+          <p>→ 시계<span class="quiz-line"></span> 얼마예요?</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q3. <strong>이</strong> (책이 얼마예요?)<br>
+            Q4. <strong>가</strong> (시계가 얼마예요?)
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (練習 2)</div>
+      </div>
+
+    </div>
+    <!-- ==========================================================================
+     📖 [見開き 2] お買い物会話実践（スキット ＆ 練習問題）
+     ========================================================================== -->
+    <div class="book-container">
+
+      <!-- 3ページ目: お買い物会話実践スキット（会話の流れ） -->
+      <div class="page left-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <div class="grammar-no">PRACTICE</div>
+        <h1 class="main-title">会話実践</h1>
+        <h3 class="grammar-title">お店で買ってみよう！</h3>
+
+        <div class="sub-title">🛍️ 服屋さん・雑貨屋さんでの会話</div>
+        <p style="font-size: 12px; color: #666; margin-bottom: 12px;">店員（점원）と客（손님）のリアルな会話の流れです。</p>
+
+        <!-- 会話カード 1 -->
+        <div class="example-card" style="border-left-color: #2563eb; background-color: #f0f7ff;">
+          <p class="ex-ko" style="font-size: 14px;">👩‍💼 점원: 어서 오세요! (いらっしゃいませ！)</p>
+          <p class="ex-ko" style="font-size: 14px; margin-top: 4px;">🙋‍♀️ 손님: 저기요, <span class="highlight">이거 얼마예요?</span> (すみません、これいくらですか？)</p>
+        </div>
+
+        <!-- 会話カード 2 -->
+        <div class="example-card" style="border-left-color: #0284c7;">
+          <p class="ex-ko" style="font-size: 14px;">👩‍💼 점원: 이거요? <span class="highlight">만 오천 원</span>이에요. (これですか？15,000ウォンです。)</p>
+          <p class="ex-ko" style="font-size: 14px; margin-top: 4px;">🙋‍♀️ 손님: 그럼 <span class="highlight">이거 주세요</span>. (じゃあ、これください。)</p>
+        </div>
+
+        <!-- 会話カード 3 -->
+        <div class="example-card" style="border-left-color: #1e3a8a; background-color: #f8fafc;">
+          <p class="ex-ko" style="font-size: 14px;">👩‍💼 점원: 네, 감사합니다! (はい、ありがとうございます！)</p>
+        </div>
+
+        <div class="sub-title">💡 覚えておくと便利なフレーズ</div>
+        <div class="point-box" style="margin: 6px 0;">
+          <ul style="padding-left: 12px; font-size: 13px;">
+            <li><strong>저기요［チョギヨ］:</strong> すみません（店員さんを呼ぶとき）</li>
+            <li><strong>~ 주세요［ジュセヨ］:</strong> 〜ください</li>
+            <li><strong>그럼［クロム］:</strong> それでは / じゃあ</li>
+          </ul>
+        </div>
+
+        <div class="footer">Page 3 (会話スキット)</div>
+      </div>
+
+      <!-- 4ページ目: 実践練習問題 -->
+      <div class="page right-page" data-lesson="10">
+        <div class="lesson-band">10과</div>
+        <h1 class="main-title">練習問題</h1>
+        <h3 class="grammar-title">会話を完成させよう！</h3>
+
+        <div class="sub-title">練習問題</div>
+        <p style="font-size:12px; color:#666; margin-bottom: 8px;">状況に合わせてカッコに入る適切な言葉を選んで入れましょう。</p>
+
+        <!-- Q1 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q1. これ（近くのもの）、いくらですか？</div>
+          <p>→ <span class="quiz-line"></span> 얼마예요?</p>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q2. あれ（遠くのもの）、いくらですか？</div>
+          <p>→ <span class="quiz-line"></span> 얼마예요?</p>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q3. 「この帽子（모자）はいくらですか？」</div>
+          <p>→ 이 모자<span class="quiz-line"></span> 얼마예요?</p>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q4. 会話を完成させましょう。<br>「すみません、これいくらですか？」➔「1,000ウォンです。」</div>
+          <p>→ 저기요, 이거 <span class="quiz-line"></span>? <br>➔ <span class="quiz-line"></span> 원이에요.</p>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-item">
+          <div class="quiz-q">Q5. 「じゃあ、これください。」</div>
+          <p>→ 그럼 이거 <span class="quiz-line"></span>.</p>
+        </div>
+
+        <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+        <div class="answer-box">
+          <div class="answer-content">
+            Q1. <strong>이거</strong> (이거 얼마예요?)<br>
+            Q2. <strong>저거</strong> (저거 얼마예요?)<br>
+            Q3. <strong>가</strong> (이 모자가 얼마예요?)<br>
+            Q4. <strong>얼마예요 / 천</strong> (이거 얼마예요? ➔ 천 원이에요.)<br>
+            Q5. <strong>주세요</strong> (그럼 이거 주세요)
+          </div>
+        </div>
+
+        <div class="footer">Page 4 (実践練習)</div>
+      </div>
+
+    </div>
+    <!-- ==========================================================================
+【見開き 16】 31〜32ページ：丁寧形「아요/어요」活用解説 ＆ 練習問題
+========================================================================== -->
+<div class="book-container">
+  <!-- 31ページ目: 文法解説 -->
+  <div class="page left-page">
+    <div class="grammar-no">文法 11</div>
+    <h1 class="main-title">日常の丁寧形「〜아요 / 어요」</h1>
+
+    <div class="sub-title">意味</div>
+    <p>動詞や形容詞の原形（辞書形：〜다）の語幹の<strong>最後の母音</strong>によって、<strong>「아요」</strong>と<strong>「어요」</strong>を使い分けます。「〜します / 〜です」という日常会話で最も使われる丁寧な表現です。</p>
+
+    <div class="sub-title">💡 接続公式</div>
+
+    <h4>💬 語幹の母音による接続ルール</h4>
+    <p>動詞・形容詞の語幹（〜다を取った形）の<strong>最後の母音の種類</strong>によって形が変わります。</p>
+
+    <table class="rule-visual-table">
+      <thead>
+        <tr>
+          <th class="has-patchim">陽性母音（ㅏ, ㅗ） ☀️</th>
+          <th class="no-patchim">陰性母音（ㅏ, ㅗ 以外） 🌙</th>
+          <th style="background-color: #f0fdf4; color: #15803d; border-color: #bbf7d0;">하다 で終わる動詞 📝</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="rule-example">가다 / 살다</span>
+            <span class="rule-plus">＋</span>
+            <span class="rule-target">아요</span>
+          </td>
+          <td>
+            <span class="rule-example">먹다 / 마시다</span>
+            <span class="rule-plus">＋</span>
+            <span class="rule-target">어요</span>
+          </td>
+          <td>
+            <span class="rule-example">공부하(다)</span>
+            <span class="rule-plus">＋</span>
+            <span class="rule-target">여요</span>
+          </td>
+        </tr>
+        <tr class="rule-result-row">
+          <td><strong>가요 / 살아요</strong></td>
+          <td><strong>먹어요 / 마셔요</strong></td>
+          <td><strong>공부해요</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">解説</div>
+    <ul>
+      <li><strong>가다（行く / パッチムなし・母音ㅏ）:</strong> 語幹の母音が「ㅏ」のため、<strong>가 ＋ 아요 ＝ 가요</strong>（行きます）になります。</li>
+      <li><strong>오다（来る / パッチムなし・母音ㅗ）:</strong> 語幹の母音が「ㅗ」のため、<strong>오 ＋ 아요 ＝ 와요</strong>（来ます）になります。（ㅗ＋ㅏ＝와）</li>
+      <li><strong>기다리다（待つ / パッチムなし・母音ㅣ）:</strong> 語幹の母音が「ㅣ」のため、<strong>기다리 ＋ 어요 ＝ 기다려요</strong>（待ちます）になります。（ㅣ＋ㅓ＝려）</li>
+      <li><strong>먹다（食べる / パッチムあり・母音ㅓ）:</strong> 語幹の母音が「ㅓ」のため、<strong>먹 ＋ 어요 ＝ 먹어요</strong>［머거요］（食べます）になります。</li>
+    </ul>
+
+    <div class="sub-title">例文</div>
+    <div class="example-item">
+      <p class="ex-ko">저는 집에 <span class="highlight">가요</span>.</p>
+      <p class="ex-ja">私は家に行きます。</p>
+    </div>
+    <div class="example-item">
+      <p class="ex-ko">친구를 <span class="highlight">기다려요</span>.</p>
+      <p class="ex-ja">友達を待つ／待ちます。</p>
+    </div>
+    <div class="example-item">
+      <p class="ex-ko">빵을 <span class="highlight">먹어요</span>.</p>
+      <p class="ex-ja">パンを食べます。</p>
+    </div>
+
+    <div class="footer">Page 31 (解説)</div>
+  </div>
+
+  <!-- 32ページ目: 単語帳 ＆ 練習問題 -->
+  <div class="page right-page">
+    <div class="grammar-no">文法 11</div>
+    <h1 class="main-title">単語帳 ＆ 練習問題</h1>
+
+    <div class="sub-title">単語</div>
+    <p style="font-size: 13px; margin-bottom: 6px;">基本動詞の活用形を確認してみましょう。</p>
+
+    <table class="word-table">
+      <thead>
+        <tr>
+          <th style="width: 35%;">単語（辞書形）</th>
+          <th style="width: 30%;">語幹の母音</th>
+          <th style="width: 35%;">丁寧形（〜아요/어요）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>가다</strong>（カダ / 行く）</td>
+          <td>ㅏ (陽性)</td>
+          <td><strong>가요</strong>（カヨ）</td>
+        </tr>
+        <tr>
+          <td><strong>오다</strong>（オダ / 来る）</td>
+          <td>ㅗ (陽性)</td>
+          <td><strong>와요</strong>（ワヨ）</td>
+        </tr>
+        <tr>
+          <td><strong>기다리다</strong>（キダリダ / 待つ）</td>
+          <td>ㅣ (陰性)</td>
+          <td><strong>기다려요</strong>（キダリョヨ）</td>
+        </tr>
+        <tr>
+          <td><strong>먹다</strong>（モクタ / 食べる）</td>
+          <td>ㅓ (陰性)</td>
+          <td><strong>먹어요</strong>（モゴヨ）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">練習問題</div>
+    <p style="font-size:12px; color:#666; margin-bottom: 8px;">【例】を参考にして、単語を丁寧形「〜아요/어요」に変えて完成させましょう。<br>（例: 가다 → 가요 / 먹다 → 먹어요）</p>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q1. 저는 집에 ( 가다 )</div>
+      <p>→ 저는 집에 <span class="quiz-line"></span>.</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q2. 지금 ( 자다 )</div>
+      <p>→ 지금 <span class="quiz-line"></span>.</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q3. 친구가 ( 오다 )</div>
+      <p>→ 친구가 <span class="quiz-line"></span>.</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q4. 친구를 ( 기다리다 )</div>
+      <p>→ 친구를 <span class="quiz-line"></span>.</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q5. 빵을 ( 먹다 )</div>
+      <p>→ 빵을 <span class="quiz-line"></span>.</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q6. 서울에 ( 살다 )</div>
+      <p>→ 서울에 <span class="quiz-line"></span>.</p>
+    </div>
+
+    <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+    <div class="answer-box">
+      <div class="sub-title answer-title">🔑 解答</div>
+      <p class="answer-content">
+        Q1. <strong>가요</strong><br>
+        Q2. <strong>자요</strong><br>
+        Q3. <strong>와요</strong><br>
+        Q4. <strong>기다려요</strong><br>
+        Q5. <strong>먹어요</strong><br>
+        Q6. <strong>살아요</strong>
+      </p>
+    </div>
+
+    <div class="footer">Page 32 (練習)</div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+【見開き 17】 33〜34ページ：動詞の活用変換 整理 ＆ 活用練習ドリル
+========================================================================== -->
+<div class="book-container">
+  <!-- 33ページ目: 文法解説 -->
+  <div class="page left-page">
+    <div class="grammar-no">文法 11-2</div>
+    <h1 class="main-title">動詞の活用変換まとめ</h1>
+
+    <div class="sub-title">1. 活用ルールのクイック復習</div>
+    <p>「다」を取った語幹の母音を確認し、<strong>3つのパターン（아요 / 어요 / 해요）</strong>に分類します。</p>
+
+    <div class="point-box">
+      <h4>💡 活用判別フロー</h4>
+      <ul>
+        <li><strong>① 語幹の母音が「ㅏ, ㅗ」</strong> ➔ <span class="highlight">＋ 아요</span>（가요, 와요, 살아요）</li>
+        <li><strong>② 語幹の母音が「ㅏ, ㅗ 以外」</strong> ➔ <span class="highlight">＋ 어요</span>（먹어요, 기다려요, 마셔요）</li>
+        <li><strong>③ 「〜하다」で終わる動詞</strong> ➔ <span class="highlight">해요 に変化</span>（공부해요, 운동해요）</li>
+      </ul>
+    </div>
+
+    <div class="sub-title">解説</div>
+    <ul>
+      <li><strong>사다（買う）:</strong> 母音「ㅏ」➔ <strong>사요</strong></li>
+      <li><strong>보다（見る）:</strong> 母音「ㅗ」➔ <strong>봐요</strong>（ㅗ＋ㅏ＝봐）</li>
+      <li><strong>마시다（飲む）:</strong> 母音「ㅣ」➔ <strong>마셔요</strong>（ㅣ＋ㅓ＝려）</li>
+      <li><strong>읽다（読む）:</strong> 母音「ㅣ」➔ <strong>읽어요</strong>［イルゴヨ］</li>
+      <li><strong>공부하다（勉強する）:</strong> 하다 ➔ <strong>공부해요</strong></li>
+    </ul>
+
+    <div class="sub-title">例文</div>
+    <div class="example-item">
+      <p class="ex-ko">사과를 <span class="highlight">사요</span>.</p>
+      <p class="ex-ja">りんごを買います。</p>
+    </div>
+    <div class="example-item">
+      <p class="ex-ko">책을 <span class="highlight">읽어요</span>.</p>
+      <p class="ex-ja">本を読みます。</p>
+    </div>
+    <div class="example-item">
+      <p class="ex-ko">한국어를 <span class="highlight">공부해요</span>.</p>
+      <p class="ex-ja">韓国語を勉強します。</p>
+    </div>
+
+    <div class="footer">Page 33 (解説)</div>
+  </div>
+
+  <!-- 34ページ目: 単語帳 ＆ 練習問題 -->
+  <div class="page right-page">
+    <div class="grammar-no">文法 11-2</div>
+    <h1 class="main-title">動詞活用 変換練習ドリル</h1>
+
+    <div class="sub-title">単語</div>
+    <p style="font-size: 13px; margin-bottom: 6px;">よく使われる動詞の原形と意味の一覧です。</p>
+
+    <table class="word-table">
+      <thead>
+        <tr>
+          <th style="width: 35%;">原形（辞書形）</th>
+          <th style="width: 30%;">パッチム</th>
+          <th style="width: 35%;">意味</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>가다</strong>（カダ）</td>
+          <td>なし</td>
+          <td>行く</td>
+        </tr>
+        <tr>
+          <td><strong>오다</strong>（オダ）</td>
+          <td>なし</td>
+          <td>来る</td>
+        </tr>
+        <tr>
+          <td><strong>먹다</strong>（モクタ）</td>
+          <td><span class="highlight">あり</span> (ㄱ)</td>
+          <td>食べる</td>
+        </tr>
+        <tr>
+          <td><strong>공부하다</strong>（コンブハダ）</td>
+          <td>-</td>
+          <td>勉強する</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">練習問題</div>
+    <p style="font-size:12px; color:#666; margin-bottom: 8px;">辞書形の動詞を丁寧形（〜아요 / 어요 / 해요）に変換してみましょう。</p>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q1. 가다（行く）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q2. 오다（来る）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q3. 먹다（食べる）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q4. 마시다（飲む）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q5. 보다（見る）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q6. 읽다（読む）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q7. 살다（住む）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q8. 공부하다（勉強する）</div>
+      <p>→ <span class="quiz-line"></span></p>
+    </div>
+
+    <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+    <div class="answer-box">
+      <div class="sub-title answer-title">🔑 解答</div>
+      <p class="answer-content">
+        Q1. <strong>가요</strong><br>
+        Q2. <strong>와요</strong><br>
+        Q3. <strong>먹어요</strong><br>
+        Q4. <strong>마셔요</strong><br>
+        Q5. <strong>봐요</strong><br>
+        Q6. <strong>읽어요</strong><br>
+        Q7. <strong>살아요</strong><br>
+        Q8. <strong>공부해요</strong>
+      </p>
+    </div>
+
+    <div class="footer">Page 34 (練習)</div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+【見開き 18】 35〜36ページ：日常動作と助詞「을/를」＆ 頻度副詞 練習問題
+========================================================================== -->
+<div class="book-container">
+  <!-- 35ページ目: 文法解説 -->
+  <div class="page left-page">
+    <div class="grammar-no">文法 12</div>
+    <h1 class="main-title">目的語「을/를」＆ 日常の行動</h1>
+
+    <div class="sub-title">意味</div>
+    <p>名詞の後ろについて目的語<strong>「〜を」</strong>を表します。日常の行動（仕事、掃除、勉強など）を表現するときに使われます。</p>
+
+    <div class="sub-title">使い分けルール</div>
+    <p>名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって形が変わります。</p>
+
+    <div class="sub-title">💡 接続公式</div>
+
+    <h4>💬 パッチムの有無による接続ルール</h4>
+    <p>名詞の最後の文字に<strong>パッチム（末尾の子音）があるかないか</strong>によって形が変わります。</p>
+
+    <table class="rule-visual-table">
+      <thead>
+        <tr>
+          <th class="has-patchim">パッチム あり ⭕</th>
+          <th class="no-patchim">パッチム なし ❌</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="rule-example">일</span>
+            <span class="rule-plus">＋</span>
+            <span class="rule-target">을</span>
+          </td>
+          <td>
+            <span class="rule-example">청소</span>
+            <span class="rule-plus">＋</span>
+            <span class="rule-target">를</span>
+          </td>
+        </tr>
+        <tr class="rule-result-row">
+          <td><strong>일을 (해요)</strong></td>
+          <td><strong>청소를 (해요)</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">解説</div>
+    <ul>
+      <li><strong>일（仕事 / パッチムあり）:</strong> 最後の文字に「ㄹ」パッチムがあるため、<strong>일 ＋ 을 ＝ 일을 해요</strong>（仕事をします）になります。［イレロ］と発音されます。</li>
+      <li><strong>청소（掃除 / パッチムなし）:</strong> 最後の文字「소」にパッチムがないため、<strong>청소 ＋ 를 ＝ 청소를 해요</strong>（掃除をします）になります。</li>
+      <li><strong>時間・頻度の表現:</strong> 「오늘（今日）」「매일（毎日）」「자주（よく）」「가끔（たまに）」などの単語を文頭に置いて行動を詳しく表現できます。</li>
+    </ul>
+
+    <div class="sub-title">例文</div>
+    <div class="example-item">
+      <p class="ex-ko">오늘 <span class="highlight">일을</span> 해요.</p>
+      <p class="ex-ja">今日、仕事をします。</p>
+    </div>
+    <div class="example-item">
+      <p class="ex-ko">매일 <span class="highlight">운동을</span> 해요.</p>
+      <p class="ex-ja">毎日、運動をします。</p>
+    </div>
+    <div class="example-item">
+      <p class="ex-ko">자주 친구에게 <span class="highlight">전화를</span> 해요.</p>
+      <p class="ex-ja">よく友達に電話をします。</p>
+    </div>
+
+    <div class="footer">Page 35 (解説)</div>
+  </div>
+
+  <!-- 36ページ目: 単語帳 ＆ 練習問題 -->
+  <div class="page right-page">
+    <div class="grammar-no">文法 12</div>
+    <h1 class="main-title">単語帳 ＆ 練習問題</h1>
+
+    <div class="sub-title">単語</div>
+    <p style="font-size: 13px; margin-bottom: 6px;">日常行動や頻度を表す基礎単語です。</p>
+
+    <table class="word-table">
+      <thead>
+        <tr>
+          <th style="width: 40%;">単語（名詞）</th>
+          <th style="width: 30%;">パッチム</th>
+          <th style="width: 30%;">意味</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>일</strong>（イル）</td>
+          <td><span class="highlight">あり</span> (ㄹ)</td>
+          <td>仕事</td>
+        </tr>
+        <tr>
+          <td><strong>청소</strong>（チョンソ）</td>
+          <td>なし</td>
+          <td>掃除</td>
+        </tr>
+        <tr>
+          <td><strong>빨래</strong>（ッパルレ）</td>
+          <td>なし</td>
+          <td>洗濯</td>
+        </tr>
+        <tr>
+          <td><strong>오늘 / 매일</strong></td>
+          <td>-</td>
+          <td>今日 / 毎日</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">練習問題</div>
+    <p style="font-size:12px; color:#666; margin-bottom: 8px;">正しい助詞（을 / 를）や時間・頻度の単語を選んで文章を完成させましょう。</p>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q1. 오늘 일 ＋ ( 을 / 를 ) 해요.</div>
+      <p>→ 오늘 일<span class="quiz-line"></span> 해요.（今日仕事をします）</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q2. 가끔 청소 ＋ ( 을 / 를 ) 해요.</div>
+      <p>→ 가끔 청소<span class="quiz-line"></span> 해요.（たまに掃除をします）</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q3. 매일 빨래 ＋ ( 을 / 를 ) 해요.</div>
+      <p>→ 매일 빨래<span class="quiz-line"></span> 해요.（毎日洗濯をします）</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q4. ( 오늘 / 매일 ) 공부를 해요.</div>
+      <p>→ <span class="quiz-line"></span> 공부를 해요.（毎日勉強をします）</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q5. ( 자주 / 가끔 ) 운동을 해요.</div>
+      <p>→ <span class="quiz-line"></span> 운동을 해요.（たまに運動をします）</p>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q6. 친구에게 ( 자주 / 가끔 ) 전화를 해요.</div>
+      <p>→ 친구에게 <span class="quiz-line"></span> 전화를 해요.（友達によく電話をします）</p>
+    </div>
+
+    <button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解</button>
+    <div class="answer-box">
+      <div class="sub-title answer-title">🔑 解答</div>
+      <p class="answer-content">
+        Q1. <strong>을</strong><br>
+        Q2. <strong>를</strong><br>
+        Q3. <strong>를</strong><br>
+        Q4. <strong>매일</strong><br>
+        Q5. <strong>가끔</strong><br>
+        Q6. <strong>자주</strong>
+      </p>
+    </div>
+
+    <div class="footer">Page 36 (練習)</div>
+  </div>
+</div>
+
+
+
+
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. 페이지 번호 자동 계산 기능
+      const allPages = document.querySelectorAll(".page");
+      const totalPages = allPages.length;
+
+      allPages.forEach((page, index) => {
+        const pageNum = index + 1;
+        const footer = page.querySelector(".footer");
+        if (footer) {
+          const label = footer.getAttribute("data-label") || "";
+          footer.textContent = `Page ${pageNum} / ${totalPages} (${label})`;
+        }
+      });
+    });
+
+    // 2. 정답 숨기기/보이기 토글 기능
+    function toggleAnswer(btn) {
+      const answerBox = btn.nextElementSibling;
+      if (answerBox.classList.contains("show")) {
+        answerBox.classList.remove("show");
+        btn.textContent = "🔑 正解";
+      } else {
+        answerBox.classList.add("show");
+        btn.textContent = "🙈 隠す";
+      }
+    }
+		// ✨ <h1 class="main-title"> 앞에 "제 N 과 : " 자동 추가 Script
+		document.addEventListener("DOMContentLoaded", function () {
+			// data-lesson 속성을 가진 모든 .page 탐색
+			const pages = document.querySelectorAll(".page[data-lesson]");
+
+			pages.forEach(page => {
+				const lessonNum = page.getAttribute("data-lesson"); // 예: "1"
+				const mainTitle = page.querySelector(".main-title");
+
+				// 이미 추가된 적이 없다면 "제 N 과 : " 붙여주기
+				if (mainTitle && !mainTitle.dataset.updated) {
+					const originalTitle = mainTitle.innerText; // "소개하기"
+					mainTitle.innerText = `제 ${lessonNum} 과 : ${originalTitle}`; // "제 1 과 : 소개하기"
+					mainTitle.dataset.updated = "true"; // 중복 실행 방지
+				}
+			});
+		});
+  </script>
+
+</body>
+</html>
