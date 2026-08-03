@@ -1,0 +1,1220 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語文法：-(으)러 가다/오다（〜しに行く／来る）を学ぼう！</title>
+	<style>
+		:root {
+			--bg-color: #f4f7f6;
+			--card-bg: #ffffff;
+			--primary-color: #4a90e2;
+			--accent-color: #e74c3c;
+			--secondary-color: #2ecc71;
+			--text-color: #333333;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Hiragino Sans', 'Meiryo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		/* 프레임 스타일 */
+		.presentation-container {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+			max-width: 1280px;
+			max-height: 720px;
+			background-color: var(--card-bg);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 30px 40px 20px 40px;
+		}
+
+		/* 슬라이드 영역 */
+		.slide-wrapper {
+			position: relative;
+			flex: 1;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 10px 0;
+		}
+
+			.slide.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		/* 타이틀 및 텍스트 */
+		h1 {
+			font-size: 2.8rem;
+			color: var(--primary-color);
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			border-bottom: 4px solid var(--primary-color);
+			padding-bottom: 8px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 1.3rem;
+			line-height: 1.6;
+			margin-bottom: 12px;
+		}
+
+		.highlight {
+			color: var(--accent-color);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.6rem;
+			background: #eef5fc;
+			padding: 12px 20px;
+			border-radius: 12px;
+			margin: 12px 0;
+			display: inline-block;
+		}
+
+		/* 표 스타일 */
+		table {
+			width: 90%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			font-size: 1.1rem;
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 10px 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		/* 연습문제 카드 */
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 25px 30px;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.quiz-title {
+			font-size: 1.3rem;
+			color: #666;
+			margin-bottom: 15px;
+		}
+
+		.quiz-jp {
+			font-size: 1.7rem;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.quiz-kr {
+			font-size: 1.9rem;
+			color: var(--primary-color);
+			background: #ffffff;
+			padding: 15px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		/* 이미지 연습 카드 */
+		.img-quiz-card {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background: #fff;
+			border: 2px solid #eee;
+			border-radius: 15px;
+			padding: 20px 30px;
+			width: 65%;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.img-placeholder {
+			font-size: 3.5rem;
+			background: #f0f4f8;
+			width: 100%;
+			padding: 15px 0;
+			border-radius: 10px;
+			margin-bottom: 15px;
+		}
+
+		/* 하단 제어바 */
+		.controls-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			height: 60px;
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid #eee;
+			z-index: 10;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			font-size: 1.5rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.btn:hover {
+				background-color: #357abd;
+			}
+
+			.btn:disabled {
+				background-color: #ccc;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: #666;
+		}
+
+		/* 모달 스타일 */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+			.modal-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		.modal-container {
+			position: relative;
+			width: 85vw;
+			height: 85vh;
+			max-width: 1200px;
+			max-height: 680px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 30px 40px 20px 40px;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+			border: 4px solid var(--secondary-color);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.modal-title {
+			font-size: 1.8rem;
+			color: var(--secondary-color);
+			font-weight: bold;
+		}
+
+		.close-btn {
+			background: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.extra-quiz-card {
+			border-left-color: var(--secondary-color);
+		}
+
+		/* ➔ 정답 토글 영역 */
+		.quiz-kr-wrap {
+			margin-top: 15px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 1.8rem;
+		}
+
+		.arrow-toggle-btn {
+			background-color: var(--secondary-color, #2ecc71);
+			color: white;
+			border: none;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			font-size: 1.4rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: all 0.2s ease;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		}
+
+			.arrow-toggle-btn:hover {
+				transform: scale(1.1);
+				background-color: #27ae60;
+			}
+
+			.arrow-toggle-btn.open {
+				transform: rotate(90deg);
+				background-color: #e74c3c;
+			}
+
+		.answer-text.hidden {
+			display: none;
+		}
+
+		.answer-text {
+			font-weight: bold;
+			animation: fadeIn 0.3s ease;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateX(-10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 메인 프레임 -->
+	<div class="presentation-container">
+
+		<!-- 기본 슬라이드 영역 -->
+		<div class="slide-wrapper" id="mainSlideWrapper">
+
+			<!-- Slide 1: 表紙 -->
+			<div class="slide active">
+				<h1>韓国語で行く目的を話してみよう！</h1>
+				<p style="font-size: 1.8rem; margin-top: 20px;">目的を表す表現 <span class="highlight">「-(으)러 가다/오다（〜しに行く／来る）」</span></p>
+			</div>
+
+			<!-- Slide 2: 概念説明 -->
+			<div class="slide">
+				<h2>行く目的を話す秘密！</h2>
+				<p>まずは日本語の文章を韓国語に変えて言ってみましょう！</p>
+				<div class="big-text">
+					<span class="highlight"> </span>  <br>
+					<small style="font-size: 1.1rem; color: #666;">（お腹がすきました。それで ご飯を食べに行きます。）</small>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>行く目的を話す秘密！</h2>
+				<p>まずは日本語の文章を韓国語に変えて言ってみましょう！</p>
+				<div class="big-text">
+					배가 고파요. 그래서 밥을 먹<span class="highlight">으러 가요</span> .<br>
+					<small style="font-size: 1.1rem; color: #666;">（お腹がすきました。それで ご飯を食べに行きます。）</small>
+				</div>
+			</div>
+
+
+			<!-- Slide 2-1: 概念説明 -->
+			<div class="slide">
+				<h2>-(으)러 가다 の作り方！</h2>
+				<p>動詞の基本形（〜다）のパッチム（子音）の有無で決まります！</p>
+				<div class="big-text" style="text-align: left;">
+					1. パッチムなし ➔ <b>-러 가다</b> (例: 사다 ➔ <span class="highlight">사러 가요</span>)<br>
+					2. パッチムあり ➔ <b>-으러 가다</b> (例: 먹다 ➔ <span class="highlight">먹으러 가요</span>)<br>
+					3. ㄹ パッチム ➔ <b>-러 가다</b> (例: 만들다 ➔ <span class="highlight">만들러 가요</span>)
+				</div>
+			</div>
+
+			<!-- Slide 3: 練習タイトル -->
+			<div class="slide">
+				<h1>基本動詞の変更練習</h1>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 1 -->
+			<div class="slide">
+				<h2>基本活用表（-(으)러 가다）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">パッチムを確認して <span class="highlight">「-러 가요 / -으러 가요」</span> をつけましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>基本形（〜다）</th>
+							<th>目的形（-(으)러 가요）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>買う </td>
+							<td>사다</td>
+							<td><b class="highlight"></b></td>
+							<td>（買いに行きます）</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다</td>
+							<td><b class="highlight"></b></td>
+							<td>（食べに行きます）</td>
+						</tr>
+						<tr>
+							<td>見に </td>
+							<td>보다</td>
+							<td><b class="highlight"></b></td>
+							<td>（見に行きます）</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다</td>
+							<td><b class="highlight"></b></td>
+							<td>（会いに行きます）</td>
+						</tr>
+						<tr>
+							<td>運動する</td>
+							<td>운동하다</td>
+							<td><b class="highlight"></b></td>
+							<td>（運動しに行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 2 -->
+			<div class="slide">
+				<h2>基本活用表（-(으)러 가다）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">パッチムを確認して <span class="highlight">「-러 가요 / -으러 가요」</span> をつけましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>基本形（〜다）</th>
+							<th>目的形（-(으)러 가요）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>買う </td>
+							<td>사다</td>
+							<td><b class="highlight">사러 가요</b></td>
+							<td>옷을 사러 가요（服を 買いに行きます）</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다</td>
+							<td><b class="highlight"></b></td>
+							<td>（食べに行きます）</td>
+						</tr>
+						<tr>
+							<td>見に </td>
+							<td>보다</td>
+							<td><b class="highlight"></b></td>
+							<td>（見に行きます）</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다</td>
+							<td><b class="highlight"></b></td>
+							<td>（会いに行きます）</td>
+						</tr>
+						<tr>
+							<td>運動する</td>
+							<td>운동하다</td>
+							<td><b class="highlight"></b></td>
+							<td>（運動しに行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 3 -->
+			<div class="slide">
+				<h2>基本活用表（-(으)러 가다）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">パッチムを確認して <span class="highlight">「-러 가요 / -으러 가요」</span> をつけましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>基本形（〜다）</th>
+							<th>目的形（-(으)러 가요）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>買う </td>
+							<td>사다</td>
+							<td><b class="highlight">사러 가요</b></td>
+							<td>옷을 사러 가요（服を 買いに行きます）</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다</td>
+							<td><b class="highlight">먹으러 가요</b></td>
+							<td>밥을 먹으러 가요（ご飯を 食べに行きます）</td>
+						</tr>
+						<tr>
+							<td>見に </td>
+							<td>보다</td>
+							<td><b class="highlight"></b></td>
+							<td>（見に行きます）</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다</td>
+							<td><b class="highlight"></b></td>
+							<td>（会いに行きます）</td>
+						</tr>
+						<tr>
+							<td>運動する</td>
+							<td>운동하다</td>
+							<td><b class="highlight"></b></td>
+							<td>（運動しに行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 4 -->
+			<div class="slide">
+				<h2>基本活用表（-(으)러 가다）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">パッチムを確認して <span class="highlight">「-러 가요 / -으러 가요」</span> をつけましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>基本形（〜다）</th>
+							<th>目的形（-(으)러 가요）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>買う </td>
+							<td>사다</td>
+							<td><b class="highlight">사러 가요</b></td>
+							<td>옷을 사러 가요（服を 買いに行きます）</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다</td>
+							<td><b class="highlight">먹으러 가요</b></td>
+							<td>밥을 먹으러 가요（ご飯を 食べに行きます）</td>
+						</tr>
+						<tr>
+							<td>見に </td>
+							<td>보다</td>
+							<td><b class="highlight">보러 가요</b></td>
+							<td>영화를 보러 가요（映画を 見に行きます）</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다</td>
+							<td><b class="highlight"></b></td>
+							<td>（会いに行きます）</td>
+						</tr>
+						<tr>
+							<td>運動する</td>
+							<td>운동하다</td>
+							<td><b class="highlight"></b></td>
+							<td>（運動しに行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 5 -->
+			<div class="slide">
+				<h2>基本活用表（-(으)러 가다）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">パッチムを確認して <span class="highlight">「-러 가요 / -으러 가요」</span> をつけましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>基本形（〜다）</th>
+							<th>目的形（-(으)러 가요）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>買う </td>
+							<td>사다</td>
+							<td><b class="highlight">사러 가요</b></td>
+							<td>옷을 사러 가요（服を 買いに行きます）</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다</td>
+							<td><b class="highlight">먹으러 가요</b></td>
+							<td>밥을 먹으러 가요（ご飯を 食べに行きます）</td>
+						</tr>
+						<tr>
+							<td>見に </td>
+							<td>보다</td>
+							<td><b class="highlight">보러 가요</b></td>
+							<td>영화를 보러 가요（映画を 見に行きます）</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다</td>
+							<td><b class="highlight">만나러 가요</b></td>
+							<td>친구를 만나러 가요（友達に 会いに行きます）</td>
+						</tr>
+						<tr>
+							<td>運動する</td>
+							<td>운동하다</td>
+							<td><b class="highlight"></b></td>
+							<td>（運動しに行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Complete -->
+			<div class="slide">
+				<h2>基本活用表（-(으)러 가다）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">パッチムを確認して <span class="highlight">「-러 가요 / -으러 가요」</span> をつけましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>基本形（〜다）</th>
+							<th>目的形（-(으)러 가요）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>買う </td>
+							<td>사다</td>
+							<td><b class="highlight">사러 가요</b></td>
+							<td>옷을 사러 가요（服を 買いに行きます）</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다</td>
+							<td><b class="highlight">먹으러 가요</b></td>
+							<td>밥을 먹으러 가요（ご飯を 食べに行きます）</td>
+						</tr>
+						<tr>
+							<td>見に </td>
+							<td>보다</td>
+							<td><b class="highlight">보러 가요</b></td>
+							<td>영화를 보러 가요（映画を 見に行きます）</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다</td>
+							<td><b class="highlight">만나러 가요</b></td>
+							<td>친구를 만나러 가요（友達に 会いに行きます）</td>
+						</tr>
+						<tr>
+							<td>運動する</td>
+							<td>운동하다</td>
+							<td><b class="highlight">운동하러 가요</b></td>
+							<td>공원에 운동하러 가요（公園に 運動しに行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 練習タイトル -->
+			<div class="slide">
+				<h1>練習問題</h1>
+			</div>
+
+			<!-- Slide 4: 練習 1 -->
+			<div class="slide">
+				<h2>練習 1：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「カフェにコーヒーを飲みに行きます。」</div>
+					<div class="quiz-kr">
+						➔ 카페에 커피를 <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 1：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「カフェにコーヒーを飲みに行きます。」</div>
+					<div class="quiz-kr">
+						➔ 카페에 커피를 <span class="highlight">마시러 가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 5: 練習 2 -->
+			<div class="slide">
+				<h2>練習 2：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「図書館に本を借りに行きます。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 2：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「図書館に本を借りに行きます。」</div>
+					<div class="quiz-kr">
+						➔ 도서관에 책을 빌리다(借りる) ➔ <span class="highlight">빌리러 가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 6: 練習 3 -->
+			<div class="slide">
+				<h2>練習 3：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q3. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「韓国に遊びに行きます。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 3：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q3. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「韓国に遊びに行きます。」</div>
+					<div class="quiz-kr">
+						➔ 한국에 놀다(遊ぶ: ㄹパッチム) ➔ <span class="highlight">놀러 가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: 絵練習 1 -->
+			<div class="slide">
+				<h2>絵を見て話そう (1/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🛒 ➔ 🍎</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「スーパーにりんごを買いに行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (1/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🛒 ➔ 🍎</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「スーパーにりんごを買いに行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						마트에 사과를 <span class="highlight">사러 가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 8: 絵練習 2 -->
+			<div class="slide">
+				<h2>絵を見て話そう (2/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🎬 ➔ 🍿</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「映画館に映画を見に行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (2/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🎬 ➔ 🍿</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「映画館に映画を見に行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						영화관에 영화를 <span class="highlight">보러 가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 9: 絵練習 3 -->
+			<div class="slide">
+				<h2>絵を見て話そう (3/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🏊‍♂️ ➔ 🏊‍♀️</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「プールに水泳（水泳し）に行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						수영하다(水泳する) <span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (3/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🏊‍♂️ ➔ 🏊‍♀️</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「プールに水泳（水泳し）に行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						수영장에 수영하러 <span class="highlight">가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 10: 絵練習 4 -->
+			<div class="slide">
+				<h2>絵を見て話そう (4/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🍜 ➔ 😋</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「食堂にラーメンを食べに行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						먹다(食べる) <span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (4/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🍜 ➔ 😋</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「食堂にラーメンを食べに行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						식당에 라면을 <span class="highlight">먹으러 가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 11: 絵練習 5 -->
+			<div class="slide">
+				<h2>絵を見て話そう (5/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🛏️ ➔ 😴</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「部屋に寝に行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight">  </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (5/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🛏️ ➔ 😴</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「部屋に寝に行きます」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						방에 <span class="highlight">자러 가요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 12: まとめ -->
+			<div class="slide">
+				<h2>今日のまとめ</h2>
+				<div style="text-align: left; font-size: 1.3rem; line-height: 2.1; background: #fff3cd; padding: 25px; border-radius: 15px; border-left: 8px solid #ffc107; width: 85%;">
+					<p>✔ <b>「그래서」</b>（それで）のあとに <b>「-(으)러 가다/오다」</b> を使うと、行く・来る目的を表現できます！</p>
+					<p>✔ パッチムなし ➔ <b>-러 가요</b> (사다 ➔ <b>사러 가요</b>)</p>
+					<p>✔ パッチムあり ➔ <b>-으러 가요</b> (먹다 ➔ <b>먹으러 가요</b>)</p>
+					<p>✔ ㄹ パッチム ➔ <b>-러 가요</b> (놀다 ➔ <b>놀러 가요</b>)</p>
+					<p>✔ どこへ何をしに行くか、<b>自然な韓国語</b>で表現してみましょう！ 😊</p>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 메인 하단 제어바 -->
+		<div class="controls-bar">
+			<button class="btn" id="prevBtn">&lt;</button>
+			<div class="page-indicator" id="pageIndicator"></div>
+			<button class="btn" id="nextBtn">&gt;</button>
+		</div>
+
+	</div>
+
+
+	<!-- ===================================================
+			 Ctrl + M 누르면 나타나는 練習 (10問) 팝업 모달
+			 =================================================== -->
+	<div class="modal-overlay" id="extraModal">
+		<div class="modal-container">
+
+			<div class="modal-header">
+				<div class="modal-title">🔥 トレーニング（10問：-(으)러 가다/오다）</div>
+				<button class="close-btn" id="closeModalBtn">閉じる (ESC)</button>
+			</div>
+
+			<!-- 추가 연습문제 슬라이드 영역 (10개) -->
+			<div class="slide-wrapper" id="extraSlideWrapper">
+
+				<!-- Extra 1 -->
+				<div class="slide active">
+					<h2>特訓 1/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q1. 韓国語に変えてみましょう。（基本形：찾다）</div>
+						<div class="quiz-jp">「お金をおろし（探し）に行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 돈을 <span class="highlight">찾으러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 2 -->
+				<div class="slide">
+					<h2>特訓 2/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q2. 韓国語に変えてみましょう。（基本形：만나다）</div>
+						<div class="quiz-jp">「友達に会いに行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 친구를 <span class="highlight">만나러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 3 -->
+				<div class="slide">
+					<h2>特訓 3/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q3. 韓国語に変えてみましょう。（基本形：일하다）</div>
+						<div class="quiz-jp">「会社に働きに行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 회사에 <span class="highlight">일하러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 4 -->
+				<div class="slide">
+					<h2>特訓 4/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q4. 韓国語に変えてみましょう。（基本形：찍다）</div>
+						<div class="quiz-jp">「写真を撮りに行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 사진을 <span class="highlight">찍으러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 5 -->
+				<div class="slide">
+					<h2>特訓 5/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q5. 韓国語に変えてみましょう。（基本形：놀다）</div>
+						<div class="quiz-jp">「公園に遊びに来ました。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 공원에 <span class="highlight">놀러 왔어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 6 -->
+				<div class="slide">
+					<h2>特訓 6/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q6. 韓国語に変えてみましょう。（基本形：배우다）</div>
+						<div class="quiz-jp">「韓国語を習いに来ます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 한국어를 <span class="highlight">배우러 와요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 7 -->
+				<div class="slide">
+					<h2>特訓 7/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q7. 韓国語に変えてみましょう。（基本形：산책하다）</div>
+						<div class="quiz-jp">「散歩しに行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">산책하러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 8 -->
+				<div class="slide">
+					<h2>特訓 8/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q8. 韓国語に変えてみましょう。（基本形：받다）</div>
+						<div class="quiz-jp">「プレゼントを受け取りに行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 선물을 <span class="highlight">받으러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 9 -->
+				<div class="slide">
+					<h2>特訓 9/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q9. 韓国語に変えてみましょう。（基本形：자르다）</div>
+						<div class="quiz-jp">「髪を切りに行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 머리를 <span class="highlight">자르러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 10 -->
+				<div class="slide">
+					<h2>特訓 10/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q10. 韓国語に変えてみましょう。（基本形：구경하다）</div>
+						<div class="quiz-jp">「服を見物し（見に）に行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 옷을 <span class="highlight">구경하러 가요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- 추가 모달 전용 하단 제어바 -->
+			<div class="controls-bar">
+				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
+				<div class="page-indicator" id="extraPageIndicator"></div>
+				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
+			</div>
+
+		</div>
+	</div>
+
+
+	<script>
+    // 1. 메인 슬라이드 제어 로직
+    const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+
+    let currentMainSlide = 0;
+
+    function updateMainSlide() {
+      mainSlides.forEach((slide, index) => {
+        if (index === currentMainSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      pageIndicator.textContent = `${currentMainSlide + 1} / ${mainSlides.length}`;
+      prevBtn.disabled = currentMainSlide === 0;
+      nextBtn.disabled = currentMainSlide === mainSlides.length - 1;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentMainSlide > 0) {
+        currentMainSlide--;
+        updateMainSlide();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentMainSlide < mainSlides.length - 1) {
+        currentMainSlide++;
+        updateMainSlide();
+      }
+    });
+
+    // 2. 추가 연습 모달 (Ctrl + M) 제어 로직
+    const extraModal = document.getElementById('extraModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const extraSlides = document.querySelectorAll('#extraSlideWrapper .slide');
+    const extraPrevBtn = document.getElementById('extraPrevBtn');
+    const extraNextBtn = document.getElementById('extraNextBtn');
+    const extraPageIndicator = document.getElementById('extraPageIndicator');
+
+    let currentExtraSlide = 0;
+    let isModalOpen = false;
+
+    function updateExtraSlide() {
+      extraSlides.forEach((slide, index) => {
+        if (index === currentExtraSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      extraPageIndicator.textContent = `${currentExtraSlide + 1} / ${extraSlides.length}`;
+      extraPrevBtn.disabled = currentExtraSlide === 0;
+      extraNextBtn.disabled = currentExtraSlide === extraSlides.length - 1;
+    }
+
+    function openModal() {
+      isModalOpen = true;
+      extraModal.classList.add('active');
+      currentExtraSlide = 0;
+      updateExtraSlide();
+    }
+
+    function closeModal() {
+      isModalOpen = false;
+      extraModal.classList.remove('active');
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+
+    extraPrevBtn.addEventListener('click', () => {
+      if (currentExtraSlide > 0) {
+        currentExtraSlide--;
+        updateExtraSlide();
+      }
+    });
+
+    extraNextBtn.addEventListener('click', () => {
+      if (currentExtraSlide < extraSlides.length - 1) {
+        currentExtraSlide++;
+        updateExtraSlide();
+      }
+    });
+
+    // 3. 키보드 단축키 이벤트 (Ctrl+M, 화살표, ESC)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+        e.preventDefault();
+        if (isModalOpen) {
+          closeModal();
+        } else {
+          openModal();
+        }
+        return;
+      }
+
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModal();
+        return;
+      }
+
+      if (isModalOpen) {
+        if (e.key === 'ArrowLeft' && currentExtraSlide > 0) {
+          currentExtraSlide--;
+          updateExtraSlide();
+        } else if (e.key === 'ArrowRight' && currentExtraSlide < extraSlides.length - 1) {
+          currentExtraSlide++;
+          updateExtraSlide();
+        }
+      } else {
+        if (e.key === 'ArrowLeft' && currentMainSlide > 0) {
+          currentMainSlide--;
+          updateMainSlide();
+        } else if (e.key === 'ArrowRight' && currentMainSlide < mainSlides.length - 1) {
+          currentMainSlide++;
+          updateMainSlide();
+        }
+      }
+    });
+
+    // 초기화
+    updateMainSlide();
+
+    // ➔ 화살표 버튼 클릭 이벤트
+    document.querySelectorAll('.arrow-toggle-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const answerText = btn.nextElementSibling;
+        answerText.classList.toggle('hidden');
+        btn.classList.toggle('open');
+      });
+    });
+	</script>
+</body>
+</html>
