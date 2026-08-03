@@ -358,6 +358,28 @@
 				transform: translateX(0);
 			}
 		}
+
+        /* 이미지를 감싸는 컨테이너 */
+        .quiz-img-container {
+            width: 100%;
+            max-height: 130px; /* 👈 이 숫자를 늘리거나 줄여서 전체 높이를 조절하세요 (예: 100px ~ 150px) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: transparent; /* 배경을 투명하게 설정 */
+        }
+
+        /* 실제 이미지 태그 */
+        .quiz-img {
+            max-width: 100%;
+            max-height: 130px; /* 👈 컨테이너 높이와 동일하게 설정 */
+            width: auto;
+            height: auto;
+            object-fit: contain; /* 이미지 비율이 깨지지 않고 쏙 들어가게 유지 */
+        }
 	</style>
 </head>
 <body>
@@ -933,6 +955,11 @@
 				<div class="slide active">
 					<h2>特訓 1/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<!-- 🔽 보관 중인 이미지 파일 경로를 src에 넣어주세요 -->
+						<div class="quiz-img-container">
+							<img src="1.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
+
 						<div class="quiz-title">Q1. 韓国語に変えてみましょう。（基本形：가다）</div>
 						<div class="quiz-jp">「家に帰ろうとしています。」</div>
 						<div class="quiz-kr-wrap">
@@ -944,10 +971,14 @@
 					</div>
 				</div>
 
+
 				<!-- Extra 2 -->
 				<div class="slide">
 					<h2>特訓 2/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="2.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q2. 韓国語に変えてみましょう。（基本形：열다）</div>
 						<div class="quiz-jp">「ドアを開けようとしました。」</div>
 						<div class="quiz-kr-wrap">
@@ -963,6 +994,9 @@
 				<div class="slide">
 					<h2>特訓 3/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="3.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q3. 韓国語に変えてみましょう。（基本形：일어나다）</div>
 						<div class="quiz-jp">「起きようとしました。」</div>
 						<div class="quiz-kr-wrap">
@@ -978,6 +1012,9 @@
 				<div class="slide">
 					<h2>特訓 4/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="4.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q4. 韓国語に変えてみましょう。（基本形：운동하다）</div>
 						<div class="quiz-jp">「明日から運動するつもりです。」</div>
 						<div class="quiz-kr-wrap">
@@ -993,6 +1030,9 @@
 				<div class="slide">
 					<h2>特訓 5/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="5.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q5. 韓国語に変えてみましょう。（基本形：가다）</div>
 						<div class="quiz-jp">「韓国へ行くつもりです。」</div>
 						<div class="quiz-kr-wrap">
@@ -1008,6 +1048,9 @@
 				<div class="slide">
 					<h2>特訓 6/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="6.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q6. 韓国語に変えてみましょう。（基本形：공부하다）</div>
 						<div class="quiz-jp">「日本語を勉強するつもりです。」</div>
 						<div class="quiz-kr-wrap">
@@ -1023,6 +1066,9 @@
 				<div class="slide">
 					<h2>特訓 7/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="7.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q7. 韓国語に変えてみましょう。（基本形：사다）</div>
 						<div class="quiz-jp">「新しい車を買うつもりです。」</div>
 						<div class="quiz-kr-wrap">
@@ -1038,6 +1084,9 @@
 				<div class="slide">
 					<h2>特訓 8/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="8.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q8. 韓国語に変えてみましょう。（基本形：만들다）</div>
 						<div class="quiz-jp">「ケーキを作ろうとしました。」</div>
 						<div class="quiz-kr-wrap">
@@ -1053,6 +1102,9 @@
 				<div class="slide">
 					<h2>特訓 9/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="9.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q9. 韓国語に変えてみましょう。（基本形：전화하다）</div>
 						<div class="quiz-jp">「電話しようとしました。」</div>
 						<div class="quiz-kr-wrap">
@@ -1068,6 +1120,9 @@
 				<div class="slide">
 					<h2>特訓 10/10</h2>
 					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-img-container">
+							<img src="10.jpg" alt="Q1 이미지" class="quiz-img">
+						</div>
 						<div class="quiz-title">Q10. 韓国語に変えてみましょう。（基本形：쉬다）</div>
 						<div class="quiz-jp">「今週末は休むつもりです。」</div>
 						<div class="quiz-kr-wrap">
