@@ -1,0 +1,877 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語文法：「하지만」の様々な意味と使い方マスター！</title>
+	<style>
+		:root {
+			--bg-color: #f4f7f6;
+			--card-bg: #ffffff;
+			--primary-color: #4a90e2;
+			--accent-color: #e74c3c;
+			--secondary-color: #2ecc71;
+			--text-color: #333333;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Hiragino Sans', 'Meiryo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		/* 프레임 스타일 */
+		.presentation-container {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+			max-width: 1280px;
+			max-height: 720px;
+			background-color: var(--card-bg);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 30px 40px 20px 40px;
+		}
+
+		/* 슬라이드 영역 */
+		.slide-wrapper {
+			position: relative;
+			flex: 1;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 10px 0;
+		}
+
+			.slide.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		/* 타이틀 및 텍스트 */
+		h1 {
+			font-size: 2.8rem;
+			color: var(--primary-color);
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			border-bottom: 4px solid var(--primary-color);
+			padding-bottom: 8px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 1.3rem;
+			line-height: 1.6;
+			margin-bottom: 12px;
+		}
+
+		.highlight {
+			color: var(--accent-color);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.6rem;
+			background: #eef5fc;
+			padding: 12px 20px;
+			border-radius: 12px;
+			margin: 12px 0;
+			display: inline-block;
+		}
+
+		/* 표 스타일 */
+		table {
+			width: 90%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			font-size: 1.1rem;
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 10px 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		/* 연습문제 카드 */
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 25px 30px;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.quiz-title {
+			font-size: 1.3rem;
+			color: #666;
+			margin-bottom: 15px;
+		}
+
+		.quiz-jp {
+			font-size: 1.7rem;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.quiz-kr {
+			font-size: 1.9rem;
+			color: var(--primary-color);
+			background: #ffffff;
+			padding: 15px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		/* 하단 제어바 */
+		.controls-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			height: 60px;
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid #eee;
+			z-index: 10;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			font-size: 1.5rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.btn:hover {
+				background-color: #357abd;
+			}
+
+			.btn:disabled {
+				background-color: #ccc;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: #666;
+		}
+
+		/* 모달 스타일 */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+			.modal-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		.modal-container {
+			position: relative;
+			width: 85vw;
+			height: 85vh;
+			max-width: 1200px;
+			max-height: 680px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 30px 40px 20px 40px;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+			border: 4px solid var(--secondary-color);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.modal-title {
+			font-size: 1.8rem;
+			color: var(--secondary-color);
+			font-weight: bold;
+		}
+
+		.close-btn {
+			background: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.extra-quiz-card {
+			border-left-color: var(--secondary-color);
+		}
+
+		/* ➔ 정답 토글 영역 */
+		.quiz-kr-wrap {
+			margin-top: 15px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 1.8rem;
+		}
+
+		.arrow-toggle-btn {
+			background-color: var(--secondary-color, #2ecc71);
+			color: white;
+			border: none;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			font-size: 1.4rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: all 0.2s ease;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		}
+
+			.arrow-toggle-btn:hover {
+				transform: scale(1.1);
+				background-color: #27ae60;
+			}
+
+			.arrow-toggle-btn.open {
+				transform: rotate(90deg);
+				background-color: #e74c3c;
+			}
+
+		.answer-text.hidden {
+			display: none;
+		}
+
+		.answer-text {
+			font-weight: bold;
+			animation: fadeIn 0.3s ease;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateX(-10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 메인 프레임 -->
+	<div class="presentation-container">
+
+		<!-- 기본 슬라이드 영역 -->
+		<div class="slide-wrapper" id="mainSlideWrapper">
+
+			<!-- Slide 1: 表紙 -->
+			<div class="slide active">
+				<h1>「하지만」のニュアンス別マスター！</h1>
+				<p style="font-size: 1.8rem; margin-top: 20px;">文脈によって変わる <span class="highlight">「하지만」</span> の3つの意味と使い方</p>
+			</div>
+
+			<!-- Slide 2: 全体概要 -->
+			<div class="slide">
+				<h2>「하지만」の3つの意味</h2>
+				<p style="font-size: 1.4rem;">日本語では文脈によって主に<b>3つのニュアンス</b>に分かれます！</p>
+				<div class="big-text" style="text-align: left; font-size: 1.4rem; width: 85%;">
+					<b>① 逆接（完全な反対）</b> ➔ 「だけど / でも / しかし」<br>
+					<b>② 対比（比べ・条件）</b> ➔ 「〜けれど / 〜だが」<br>
+					<b>③ 譲歩（認めた上の反론）</b> ➔ 「そうはいっても / とは言え」
+				</div>
+			</div>
+
+			<!-- Slide 3: 変更ルール -->
+			<div class="slide">
+				<h2>文のつなぎ方ルール！</h2>
+				<p style="font-size: 1.4rem;">前の文章をきちんと終わらせて（<b>.</b>）から、次の文章の先頭に置きます。</p>
+				<div class="big-text" style="text-align: left; font-size: 1.4rem; width: 85%;">
+					<b>[文1] .  하지만  [文2] .</b><br><br>
+					・한국어는 어려워요. <span class="highlight">하지만</span> 재미있어요.<br>
+					・비가 와요. <span class="highlight">하지만</span> 갈 거예요.<br>
+					・알아요. <span class="highlight">하지만</span> 안 돼요.
+				</div>
+			</div>
+
+			<!-- Slide 4: 意味1 説明 -->
+			<div class="slide">
+				<h2>① 逆接（だけど・でも）</h2>
+				<p style="font-size: 1.3rem; margin-bottom: 20px;">前の文と<b>完全に対立する結果や事実</b>を言うときに使います。</p>
+				<div class="big-text" style="font-size: 1.5rem;">
+					비싸요. <span class="highlight">하지만</span> 맛있어요.<br>
+					<small style="font-size: 1.1rem; color: #666;">（高いです。<b>だけど</b> おいしいです。）</small>
+				</div>
+			</div>
+
+			<!-- Slide 5: 意味1 練習 1 -->
+			<div class="slide">
+				<h2>① 逆接の練習 (1/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「忙しいです。だけど 楽しいです。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>① 逆接の練習 (1/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「忙しいです。だけど 楽しいです。」</div>
+					<div class="quiz-kr">
+						➔ 바빠요. <span class="highlight">하지만</span> 즐거워요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 6: 意味1 練習 2 -->
+			<div class="slide">
+				<h2>① 逆接の練習 (2/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「辛いです。でも おいしいです。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>① 逆接の練習 (2/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「辛いです。でも おいしいです。」</div>
+					<div class="quiz-kr">
+						➔ 매워요. <span class="highlight">하지만</span> 맛있어요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: 意味2 説明 -->
+			<div class="slide">
+				<h2>② 対比（〜けれど・〜だが）</h2>
+				<p style="font-size: 1.3rem; margin-bottom: 20px;">2つの事実を<b>比べたり、補足して述べる</b>ときの表現です。</p>
+				<div class="big-text" style="font-size: 1.5rem;">
+					방이 작아요. <span class="highlight">하지만</span> 깨끗해요.<br>
+					<small style="font-size: 1.1rem; color: #666;">（部屋が小さいです。<b>けれど</b> 綺麗です。）</small>
+				</div>
+			</div>
+
+			<!-- Slide 8: 意味2 練習 1 -->
+			<div class="slide">
+				<h2>② 対比の練習 (1/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「韓国語は難しいです。けれど 面白いです。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>② 対比の練習 (1/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「韓国語は難しいです。けれど 面白いです。」</div>
+					<div class="quiz-kr">
+						➔ 한국어는 어려워요. <span class="highlight">하지만</span> 재미있어요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 9: 意味2 練習 2 -->
+			<div class="slide">
+				<h2>② 対比の練習 (2/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「外は寒いです。けれど 中は暖かいです。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>② 対比の練習 (2/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「外は寒いです。けれど 中は暖かいです。」</div>
+					<div class="quiz-kr">
+						➔ 밖은 추워요. <span class="highlight">하지만</span> 안은 따뜻해요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 10: 意味3 説明 -->
+			<div class="slide">
+				<h2>③ 譲歩（そうはいっても・とは言え）</h2>
+				<p style="font-size: 1.3rem; margin-bottom: 20px;">相手の意見や状況を<b>一度認めた上で、自分の意見を主張する</b>ときです。</p>
+				<div class="big-text" style="font-size: 1.5rem;">
+					알아요. <span class="highlight">하지만</span> 안 돼요.<br>
+					<small style="font-size: 1.1rem; color: #666;">（分かります。<b>そうはいっても</b> ダメです。）</small>
+				</div>
+			</div>
+
+			<!-- Slide 11: 意味3 練習 1 -->
+			<div class="slide">
+				<h2>③ 譲歩の練習 (1/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「理解できます。とは言え 難しいです。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>③ 譲歩の練習 (1/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「理解できます。とは言え 難しいです。」</div>
+					<div class="quiz-kr">
+						➔ 이해해요. <span class="highlight">하지만</span> 어려워요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 12: 意味3 練習 2 -->
+			<div class="slide">
+				<h2>③ 譲歩の練習 (2/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「雨が降ります。そうはいっても 行きます。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>③ 譲歩の練習 (2/2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を「하지만」を使って変えてみましょう。</div>
+					<div class="quiz-jp">「雨が降ります。そうはいっても 行きます。」</div>
+					<div class="quiz-kr">
+						➔ 비가 와요. <span class="highlight">하지만</span> 가요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 13: まとめ -->
+			<div class="slide">
+				<h2>今日のまとめ</h2>
+				<div style="text-align: left; font-size: 1.3rem; line-height: 2.1; background: #fff3cd; padding: 25px; border-radius: 15px; border-left: 8px solid #ffc107; width: 85%;">
+					<p>✔ <b>① 逆接</b>：だけど・でも（비싸요. 하지만 맛있어요.）</p>
+					<p>✔ <b>② 対比</b>：〜けれど・〜だが（어려워요. 하지만 재미있어요.）</p>
+					<p>✔ <b>③ 譲歩</b>：そうはいっても・とは言え（알아요. 하지만 안 돼요.）</p>
+					<p>✔ 「하지만」ひとつで<b>色々なニュアンスの文</b>をスムーズにつなげられます！ 😊</p>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 메인 하단 제어바 -->
+		<div class="controls-bar">
+			<button class="btn" id="prevBtn">&lt;</button>
+			<div class="page-indicator" id="pageIndicator"></div>
+			<button class="btn" id="nextBtn">&gt;</button>
+		</div>
+
+	</div>
+
+
+	<!-- ===================================================
+			 Ctrl + M 누르면 나타나는 練習 (10問) 팝업 모달
+			 =================================================== -->
+	<div class="modal-overlay" id="extraModal">
+		<div class="modal-container">
+
+			<div class="modal-header">
+				<div class="modal-title">🔥 トレーニング（10問：「하지만」活用）</div>
+				<button class="close-btn" id="closeModalBtn">閉じる (ESC)</button>
+			</div>
+
+			<!-- 추가 연습문제 슬라이드 영역 (10개) -->
+			<div class="slide-wrapper" id="extraSlideWrapper">
+
+				<!-- Extra 1 -->
+				<div class="slide active">
+					<h2>特訓 1/10 [逆接]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q1. 韓国語に変えてみましょう。（逆接：だけど）</div>
+						<div class="quiz-jp">「高いです。だけど おいしいです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 비싸요. <span class="highlight">하지만</span> 맛있어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 2 -->
+				<div class="slide">
+					<h2>特訓 2/10 [逆接]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q2. 韓国語に変えてみましょう。（逆接：でも）</div>
+						<div class="quiz-jp">「辛いです。でも よく食べます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 매워요. <span class="highlight">하지만</span> 잘 먹어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 3 -->
+				<div class="slide">
+					<h2>特訓 3/10 [対比]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q3. 韓国語に変えてみましょう。（対比：けれど）</div>
+						<div class="quiz-jp">「小さいです。けれど かわいいです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 작아요. <span class="highlight">하지만</span> 귀여워요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 4 -->
+				<div class="slide">
+					<h2>特訓 4/10 [対比]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q4. 韓国語に変えてみましょう。（対比：だが）</div>
+						<div class="quiz-jp">「忙しいです。だが 楽しいです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 바빠요. <span class="highlight">하지만</span> 즐거워요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 5 -->
+				<div class="slide">
+					<h2>特訓 5/10 [譲歩]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q5. 韓国語に変えてみましょう。（譲歩：そうはいっても）</div>
+						<div class="quiz-jp">「分かります。そうはいっても ダメです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 알아요. <span class="highlight">하지만</span> 안 돼요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 6 -->
+				<div class="slide">
+					<h2>特訓 6/10 [譲歩]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q6. 韓国語に変えてみましょう。（譲歩：とは言え）</div>
+						<div class="quiz-jp">「雨が降ります。とは言え 行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 비가 와요. <span class="highlight">하지만</span> 가요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 7 -->
+				<div class="slide">
+					<h2>特訓 7/10 [対比]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q7. 韓国語に変えてみましょう。（対比：けれど）</div>
+						<div class="quiz-jp">「寒いです。けれど 大丈夫です。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 추워요. <span class="highlight">하지만</span> 괜찮아요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 8 -->
+				<div class="slide">
+					<h2>特訓 8/10 [逆接]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q8. 韓国語に変えてみましょう。（逆接：でも）</div>
+						<div class="quiz-jp">「良いです。でも 少し高いです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 좋아요. <span class="highlight">하지만</span> 조금 비싸요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 9 -->
+				<div class="slide">
+					<h2>特訓 9/10 [譲歩]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q9. 韓国語に変えてみましょう。（譲歩：そうはいっても）</div>
+						<div class="quiz-jp">「よく知りません。そうはいっても 頑張ります。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 잘 몰라요. <span class="highlight">하지만</span> 열심히 할게요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 10 -->
+				<div class="slide">
+					<h2>特訓 10/10 [対比]</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q10. 韓国語に変えてみましょう。（対比：けれど）</div>
+						<div class="quiz-jp">「学生です。けれど 仕事をしています。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 학생이에요. <span class="highlight">하지만</span> 일을 해요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- 추가 모달 전용 하단 제어바 -->
+			<div class="controls-bar">
+				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
+				<div class="page-indicator" id="extraPageIndicator"></div>
+				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
+			</div>
+
+		</div>
+	</div>
+
+
+	<script>
+    // 1. 메인 슬라이드 제어 로직
+    const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+
+    let currentMainSlide = 0;
+
+    function updateMainSlide() {
+      mainSlides.forEach((slide, index) => {
+        if (index === currentMainSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      pageIndicator.textContent = `${currentMainSlide + 1} / ${mainSlides.length}`;
+      prevBtn.disabled = currentMainSlide === 0;
+      nextBtn.disabled = currentMainSlide === mainSlides.length - 1;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentMainSlide > 0) {
+        currentMainSlide--;
+        updateMainSlide();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentMainSlide < mainSlides.length - 1) {
+        currentMainSlide++;
+        updateMainSlide();
+      }
+    });
+
+    // 2. 추가 연습 모달 (Ctrl + M) 제어 로직
+    const extraModal = document.getElementById('extraModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const extraSlides = document.querySelectorAll('#extraSlideWrapper .slide');
+    const extraPrevBtn = document.getElementById('extraPrevBtn');
+    const extraNextBtn = document.getElementById('extraNextBtn');
+    const extraPageIndicator = document.getElementById('extraPageIndicator');
+
+    let currentExtraSlide = 0;
+    let isModalOpen = false;
+
+    function updateExtraSlide() {
+      extraSlides.forEach((slide, index) => {
+        if (index === currentExtraSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      extraPageIndicator.textContent = `${currentExtraSlide + 1} / ${extraSlides.length}`;
+      extraPrevBtn.disabled = currentExtraSlide === 0;
+      extraNextBtn.disabled = currentExtraSlide === extraSlides.length - 1;
+    }
+
+    function openModal() {
+      isModalOpen = true;
+      extraModal.classList.add('active');
+      currentExtraSlide = 0;
+      updateExtraSlide();
+    }
+
+    function closeModal() {
+      isModalOpen = false;
+      extraModal.classList.remove('active');
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+
+    extraPrevBtn.addEventListener('click', () => {
+      if (currentExtraSlide > 0) {
+        currentExtraSlide--;
+        updateExtraSlide();
+      }
+    });
+
+    extraNextBtn.addEventListener('click', () => {
+      if (currentExtraSlide < extraSlides.length - 1) {
+        currentExtraSlide++;
+        updateExtraSlide();
+      }
+    });
+
+    // 3. 키보드 단축키 이벤트 (Ctrl+M, 화살표, ESC)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+        e.preventDefault();
+        if (isModalOpen) {
+          closeModal();
+        } else {
+          openModal();
+        }
+        return;
+      }
+
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModal();
+        return;
+      }
+
+      if (isModalOpen) {
+        if (e.key === 'ArrowLeft' && currentExtraSlide > 0) {
+          currentExtraSlide--;
+          updateExtraSlide();
+        } else if (e.key === 'ArrowRight' && currentExtraSlide < extraSlides.length - 1) {
+          currentExtraSlide++;
+          updateExtraSlide();
+        }
+      } else {
+        if (e.key === 'ArrowLeft' && currentMainSlide > 0) {
+          currentMainSlide--;
+          updateMainSlide();
+        } else if (e.key === 'ArrowRight' && currentMainSlide < mainSlides.length - 1) {
+          currentMainSlide++;
+          updateMainSlide();
+        }
+      }
+    });
+
+    // 초기화
+    updateMainSlide();
+
+    // ➔ 화살표 버튼 클릭 이벤트
+    document.querySelectorAll('.arrow-toggle-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const answerText = btn.nextElementSibling;
+        answerText.classList.toggle('hidden');
+        btn.classList.toggle('open');
+      });
+    });
+	</script>
+</body>
+</html>

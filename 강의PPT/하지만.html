@@ -1,0 +1,1169 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語文法：하지만（だけど・でも）を学ぼう！</title>
+	<style>
+		:root {
+			--bg-color: #f4f7f6;
+			--card-bg: #ffffff;
+			--primary-color: #4a90e2;
+			--accent-color: #e74c3c;
+			--secondary-color: #2ecc71;
+			--text-color: #333333;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Hiragino Sans', 'Meiryo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		/* 프레임 스타일 */
+		.presentation-container {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+			max-width: 1280px;
+			max-height: 720px;
+			background-color: var(--card-bg);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 30px 40px 20px 40px;
+		}
+
+		/* 슬라이드 영역 */
+		.slide-wrapper {
+			position: relative;
+			flex: 1;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 10px 0;
+		}
+
+			.slide.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		/* 타이틀 및 텍스트 */
+		h1 {
+			font-size: 2.8rem;
+			color: var(--primary-color);
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			border-bottom: 4px solid var(--primary-color);
+			padding-bottom: 8px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 1.3rem;
+			line-height: 1.6;
+			margin-bottom: 12px;
+		}
+
+		.highlight {
+			color: var(--accent-color);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.6rem;
+			background: #eef5fc;
+			padding: 12px 20px;
+			border-radius: 12px;
+			margin: 12px 0;
+			display: inline-block;
+		}
+
+		/* 표 스타일 */
+		table {
+			width: 90%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			font-size: 1.1rem;
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 10px 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		/* 연습문제 카드 */
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 25px 30px;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.quiz-title {
+			font-size: 1.3rem;
+			color: #666;
+			margin-bottom: 15px;
+		}
+
+		.quiz-jp {
+			font-size: 1.7rem;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.quiz-kr {
+			font-size: 1.9rem;
+			color: var(--primary-color);
+			background: #ffffff;
+			padding: 15px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		/* 이미지 연습 카드 */
+		.img-quiz-card {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background: #fff;
+			border: 2px solid #eee;
+			border-radius: 15px;
+			padding: 20px 30px;
+			width: 65%;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.img-placeholder {
+			font-size: 3.5rem;
+			background: #f0f4f8;
+			width: 100%;
+			padding: 15px 0;
+			border-radius: 10px;
+			margin-bottom: 15px;
+		}
+
+		/* 하단 제어바 */
+		.controls-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			height: 60px;
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid #eee;
+			z-index: 10;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			font-size: 1.5rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.btn:hover {
+				background-color: #357abd;
+			}
+
+			.btn:disabled {
+				background-color: #ccc;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: #666;
+		}
+
+		/* 모달 스타일 */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+			.modal-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		.modal-container {
+			position: relative;
+			width: 85vw;
+			height: 85vh;
+			max-width: 1200px;
+			max-height: 680px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 30px 40px 20px 40px;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+			border: 4px solid var(--secondary-color);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.modal-title {
+			font-size: 1.8rem;
+			color: var(--secondary-color);
+			font-weight: bold;
+		}
+
+		.close-btn {
+			background: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.extra-quiz-card {
+			border-left-color: var(--secondary-color);
+		}
+
+		/* ➔ 정답 토글 영역 */
+		.quiz-kr-wrap {
+			margin-top: 15px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 1.8rem;
+		}
+
+		.arrow-toggle-btn {
+			background-color: var(--secondary-color, #2ecc71);
+			color: white;
+			border: none;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			font-size: 1.4rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: all 0.2s ease;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		}
+
+			.arrow-toggle-btn:hover {
+				transform: scale(1.1);
+				background-color: #27ae60;
+			}
+
+			.arrow-toggle-btn.open {
+				transform: rotate(90deg);
+				background-color: #e74c3c;
+			}
+
+		.answer-text.hidden {
+			display: none;
+		}
+
+		.answer-text {
+			font-weight: bold;
+			animation: fadeIn 0.3s ease;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateX(-10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 메인 프레임 -->
+	<div class="presentation-container">
+
+		<!-- 기본 슬라이드 영역 -->
+		<div class="slide-wrapper" id="mainSlideWrapper">
+
+			<!-- Slide 1: 表紙 -->
+			<div class="slide active">
+				<h1>韓国語で「だけど・でも」と言ってみよう！</h1>
+				<p style="font-size: 1.8rem; margin-top: 20px;">文と文をつなぐ接続詞 <span class="highlight">「하지만（だけど / でも）」</span></p>
+			</div>
+
+			<!-- Slide 2: 概念説明 -->
+			<div class="slide">
+				<h2>反対の内容をつなげる接続詞！</h2>
+				<p>まずは日本語の文章を韓国語に変えて言ってみましょう！</p>
+				<div class="big-text">
+					<span class="highlight"> </span>  <br>
+					<small style="font-size: 1.1rem; color: #666;">（韓国語は難しいです。だけど 面白いです。）</small>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>反対の内容をつなげる接続詞！</h2>
+				<p>まずは日本語の文章を韓国語に変えて言ってみましょう！</p>
+				<div class="big-text">
+					한국어는 어려워요. <span class="highlight">하지만</span> 재미있어요.<br>
+					<small style="font-size: 1.1rem; color: #666;">（韓国語は難しいです。だけど 面白いです。）</small>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>「하지만」の使い方ルール！</h2>
+				<p style="font-size: 1.4rem;">前の文を一度言い終えて（<b>.</b>）から、次の文の頭に <span class="highlight">「하지만」</span> を置きます！</p>
+				<div class="big-text" style="text-align: left; font-size: 1.4rem; width: 85%;">
+					<b>文1（肯定または否定） .  하지만  文2（反対の内容） .</b><br><br>
+					・ 비싸요. <span class="highlight">하지만</span> 맛있어요.（高いです。だけど おいしいです。）<br>
+					・ 바빠요. <span class="highlight">하지만</span> 즐거워요.（忙しいです。でも 楽しいです。）
+				</div>
+			</div>
+
+			<!-- Slide 3: 練習タイトル -->
+			<div class="slide">
+				<h1>「하지만」を使った接続練習</h1>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 1 -->
+			<div class="slide">
+				<h2>基本接続表（하지만）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">2つの文の間に <span class="highlight">「하지만」</span> を入れてみましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>前の文（文1）</th>
+							<th>接続詞</th>
+							<th>後ろの文（文2）</th>
+							<th>全体（日本語の意味）</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>비싸요（高いです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>맛있어요（おいしいです）</td>
+							<td>（高いです。だけど おいしいです）</td>
+						</tr>
+						<tr>
+							<td>작아요（小さいです）</td>
+							<td><b class="highlight"></b></td>
+							<td>귀여워요（かわいいです）</td>
+							<td>（ festival：小さいです。でも かわいいです）</td>
+						</tr>
+						<tr>
+							<td>바빠요（忙しいです）</td>
+							<td><b class="highlight"></b></td>
+							<td>즐거워요（楽しいです）</td>
+							<td>（忙しいです。だけど 楽しいです）</td>
+						</tr>
+						<tr>
+							<td>어려워요（難しいです）</td>
+							<td><b class="highlight"></b></td>
+							<td>재미있어요（面白いです）</td>
+							<td>（ festival：難しいです。でも 面白いです）</td>
+						</tr>
+						<tr>
+							<td>비가 와요（雨が降ります）</td>
+							<td><b class="highlight"></b></td>
+							<td>가요（行きます）</td>
+							<td>（雨が降ります。だけど 行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 2 -->
+			<div class="slide">
+				<h2>基本接続表（하지만）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">2つの文の間に <span class="highlight">「하지만」</span> を入れてみましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>前の文（文1）</th>
+							<th>接続詞</th>
+							<th>後ろの文（文2）</th>
+							<th>全体（日本語の意味）</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>비싸요（高いです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>맛있어요（おいしいです）</td>
+							<td>비싸요. 하지만 맛있어요.</td>
+						</tr>
+						<tr>
+							<td>작아요（小さいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>귀여워요（かわいいです）</td>
+							<td>（ festival：小さいです。でも かわいいです）</td>
+						</tr>
+						<tr>
+							<td>바빠요（忙しいです）</td>
+							<td><b class="highlight"></b></td>
+							<td>즐거워요（楽しいです）</td>
+							<td>（忙しいです。だけど 楽しいです）</td>
+						</tr>
+						<tr>
+							<td>어려워요（難しいです）</td>
+							<td><b class="highlight"></b></td>
+							<td>재미있어요（面白いです）</td>
+							<td>（ festival：難しいです。でも 面白いです）</td>
+						</tr>
+						<tr>
+							<td>비가 와요（雨が降ります）</td>
+							<td><b class="highlight"></b></td>
+							<td>가요（行きます）</td>
+							<td>（雨が降ります。だけど 行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 3 -->
+			<div class="slide">
+				<h2>基本接続表（하지만）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">2つの文の間に <span class="highlight">「하지만」</span> を入れてみましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>前の文（文1）</th>
+							<th>接続詞</th>
+							<th>後ろの文（文2）</th>
+							<th>全体（日本語の意味）</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>비싸요（高いです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>맛있어요（おいしいです）</td>
+							<td>비싸요. 하지만 맛있어요.</td>
+						</tr>
+						<tr>
+							<td>작아요（小さいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>귀여워요（かわいいです）</td>
+							<td>작아요. 하지만 귀여워요.</td>
+						</tr>
+						<tr>
+							<td>바빠요（忙しいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>즐거워요（楽しいです）</td>
+							<td>（忙しいです。だけど 楽しいです）</td>
+						</tr>
+						<tr>
+							<td>어려워요（難しいです）</td>
+							<td><b class="highlight"></b></td>
+							<td>재미있어요（面白いです）</td>
+							<td>（ festival：難しいです。でも 面白いです）</td>
+						</tr>
+						<tr>
+							<td>비가 와요（雨が降ります）</td>
+							<td><b class="highlight"></b></td>
+							<td>가요（行きます）</td>
+							<td>（雨が降ります。だけど 行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 4 -->
+			<div class="slide">
+				<h2>基本接続表（하지만）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">2つの文の間に <span class="highlight">「하지만」</span> を入れてみましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>前の文（文1）</th>
+							<th>接続詞</th>
+							<th>後ろの文（文2）</th>
+							<th>全体（日本語の意味）</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>비싸요（高いです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>맛있어요（おいしいです）</td>
+							<td>비싸요. 하지만 맛있어요.</td>
+						</tr>
+						<tr>
+							<td>작아요（小さいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>귀여워요（かわいいです）</td>
+							<td>작아요. 하지만 귀여워요.</td>
+						</tr>
+						<tr>
+							<td>바빠요（忙しいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>즐거워요（楽しいです）</td>
+							<td>바빠요. 하지만 즐거워요.</td>
+						</tr>
+						<tr>
+							<td>어려워요（難しいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>재미있어요（面白いです）</td>
+							<td>（ festival：難しいです。でも 面白いです）</td>
+						</tr>
+						<tr>
+							<td>비가 와요（雨が降ります）</td>
+							<td><b class="highlight"></b></td>
+							<td>가요（行きます）</td>
+							<td>（雨が降ります。だけど 行きます）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Complete -->
+			<div class="slide">
+				<h2>基本接続表（하지만）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">2つの文の間に <span class="highlight">「하지만」</span> を入れてみましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>前の文（文1）</th>
+							<th>接続詞</th>
+							<th>後ろの文（文2）</th>
+							<th>全体（日本語の意味）</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>비싸요（高いです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>맛있어요（おいしいです）</td>
+							<td>비싸요. 하지만 맛있어요.</td>
+						</tr>
+						<tr>
+							<td>작아요（小さいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>귀여워요（かわいいです）</td>
+							<td>작아요. 하지만 귀여워요.</td>
+						</tr>
+						<tr>
+							<td>바빠요（忙しいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>즐거워요（楽しいです）</td>
+							<td>바빠요. 하지만 즐거워요.</td>
+						</tr>
+						<tr>
+							<td>어려워요（難しいです）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>재미있어요（面白いです）</td>
+							<td>어려워요. 하지만 재미있어요.</td>
+						</tr>
+						<tr>
+							<td>비가 와요（雨が降ります）</td>
+							<td><b class="highlight">하지만</b></td>
+							<td>가요（行きます）</td>
+							<td>비가 와요. 하지만 가요.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 練習タイトル -->
+			<div class="slide">
+				<h1>練習問題</h1>
+			</div>
+
+			<!-- Slide 4: 練習 1 -->
+			<div class="slide">
+				<h2>練習 1：文章をつなげよう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「高いです。だけど おいしいです。」</div>
+					<div class="quiz-kr">
+						➔ 비싸요. <span class="highlight"></span> 맛있어요.
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 1：文章をつなげよう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「高いです。だけど おいしいです。」</div>
+					<div class="quiz-kr">
+						➔ 비싸요. <span class="highlight">하지만</span> 맛있어요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 5: 練習 2 -->
+			<div class="slide">
+				<h2>練習 2：文章をつなげよう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「韓国語は難しいです。でも 面白いです。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 2：文章をつなげよう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「韓国語は難しいです。でも 面白いです。」</div>
+					<div class="quiz-kr">
+						➔ 한국어는 어려워요. <span class="highlight">하지만</span> 재미있어요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 6: 練習 3 -->
+			<div class="slide">
+				<h2>練習 3：文章をつなげよう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q3. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「雨が降ります。だけど 行きます。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 3：文章をつなげよう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q3. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「雨が降ります。だけど 行きます。」</div>
+					<div class="quiz-kr">
+						➔ 비가 와요. <span class="highlight">하지만</span> 가요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: 絵練習 1 -->
+			<div class="slide">
+				<h2>絵を見て話そう (1/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🏷️ ➔ 😋</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「値段が高いです。だけど おいしいです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (1/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🏷️ ➔ 😋</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「値段が高いです。だけど おいしいです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						비싸요. <span class="highlight">하지만</span> 맛있어요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 8: 絵練習 2 -->
+			<div class="slide">
+				<h2>絵を見て話そう (2/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">📏 ➔ ✨</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「部屋が狭いです。でも 綺麗です」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (2/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">📏 ➔ ✨</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「部屋が狭いです。でも 綺麗です」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						방이 좁아요. <span class="highlight">하지만</span> 깨끗해요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 9: 絵練習 3 -->
+			<div class="slide">
+				<h2>絵を見て話そう (3/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🏃‍♂️ ➔ 😀</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「忙しいです。だけど 楽しいです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						바빠요. <span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (3/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🏃‍♂️ ➔ 😀</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「忙しいです。だけど 楽しいです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						바빠요. <span class="highlight">하지만</span> 즐거워요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 10: 絵練習 4 -->
+			<div class="slide">
+				<h2>絵を見て話そう (4/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🌶️ ➔ 😋</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「辛いです。でも おいしいです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						매워요. <span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (4/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🌶️ ➔ 😋</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「辛いです。でも おいしいです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						매워요. <span class="highlight">하지만</span> 맛있어요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 11: 絵練習 5 -->
+			<div class="slide">
+				<h2>絵を見て話そう (5/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">❄️ ➔ ☀️</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「 must： provides：寒いですが、天気が良いです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight">  </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (5/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">❄️ ➔ ☀️</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「寒いです。だけど 天気が良いです」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						추워요. <span class="highlight">하지만</span> 날씨가 좋아요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 12: まとめ -->
+			<div class="slide">
+				<h2>今日のまとめ</h2>
+				<div style="text-align: left; font-size: 1.3rem; line-height: 2.1; background: #fff3cd; padding: 25px; border-radius: 15px; border-left: 8px solid #ffc107; width: 85%;">
+					<p>✔ <b>「하지만」</b> は「だけど / でも / しかし」という意味の接続詞です！</p>
+					<p>✔ 前の文を一度終わらせて（.）次の文の先頭に置きます。</p>
+					<p>✔ 例：비싸요. <b>하지만</b> 맛있어요.（高いです。だけど おいしいです。）</p>
+					<p>✔ 反対の内容を伝える<b>会話の基礎表現</b>をしっかりマスターしましょう！ 😊</p>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- 메인 하단 제어바 -->
+		<div class="controls-bar">
+			<button class="btn" id="prevBtn">&lt;</button>
+			<div class="page-indicator" id="pageIndicator"></div>
+			<button class="btn" id="nextBtn">&gt;</button>
+		</div>
+
+	</div>
+
+
+	<!-- ===================================================
+			 Ctrl + M 누르면 나타나는 練習 (10問) 팝업 모달
+			 =================================================== -->
+	<div class="modal-overlay" id="extraModal">
+		<div class="modal-container">
+
+			<div class="modal-header">
+				<div class="modal-title">🔥 トレーニング（10問：하지만）</div>
+				<button class="close-btn" id="closeModalBtn">閉じる (ESC)</button>
+			</div>
+
+			<!-- 추가 연습문제 슬라이드 영역 (10개) -->
+			<div class="slide-wrapper" id="extraSlideWrapper">
+
+				<!-- Extra 1 -->
+				<div class="slide active">
+					<h2>特訓 1/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q1. 韓国語に変えてみましょう。（비싸요 / 맛있어요）</div>
+						<div class="quiz-jp">「高いです。だけど おいしいです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 비싸요. <span class="highlight">하지만</span> 맛있어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 2 -->
+				<div class="slide">
+					<h2>特訓 2/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q2. 韓国語に変えてみましょう。（작아요 / 귀여워요）</div>
+						<div class="quiz-jp">「小さいです。でも かわいいです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 작아요. <span class="highlight">하지만</span> 귀여워요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 3 -->
+				<div class="slide">
+					<h2>特訓 3/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q3. 韓国語に変えてみましょう。（바빠요 / 즐거워요）</div>
+						<div class="quiz-jp">「忙しいです。だけど 楽しいです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 바빠요. <span class="highlight">하지만</span> 즐거워요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 4 -->
+				<div class="slide">
+					<h2>特訓 4/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q4. 韓国語に変えてみましょう。（어려워요 / 재미있어요）</div>
+						<div class="quiz-jp">「難しいです。でも 面白いです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 어려워요. <span class="highlight">하지만</span> 재미있어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 5 -->
+				<div class="slide">
+					<h2>特訓 5/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q5. 韓国語に変えてみましょう。（비가 와요 / 가요）</div>
+						<div class="quiz-jp">「雨が降ります。だけど 行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 비가 와요. <span class="highlight">하지만</span> 가요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 6 -->
+				<div class="slide">
+					<h2>特訓 6/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q6. 韓国語に変えてみましょう。（매워요 / 잘 먹어요）</div>
+						<div class="quiz-jp">「辛いです。でも よく食べます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 매워요. <span class="highlight">하지만</span> 잘 먹어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 7 -->
+				<div class="slide">
+					<h2>特訓 7/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q7. 韓国語に変えてみましょう。（추워요 / 괜찮아요）</div>
+						<div class="quiz-jp">「寒いです。だけど 大丈夫です。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 추워요. <span class="highlight">하지만</span> 괜찮아요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 8 -->
+				<div class="slide">
+					<h2>特訓 8/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q8. 韓国語に変えてみましょう。（좋아요 / 조금 비싸요）</div>
+						<div class="quiz-jp">「良いです。でも 少し高いです。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 좋아요. <span class="highlight">하지만</span> 조금 비싸요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 9 -->
+				<div class="slide">
+					<h2>特訓 9/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q9. 韓国語に変えてみましょう。（잘 몰라요 / 열심히 할게요）</div>
+						<div class="quiz-jp">「よく知りません。だけど 頑張ります。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 잘 몰라요. <span class="highlight">하지만</span> 열심히 할게요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 10 -->
+				<div class="slide">
+					<h2>特訓 10/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q10. 韓国語に変えてみましょう。（학생이에요 / 일을 해요）</div>
+						<div class="quiz-jp">「学生です。でも 仕事をしています。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 학생이에요. <span class="highlight">하지만</span> 일을 해요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- 추가 모달 전용 하단 제어바 -->
+			<div class="controls-bar">
+				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
+				<div class="page-indicator" id="extraPageIndicator"></div>
+				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
+			</div>
+
+		</div>
+	</div>
+
+
+	<script>
+		// 1. 메인 슬라이드 제어 로직
+		const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
+		const prevBtn = document.getElementById('prevBtn');
+		const nextBtn = document.getElementById('nextBtn');
+		const pageIndicator = document.getElementById('pageIndicator');
+
+		let currentMainSlide = 0;
+
+		function updateMainSlide() {
+			mainSlides.forEach((slide, index) => {
+				if (index === currentMainSlide) {
+					slide.classList.add('active');
+				} else {
+					slide.classList.remove('active');
+				}
+			});
+			pageIndicator.textContent = `${currentMainSlide + 1} / ${mainSlides.length}`;
+			prevBtn.disabled = currentMainSlide === 0;
+			nextBtn.disabled = currentMainSlide === mainSlides.length - 1;
+		}
+
+		prevBtn.addEventListener('click', () => {
+			if (currentMainSlide > 0) {
+				currentMainSlide--;
+				updateMainSlide();
+			}
+		});
+
+		nextBtn.addEventListener('click', () => {
+			if (currentMainSlide < mainSlides.length - 1) {
+				currentMainSlide++;
+				updateMainSlide();
+			}
+		});
+
+		// 2. 추가 연습 모달 (Ctrl + M) 제어 로직
+		const extraModal = document.getElementById('extraModal');
+		const closeModalBtn = document.getElementById('closeModalBtn');
+		const extraSlides = document.querySelectorAll('#extraSlideWrapper .slide');
+		const extraPrevBtn = document.getElementById('extraPrevBtn');
+		const extraNextBtn = document.getElementById('extraNextBtn');
+		const extraPageIndicator = document.getElementById('extraPageIndicator');
+
+		let currentExtraSlide = 0;
+		let isModalOpen = false;
+
+		function updateExtraSlide() {
+			extraSlides.forEach((slide, index) => {
+				if (index === currentExtraSlide) {
+					slide.classList.add('active');
+				} else {
+					slide.classList.remove('active');
+				}
+			});
+			extraPageIndicator.textContent = `${currentExtraSlide + 1} / ${extraSlides.length}`;
+			extraPrevBtn.disabled = currentExtraSlide === 0;
+			extraNextBtn.disabled = currentExtraSlide === extraSlides.length - 1;
+		}
+
+		function openModal() {
+			isModalOpen = true;
+			extraModal.classList.add('active');
+			currentExtraSlide = 0;
+			updateExtraSlide();
+		}
+
+		function closeModal() {
+			isModalOpen = false;
+			extraModal.classList.remove('active');
+		}
+
+		closeModalBtn.addEventListener('click', closeModal);
+
+		extraPrevBtn.addEventListener('click', () => {
+			if (currentExtraSlide > 0) {
+				currentExtraSlide--;
+				updateExtraSlide();
+			}
+		});
+
+		extraNextBtn.addEventListener('click', () => {
+			if (currentExtraSlide < extraSlides.length - 1) {
+				currentExtraSlide++;
+				updateExtraSlide();
+			}
+		});
+
+		// 3. 키보드 단축키 이벤트 (Ctrl+M, 화살표, ESC)
+		document.addEventListener('keydown', (e) => {
+			if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+				e.preventDefault();
+				if (isModalOpen) {
+					closeModal();
+				} else {
+					openModal();
+				}
+				return;
+			}
+
+			if (e.key === 'Escape' && isModalOpen) {
+				closeModal();
+				return;
+			}
+
+			if (isModalOpen) {
+				if (e.key === 'ArrowLeft' && currentExtraSlide > 0) {
+					currentExtraSlide--;
+					updateExtraSlide();
+				} else if (e.key === 'ArrowRight' && currentExtraSlide < extraSlides.length - 1) {
+					currentExtraSlide++;
+					updateExtraSlide();
+				}
+			} else {
+				if (e.key === 'ArrowLeft' && currentMainSlide > 0) {
+					currentMainSlide--;
+					updateMainSlide();
+				} else if (e.key === 'ArrowRight' && currentMainSlide < mainSlides.length - 1) {
+					currentMainSlide++;
+					updateMainSlide();
+				}
+			}
+		});
+
+		// 초기화
+		updateMainSlide();
+
+		// ➔ 화살표 버튼 클릭 이벤트
+		document.querySelectorAll('.arrow-toggle-btn').forEach((btn) => {
+			btn.addEventListener('click', () => {
+				const answerText = btn.nextElementSibling;
+				answerText.classList.toggle('hidden');
+				btn.classList.toggle('open');
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,1121 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語文法：-밖에 + 안/없다（〜しか〜ない）入門編</title>
+	<style>
+		:root {
+			--bg-color: #f4f7f6;
+			--card-bg: #ffffff;
+			--primary-color: #4a90e2;
+			--accent-color: #e74c3c;
+			--secondary-color: #2ecc71;
+			--text-color: #333333;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Hiragino Sans', 'Meiryo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		.presentation-container {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+			max-width: 1280px;
+			max-height: 720px;
+			background-color: var(--card-bg);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 30px 40px 20px 40px;
+		}
+
+		.slide-wrapper {
+			position: relative;
+			flex: 1;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 10px 0;
+		}
+
+		.slide.active {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		h1 {
+			font-size: 2.8rem;
+			color: var(--primary-color);
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			border-bottom: 4px solid var(--primary-color);
+			padding-bottom: 8px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 1.3rem;
+			line-height: 1.6;
+			margin-bottom: 12px;
+		}
+
+		.highlight {
+			color: var(--accent-color);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.6rem;
+			background: #eef5fc;
+			padding: 12px 20px;
+			border-radius: 12px;
+			margin: 12px 0;
+			display: inline-block;
+		}
+
+		table {
+			width: 90%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			font-size: 1.1rem;
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 10px 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 25px 30px;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.quiz-title {
+			font-size: 1.3rem;
+			color: #666;
+			margin-bottom: 15px;
+		}
+
+		.quiz-jp {
+			font-size: 1.7rem;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.quiz-kr {
+			font-size: 1.9rem;
+			color: var(--primary-color);
+			background: #ffffff;
+			padding: 15px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		.img-quiz-card {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background: #fff;
+			border: 2px solid #eee;
+			border-radius: 15px;
+			padding: 20px 30px;
+			width: 65%;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.img-placeholder {
+			font-size: 3.5rem;
+			background: #f0f4f8;
+			width: 100%;
+			padding: 15px 0;
+			border-radius: 10px;
+			margin-bottom: 15px;
+		}
+
+		.controls-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			height: 60px;
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid #eee;
+			z-index: 10;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			font-size: 1.5rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.btn:hover { background-color: #357abd; }
+		.btn:disabled { background-color: #ccc; cursor: not-allowed; }
+
+		.page-indicator {
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: #666;
+		}
+
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+		.modal-overlay.active { opacity: 1; visibility: visible; }
+
+		.modal-container {
+			position: relative;
+			width: 85vw;
+			height: 85vh;
+			max-width: 1200px;
+			max-height: 680px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 30px 40px 20px 40px;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+			border: 4px solid var(--secondary-color);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.modal-title {
+			font-size: 1.8rem;
+			color: var(--secondary-color);
+			font-weight: bold;
+		}
+
+		.close-btn {
+			background: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.extra-quiz-card { border-left-color: var(--secondary-color); }
+
+		.quiz-kr-wrap {
+			margin-top: 15px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 1.8rem;
+		}
+
+		.arrow-toggle-btn {
+			background-color: var(--secondary-color, #2ecc71);
+			color: white;
+			border: none;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			font-size: 1.4rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: all 0.2s ease;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		}
+
+		.arrow-toggle-btn:hover {
+			transform: scale(1.1);
+			background-color: #27ae60;
+		}
+
+		.arrow-toggle-btn.open {
+			transform: rotate(90deg);
+			background-color: #e74c3c;
+		}
+
+		.answer-text.hidden { display: none; }
+
+		.answer-text {
+			font-weight: bold;
+			animation: fadeIn 0.3s ease;
+		}
+
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateX(-10px); }
+			to { opacity: 1; transform: translateX(0); }
+		}
+	</style>
+</head>
+<body>
+
+	<div class="presentation-container">
+		<div class="slide-wrapper" id="mainSlideWrapper">
+
+			<!-- Slide 1: 表紙 -->
+			<div class="slide active">
+				<h1>「〜しか〜ない」と言ってみよう！</h1>
+				<p style="font-size: 1.8rem; margin-top: 20px;">限定を表す表現 <span class="highlight">「名詞 + 밖에 + 안 / 없다（入門編）」</span></p>
+			</div>
+
+			<!-- Slide 2: 導入 1 -->
+			<div class="slide">
+				<h2>「〜しか〜ない」をつくる秘密！</h2>
+				<p>まずは日本語の文章を韓国語に変えて言ってみましょう！</p>
+				<div class="big-text">
+					<span class="highlight"> </span>  <br>
+					<small style="font-size: 1.1rem; color: #666;">（時間があります。だけど 10分しかありません。）</small>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>「〜しか〜ない」をつくる秘密！</h2>
+				<p>まずは日本語の文章を韓国語に変えて言ってみましょう！</p>
+				<div class="big-text">
+					시간이 있어요. <span class="highlight">하지만</span> 10분밖에 없어요.<br>
+					<small style="font-size: 1.1rem; color: #666;">（時間があります。だけど 10分しかありません。）</small>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>「〜しか〜ない」をつくる秘密！</h2>
+				<p>接続詞 <span class="highlight">「하지만（だけど）」</span> と一緒に使ってみましょう！</p>
+				<div class="big-text">
+					시간이 있어요. <span class="highlight">하지만</span> 10분밖에 없어요.<br>
+					<small style="font-size: 1.1rem; color: #666;">（時間があります。だけど 10分しかありません。）</small>
+				</div>
+			</div>
+
+			<!-- Slide 2-1: ルール -->
+			<div class="slide">
+				<h2>-밖에 + 否定 のお約束ルール！</h2>
+				<p style="font-size: 1.4rem;">名詞の後ろに <span class="highlight">「밖에」</span> をつけ、必ず後ろに <b>否定文（안 / 없다）</b> が来ます！</p>
+				<div class="big-text" style="text-align: left; font-size: 1.4rem; width: 85%;">
+					1. <b>名詞 + 밖에 + 없다</b>（〜しかいない / 〜しかない）<br>
+					➔ 물<span class="highlight">밖에 없어요</span>.（水しかありません）<br><br>
+					2. <b>名詞 + 밖에 + 안 + 動詞</b>（〜しか〜ない）<br>
+					➔ 사과<span class="highlight">밖에 안 먹어요</span>.（りんごしか食べません）
+				</div>
+			</div>
+
+			<!-- Slide 3: 練習タイトル -->
+			<div class="slide">
+				<h1>基本変更の練習</h1>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 1 -->
+			<div class="slide">
+				<h2>基本活用表（名詞 + 밖에 + 否定）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">名詞に <span class="highlight">「밖에」</span> をつけて否定形をつなげましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>名詞</th>
+							<th>韓国語表現</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>水（みず）</td>
+							<td>물</td>
+							<td><b class="highlight"></b></td>
+							<td>（水しかありません）</td>
+						</tr>
+						<tr>
+							<td>1つ（ひとつ）</td>
+							<td>하나</td>
+							<td><b class="highlight"></b></td>
+							<td>（1つしかありません）</td>
+						</tr>
+						<tr>
+							<td>私（わたし）</td>
+							<td>나 / 저</td>
+							<td><b class="highlight"></b></td>
+							<td>（私しかいません）</td>
+						</tr>
+						<tr>
+							<td>りんご</td>
+							<td>사과</td>
+							<td><b class="highlight"></b></td>
+							<td>（りんごしか食べません）</td>
+						</tr>
+						<tr>
+							<td>千ウォン</td>
+							<td>천 원</td>
+							<td><b class="highlight"></b></td>
+							<td>（千ウォンしかありません）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 2 -->
+			<div class="slide">
+				<h2>基本活用表（名詞 + 밖에 + 否定）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">名詞に <span class="highlight">「밖에」</span> をつけて否定形をつなげましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>名詞</th>
+							<th>韓国語表現</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>水（みず）</td>
+							<td>물</td>
+							<td><b class="highlight">물밖에 없어요</b></td>
+							<td>물밖에 없어요（水しか ありません）</td>
+						</tr>
+						<tr>
+							<td>1つ（ひとつ）</td>
+							<td>하나</td>
+							<td><b class="highlight"></b></td>
+							<td>（1つしかありません）</td>
+						</tr>
+						<tr>
+							<td>私（わたし）</td>
+							<td>나 / 저</td>
+							<td><b class="highlight"></b></td>
+							<td>（私しかいません）</td>
+						</tr>
+						<tr>
+							<td>りんご</td>
+							<td>사과</td>
+							<td><b class="highlight"></b></td>
+							<td>（りんごしか食べません）</td>
+						</tr>
+						<tr>
+							<td>千ウォン</td>
+							<td>천 원</td>
+							<td><b class="highlight"></b></td>
+							<td>（千ウォンしかありません）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 3 -->
+			<div class="slide">
+				<h2>基本活用表（名詞 + 밖에 + 否定）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">名詞に <span class="highlight">「밖에」</span> をつけて否定形をつなげましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>名詞</th>
+							<th>韓国語表現</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>水（みず）</td>
+							<td>물</td>
+							<td><b class="highlight">물밖에 없어요</b></td>
+							<td>물밖에 없어요（水しか ありません）</td>
+						</tr>
+						<tr>
+							<td>1つ（ひとつ）</td>
+							<td>하나</td>
+							<td><b class="highlight">하나밖에 없어요</b></td>
+							<td>하나밖에 없어요（1つしか ありません）</td>
+						</tr>
+						<tr>
+							<td>私（わたし）</td>
+							<td>나 / 저</td>
+							<td><b class="highlight"></b></td>
+							<td>（私しかいません）</td>
+						</tr>
+						<tr>
+							<td>りんご</td>
+							<td>사과</td>
+							<td><b class="highlight"></b></td>
+							<td>（りんごしか食べません）</td>
+						</tr>
+						<tr>
+							<td>千ウォン</td>
+							<td>천 원</td>
+							<td><b class="highlight"></b></td>
+							<td>（千ウォンしかありません）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 4 -->
+			<div class="slide">
+				<h2>基本活用表（名詞 + 밖에 + 否定）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">名詞に <span class="highlight">「밖에」</span> をつけて否定形をつなげましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>名詞</th>
+							<th>韓国語表現</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>水（みず）</td>
+							<td>물</td>
+							<td><b class="highlight">물밖에 없어요</b></td>
+							<td>물밖에 없어요（水しか ありません）</td>
+						</tr>
+						<tr>
+							<td>1つ（ひとつ）</td>
+							<td>하나</td>
+							<td><b class="highlight">하나밖에 없어요</b></td>
+							<td>하나밖에 없어요（1つしか ありません）</td>
+						</tr>
+						<tr>
+							<td>私（わたし）</td>
+							<td>나 / 저</td>
+							<td><b class="highlight">저밖에 없어요</b></td>
+							<td>저밖에 없어요（私しか いません）</td>
+						</tr>
+						<tr>
+							<td>りんご</td>
+							<td>사과</td>
+							<td><b class="highlight"></b></td>
+							<td>（りんごしか食べません）</td>
+						</tr>
+						<tr>
+							<td>千ウォン</td>
+							<td>천 원</td>
+							<td><b class="highlight"></b></td>
+							<td>（千ウォンしかありません）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Step 5 -->
+			<div class="slide">
+				<h2>基本活用表（名詞 + 밖에 + 否定）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">名詞に <span class="highlight">「밖에」</span> をつけて否定形をつなげましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>名詞</th>
+							<th>韓国語表現</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>水（みず）</td>
+							<td>물</td>
+							<td><b class="highlight">물밖에 없어요</b></td>
+							<td>물밖에 없어요（水しか ありません）</td>
+						</tr>
+						<tr>
+							<td>1つ（ひとつ）</td>
+							<td>하나</td>
+							<td><b class="highlight">하나밖에 없어요</b></td>
+							<td>하나밖에 없어요（1つしか ありません）</td>
+						</tr>
+						<tr>
+							<td>私（わたし）</td>
+							<td>나 / 저</td>
+							<td><b class="highlight">저밖에 없어요</b></td>
+							<td>저밖에 없어요（私しか いません）</td>
+						</tr>
+						<tr>
+							<td>りんご</td>
+							<td>사과</td>
+							<td><b class="highlight">사과밖에 안 먹어요</b></td>
+							<td>사과밖에 안 먹어요（りんごしか 食べません）</td>
+						</tr>
+						<tr>
+							<td>千ウォン</td>
+							<td>천 원</td>
+							<td><b class="highlight"></b></td>
+							<td>（千ウォンしかありません）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 3: 活用表 Complete -->
+			<div class="slide">
+				<h2>基本活用表（名詞 + 밖에 + 否定）</h2>
+				<p style="font-size: 1.1rem; margin-bottom: 10px;">名詞に <span class="highlight">「밖에」</span> をつけて否定形をつなげましょう！</p>
+				<table>
+					<thead>
+						<tr>
+							<th>日本語</th>
+							<th>名詞</th>
+							<th>韓国語表現</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>水（みず）</td>
+							<td>물</td>
+							<td><b class="highlight">물밖에 없어요</b></td>
+							<td>물밖에 없어요（水しか ありません）</td>
+						</tr>
+						<tr>
+							<td>1つ（ひとつ）</td>
+							<td>하나</td>
+							<td><b class="highlight">하나밖에 없어요</b></td>
+							<td>하나밖에 없어요（1つしか ありません）</td>
+						</tr>
+						<tr>
+							<td>私（わたし）</td>
+							<td>나 / 저</td>
+							<td><b class="highlight">저밖에 없어요</b></td>
+							<td>저밖에 없어요（私しか いません）</td>
+						</tr>
+						<tr>
+							<td>りんご</td>
+							<td>사과</td>
+							<td><b class="highlight">사과밖에 안 먹어요</b></td>
+							<td>사과밖에 안 먹어요（りんごしか 食べません）</td>
+						</tr>
+						<tr>
+							<td>千ウォン</td>
+							<td>천 원</td>
+							<td><b class="highlight">천 원밖에 없어요</b></td>
+							<td>천 원밖에 없어요（千ウォンしか ありません）</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 練習タイトル -->
+			<div class="slide">
+				<h1>練習問題</h1>
+			</div>
+
+			<!-- Slide 4: 練習 1 -->
+			<div class="slide">
+				<h2>練習 1：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「時間が10分しかありません。」</div>
+					<div class="quiz-kr">
+						➔ 시간이 10분 <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 1：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q1. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「時間が10分しかありません。」</div>
+					<div class="quiz-kr">
+						➔ 시간이 10분 <span class="highlight">밖에 없어요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 5: 練習 2 -->
+			<div class="slide">
+				<h2>練習 2：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「パンしか食べません。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 2：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q2. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「パンしか食べません。」</div>
+					<div class="quiz-kr">
+						➔ 빵 <span class="highlight">밖에 안 먹어요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 6: 練習 3 -->
+			<div class="slide">
+				<h2>練習 3：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q3. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「教室に私しかいません。」</div>
+					<div class="quiz-kr">
+						➔  <span class="highlight"></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習 3：文章をつくろう</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-title">Q3. 次の日本語を韓国語に変えてみましょう。</div>
+					<div class="quiz-jp">「教室に私しかいません。」</div>
+					<div class="quiz-kr">
+						➔ 교실에 저 <span class="highlight">밖에 없어요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: 絵練習 1 -->
+			<div class="slide">
+				<h2>絵を見て話そう (1/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🥛 ➔ ❌</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「牛乳しかありません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (1/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🥛 ➔ ❌</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「牛乳しかありません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						우유 <span class="highlight">밖에 없어요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 8: 絵練習 2 -->
+			<div class="slide">
+				<h2>絵を見て話そう (2/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">👛 ➔ 1000₩</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「千ウォンしかありません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						<span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (2/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">👛 ➔ 1000₩</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「千ウォンしかありません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						천 원 <span class="highlight">밖에 없어요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 9: 絵練習 3 -->
+			<div class="slide">
+				<h2>絵を見て話そう (3/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">☕ ➔ 🚫</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「コーヒーしか飲みません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						마시다(飲む) <span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (3/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">☕ ➔ 🚫</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「コーヒーしか飲みません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						커피 <span class="highlight">밖에 안 마셔요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 10: 絵練習 4 -->
+			<div class="slide">
+				<h2>絵を見て話そう (4/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🍎 ➔ 🚫</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「りんごしか買いません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						사다(買う) <span class="highlight"> </span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (4/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🍎 ➔ 🚫</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「りんごしか買いません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						사과 <span class="highlight">밖에 안 사요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 11: 絵練習 5 -->
+			<div class="slide">
+				<h2>絵を見て話そう (5/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🐶 ➔ ❌</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「犬しかいません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						  <span class="highlight">  </span>  
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>絵を見て話そう (5/5)</h2>
+				<div class="img-quiz-card">
+					<div class="img-placeholder">🐶 ➔ ❌</div>
+					<div class="quiz-jp" style="font-size: 1.4rem;">「犬しかいません」</div>
+					<div class="quiz-kr" style="font-size: 1.7rem;">
+						강아지 <span class="highlight">밖에 없어요</span>.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 12: まとめ -->
+			<div class="slide">
+				<h2>今日のまとめ</h2>
+				<div style="text-align: left; font-size: 1.3rem; line-height: 2.1; background: #fff3cd; padding: 25px; border-radius: 15px; border-left: 8px solid #ffc107; width: 85%;">
+					<p>✔ <b>「-밖에」</b> の後ろには、必ず <b>否定表現（없다 / 안）</b> が来ます！</p>
+					<p>✔ 名詞 + 밖에 + <b>없어요</b> ➔ 〜しかありません / 〜しかいません</p>
+					<p>✔ 名詞 + 밖에 + <b>안 + 動詞</b> ➔ 〜しか〜しません</p>
+					<p>✔ 「それしかない」という気持ちを<b>韓国語で自然に表現</b>してみましょう！ 😊</p>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="controls-bar">
+			<button class="btn" id="prevBtn">&lt;</button>
+			<div class="page-indicator" id="pageIndicator"></div>
+			<button class="btn" id="nextBtn">&gt;</button>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal-overlay" id="extraModal">
+		<div class="modal-container">
+			<div class="modal-header">
+				<div class="modal-title">🔥 トレーニング（10問：-밖에 + 안/없다）</div>
+				<button class="close-btn" id="closeModalBtn">閉じる (ESC)</button>
+			</div>
+			<div class="slide-wrapper" id="extraSlideWrapper">
+
+				<!-- Extra 1 -->
+				<div class="slide active">
+					<h2>特訓 1/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q1. 韓国語に変えてみましょう。（물 / 없다）</div>
+						<div class="quiz-jp">「水しかありません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 물 <span class="highlight">밖에 없어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 2 -->
+				<div class="slide">
+					<h2>特訓 2/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q2. 韓国語に変えてみましょう。（하나 / 없다）</div>
+						<div class="quiz-jp">「1つしかありません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 하나 <span class="highlight">밖에 없어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 3 -->
+				<div class="slide">
+					<h2>特訓 3/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q3. 韓国語に変えてみましょう。（사과 / 안 먹다）</div>
+						<div class="quiz-jp">「りんごしか食べません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 사과 <span class="highlight">밖에 안 먹어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 4 -->
+				<div class="slide">
+					<h2>特訓 4/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q4. 韓国語に変えてみましょう。（10분 / 없다）</div>
+						<div class="quiz-jp">「10分しかありません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 10분 <span class="highlight">밖에 없어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 5 -->
+				<div class="slide">
+					<h2>特訓 5/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q5. 韓国語に変えてみましょう。（주말 / 안 쉬다）</div>
+						<div class="quiz-jp">「週末しか休みません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 주말 <span class="highlight">밖에 안 쉬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 6 -->
+				<div class="slide">
+					<h2>特訓 6/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q6. 韓国語に変えてみましょう。（한국어 / 안 공부하다）</div>
+						<div class="quiz-jp">「韓国語しか勉強しません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 한국어 <span class="highlight">밖에 안 공부해요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 7 -->
+				<div class="slide">
+					<h2>特訓 7/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q7. 韓国語に変えてみましょう。（너 / 없다）</div>
+						<div class="quiz-jp">「君（あなた）しかいません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 너 <span class="highlight">밖에 없어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 8 -->
+				<div class="slide">
+					<h2>特訓 8/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q8. 韓国語に変えてみましょう。（커피 / 안 마시다）</div>
+						<div class="quiz-jp">「コーヒーしか飲みません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 커피 <span class="highlight">밖에 안 마셔요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 9 -->
+				<div class="slide">
+					<h2>特訓 9/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q9. 韓国語に変えてみましょう。（영화 / 안 보다）</div>
+						<div class="quiz-jp">「映画しか見ません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 영화 <span class="highlight">밖에 안 봐요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 10 -->
+				<div class="slide">
+					<h2>特訓 10/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q10. 韓国語に変えてみましょう。（친구 / 없다）</div>
+						<div class="quiz-jp">「友達しかいません。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 친구 <span class="highlight">밖에 없어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="controls-bar">
+				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
+				<div class="page-indicator" id="extraPageIndicator"></div>
+				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+    const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+    let currentMainSlide = 0;
+
+    function updateMainSlide() {
+      mainSlides.forEach((slide, index) => {
+        if (index === currentMainSlide) slide.classList.add('active');
+        else slide.classList.remove('active');
+      });
+      pageIndicator.textContent = `${currentMainSlide + 1} / ${mainSlides.length}`;
+      prevBtn.disabled = currentMainSlide === 0;
+      nextBtn.disabled = currentMainSlide === mainSlides.length - 1;
+    }
+
+    prevBtn.addEventListener('click', () => { if (currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); } });
+    nextBtn.addEventListener('click', () => { if (currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); } });
+
+    const extraModal = document.getElementById('extraModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const extraSlides = document.querySelectorAll('#extraSlideWrapper .slide');
+    const extraPrevBtn = document.getElementById('extraPrevBtn');
+    const extraNextBtn = document.getElementById('extraNextBtn');
+    const extraPageIndicator = document.getElementById('extraPageIndicator');
+    let currentExtraSlide = 0;
+    let isModalOpen = false;
+
+    function updateExtraSlide() {
+      extraSlides.forEach((slide, index) => {
+        if (index === currentExtraSlide) slide.classList.add('active');
+        else slide.classList.remove('active');
+      });
+      extraPageIndicator.textContent = `${currentExtraSlide + 1} / ${extraSlides.length}`;
+      extraPrevBtn.disabled = currentExtraSlide === 0;
+      extraNextBtn.disabled = currentExtraSlide === extraSlides.length - 1;
+    }
+
+    function openModal() { isModalOpen = true; extraModal.classList.add('active'); currentExtraSlide = 0; updateExtraSlide(); }
+    function closeModal() { isModalOpen = false; extraModal.classList.remove('active'); }
+    closeModalBtn.addEventListener('click', closeModal);
+
+    extraPrevBtn.addEventListener('click', () => { if (currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); } });
+    extraNextBtn.addEventListener('click', () => { if (currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); } });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+        e.preventDefault();
+        if (isModalOpen) closeModal(); else openModal();
+        return;
+      }
+      if (e.key === 'Escape' && isModalOpen) { closeModal(); return; }
+
+      if (isModalOpen) {
+        if (e.key === 'ArrowLeft' && currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); }
+        else if (e.key === 'ArrowRight' && currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); }
+      } else {
+        if (e.key === 'ArrowLeft' && currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); }
+        else if (e.key === 'ArrowRight' && currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); }
+      }
+    });
+
+    updateMainSlide();
+
+    document.querySelectorAll('.arrow-toggle-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const answerText = btn.nextElementSibling;
+        answerText.classList.toggle('hidden');
+        btn.classList.toggle('open');
+      });
+    });
+	</script>
+</body>
+</html>
