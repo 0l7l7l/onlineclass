@@ -1,0 +1,1555 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>한국어 문법：-아/어 주다</title>
+	<style>
+		:root {
+			--bg-color: #f4f7f6;
+			--card-bg: #ffffff;
+			--primary-color: #4a90e2;
+			--accent-color: #e74c3c;
+			--secondary-color: #2ecc71;
+			--text-color: #333333;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Hiragino Sans', 'Meiryo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		/* 프레임 스타일 */
+		.presentation-container {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+			max-width: 1280px;
+			max-height: 720px;
+			background-color: var(--card-bg);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 25px 40px 15px 40px;
+		}
+
+		/* 슬라이드 영역 */
+		.slide-wrapper {
+			position: relative;
+			flex: 1;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 5px 0;
+		}
+
+			.slide.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		/* 타이틀 및 텍스트 */
+		h1 {
+			font-size: 2.8rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			line-height: 1.2;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			border-bottom: 4px solid var(--primary-color);
+			padding-bottom: 6px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 1.3rem;
+			line-height: 1.6;
+			margin-bottom: 10px;
+		}
+
+		.highlight {
+			color: var(--accent-color);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.6rem;
+			background: #eef5fc;
+			padding: 12px 25px;
+			border-radius: 12px;
+			margin: 10px 0;
+			display: inline-block;
+		}
+
+		/* 시각적 화살표 다이어그램 */
+		.arrow-diagram {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 20px;
+			background: #f8f9fa;
+			padding: 20px 40px;
+			border-radius: 15px;
+			border: 2px solid #e9ecef;
+			margin: 15px 0;
+			width: 85%;
+		}
+
+		.diagram-box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.diagram-icon {
+			font-size: 3rem;
+		}
+
+		.diagram-name {
+			font-size: 1.6rem;
+			font-weight: bold;
+			margin-top: 5px;
+		}
+
+		.diagram-arrow-text {
+			font-size: 1.8rem;
+			font-weight: bold;
+			color: var(--accent-color);
+		}
+
+		/* 표 스타일 */
+		table {
+			width: 85%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			font-size: 1.2rem;
+		}
+
+		th, td {
+			border: 2px solid #ddd;
+			padding: 12px;
+			text-align: center;
+		}
+
+		th {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		/* 연습문제 카드 */
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 20px 30px;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.quiz-title {
+			font-size: 1.2rem;
+			color: #666;
+			margin-bottom: 10px;
+		}
+
+		.quiz-jp {
+			font-size: 1.5rem;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+
+		.quiz-kr {
+			font-size: 1.8rem;
+			color: var(--primary-color);
+			background: #ffffff;
+			padding: 12px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		/* 하단 제어바 */
+		.controls-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			height: 50px;
+			margin-top: 5px;
+			padding-top: 5px;
+			border-top: 1px solid #eee;
+			z-index: 10;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			width: 44px;
+			height: 44px;
+			border-radius: 50%;
+			font-size: 1.3rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.btn:hover {
+				background-color: #357abd;
+			}
+
+			.btn:disabled {
+				background-color: #ccc;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 1.1rem;
+			font-weight: bold;
+			color: #666;
+		}
+
+		/* 모달 스타일 */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+			.modal-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		.modal-container {
+			position: relative;
+			width: 85vw;
+			height: 85vh;
+			max-width: 1200px;
+			max-height: 680px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 30px 40px 20px 40px;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+			border: 4px solid var(--secondary-color);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.modal-title {
+			font-size: 1.8rem;
+			color: var(--secondary-color);
+			font-weight: bold;
+		}
+
+		.close-btn {
+			background: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.extra-quiz-card {
+			border-left-color: var(--secondary-color);
+		}
+
+		/* ➔ 정답 토글 영역 */
+		.quiz-kr-wrap {
+			margin-top: 15px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 1.6rem;
+		}
+
+		.arrow-toggle-btn {
+			background-color: var(--secondary-color, #2ecc71);
+			color: white;
+			border: none;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			font-size: 1.4rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: all 0.2s ease;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		}
+
+			.arrow-toggle-btn:hover {
+				transform: scale(1.1);
+				background-color: #27ae60;
+			}
+
+			.arrow-toggle-btn.open {
+				transform: rotate(90deg);
+				background-color: #e74c3c;
+			}
+
+		.answer-text.hidden {
+			display: none;
+		}
+
+		.answer-text {
+			font-weight: bold;
+			animation: fadeIn 0.3s ease;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateX(-10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="presentation-container">
+		<!-- 슬라이드 영역 -->
+		<div class="slide-wrapper" id="mainSlideWrapper">
+
+			<div class="slide active">
+				<h1>오늘의 주제</h1>
+				<div class="arrow-diagram" style="margin-top: 25px;">
+					<p style="margin-top: 20px; font-size: 1.3rem;">
+						<span class="highlight">주다</span>
+					</p>
+				</div>
+			</div>
+
+			<div class="slide active">
+				<h1>오늘의 주제</h1>
+				<div class="arrow-diagram" style="margin-top: 25px;">
+					<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+						<div style="font-size: 2rem; color: var(--accent-color); font-weight: bold;">➔</div>
+						<div style="font-size: 4rem;"><p style="font-size: 1.4rem; color: #666; margin-bottom: 5px;">リンゴをあげました</p></div>
+					</div>
+				</div>
+			</div>
+			<div class="slide active">
+				<h1>오늘의 주제</h1>
+				<div class="arrow-diagram" style="margin-top: 25px;">
+					<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+						<div style="font-size: 2rem; color: var(--accent-color); font-weight: bold;">➔</div>
+						<div style="font-size: 4rem;"><p style="font-size: 1.4rem; color: #666; margin-bottom: 5px;">사과를 줬어요.</p></div>
+					</div>
+				</div>
+			</div>
+			<div class="slide active">
+				<h1>오늘의 주제</h1>
+				<div class="arrow-diagram" style="margin-top: 25px;">
+					<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+						<div style="font-size: 2rem; color: var(--accent-color); font-weight: bold;">➔</div>
+						<div style="font-size: 4rem;"><p style="font-size: 1.4rem; color: #666; margin-bottom: 5px;">リンゴをくれました</p></div>
+					</div>
+				</div>
+			</div>
+			<div class="slide active">
+				<h1>오늘의 주제</h1>
+				<div class="arrow-diagram" style="margin-top: 25px;">
+					<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+						<div style="font-size: 2rem; color: var(--accent-color); font-weight: bold;">➔</div>
+						<div style="font-size: 4rem;"><p style="font-size: 1.4rem; color: #666; margin-bottom: 5px;">사과를 줬어요.</p></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slide active">
+				<p style="font-size: 1.4rem; color: #666; margin-bottom: 5px;">한국어 문법</p>
+				<h1>-아/어 주다</h1>
+			</div>
+			<div class="slide active">
+				<div class="arrow-diagram" style="margin-top: 25px;">
+					<div class="diagram-box">
+						<div class="diagram-icon">👩</div>
+						<div class="diagram-name">엄마</div>
+					</div>
+					<div class="diagram-arrow-text">─── 🍱 ───➔</div>
+					<div class="diagram-box">
+						<div class="diagram-icon">👦</div>
+						<div class="diagram-name">아이</div>
+					</div>
+				</div>
+			</div>
+			<!-- 1장. 제목 -->
+			<div class="slide active">
+				<p style="font-size: 1.4rem; color: #666; margin-bottom: 5px;">한국어 문법</p>
+				<h1>-아/어 주다</h1>
+				<p style="font-size: 1.8rem; margin-top: 10px;" class="highlight">다른 사람을 위해 행동해요.</p>
+				<p style="font-size: 1.8rem; margin-top: 10px;" class="highlight">相手のために何かをする時に使う表現です。</p>
+				<div class="arrow-diagram" style="margin-top: 25px;">
+					<div class="diagram-box">
+						<div class="diagram-icon">👩</div>
+						<div class="diagram-name">엄마</div>
+					</div>
+					<div class="diagram-arrow-text">─── 🍱 ───➔</div>
+					<div class="diagram-box">
+						<div class="diagram-icon">👦</div>
+						<div class="diagram-name">아이</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 2장. 생각하기 (인트로) -->
+			<div class="slide">
+				<h2>이 사람은 뭐 하고 있어요?</h2>
+
+				<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+					<div style="font-size: 4rem;">👩🍳</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>이 사람은 무엇을 하고 있어요?</h2>
+
+				<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+					<div style="font-size: 4rem;">👩🍳</div>
+				</div>
+
+				<div class="big-text" style="font-size: 1.4rem;">
+					"요리해요"<br><br>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>이 사람은 무엇을 하고 있어요?</h2>
+
+				<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+					<div style="font-size: 4rem;">👩🍳</div>
+					<div style="font-size: 2rem; color: var(--accent-color); font-weight: bold;">➔</div>
+					<div style="font-size: 4rem;">👦😋</div>
+				</div>
+
+				<div class="big-text" style="font-size: 1.4rem;">
+					그런데 엄마는 그냥 요리해요? <br>
+					<span class="highlight">아니면 아이のために 요리해요?</span>
+				</div>
+			</div>
+
+
+
+
+			<!-- 3장. 핵심 개념 -->
+			<div class="slide">
+				<h1><!--행동도 줄 수 있어요-->物は「渡す」ことができますよね。</h1>
+
+				<div style="display: flex; justify-content: center; gap: 30px; width: 85%; margin-top: 20px;">
+					<div style="background: #eef5fc; padding: 20px; border-radius: 12px; flex: 1;">
+						<p style="font-size: 1.2rem; font-weight: bold;">[물건]</p>
+						<p style="font-size: 2.5rem; margin: 10px 0;">🎁</p>
+						<p style="font-size: 1.3rem;">친구 ➔ 나</p>
+						<p class="highlight" style="font-size: 1.5rem;">선물</p>
+					</div>
+				</div>
+
+				<p style="margin-top: 20px; font-size: 1.3rem;">
+					한국어에서는 행동을 줄 때 <span class="highlight">-아/어 주다</span>를 사용해요.
+				</p>
+			</div>
+
+			<!--예시문제 -->
+			<div class="slide">
+				<h2>例えば</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">주다</div>
+						<div class="quiz-jp">친구가 선물을 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 日本語: 友達にプレゼントを <span class="highlight">あげます。</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例えば</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">주다</div>
+						<div class="quiz-jp">친구가 선물을 <span class="highlight">줘요</span>.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 日本語: 友達にプレゼントを <span class="highlight">あげます</span>。<br>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>例えば</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">주다</div>
+						<div class="quiz-jp">친구가 선물을 <span class="highlight">줘요</span>.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 日本語: 友達にプレゼントを <span class="highlight">あげます</span>。<br>
+							物は「渡す」ことができますよね。
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="slide">
+				<h1>物だけではなく、相手のためにする行動も「渡す」と考えます。</h1>
+
+				<div style="display: flex; justify-content: center; gap: 30px; width: 85%; margin-top: 20px;">
+
+					<div style="background: #fff3cd; padding: 20px; border-radius: 12px; flex: 1; border: 2px solid #ffc107;">
+						<p style="font-size: 1.2rem; font-weight: bold;">[行動]</p>
+						<p style="font-size: 2.5rem; margin: 10px 0;">🤝</p>
+						<p style="font-size: 1.3rem;">친구 ➔ 나</p>
+						<p class="highlight" style="font-size: 1.5rem;">도와주다</p>
+					</div>
+				</div>
+
+				<p style="margin-top: 20px; font-size: 1.3rem;">
+					한국어에서는 행동을 줄 때 <span class="highlight">-아/어 주다</span>를 사용해요.
+				</p>
+			</div>
+			<!--예시문제 -->
+			<div class="slide">
+				<h2>例えば</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">주다</div>
+						<div class="quiz-jp">친구가 저를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 日本語: 友達が私を <span class="highlight">手伝います</span>。
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例えば</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">주다</div>
+						<div class="quiz-jp">친구가 저를 <span class="highlight">도와줘요</span>.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 日本語: 友達が私を <span class="highlight">手伝います</span>。
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例えば</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">주다</div>
+						<div class="quiz-jp">친구가 저를 <span class="highlight">도와줘요</span>.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 日本語: 友達が私を <span class="highlight">手伝います</span>。<br>
+							これは「助ける」という行動を私のためにしてくれた、というイメージです。
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slide">
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-jp">そのため、韓国語では動詞の後ろに <span class="highlight">「-아/어 주다」</span>を付けます。</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slide">
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-jp">「주다」は本来 <span class="highlight">「与える・あげる」</span>という意味ですが、韓国語では物だけではなく、相手のために何かをする行動にも使います。</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 4장. 만드는 방법 -->
+
+
+
+			<div class="slide">
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<h2>동사 + 아/어 주다</h2>
+						<p>해요体から <span class="highlight">「요」を消して 「줘요」</span>をつけるだけでok!</p>
+						<div class="single-quiz-card">
+							<div class="quiz-jp">「가다」➞ 「가 <span class="highlight">요</span>」➞ 가<span class="highlight">줘요</span>。</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 3: STEP 2 - 만드는 방법 -->
+			<div class="slide">
+				<h2>STEP 2. 作り方（かんたんルール）</h2>
+
+				<div class="big-text" style="font-size: 2.2rem; background: #fff3cd; border: 3px dashed #ffc107; padding: 25px 40px;">
+					<b>해요</b> ➔ <span style="text-decoration: line-through; color: #aaa;">요</span> + <span class="highlight">줘요</span>
+				</div>
+
+				<div style="font-size: 1.6rem; text-align: left; line-height: 2.2; margin-top: 20px;">
+					・가요 ➔ <span class="highlight">가줘요</span><br>
+					・먹어요 ➔ <span class="highlight">먹어줘요</span><br>
+					・공부해요 ➔ <span class="highlight">공부해줘요</span>
+				</div>
+			</div>
+
+
+			<div class="slide">
+				<h2>동사 + 아/어 주다</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>기본형</th>
+							<th>변화</th>
+							<th>완성</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>가다</td>
+							<td>가 + 줘요</td>
+							<td><b class="highlight">가줘요</b></td>
+						</tr>
+						<tr>
+							<td>먹다</td>
+							<td>먹어 + 줘요</td>
+							<td><b class="highlight">먹어줘요</b></td>
+						</tr>
+						<tr>
+							<td>하다</td>
+							<td>해 + 줘요</td>
+							<td><b class="highlight">해줘요</b></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- 5장. 연습 ① -->
+			<div class="slide">
+				<h2>만들어 보세요</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 75%; margin-top: 20px;">
+					<div style="background: #f8f9fa; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; ">
+						<span>도와요? <b style="color: #e74c3c;">❌</b></span>
+						<span>➔ &nbsp;&nbsp; <b class="highlight"> </b></span>
+					</div>
+
+					<div style="background: #f8f9fa; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between;  ">
+						<span>알려요? <b style="color: #e74c3c;">❌</b></span>
+						<span>➔ &nbsp;&nbsp; <b class="highlight"> </b></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>만들어 보세요</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 75%; margin-top: 20px;">
+					<div style="background: #f8f9fa; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between;  ">
+						<span>도와요? <b style="color: #e74c3c;">❌</b></span>
+						<span>➔ &nbsp;&nbsp; <b class="highlight">도와줘요? ⭕</b></span>
+					</div>
+
+					<div style="background: #f8f9fa; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; ">
+						<span>알려요? <b style="color: #e74c3c;">❌</b></span>
+						<span>➔ &nbsp;&nbsp; <b class="highlight"> </b></span>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>만들어 보세요</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 75%; margin-top: 20px;">
+					<div style="background: #f8f9fa; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between;  ">
+						<span>도와요? <b style="color: #e74c3c;">❌</b></span>
+						<span>➔ &nbsp;&nbsp; <b class="highlight">도와줘요? ⭕</b></span>
+					</div>
+
+					<div style="background: #f8f9fa; padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; ">
+						<span>알려요? <b style="color: #e74c3c;">❌</b></span>
+						<span>➔ &nbsp;&nbsp; <b class="highlight">알려줘요? ⭕</b></span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: STEP 4 - 누가? 누구한테? -->
+			<div class="slide">
+				<h2>STEP 4. 누가? 누구한테?</h2>
+
+				<div class="arrow-diagram">
+					<div class="diagram-box">
+						<div class="diagram-role">行動する人</div>
+						<div class="diagram-name"><span class="highlight">A가</span></div>
+					</div>
+					<div class="diagram-arrow-text">────────➔</div>
+					<div class="diagram-box">
+						<div class="diagram-role">助けを受ける人</div>
+						<div class="diagram-name"><span class="highlight">B한테</span></div>
+					</div>
+				</div>
+
+				<div class="big-text" style="font-size: 1.8rem; margin-top: 15px;">
+					엄마<span class="highlight">가</span> 나<span class="highlight">한테</span> 요리해줘요.
+				</div>
+			</div>
+
+
+
+
+			<div class="slide">
+				<div class="section-title">
+					<div class="section-number">STEP 2</div>
+					<h1>練習してみよう！</h1>
+					<h3>動詞 + 아/어 주다</h3>
+					<p style="margin-top:30px;font-size:32px;">
+						빈칸에 알맞은 표현을 넣어 보세요.
+					</p>
+				</div>
+			</div>
+			<!-- 6장. 연습 ② -->
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">① (가르치다)</div>
+						<div class="quiz-jp">친구가 한국어를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">① (가르치다)</div>
+						<div class="quiz-jp">친구가 한국어를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 친구가 한국어를 <span class="highlight">가르쳐줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">② (만들다)</div>
+						<div class="quiz-jp">엄마가 김치를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">② (만들다)</div>
+						<div class="quiz-jp">엄마가 김치를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 엄마가 김치를 <span class="highlight">만들어줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">③ (읽다)</div>
+						<div class="quiz-jp">언니가 책을 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 　
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">③ (읽다)</div>
+						<div class="quiz-jp">언니가 책을 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 언니가 책을 <span class="highlight">읽어줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">④ (알려주다)</div>
+						<div class="quiz-jp">친구가 한국어를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 　
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">④ (알려주다)</div>
+						<div class="quiz-jp">친구가 한국어를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 친구가 한국어를 <span class="highlight">알려줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑤ (가르치다)</div>
+						<div class="quiz-jp">선생님이 한국어를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑤ (가르치다)</div>
+						<div class="quiz-jp">선생님이 한국어를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 선생님이 한국어를 <span class="highlight">가르쳐줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑥ (사다)</div>
+						<div class="quiz-jp">친구가 커피를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 　
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑥ (사다)</div>
+						<div class="quiz-jp">친구가 커피를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 친구가 커피를 <span class="highlight">사줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑦ (기다리다)</div>
+						<div class="quiz-jp">친구가 저를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 　
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑦ (기다리다)</div>
+						<div class="quiz-jp">친구가 저를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 친구가 저를 <span class="highlight">기다려줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑧ (도와주다)</div>
+						<div class="quiz-jp">동생이 엄마를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 　
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑧ (도와주다)</div>
+						<div class="quiz-jp">동생이 엄마를 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 정답: 동생이 엄마를 <span class="highlight">도와줘요</span>.
+						</div>
+					</div>
+				</div>
+			</div><div class="slide">
+				<h2>빈칸 문제</h2>
+				<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+					<div class="single-quiz-card">
+						<div class="quiz-title">⑨ (찾아주다)</div>
+						<div class="quiz-jp">친구가 길을 ________.</div>
+						<div class="quiz-kr" style="margin-top: 10px;">
+							➔ 　
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><div class="slide">
+			<h2>빈칸 문제</h2>
+			<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+				<div class="single-quiz-card">
+					<div class="quiz-title">⑨ (찾아주다)</div>
+					<div class="quiz-jp">친구가 길을 ________.</div>
+					<div class="quiz-kr" style="margin-top: 10px;">
+						➔ 정답: 친구가 길을 <span class="highlight">찾아줘요</span>.
+					</div>
+				</div>
+			</div>
+		
+	<div class="slide">
+		<h2>빈칸 문제</h2>
+		<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+			<div class="single-quiz-card">
+				<div class="quiz-title">⑩ (열다)</div>
+				<div class="quiz-jp">아빠가 문을 ________.</div>
+				<div class="quiz-kr" style="margin-top: 10px;">
+					➔ 정답: 아빠가 문을 <span class="highlight">열어줘요</span>.
+				</div>
+			</div>
+		</div>
+	</div>　
+
+	<!-- 7장. 이제 사람 넣기 -->
+	<div class="slide">
+		<h2>누가? 누구한테?</h2>
+
+		<div class="arrow-diagram">
+			<div class="diagram-box">
+				<div class="diagram-icon">👩</div>
+				<div class="diagram-name">엄마</div>
+			</div>
+			<div class="diagram-arrow-text">──────────➔</div>
+			<div class="diagram-box">
+				<div class="diagram-icon">👦</div>
+				<div class="diagram-name">아이</div>
+			</div>
+		</div>
+
+		<div class="big-text" style="text-align: left; font-size: 1.3rem;">
+			・<b>누가?</b> ➔ <span class="highlight">엄마</span><br>
+			・<b>누구한테?</b> ➔ <span class="highlight">아이</span><br>
+			<hr style="margin: 10px 0; border: none; border-top: 1px solid #ccc;">
+			<b>문장:</b> <span class="highlight">엄마가 아이한테 만들어줘요.</span>
+		</div>
+	</div>
+
+	<!-- 8장. 문장 공식 -->
+	<div class="slide">
+		<h1>문장 공식</h1>
+
+		<div class="big-text" style="font-size: 2rem; background: #fff3cd; border: 3px solid #ffc107; padding: 25px 40px;">
+			<span class="highlight">A가 B한테</span><br>
+			V-아/어 줘요
+		</div>
+
+		<div style="margin-top: 25px; font-size: 1.4rem;">
+			<b>예:</b> <span class="highlight">친구가 나한테</span> 사진을 찍어줘요.
+		</div>
+	</div>
+
+	<!-- 9장. 방향 게임 -->
+	<div class="slide">
+		<h2>방향 게임 (말해보세요!)</h2>
+
+		<div style="display: flex; flex-direction: column; gap: 20px; width: 85%; margin-top: 10px;">
+			<div style="background: #f8f9fa; padding: 15px; border-radius: 12px; text-align: left;">
+				<p style="font-weight: bold; color: var(--primary-color);">① 👨 ───☕───➔ 👩 (남자가 여자에게 커피를 줌)</p>
+				<p style="font-size: 1.3rem; margin-top: 5px;">➔ 학생: <span class="highlight">남자가 여자한테 커피를 사줘요.</span></p>
+			</div>
+
+			<div style="background: #f8f9fa; padding: 15px; border-radius: 12px; text-align: left;">
+				<p style="font-weight: bold; color: var(--primary-color);">② 👩 ───🍳───➔ 👨 (여자가 남자에게 요리)</p>
+				<p style="font-size: 1.3rem; margin-top: 5px;">➔ 학생: <span class="highlight">여자가 남자한테 요리해줘요.</span></p>
+			</div>
+		</div>
+	</div>
+
+	<!-- 10장. 일본어 비교 -->
+	<div class="slide">
+		<h2>일본어에서는?</h2>
+
+		<div style="display: flex; flex-direction: column; gap: 15px; width: 85%; margin-top: 10px; text-align: left;">
+			<div style="background: #eef5fc; padding: 12px 20px; border-radius: 10px; font-size: 1.2rem;">
+				<b>① 내가 해준다 (나 ➔ 친구)</b> ➔ <span class="highlight">あげる</span>
+			</div>
+			<div style="background: #eef5fc; padding: 12px 20px; border-radius: 10px; font-size: 1.2rem;">
+				<b>② 상대가 나에게 해준다 (친구 ➔ 나)</b> ➔ <span class="highlight">くれる</span>
+			</div>
+			<div style="background: #eef5fc; padding: 12px 20px; border-radius: 10px; font-size: 1.2rem;">
+				<b>③ 내가 도움을 받는다 (나  친구)</b> ➔ <span class="highlight">もらう</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 11장. 한국어에서는? -->
+	<div class="slide">
+		<h2>한국어에서는? (중요 정리)</h2>
+
+		<div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0;">
+			<div style="background: #f8f9fa; padding: 20px; border-radius: 12px; font-size: 1.3rem;">
+				<b>일본어:</b><br>
+				あげる<br>
+				くれる<br>
+				もらう
+			</div>
+
+			<div style="font-size: 2.5rem; color: var(--accent-color); font-weight: bold;">➔</div>
+
+			<div style="background: #fff3cd; padding: 20px 30px; border-radius: 12px; font-size: 1.5rem; border: 2px solid #ffc107;">
+				<b>한국어:</b><br>
+				<span class="highlight">-아/어 주다</span><br>
+				<small style="font-size: 1rem; color: #666;">(누가 / 누구한테)</small>
+			</div>
+		</div>
+	</div>
+
+	<!-- 12장. 말하기 연습 & 마지막 슬라이드 -->
+	<div class="slide">
+		<h2>말하기 연습 & 오늘 배운 것</h2>
+
+		<div style="display: flex; justify-content: space-between; gap: 20px; width: 90%; text-align: left;">
+			<div style="background: #f8f9fa; padding: 15px; border-radius: 12px; flex: 1;">
+				<p style="font-weight: bold; color: var(--primary-color);">🗣️ 질문에 대답하세요</p>
+				<ul style="font-size: 1rem; line-height: 1.8; margin-left: 20px; margin-top: 5px;">
+					<li>누가 요리해줬어요?</li>
+					<li>누가 한국어를 가르쳐줬어요?</li>
+					<li>최근에 누가 도와줬어요?</li>
+					<li>누구한테 선물을 줬어요?</li>
+				</ul>
+			</div>
+
+			<div style="background: #fff3cd; padding: 15px; border-radius: 12px; flex: 1; border: 2px solid #ffc107;">
+				<p style="font-weight: bold; color: #856404;">✅ 오늘 배운 것</p>
+				<ul style="font-size: 1rem; line-height: 1.8; margin-left: 20px; margin-top: 5px;">
+					<li><b>동사 + 아/어 주다</b></li>
+					<li><b>A가 B한테 해줘요</b></li>
+					<li><b>행동도 선물이 될 수 있어요</b></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	</div>
+
+	<!-- 하단 제어바 -->
+	<div class="controls-bar">
+		<button class="btn" id="prevBtn">&lt;</button>
+		<div class="page-indicator" id="pageIndicator"></div>
+		<button class="btn" id="nextBtn">&gt;</button>
+	</div>
+	</div>
+
+	<!-- Modal (Ctrl + M) -->
+	<div class="modal-overlay" id="extraModal">
+		<div class="modal-container">
+			<div class="modal-header">
+				<div class="modal-title">🔥 말하기 특훈 (10問：-아/어 주다)</div>
+				<button class="close-btn" id="closeModalBtn">閉じる (ESC)</button>
+			</div>
+			<div class="slide-wrapper" id="extraSlideWrapper">
+
+
+				<!-- Extra 1 -->
+				<div class="slide active">
+					<h2>特訓 1/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">変形してみましょう（가다）</div>
+						<div class="quiz-jp">가요 ➔ ?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">가줘요</span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 2 -->
+				<div class="slide">
+					<h2>特訓 2/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">変形してみましょう（오다）</div>
+						<div class="quiz-jp">와요 ➔ ?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">와줘요</span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 3 -->
+				<div class="slide">
+					<h2>特訓 3/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">変形してみましょう（먹다）</div>
+						<div class="quiz-jp">먹어요 ➔ ?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">먹어줘요</span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 4 -->
+				<div class="slide">
+					<h2>特訓 4/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">変形してみましょう（만들다）</div>
+						<div class="quiz-jp">만들어요 ➔ ?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">만들어줘요</span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 5 -->
+				<div class="slide">
+					<h2>特訓 5/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">変形してみましょう（돕다）</div>
+						<div class="quiz-jp">도와요 ➔ ?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">도와줘요</span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 6 -->
+				<div class="slide">
+					<h2>特訓 6/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">変形してみましょう（읽다）</div>
+						<div class="quiz-jp">읽어요 ➔ ?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">읽어줘요</span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 7 -->
+				<div class="slide">
+					<h2>特訓 7/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">答えてみましょう（친구가 도와줬어요）</div>
+						<div class="quiz-jp">누가 도와줬어요?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">친구가</span> 도와줬어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 8 -->
+				<div class="slide">
+					<h2>特訓 8/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">答えてみましょう（선생님이 가르쳐줬어요）</div>
+						<div class="quiz-jp">누가 가르쳐줬어요?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">선생님이</span> 가르쳐줬어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 9 -->
+				<div class="slide">
+					<h2>特訓 9/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">答えてみましょう（엄마가 요리해줬어요）</div>
+						<div class="quiz-jp">누가 요리해줬어요?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">엄마가</span> 요리해줬어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 10 -->
+				<div class="slide">
+					<h2>特訓 10/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">答えてみましょう（동생이 찍어줬어요）</div>
+						<div class="quiz-jp">누가 사진을 찍어줬어요?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ <span class="highlight">동생이</span> 찍어줬어요.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 1 -->
+				<div class="slide active">
+					<h2>特訓 1/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q1. 質問に答えてみましょう！（엄마 / 요리）</div>
+						<div class="quiz-jp">「누가 요리해줬어요?（誰が料理してくれましたか？）」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 엄마가 <span class="highlight">요리해줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 2 -->
+				<div class="slide">
+					<h2>特訓 2/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q2. 質問に答えてみましょう！（친구가 / 한국어）</div>
+						<div class="quiz-jp">「누가 한국어를 가르쳐줬어요?（誰が韓国語を教えてくれましたか？）」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 친구가 한국어를 <span class="highlight">가르쳐줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 3 -->
+				<div class="slide">
+					<h2>特訓 3/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q3. 質問に答えてみましょう！（선생님이）</div>
+						<div class="quiz-jp">「최근에 누가 도와줬어요?（最近誰が助けてくれましたか？）」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 선생님이 <span class="highlight">도와줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 4 -->
+				<div class="slide">
+					<h2>特訓 4/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q4. 質問に答えてみましょう！（친구한테）</div>
+						<div class="quiz-jp">「누구한테 선물을 줬어요?（誰にプレゼントをあげましたか？）」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 친구한테 선물을 <span class="highlight">줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide">
+					<h2>特訓 4/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q4. 質問に答えてみましょう！（동료한테）</div>
+						<div class="quiz-jp">「누구한테 해 줬어요?（誰にやってあげましたか？）」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 동료<span class="highlight">한테</span> 선물을 <span class="highlight">줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+
+
+				<!-- Extra 5 -->
+				<div class="slide">
+					<h2>特訓 5/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q5. 韓国語に変えてみましょう。（남자가 / 여자한테 / 커피）</div>
+						<div class="quiz-jp">「男の人が女の人にコーヒーを買ってあげます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 남자가 여자한테 커피를 <span class="highlight">사줘요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 6 -->
+				<div class="slide">
+					<h2>特訓 6/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q6. 韓国語に変えてみましょう。（여자가 / 남자한테 / 요리）</div>
+						<div class="quiz-jp">「女の人が男の人に料理してあげます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 여자가 남자한테 <span class="highlight">요리해줘요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 7 -->
+				<div class="slide">
+					<h2>特訓 7/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q7. 韓国語に変えてみましょう。（엄마가 / 김치）</div>
+						<div class="quiz-jp">「ママがキムチを作ってくれます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 엄마가 김치를 <span class="highlight">만들어줘요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 8 -->
+				<div class="slide">
+					<h2>特訓 8/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q8. 韓国語に変えてみましょう。（동생이 / 사진）</div>
+						<div class="quiz-jp">「妹/弟が写真を撮ってくれました。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 동생이 사진을 <span class="highlight">찍어줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 9 -->
+				<div class="slide">
+					<h2>特訓 9/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q9. 韓国語に変えてみましょう。（친구가 / 길）</div>
+						<div class="quiz-jp">「友達が道を教えてくれました。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 친구가 길을 <span class="highlight">알려줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Extra 10 -->
+				<div class="slide">
+					<h2>特訓 10/10</h2>
+					<div class="single-quiz-card extra-quiz-card">
+						<div class="quiz-title">Q10. 韓国語に変えてみましょう。（선생님이 / 설명）</div>
+						<div class="quiz-jp">「先生が説明してくれました。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn" title="クリックして正解を確認">➔</button>
+							<span class="answer-text hidden">
+								➔ 선생님이 <span class="highlight">설명해줬어요</span>.
+							</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="controls-bar">
+				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
+				<div class="page-indicator" id="extraPageIndicator"></div>
+				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
+		const prevBtn = document.getElementById('prevBtn');
+		const nextBtn = document.getElementById('nextBtn');
+		const pageIndicator = document.getElementById('pageIndicator');
+		let currentMainSlide = 0;
+
+		function updateMainSlide() {
+			mainSlides.forEach((slide, index) => {
+				if (index === currentMainSlide) slide.classList.add('active');
+				else slide.classList.remove('active');
+			});
+			pageIndicator.textContent = `${currentMainSlide + 1} / ${mainSlides.length}`;
+			prevBtn.disabled = currentMainSlide === 0;
+			nextBtn.disabled = currentMainSlide === mainSlides.length - 1;
+		}
+
+		prevBtn.addEventListener('click', () => { if (currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); } });
+		nextBtn.addEventListener('click', () => { if (currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); } });
+
+		const extraModal = document.getElementById('extraModal');
+		const closeModalBtn = document.getElementById('closeModalBtn');
+		const extraSlides = document.querySelectorAll('#extraSlideWrapper .slide');
+		const extraPrevBtn = document.getElementById('extraPrevBtn');
+		const extraNextBtn = document.getElementById('extraNextBtn');
+		const extraPageIndicator = document.getElementById('extraPageIndicator');
+		let currentExtraSlide = 0;
+		let isModalOpen = false;
+
+		function updateExtraSlide() {
+			extraSlides.forEach((slide, index) => {
+				if (index === currentExtraSlide) slide.classList.add('active');
+				else slide.classList.remove('active');
+			});
+			extraPageIndicator.textContent = `${currentExtraSlide + 1} / ${extraSlides.length}`;
+			extraPrevBtn.disabled = currentExtraSlide === 0;
+			extraNextBtn.disabled = currentExtraSlide === extraSlides.length - 1;
+		}
+
+		function openModal() { isModalOpen = true; extraModal.classList.add('active'); currentExtraSlide = 0; updateExtraSlide(); }
+		function closeModal() { isModalOpen = false; extraModal.classList.remove('active'); }
+		closeModalBtn.addEventListener('click', closeModal);
+
+		extraPrevBtn.addEventListener('click', () => { if (currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); } });
+		extraNextBtn.addEventListener('click', () => { if (currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); } });
+
+		document.addEventListener('keydown', (e) => {
+			if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+				e.preventDefault();
+				if (isModalOpen) closeModal(); else openModal();
+				return;
+			}
+			if (e.key === 'Escape' && isModalOpen) { closeModal(); return; }
+
+			if (isModalOpen) {
+				if (e.key === 'ArrowLeft' && currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); }
+				else if (e.key === 'ArrowRight' && currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); }
+			} else {
+				if (e.key === 'ArrowLeft' && currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); }
+				else if (e.key === 'ArrowRight' && currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); }
+			}
+		});
+
+		updateMainSlide();
+
+		document.querySelectorAll('.arrow-toggle-btn').forEach((btn) => {
+			btn.addEventListener('click', () => {
+				const answerText = btn.nextElementSibling;
+				answerText.classList.toggle('hidden');
+				btn.classList.toggle('open');
+			});
+		});</script>
+</body>
+</html>
+
+
+<!--공항에서그런이야기를들은적있어요. 공항직원이 스티커는이쪽 스티커없는건저쪽!
+우리가생각하는 스티커좀다르죠 , 이거에대해서오늘알아볼거에요. 일본에서는 스티커라는말을일상생활에서-->
