@@ -335,35 +335,30 @@
 			color: #888;
 		}
 		/* モダル用画像スタイル */
-        /* 퀴즈 카드 내부 세로 정렬 지정 */
-        .single-quiz-card {
-            display: flex;
-            flex-direction: column; /* 요소들을 위에서 아래로 세로 배치 */
-            align-items: center;
-            width: 100%;
-            box-sizing: border-box;
-        }
+       /* 이미지 컨테이너 (좌측 영역) */
+.quiz-img-container {
+	width: 50%; /* 원하는 이미지 영역 비율 (예: 40% ~ 50%) */
+	height: 250px; /* 고정 높이 지정 */
+	border-radius: 10px;
+	overflow: hidden;
+	background-color: #f0f0f0;
+}
 
-        /* 이미지 컨테이너 */
-        .quiz-img-container {
-            width: 100%;
-            max-height: 200px; /* 카드를 넘치지 않도록 높이 제한 */
-            margin-bottom: 15px;
-            overflow: hidden;
-            border-radius: 10px;
+/* 이미지 (검은 여백 제거 및 프레임 채우기) */
+.quiz-img-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* 비율을 유지하면서 검은 여백 없이 영역을 완전히 채움 */
+	display: block;
+}
+        /* 우측 텍스트 영역 */
+        .quiz-content-wrap {
+            margin-left: auto; /* 왼쪽 여백을 최대로 늘려 오른쪽 끝으로 밀기 */
             display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
+            flex-direction: column;
+            align-items: flex-end; /* 내부 요소(텍스트, 버튼) 오른쪽 정렬 */
+            text-align: right; /* 텍스트 줄바꿈 시 오른쪽 정렬 */
         }
-
-            /* 이미지 속성 지정 */
-            .quiz-img-container img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain; /* 이미지가 잘리지 않고 전체가 들어오도록 설정 */
-                display: block;
-            }
 	</style>
 </head>
 <body>
@@ -1361,10 +1356,13 @@
 			</div>
 
 			<div class="slide-wrapper" id="extraSlideWrapper">
+				<!-- 1번째 슬라이드 (여기 닫는 태그 </div>가 누락되어 있었습니다) -->
 				<div class="slide active">
 					<div class="single-quiz-card">
 						<div class="quiz-img-container">
 							<img src="1.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
 							<div class="quiz-jp">「手を洗って、ご飯を食べます。」</div>
 							<div class="quiz-kr-wrap">
 								<button class="arrow-toggle-btn">➔</button>
@@ -1373,219 +1371,324 @@
 						</div>
 					</div>
 				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="2.jpg" alt="問題画像">
-						<div class="quiz-jp">「服を着て、出かけます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">옷을 <span class="highlight">입고</span> 나가요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「掃除をして、洗濯をします。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">청소를 <span class="highlight">하고</span> 빨래를 해요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「コーヒーを飲んで、話します。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">커피를 <span class="highlight">마시고</span> 이야기해요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「宿題をして、寝ます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">숙제를 <span class="highlight">하고</span> 자요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「バスに乗って、行きます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">버스를 <span class="highlight">타고</span> 가요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「買い物をして、家に帰ります。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">쇼핑을 <span class="highlight">하고</span> 집에 와요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「Youtubeを見て、休んでます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">유튜브(Youtube)를 <span class="highlight">보고</span> 쉬어요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「メールを送って、待ちます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">문자를 <span class="highlight">보내고</span> 기다려요.</span>
-						</div>
-					</div>
-				</div>
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「写真を撮って、アップします。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">사진을 <span class="highlight">찍고</span> 올려요.</span>
-						</div>
-					</div>
-				</div>
 
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「ご飯を食べて、学校へ行きます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">밥을 <span class="highlight">먹고</span> 학교에 가요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「起きて、顔を洗います。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">일어나고 세수해요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「コーヒーを飲んで、仕事します。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">커피를 <span class="highlight">마시고</span> 일해요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「本を読んで、寝ます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">책을 <span class="highlight">읽고</span> 자요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「運動して、シャワーを浴びます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">운동하고 샤워해요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「友達に会って、カフェに行きます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">친구를 <span class="highlight">만나고</span> 카페에 가요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<img src="20.jpg" alt="問題画像">
-					<div class="single-quiz-card">
-						<div class="quiz-jp">「音楽を聞いて、勉強します。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">음악을 <span class="highlight">듣고</span> 공부해요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「写真を撮って、友達に送ります。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">사진을 <span class="highlight">찍고</span> 친구에게 보내요.</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="slide"> 
-					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「買い物して、家に帰ります。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">쇼핑하고 집에 가요.</span>
-						</div>
-					</div>
-				</div>
-
+				<!-- 2번째 슬라이드 -->
 				<div class="slide">
-					<h2>問題 30/30</h2>
 					<div class="single-quiz-card">
-
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「料理して、ご飯を食べます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">요리하고 밥을 먹어요.</span>
+						<div class="quiz-img-container">
+							<img src="2.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「服を着て、出かけます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">옷을 <span class="highlight">입고</span> 나가요.</span>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 
+				<!-- 3번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="3.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「掃除をして、洗濯をします。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">청소를 <span class="highlight">하고</span> 빨래를 해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 4번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="4.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「コーヒーを飲んで、話します。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">커피를 <span class="highlight">마시고</span> 이야기해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 5번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="5.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「宿題をして、寝ます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">숙제를 <span class="highlight">하고</span> 자요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 6번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「バスに乗って、行きます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">버스를 <span class="highlight">타고</span> 가요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 7번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「買い物をして、家に帰ります。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">쇼핑을 <span class="highlight">하고</span> 집에 와요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 8번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「Youtubeを見て、休んでます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">유튜브(Youtube)를 <span class="highlight">보고</span> 쉬어요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 9번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「メールを送って、待ちます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">문자를 <span class="highlight">보내고</span> 기다려요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 10번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「写真を撮って、アップします。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">사진을 <span class="highlight">찍고</span> 올려요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 11번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「ご飯を食べて、学校へ行きます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">밥을 <span class="highlight">먹고</span> 학교에 가요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 12번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「起きて、顔を洗います。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">일어나고 세수해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 13번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「コーヒーを飲んで、仕事します。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">커피를 <span class="highlight">마시고</span> 일해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 14번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「本を読んで、寝ます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">책을 <span class="highlight">읽고</span> 자요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 15번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「運動して、シャワーを浴びます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">운동하고 샤워해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 16번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「友達に会って、カフェに行きます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">친구를 <span class="highlight">만나고</span> 카페에 가요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 17번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「音楽を聞いて、勉強します。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">음악을 <span class="highlight">듣고</span> 공부해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 18번째 슬라이드 -->
+				<div class="slide">
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「写真を撮って、友達に送ります。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">사진을 <span class="highlight">찍고</span> 친구에게 보내요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 19번째 슬라이드 -->
+				<div class="slide">
+					
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「料理して、ご飯を食べます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">요리하고 밥을 먹어요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 20번째 슬라이드 -->
+				<div class="slide">
+					<h2>問題 20/20</h2>
+					<div class="single-quiz-card">
+						<div class="quiz-img-container">
+							<img src="20.jpg" alt="問題画像">
+						</div>
+						<div class="quiz-content-wrap">
+							<div class="quiz-jp">「ショッピングして、家に帰ります。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">쇼핑하고 집에 가요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div><!-- #extraSlideWrapper 닫기 -->
+			<!-- 컨트롤 바는 슬라이드 외부(모달 컨테이너 내부)에 독립적으로 위치 -->
 			<div class="controls-bar">
 				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
-				<div class="page-indicator" id="extraPageIndicator">1 / 10</div>
+				<div class="page-indicator" id="extraPageIndicator">1 / 20</div>
 				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
 			</div>
-		</div>
-	</div>
+		</div><!-- .modal-container 닫기 -->
+	</div><!-- .modal-overlay 닫기 -->
 
-	<script>// 메인 슬라이드 제어
+	<script>
+	// 메인 슬라이드 제어
 		const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
 		const prevBtn = document.getElementById('prevBtn');
 		const nextBtn = document.getElementById('nextBtn');
