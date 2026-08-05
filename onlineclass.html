@@ -2479,13 +2479,18 @@
               <td>2026.07.01</td>
               <td><button class="comment-btn" onclick="showToast('다운로드가 완료되었습니다.')">받기</button></td>
             </tr>
-            <tr>
-              <td>3</td>
-              <td>일본 여행 시 요긴하게 쓰는 식당 주문 만능 표현 가이드</td>
-              <td>2026.06.15</td>
-              <td><button class="comment-btn" onclick="showToast('다운로드가 완료되었습니다.')">받기</button></td>
-            </tr>
-          </tbody>
+						<tr>
+							<td>3</td>
+							<td>일본 여행 시 요긴하게 쓰는 식당 주문 만능 표현 가이드</td>
+							<td>2026.06.15</td>
+							<td><button class="comment-btn" onclick="showToast('다운로드가 완료되었습니다.')">받기</button></td>
+						</tr>
+						<tr>
+							<td colspan="4" style="text-align: center; padding: 20px;">
+								<button class="btn-transparent" onclick="goToPostBuy()">더 많은 자료 보러가기</button>
+							</td>
+						</tr>
+					</tbody>
         </table>
       </div>
     </section>
@@ -3202,14 +3207,26 @@
     function setRole(role) {
       const navGuest = document.getElementById('nav-guest');
       const navStudent = document.getElementById('nav-student');
+      const guestSnsWrap = navGuest.querySelector('.sidebar-sns-wrap');
+			const guestLoginWrap = navGuest.querySelector('.nav-btn-wrapper');
+
       if (role === 'student') {
-        navGuest.classList.add('hidden');
+        navGuest.classList.remove('hidden');
         navStudent.classList.remove('hidden');
+
+				// 로그인 상태에서는 게스트 하단(중복 SNS/로그인 버튼) 숨김
+				if (guestSnsWrap) guestSnsWrap.classList.add('hidden');
+				if (guestLoginWrap) guestLoginWrap.classList.add('hidden');
+
         showSection('reserve');
         loadMyPageData();
         // fetch assigned teacher available slots for this student
         fetchTeacherSlots();
       } else {
+        // 비로그인 상태에서는 게스트 하단 노출 복구
+				if (guestSnsWrap) guestSnsWrap.classList.remove('hidden');
+				if (guestLoginWrap) guestLoginWrap.classList.remove('hidden');
+
         navGuest.classList.remove('hidden');
         navStudent.classList.add('hidden');
         showSection('main');
@@ -4518,7 +4535,16 @@
 		function closeQuizModal() {
 			document.getElementById('semo-quiz-modal').classList.add('hidden');
 		}
-  </script>
+
+		function goToPostBuy() {
+			if (!isStudentLoggedIn()) {
+				showToast('자료실 접근을 위해 로그인이 필요합니다.');
+				openModal('login');
+				return;
+			}
+			window.open('post/postbuy.html', '_blank');
+		}
+	</script>
 
 </body>
 </html>
