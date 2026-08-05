@@ -3207,14 +3207,26 @@
     function setRole(role) {
       const navGuest = document.getElementById('nav-guest');
       const navStudent = document.getElementById('nav-student');
+      const guestSnsWrap = navGuest.querySelector('.sidebar-sns-wrap');
+			const guestLoginWrap = navGuest.querySelector('.nav-btn-wrapper');
+
       if (role === 'student') {
-        navGuest.classList.add('hidden');
+        navGuest.classList.remove('hidden');
         navStudent.classList.remove('hidden');
+
+				// 로그인 상태에서는 게스트 하단(중복 SNS/로그인 버튼) 숨김
+				if (guestSnsWrap) guestSnsWrap.classList.add('hidden');
+				if (guestLoginWrap) guestLoginWrap.classList.add('hidden');
+
         showSection('reserve');
         loadMyPageData();
         // fetch assigned teacher available slots for this student
         fetchTeacherSlots();
       } else {
+        // 비로그인 상태에서는 게스트 하단 노출 복구
+				if (guestSnsWrap) guestSnsWrap.classList.remove('hidden');
+				if (guestLoginWrap) guestLoginWrap.classList.remove('hidden');
+
         navGuest.classList.remove('hidden');
         navStudent.classList.add('hidden');
         showSection('main');
