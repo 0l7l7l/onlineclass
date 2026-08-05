@@ -321,6 +321,7 @@
 		let currentCategory = '일상회화';
 		let carouselOffset = 0; // 슬라이드 오프셋
 		let selectedLesson = null;
+		let purchasedPdfMap = {};
 
 		const pricePerBook = 3000;
 
@@ -363,9 +364,34 @@
 			}
 		}
 
+		async function fetchPdfAccess() {
+			try {
+				const response = await fetch('../api/pdf_access.php');
+				const text = await response.text();
+				const result = tryParseApiJson(text);
+
+				if (!response.ok || !result || !result.success) {
+					purchasedPdfMap = {};
+					return;
+				}
+
+				const map = {};
+				(result.data?.accesses || []).forEach(item => {
+					if (item && item.title && item.expired_at) {
+						map[item.title] = item.expired_at;
+					}
+				});
+				purchasedPdfMap = map;
+			} catch (err) {
+				console.error(err);
+				purchasedPdfMap = {};
+			}
+		}
+
 		// Initialize SPA
 		async function init() {
 			await fetchUserData();
+     await fetchPdfAccess();
 			renderSubNav();
 			renderCards();
 		}
@@ -402,19 +428,19 @@
       renderCards();
     }
 
-		function checkPurchase(title) {
-			const purchaseTime = localStorage.getItem(`pdf_purchase_${title}`);
-			if (!purchaseTime) return false;
-			const hoursDiff = (new Date().getTime() - parseInt(purchaseTime, 10)) / (1000 * 60 * 60);
-			if (hoursDiff <= 48) {
-				return true;
-			} else {
-				localStorage.removeItem(`pdf_purchase_${title}`);
-				return false;
-			}
+   function checkPurchase(title) {
+			const expiredAt = purchasedPdfMap[title];
+			if (!expiredAt) return false;
+			return new Date(expiredAt).getTime() > Date.now();
 		}
 
 		function downloadPDF(title) {
+      if (!checkPurchase(title)) {
+				alert('구매 권한이 없거나 이용 시간이 만료되었습니다. 다시 구매해 주세요.');
+				renderCards();
+				return;
+			}
+
 			alert(`[${title}] 회화 교재 PDF 다운로드를 시작합니다.\n(인쇄 화면을 통해 PDF로 저장해주세요)`);
 			const originalTitle = document.title;
 			document.title = title;
@@ -470,31 +496,41 @@
 
 		// Payment Processing Logic
 		async function handleSemoPayment() {
-			if (userSemo >= pricePerBook) {
-				// 서버 연동 시에는 api로 결제 요청을 보내야함 (임시로 클라이언트에서 차감)
-				try {
-					const form = new URLSearchParams();
-					form.append('amount', String(pricePerBook));
-					form.append('item_title', selectedLesson);
-					await fetch('../api/buy_pdf.php', {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-							body: form.toString()
-					}).catch(e => null);
-				} catch (e) {
-					console.error(e);
+     if (userSemo < pricePerBook) {
+				alert('세모 잔액이 부족합니다. 세모를 충전하고 오세요.');
+				return;
+			}
+
+			try {
+				const form = new URLSearchParams();
+				form.append('item_title', selectedLesson);
+
+				const response = await fetch('../api/buy_pdf.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+					body: form.toString()
+				});
+
+				const raw = await response.text();
+				const result = tryParseApiJson(raw);
+
+				if (!response.ok || !result || !result.success) {
+					alert((result && result.message) || '구매 처리 중 오류가 발생했습니다.');
+					return;
 				}
 
-				userSemo -= pricePerBook;
+				userSemo = parseInt(result.data?.balance ?? userSemo, 10) || userSemo;
 				document.getElementById('semo-balance').innerText = userSemo.toLocaleString();
-				localStorage.setItem(`pdf_purchase_${selectedLesson}`, new Date().getTime());
 
-				alert(`[${selectedLesson}] 구매가 완료되었습니다!\n48시간 내에 언제든 다운로드가 가능합니다.`);
-				closeModal();
+				await fetchPdfAccess();
 				renderCards();
+				closeModal();
+
+				alert(result.message || `[${selectedLesson}] 구매가 완료되었습니다!`);
 				downloadPDF(selectedLesson);
-			} else {
-				alert('세모 잔액이 부족합니다. 세모를 충전하고 오세요.');
+			} catch (e) {
+				console.error(e);
+				alert('구매 처리 중 네트워크 오류가 발생했습니다.');
 			}
 		}
 
