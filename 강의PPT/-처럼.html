@@ -1,0 +1,932 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語文法：~처럼（〜のように・〜みたいに）</title>
+	<style>
+		:root {
+			--bg-color: #f4f7f6;
+			--card-bg: #ffffff;
+			--primary-color: #8e44ad;
+			--accent-color: #e74c3c;
+			--secondary-color: #2ecc71;
+			--text-color: #333333;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Hiragino Sans', 'Meiryo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		.presentation-container {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+			max-width: 1280px;
+			max-height: 720px;
+			background-color: var(--card-bg);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 30px 40px 20px 40px;
+		}
+
+		.slide-wrapper {
+			position: relative;
+			flex: 1;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 10px 0;
+		}
+
+			.slide.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		h1 {
+			font-size: 2.8rem;
+			color: var(--primary-color);
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			border-bottom: 4px solid var(--primary-color);
+			padding-bottom: 8px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 1.3rem;
+			line-height: 1.6;
+			margin-bottom: 12px;
+		}
+
+		.highlight {
+			color: var(--accent-color);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.5rem;
+			background: #f4ecf7;
+			padding: 15px 25px;
+			border-radius: 12px;
+			margin: 10px 0;
+			display: inline-block;
+			text-align: left;
+			width: 85%;
+		}
+
+		.use-case-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 15px;
+			width: 85%;
+			margin-top: 15px;
+		}
+
+		.use-case-card {
+			background: #f8f9fa;
+			border-top: 4px solid var(--primary-color);
+			padding: 15px;
+			border-radius: 8px;
+			font-size: 1.1rem;
+			text-align: left;
+		}
+		.vocab-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 15px;
+			width: 90%;
+			margin-top: 15px;
+		}
+
+		.vocab-card {
+			background: #f8f9fa;
+			border: 1px solid #ddd;
+			padding: 12px;
+			border-radius: 8px;
+			font-size: 1.1rem;
+		}
+
+		table {
+			width: 90%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			font-size: 1.1rem;
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 10px 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 20px 25px;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.quiz-jp {
+			font-size: 1.5rem;
+			font-weight: bold;
+			margin-bottom: 12px;
+		}
+
+		.quiz-kr {
+			font-size: 1.7rem;
+			color: var(--primary-color);
+			background: #ffffff;
+			padding: 12px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		.controls-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			height: 60px;
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid #eee;
+			z-index: 10;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			font-size: 1.5rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.btn:hover {
+				background-color: #6c3483;
+			}
+
+			.btn:disabled {
+				background-color: #ccc;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: #666;
+		}
+
+		.note-box {
+			background: #eaf2f8;
+			border-left: 8px solid #3498db;
+			padding: 15px 25px;
+			border-radius: 12px;
+			width: 85%;
+			text-align: left;
+			font-size: 1.15rem;
+			line-height: 1.7;
+		}
+
+		/* Modal Styles */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+			.modal-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		.modal-container {
+			position: relative;
+			width: 85vw;
+			height: 85vh;
+			max-width: 1200px;
+			max-height: 680px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 30px 40px 20px 40px;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+			border: 4px solid var(--secondary-color);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.modal-title {
+			font-size: 1.8rem;
+			color: var(--secondary-color);
+			font-weight: bold;
+		}
+
+		.close-btn {
+			background: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.quiz-kr-wrap {
+			margin-top: 15px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 1.7rem;
+		}
+
+		.arrow-toggle-btn {
+			background-color: var(--secondary-color);
+			color: white;
+			border: none;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			font-size: 1.4rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: all 0.2s ease;
+		}
+
+			.arrow-toggle-btn.open {
+				transform: rotate(90deg);
+				background-color: #e74c3c;
+			}
+
+		.answer-text.hidden {
+			display: none;
+		}
+
+		.shortcut-hint {
+			position: absolute;
+			bottom: 10px;
+			right: 20px;
+			font-size: 0.85rem;
+			color: #888;
+		}
+
+		/* モダル用画像スタイル */
+		/* Quiz Card Laytout Modification (2-column layout) */
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 20px 25px;
+			width: 90%;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+			/* 2열 가로 배치 핵심 설정 */
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 20px;
+		}
+
+		/* 이미지 컨테이너 (좌측) */
+		.quiz-img-container {
+			flex: 0 0 40%; /* 좌측 영역 너비 40% 고정 */
+			max-height: 280px;
+			overflow: hidden;
+			border-radius: 10px;
+			background-color: #f0f0f0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.quiz-img-container img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover; /* 비율을 유지하면서 상자에 맞춤 */
+				display: block;
+			}
+
+		/* 문제 및 정답 영역 (우측) */
+		.quiz-content-right {
+			flex: 1; /* 나머지 너비 차지 */
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			text-align: left;
+		}
+
+		/* 이미지가 없는 경우 우측 영역이 100%를 쓰도록 조절 */
+		.single-quiz-card.no-img .quiz-content-right {
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="shortcut-hint">💡 Ctrl + M : 穴埋め特訓モード（10問）</div>
+
+	<div class="presentation-container">
+		<div class="slide-wrapper" id="mainSlideWrapper">
+
+			<!-- Slide 1: 表紙 -->
+			<div class="slide active">
+				<h1>〜のように / 〜みたいに</h1>
+				<p style="font-size: 1.8rem; margin-top: 20px;">
+					例えの表現 <span class="highlight">「~처럼」</span> を学ぼう！
+				</p>
+			</div>
+
+			<!-- Slide 2: 作り方と基本の意味 -->
+			<div class="slide">
+				<h2>「~처럼」の作り方と意味</h2>
+				<div class="big-text" style="background:#fef9e7; border: 2px solid #f1c40f; text-align:center;">
+					<b>[名詞] + 처럼</b> ＝ 〜のように / 〜みたいに
+				</div>
+				<p style="margin-top:10px;">「Aと<b>同じやり方で</b>」または「Aと<b>同じ姿で</b>」という意味です！</p>
+			</div>
+			<div class="slide">
+				<h2>「~처럼」の作り方と意味</h2>
+				<div class="big-text">
+					• 엄마<span class="highlight">처럼</span> 요리해요.<br>
+					<small style="font-size: 1.05rem; color: #666;">（お母さんのように料理します ➔ 母と同じやり方で料理する）</small>
+				</div>
+			</div>
+
+			<!-- Slide 3: どんな場面で使う？ -->
+			<div class="slide">
+				<h2>「~처럼」を使う3つの場面</h2>
+				<div class="use-case-grid">
+					<div class="use-case-card">
+						<b>① 行動を真似る</b><br>
+						<span style="font-size:0.9rem; color:#666;">[人] + 처럼 + 動詞</span><br><br>
+						• 엄마<span class="highlight">처럼</span> 요리해요.<br>
+						• 친구<span class="highlight">처럼</span> 이야기해요.<br>
+						• 선생님<span class="highlight">처럼</span> 설명해요.
+					</div>
+					<div class="use-case-card">
+						<b>② 姿・状態が似ている</b><br>
+						<span style="font-size:0.9rem; color:#666;">[名詞] + 처럼 + 形容詞</span><br><br>
+						• 아기<span class="highlight">처럼</span> 귀여워요.<br>
+						• 배우<span class="highlight">처럼</span> 잘생겼어요.<br>
+						• 천사<span class="highlight">처럼</span> 착해요.
+					</div>
+					<div class="use-case-card">
+						<b>③ 物や自然に例える</b><br>
+						<span style="font-size:0.9rem; color:#666;">[自然/物] + 처럼</span><br><br>
+						• 눈<span class="highlight">처럼</span> 하얘요.<br>
+						<small style="color:#666;">（雪のように白い）</small><br><br>
+						• 호수<span class="highlight">처럼</span> 조용해요.<br>
+						<small style="color:#666;">（湖のように静か）</small>
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 4: 単語確認 -->
+			<div class="slide">
+				<h2>今日の単語</h2>
+				<div class="vocab-grid">
+					<div class="vocab-card"><b>잘생겼어요</b> (かっこいい)</div>
+					<div class="vocab-card"><b>웃다</b> (笑う)</div>
+					<div class="vocab-card"><b>웃기다</b> (笑える)</div>
+					<div class="vocab-card"><b>조용하다</b> (静かな)</div>
+					<div class="vocab-card"><b>하얘요</b> (白い)</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>今日の単語</h2>
+				<div class="vocab-grid">
+					<div class="vocab-card"><b>쫀득쫀득하다</b> (モチモチだ)</div>
+					<div class="vocab-card"><b>끈적끈적하다</b> (ねばねば・ベタベタ)</div>
+				</div>
+			</div>
+			<!-- Slide :使う単語 -->
+
+			<div class="slide">
+				<div class="big-text" style="background:#fef9e7; border: 2px solid #f1c40f; text-align:center;">
+
+					<h2>今回使う動詞練習</h2>
+					<table style="margin-top:15px;">
+						<thead>
+							<tr>
+								<th>意味</th>
+								<th>基本形</th>
+								<th>해요体</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>動く </td>
+								<td>움직이다 </td>
+								<td>  </td>
+							</tr>
+							<tr>
+								<td>なる </td>
+								<td>되다 </td>
+								<td> </td>
+							</tr>
+							<tr>
+								<td>見た目している</td>
+								<td>(처럼)생기다 </td>
+								<td> </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Slide 1: 表紙 -->
+			<div class="slide active">
+				<h1>〜のように / 〜みたいに</h1>
+				<p style="font-size: 1.8rem; margin-top: 20px;">
+					<span class="highlight">「~처럼」</span> 例文でニュアンスを掴もう！
+				</p>
+			</div>
+
+			<!-- Slide 4: 例文で練習 -->
+			<div class="slide">
+				<h2>例文でニュアンスを掴もう！1/3</h2>
+				<div class="big-text">
+					• 　<br>
+					<small style="font-size: 1rem; color: #666;">（韓国人のように(自然に)話します）</small><br><br>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例文でニュアンスを掴もう！1/3</h2>
+				<div class="big-text">
+					• 한국 사람<span class="highlight">처럼</span> 말해요.<br>
+					<small style="font-size: 1rem; color: #666;">（韓国人のように(自然に)話します）</small><br><br>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例文でニュアンスを掴もう！2/3</h2>
+				<div class="big-text">
+					• 　<br>
+					<small style="font-size: 1rem; color: #666;">（子どものように(無邪気に)笑います）</small><br><br>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例文でニュアンスを掴もう！2/3</h2>
+				<div class="big-text">
+					• 아이<span class="highlight">처럼</span> 웃어요.<br>
+					<small style="font-size: 1rem; color: #666;">（子どものように(無邪気に)笑います）</small><br><br>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例文でニュアンスを掴もう！3/3</h2>
+				<div class="big-text">
+					<small style="font-size: 1rem; color: #666;">（ロボットのように硬く動きます）</small>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例文でニュアンスを掴もう！3/3</h2>
+				<div class="big-text">
+					• 로봇<span class="highlight">처럼</span> 움직여요.<br>
+					<small style="font-size: 1rem; color: #666;">（ロボットのように硬く動きます）</small>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>例文でニュアンスを掴もう！まとめ確認</h2>
+				<div class="big-text">
+					• 한국 사람<span class="highlight">처럼</span> 말해요.<br>
+					<small style="font-size: 1rem; color: #666;">（韓国人のように自然に話します）</small><br><br>
+					• 아이<span class="highlight">처럼</span> 웃어요.<br>
+					<small style="font-size: 1rem; color: #666;">（子どものように(無邪気に)笑います）</small><br><br>
+					• 로봇<span class="highlight">처럼</span> 움직여요.<br>
+					<small style="font-size: 1rem; color: #666;">（ロボットのように硬く動きます）</small>
+				</div>
+			</div>
+
+			<!-- Slide 5: 日常会話のポイント -->
+			<div class="slide">
+				<h2>💡 会話のワンポイント</h2>
+				<div class="note-box">
+					<p>• <b>パッチムがあってもなくても、そのまま「처럼」をつけるだけ！</b></p>
+					<p style="margin-left: 15px;">
+						- 엄마 ➔ 엄마<b>처럼</b><br>
+						- 한국 사람 ➔ 한국 사람<b>처럼</b>
+					</p>
+					<hr style="margin: 10px 0; border: 0; border-top: 1px solid #abdbe3;">
+					<p>• 韓国語の「~처럼」は日常会話でとてもよく使われます。相手の褒め言葉（「韓国人みたいですね！」など）にもぴったりです！</p>
+				</div>
+			</div>
+
+			<!-- Slide 6: 練習問題 1 -->
+			<div class="slide">
+				<h2>練習：韓国語に変えてみよう！(1)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-jp">Q. 「お父さんの見た目している（お父さんとそっくり）」（(처럼)생기다）</div>
+					<div class="quiz-kr">
+						➔ 아빠<span class="highlight">처럼</span> 생겼어요
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習：韓国語に変えてみよう！(1)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-jp">Q. 「友達のように話します。」（친구）</div>
+					<div class="quiz-kr">
+						➔ 친구<span class="highlight">처럼</span> 이야기해요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: 練習問題 2 -->
+			<div class="slide">
+				<h2>練習：韓国語に変えてみよう！(2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-jp">Q. 「雪のように白いです。」（눈）</div>
+					<div class="quiz-kr">
+						➔ 눈<span class="highlight">처럼</span> 하얘요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 8: まとめ -->
+			<div class="slide">
+				<h2>今日のまとめ</h2>
+				<div style="text-align: left; font-size: 1.25rem; line-height: 2; background: #fff3cd; padding: 25px; border-radius: 15px; border-left: 8px solid #ffc107; width: 85%;">
+					<p>✔ <b>[名詞] + 처럼</b> ＝ 〜のように / 〜みたいに</p>
+					<p>✔ <b>行動を真似る時</b>（엄마처럼 요리해요）</p>
+					<p>✔ <b>姿や状態を例える時</b>（아기처럼 귀여워요 / 눈처럼 하얘요）</p>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="controls-bar">
+			<button class="btn" id="prevBtn">&lt;</button>
+			<div class="page-indicator" id="pageIndicator">1 / 8</div>
+			<button class="btn" id="nextBtn">&gt;</button>
+		</div>
+	</div>
+
+	<!-- ===================================================
+			 Ctrl + M 穴埋め特訓モダル (10問)
+		 =================================================== -->
+	<div class="modal-overlay" id="extraModal">
+		<div class="modal-container">
+			<div class="modal-header">
+				<div class="modal-title">📝 ~처럼 穴埋め特訓（10問）</div>
+				<button class="close-btn" id="closeModalBtn">閉じる (ESC)</button>
+			</div>
+
+			<div class="slide-wrapper" id="extraSlideWrapper">
+				
+				<div class="slide active">
+					<h2>問題 1/10</h2>
+					<div class="single-quiz-card">
+						<!-- 👈 좌측: 이미지 영역 -->
+						<div class="quiz-img-container"><img src="1.jpg" alt="問題画像"></div>
+						<div class="quiz-content-right">
+							<div class="quiz-jp">Q. お母さんのように料理します。（엄마）</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">엄마<span class="highlight">처럼</span> 요리해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="slide">
+					<h2>問題 2/10</h2>
+					<div class="single-quiz-card">
+						<!-- 👈 좌측: 이미지 영역 -->
+						<div class="quiz-img-container">
+							<img src="2.jpg" alt="問題画像">
+							<div class="quiz-content-right">
+							</div>
+							<div class="quiz-jp">Q. 韓国人のように話します。（한국 사람）</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">한국 사람<span class="highlight">처럼</span> 말해요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="slide">
+					<h2>問題 3/10</h2>
+					<div class="single-quiz-card">
+						<!-- 👈 좌측: 이미지 영역 -->
+						<div class="quiz-img-container">
+							<img src="1.jpg" alt="問題画像">
+							<div class="quiz-content-right">
+							</div>
+							<div class="quiz-jp">Q. 子どものように笑います。（아이）</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">아이<span class="highlight">처럼</span> 웃어요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+					<div class="slide">
+						<h2>問題 4/10</h2>
+						<div class="single-quiz-card">
+							<!-- 👈 좌측: 이미지 영역 -->
+							<div class="quiz-img-container">
+								<img src="1.jpg" alt="問題画像">
+								<div class="quiz-content-right">
+								</div>
+								<div class="quiz-jp">Q. ロボットのように動きます。（로봇）</div>
+								<div class="quiz-kr-wrap">
+									<button class="arrow-toggle-btn">➔</button>
+									<span class="answer-text hidden">로봇<span class="highlight">처럼</span> 움직여요.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slide">
+						<h2>問題 5/10</h2>
+						<div class="single-quiz-card">
+							<!-- 👈 좌측: 이미지 영역 -->
+							<div class="quiz-img-container">
+								<img src="1.jpg" alt="問題画像">
+								<div class="quiz-content-right">
+								</div>
+								<div class="quiz-jp">Q. 先生のように説明します。（선생님）</div>
+								<div class="quiz-kr-wrap">
+									<button class="arrow-toggle-btn">➔</button>
+									<span class="answer-text hidden">선생님<span class="highlight">처럼</span> 설명해요.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slide">
+						<h2>問題 6/10</h2>
+						<div class="single-quiz-card">
+							<!-- 👈 좌측: 이미지 영역 -->
+							<div class="quiz-img-container">
+								<img src="1.jpg" alt="問題画像">
+								<div class="quiz-content-right">
+								</div>
+								<div class="quiz-jp">Q. 赤ちゃんのようにかわいいです。（아기）</div>
+								<div class="quiz-kr-wrap">
+									<button class="arrow-toggle-btn">➔</button>
+									<span class="answer-text hidden">아기<span class="highlight">처럼</span> 귀여워요.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slide">
+						<h2>問題 7/10</h2>
+						<div class="single-quiz-card">
+							<!-- 👈 좌측: 이미지 영역 -->
+							<div class="quiz-img-container">
+								<img src="1.jpg" alt="問題画像">
+								<div class="quiz-content-right">
+								</div>
+								<div class="quiz-jp">Q. 俳優のようにハンサムです。（배우）</div>
+								<div class="quiz-kr-wrap">
+									<button class="arrow-toggle-btn">➔</button>
+									<span class="answer-text hidden">배우<span class="highlight">처럼</span> 잘생겼어요.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slide">
+						<h2>問題 8/10</h2>
+						<div class="single-quiz-card">
+							<!-- 👈 좌측: 이미지 영역 -->
+							<div class="quiz-img-container">
+								<img src="1.jpg" alt="問題画像">
+								<div class="quiz-content-right">
+								</div>
+								<div class="quiz-jp">Q. 天使のように優しいです。（천사）</div>
+								<div class="quiz-kr-wrap">
+									<button class="arrow-toggle-btn">➔</button>
+									<span class="answer-text hidden">천사<span class="highlight">처럼</span> 착해요.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slide">
+						<h2>問題 9/10</h2>
+						<div class="single-quiz-card">
+							<!-- 👈 좌측: 이미지 영역 -->
+							<div class="quiz-img-container">
+								<img src="1.jpg" alt="問題画像">
+								<div class="quiz-content-right">
+								</div>
+								<div class="quiz-jp">Q. 雪のように白いです。（눈）</div>
+								<div class="quiz-kr-wrap">
+									<button class="arrow-toggle-btn">➔</button>
+									<span class="answer-text hidden">눈<span class="highlight">처럼</span> 하얘요.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slide">
+						<h2>問題 10/10</h2>
+						<div class="single-quiz-card">
+							<!-- 👈 좌측: 이미지 영역 -->
+							<div class="quiz-img-container">
+								<img src="1.jpg" alt="問題画像">
+								<div class="quiz-content-right">
+								</div>
+								<div class="quiz-jp">Q. 湖のように静かです。（호수）</div>
+								<div class="quiz-kr-wrap">
+									<button class="arrow-toggle-btn">➔</button>
+									<span class="answer-text hidden">호수<span class="highlight">처럼</span> 조용해요.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- Slide : 질문해보기 -->
+				<div class="slide active">
+					<h1>〜のように / 〜みたいに</h1>
+					<p style="font-size: 1.8rem; margin-top: 20px;">
+						직업을 <span class="highlight">맞춰</span> 보세요！
+					</p>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>問題 1/10</h2>
+				<div class="single-quiz-card">
+					<!-- 👈 좌측: 이미지 영역 -->
+					<div class="quiz-img-container">
+						<img src="01.jpg" alt="問題画像">
+						<div class="quiz-content-right">
+						</div>
+						<div class="quiz-jp">Q. 어때요?</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">가수<span class="highlight">처럼</span> 생겼어요.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="controls-bar">
+				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
+				<div class="page-indicator" id="extraPageIndicator">1 / 10</div>
+				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// 메인 슬라이드 제어
+		const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
+		const prevBtn = document.getElementById('prevBtn');
+		const nextBtn = document.getElementById('nextBtn');
+		const pageIndicator = document.getElementById('pageIndicator');
+		let currentMainSlide = 0;
+
+		function updateMainSlide() {
+			mainSlides.forEach((slide, index) => {
+				slide.classList.toggle('active', index === currentMainSlide);
+			});
+			pageIndicator.textContent = `${currentMainSlide + 1} / ${mainSlides.length}`;
+			prevBtn.disabled = currentMainSlide === 0;
+			nextBtn.disabled = currentMainSlide === mainSlides.length - 1;
+		}
+
+		prevBtn.addEventListener('click', () => { if (currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); } });
+		nextBtn.addEventListener('click', () => { if (currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); } });
+
+		// Ctrl + M 모달 제어
+		const extraModal = document.getElementById('extraModal');
+		const closeModalBtn = document.getElementById('closeModalBtn');
+		const extraSlides = document.querySelectorAll('#extraSlideWrapper .slide');
+		const extraPrevBtn = document.getElementById('extraPrevBtn');
+		const extraNextBtn = document.getElementById('extraNextBtn');
+		const extraPageIndicator = document.getElementById('extraPageIndicator');
+		let currentExtraSlide = 0;
+		let isModalOpen = false;
+
+		function updateExtraSlide() {
+			extraSlides.forEach((slide, index) => {
+				slide.classList.toggle('active', index === currentExtraSlide);
+			});
+			extraPageIndicator.textContent = `${currentExtraSlide + 1} / ${extraSlides.length}`;
+			extraPrevBtn.disabled = currentExtraSlide === 0;
+			extraNextBtn.disabled = currentExtraSlide === extraSlides.length - 1;
+		}
+
+		function openModal() {
+			isModalOpen = true;
+			extraModal.classList.add('active');
+			currentExtraSlide = 0;
+			updateExtraSlide();
+		}
+
+		function closeModal() {
+			isModalOpen = false;
+			extraModal.classList.remove('active');
+		}
+
+		closeModalBtn.addEventListener('click', closeModal);
+		extraPrevBtn.addEventListener('click', () => { if (currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); } });
+		extraNextBtn.addEventListener('click', () => { if (currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); } });
+
+		// 키보드 단축키
+		document.addEventListener('keydown', (e) => {
+			if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+				e.preventDefault();
+				isModalOpen ? closeModal() : openModal();
+				return;
+			}
+			if (e.key === 'Escape' && isModalOpen) {
+				closeModal();
+				return;
+			}
+			if (isModalOpen) {
+				if (e.key === 'ArrowLeft' && currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); }
+				else if (e.key === 'ArrowRight' && currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); }
+			} else {
+				if (e.key === 'ArrowLeft' && currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); }
+				else if (e.key === 'ArrowRight' && currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); }
+			}
+		});
+
+		// 정답 토글 버튼
+		document.querySelectorAll('.arrow-toggle-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const answerText = btn.nextElementSibling;
+				answerText.classList.toggle('hidden');
+				btn.classList.toggle('open');
+			});
+		});
+
+		updateMainSlide();
+	</script>
+</body>
+</html>

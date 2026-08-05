@@ -1,0 +1,510 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>다국어 회화 교재 PDF 판매 플랫폼</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Noto Sans KR', sans-serif;
+			background-color: #f4f6f8;
+			color: #333;
+			display: flex;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		/* Layout */
+		#sidebar {
+			width: 220px;
+			background-color: #1e293b;
+			color: #fff;
+			display: flex;
+			flex-direction: column;
+			padding: 20px 0;
+		}
+
+			#sidebar h2 {
+				font-size: 1.1rem;
+				padding: 0 20px 20px;
+				border-bottom: 1px solid #334155;
+			}
+
+		.nav-btn {
+			background: none;
+			border: none;
+			color: #94a3b8;
+			padding: 15px 20px;
+			text-align: left;
+			font-size: 1rem;
+			cursor: pointer;
+			width: 100%;
+			transition: 0.2s;
+		}
+
+			.nav-btn:hover, .nav-btn.active {
+				background-color: #334155;
+				color: #fff;
+				font-weight: bold;
+			}
+
+		#main {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			overflow-y: auto;
+		}
+
+		header {
+			background: #fff;
+			padding: 15px 30px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-bottom: 1px solid #e2e8f0;
+		}
+
+		.user-info {
+			font-size: 0.95rem;
+		}
+
+		.point-badge {
+			background-color: #eff6ff;
+			color: #2563eb;
+			padding: 5px 12px;
+			border-radius: 20px;
+			font-weight: bold;
+			margin-left: 8px;
+		}
+
+		.content-area {
+			padding: 30px;
+		}
+
+		.sub-nav {
+			display: flex;
+			gap: 10px;
+			margin-bottom: 25px;
+			flex-wrap: wrap;
+		}
+
+		.sub-btn {
+			background: #fff;
+			border: 1px solid #cbd5e1;
+			padding: 8px 16px;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+
+			.sub-btn.active {
+				background: #2563eb;
+				color: #fff;
+				border-color: #2563eb;
+			}
+
+		/* Carousel / Cards Layout */
+		.carousel-container {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			background: #fff;
+			padding: 25px;
+			border-radius: 12px;
+			box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+		}
+
+		.arrow-btn {
+			background: #f1f5f9;
+			border: none;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 1.2rem;
+			font-weight: bold;
+		}
+
+			.arrow-btn:hover {
+				background: #e2e8f0;
+			}
+
+		.cards-wrapper {
+			display: flex;
+			gap: 15px;
+			overflow: hidden;
+			width: 100%;
+		}
+
+		.card {
+			flex: 1;
+			min-width: 150px;
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 20px;
+			text-align: center;
+			cursor: pointer;
+			transition: 0.2s;
+		}
+
+			.card:hover {
+				transform: translateY(-50px);
+				border-color: #2563eb;
+				box-shadow: 0 10px 15px -3px rgba(37,99,235,0.1);
+			}
+
+		.card-num {
+			font-size: 0.8rem;
+			color: #64748b;
+			margin-bottom: 8px;
+		}
+
+		.card-title {
+			font-size: 1.05rem;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+
+		.btn-preview {
+			background: #e0e7ff;
+			color: #4338ca;
+			border: none;
+			padding: 6px 12px;
+			border-radius: 4px;
+			font-size: 0.85rem;
+			cursor: pointer;
+		}
+
+		/* Modal */
+		.modal-overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.5);
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+		}
+
+			.modal-overlay.active {
+				display: flex;
+			}
+
+		.modal {
+			background: #fff;
+			width: 480px;
+			border-radius: 12px;
+			padding: 25px;
+			box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+
+		.close-btn {
+			background: none;
+			border: none;
+			font-size: 1.5rem;
+			cursor: pointer;
+		}
+
+		.preview-box {
+			background: #f1f5f9;
+			height: 180px;
+			border-radius: 6px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: #64748b;
+			margin-bottom: 20px;
+			border: 1px dashed #cbd5e1;
+		}
+
+		.modal-actions {
+			display: flex;
+			gap: 10px;
+		}
+
+		.btn-buy, .btn-deposit {
+			flex: 1;
+			padding: 12px;
+			border: none;
+			border-radius: 6px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+		.btn-buy {
+			background: #2563eb;
+			color: #fff;
+		}
+
+		.btn-deposit {
+			background: #64748b;
+			color: #fff;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 1. Left Sidebar Navigation -->
+	<div id="sidebar">
+		<h2>회화 교재 선택</h2>
+		<button class="nav-btn active" onclick="switchLang('ko')">🇰🇷 한국어</button>
+		<button class="nav-btn" onclick="switchLang('ja')">🇯🇵 일본어</button>
+		<button class="nav-btn" onclick="switchLang('zh')">🇨🇳 중국어</button>
+	</div>
+
+	<!-- 2. Main Content Area -->
+	<div id="main">
+		<header>
+			<h1 id="page-title">한국어 회화 목록</h1>
+			<div class="user-info">
+				보유 세모: <span class="point-badge" id="semo-balance">5,000</span> 세모
+			</div>
+		</header>
+
+		<div class="content-area">
+			<!-- Sub Category Navigation -->
+			<div class="sub-nav" id="sub-nav">
+				<!-- Rendered by JS -->
+			</div>
+
+			<!-- Carousel section (5 Cards) -->
+			<div class="carousel-container">
+				<button class="arrow-btn" onclick="moveCarousel(-1)">&lt;</button>
+				<div class="cards-wrapper" id="cards-wrapper">
+					<!-- Rendered 5 cards by JS -->
+				</div>
+				<button class="arrow-btn" onclick="moveCarousel(1)">&gt;</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 3. Preview & Payment Modal -->
+	<div class="modal-overlay" id="modal-overlay">
+		<div class="modal">
+			<div class="modal-header">
+				<h3 id="modal-title">과 제목</h3>
+				<button class="close-btn" onclick="closeModal()">&times;</button>
+			</div>
+			<div class="preview-box">
+				📖 HTML Book PDF 미리보기 (Sample)
+			</div>
+			<p style="margin-bottom: 15px; font-size: 0.9rem; color: #475569;">
+				가격: <strong>3,000 세모</strong> (또는 무통장 입금 신청)
+			</p>
+			<div class="modal-actions">
+				<button class="btn-buy" onclick="handleSemoPayment()">세모로 구매/다운로드</button>
+				<button class="btn-deposit" onclick="handleDepositRequest()">무통장 입금 구매</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// State Management
+		let userSemo = 0; // 보유 세모
+		let currentLang = 'ko';
+		let currentCategory = '일상회화';
+		let carouselOffset = 0; // 슬라이드 오프셋
+		let selectedLesson = null;
+
+		const pricePerBook = 3000;
+
+		// Categories Data
+		const categories = {
+			ko: ['일상회화', '친구회화', '기초회화', '기본회화', '중급회화'],
+			ja: ['日常会話', '友達会話', '基礎会話', '基本会話', '中級会話'],
+			zh: ['日常对话', '朋友对话', '基础对话', '基本对话', '中级对话']
+		};
+
+		function tryParseApiJson(raw) {
+			const text = String(raw || '').trim();
+			if (!text) return null;
+			try { return JSON.parse(text); } catch (_) {
+				const first = text.indexOf('{');
+				const last = text.lastIndexOf('}');
+				if (first >= 0 && last > first) {
+					try { return JSON.parse(text.slice(first, last + 1)); } catch (_) { return null; }
+				}
+				return null;
+			}
+		}
+
+		async function fetchUserData() {
+			try {
+				const response = await fetch('../api/mypage.php');
+				const text = await response.text();
+				const result = tryParseApiJson(text);
+				if (!response.ok || !result || !result.success) {
+					alert('로그인이 필요한 서비스입니다.');
+					window.location.href = '../onlineclass.html';
+					return;
+				}
+				userSemo = parseInt(result.data.money || 0, 10);
+				document.getElementById('semo-balance').innerText = userSemo.toLocaleString();
+			} catch (err) {
+				console.error(err);
+				alert('로그인이 필요한 서비스입니다.');
+				window.location.href = '../onlineclass.html';
+			}
+		}
+
+		// Initialize SPA
+		async function init() {
+			await fetchUserData();
+			renderSubNav();
+			renderCards();
+		}
+
+    // Switch Language (Left Menu)
+    function switchLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.nav-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', ['ko', 'ja', 'zh'][idx] === lang);
+      });
+
+      const titles = { ko: '한국어 회화 목록', ja: '일본어 회화 목록', zh: '중국어 회화 목록' };
+      document.getElementById('page-title').innerText = titles[lang];
+
+      currentCategory = categories[lang][0];
+      carouselOffset = 0;
+      renderSubNav();
+      renderCards();
+    }
+
+    // Subcategory render
+    function renderSubNav() {
+      const navContainer = document.getElementById('sub-nav');
+      navContainer.innerHTML = categories[currentLang].map(cat => `
+        <button class="sub-btn ${cat === currentCategory ? 'active' : ''}"
+                onclick="selectCategory('${cat}')">${cat}</button>
+      `).join('');
+    }
+
+    function selectCategory(cat) {
+      currentCategory = cat;
+      carouselOffset = 0;
+      renderSubNav();
+      renderCards();
+    }
+
+		function checkPurchase(title) {
+			const purchaseTime = localStorage.getItem(`pdf_purchase_${title}`);
+			if (!purchaseTime) return false;
+			const hoursDiff = (new Date().getTime() - parseInt(purchaseTime, 10)) / (1000 * 60 * 60);
+			if (hoursDiff <= 48) {
+				return true;
+			} else {
+				localStorage.removeItem(`pdf_purchase_${title}`);
+				return false;
+			}
+		}
+
+		function downloadPDF(title) {
+			alert(`[${title}] 회화 교재 PDF 다운로드를 시작합니다.\n(인쇄 화면을 통해 PDF로 저장해주세요)`);
+			const originalTitle = document.title;
+			document.title = title;
+			window.print();
+			document.title = originalTitle;
+		}
+
+		// Carousel Cards Render (Show 5 cards based on offset)
+		function renderCards() {
+			const wrapper = document.getElementById('cards-wrapper');
+			wrapper.innerHTML = '';
+
+			for (let i = 1; i <= 5; i++) {
+				const lessonNum = i + carouselOffset;
+				const lessonTitle = `${currentCategory} - ${lessonNum}과`;
+				const hasPurchased = checkPurchase(lessonTitle);
+
+				const btnHtml = hasPurchased 
+					? `<button class="btn-preview" style="background:#10b981; color:#fff;" onclick="event.stopPropagation(); downloadPDF('${lessonTitle}')">다운로드 (48H)</button>`
+					: `<button class="btn-preview">상세보기</button>`;
+
+				const clickAction = hasPurchased 
+					? `downloadPDF('${lessonTitle}')` 
+					: `openModal('${lessonTitle}')`;
+
+				const cardHtml = `
+					<div class="card" onclick="${clickAction}">
+						<div class="card-num">CHAPTER ${lessonNum}</div>
+						<div class="card-title">${currentCategory}<br>${lessonNum}과</div>
+						${btnHtml}
+					</div>
+				`;
+				wrapper.innerHTML += cardHtml;
+			}
+		}
+
+    function moveCarousel(direction) {
+      carouselOffset += direction;
+      if (carouselOffset < 0) carouselOffset = 0;
+      renderCards();
+    }
+
+    // Modal Operations
+    function openModal(title) {
+      selectedLesson = title;
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-overlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+		// Payment Processing Logic
+		async function handleSemoPayment() {
+			if (userSemo >= pricePerBook) {
+				// 서버 연동 시에는 api로 결제 요청을 보내야함 (임시로 클라이언트에서 차감)
+				try {
+					const form = new URLSearchParams();
+					form.append('amount', String(pricePerBook));
+					form.append('item_title', selectedLesson);
+					await fetch('../api/buy_pdf.php', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+							body: form.toString()
+					}).catch(e => null);
+				} catch (e) {
+					console.error(e);
+				}
+
+				userSemo -= pricePerBook;
+				document.getElementById('semo-balance').innerText = userSemo.toLocaleString();
+				localStorage.setItem(`pdf_purchase_${selectedLesson}`, new Date().getTime());
+
+				alert(`[${selectedLesson}] 구매가 완료되었습니다!\n48시간 내에 언제든 다운로드가 가능합니다.`);
+				closeModal();
+				renderCards();
+				downloadPDF(selectedLesson);
+			} else {
+				alert('세모 잔액이 부족합니다. 세모를 충전하고 오세요.');
+			}
+		}
+
+    function handleDepositRequest() {
+      alert(`[${selectedLesson}] 무통장 입금 신청이 완료되었습니다.\n관리자 승인 후 다운로드가 가능합니다.`);
+      closeModal();
+    }
+
+    // Start App
+    init();
+	</script>
+</body>
+</html>

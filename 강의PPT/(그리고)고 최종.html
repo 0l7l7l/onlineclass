@@ -1,0 +1,1660 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語文法：-고（〜して）を学ぼう！</title>
+	<style>
+		:root {
+			--bg-color: #f4f7f6;
+			--card-bg: #ffffff;
+			--primary-color: #4a90e2;
+			--accent-color: #e74c3c;
+			--secondary-color: #2ecc71;
+			--text-color: #333333;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Hiragino Sans', 'Meiryo', 'Malgun Gothic', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		.presentation-container {
+			position: relative;
+			width: 90vw;
+			height: 90vh;
+			max-width: 1280px;
+			max-height: 720px;
+			background-color: var(--card-bg);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 30px 40px 20px 40px;
+		}
+
+		.slide-wrapper {
+			position: relative;
+			flex: 1;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.slide {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 10px 0;
+		}
+
+			.slide.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		h1 {
+			font-size: 2.8rem;
+			color: var(--primary-color);
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary-color);
+			margin-bottom: 15px;
+			border-bottom: 4px solid var(--primary-color);
+			padding-bottom: 8px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 1.3rem;
+			line-height: 1.6;
+			margin-bottom: 12px;
+		}
+
+		.highlight {
+			color: var(--accent-color);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.6rem;
+			background: #eef5fc;
+			padding: 15px 25px;
+			border-radius: 12px;
+			margin: 12px 0;
+			display: inline-block;
+			text-align: left;
+		}
+
+		.vocab-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 15px;
+			width: 90%;
+			margin-top: 15px;
+		}
+
+		.vocab-card {
+			background: #f8f9fa;
+			border: 1px solid #ddd;
+			padding: 12px;
+			border-radius: 8px;
+			font-size: 1.1rem;
+		}
+
+		table {
+			width: 90%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			font-size: 1.1rem;
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 10px 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: var(--primary-color);
+			color: white;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		.single-quiz-card {
+			background: #f8f9fa;
+			border-left: 8px solid var(--primary-color);
+			border-radius: 12px;
+			padding: 25px 30px;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+
+		.quiz-jp {
+			font-size: 1.6rem;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+
+		.quiz-kr {
+			font-size: 1.8rem;
+			color: var(--primary-color);
+			background: #ffffff;
+			padding: 15px;
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		.controls-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			height: 60px;
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid #eee;
+			z-index: 10;
+		}
+
+		.btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			font-size: 1.5rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.btn:hover {
+				background-color: #357abd;
+			}
+
+			.btn:disabled {
+				background-color: #ccc;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: #666;
+		}
+
+		.note-box {
+			background: #fff0f0;
+			border-left: 8px solid #e74c3c;
+			padding: 20px 30px;
+			border-radius: 12px;
+			width: 85%;
+			text-align: left;
+			font-size: 1.2rem;
+			line-height: 1.8;
+		}
+
+		/* ===================================================
+			 Ctrl + M 모달 팝업 스타일
+			 =================================================== */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(0,0,0,0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+			.modal-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+		.modal-container {
+			position: relative;
+			width: 85vw;
+			height: 85vh;
+			max-width: 1200px;
+			max-height: 680px;
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 30px 40px 20px 40px;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+			border: 4px solid var(--secondary-color);
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.modal-title {
+			font-size: 1.8rem;
+			color: var(--secondary-color);
+			font-weight: bold;
+		}
+
+		.close-btn {
+			background: #e74c3c;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.quiz-kr-wrap {
+			margin-top: 15px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 1.8rem;
+		}
+
+		.arrow-toggle-btn {
+			background-color: var(--secondary-color);
+			color: white;
+			border: none;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			font-size: 1.4rem;
+			font-weight: bold;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition: all 0.2s ease;
+		}
+
+			.arrow-toggle-btn.open {
+				transform: rotate(90deg);
+				background-color: #e74c3c;
+			}
+
+		.answer-text.hidden {
+			display: none;
+		}
+
+		.shortcut-hint {
+			position: absolute;
+			bottom: 10px;
+			right: 20px;
+			font-size: 0.85rem;
+			color: #888;
+		}
+		/* モダル用画像スタイル */
+		.quiz-img-container {
+			width: 100%;
+			max-height: 250px; /* 이미지의 최대 높이 제한 (필요시 조절) */
+			margin-bottom: 15px;
+			overflow: hidden;
+			border-radius: 10px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #f0f0f0;
+		}
+
+			.quiz-img-container img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover; /* 이미지가 비율을 유지하며 상자에 가득 차게 설정 */
+				display: block;
+			}
+	</style>
+</head>
+<body>
+
+	<div class="shortcut-hint">💡 Ctrl + M : 追加練習モード（10問）</div>
+
+	<div class="presentation-container">
+		<div class="slide-wrapper" id="mainSlideWrapper">
+
+			<!-- Slide 1: 表紙 -->
+			<div class="slide active">
+				<h1>韓国語で動作をつなげよう！</h1>
+				<p style="font-size: 1.8rem; margin-top: 20px;">「그리고（그리고）」から <span class="highlight">「-고（〜して）」</span> へ</p>
+			</div>
+
+			<!-- Slide 2: そして(그리고)の復習 -->
+			<div class="slide">
+				<h2>前回学んだ「그리고」を覚えていますか？</h2>
+				<p>まずは日本語を韓国語に変えてみましょう！</p>
+				<div class="big-text">
+					ご飯を食べます。<span class="highlight">「그리고」</span> 会社へ行きます。<br>
+					➔ 밥을 먹어요. <span class="highlight">그리고</span> 회사에 가요.
+				</div>
+			</div>
+
+			<!-- Slide 3: 그리고 ➔ -고 導入 -->
+			<div class="slide">
+				<h2>日常会話ではもっとスッキリつなげます！</h2>
+				<p>「ご飯を食べて会社に行きます」はどう言うでしょうか？</p>
+				<div class="big-text" style="background:#e8f8f5; border: 2px solid #2ecc71;">
+					➔ 밥을 먹<span class="highlight">고</span> 회사에 가요.
+				</div>
+				<p style="margin-top:15px;">
+					「-고」は<b>動作と動作をつなぐ文法</b>です。<br>
+					「그리고」で文章を区切るより、1つの流れで行動をつなぐ時にとてもよく使います！
+				</p>
+			</div>
+
+			<!-- Slide 4: 単語追加 -->
+			<div class="slide">
+				<h2>今日の新着単語（時間・頻度）</h2>
+				<div class="vocab-grid">
+					<div class="vocab-card"><b>늦게</b> (遅く)</div>
+					<div class="vocab-card"><b>일찍</b> (早く)</div>
+					<div class="vocab-card"><b>매일</b> (毎日)</div>
+					<div class="vocab-card"><b>보통</b> (普通/普段)</div>
+					<div class="vocab-card"><b>문자</b> (ショットメッセージ)</div>
+					<div class="vocab-card"><b>가끔</b> (たまに)</div>
+				</div>
+			</div>
+
+			<!-- Slide 5: 変形表 -->
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>  </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>일어나<b>고</b> </td>
+							<td>일어나고 씻어요</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>일어나<b>고</b> </td>
+							<td>일어나고 씻어요</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td>먹<b>고</b></td>
+							<td>  </td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>일어나<b>고</b> </td>
+							<td>일어나고 씻어요</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td>먹<b>고</b></td>
+							<td> 먹고 마셔요</td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td></td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>일어나<b>고</b> </td>
+							<td>일어나고 씻어요</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td>먹<b>고</b></td>
+							<td> 먹고 마셔요</td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td>읽<b>고</b> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>일어나<b>고</b> </td>
+							<td>일어나고 씻어요</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td>먹<b>고</b></td>
+							<td> 먹고 마셔요</td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td> 읽<b>고</b></td>
+							<td> 읽고 써요</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td> </td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>일어나<b>고</b> </td>
+							<td>일어나고 씻어요</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td>먹<b>고</b> </td>
+							<td>먹고 마셔요</td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td>읽<b>고</b> </td>
+							<td>읽고 써요</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td>만나<b>고</b>  </td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>起きる </td>
+							<td>일어나다 </td>
+							<td>일어나<b>고</b> </td>
+							<td>일어나고 씻어요</td>
+						</tr>
+						<tr>
+							<td>食べる </td>
+							<td>먹다 </td>
+							<td>먹<b>고</b> </td>
+							<td>먹고 마셔요</td>
+						</tr>
+						<tr>
+							<td>読む </td>
+							<td>읽다 </td>
+							<td>읽<b>고</b> </td>
+							<td>읽고 써요</td>
+						</tr>
+						<tr>
+							<td>会う </td>
+							<td>만나다 </td>
+							<td>만나<b>고</b>  </td>
+							<td>만나고 이야기해요</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td> ></td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td>자고 일어나요</td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td> ></td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td>자고 일어나요</td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td> 마시<b>고</b></td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td> ></td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td>자고 일어나요</td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td> 마시<b>고</b></td>
+							<td> 마시고 먹어요</td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td> </td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td> ></td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td>자고 일어나요</td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td> 마시<b>고</b></td>
+							<td> 마시고 먹어요</td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td> 쓰<b>고</b></td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td> ></td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td>자고 일어나요</td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td> 마시<b>고</b></td>
+							<td> </td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td> 쓰<b>고</b></td>
+							<td> 쓰고 읽어요.</td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td> ></td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td>자고 일어나요</td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td>마시<b>고</b></td>
+							<td>마시고 먹어요</td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td>쓰<b>고</b></td>
+							<td>쓰고 읽어요</td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td>이야기하<b>고</b></td>
+							<td> </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 寝る</td>
+							<td> 자다</td>
+							<td> 자<b>고</b></td>
+							<td>자고 일어나요</td>
+						</tr>
+						<tr>
+							<td>飲む</td>
+							<td>마시다</td>
+							<td>마시<b>고</b></td>
+							<td>마시고 먹어요</td>
+						</tr>
+						<tr>
+							<td>書く</td>
+							<td>쓰다</td>
+							<td>쓰<b>고</b></td>
+							<td>쓰고 읽어요</td>
+						</tr>
+						<tr>
+							<td>話す</td>
+							<td>이야기하다</td>
+							<td>이야기하<b>고</b></td>
+							<td>이야기하고 만나요</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 出る・出かける</td>
+							<td> 나가다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+						<tr>
+							<td> 考える・思う</td>
+							<td> 생각하다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+						<tr>
+							<td> 送る</td>
+							<td> 보내다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 出る・出かける</td>
+							<td> 나가다</td>
+							<td> 나가<b>고</b></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td> 考える・思う</td>
+							<td> 생각하다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+						<tr>
+							<td> 送る</td>
+							<td> 보내다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 出る・出かける</td>
+							<td> 나가다</td>
+							<td> 나가<b>고</b></td>
+							<td> 나가고 생각해요</td>
+						</tr>
+						<tr>
+							<td> 考える・思う</td>
+							<td> 생각하다</td>
+							<td> 　</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td> 送る</td>
+							<td> 보내다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 出る・出かける</td>
+							<td> 나가다</td>
+							<td> 나가<b>고</b></td>
+							<td> 나가고 생각해요</td>
+						</tr>
+						<tr>
+							<td> 考える・思う</td>
+							<td> 생각하다</td>
+							<td> 생각하<b>고</b></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td> 送る</td>
+							<td> 보내다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 出る・出かける</td>
+							<td> 나가다</td>
+							<td> 나가<b>고</b></td>
+							<td> 나가고 생각해요</td>
+						</tr>
+						<tr>
+							<td> 考える・思う</td>
+							<td> 생각하다</td>
+							<td> 생각하<b>고</b></td>
+							<td> 생각하고 말해요</td>
+						</tr>
+						<tr>
+							<td> 送る</td>
+							<td> 보내다</td>
+							<td> </td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 出る・出かける</td>
+							<td> 나가다</td>
+							<td> 나가<b>고</b></td>
+							<td> 나가고 생각해요</td>
+						</tr>
+						<tr>
+							<td> 考える・思う</td>
+							<td> 생각하다</td>
+							<td> 생각하<b>고</b></td>
+							<td> 생각하고 말해요</td>
+						</tr>
+						<tr>
+							<td> 送る</td>
+							<td> 보내다</td>
+							<td> 보내<b>고</b></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="slide">
+				<h2>動詞 + 고 変形練習</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>意味</th>
+							<th>基本形</th>
+							<th>-고（〜して）</th>
+							<th>活用例</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td> 出る・出かける</td>
+							<td> 나가다</td>
+							<td> 나가<b>고</b></td>
+							<td> 나가고 생각해요</td>
+						</tr>
+						<tr>
+							<td> 考える・思う</td>
+							<td> 생각하다</td>
+							<td> 생각하<b>고</b></td>
+							<td> 생각하고 말해요</td>
+						</tr>
+						<tr>
+							<td> 送る</td>
+							<td> 보내다</td>
+							<td> 보내<b>고</b></td>
+							<td> 보내고 기다려요</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Slide 6: 練習 1 -->
+			<div class="slide">
+				<h2>練習：韓国語に変えてみよう！(1)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-jp">Q. 「遅く起きて、シャワーを浴びます。」</div>
+					<div class="quiz-kr">
+						➔
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習：韓国語に変えてみよう！(1)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-jp">Q. 「遅く起きて、シャワーを浴びます。」</div>
+					<div class="quiz-kr">
+						➔ 늦게 <span class="highlight">일어나고</span> 샤워를 해요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 7: 練習 2 -->
+			<div class="slide">
+				<h2>練習：韓国語に変えてみよう！(2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-jp">Q. 「普段は料理をして、ご飯を食べます。」</div>
+					<div class="quiz-kr">
+						➔
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<h2>練習：韓国語に変えてみよう！(2)</h2>
+				<div class="single-quiz-card">
+					<div class="quiz-jp">Q. 「普段は料理をして、ご飯を食べます。」</div>
+					<div class="quiz-kr">
+						➔ 보통 요리(를) <span class="highlight">하고</span> 밥을 먹어요.
+					</div>
+				</div>
+			</div>
+
+			<!-- Slide 8: 注意点 (-고 vs -아서/어서) -->
+			<div class="slide">
+				<h2>⚠️ 日本人が間違いやすいポイント！</h2>
+				<div class="note-box">
+					<p>日本語の「〜て」がすべて「-고」になるわけではありません。</p>
+					<hr style="margin: 10px 0; border: 0; border-top: 1px solid #ffcccc;">
+					<p><b>「疲れて休みます」</b>（理由：疲れたので休む）</p>
+					<p style="color:red;">❌ 피곤하고 쉬어요</p>
+					<p style="color:green; font-weight:bold;">✅ 피곤해서 쉬어요 (-해서を使う)</p>
+					<p style="margin-top:10px; font-size:1.1rem;">
+						※ 今日はまず<b>「純粋な動作の順番をつなぐ -고」</b>だけマスターしましょう！
+					</p>
+				</div>
+			</div>
+
+
+
+			<!-- Slide 9: まとめ -->
+			<div class="slide">
+				<h2>今日のまとめ</h2>
+				<div style="text-align: left; font-size: 1.3rem; line-height: 2; background: #fff3cd; padding: 25px; border-radius: 15px; border-left: 8px solid #ffc107; width: 85%;">
+					<p>✔ <b>그리고</b> の代わりに <b>-고</b> を使うと動作が自然につながる！</p>
+					<p>✔ 動詞の「다」を取って <b>-고</b> をつけるだけ！</p>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="controls-bar">
+			<button class="btn" id="prevBtn">&lt;</button>
+			<div class="page-indicator" id="pageIndicator">1 / 9</div>
+			<button class="btn" id="nextBtn">&gt;</button>
+		</div>
+	</div>
+
+	<!-- ===================================================
+			 Ctrl + M 추가 연습 모달 (20問)
+		 =================================================== -->
+	<div class="modal-overlay" id="extraModal">
+		<div class="modal-container">
+			<div class="modal-header">
+				<div class="modal-title">🔥 トレーニング（0問）</div>
+				<button class="close-btn" id="closeModalBtn">閉じる (ESC)</button>
+			</div>
+
+			<div class="slide-wrapper" id="extraSlideWrapper">
+				<div class="slide active"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「手を洗って、ご飯を食べます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">손을 <span class="highlight">씻고</span> 밥을 먹어요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「服を着て、出かけます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">옷을 <span class="highlight">입고</span> 나가요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「掃除をして、洗濯をします。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">청소를 <span class="highlight">하고</span> 빨래를 해요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「コーヒーを飲んで、話します。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">커피를 <span class="highlight">마시고</span> 이야기해요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「宿題をして、寝ます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">숙제를 <span class="highlight">하고</span> 자요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「バスに乗って、行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">버스를 <span class="highlight">타고</span> 가요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「買い物をして、家に帰ります。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">쇼핑을 <span class="highlight">하고</span> 집에 와요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「Youtubeを見て、休んでます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">유튜브(Youtube)를 <span class="highlight">보고</span> 쉬어요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「メールを送って、待ちます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">문자를 <span class="highlight">보내고</span> 기다려요.</span>
+						</div>
+					</div>
+				</div>
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「写真を撮って、アップします。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">사진을 <span class="highlight">찍고</span> 올려요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「ご飯を食べて、学校へ行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">밥을 <span class="highlight">먹고</span> 학교에 가요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「起きて、顔を洗います。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">일어나고 세수해요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「コーヒーを飲んで、仕事します。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">커피를 <span class="highlight">마시고</span> 일해요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「本を読んで、寝ます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">책을 <span class="highlight">읽고</span> 자요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「運動して、シャワーを浴びます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">운동하고 샤워해요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「友達に会って、カフェに行きます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">친구를 <span class="highlight">만나고</span> 카페에 가요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<img src="20.jpg" alt="問題画像">
+					<div class="single-quiz-card">
+						<div class="quiz-jp">「音楽を聞いて、勉強します。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">음악을 <span class="highlight">듣고</span> 공부해요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「写真を撮って、友達に送ります。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">사진을 <span class="highlight">찍고</span> 친구에게 보내요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide"> 
+					<div class="single-quiz-card">
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「買い物して、家に帰ります。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">쇼핑하고 집에 가요.</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="slide">
+					<h2>問題 30/30</h2>
+					<div class="single-quiz-card">
+
+						<img src="20.jpg" alt="問題画像">
+						<div class="quiz-jp">「料理して、ご飯を食べます。」</div>
+						<div class="quiz-kr-wrap">
+							<button class="arrow-toggle-btn">➔</button>
+							<span class="answer-text hidden">요리하고 밥을 먹어요.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="controls-bar">
+				<button class="btn" id="extraPrevBtn" style="background-color: var(--secondary-color);">&lt;</button>
+				<div class="page-indicator" id="extraPageIndicator">1 / 10</div>
+				<button class="btn" id="extraNextBtn" style="background-color: var(--secondary-color);">&gt;</button>
+			</div>
+		</div>
+	</div>
+
+	<script>// 메인 슬라이드 제어
+		const mainSlides = document.querySelectorAll('#mainSlideWrapper .slide');
+		const prevBtn = document.getElementById('prevBtn');
+		const nextBtn = document.getElementById('nextBtn');
+		const pageIndicator = document.getElementById('pageIndicator');
+		let currentMainSlide = 0;
+
+		function updateMainSlide() {
+			mainSlides.forEach((slide, index) => {
+				slide.classList.toggle('active', index === currentMainSlide);
+			});
+			pageIndicator.textContent = `${currentMainSlide + 1} / ${mainSlides.length}`;
+			prevBtn.disabled = currentMainSlide === 0;
+			nextBtn.disabled = currentMainSlide === mainSlides.length - 1;
+		}
+
+		prevBtn.addEventListener('click', () => { if (currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); } });
+		nextBtn.addEventListener('click', () => { if (currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); } });
+
+		// Ctrl + M 모달 제어
+		const extraModal = document.getElementById('extraModal');
+		const closeModalBtn = document.getElementById('closeModalBtn');
+		const extraSlides = document.querySelectorAll('#extraSlideWrapper .slide');
+		const extraPrevBtn = document.getElementById('extraPrevBtn');
+		const extraNextBtn = document.getElementById('extraNextBtn');
+		const extraPageIndicator = document.getElementById('extraPageIndicator');
+		let currentExtraSlide = 0;
+		let isModalOpen = false;
+
+		function updateExtraSlide() {
+			extraSlides.forEach((slide, index) => {
+				slide.classList.toggle('active', index === currentExtraSlide);
+			});
+			extraPageIndicator.textContent = `${currentExtraSlide + 1} / ${extraSlides.length}`;
+			extraPrevBtn.disabled = currentExtraSlide === 0;
+			extraNextBtn.disabled = currentExtraSlide === extraSlides.length - 1;
+		}
+
+		function openModal() {
+			isModalOpen = true;
+			extraModal.classList.add('active');
+			currentExtraSlide = 0;
+			updateExtraSlide();
+		}
+
+		function closeModal() {
+			isModalOpen = false;
+			extraModal.classList.remove('active');
+		}
+
+		closeModalBtn.addEventListener('click', closeModal);
+		extraPrevBtn.addEventListener('click', () => { if (currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); } });
+		extraNextBtn.addEventListener('click', () => { if (currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); } });
+
+		// 키보드 단축키
+		document.addEventListener('keydown', (e) => {
+			if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+				e.preventDefault();
+				isModalOpen ? closeModal() : openModal();
+				return;
+			}
+			if (e.key === 'Escape' && isModalOpen) {
+				closeModal();
+				return;
+			}
+			if (isModalOpen) {
+				if (e.key === 'ArrowLeft' && currentExtraSlide > 0) { currentExtraSlide--; updateExtraSlide(); }
+				else if (e.key === 'ArrowRight' && currentExtraSlide < extraSlides.length - 1) { currentExtraSlide++; updateExtraSlide(); }
+			} else {
+				if (e.key === 'ArrowLeft' && currentMainSlide > 0) { currentMainSlide--; updateMainSlide(); }
+				else if (e.key === 'ArrowRight' && currentMainSlide < mainSlides.length - 1) { currentMainSlide++; updateMainSlide(); }
+			}
+		});
+
+		// 정답 버튼 토글
+		document.querySelectorAll('.arrow-toggle-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const answerText = btn.nextElementSibling;
+				answerText.classList.toggle('hidden');
+				btn.classList.toggle('open');
+			});
+		});
+
+		updateMainSlide();</script>
+</body>
+</html>

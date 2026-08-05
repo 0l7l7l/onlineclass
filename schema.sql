@@ -34,9 +34,9 @@ ALTER TABLE `users`
 -------------------------------------------------------------
 
 -- users 테이블 성능 최적화를 위한 인덱스 추가
-CREATE INDEX idx_users_teacher_id ON `users`(`teacher_id`);
-CREATE INDEX idx_users_supporter_id ON `users`(`supporter_id`);
-CREATE INDEX idx_users_role_deleted ON `users`(`role`, `deleted_at`);
+--CREATE INDEX idx_users_teacher_id ON `users`(`teacher_id`);
+--CREATE INDEX idx_users_supporter_id ON `users`(`supporter_id`);
+--CREATE INDEX idx_users_role_deleted ON `users`(`role`, `deleted_at`);
 
 
 -- 2. 상품 테이블 (products)
