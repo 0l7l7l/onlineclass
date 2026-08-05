@@ -335,24 +335,35 @@
 			color: #888;
 		}
 		/* モダル用画像スタイル */
-		.quiz-img-container {
-			width: 100%;
-			max-height: 250px; /* 이미지의 최대 높이 제한 (필요시 조절) */
-			margin-bottom: 15px;
-			overflow: hidden;
-			border-radius: 10px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			background-color: #f0f0f0;
-		}
+        /* 퀴즈 카드 내부 세로 정렬 지정 */
+        .single-quiz-card {
+            display: flex;
+            flex-direction: column; /* 요소들을 위에서 아래로 세로 배치 */
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-			.quiz-img-container img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover; /* 이미지가 비율을 유지하며 상자에 가득 차게 설정 */
-				display: block;
-			}
+        /* 이미지 컨테이너 */
+        .quiz-img-container {
+            width: 100%;
+            max-height: 200px; /* 카드를 넘치지 않도록 높이 제한 */
+            margin-bottom: 15px;
+            overflow: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+            /* 이미지 속성 지정 */
+            .quiz-img-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain; /* 이미지가 잘리지 않고 전체가 들어오도록 설정 */
+                display: block;
+            }
 	</style>
 </head>
 <body>
@@ -1350,19 +1361,21 @@
 			</div>
 
 			<div class="slide-wrapper" id="extraSlideWrapper">
-				<div class="slide active"> 
+				<div class="slide active">
 					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
-						<div class="quiz-jp">「手を洗って、ご飯を食べます。」</div>
-						<div class="quiz-kr-wrap">
-							<button class="arrow-toggle-btn">➔</button>
-							<span class="answer-text hidden">손을 <span class="highlight">씻고</span> 밥을 먹어요.</span>
+						<div class="quiz-img-container">
+							<img src="1.jpg" alt="問題画像">
+							<div class="quiz-jp">「手を洗って、ご飯を食べます。」</div>
+							<div class="quiz-kr-wrap">
+								<button class="arrow-toggle-btn">➔</button>
+								<span class="answer-text hidden">손을 <span class="highlight">씻고</span> 밥을 먹어요.</span>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="slide"> 
 					<div class="single-quiz-card">
-						<img src="20.jpg" alt="問題画像">
+						<img src="2.jpg" alt="問題画像">
 						<div class="quiz-jp">「服を着て、出かけます。」</div>
 						<div class="quiz-kr-wrap">
 							<button class="arrow-toggle-btn">➔</button>
