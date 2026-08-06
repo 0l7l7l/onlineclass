@@ -20,19 +20,39 @@ if ($itemTitle === '') {
 
 function extractLectureNumber(string $title): ?int
 {
-    if (preg_match('/(\d+)?/u', $title, $m)) {
+    if (preg_match('/(\d+)/u', $title, $m)) {
         return (int)$m[1];
     }
     return null;
+}
+
+function resolvePdfPriceByTitle(string $title): int
+{
+    if (preg_match('/\s-\s???$/u', $title) === 1) {
+        return 2880;
+    }
+
+    if (preg_match('/\s-\s1?$/u', $title) === 1) {
+        return 0;
+    }
+
+    return 300;
 }
 
 try {
     $pdo = DB::getConnection();
     $pdo->beginTransaction();
 
-    $price = 3000;
+    $price = resolvePdfPriceByTitle($itemTitle);
     $expiryDays = 2; // 48??
     $lectureNumber = extractLectureNumber($itemTitle);
+
+    if ($price <= 0) {
+        $pdo->rollBack();
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => '?? ??? ?? ?? ??? ???.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 
     $productStmt = $pdo->prepare("SELECT * FROM products WHERE product_type = 'PDF' AND title = ? AND is_active = 1 LIMIT 1");
     $productStmt->execute([$itemTitle]);

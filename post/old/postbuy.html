@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>다국어 회화 교재 PDF 판매 플랫폼</title>
+	<title>회화 교재 PDF</title>
 	<style>
 		* {
 			box-sizing: border-box;
@@ -434,18 +434,18 @@
 			return new Date(expiredAt).getTime() > Date.now();
 		}
 
-		function downloadPDF(title) {
+   function downloadPDF(title, autoStart = false) {
       if (!checkPurchase(title)) {
 				alert('구매 권한이 없거나 이용 시간이 만료되었습니다. 다시 구매해 주세요.');
 				renderCards();
 				return;
 			}
 
-			alert(`[${title}] 회화 교재 PDF 다운로드를 시작합니다.\n(인쇄 화면을 통해 PDF로 저장해주세요)`);
-			const originalTitle = document.title;
-			document.title = title;
-			window.print();
-			document.title = originalTitle;
+      const langFolderMap = { ko: 'kr', ja: 'jp', zh: 'ch', en: 'en' };
+			const folder = langFolderMap[currentLang] || 'kr';
+      const auto = autoStart ? '&autostart=1' : '';
+			const url = `../api/pdf_access.php?action=view_html&item_title=${encodeURIComponent(title)}&lang=${encodeURIComponent(folder)}${auto}`;
+			window.open(url, '_blank');
 		}
 
 		// Carousel Cards Render (Show 5 cards based on offset)
@@ -526,8 +526,8 @@
 				renderCards();
 				closeModal();
 
-				alert(result.message || `[${selectedLesson}] 구매가 완료되었습니다!`);
-				downloadPDF(selectedLesson);
+        alert(result.message || `[${selectedLesson}] 구매가 완료되었습니다!`);
+				downloadPDF(selectedLesson, true);
 			} catch (e) {
 				console.error(e);
 				alert('구매 처리 중 네트워크 오류가 발생했습니다.');

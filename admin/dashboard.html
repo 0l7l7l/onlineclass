@@ -187,6 +187,76 @@
 			gap: 8px;
 			margin-top: 15px;
 		}
+
+		.textbook-helper-grid {
+			display: grid;
+			grid-template-columns: 1.2fr 1fr;
+			gap: 18px;
+		}
+
+		.textbook-dropzone {
+			border: 2px dashed #cbd5e1;
+			border-radius: 10px;
+			background: #f8fafc;
+			min-height: 180px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 20px;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			color: #475569;
+		}
+
+		.textbook-dropzone.dragover {
+			border-color: #2563eb;
+			background: #eff6ff;
+			color: #1e40af;
+		}
+
+		.textbook-helper-box {
+			background: #fff;
+			padding: 18px;
+			border-radius: 10px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		}
+
+		.textbook-helper-box .form-group {
+			margin-bottom: 12px;
+		}
+
+		.textbook-helper-box label {
+			display: block;
+			font-size: 13px;
+			font-weight: 700;
+			color: #4b5563;
+			margin-bottom: 6px;
+		}
+
+		.textbook-helper-box input,
+		.textbook-helper-box select,
+		.textbook-helper-box textarea {
+			width: 100%;
+			border: 1px solid #d1d5db;
+			border-radius: 6px;
+			padding: 8px 10px;
+			font-size: 13px;
+		}
+
+		.textbook-output-row {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 8px;
+			align-items: start;
+		}
+
+		@media (max-width: 1024px) {
+			.textbook-helper-grid {
+				grid-template-columns: 1fr;
+			}
+		}
 	</style>
 </head>
 <body>
@@ -214,6 +284,7 @@
 		<button class="menu-btn" onclick="switchPage('users-page', this)">👤 회원 관리</button>
 		<button class="menu-btn" onclick="switchPage('approvals-page', this)">💰 충전/입금 승인</button>
 		<button class="menu-btn" onclick="switchPage('products-page', this)">🎟️ 상품 및 티켓 관리</button>
+    <button class="menu-btn" onclick="switchPage('textbook-helper-page', this)">📚 교재 추가</button>
 	</div>
 
 	<div class="main-content">
@@ -412,6 +483,69 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+
+		<!-- [TAB 6] 교재 추가 도우미 -->
+		<div id="textbook-helper-page" class="page-section">
+			<h2>교재 추가</h2>
+      <p style="color: #858796; margin-bottom: 20px;">파일을 드래그 앤 드롭하면 제목/방식/경로/SQL 자동 생성 후 즉시 업로드/DB 등록이 가능합니다.</p>
+
+			<div class="textbook-helper-grid">
+				<div class="textbook-helper-box">
+					<div id="textbook-dropzone" class="textbook-dropzone">
+						<div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">여기에 교재 파일을 놓으세요</div>
+						<div style="font-size: 13px; color: #64748b;">지원 확장자: .html, .pdf</div>
+						<div style="margin-top: 12px; font-size: 12px; color: #94a3b8;">또는 클릭하여 파일 선택</div>
+					</div>
+					<input type="file" id="textbook-file-input" accept=".html,.pdf" style="display:none;">
+					<div id="textbook-picked-file" style="margin-top: 10px; font-size: 12px; color: #64748b;">선택된 파일 없음</div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+						<button type="button" class="btn btn-primary" id="textbook-upload-btn" onclick="uploadTextbookNow()">업로드 + DB 등록</button>
+					</div>
+					<div id="textbook-upload-status" style="margin-top:8px; font-size:12px; color:#64748b;">업로드 대기</div>
+				</div>
+
+				<div class="textbook-helper-box">
+					<div class="form-group">
+						<label for="textbook-title">교재 제목</label>
+						<input type="text" id="textbook-title" placeholder="예: 일상회화 - 6과">
+					</div>
+					<div class="form-group">
+						<label for="textbook-type">교재 방식</label>
+						<select id="textbook-type">
+							<option value="html">HTML 방식</option>
+							<option value="pdf">PDF 방식</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="textbook-lang">언어</label>
+						<select id="textbook-lang">
+							<option value="kr">한국어 (kr)</option>
+							<option value="jp">일본어 (jp)</option>
+							<option value="ch">중국어 (ch)</option>
+							<option value="en">영어 (en)</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="textbook-helper-box" style="margin-top:18px;">
+				<div class="form-group">
+					<label>FTP/서버 업로드 경로</label>
+					<div class="textbook-output-row">
+						<input type="text" id="textbook-upload-path" readonly>
+						<button type="button" class="btn btn-secondary" onclick="copyTextbookOutput('textbook-upload-path')">복사</button>
+					</div>
+				</div>
+
+				<div class="form-group" style="margin-bottom:0;">
+					<label>DB 실행용 SQL</label>
+					<div class="textbook-output-row">
+						<textarea id="textbook-sql" rows="3" readonly></textarea>
+						<button type="button" class="btn btn-secondary" onclick="copyTextbookOutput('textbook-sql')">복사</button>
+					</div>
+				</div>
+			</div>
 		</div>
 
 	</div>
@@ -899,6 +1033,7 @@
 		let manageStudentMode = 'add';
 		let pendingStudentCandidateId = null;
 		let pendingStudentCandidateName = '';
+		let selectedTextbookFile = null;
 
 		function escapeHtml(value) {
 			return String(value ?? '')
@@ -907,6 +1042,227 @@
 				.replace(/>/g, '&gt;')
 				.replace(/"/g, '&quot;')
 				.replace(/'/g, '&#39;');
+		}
+
+		function normalizeTextbookTitle(raw) {
+			let title = String(raw || '').trim();
+			if (!title) return '';
+			if (title.includes('_') && !title.includes('-')) {
+				title = title.replace(/_/g, ' - ');
+			}
+			return title;
+		}
+
+		function getSafeTextbookName(rawTitle) {
+			return String(rawTitle || '')
+				.replace(/\s*-\s*/g, '_')
+				.replace(/[\\/:*?"<>|]/g, '')
+				.trim();
+		}
+
+		function escapeSqlString(value) {
+			return String(value || '').replace(/'/g, "''");
+		}
+
+		function extractLectureNumberFromTitle(title) {
+			const m = String(title || '').match(/(\d+)/);
+			return m ? parseInt(m[1], 10) : null;
+		}
+
+		function updateTextbookOutputs() {
+			const titleEl = document.getElementById('textbook-title');
+			const typeEl = document.getElementById('textbook-type');
+			const langEl = document.getElementById('textbook-lang');
+			const uploadPathEl = document.getElementById('textbook-upload-path');
+			const sqlEl = document.getElementById('textbook-sql');
+
+			if (!titleEl || !typeEl || !langEl || !uploadPathEl || !sqlEl) return;
+
+			const rawTitle = normalizeTextbookTitle(titleEl.value);
+			const type = typeEl.value === 'html' ? 'html' : 'pdf';
+			const lang = langEl.value || 'kr';
+			const safeTitle = getSafeTextbookName(rawTitle);
+
+			if (!rawTitle || !safeTitle) {
+				uploadPathEl.value = '';
+				sqlEl.value = '';
+				return;
+			}
+
+      uploadPathEl.value = type === 'html'
+				? `/post/books/${lang}/${safeTitle}.html`
+				: `/files/books/${lang}/${safeTitle}.pdf`;
+
+			const titleSql = escapeSqlString(rawTitle);
+     const lectureNo = extractLectureNumberFromTitle(rawTitle);
+			sqlEl.value = `INSERT INTO products (product_type, title, price, lecture_number, class_type, total_count, expiry_days, per_week, is_active) VALUES ('PDF', '${titleSql}', 3000, ${lectureNo === null ? 'NULL' : lectureNo}, NULL, NULL, 2, 0, 1);`;
+		}
+
+		function processTextbookFile(file) {
+			if (!file || !file.name) return;
+			const fileName = file.name;
+			const lastDot = fileName.lastIndexOf('.');
+			if (lastDot === -1) return;
+
+			const ext = fileName.substring(lastDot + 1).toLowerCase();
+			if (ext !== 'html' && ext !== 'pdf') {
+       selectedTextbookFile = null;
+				alert('html 또는 pdf 파일만 등록할 수 있습니다.');
+				return;
+			}
+
+			let rawTitle = fileName.substring(0, lastDot);
+			rawTitle = normalizeTextbookTitle(rawTitle);
+
+			const titleEl = document.getElementById('textbook-title');
+			const typeEl = document.getElementById('textbook-type');
+			const pickedEl = document.getElementById('textbook-picked-file');
+			const statusEl = document.getElementById('textbook-upload-status');
+			selectedTextbookFile = file;
+
+			if (titleEl) titleEl.value = rawTitle;
+			if (typeEl) typeEl.value = ext === 'html' ? 'html' : 'pdf';
+			if (pickedEl) pickedEl.innerText = `선택된 파일: ${fileName}`;
+			if (statusEl) statusEl.innerText = '업로드 대기';
+
+			updateTextbookOutputs();
+		}
+
+		function setTextbookUploadStatus(message, tone = 'normal') {
+			const statusEl = document.getElementById('textbook-upload-status');
+			if (!statusEl) return;
+			statusEl.innerText = message;
+			if (tone === 'error') {
+				statusEl.style.color = '#b91c1c';
+			} else if (tone === 'success') {
+				statusEl.style.color = '#166534';
+			} else {
+				statusEl.style.color = '#64748b';
+			}
+		}
+
+		async function uploadTextbookNow() {
+			const fileInput = document.getElementById('textbook-file-input');
+			const titleEl = document.getElementById('textbook-title');
+			const langEl = document.getElementById('textbook-lang');
+			const uploadBtn = document.getElementById('textbook-upload-btn');
+			const uploadPathEl = document.getElementById('textbook-upload-path');
+			const sqlEl = document.getElementById('textbook-sql');
+
+			const file = selectedTextbookFile || fileInput?.files?.[0];
+			if (!file) {
+				alert('먼저 업로드할 파일을 선택해 주세요.');
+				return;
+			}
+
+			const title = normalizeTextbookTitle(titleEl?.value || '');
+			const lang = langEl?.value || 'kr';
+			if (!title) {
+				alert('교재 제목을 확인해 주세요.');
+				return;
+			}
+
+			const form = new FormData();
+			form.append('file', file);
+			form.append('lang', lang);
+			form.append('title', title);
+
+			try {
+				if (uploadBtn) {
+					uploadBtn.disabled = true;
+					uploadBtn.innerText = '업로드 중...';
+				}
+				setTextbookUploadStatus('업로드 및 DB 등록 처리 중...', 'normal');
+
+				const response = await fetch('../api/upload_book.php', {
+					method: 'POST',
+					body: form
+				});
+
+				const raw = await response.text();
+				const result = tryParseApiJson(raw);
+				if (!response.ok || !result || !result.success) {
+					const msg = (result && result.message) || '업로드 처리에 실패했습니다.';
+					setTextbookUploadStatus(msg, 'error');
+					alert(msg);
+					return;
+				}
+
+				if (result.data?.upload_path && uploadPathEl) uploadPathEl.value = result.data.upload_path;
+				if (result.data?.sql && sqlEl) sqlEl.value = result.data.sql;
+				if (titleEl && result.data?.title) titleEl.value = result.data.title;
+
+				setTextbookUploadStatus(result.message || '업로드 및 DB 등록이 완료되었습니다.', 'success');
+				alert(result.message || '업로드 및 DB 등록이 완료되었습니다.');
+			} catch (e) {
+				console.error(e);
+				setTextbookUploadStatus('네트워크 오류가 발생했습니다.', 'error');
+				alert('업로드 중 네트워크 오류가 발생했습니다.');
+			} finally {
+				if (uploadBtn) {
+					uploadBtn.disabled = false;
+					uploadBtn.innerText = '업로드 + DB 등록';
+				}
+			}
+		}
+
+		async function copyTextbookOutput(targetId) {
+			const el = document.getElementById(targetId);
+			if (!el) return;
+			const text = el.value || '';
+			if (!text.trim()) {
+				alert('복사할 내용이 없습니다.');
+				return;
+			}
+
+			try {
+				if (navigator.clipboard && window.isSecureContext) {
+					await navigator.clipboard.writeText(text);
+				} else {
+					el.focus();
+					el.select();
+					document.execCommand('copy');
+				}
+				alert('복사되었습니다.');
+			} catch (e) {
+				console.error(e);
+				alert('복사에 실패했습니다.');
+			}
+		}
+
+		function bindTextbookHelper() {
+			const dropzone = document.getElementById('textbook-dropzone');
+			const fileInput = document.getElementById('textbook-file-input');
+			const titleEl = document.getElementById('textbook-title');
+			const typeEl = document.getElementById('textbook-type');
+			const langEl = document.getElementById('textbook-lang');
+
+			if (!dropzone || !fileInput || !titleEl || !typeEl || !langEl) return;
+
+			dropzone.addEventListener('click', () => fileInput.click());
+			dropzone.addEventListener('dragover', (event) => {
+				event.preventDefault();
+				dropzone.classList.add('dragover');
+			});
+			dropzone.addEventListener('dragleave', () => {
+				dropzone.classList.remove('dragover');
+			});
+			dropzone.addEventListener('drop', (event) => {
+				event.preventDefault();
+				dropzone.classList.remove('dragover');
+				const file = event.dataTransfer?.files?.[0];
+				processTextbookFile(file);
+			});
+
+			fileInput.addEventListener('change', () => {
+				const file = fileInput.files?.[0];
+				processTextbookFile(file);
+			});
+
+			titleEl.addEventListener('input', updateTextbookOutputs);
+			typeEl.addEventListener('change', updateTextbookOutputs);
+			langEl.addEventListener('change', updateTextbookOutputs);
+			updateTextbookOutputs();
 		}
 
 		function tryParseApiJson(raw) {
@@ -2303,6 +2659,7 @@
 			checkAdminSession();
 			renderTeacherSelectOptions([]);
 			resetSlotDetail();
+			bindTextbookHelper();
 
 			document.addEventListener('keydown', (event) => {
 				if (event.key === 'Escape') closeAllModals();

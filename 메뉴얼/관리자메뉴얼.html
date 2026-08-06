@@ -1,0 +1,323 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>관리자 시스템 매뉴얼 (교재 등록 & 세모 승인)</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			background-color: #f8fafc;
+			color: #0f172a;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 20px;
+		}
+
+		.slider-container {
+			position: relative;
+			width: 100%;
+			max-width: 880px;
+			min-height: 650px;
+			background: #ffffff;
+			border-radius: 16px;
+			border: 1px solid #e2e8f0;
+			box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 40px 60px;
+		}
+
+		/* SPA 섹션 스위칭 */
+		.section {
+			display: none;
+			height: 100%;
+		}
+
+			.section.active {
+				display: block;
+				animation: fadeIn 0.3s ease-in-out;
+			}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(8px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		/* 탭 메뉴 */
+		.nav-tabs {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 24px;
+			border-bottom: 2px solid #f1f5f9;
+			padding-bottom: 12px;
+		}
+
+		.tab-btn {
+			padding: 8px 16px;
+			background: transparent;
+			border: 1.5px solid #cbd5e1;
+			color: #64748b;
+			border-radius: 8px;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+			.tab-btn.active {
+				background-color: #2563eb;
+				color: #ffffff;
+				border-color: #2563eb;
+			}
+
+		h1 {
+			font-size: 20px;
+			font-weight: 700;
+			color: #0f172a;
+			margin-bottom: 8px;
+		}
+
+		h2 {
+			font-size: 16px;
+			font-weight: 600;
+			color: #2563eb;
+			margin: 18px 0 10px 0;
+		}
+
+		p, li {
+			font-size: 14px;
+			color: #334155;
+			line-height: 1.6;
+		}
+
+		ul, ol {
+			padding-left: 20px;
+			margin-bottom: 12px;
+		}
+
+		li {
+			margin-bottom: 6px;
+		}
+
+		/* 경고 / 강조 박스 (아웃라인 스타일) */
+		.danger-box {
+			background-color: #fef2f2;
+			border: 1.5px solid #ef4444;
+			color: #991b1b;
+			padding: 16px;
+			border-radius: 8px;
+			margin: 16px 0;
+			font-size: 13.5px;
+		}
+
+		.danger-title {
+			font-weight: 700;
+			margin-bottom: 6px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.info-box {
+			background-color: #eff6ff;
+			border: 1.5px solid #3b82f6;
+			color: #1e40af;
+			padding: 16px;
+			border-radius: 8px;
+			margin: 16px 0;
+			font-size: 13.5px;
+		}
+
+		code {
+			background-color: #f1f5f9;
+			color: #d97706;
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-family: monospace;
+			font-weight: 600;
+		}
+
+		/* 방향 이동 버튼 (< >) */
+		.nav-btn {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: transparent;
+			color: #2563eb;
+			border: 2px solid #2563eb;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			font-size: 20px;
+			cursor: pointer;
+			transition: all 0.2s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.nav-btn:hover {
+				background-color: #2563eb;
+				color: #ffffff;
+			}
+
+			.nav-btn:disabled {
+				border-color: #cbd5e1;
+				color: #cbd5e1;
+				cursor: not-allowed;
+			}
+
+		.prev-btn {
+			left: 12px;
+		}
+
+		.next-btn {
+			right: 12px;
+		}
+
+		.footer-nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 20px;
+			border-top: 1px solid #f1f5f9;
+			padding-top: 12px;
+			font-size: 12px;
+			color: #94a3b8;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="slider-container">
+		<!-- 탭 메뉴 (페이지 전환) -->
+		<div class="nav-tabs">
+			<button class="tab-btn active" onclick="jumpToSection(0)">1. 전자교재 자동 업로드</button>
+			<button class="tab-btn" onclick="jumpToSection(1)">2. 세모(캐시) 무통장 승인</button>
+		</div>
+
+		<!-- 좌우 이동 버튼 (< >) -->
+		<button class="nav-btn prev-btn" id="prevBtn" onclick="moveSection(-1)">&lt;</button>
+		<button class="nav-btn next-btn" id="nextBtn" onclick="moveSection(1)">&gt;</button>
+
+		<!-- SECTION 1: 전자교재 자동 업로드 -->
+		<div class="section active">
+			<h1>📘 전자교재 원클릭 자동 업로드 매뉴얼</h1>
+			<p>교재 파일(.html 또는 .pdf)을 관리자 화면에 드래그하면, 서버 파일 저장과 DB 등록이 동시에 처리됩니다.</p>
+
+			<h2>1. 작업 순서</h2>
+			<ol>
+				<li>관리자 사이트의 <b>교재 등록 메뉴</b>로 이동합니다.</li>
+				<li>교재에 해당하는 <b>언어(한국어/일본어/중국어/영어)</b>를 선택합니다.</li>
+				<li>준비된 교재 파일을 **드래그 앤 드롭 영역**에 던집니다.</li>
+				<li>`업로드 성공` 메시지 및 DB SQL 반영 결과를 확인합니다.</li>
+			</ol>
+
+			<div class="danger-box">
+				<div class="danger-title">🚨 [필수 준수] 파일 이름 저장 규칙 주의사항</div>
+				<ul>
+					<li>
+						<b>HTML 파일명 형식:</b> 반드시 <code>카테고리 - N과.html</code> 또는 <code>카테고리_N과.html</code> 규칙을 준수해야 합니다.
+						<br>&nbsp;&nbsp;예: <code>일상회화 - 1과.html</code> (⭕) / <code>test1.html</code> (❌ 절대 금지)
+					</li>
+					<li><b>이유:</b> 시스템이 파일 이름에서 <code>카테고리</code>와 <code>과 번호</code>를 파싱하여 DB 상품(Title)으로 연결합니다. 이름이 틀리면 학생 화면에서 교재를 구매해도 404 오류가 발생합니다.</li>
+					<li><b>특수문자 금지:</b> 파일명에 <code>/ \ : * ? " &lt; &gt; |</code> 특수문자를 넣지 마세요.</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- SECTION 2: 세모(캐시) 무통장 입금 승인 -->
+		<div class="section">
+			<h1>💰 세모(캐시) 충전 & 무통장 입금 승인 매뉴얼</h1>
+			<p>‘세모’는 PDF 다운로드 및 수업 티켓 구매 시 <b>현금과 동일하게 차감되는 핵심 자산</b>입니다.</p>
+
+			<h2>1. 무통장 입금 승인 처리 절차</h2>
+			<ol>
+				<li>관리자 페이지 <b>[입금/충전 승인 관리]</b> 메뉴로 이동합니다.</li>
+				<li>신청자의 <code>입금자명</code>, <code>신청 금액(세모)</code>, <code>신청 일시</code>를 확인합니다.</li>
+				<li><b>실제 은행 계좌(통장 내역)를 조회</b>하여 해당 입금자명으로 정확한 금액이 입금되었는지 대조합니다.</li>
+				<li>입금이 100% 확인된 경우에만 <b>[충전/입금 승인]</b> 버튼을 클릭합니다.</li>
+			</ol>
+
+			<div class="danger-box">
+				<div class="danger-title">⚠️ [경고] 무통장 승인 시 강력 주의사항</div>
+				<ul>
+					<li><b>통장 입금 내역 미확인 승인 절대 금지:</b> 승인 버튼을 누르는 즉시 사용자 계정에 세모가 지급되며, <b>무료로 PDF 교재 다운로드 및 수업 예약</b>이 가능해집니다.</li>
+					<li><b>입금자명 대조 필수:</b> 신청자 이름과 실제 입금 통장의 이름이 다를 수 있으므로(예: 타인 명의 입금) 금액과 입금 시간을 철저히 확인하세요.</li>
+					<li><b>중복 승인 주의:</b> 이미 승인 처리된 내역인지 반드시 확인 후 승인하세요. 실수로 중복 클릭 시 세모가 이중 지급될 수 있습니다.</li>
+				</ul>
+			</div>
+
+			<div class="info-box">
+				<b>💡 입금 미확인 시 대처:</b> 입금자명이 다르거나 입금 확인이 되지 않은 건은 승인하지 말고, [보류/거절] 처리 후 고객센터 문의를 안내해야 합니다.
+			</div>
+		</div>
+
+		<!-- 하단 푸터 -->
+		<div class="footer-nav">
+			<span>키보드 방향키(←, →)로도 페이지 이동이 가능합니다.</span>
+			<span id="pageIndicator">1 / 2</span>
+		</div>
+	</div>
+
+	<script>
+        let currentSection = 0;
+        const sections = document.querySelectorAll('.section');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateSlider() {
+            sections.forEach((sec, idx) => {
+                sec.classList.toggle('active', idx === currentSection);
+            });
+            tabBtns.forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === currentSection);
+            });
+
+            prevBtn.disabled = currentSection === 0;
+            nextBtn.disabled = currentSection === sections.length - 1;
+
+            pageIndicator.innerText = `${currentSection + 1} / ${sections.length}`;
+        }
+
+        function moveSection(step) {
+            currentSection += step;
+            if (currentSection < 0) currentSection = 0;
+            if (currentSection >= sections.length) currentSection = sections.length - 1;
+            updateSlider();
+        }
+
+        function jumpToSection(idx) {
+            currentSection = idx;
+            updateSlider();
+        }
+
+        // 키보드 화살표 감지
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSection > 0) moveSection(-1);
+            if (e.key === 'ArrowRight' && currentSection < sections.length - 1) moveSection(1);
+        });
+
+        updateSlider();
+	</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전자교재 등록 자동 변환 도우미</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+        h1 { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+        .subtitle { font-size: 13px; color: #64748b; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus { border-color: #2563eb; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        /* 결과 박스 스타일 */
+        .result-box {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .result-title { font-size: 13px; font-weight: 700; color: #2563eb; }
+        .code-block {
+            background-color: #0f172a;
+            color: #38bdf8;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            word-break: break-all;
+            margin-bottom: 16px;
+        }
+        .btn-outline {
+            padding: 4px 10px;
+            background: transparent;
+            color: #2563eb;
+            border: 1.5px solid #2563eb;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline:hover { background: #2563eb; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🛠️ 교재 등록 경로 & SQL 자동 생성기</h1>
+        <p class="subtitle">교재 제목만 치면 백엔드 규칙에 맞춘 파일명/경로와 DB SQL을 자동 복사할 수 있습니다.</p>
+
+        <!-- 교재 정보 입력 -->
+        <div class="form-group">
+            <label>1. 교재 제목 (앱 화면에 표시될 이름)</label>
+            <input type="text" id="bookTitle" placeholder="예: 일상회화 - 6과" oninput="generateAll()">
+        </div>
+
+        <div class="grid">
+            <div class="form-group">
+                <label>2. 언어 선택</label>
+                <select id="langSelect" onchange="generateAll()">
+                    <option value="kr">한국어 (kr)</option>
+                    <option value="jp">일본어 (jp)</option>
+                    <option value="ch">중국어 (ch)</option>
+                    <option value="en">영어 (en)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>3. 파일 방식</label>
+                <select id="typeSelect" onchange="generateAll()">
+                    <option value="html">HTML 뷰어 방식 (기본)</option>
+                    <option value="pdf">PDF 파일 방식</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 결과 출력 영역 -->
+        <div class="result-box">
+            <div class="result-header">
+                <span class="result-title">📁 1) FTP/서버에 올릴 실제 파일 경로 및 이름</span>
+                <button class="btn-outline" onclick="copyText('filePathResult')">경로 복사</button>
+            </div>
+            <div class="code-block" id="filePathResult">교재 제목을 입력해주세요.</div>
+
+            <div class="result-header">
+                <span class="result-title">🗄️ 2) DB(MySQL)에 실행할 SQL 문</span>
+                <button class="btn-outline" onclick="copyText('sqlResult')">SQL 복사</button>
+            </div>
+            <div class="code-block" id="sqlResult">INSERT INTO products ...</div>
+        </div>
+    </div>
+
+    <script>
+        function generateAll() {
+            const title = document.getElementById('bookTitle').value.trim();
+            const lang = document.getElementById('langSelect').value;
+            const type = document.getElementById('typeSelect').value;
+
+            if (!title) {
+                document.getElementById('filePathResult').innerText = "교재 제목을 입력해주세요.";
+                document.getElementById('sqlResult').innerText = "INSERT INTO products ...";
+                return;
+            }
+
+            // PHP의 safeTitle 치환 로직 동일 적용 (하이픈 및 공백 -> 언더바)
+            let safeTitle = title.replace(/\s*-\s*/g, '_').replace(/[\\/:*?"<>|]/g, '');
+
+            let uploadPath = '';
+            if (type === 'html') {
+                uploadPath = `/post/books/${lang}/${safeTitle}.html`;
+            } else {
+                uploadPath = `/files/books/${lang}/${title}.pdf`;
+            }
+
+            const sql = `INSERT INTO products (title, product_type, is_active) VALUES ('${title}', 'PDF', 1);`;
+
+            document.getElementById('filePathResult').innerText = uploadPath;
+            document.getElementById('sqlResult').innerText = sql;
+        }
+
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            if (!text || text.includes('입력해주세요')) return;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('클립보드에 복사되었습니다!');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SPA 회화 교재 & 영상 학습관</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Pretendard', 'Segoe UI', sans-serif;
+		}
+
+		body {
+			display: flex;
+			height: 100vh;
+			background-color: #f1f5f9;
+			color: #333;
+			overflow: hidden;
+		}
+
+		/* 1. 좌측 사이드바 */
+		.sidebar {
+			width: 250px;
+			background-color: #0f172a;
+			color: #fff;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			flex-shrink: 0;
+		}
+
+			.sidebar h2 {
+				font-size: 1.2rem;
+				padding-bottom: 15px;
+				border-bottom: 1px solid #334155;
+				color: #38bdf8;
+				margin-bottom: 20px;
+			}
+
+		.menu-btn {
+			width: 100%;
+			padding: 14px 16px;
+			background: none;
+			border: 1px solid transparent;
+			color: #94a3b8;
+			text-align: left;
+			font-size: 0.95rem;
+			font-weight: 600;
+			cursor: pointer;
+			border-radius: 8px;
+			margin-bottom: 8px;
+			transition: all 0.2s ease;
+		}
+
+			.menu-btn:hover, .menu-btn.active {
+				background-color: #1e293b;
+				color: #38bdf8;
+				border-color: #38bdf8;
+			}
+
+		.user-profile {
+			background-color: #1e293b;
+			padding: 15px;
+			border-radius: 8px;
+			font-size: 0.85rem;
+			color: #cbd5e1;
+		}
+
+		.semo-badge {
+			color: #f59e0b;
+			font-weight: bold;
+			font-size: 1rem;
+		}
+
+		/* 2. 메인 콘텐츠 영역 */
+		.main-content {
+			flex: 1;
+			padding: 30px;
+			overflow-y: auto;
+			position: relative;
+		}
+
+		.header-title {
+			font-size: 1.5rem;
+			margin-bottom: 25px;
+			font-weight: bold;
+		}
+
+		/* 3. 겹침 카드 스택 & 캐러셀 구조 */
+		.carousel-view {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 20px;
+			margin-top: 40px;
+			perspective: 1000px;
+		}
+
+		.nav-arrow {
+			background: #fff;
+			border: 1px solid #cbd5e1;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 1.2rem;
+			font-weight: bold;
+			box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+			transition: all 0.2s;
+			z-index: 10;
+		}
+
+			.nav-arrow:hover {
+				background: #38bdf8;
+				color: #fff;
+				border-color: #38bdf8;
+			}
+
+		/* 카드가 겹쳐 보이는 스택 무대 */
+		.card-stack {
+			display: flex;
+			position: relative;
+			width: 850px;
+			height: 450px;
+			align-items: center;
+			justify-content: center;
+		}
+
+		/* 부드러운 슬라이딩 트랜지션 핵심 스타일 */
+		.overlap-card {
+			position: absolute;
+			width: 260px;
+			height: 380px;
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 16px;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+			cursor: pointer;
+			/* 위치, 크기, 투명도 전환 애니메이션 */
+			transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease, border-color 0.3s ease;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+		}
+
+			/* 카드 5단계 위치 클래스 정의 */
+			.overlap-card.pos-0 {
+				transform: translateX(-240px) scale(0.85);
+				z-index: 1;
+				opacity: 0.6;
+			}
+
+			.overlap-card.pos-1 {
+				transform: translateX(-120px) scale(0.92);
+				z-index: 2;
+				opacity: 0.85;
+			}
+
+			.overlap-card.pos-2 {
+				transform: translateX(0) scale(1);
+				z-index: 3;
+				opacity: 1;
+				border: 2px solid #0284c7;
+				box-shadow: 0 15px 30px rgba(2, 132, 199, 0.15);
+			}
+
+			.overlap-card.pos-3 {
+				transform: translateX(120px) scale(0.92);
+				z-index: 2;
+				opacity: 0.85;
+			}
+
+			.overlap-card.pos-4 {
+				transform: translateX(240px) scale(0.85);
+				z-index: 1;
+				opacity: 0.6;
+			}
+
+			.overlap-card:hover {
+				transform: translateY(-10px) scale(1.02) !important;
+				z-index: 10 !important;
+				opacity: 1 !important;
+				box-shadow: 0 15px 30px rgba(2, 132, 199, 0.25);
+			}
+
+		/* 카드 내부 영역 */
+		.card-video-box {
+			width: 100%;
+			height: 150px;
+			background: #000;
+			position: relative;
+		}
+
+			.card-video-box video {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+		.video-badge {
+			position: absolute;
+			top: 8px;
+			left: 8px;
+			background: rgba(0,0,0,0.6);
+			color: #fff;
+			padding: 3px 8px;
+			border-radius: 4px;
+			font-size: 0.7rem;
+		}
+
+		.card-body {
+			padding: 16px;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.card-title {
+			font-size: 1.1rem;
+			font-weight: bold;
+			color: #0f172a;
+			margin-bottom: 6px;
+		}
+
+		.card-desc {
+			font-size: 0.8rem;
+			color: #64748b;
+			line-height: 1.4;
+		}
+
+		.card-action-btn {
+			margin-top: 10px;
+			width: 100%;
+			padding: 8px;
+			background: #0284c7;
+			color: #fff;
+			border: none;
+			border-radius: 6px;
+			font-weight: bold;
+			font-size: 0.85rem;
+		}
+
+		/* 4. 카드 선택 후 split-view */
+		.split-view {
+			display: none;
+			gap: 30px;
+			margin-top: 20px;
+			animation: fadeIn 0.4s ease;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.left-selected-card {
+			width: 300px;
+			flex-shrink: 0;
+		}
+
+		.right-lecture-menu {
+			flex: 1;
+			background: #fff;
+			border-radius: 16px;
+			padding: 25px;
+			border: 1px solid #e2e8f0;
+			box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+		}
+
+		.back-to-carousel-btn {
+			background: #f1f5f9;
+			border: 1px solid #cbd5e1;
+			padding: 8px 16px;
+			border-radius: 6px;
+			cursor: pointer;
+			font-weight: bold;
+			margin-bottom: 15px;
+		}
+
+		.lecture-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+			gap: 12px;
+			margin-top: 15px;
+			max-height: 420px;
+			overflow-y: auto;
+			padding-right: 5px;
+		}
+
+		.lecture-item-btn {
+			background: #f8fafc;
+			border: 1px solid #cbd5e1;
+			padding: 12px;
+			border-radius: 8px;
+			text-align: center;
+			font-size: 0.9rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+			.lecture-item-btn:hover {
+				background: #e0f2fe;
+				border-color: #0284c7;
+				color: #0284c7;
+			}
+
+		.all-buy-btn {
+			grid-column: 1 / -1;
+			background: #f59e0b;
+			color: #fff;
+			border: none;
+			padding: 14px;
+			border-radius: 8px;
+			font-size: 1rem;
+			font-weight: bold;
+			cursor: pointer;
+			margin-top: 10px;
+		}
+
+		/* 5. 미리보기 모달 */
+		.modal-overlay {
+			display: none;
+			position: fixed;
+			inset: 0;
+			background: rgba(0,0,0,0.5);
+			justify-content: center;
+			align-items: center;
+			z-index: 2000;
+		}
+
+			.modal-overlay.active {
+				display: flex;
+			}
+
+		.modal-box {
+			background: #fff;
+			width: 500px;
+			border-radius: 12px;
+			padding: 25px;
+			box-shadow: 0 20px 25px rgba(0,0,0,0.2);
+		}
+
+		.pdf-preview-stage {
+			height: 220px;
+			background: #f1f5f9;
+			border: 1px dashed #cbd5e1;
+			border-radius: 8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #64748b;
+			margin: 15px 0;
+		}
+
+		.modal-buy-btn {
+			width: 100%;
+			padding: 12px;
+			background: #0284c7;
+			color: #fff;
+			border: none;
+			border-radius: 6px;
+			font-size: 1rem;
+			font-weight: bold;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 좌측 사이드바 -->
+	<div class="sidebar">
+		<div>
+			<h2>📚 교재 구매관</h2>
+			<button class="menu-btn active" onclick="resetToCarousel()">전체 교재 둘러보기</button>
+		</div>
+		<div class="user-profile">
+			<strong>이학생</strong>님 (학생)<br>
+			보유 세모: <span class="semo-badge" id="user-semo">1,000</span> 세모
+		</div>
+	</div>
+
+	<!-- 우측 메인 콘텐츠 -->
+	<div class="main-content">
+		<h1 class="header-title" id="page-title">추천 회화 교재 (카드 선택)</h1>
+
+		<!-- VIEW 1: 겹쳐진 5장 카드 캐러셀 뷰 -->
+		<div class="carousel-view" id="carousel-view">
+			<button class="nav-arrow" onclick="rotateCarousel(-1)">&lt;</button>
+
+			<div class="card-stack" id="card-stack">
+				<!-- 고정 DOM 카드가 슬라이딩 애니메이션으로 제어됩니다 -->
+			</div>
+
+			<button class="nav-arrow" onclick="rotateCarousel(1)">&gt;</button>
+		</div>
+
+		<!-- VIEW 2: 카드 선택 후 좌측 이동 & 우측 강의 메뉴 뷰 -->
+		<div class="split-view" id="split-view">
+			<div class="left-selected-card" id="left-card-target"></div>
+
+			<div class="right-lecture-menu">
+				<button class="back-to-carousel-btn" onclick="resetToCarousel()">← 전체 교재 목록으로 돌아가기</button>
+				<h2 id="selected-course-title">일어회화 커리큘럼</h2>
+				<p style="color:#64748b; font-size:0.85rem; margin-top:4px;">학습할 강좌를 선택해 교재 페이지 미리보기 및 구매를 진행하세요.</p>
+
+				<div class="lecture-grid" id="lecture-grid"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 미리보기 및 구매 모달 -->
+	<div class="modal-overlay" id="pdf-modal">
+		<div class="modal-box">
+			<div style="display:flex; justify-content:space-between; align-items:center;">
+				<h3 id="modal-lecture-title">1강 교재 미리보기</h3>
+				<button style="background:none; border:none; font-size:1.5rem; cursor:pointer;" onclick="closeModal()">&times;</button>
+			</div>
+
+			<div class="pdf-preview-stage">
+				📄 [PDF 교재 미리보기 1~2 페이지 샘플]
+			</div>
+
+			<div style="margin-bottom: 15px; font-size:0.9rem;">
+				수강료: <strong id="modal-price-text">10,000원 (1,000 세모)</strong>
+			</div>
+
+			<button class="modal-buy-btn" onclick="buyBookWithSemo()">세모(전자머니)로 구매하기</button>
+		</div>
+	</div>
+
+	<script>
+		const coursesData = [
+			{ id: 'ja', title: '일어회화 마스터', desc: '기초부터 현지 원어민 회화 표현 완벽 정복!', priceInWon: 10000, videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+			{ id: 'ko', title: '한국어회화 실전', desc: '일상생활에서 매일 쓰는 실전 K-회화 가이드', priceInWon: 10000, videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+			{ id: 'zh', title: '중국어회화 입문', desc: '성조부터 시작하는 쉬운 한어 회화 한 권 완성', priceInWon: 10000, videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+			{ id: 'en', title: '영어회화 패턴', desc: '원어민이 자주 쓰는 패턴 100개로 말문 트기', priceInWon: 12000, videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+			{ id: 'jpt', title: '일본어 JPT 실전', desc: 'JPT 고득점 달성을 위한 청해/독해 통합 패키지', priceInWon: 15000, videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' }
+		];
+
+		let userSemo = 1000;
+		let currentCourseIndex = 0; // 중앙 카드의 데이터 인덱스
+		let activeSelectedCourse = null;
+		let selectedLectureName = '';
+
+		// 초기 생성
+		function init() {
+			createPersistentCards();
+			updateCardPositions();
+		}
+
+		// DOM 요소를 처음에 단 한번만 생성하여 배치합니다.
+		function createPersistentCards() {
+			const stackContainer = document.getElementById('card-stack');
+			stackContainer.innerHTML = '';
+
+			coursesData.forEach((course, index) => {
+				const cardEl = document.createElement('div');
+				cardEl.id = `course-card-${index}`;
+				cardEl.className = 'overlap-card';
+				cardEl.onclick = () => selectCourseCard(course);
+
+				cardEl.innerHTML = `
+											<div class="card-video-box">
+													<span class="video-badge">▶ 샘플강의</span>
+													<video src="${course.videoUrl}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>
+											</div>
+											<div class="card-body">
+													<div>
+															<div class="card-title">${course.title}</div>
+															<div class="card-desc">${course.desc}</div>
+													</div>
+													<button class="card-action-btn">강좌 및 교재 보기</button>
+											</div>
+									`;
+				stackContainer.appendChild(cardEl);
+			});
+		}
+
+		// 위치 클래스(pos-0 ~ pos-4)만 변경하여 CSS 애니메이션을 발동시킵니다.
+		function updateCardPositions() {
+			coursesData.forEach((_, index) => {
+				const cardEl = document.getElementById(`course-card-${index}`);
+				// 중앙(index 0)을 기준으로 각 카드의 위치 계산
+				let pos = (index - currentCourseIndex + 5) % 5;
+				cardEl.className = `overlap-card pos-${pos}`;
+			});
+		}
+
+		// 회전 제어
+		function rotateCarousel(dir) {
+			currentCourseIndex = (currentCourseIndex + dir + coursesData.length) % coursesData.length;
+			updateCardPositions();
+		}
+
+		// 카드 클릭 시 뷰 전환
+		function selectCourseCard(course) {
+			activeSelectedCourse = course;
+
+			document.getElementById('page-title').innerText = `${course.title} 학습관`;
+			document.getElementById('carousel-view').style.display = 'none';
+			document.getElementById('split-view').style.display = 'flex';
+
+			const leftTarget = document.getElementById('left-card-target');
+			leftTarget.innerHTML = `
+									<div class="overlap-card" style="position:relative; width:100%; height:400px; transform:none; opacity:1;">
+											<div class="card-video-box" style="height:180px;">
+													<span class="video-badge">▶ 미리보기</span>
+													<video src="${course.videoUrl}" controls autoplay style="width:100%; height:100%;"></video>
+											</div>
+											<div class="card-body">
+													<div>
+															<div class="card-title">${course.title}</div>
+															<div class="card-desc">${course.desc}</div>
+													</div>
+													<div style="margin-top:15px; font-size:0.85rem; color:#0284c7; font-weight:bold;">
+															권당 세모: ${(course.priceInWon / 10).toLocaleString()} 세모
+													</div>
+											</div>
+									</div>
+							`;
+
+			renderLectureList(course);
+		}
+
+		function renderLectureList(course) {
+			document.getElementById('selected-course-title').innerText = `${course.title} 커리큘럼`;
+			const grid = document.getElementById('lecture-grid');
+			grid.innerHTML = '';
+
+			for (let i = 1; i <= 30; i++) {
+				const btn = document.createElement('button');
+				btn.className = 'lecture-item-btn';
+				btn.innerText = `${i}강 교재`;
+				btn.onclick = () => openLectureModal(`${i}강`);
+				grid.appendChild(btn);
+			}
+
+			const allBuyBtn = document.createElement('button');
+			allBuyBtn.className = 'all-buy-btn';
+			allBuyBtn.innerText = `🎁 전체 1~30강 교재 패키지 일괄 구매`;
+			allBuyBtn.onclick = () => openLectureModal(`전체 1~30강 패키지`);
+			grid.appendChild(allBuyBtn);
+		}
+
+		function resetToCarousel() {
+			document.getElementById('page-title').innerText = '추천 회화 교재 (카드 선택)';
+			document.getElementById('split-view').style.display = 'none';
+			document.getElementById('carousel-view').style.display = 'flex';
+		}
+
+		function openLectureModal(lectureName) {
+			selectedLectureName = lectureName;
+			const course = activeSelectedCourse;
+			const semoPrice = course.priceInWon / 10;
+
+			document.getElementById('modal-lecture-title').innerText = `[${course.title}] ${lectureName}`;
+			document.getElementById('modal-price-text').innerText = `${course.priceInWon.toLocaleString()}원 (${semoPrice.toLocaleString()} 세모)`;
+			document.getElementById('pdf-modal').classList.add('active');
+		}
+
+		function closeModal() {
+			document.getElementById('pdf-modal').classList.remove('active');
+		}
+
+		function buyBookWithSemo() {
+			const semoPrice = activeSelectedCourse.priceInWon / 10;
+
+			if (userSemo < semoPrice) {
+				alert(`세모 잔액이 부족합니다!\n필요 세모: ${semoPrice} 세모 / 보유 세모: ${userSemo} 세모`);
+				return;
+			}
+
+			userSemo -= semoPrice;
+			document.getElementById('user-semo').innerText = userSemo.toLocaleString();
+			alert(`[${activeSelectedCourse.title} - ${selectedLectureName}] 구매가 완료되었습니다!`);
+			closeModal();
+		}
+
+		init();
+	</script>
+</body>
+</html>
