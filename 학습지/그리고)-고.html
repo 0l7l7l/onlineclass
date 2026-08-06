@@ -1,0 +1,1094 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>한국어 문법 교재 - -고 (~하고)</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--dark-blue: #1e3a8a;
+			--light-blue-bg: #eff6ff;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			/* 책 중앙 접힘선 효과 */
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 20mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 12mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+		.left-page .footer {
+			left: 20mm;
+		}
+
+		.right-page .footer {
+			right: 20mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 15mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 20mm;
+		}
+
+		.right-page .grammar-no {
+			right: 20mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+		 🏷️ 상단 굵은 띠 배지 (.lesson-band)
+		 ========================================================================== */
+		.lesson-band {
+			display: inline-block;
+			align-self: flex-start;
+			background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 800;
+			padding: 6px 18px;
+			border-radius: 20px;
+			letter-spacing: 1px;
+			margin-bottom: 12px;
+			box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+		}
+
+		/* ==========================================================================
+		 3. 본문 타이틀 & 공통 요소
+		 ========================================================================== */
+		.main-title {
+			font-size: 24px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 12px;
+			border-bottom: 3px solid var(--primary-blue);
+			padding-bottom: 8px;
+		}
+
+		h3.grammar-title {
+			font-size: 32px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		.sub-title {
+			font-size: 16px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-top: 14px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border-bottom: 1px solid #dbeafe;
+		}
+
+			.sub-title::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		p, li {
+			font-size: 13.5px;
+			line-height: 1.6;
+			color: #334155;
+		}
+
+		ul {
+			padding-left: 18px;
+			margin-top: 4px;
+		}
+
+		li {
+			margin-bottom: 6px;
+		}
+
+		.highlight {
+			color: var(--primary-blue);
+			font-weight: bold;
+		}
+
+		.point-box {
+			background-color: var(--light-blue-bg);
+			border-left: 5px solid var(--primary-blue);
+			padding: 12px 16px;
+			border-radius: 4px;
+			margin: 12px 0;
+		}
+
+			.point-box h4 {
+				font-size: 15px;
+				color: #1e293b;
+				margin-bottom: 6px;
+			}
+
+			.point-box ul {
+				list-style: none;
+				padding-left: 0;
+			}
+
+			.point-box li {
+				font-size: 14px;
+				margin-bottom: 4px;
+			}
+
+		/* ==========================================================================
+		 💬 말풍선 (Speech Bubble) + 규칙 비주얼 표
+		 ========================================================================== */
+		.speech-bubble-box {
+			position: relative;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 16px;
+			padding: 14px 18px;
+			margin: 12px 0 16px 0;
+		}
+
+			.speech-bubble-box::after {
+				content: '';
+				position: absolute;
+				top: -10px;
+				left: 24px;
+				border-width: 0 10px 10px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.speech-bubble-box h4 {
+				font-size: 14px;
+				color: var(--dark-blue);
+				margin-bottom: 10px;
+				font-weight: bold;
+			}
+
+		.rule-visual-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 6px;
+			margin-top: 4px;
+		}
+
+			.rule-visual-table th {
+				padding: 6px;
+				font-size: 13px;
+				font-weight: 800;
+				border-radius: 8px;
+				color: #ffffff;
+				text-align: center;
+			}
+
+				.rule-visual-table th.has-patchim {
+					background-color: #2563eb;
+				}
+
+				.rule-visual-table th.no-patchim {
+					background-color: #0284c7;
+				}
+
+			.rule-visual-table td {
+				background-color: #ffffff;
+				border: 1px solid #dbeafe;
+				border-radius: 8px;
+				padding: 8px;
+				text-align: center;
+				vertical-align: middle;
+			}
+
+		.rule-example {
+			font-weight: 700;
+			color: #334155;
+			font-size: 14px;
+		}
+
+		.rule-plus {
+			color: #94a3b8;
+			font-size: 12px;
+			margin: 0 2px;
+		}
+
+		.rule-target {
+			font-weight: 900;
+			color: #2563eb;
+			font-size: 15px;
+		}
+
+		.rule-result-row td {
+			background-color: #f8fafc;
+			font-size: 13px;
+			color: #1e3a8a;
+		}
+
+		/* ==========================================================================
+		 📝 예문 카드 & 단어 테이블 & 연습문제
+		 ========================================================================== */
+		.example-card {
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px 16px;
+			margin-bottom: 10px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+		}
+
+		.ex-ko {
+			font-size: 16px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.ex-ja {
+			font-size: 13px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.word-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 8px 0 16px 0;
+			font-size: 13px;
+		}
+
+			.word-table th, .word-table td {
+				border: 1px solid #dbeafe;
+				padding: 6px 10px;
+				text-align: center;
+			}
+
+			.word-table th {
+				background-color: #dbeafe;
+				color: var(--dark-blue);
+				font-weight: bold;
+			}
+
+		.quiz-item {
+			margin-bottom: 10px;
+			background-color: #fafafa;
+			padding: 10px 14px;
+			border-radius: 8px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 14px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			width: 80px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+		}
+
+		/* ==========================================================================
+		 🔑 정답 박스 & 버튼 스타일
+		 ========================================================================== */
+		.answer-btn {
+			margin-top: 8px;
+			padding: 6px 14px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 2px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 12px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+				color: #1d4ed8;
+				border-color: #1d4ed8;
+			}
+
+		.answer-box {
+			margin-top: 8px;
+			padding: 10px 12px;
+			border: 2px solid var(--primary-blue);
+			border-radius: 8px;
+			display: none;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 13px;
+			color: var(--dark-blue);
+			line-height: 1.5;
+		}
+
+		/* ==========================================================================
+		 📘 표지(Cover) & 단원 구분(Divider) 전용 스타일
+		 ========================================================================== */
+		.page.cover-page {
+			background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+			justify-content: space-between;
+			align-items: center;
+			text-align: center;
+			padding: 35mm 20mm 20mm 20mm;
+		}
+
+		.cover-header {
+			margin-top: 10px;
+		}
+
+		.cover-badge {
+			display: inline-block;
+			background-color: #e0f2fe;
+			color: #0284c7;
+			font-size: 13px;
+			font-weight: 700;
+			padding: 6px 16px;
+			border-radius: 20px;
+			letter-spacing: 1.5px;
+			margin-bottom: 15px;
+		}
+
+		.cover-title {
+			font-size: 34px;
+			color: #1e293b;
+			font-weight: 900;
+			line-height: 1.3;
+		}
+
+		.cover-subtitle {
+			font-size: 16px;
+			color: #64748b;
+			font-weight: 500;
+			margin-top: 10px;
+		}
+
+		.cover-image-box {
+			width: 140px;
+			height: 140px;
+			background-color: #ffffff;
+			border: 2px dashed #cbd5e1;
+			border-radius: 24px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin: 20px 0;
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+		}
+
+			.cover-image-box span {
+				font-size: 36px;
+				margin-bottom: 4px;
+			}
+
+			.cover-image-box p {
+				font-size: 11px;
+				color: #94a3b8;
+			}
+
+		.cover-footer-info {
+			margin-bottom: 10px;
+		}
+
+		.cover-author {
+			font-size: 14px;
+			font-weight: 700;
+			color: #334155;
+		}
+
+		.cover-copy {
+			font-size: 12px;
+			color: #94a3b8;
+			margin-top: 4px;
+		}
+
+		/* 단원 구분(Divider) */
+		.page.divider-page {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			padding: 30mm 20mm;
+		}
+
+		.divider-badge {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: bold;
+			padding: 6px 16px;
+			border-radius: 20px;
+			margin-bottom: 20px;
+			display: inline-block;
+		}
+
+		.divider-title {
+			font-size: 32px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 15px;
+		}
+
+		.divider-subtitle {
+			font-size: 18px;
+			color: #3b82f6;
+			font-weight: 600;
+			margin-bottom: 30px;
+		}
+
+		/* ==========================================================================
+		 📱 모바일 & 🖨️ 인쇄(Print) 대응
+		 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+		 📖 [첫 번째 펼침면] 왼쪽: 표지 | 오른쪽: 프롤로그 (교재 사용법)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- (왼쪽 페이지) 表紙 -->
+			<div class="page left-page cover-page">
+				<div class="cover-header">
+					<span class="cover-badge">KOREAN GRAMMAR</span>
+					<h1 class="cover-title">설레는 첫 걸음<br>한국어 회화</h1>
+					<p class="cover-subtitle">하루 10분으로 완성하는 기초 문법</p>
+				</div>
+				<div class="cover-image-box">
+					<span>🐣</span>
+					<p>Illustration</p>
+				</div>
+				<div class="cover-footer-info">
+					<p class="cover-author">Designed by. 세모일본어</p>
+					<p class="cover-copy">Self-Study Grammar Book</p>
+				</div>
+				<div class="footer">Cover</div>
+			</div>
+
+			<!-- (오른쪽 페이지) PROLOGUE -->
+			<div class="page right-page">
+				<div class="grammar-no">PROLOGUE</div>
+				<h1 class="main-title">이렇게 공부해보세요!</h1>
+				<div class="sub-title">1. 부담 없이 하루 한 장</div>
+				<p>문법을 외우려고 하지 말고, 눈으로 편안하게 읽으며 입으로 소리 내어 따라 해보세요.</p>
+
+				<div class="sub-title">2. 직접 정답을 확인하는 재미</div>
+				<p>연습 문제를 풀고 난 뒤 <strong>[🔑 正解を確認する]</strong> 버튼을 눌러 바로바로 정답을 체크해 보세요.</p>
+
+				<div class="point-box" style="margin-top: 25px;">
+					<h4>💡 교재 특징</h4>
+					<ul>
+						<li>내가 말할 수 있도록 자주 쓰는 한국어 위주 구성</li>
+						<li>한눈에 들어오는 깔끔하고 직관적인 설명</li>
+					</ul>
+				</div>
+				<div class="footer">Prologue</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 📖 [두 번째 펼침면] 왼쪽: 구분 페이지 | 오른쪽: 단원 소개
+		 ========================================================================== -->
+		<div class="book-container">
+			<div class="page left-page divider-page">
+				<span class="divider-badge">LESSON 02</span>
+				<h2 class="divider-title">시작이에요!</h2>
+				<p class="divider-subtitle">할 수 있어요!</p>
+			</div>
+
+			<div class="page right-page">
+				<div class="grammar-no">文法 Overview</div>
+				<h1 class="main-title">LESSON 02 개요</h1>
+				<div class="sub-title">학습 목표</div>
+				<p>日常会話において、動作や状態を順序よく丁寧につなげる表現をマスターします。</p>
+				<div class="speech-bubble-box" style="margin-top:20px;">
+					<h4>💬 point</h4>
+					<p>「그리고(そして)」を使わずに、文と文を1つになめらかにつなぐ技術を学びましょう！</p>
+				</div>
+				<div class="footer">Overview</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 📖 [세 번째 펼침면] 1페이지(문법 설명) + 2페이지(예문 전용)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 📄 1페이지: 문법 설명 -->
+			<div class="page left-page">
+				<div class="lesson-band">LESSON 02</div>
+				<h1 class="main-title">동작 연결하기</h1>
+				<h3 class="grammar-title">動詞 + 고</h3>
+
+				<!-- 1. 意味 -->
+				<div class="sub-title">意味</div>
+				<p>動詞の語幹につき<b>「〜してから、〜して」</b>という意味を表します。主に日常会話において、2つ以上の動作を順序立ててつなぐ時に使われます。</p>
+
+				<!-- 2. 使い分けルール -->
+				<div class="sub-title">💡 接続公式</div>
+				<div class="speech-bubble-box">
+					<h4>💬 パッチムの有無に関わらないシンプル接続！</h4>
+					<p>動詞の基本形から<b>「다」を取って「고」をつけるだけ</b>です。</p>
+					<table class="rule-visual-table">
+						<thead>
+							<tr>
+								<th class="has-patchim">パッチム あり ⭕</th>
+								<th class="no-patchim">パッチム なし ❌</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span class="rule-example">먹다</span>
+									<span class="rule-plus">＋</span>
+									<span class="rule-target">고</span>
+								</td>
+								<td>
+									<span class="rule-example">자다</span>
+									<span class="rule-plus">＋</span>
+									<span class="rule-target">고</span>
+								</td>
+							</tr>
+							<tr class="rule-result-row">
+								<td><strong>먹고</strong></td>
+								<td><strong>자고</strong></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- 3. Point -->
+				<div class="sub-title">Point</div>
+				<ul>
+					<li><b>먹다（食べる）:</b> 語幹「먹」にそのまま「고」を接続 ➔ <b>먹고</b>（食べて）</li>
+					<li><b>자다（寝る）:</b> 語幹「자」にそのまま「고」を接続 ➔ <b>자고</b>（寝て）</li>
+				</ul>
+				<!-- 3. 解説 -->
+				<div class="sub-title">Point</div>
+				<div class="speech-bubble-box">
+					<ul>
+						<li><strong>그리고（そして）との違い:</strong> 文章を一度切って「그리고」でつなぐよりも、「-고」を使う方が日常会話ではとてもスムーズで ナチュラルに聞こえます。</li>
+						<li><strong>時制の注意:</strong> 過去形にする場合でも「-고」には過去形をつけず、<strong>文末の動詞だけを過去形</strong>にします。（例：먹고 갔어요 ⭕ / 먹었고 갔어요 ❌）</li>
+					</ul>
+				</div>
+
+				<div class="footer">Page 1 (解説)</div>
+			</div>
+
+			<!-- 📄 2페이지: 예문 전용 -->
+			<div class="page right-page">
+				<div class="grammar-no">LESSON 02</div>
+				<h1 class="main-title">例文で覚える</h1>
+				<p style="margin-bottom: 16px; color: #64748b; font-size: 13px;">声に出して何度も読んでみましょう！</p>
+
+				<div class="example-card">
+					<p class="ex-ko">밥을 먹<span class="highlight">고</span> 회사에 가요.</p>
+					<p class="ex-ja">ご飯を食べて会社に行きます。</p>
+				</div>
+
+				<div class="example-card">
+					<p class="ex-ko">일어나<span class="highlight">고</span> 씻어요.</p>
+					<p class="ex-ja">起きて洗います。</p>
+				</div>
+
+				<div class="example-card">
+					<p class="ex-ko">책을 읽<span class="highlight">고</span> 자요.</p>
+					<p class="ex-ja">本を読んで寝ます。</p>
+				</div>
+
+				<div class="example-card">
+					<p class="ex-ko">친구를 만나<span class="highlight">고</span> 카페에 가요.</p>
+					<p class="ex-ja">友達に会ってカフェに行きます。</p>
+				</div>
+
+				<div class="sub-title">質問・会話フレーズ</div>
+				<div class="point-box">
+					<h4>💬 会話での応用</h4>
+					<ul>
+						<li><b>A:</b> 주말에 뭐 해요? (週末に何をしますか？)</li>
+						<li><b>B:</b> 영화를 <span class="highlight">보고</span> 밥을 먹어요. (映画を見てご飯を食べます。)</li>
+					</ul>
+				</div>
+				<div class="sub-title">2. 注意したいポイント</div>
+				<div class="speech-bubble-box" style="background-color: #fff1f2; border-color: #fecdd3;">
+					<h4 style="color: #be123c; font-size: 0.9rem; margin-bottom: 4px;">⚠️ 「〜て」の誤用に注意</h4>
+					<p style="font-size: 0.85rem; color: #881337;">
+						理由・原因（〜だから、〜して）を表すときは「-고」ではなく「-아서/어서」を使います。<br>
+						例：疲れて休みます ➔ <strong>피곤해서 쉬어요 (⭕)</strong> / 피곤하고 쉬어요 (❌)
+					</p>
+				</div>
+
+
+				<div class="footer">Page 2 (例文)</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 📖 [네 번째 펼침면] 3페이지(단어+연습문제 1) + 4페이지(단어+연습문제 2)
+		 ========================================================================== -->
+		<div class="book-container">
+
+			<!-- 📄 3페이지: 연습문제 STEP 1 -->
+			<div class="page left-page">
+				<div class="lesson-band">STEP 1</div>
+				<h1 class="main-title">練習問題 STEP 1</h1>
+
+				<!-- 상단: 단어장 -->
+				<div class="sub-title">単語帳</div>
+				<table class="word-table">
+					<thead>
+						<tr>
+							<th>単語（動詞）</th>
+							<th>-고 形</th>
+							<th>意味</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><strong>일어나다</strong></td>
+							<td> </td>
+							<td>起きる</td>
+						</tr>
+						<tr>
+							<td><strong>씻다</strong></td>
+							<td> </td>
+							<td>洗う</td>
+						</tr>
+						<tr>
+							<td><strong>먹다</strong></td>
+							<td> </td>
+							<td>食べる</td>
+						</tr>
+						<tr>
+							<td><strong>마시다</strong></td>
+							<td> 마시고</td>
+							<td>飲む</td>
+						</tr>
+						<tr>
+							<td><strong>요리하다</strong></td>
+							<td> </td>
+							<td>料理する</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- 하단: 연습문제 -->
+				<div class="sub-title">練習問題</div>
+				<p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な形を選び文章を完成させましょう。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q1. 일어나다 ＋ 씻어요</div>
+					<p>→ 늦게 <span class="quiz-line"></span> 씻어요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q2. 요리하다 ＋ 밥을 먹어요</div>
+					<p>→ 보통 요리를 <span class="quiz-line"></span> 밥을 먹어요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q3. 마시다 ＋ 이야기해요</div>
+					<p>→ 커피를 <span class="quiz-line"></span> 이야기해요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q4. 씻다 ＋ 밥을 먹어요</div>
+					<p>→ 손을 <span class="quiz-line"></span> 밥을 먹어요.</p>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						Q1. <strong>일어나고</strong> (늦게 일어나고 씻어요.)<br>
+						Q2. <strong>하고</strong> (보통 요리를 하고 밥을 먹어요.)<br>
+						Q3. <strong>마시고</strong> (커피를 마시고 이야기해요.)<br>
+						Q4. <strong>씻고</strong> (손을 씻고 밥을 먹어요.)<br>
+					</div>
+				</div>
+
+				<div class="footer">Page 3 (練習 1)</div>
+			</div>
+
+			<!-- 📄 4페이지: 연습문제 STEP 2 -->
+			<div class="page right-page">
+				<div class="grammar-no">STEP 2</div>
+				<h1 class="main-title">練習問題 STEP 2</h1>
+
+				<!-- 상단: 단어장 -->
+				<div class="sub-title">単語帳</div>
+				<table class="word-table">
+					<thead>
+						<tr>
+							<th>単語（動詞）</th>
+							<th>-고 形</th>
+							<th>意味</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td><strong>입다</strong></td><td></td><td>着る</td></tr>
+						<tr><td><strong>청소하다</strong></td><td>청소하고</td><td>掃除する</td></tr>
+						<tr><td><strong>숙제하다</strong></td><td>숙제  </td><td>宿題する</td></tr>
+						<tr><td><strong>타다</strong></td><td>타고</td><td>乗る</td></tr>
+						<tr><td><strong>보내다</strong></td><td>  </td><td>送る</td></tr>
+						<tr><td><strong>찍다</strong></td><td> </td><td>撮る</td></tr>
+					</tbody>
+				</table>
+
+				<!-- 하단: 연습문제 -->
+				<div class="sub-title">練習問題</div>
+				<p style="font-size:12px; color:#666; margin-bottom: 8px;">適切な形を選び文章を完成させましょう。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q5. 입다 ＋ 나가요</div>
+					<p>→ 옷을 <span class="quiz-line"></span> 나가요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q6. 숙제하다 ＋ 자요</div>
+					<p>→ 숙제를 <span class="quiz-line"></span> 자요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q7. 타다 ＋ 가요</div>
+					<p>→ 버스를 <span class="quiz-line"></span> 가요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q8. 찍다 ＋ 올려요</div>
+					<p>→ 사진을 <span class="quiz-line"></span> 올려요.</p>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						Q5. <strong>입고</strong> (옷을 입고 나가요.)<br>
+						Q6. <strong>하고</strong> (숙제를 하고 자요.)<br>
+						Q7. <strong>타고</strong> (버스를 타고 가요.)<br>
+						Q8. <strong>찍고</strong> (사진을 찍고 올려요.)<br>
+					</div>
+				</div>
+
+				<div class="footer">Page 4 (練習 2)</div>
+			</div>
+
+		</div>
+
+		<!-- ==========================================================================
+		 📖 [다섯 번째 펼침면] 5페이지(하루 루틴 길게 연결하기) + 6페이지(연습문제 STEP 3)
+		 ========================================================================== -->
+		<div class="book-container">
+
+			<!-- 📄 5페이지: 응용 표현 - 하루 루틴 연속 연결하기 -->
+			<div class="page left-page">
+				<div class="lesson-band">LESSON 02</div>
+				<h1 class="main-title">一日のルーティンをつなぐ</h1>
+				<h3 class="grammar-title">複数の動作を続けて言う</h3>
+
+				<!-- 1. 説明 -->
+				<div class="sub-title">Point</div>
+				<p><b>「-고」</b>は、2つ以上の動作をいくらでも続けてつなげることができます。一日のスケジュール（ルーティン）を時間の順番通りになめらかに話してみましょう！</p>
+
+				<!-- 2. ルーティンパターンボックス -->
+				<div class="speech-bubble-box" style="margin-top: 12px;">
+					<h4>💬 文章のつなぎ方（公式）</h4>
+					<p style="font-size: 13px; color: #1e3a8a;">
+						動詞① + <b>고</b> ➔ 動詞② + <b>고</b> ➔ 動詞③ + <b>고</b> ➔ 動詞④ (文末の語尾)
+					</p>
+				</div>
+
+				<!-- 3. 実践ルーティン例文 -->
+				<div class="sub-title">一日のルーティン</div>
+
+				<div class="example-card" style="border-left-color: #0284c7;">
+					<p class="ex-ko">아침에 일어나<span class="highlight">고</span> 샤워를 하<span class="highlight">고</span> 밥을 먹어요.</p>
+					<p class="ex-ja">朝起きて、シャワーを浴びて、ご飯を食べます。</p>
+				</div>
+
+				<div class="example-card" style="border-left-color: #0284c7;">
+					<p class="ex-ko">일을 하____, _____를 하<span class="highlight">고</span> 산책_______  자요.</p>
+					<p class="ex-ja">仕事をして、勉強をして、散歩をして寝ます。</p>
+				</div>
+
+				<div class="example-card" style="border-left-color: #0284c7;">
+					<p class="ex-ko">친구를 _________ 카페에 가<span class="highlight">고</span> 이야기를 해요.</p>
+					<p class="ex-ja">友達に会って、カフェに行って、話をします。</p>
+				</div>
+
+				<div class="point-box" style="margin-top: 10px;">
+					<h4>💡 Tip : 過去形（〜した）で話すとき</h4>
+					<p style="font-size: 12.5px;">途中でつなぐ動詞には過去形を使わず、<b>一番最後の動詞だけを過去形</b>に変えます！</p>
+					<p style="font-size: 12.5px; margin-top: 4px; font-weight: bold; color: #2563eb;">
+						➔ 일어나<span class="highlight">고</span> 씻<span class="highlight">고</span> 밥을 <span class="highlight">먹었어요</span>. (⭕)
+					</p>
+				</div>
+
+				<div class="footer">Page 5 (Routine)</div>
+			</div>
+
+			<!-- 📄 6페이지: 연습문제 STEP 3 (신규 단어 활용) -->
+			<div class="page right-page">
+				<div class="grammar-no">STEP 3</div>
+				<h1 class="main-title">練習問題 STEP 3</h1>
+
+				<!-- 상단: 신규 단어장 -->
+				<div class="sub-title">新着単語帳</div>
+				<table class="word-table">
+					<thead>
+						<tr>
+							<th>単語</th>
+							<th>-고 形</th>
+							<th>意味</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td><strong>나가다</strong></td><td>나가고</td><td>出かける</td></tr>
+						<tr><td><strong>생각하다</strong></td><td></td><td>考える</td></tr>
+						<tr><td><strong>보내다</strong></td><td></td><td>送る</td></tr>
+						<tr><td><strong>올리다</strong></td><td></td><td>投稿する・載せる</td></tr>
+						<tr><td><strong>샤워하다</strong></td><td></td><td>シャワーを浴びる</td></tr>
+						<tr><td><strong>쇼핑하다</strong></td><td></td><td>買い物する</td></tr>
+					</tbody>
+				</table>
+
+				<!-- 하단: 연습문제 -->
+				<div class="sub-title">練習問題</div>
+				<p style="font-size:12px; color:#666; margin-bottom: 8px;">新しく習った単語を使って文を完成させましょう。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q9. 생각을 하다 ＋ 말해요 (考えて話します)</div>
+					<p>→ 생각을 <span class="quiz-line"></span> 말해요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q10. 문자를 보내다 ＋ 기다려요 (メッセージを送って待ちます)</div>
+					<p>→ 문자를 <span class="quiz-line"></span> 기다려요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q11. 사진을 찍다 ＋ 유튜브에 올려요 (写真を撮ってYouTubeに投稿します)</div>
+					<p>→ 사진을 <span class="quiz-line"></span> 유튜브에 올려요.</p>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">Q12. 운동을 하다 ＋ 샤워를 하다 ＋ 자요 (3つつなげる)</div>
+					<p>→ 운동을 <span class="quiz-line"></span> 샤워를 <span class="quiz-line"></span> 자요.</p>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						Q9. <strong>하고</strong> (생각을 하고 말해요.)<br>
+						Q10. <strong>보내고</strong> (문자를 보내고 기다려요.)<br>
+						Q11. <strong>찍고</strong> (사진을 찍고 유튜브에 올려요.)<br>
+						Q12. <strong>하고 / 하고</strong> (운동을 하고 샤워를 하고 자요.)<br>
+					</div>
+				</div>
+
+				<div class="footer">Page 6 (練習 3)</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<script>
+		// 정답 확인 버튼 토글 함수
+		function toggleAnswer(btn) {
+			const answerBox = btn.nextElementSibling;
+			if (answerBox.classList.contains('show')) {
+				answerBox.classList.remove('show');
+				btn.textContent = '🔑 正解を確認する';
+			} else {
+				answerBox.classList.add('show');
+				btn.textContent = '🙈 正解を隠す';
+			}
+		}
+	</script>
+</body>
+</html>
