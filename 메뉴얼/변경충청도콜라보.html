@@ -227,9 +227,43 @@ dashboard.html의 이벤트 목록에서 QR 확인 가능
 1.	QR 키를 JP000025 규칙으로 변경
 2.	tag_designs 테이블 설계
 3.	관리자에 태그 미리보기 / PDF 생성까지 추가-->
+<!--***********************************************
+**********************************************
+시스템에서 자동화하면:
+
+관리자 화면:
+
+콘텐츠:今日何してる？
+
+생성 수량:100
+
+[태그 생성]
+
+클릭
+
+↓
+
+자동:
+
+QR 100개 생성
 
 
 
+태그 디자인 100장 생성
+
+
+
+PDF 다운로드
+
+↓
+
+인쇄소 전달이런식으로 이루어지는데, 디자인 파일
+
+
+
+ QR 목록 CSV 하는방법이있을까?
+*************************************************
+**************************************************-->
 
 
 
@@ -548,10 +582,10 @@ dashboard.html의 이벤트 목록에서 QR 확인 가능
 			if (!marqueeEl) return;
 
 			let itemsHtml = storeData.map(s => `
-						<span class="inline-flex items-center gap-1 shrink-0">
-							<i class="fa-solid fa-store text-amber-400"></i> ${s.nameKo}
-						</span>
-					`).join('<span class="text-slate-600">|</span>');
+							<span class="inline-flex items-center gap-1 shrink-0">
+								<i class="fa-solid fa-store text-amber-400"></i> ${s.nameKo}
+							</span>
+						`).join('<span class="text-slate-600">|</span>');
 
 			// 끊김 없는 루프를 위해 동일 내용을 2번 반복
 			marqueeEl.innerHTML = itemsHtml + '<span class="text-slate-600">|</span>' + itemsHtml;
@@ -566,34 +600,34 @@ dashboard.html의 이벤트 목록에서 QR 확인 가능
 			const regionBox = document.getElementById('region-ranking-ko');
 			if (regionBox) {
 				regionBox.innerHTML = regionData.map((item, idx) => `
-							<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-white border-2 border-amber-300 shadow' : 'bg-white/90'}">
-								<div class="flex items-center gap-2">
-									<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-700'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
-									<span>${item.nameKo}</span>
+								<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-white border-2 border-amber-300 shadow' : 'bg-white/90'}">
+									<div class="flex items-center gap-2">
+										<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-700'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
+										<span>${item.nameKo}</span>
+									</div>
+									<div class="flex items-center gap-1 text-amber-600 text-[11px]">
+										<i class="fa-solid fa-qrcode"></i>
+										<span class="font-extrabold">${item.count.toLocaleString()} 스캔</span>
+									</div>
 								</div>
-								<div class="flex items-center gap-1 text-amber-600 text-[11px]">
-									<i class="fa-solid fa-qrcode"></i>
-									<span class="font-extrabold">${item.count.toLocaleString()} 스캔</span>
-								</div>
-							</div>
-						`).join('');
+							`).join('');
 			}
 
 			// 2. 점포별 순위 렌더링
 			const storeBox = document.getElementById('store-ranking-ko');
 			if (storeBox) {
 				storeBox.innerHTML = storeData.slice(0, 5).map((item, idx) => `
-							<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-indigo-900 text-white border-2 border-amber-400 shadow-lg' : 'bg-white text-slate-900'}">
-								<div class="flex items-center gap-2">
-									<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-indigo-100 text-indigo-900'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
-									<span class="${idx === 0 ? 'text-amber-300 font-extrabold' : ''}">${item.nameKo}</span>
+								<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-indigo-900 text-white border-2 border-amber-400 shadow-lg' : 'bg-white text-slate-900'}">
+									<div class="flex items-center gap-2">
+										<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-indigo-100 text-indigo-900'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
+										<span class="${idx === 0 ? 'text-amber-300 font-extrabold' : ''}">${item.nameKo}</span>
+									</div>
+									<div class="flex items-center gap-1 ${idx === 0 ? 'text-amber-300' : 'text-indigo-600'} text-[11px]">
+										<i class="fa-solid fa-fire"></i>
+										<span class="font-extrabold">${item.count.toLocaleString()}회</span>
+									</div>
 								</div>
-								<div class="flex items-center gap-1 ${idx === 0 ? 'text-amber-300' : 'text-indigo-600'} text-[11px]">
-									<i class="fa-solid fa-fire"></i>
-									<span class="font-extrabold">${item.count.toLocaleString()}회</span>
-								</div>
-							</div>
-						`).join('');
+							`).join('');
 			}
 		}
 
