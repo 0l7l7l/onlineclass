@@ -1,0 +1,708 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo × 우리 동네 가게 제휴 안내</title>
+	<!-- Tailwind CSS CDN -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- FontAwesome Icon CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+		body {
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		/* 실시간 카운트업 애니메이션 */
+		@keyframes pulse-glow {
+			0%, 100% {
+				transform: scale(1);
+			}
+
+			50% {
+				transform: scale(1.03);
+				background-color: #fef3c7;
+			}
+		}
+
+		.count-up-active {
+			animation: pulse-glow 0.6s ease-in-out;
+		}
+	</style>
+</head>
+<body class="bg-slate-100 text-slate-800 pb-20 select-none">
+
+	<!-- 언어 선택 탑 바 -->
+	<div class="bg-slate-900 text-white text-xs py-2 px-4 sticky top-0 z-50 flex justify-between items-center shadow-md">
+		<span class="font-semibold text-slate-300">
+			<i class="fa-solid fa-globe text-amber-400 mr-1"></i> 언어 선택 / 言語選択
+		</span>
+		<div class="flex gap-1 bg-slate-800 p-0.5 rounded-lg border border-slate-700">
+			<button onclick="setLanguage('ko')" id="lang-btn-ko" class="px-3 py-1 rounded-md text-xs font-bold bg-amber-400 text-slate-900 transition">
+				한국어 🇰🇷
+			</button>
+			<button onclick="setLanguage('ja')" id="lang-btn-ja" class="px-3 py-1 rounded-md text-xs font-bold text-slate-400 hover:text-white transition">
+				日本語 🇯🇵
+			</button>
+		</div>
+	</div>
+
+	<!-- MAIN CONTAINER -->
+	<div class="max-w-md mx-auto min-h-screen bg-white shadow-xl overflow-hidden">
+
+		<!-- ========================================== -->
+		<!-- 🇰🇷 KOREAN VERSION                         -->
+		<!-- ========================================== -->
+		<div id="lang-ko" class="block">
+			<!-- Header Banner -->
+			<header class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 relative overflow-hidden">
+				<div class="absolute -right-4 -bottom-4 text-slate-800 opacity-20 text-9xl font-black">Semo</div>
+				<span class="inline-block bg-amber-400 text-slate-900 text-xs font-black px-2.5 py-1 rounded-full mb-3 shadow-sm">
+					Semo × 우리 동네 가게
+				</span>
+				<h1 class="text-2xl font-black leading-tight text-white">
+					일본어 한마디 이벤트<br><span class="text-amber-300">제휴 안내</span>
+				</h1>
+				<p class="text-indigo-200 text-xs mt-2 font-medium">
+					손님에게 새로운 즐거움을, 가게에는 특별한 경험을 더합니다.
+				</p>
+			</header>
+
+			<!-- 탭 메뉴 -->
+			<nav class="px-4 mt-4">
+				<div class="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
+					<button onclick="switchTabKo('proposal')" id="tab-ko-proposal" class="flex-1 py-2 text-xs font-bold text-indigo-600 bg-white shadow-sm rounded-lg transition">
+						📋 제안서
+					</button>
+					<button onclick="switchTabKo('demo')" id="tab-ko-demo" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition">
+						📱 QR 체험
+					</button>
+					<button onclick="switchTabKo('manual')" id="tab-ko-manual" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition">
+						📑 매뉴얼
+					</button>
+				</div>
+			</nav>
+
+			<!-- 1. 제안서 TAB -->
+			<section id="content-ko-proposal" class="p-5 space-y-6">
+				<!-- 인사말 -->
+				<div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-xl">
+					<p class="text-xs font-bold text-indigo-900 mb-1">안녕하세요 사장님!</p>
+					<p class="text-xs text-slate-700 leading-relaxed">
+						<b>Semo</b>는 일본어와 한국어를 쉽고 재미있게 배울 수 있도록 돕는 언어 교육 브랜드입니다.
+						일본 문화에 관심 있는 손님들이 음식과 함께 일본어를 자연스럽게 경험할 수 있도록, 지역 소상공인과 함께하는 작은 이벤트를 준비했습니다.
+					</p>
+				</div>
+
+				<!-- 이벤트 프로세스 -->
+				<section class="space-y-3">
+					<h2 class="font-extrabold text-base text-slate-900 flex items-center gap-2 border-b pb-2">
+						<span>🍺</span> Semo QR 이벤트란?
+					</h2>
+					<p class="text-xs text-slate-500">음료에 부착된 작은 QR 태그를 통해 손님이 참여하는 일본어 이벤트입니다.</p>
+
+					<div class="grid grid-cols-4 gap-1.5 text-center pt-2">
+						<div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-col justify-between">
+							<span class="text-xs font-black text-indigo-600">①</span>
+							<p class="text-[11px] font-bold mt-1">음료 주문</p>
+						</div>
+						<div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-col justify-between">
+							<span class="text-xs font-black text-indigo-600">②</span>
+							<p class="text-[11px] font-bold mt-1">Semo QR 확인</p>
+						</div>
+						<div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-col justify-between">
+							<span class="text-xs font-black text-indigo-600">③</span>
+							<p class="text-[11px] font-bold mt-1">일본어 콘텐츠</p>
+						</div>
+						<div class="bg-amber-50 p-2 rounded-xl border border-amber-300 flex flex-col justify-between">
+							<span class="text-xs font-black text-amber-700">④</span>
+							<p class="text-[11px] font-bold text-amber-900 mt-1">무료체험 당첨</p>
+						</div>
+					</div>
+				</section>
+
+				<!-- 사장님 혜택 -->
+				<section class="space-y-3">
+					<h2 class="font-extrabold text-base text-slate-900 flex items-center gap-2 border-b pb-2">
+						<span>🎁</span> 사장님께 드리는 혜택
+					</h2>
+
+					<div class="space-y-2 text-xs">
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-circle-check text-emerald-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">별도의 비용 없이 참여 가능</h3>
+								<p class="text-slate-500 mt-0.5">이벤트 QR 태그와 운영 안내는 Semo에서 전액 준비합니다.</p>
+							</div>
+						</div>
+
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-face-smile text-amber-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">손님에게 새로운 재미 제공</h3>
+								<p class="text-slate-500 mt-0.5">음식을 기다리는 시간과 식사 시간에 즐길 수 있는 소소한 콘텐츠를 제공합니다.</p>
+							</div>
+						</div>
+
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-store text-indigo-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">가게만의 특별한 경험 만들기</h3>
+								<p class="text-slate-500 mt-0.5">"일본어 한마디가 있는 가게" - 손님에게 오래 기억되는 매장 이미지를 선사합니다.</p>
+							</div>
+						</div>
+
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-gift text-rose-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">Semo 무료체험 혜택 제공</h3>
+								<p class="text-slate-500 mt-0.5">일본어에 관심 있는 손님들에게 100% 당첨 기회를 제공합니다.</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 직원 추천 QR -->
+				<section class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-2xl border border-amber-200 space-y-2">
+					<div class="flex items-center gap-2">
+						<span class="bg-amber-400 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded">NEW</span>
+						<h3 class="font-bold text-sm text-amber-950">🎁 직원 전용 추천 QR 제공</h3>
+					</div>
+					<p class="text-xs text-slate-700 leading-relaxed">
+						직원분이 일본어에 관심 있는 손님에게 직접 추천할 수 있는 전용 QR을 제공해 드립니다.
+					</p>
+					<div class="bg-white/80 p-2.5 rounded-xl border border-amber-200/60 text-xs italic text-slate-600">
+						"일본어 관심 있으시면 무료체험 한번 받아보세요 😊"
+					</div>
+					<p class="text-[11px] text-amber-800 font-medium">
+						* 직원의 작은 추천이 새로운 손님 경험과 단골 형성으로 이어집니다.
+					</p>
+				</section>
+
+				<!-- 지역 챌린지 -->
+				<section class="bg-slate-900 text-white p-4 rounded-2xl space-y-3">
+					<div class="flex items-center justify-between">
+						<h3 class="font-bold text-sm text-amber-400 flex items-center gap-1.5">
+							<i class="fa-solid fa-location-dot"></i> 📍 지역 일본어 챌린지 이벤트
+						</h3>
+						<span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">충청 전역</span>
+					</div>
+					<p class="text-xs text-slate-300 leading-relaxed">
+						충청 지역 손님들과 함께하는 소소한 일본 문화 참여 이벤트입니다.
+					</p>
+					<div class="flex flex-wrap gap-1.5">
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">충청남도</span>
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">충청북도</span>
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">세종</span>
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">천안</span>
+					</div>
+				</section>
+
+				<!-- 🔥 [움직이는 실시간 랭킹 보드] -->
+				<section class="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 text-white p-4 rounded-2xl shadow-md space-y-3 relative overflow-hidden">
+					<div class="flex items-center justify-between border-b border-amber-400/50 pb-2">
+						<h3 class="font-black text-sm text-white flex items-center gap-1.5">
+							<i class="fa-solid fa-fire text-amber-200 animate-bounce"></i> 실시간 충청 지역 참여 순위
+						</h3>
+						<span class="bg-amber-800/80 text-amber-100 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+							<span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span> LIVE
+						</span>
+					</div>
+
+					<p class="text-[11px] text-amber-100 flex items-center justify-between">
+						<span>손님들의 QR 스캔으로 실시간 집계 중!</span>
+						<span id="toast-notify" class="hidden bg-white text-orange-600 font-extrabold text-[9px] px-1.5 py-0.5 rounded-full shadow animate-pulse">🔥 방금 전 스캔!</span>
+					</p>
+
+					<!-- 랭킹 리스트 (자바스크립트로 수치 실시간 상승) -->
+					<div class="space-y-1.5 text-xs text-slate-900 font-bold">
+						<!-- 1위 -->
+						<div id="rank-card-1" class="bg-white p-2.5 rounded-xl shadow-sm flex items-center justify-between border-2 border-amber-300 transition-all duration-300">
+							<div class="flex items-center gap-2">
+								<span class="bg-amber-400 text-slate-900 w-5 h-5 rounded-full flex items-center justify-center font-black text-xs">1</span>
+								<span class="font-extrabold">천안시 두정/불당동</span>
+							</div>
+							<div class="flex items-center gap-1 text-amber-600 text-[11px]">
+								<i class="fa-solid fa-qrcode"></i> <span id="count-1">1,420</span>건
+							</div>
+						</div>
+						<!-- 2위 -->
+						<div id="rank-card-2" class="bg-white/95 p-2 rounded-xl flex items-center justify-between transition-all duration-300">
+							<div class="flex items-center gap-2">
+								<span class="bg-slate-200 text-slate-700 w-5 h-5 rounded-full flex items-center justify-center font-black text-xs">2</span>
+								<span>청주시 복대/가경동</span>
+							</div>
+							<div class="flex items-center gap-1 text-slate-600 text-[11px]">
+								<i class="fa-solid fa-qrcode"></i> <span id="count-2">1,180</span>건
+							</div>
+						</div>
+						<!-- 3위 -->
+						<div id="rank-card-3" class="bg-white/95 p-2 rounded-xl flex items-center justify-between transition-all duration-300">
+							<div class="flex items-center gap-2">
+								<span class="bg-amber-100 text-amber-800 w-5 h-5 rounded-full flex items-center justify-center font-black text-xs">3</span>
+								<span>세종시 나성/어진동</span>
+							</div>
+							<div class="flex items-center gap-1 text-slate-600 text-[11px]">
+								<i class="fa-solid fa-qrcode"></i> <span id="count-3">950</span>건
+							</div>
+						</div>
+						<!-- 4위 -->
+						<div class="bg-white/90 p-2 rounded-xl flex items-center justify-between text-slate-700">
+							<div class="flex items-center gap-2">
+								<span class="text-slate-500 w-5 text-center font-bold text-xs">4</span>
+								<span>아산시 배방/탕정</span>
+							</div>
+							<div class="flex items-center gap-1 text-slate-500 text-[11px]">
+								<i class="fa-solid fa-qrcode"></i> <span id="count-4">720</span>건
+							</div>
+						</div>
+						<!-- 5위 -->
+						<div class="bg-white/90 p-2 rounded-xl flex items-center justify-between text-slate-700">
+							<div class="flex items-center gap-2">
+								<span class="text-slate-500 w-5 text-center font-bold text-xs">5</span>
+								<span>충주시 연수동</span>
+							</div>
+							<div class="flex items-center gap-1 text-slate-500 text-[11px]">
+								<i class="fa-solid fa-qrcode"></i> <span id="count-5">510</span>건
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 푸터 -->
+				<footer class="text-center space-y-3 pt-4 border-t">
+					<div>
+						<p class="text-xs font-bold text-indigo-600">함께 만드는 작은 일본 문화 경험</p>
+						<p class="text-sm font-black text-slate-900 mt-0.5">손님에게는 즐거움을, 가게에는 새로운 이야기를.</p>
+					</div>
+
+					<div class="bg-slate-100 p-4 rounded-xl text-left text-xs space-y-1.5 text-slate-600">
+						<p class="font-bold text-slate-900 text-sm mb-2">참여 및 제휴 문의</p>
+						<p><i class="fa-solid fa-globe w-4 text-indigo-600"></i> 홈페이지: www.semo-lang.com</p>
+						<p><i class="fa-brands fa-instagram w-4 text-pink-600"></i> SNS: @semo_official</p>
+						<p><i class="fa-solid fa-phone w-4 text-emerald-600"></i> 연락처: 010-0000-0000</p>
+					</div>
+				</footer>
+			</section>
+
+			<!-- 2. QR 체험 TAB -->
+			<section id="content-ko-demo" class="hidden p-5 space-y-4">
+				<div class="bg-white rounded-2xl p-5 shadow-lg border-2 border-indigo-500 text-center">
+					<span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
+						손님 스캔 화면 체험
+					</span>
+
+					<div class="my-6">
+						<div class="text-5xl mb-2">🍶</div>
+						<h3 class="text-xl font-extrabold text-slate-900">오늘의 일본어 운세</h3>
+						<p class="text-xs text-slate-500 mt-1">음료와 함께 즐기는 소소한 행운 퀴즈!</p>
+					</div>
+
+					<button onclick="runDemoKo()" id="demo-btn-ko" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition">
+						🔮 운세 확인 & 당첨 결과 뽑기
+					</button>
+
+					<div id="demo-result-ko" class="hidden mt-6 p-4 bg-amber-50 border border-amber-300 rounded-xl text-left space-y-3">
+						<div class="text-center">
+							<span class="text-xs font-bold text-amber-800 bg-amber-200 px-2 py-0.5 rounded">🎉 축하합니다!</span>
+							<h4 class="text-lg font-black text-amber-900 mt-1">Semo 무료 체험권 당첨!</h4>
+						</div>
+						<hr class="border-amber-200">
+						<div class="text-xs space-y-1 text-slate-700">
+							<p><b>오늘의 운세:</b> 대길(大吉) 🌟</p>
+							<p><b>오늘의 일본어:</b> 乾杯 (かんぱい / 칸파이 = 건배)</p>
+							<p class="text-indigo-600 font-bold mt-2">🎁 혜택: Semo 7일 이용권 + 매장 음료 쿠폰</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- 3. 매뉴얼 TAB -->
+			<section id="content-ko-manual" class="hidden p-5 space-y-4">
+				<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+					<h2 class="font-bold text-lg text-slate-900 border-b pb-2 mb-4 flex items-center gap-2">
+						<i class="fa-solid fa-list-check text-indigo-600"></i> 사장님 3초 간이 매뉴얼
+					</h2>
+
+					<ol class="space-y-4 text-sm">
+						<li class="flex gap-3">
+							<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">1</span>
+							<div>
+								<p class="font-bold text-slate-800">Semo 태그 준비</p>
+								<p class="text-xs text-slate-500 mt-0.5">전달해 드린 태그 묶음을 음료 냉장고 옆에 배치합니다.</p>
+							</div>
+						</li>
+						<li class="flex gap-3">
+							<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">2</span>
+							<div>
+								<p class="font-bold text-slate-800">음료 병목에 걸어 서빙</p>
+								<p class="text-xs text-slate-500 mt-0.5">음료/주류 나갈 때 병목에 쏙 걸어서 손님께 전달합니다.</p>
+							</div>
+						</li>
+						<li class="flex gap-3">
+							<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">3</span>
+							<div>
+								<p class="font-bold text-slate-800">운영 끝!</p>
+								<p class="text-xs text-slate-500 mt-0.5">손님이 QR을 찍고 참여하는 모든 과정은 자동 진행됩니다.</p>
+							</div>
+						</li>
+					</ol>
+
+					<div class="mt-6 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-500 space-y-1">
+						<p>⚠️ <b>주의사항</b></p>
+						<p>• 태그가 물기에 젖거나 훼손되면 새 태그로 교체해 주세요.</p>
+						<p>• 라벨 상표가 가려지지 않도록 병목 상단에 가볍게 걸어주세요.</p>
+					</div>
+				</div>
+			</section>
+		</div>
+
+
+		<!-- ========================================== -->
+		<!-- 🇯🇵 JAPANESE VERSION (한국어 학습자용)       -->
+		<!-- ========================================== -->
+		<div id="lang-ja" class="hidden">
+			<!-- Header Banner -->
+			<header class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 relative overflow-hidden">
+				<div class="absolute -right-4 -bottom-4 text-slate-800 opacity-20 text-9xl font-black">Semo</div>
+				<span class="inline-block bg-amber-400 text-slate-900 text-xs font-black px-2.5 py-1 rounded-full mb-3 shadow-sm">
+					Semo × 地域のお店
+				</span>
+				<h1 class="text-2xl font-black leading-tight text-white">
+					韓国語ひとことイベント<br><span class="text-amber-300">提携のご案内</span>
+				</h1>
+				<p class="text-indigo-200 text-xs mt-2 font-medium">
+					お客様に新しい楽しさを、お店には特別な体験をお届けします。
+				</p>
+			</header>
+
+			<!-- 탭 메뉴 (일본어) -->
+			<nav class="px-4 mt-4">
+				<div class="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
+					<button onclick="switchTabJa('proposal')" id="tab-ja-proposal" class="flex-1 py-2 text-xs font-bold text-indigo-600 bg-white shadow-sm rounded-lg transition">
+						📋 案内書
+					</button>
+					<button onclick="switchTabJa('demo')" id="tab-ja-demo" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition">
+						📱 QR体験
+					</button>
+					<button onclick="switchTabJa('manual')" id="tab-ja-manual" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition">
+						📑 マニュアル
+					</button>
+				</div>
+			</nav>
+
+			<!-- 1. 제안서 TAB (일본어) -->
+			<section id="content-ja-proposal" class="p-5 space-y-6">
+				<!-- 인사말 -->
+				<div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-xl">
+					<p class="text-xs font-bold text-indigo-900 mb-1">オーナー様、こんにちは！</p>
+					<p class="text-xs text-slate-700 leading-relaxed">
+						<b>Semo</b>は、韓国語と日本語を楽しく学べる語学教育ブランドです。
+						韓国語や韓国文化に関心のあるお客様が、お食事と共に自然に韓国語を体験できるよう、地域の店舗様と一緒に楽しむイベントをご用意しました。
+					</p>
+				</div>
+
+				<!-- 이벤트 프로세스 -->
+				<section class="space-y-3">
+					<h2 class="font-extrabold text-base text-slate-900 flex items-center gap-2 border-b pb-2">
+						<span>🍺</span> Semo QRイベントとは？
+					</h2>
+					<p class="text-xs text-slate-500">ドリンクに付けた小さなQRタグから、お客様が参加できる韓国語イベントです。</p>
+
+					<div class="grid grid-cols-4 gap-1.5 text-center pt-2">
+						<div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-col justify-between">
+							<span class="text-xs font-black text-indigo-600">①</span>
+							<p class="text-[11px] font-bold mt-1">ドリンク注文</p>
+						</div>
+						<div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-col justify-between">
+							<span class="text-xs font-black text-indigo-600">②</span>
+							<p class="text-[11px] font-bold mt-1">QR確認</p>
+						</div>
+						<div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex flex-col justify-between">
+							<span class="text-xs font-black text-indigo-600">③</span>
+							<p class="text-[11px] font-bold mt-1">韓国語体験</p>
+						</div>
+						<div class="bg-amber-50 p-2 rounded-xl border border-amber-300 flex flex-col justify-between">
+							<span class="text-xs font-black text-amber-700">④</span>
+							<p class="text-[11px] font-bold text-amber-900 mt-1">無料体験当選</p>
+						</div>
+					</div>
+				</section>
+
+				<!-- 사장님 혜택 -->
+				<section class="space-y-3">
+					<h2 class="font-extrabold text-base text-slate-900 flex items-center gap-2 border-b pb-2">
+						<span>🎁</span> オーナー様へのメリット
+					</h2>
+
+					<div class="space-y-2 text-xs">
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-circle-check text-emerald-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">費用負担なしで参加可能</h3>
+								<p class="text-slate-500 mt-0.5">QRタグや案内素材はすべてSemoがご用意いたします。</p>
+							</div>
+						</div>
+
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-face-smile text-amber-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">お客様に新しい楽しさを提供</h3>
+								<p class="text-slate-500 mt-0.5">お料理を待つ時間やご歓談の際に楽しめるミニコンテンツです。</p>
+							</div>
+						</div>
+
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-store text-indigo-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">お店ならではの特別な体験作り</h3>
+								<p class="text-slate-500 mt-0.5">「韓国語ひとことが楽しめるお店」として印象に残る店舗作りをサポートします。</p>
+							</div>
+						</div>
+
+						<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+							<i class="fa-solid fa-gift text-rose-500 text-base mt-0.5"></i>
+							<div>
+								<h3 class="font-bold text-slate-900">Semo無料体験のプレゼント</h3>
+								<p class="text-slate-500 mt-0.5">韓国語にご興味のあるお客様へ、100%当たる体験特典をプレゼントします。</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 직원 추천 QR -->
+				<section class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-2xl border border-amber-200 space-y-2">
+					<div class="flex items-center gap-2">
+						<span class="bg-amber-400 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded">NEW</span>
+						<h3 class="font-bold text-sm text-amber-950">🎁 スタッフ専用おすすめQR</h3>
+					</div>
+					<p class="text-xs text-slate-700 leading-relaxed">
+						スタッフの方が韓国語に関心のあるお客様へ直接おすすめできる専用QRコードをご用意します。
+					</p>
+					<div class="bg-white/80 p-2.5 rounded-xl border border-amber-200/60 text-xs italic text-slate-600">
+						「韓国語にご興味があれば、無料体験をぜひ一度お試しください😊」
+					</div>
+					<p class="text-[11px] text-amber-800 font-medium">
+						* スタッフの一言が、新しいお客様体験とリピーター作りに繋がります。
+					</p>
+				</section>
+
+				<!-- 지역 챌린지 -->
+				<section class="bg-slate-900 text-white p-4 rounded-2xl space-y-3">
+					<div class="flex items-center justify-between">
+						<h3 class="font-bold text-sm text-amber-400 flex items-center gap-1.5">
+							<i class="fa-solid fa-location-dot"></i> 📍 地域韓国語チャレンジイベント
+						</h3>
+						<span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">忠清エリア</span>
+					</div>
+					<p class="text-xs text-slate-300 leading-relaxed">
+						忠清（チュンチョン）エリアのお客様と一緒に楽しむ文化イベントです。
+					</p>
+					<div class="flex flex-wrap gap-1.5">
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">忠清南道</span>
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">忠清北道</span>
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">世宗</span>
+						<span class="text-[11px] bg-indigo-950 text-indigo-200 border border-indigo-800 px-2 py-1 rounded-lg">天安</span>
+					</div>
+				</section>
+
+				<!-- 푸터 -->
+				<footer class="text-center space-y-3 pt-4 border-t">
+					<div>
+						<p class="text-xs font-bold text-indigo-600">共に創る文化体験</p>
+						<p class="text-sm font-black text-slate-900 mt-0.5">お客様には楽しさを、お店には新しい物語を。</p>
+					</div>
+
+					<div class="bg-slate-100 p-4 rounded-xl text-left text-xs space-y-1.5 text-slate-600">
+						<p class="font-bold text-slate-900 text-sm mb-2">参加・提携のお問い合わせ</p>
+						<p><i class="fa-solid fa-globe w-4 text-indigo-600"></i> HP: www.semo-lang.com</p>
+						<p><i class="fa-brands fa-instagram w-4 text-pink-600"></i> SNS: @semo_official</p>
+						<p><i class="fa-solid fa-phone w-4 text-emerald-600"></i> TEL: 010-0000-0000</p>
+					</div>
+				</footer>
+			</section>
+
+			<!-- 2. QR 체험 TAB (일본어) -->
+			<section id="content-ja-demo" class="hidden p-5 space-y-4">
+				<div class="bg-white rounded-2xl p-5 shadow-lg border-2 border-indigo-500 text-center">
+					<span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
+						お客様スキャン画面体験
+					</span>
+
+					<div class="my-6">
+						<div class="text-5xl mb-2">🍶</div>
+						<h3 class="text-xl font-extrabold text-slate-900">今日の韓国語おみくじ</h3>
+						<p class="text-xs text-slate-500 mt-1">ドリンクと一緒に楽しむラッキークイズ！</p>
+					</div>
+
+					<button onclick="runDemoJa()" id="demo-btn-ja" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition">
+						🔮 おみくじを引く＆特典確認
+					</button>
+
+					<div id="demo-result-ja" class="hidden mt-6 p-4 bg-amber-50 border border-amber-300 rounded-xl text-left space-y-3">
+						<div class="text-center">
+							<span class="text-xs font-bold text-amber-800 bg-amber-200 px-2 py-0.5 rounded">🎉 おめでとうございます！</span>
+							<h4 class="text-lg font-black text-amber-900 mt-1">Semo無料体験チケット当選！</h4>
+						</div>
+						<hr class="border-amber-200">
+						<div class="text-xs space-y-1 text-slate-700">
+							<p><b>今日の運勢:</b> 大吉（大吉） 🌟</p>
+							<p><b>今日の韓国語:</b> 건배 (コンベ = 乾杯)</p>
+							<p class="text-indigo-600 font-bold mt-2">🎁 特典: Semo 7日間利用券 + ドリンククーポン</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- 3. 매뉴얼 TAB (일본어) -->
+			<section id="content-ja-manual" class="hidden p-5 space-y-4">
+				<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+					<h2 class="font-bold text-lg text-slate-900 border-b pb-2 mb-4 flex items-center gap-2">
+						<i class="fa-solid fa-list-check text-indigo-600"></i> 店舗様用 3秒簡易マニュアル
+					</h2>
+
+					<ol class="space-y-4 text-sm">
+						<li class="flex gap-3">
+							<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">1</span>
+							<div>
+								<p class="font-bold text-slate-800">Semoタグの準備</p>
+								<p class="text-xs text-slate-500 mt-0.5">お渡ししたタグセットを冷蔵庫の横に配置します。</p>
+							</div>
+						</li>
+						<li class="flex gap-3">
+							<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">2</span>
+							<div>
+								<p class="font-bold text-slate-800">ボトルに掛けて提供</p>
+								<p class="text-xs text-slate-500 mt-0.5">ドリンクを出す際、ボトルネックにサッと掛けてお客様へ渡します。</p>
+							</div>
+						</li>
+						<li class="flex gap-3">
+							<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">3</span>
+							<div>
+								<p class="font-bold text-slate-800">運用完了！</p>
+								<p class="text-xs text-slate-500 mt-0.5">お客様がQRを読み込んで参加する流れはすべて自動で行われます。</p>
+							</div>
+						</li>
+					</ol>
+
+					<div class="mt-6 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-500 space-y-1">
+						<p>⚠️ <b>ご注意事項</b></p>
+						<p>• タグが濡れたり破損した場合は、新しいタグにお取替えください。</p>
+						<p>• 商品の銘柄が見えるよう、ボトル上部に軽く掛けてください。</p>
+					</div>
+				</div>
+			</section>
+		</div>
+
+	</div>
+
+	<!-- JavaScript Logic -->
+	<script>
+		// 초기 데이터 세팅
+		let counts = { 1: 1420, 2: 1180, 3: 950, 4: 720, 5: 510 };
+
+		// 3초마다 랜덤 실시간 스캔 집계 시뮬레이션
+		setInterval(() => {
+			// 1위~3위 지역 중 랜덤 1곳 카운트 증가
+			const targetRank = Math.floor(Math.random() * 3) + 1;
+			counts[targetRank] += Math.floor(Math.random() * 2) + 1;
+
+			const countElem = document.getElementById(`count-${targetRank}`);
+			const cardElem = document.getElementById(`rank-card-${targetRank}`);
+			const toastElem = document.getElementById('toast-notify');
+
+			if (countElem && cardElem) {
+				// 수치 업데이트 (천단위 콤마)
+				countElem.innerText = counts[targetRank].toLocaleString();
+
+				// 카드 살짝 반짝이는 클래스 부여
+				cardElem.classList.add('count-up-active');
+				if (toastElem) toastElem.classList.remove('hidden');
+
+				setTimeout(() => {
+					cardElem.classList.remove('count-up-active');
+					if (toastElem) toastElem.classList.add('hidden');
+				}, 1000);
+			}
+		}, 3500);
+
+		// 언어 변경 함수
+		function setLanguage(lang) {
+			const koMain = document.getElementById('lang-ko');
+			const jaMain = document.getElementById('lang-ja');
+			const koBtn = document.getElementById('lang-btn-ko');
+			const jaBtn = document.getElementById('lang-btn-ja');
+
+			if (lang === 'ko') {
+				koMain.classList.remove('hidden');
+				jaMain.classList.add('hidden');
+				koBtn.className = "px-3 py-1 rounded-md text-xs font-bold bg-amber-400 text-slate-900 transition";
+				jaBtn.className = "px-3 py-1 rounded-md text-xs font-bold text-slate-400 hover:text-white transition";
+			} else {
+				jaMain.classList.remove('hidden');
+				koMain.classList.add('hidden');
+				jaBtn.className = "px-3 py-1 rounded-md text-xs font-bold bg-amber-400 text-slate-900 transition";
+				koBtn.className = "px-3 py-1 rounded-md text-xs font-bold text-slate-400 hover:text-white transition";
+			}
+		}
+
+		// 한국어 탭 전환
+		function switchTabKo(tabName) {
+			document.getElementById('content-ko-proposal').classList.add('hidden');
+			document.getElementById('content-ko-demo').classList.add('hidden');
+			document.getElementById('content-ko-manual').classList.add('hidden');
+
+			['proposal', 'demo', 'manual'].forEach(tab => {
+				document.getElementById(`tab-ko-${tab}`).className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition";
+			});
+
+			document.getElementById(`content-ko-${tabName}`).classList.remove('hidden');
+			document.getElementById(`tab-ko-${tabName}`).className = "flex-1 py-2 text-xs font-bold text-indigo-600 bg-white shadow-sm rounded-lg transition";
+		}
+
+		// 일본어 탭 전환
+		function switchTabJa(tabName) {
+			document.getElementById('content-ja-proposal').classList.add('hidden');
+			document.getElementById('content-ja-demo').classList.add('hidden');
+			document.getElementById('content-ja-manual').classList.add('hidden');
+
+			['proposal', 'demo', 'manual'].forEach(tab => {
+				document.getElementById(`tab-ja-${tab}`).className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition";
+			});
+
+			document.getElementById(`content-ja-${tabName}`).classList.remove('hidden');
+			document.getElementById(`tab-ja-${tabName}`).className = "flex-1 py-2 text-xs font-bold text-indigo-600 bg-white shadow-sm rounded-lg transition";
+		}
+
+		// 한국어 데모 시뮬레이션
+		function runDemoKo() {
+			const resultBox = document.getElementById('demo-result-ko');
+			const btn = document.getElementById('demo-btn-ko');
+			btn.innerText = "추첨 진행 중...";
+			btn.classList.add('opacity-50');
+
+			setTimeout(() => {
+				resultBox.classList.remove('hidden');
+				btn.innerText = "🔮 다시 뽑아보기";
+				btn.classList.remove('opacity-50');
+			}, 600);
+		}
+
+		// 일본어 데모 시뮬레이션
+		function runDemoJa() {
+			const resultBox = document.getElementById('demo-result-ja');
+			const btn = document.getElementById('demo-btn-ja');
+			btn.innerText = "抽選中...";
+			btn.classList.add('opacity-50');
+
+			setTimeout(() => {
+				resultBox.classList.remove('hidden');
+				btn.innerText = "🔮 もう一度引く";
+				btn.classList.remove('opacity-50');
+			}, 600);
+		}
+	</script>
+</body>
+</html>

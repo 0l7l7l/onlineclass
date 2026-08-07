@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo × 소상공인 제휴 안내</title>
+	<!-- Tailwind CSS CDN -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- FontAwesome Icon CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+		body {
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		/* 순위 변동 시 부드러운 이동 효과 */
+		.ranking-item {
+			transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		/* 🔥 무한 흘러가는 전광판 애니메이션 */
+		@keyframes marquee {
+			0% {
+				transform: translateX(0%);
+			}
+
+			100% {
+				transform: translateX(-50%);
+			}
+		}
+
+		.marquee-track {
+			display: flex;
+			width: max-content;
+			animation: marquee 25s linear infinite;
+		}
+
+			.marquee-track:hover {
+				animation-play-state: paused; /* 마우스 호버 시 일시정지 */
+			}
+
+		/* 🔥 방금 전 스캔 팝업 애니메이션 */
+		@keyframes liveScanPop {
+			0% {
+				opacity: 0;
+				transform: translateY(-10px) scale(0.95);
+			}
+
+			15% {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+
+			85% {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+
+			100% {
+				opacity: 0;
+				transform: translateY(-10px) scale(0.95);
+			}
+		}
+
+		.live-scan-toast {
+			animation: liveScanPop 3.5s ease-in-out forwards;
+		}
+	</style>
+</head>
+<body class="bg-slate-100 text-slate-800 pb-28 select-none">
+
+	<!-- 언어 선택 탑 바 -->
+	<div class="bg-slate-900 text-white text-xs py-2 px-4 sticky top-0 z-50 flex justify-between items-center shadow-md">
+		<span class="font-semibold text-slate-300">
+			<i class="fa-solid fa-globe text-amber-400 mr-1"></i> 언어 선택 / 言語選択
+		</span>
+		<div class="flex gap-1 bg-slate-800 p-0.5 rounded-lg border border-slate-700">
+			<button onclick="setLanguage('ko')" id="lang-btn-ko" class="px-3 py-1 rounded-md text-xs font-bold bg-amber-400 text-slate-900 transition">
+				한국어 🇰🇷
+			</button>
+			<button onclick="setLanguage('ja')" id="lang-btn-ja" class="px-3 py-1 rounded-md text-xs font-bold text-slate-400 hover:text-white transition">
+				日本語 🇯🇵
+			</button>
+		</div>
+	</div>
+
+	<!-- MAIN CONTAINER -->
+	<div class="max-w-md mx-auto min-h-screen bg-white shadow-xl overflow-hidden relative">
+
+		<!-- 🔥 실시간 스캔 알림 팝업 -->
+		<div id="live-scan-banner" class="hidden absolute top-20 left-4 right-4 z-40">
+			<div class="bg-slate-900/95 text-white border-2 border-amber-400 p-3 rounded-2xl shadow-2xl flex items-center justify-between live-scan-toast">
+				<div class="flex items-center gap-2.5">
+					<span class="bg-amber-400 text-slate-900 text-xs font-black px-2 py-0.5 rounded-full flex items-center gap-1">
+						<i class="fa-solid fa-fire text-rose-600 animate-bounce"></i> 방금 전 스캔!
+					</span>
+					<span id="toast-store-name" class="text-xs font-bold text-amber-200">
+						[천안] 불당동 이자카야
+					</span>
+				</div>
+				<span class="text-[10px] text-slate-300 font-medium">방금 전</span>
+			</div>
+		</div>
+
+		<!-- ========================================== -->
+		<!-- 🇰🇷 KOREAN VERSION                         -->
+		<!-- ========================================== -->
+		<div id="lang-ko" class="block">
+			<!-- Header Banner -->
+			<header class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 relative overflow-hidden">
+				<div class="absolute -right-4 -bottom-4 text-slate-800 opacity-20 text-9xl font-black">Semo</div>
+				<span class="inline-block bg-amber-400 text-slate-900 text-xs font-black px-2.5 py-1 rounded-full mb-3 shadow-sm">
+					소상공인 × 세모
+				</span>
+				<h1 class="text-2xl font-black leading-tight text-white">
+					우리 가게에 작은<br><span class="text-amber-300">깜짝 이벤트를 선물해보세요</span>
+				</h1>
+				<p class="text-indigo-200 text-xs mt-2 font-medium">
+					“이게 뭐지?” 하는 순간, 손님과 가게의 새로운 이야기가 시작됩니다.
+				</p>
+			</header>
+
+			<!-- 탭 메뉴 -->
+			<nav class="px-4 mt-4">
+				<div class="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
+					<button onclick="switchTabKo('proposal')" id="tab-ko-proposal" class="flex-1 py-2 text-xs font-bold text-indigo-600 bg-white shadow-sm rounded-lg transition">
+						📋 제안서
+					</button>
+					<button onclick="switchTabKo('ranking')" id="tab-ko-ranking" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition">
+						🔥 지금 우리는?
+					</button>
+					<button onclick="switchTabKo('demo')" id="tab-ko-demo" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition">
+						📱 QR 체험
+					</button>
+				</div>
+			</nav>
+
+			<!-- 1. 제안서 TAB -->
+			<section id="content-ko-proposal" class="p-5 space-y-6">
+				<!-- 소개글 -->
+				<div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-xl space-y-2">
+					<p class="text-xs font-bold text-indigo-900">안녕하세요 사장님!</p>
+					<p class="text-xs text-slate-700 leading-relaxed">
+						<b>한국어와 일본어를 쉽고 재미있게 배울 수 있는 콘텐츠를 만드는 ‘세모’</b>입니다.<br>
+						세모는 온라인 콘텐츠와 디지털 교재를 제작하여, 언어를 일상 속에서 자연스럽게 접하고 즐길 수 있도록 만듭니다. 이번에는 <b>충청남도 소상공인 사장님들과 작은 콜라보 이벤트</b>를 준비하고 있습니다.
+					</p>
+				</div>
+
+				<!-- 이벤트 활용 방식 -->
+				<section class="space-y-3">
+					<h2 class="font-extrabold text-base text-slate-900 border-b pb-2 flex items-center gap-2">
+						<span>🍺</span> 세모가 준비한 작은 이벤트
+					</h2>
+					<p class="text-xs text-slate-600">상품이나 매장에 일본어가 적힌 특별한 스티커/태그와 QR코드를 부착합니다.</p>
+
+					<div class="grid grid-cols-2 gap-2 text-xs">
+						<div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+							<span class="text-base">🍺</span> <b>이자카야</b><br>
+							<span class="text-[11px] text-slate-500">술병에 부착된 일본어 뜻 확인</span>
+						</div>
+						<div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+							<span class="text-base">☕</span> <b>카페</b><br>
+							<span class="text-[11px] text-slate-500">컵/포장지에 오늘의 한마디</span>
+						</div>
+						<div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+							<span class="text-base">🥐</span> <b>베이커리</b><br>
+							<span class="text-[11px] text-slate-500">빵 이름을 일본어로 확인</span>
+						</div>
+						<div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+							<span class="text-base">💐</span> <b>꽃집</b><br>
+							<span class="text-[11px] text-slate-500">꽃말을 일본어로 알아보기</span>
+						</div>
+					</div>
+				</section>
+
+				<!-- 진행 과정 -->
+				<section class="bg-slate-900 text-white p-4 rounded-2xl space-y-3">
+					<h3 class="font-bold text-sm text-amber-300">손님의 경험 흐름</h3>
+					<div class="text-[11px] space-y-1.5 text-slate-300">
+						<p>1. 상품 발견 ➔ 재미있는 일본어 발견</p>
+						<p>2. QR 촬영 ➔ 세모 사이트 방문</p>
+						<p>3. 언어 콘텐츠 & 이벤트 경험</p>
+						<p>4. “다른 것도 있나?” 재방문 연결</p>
+					</div>
+				</section>
+
+				<!-- 역할 분담 -->
+				<section class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-2">
+					<h3 class="font-bold text-sm text-amber-950">🎁 비용 부담 없이 시작하세요</h3>
+					<div class="text-xs text-slate-700 space-y-1">
+						<p><b>사장님이 하실 일:</b> 스티커 부착 및 손님 판매</p>
+						<p><b>세모가 하는 일:</b> QR 콘텐츠 제작, 이벤트 기획, 홍보 및 참여 매장 소개 공간 운영</p>
+					</div>
+				</section>
+			</section>
+
+			<!-- 2. 실시간 랭킹 TAB (지금 우리는?) -->
+			<section id="content-ko-ranking" class="hidden p-5 space-y-6">
+				<!-- A. 충청도 지역별 스캔 순위 -->
+				<section class="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 text-white p-4 rounded-2xl shadow-md space-y-3">
+					<div class="flex items-center justify-between border-b border-amber-400/50 pb-2">
+						<h3 class="font-black text-sm text-white flex items-center gap-1.5">
+							<i class="fa-solid fa-map-location-dot text-amber-200 animate-bounce"></i> 충청도 지역별 QR 스캔 순위
+						</h3>
+						<span class="bg-amber-700/60 text-amber-100 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+							<span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span> LIVE
+						</span>
+					</div>
+					<div id="region-ranking-ko" class="space-y-1.5 text-xs text-slate-900 font-bold">
+						<!-- JS 동적 렌더링 -->
+					</div>
+				</section>
+
+				<!-- B. 점포별 실시간 스캔 순위 -->
+				<section class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-4 rounded-2xl shadow-lg space-y-3 border border-indigo-500/30">
+					<div class="flex items-center justify-between border-b border-indigo-700/50 pb-2">
+						<div>
+							<span class="bg-indigo-600 text-indigo-100 text-[9px] font-bold px-2 py-0.5 rounded">실시간 집계</span>
+							<h3 class="font-black text-sm text-amber-300 flex items-center gap-1.5 mt-1">
+								<i class="fa-solid fa-trophy text-amber-400"></i> 참여 점포 스캔 TOP 5
+							</h3>
+						</div>
+					</div>
+					<div id="store-ranking-ko" class="space-y-1.5 text-xs text-slate-900 font-bold">
+						<!-- JS 동적 렌더링 -->
+					</div>
+				</section>
+			</section>
+
+			<!-- 3. QR 체험 TAB -->
+			<section id="content-ko-demo" class="hidden p-5 space-y-4">
+				<div class="bg-white rounded-2xl p-5 shadow-lg border-2 border-indigo-500 text-center">
+					<span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">손님 시점 QR 체험</span>
+					<div class="my-6">
+						<div class="text-5xl mb-2">🍶</div>
+						<h3 class="text-xl font-extrabold text-slate-900">오늘의 일본어 운세</h3>
+						<p class="text-xs text-slate-500 mt-1">QR을 촬영하면 나타나는 콘텐츠 예시입니다.</p>
+					</div>
+					<button onclick="runDemoKo()" id="demo-btn-ko" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition">
+						🔮 콘텐츠 확인해보기
+					</button>
+					<div id="demo-result-ko" class="hidden mt-4 p-4 bg-amber-50 border border-amber-300 rounded-xl text-left text-xs space-y-2">
+						<p class="font-bold text-amber-900">🎉 오늘의 일본어: 乾杯 (かんぱい / 건배)</p>
+						<p class="text-slate-600">세모 온라인 사이트 연결 및 이벤트 쿠폰이 지급됩니다!</p>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<!-- ========================================== -->
+		<!-- 🇯🇵 JAPANESE VERSION                       -->
+		<!-- ========================================== -->
+		<div id="lang-ja" class="hidden">
+			<header class="bg-slate-900 text-white p-6">
+				<h1 class="text-2xl font-black text-amber-300">Semo × 小規模事業者</h1>
+				<p class="text-xs text-slate-300 mt-1">お店とお客様をつなぐ新しい言語体験イベント</p>
+			</header>
+			<section class="p-5 text-xs space-y-4">
+				<div id="store-ranking-ja" class="space-y-1.5"></div>
+			</section>
+		</div>
+
+		<!-- 하단 연결 정보 -->
+		<footer class="p-5 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 space-y-1">
+			<p class="font-bold text-slate-900">세모 (Semo)</p>
+			<p>🌐 한국어 · 일본어 콘텐츠 / 디지털 교재 / 온라인 수업</p>
+			<p>✉ 문의: official@semo-lang.com</p>
+		</footer>
+
+	</div>
+
+	<!-- 🔥 하단 무한 흘러가는 제휴 점포 전광판 (Marquee Footer) -->
+	<div class="fixed bottom-0 left-0 right-0 bg-slate-900 text-white border-t-2 border-amber-400 py-2.5 z-50 overflow-hidden shadow-2xl">
+		<div class="max-w-md mx-auto relative flex items-center">
+			<div class="bg-amber-400 text-slate-900 text-[10px] font-black px-2 py-1 absolute left-2 z-10 rounded shadow shrink-0">
+				함께하는 점포
+			</div>
+			<div class="overflow-hidden w-full pl-24">
+				<div id="marquee-content" class="marquee-track text-xs font-semibold text-slate-200 gap-6">
+					<!-- JS로 두 번 반복하여 끊김 없는 무한 루프 생성 -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JavaScript Logic -->
+	<script>
+		// 1. 충청도 지역별 데이터
+		let regionData = [
+			{ id: 1, nameKo: "천안시 (서북구/동남구)", nameJa: "天安市", count: 1840 },
+			{ id: 2, nameKo: "아산시 (배방/탕정)", nameJa: "牙山市", count: 1320 },
+			{ id: 3, nameKo: "공주시 (신관/금학)", nameJa: "公州市", count: 980 },
+			{ id: 4, nameKo: "서산시 (호수공원)", nameJa: "瑞山市", count: 750 },
+			{ id: 5, nameKo: "당진시 (읍내동)", nameJa: "唐津市", count: 510 }
+		];
+
+		// 2. 참여 점포 목록 데이터
+		let storeData = [
+			{ id: 101, nameKo: "[천안] 불당동 ◯◯이자카야", nameJa: "[天安] ◯◯居酒屋", count: 420 },
+			{ id: 102, nameKo: "[아산] 탕정 ☕ 카페세모", nameJa: "[牙山] ☕ Cafe Semo", count: 380 },
+			{ id: 103, nameKo: "[천안] 두정동 🥐 빵빵베이커리", nameJa: "[天安] 🥐 Bakery", count: 310 },
+			{ id: 104, nameKo: "[공주] 신관동 💐 플라워모닝", nameJa: "[公州] 💐 Flower", count: 260 },
+			{ id: 105, nameKo: "[서산] 호수공원 🍺 청춘포차", nameJa: "[瑞山] 🍺 Pocha", count: 190 },
+			{ id: 106, nameKo: "[당진] 읍내동 ☕ 로스터리", nameJa: "[唐津] ☕ Roastery", count: 140 }
+		];
+
+		// A. 하단 무한 전광판 렌더링 (끊기지 않고 흐르는 효과)
+		function renderMarquee() {
+			const marqueeEl = document.getElementById('marquee-content');
+			if (!marqueeEl) return;
+
+			let itemsHtml = storeData.map(s => `
+				<span class="inline-flex items-center gap-1 shrink-0">
+					<i class="fa-solid fa-store text-amber-400"></i> ${s.nameKo}
+				</span>
+			`).join('<span class="text-slate-600">|</span>');
+
+			// 끊김 없는 루프를 위해 동일 내용을 2번 반복
+			marqueeEl.innerHTML = itemsHtml + '<span class="text-slate-600">|</span>' + itemsHtml;
+		}
+
+		// B. 실시간 순위 화면 렌더링 (내림차순 정렬)
+		function renderRankings() {
+			regionData.sort((a, b) => b.count - a.count);
+			storeData.sort((a, b) => b.count - a.count);
+
+			// 1. 지역별 순위 렌더링
+			const regionBox = document.getElementById('region-ranking-ko');
+			if (regionBox) {
+				regionBox.innerHTML = regionData.map((item, idx) => `
+					<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-white border-2 border-amber-300 shadow' : 'bg-white/90'}">
+						<div class="flex items-center gap-2">
+							<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-700'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
+							<span>${item.nameKo}</span>
+						</div>
+						<div class="flex items-center gap-1 text-amber-600 text-[11px]">
+							<i class="fa-solid fa-qrcode"></i>
+							<span class="font-extrabold">${item.count.toLocaleString()} 스캔</span>
+						</div>
+					</div>
+				`).join('');
+			}
+
+			// 2. 점포별 순위 렌더링
+			const storeBox = document.getElementById('store-ranking-ko');
+			if (storeBox) {
+				storeBox.innerHTML = storeData.slice(0, 5).map((item, idx) => `
+					<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-indigo-900 text-white border-2 border-amber-400 shadow-lg' : 'bg-white text-slate-900'}">
+						<div class="flex items-center gap-2">
+							<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-indigo-100 text-indigo-900'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
+							<span class="${idx === 0 ? 'text-amber-300 font-extrabold' : ''}">${item.nameKo}</span>
+						</div>
+						<div class="flex items-center gap-1 ${idx === 0 ? 'text-amber-300' : 'text-indigo-600'} text-[11px]">
+							<i class="fa-solid fa-fire"></i>
+							<span class="font-extrabold">${item.count.toLocaleString()}회</span>
+						</div>
+					</div>
+				`).join('');
+			}
+		}
+
+		// C. 실시간 알림 팝업
+		function triggerLiveToast(name) {
+			const toast = document.getElementById('live-scan-banner');
+			const nameEl = document.getElementById('toast-store-name');
+			if (!toast || !nameEl) return;
+
+			nameEl.innerText = name;
+			toast.classList.remove('hidden');
+
+			setTimeout(() => {
+				toast.classList.add('hidden');
+			}, 3200);
+		}
+
+		// D. 실시간 시뮬레이션 인터벌 (3.5초마다 변동)
+		function startSimulation() {
+			setInterval(() => {
+				// 랜덤 점포 스캔 수 증가
+				const randStoreIdx = Math.floor(Math.random() * storeData.length);
+				const increment = Math.floor(Math.random() * 3) + 1;
+				storeData[randStoreIdx].count += increment;
+
+				// 연동된 지역 스캔 수 증가
+				const randRegionIdx = Math.floor(Math.random() * regionData.length);
+				regionData[randRegionIdx].count += increment;
+
+				// 팝업 표시 및 화면 갱신
+				triggerLiveToast(storeData[randStoreIdx].nameKo);
+				renderRankings();
+			}, 3500);
+		}
+
+		// 탭 전환
+		function switchTabKo(tabName) {
+			['proposal', 'ranking', 'demo'].forEach(tab => {
+				document.getElementById(`content-ko-${tab}`).classList.add('hidden');
+				document.getElementById(`tab-ko-${tab}`).className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg transition";
+			});
+			document.getElementById(`content-ko-${tabName}`).classList.remove('hidden');
+			document.getElementById(`tab-ko-${tabName}`).className = "flex-1 py-2 text-xs font-bold text-indigo-600 bg-white shadow-sm rounded-lg transition";
+		}
+
+		// 언어 전환
+		function setLanguage(lang) {
+			document.getElementById('lang-ko').style.display = lang === 'ko' ? 'block' : 'none';
+			document.getElementById('lang-ja').style.display = lang === 'ja' ? 'block' : 'none';
+		}
+
+		// 체험하기 버튼
+		function runDemoKo() {
+			const res = document.getElementById('demo-result-ko');
+			res.classList.remove('hidden');
+		}
+
+		// 초기화
+		window.onload = function() {
+			renderMarquee();
+			renderRankings();
+			startSimulation();
+		};
+	</script>
+</body>
+</html>

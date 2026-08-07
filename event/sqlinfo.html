@@ -1,0 +1,537 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo QR 이벤트 시스템 DB 설계서 & SQL 스크립트</title>
+	<!-- Tailwind CSS CDN -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- FontAwesome CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+		body {
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		pre code {
+			font-family: 'Fira Code', 'Courier New', Courier, monospace;
+			font-size: 0.85rem;
+		}
+	</style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-20">
+
+	<!-- Header Banner -->
+	<header class="bg-slate-800 border-b border-slate-700 py-8 px-4 shadow-lg">
+		<div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+			<div>
+				<span class="bg-indigo-500/20 text-indigo-400 text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/30">
+					Semo System Architecture v1.0
+				</span>
+				<h1 class="text-2xl md:text-3xl font-black text-white mt-2 flex items-center gap-2">
+					<i class="fa-solid fa-database text-amber-400"></i> Semo QR 이벤트 DB 설계서
+				</h1>
+				<p class="text-slate-400 text-xs md:text-sm mt-1">
+					충청권(충남/충북/세종/천안) 시범 운영 및 매장 단위 확장 대응 시스템
+				</p>
+			</div>
+			<div class="flex items-center gap-2 bg-slate-900/80 p-2.5 rounded-xl border border-slate-700">
+				<span class="w-3 h-3 bg-emerald-500 rounded-full animate-ping"></span>
+				<span class="text-xs font-bold text-slate-300">Server Target: <b>Conoha Wing (MariaDB/MySQL)</b></span>
+			</div>
+		</div>
+	</header>
+
+	<!-- Main Container -->
+	<main class="max-w-5xl mx-auto px-4 mt-8 space-y-10">
+
+		<!-- 1. SYSTEM ARCHITECTURE & FLOW -->
+		<section class="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 shadow-sm space-y-4">
+			<h2 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-700 pb-3">
+				<i class="fa-solid fa-diagram-project"></i> 1. 시스템 데이터 흐름 (Data Flow)
+			</h2>
+
+			<div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-center text-xs">
+				<div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
+					<span class="text-indigo-400 font-bold block mb-1">1. QR 스캔</span>
+					<p class="text-slate-400">음료 병목/테이블 태그 스캔</p>
+				</div>
+				<div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
+					<span class="text-indigo-400 font-bold block mb-1">2. 콘텐츠 노출</span>
+					<p class="text-slate-400">LanguageContents 바인딩</p>
+				</div>
+				<div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
+					<span class="text-indigo-400 font-bold block mb-1">3. 이벤트 참여</span>
+					<p class="text-slate-400">룰렛/운세 뽑기 실행</p>
+				</div>
+				<div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
+					<span class="text-indigo-400 font-bold block mb-1">4. 결과 & 스캔기록</span>
+					<p class="text-slate-400">Prizes 당첨 + History 저장</p>
+				</div>
+				<div class="bg-amber-500/10 p-3 rounded-xl border border-amber-500/30 text-amber-300">
+					<span class="font-bold block mb-1">5. 리워드 지급</span>
+					<p class="text-amber-200/80">Semo 포인트 / 무료체험권</p>
+				</div>
+			</div>
+
+			<!-- 관계도 Diagram -->
+			<div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-indigo-300 overflow-x-auto leading-relaxed">
+<pre>
+ [Languages] ───────────────► [LanguageContents]
+                                      │
+                                      ▼
+ [Regions] ───► [Stores] ────► [EventQR] ◄─── [EventPrizes]
+  (지역)        (제휴매장)       (QR코드)        (당첨상품)
+                                      │
+                                      ▼
+                            [EventScanHistory] ───► [SemoPointHistory]
+                            (참여/스캔 통계기록)     (세모 포인트 적립)
+</pre>
+			</div>
+		</section>
+
+		<!-- 2. DB TABLE SPECIFICATIONS -->
+		<section class="space-y-6">
+			<h2 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-700 pb-3">
+				<i class="fa-solid fa-table"></i> 2. 테이블 상세 명세서 (8개 테이블)
+			</h2>
+
+			<div class="grid grid-cols-1 gap-6">
+
+				<!-- 1. Languages -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">필수 Phase 1</span>
+							Languages <span class="text-xs text-slate-400 font-normal">(언어 종류 관리)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">언어 고유 번호</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">name</td><td class="p-2">VARCHAR(50)</td><td class="p-2">NOT NULL</td><td class="p-2">언어명 (예: 日本語, 한국어)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">code</td><td class="p-2">VARCHAR(10)</td><td class="p-2">NOT NULL, UNIQUE</td><td class="p-2">언어 코드 (예: JP, KR, CN)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">is_active</td><td class="p-2">TINYINT(1)</td><td class="p-2">DEFAULT 1</td><td class="p-2">사용 여부 (1:활성, 0:비활성)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">created_at</td><td class="p-2">DATETIME</td><td class="p-2">DEFAULT CURRENT_TIMESTAMP</td><td class="p-2">등록일시</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 2. LanguageContents -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">필수 Phase 1</span>
+							LanguageContents <span class="text-xs text-slate-400 font-normal">(언어 학습 콘텐츠)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">콘텐츠 고유 번호</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">language_id</td><td class="p-2">INT</td><td class="p-2">FK (Languages.id)</td><td class="p-2">언어 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">text</td><td class="p-2">VARCHAR(200)</td><td class="p-2">NOT NULL</td><td class="p-2">원어 표기 (예: 乾杯！)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">reading</td><td class="p-2">VARCHAR(200)</td><td class="p-2">NULL</td><td class="p-2">읽기/발음 (예: かんぱい / 칸파이)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">meaning</td><td class="p-2">VARCHAR(200)</td><td class="p-2">NOT NULL</td><td class="p-2">번역/뜻 (예: 건배!)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">explanation</td><td class="p-2">TEXT</td><td class="p-2">NULL</td><td class="p-2">상세 문화/문법 설명</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">example_text</td><td class="p-2">VARCHAR(300)</td><td class="p-2">NULL</td><td class="p-2">예문 원어</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">example_meaning</td><td class="p-2">VARCHAR(300)</td><td class="p-2">NULL</td><td class="p-2">예문 해석</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">image_url</td><td class="p-2">VARCHAR(500)</td><td class="p-2">NULL</td><td class="p-2">연관 이미지 URL</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">level</td><td class="p-2">INT</td><td class="p-2">DEFAULT 1</td><td class="p-2">난이도 (1:초급, 2:중급...)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">is_active</td><td class="p-2">TINYINT(1)</td><td class="p-2">DEFAULT 1</td><td class="p-2">사용 여부</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">created_at</td><td class="p-2">DATETIME</td><td class="p-2">DEFAULT CURRENT_TIMESTAMP</td><td class="p-2">등록일시</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 3. Regions -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">필수 Phase 1</span>
+							Regions <span class="text-xs text-slate-400 font-normal">(이벤트 지역 관리)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">지역 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">name</td><td class="p-2">VARCHAR(50)</td><td class="p-2">NOT NULL</td><td class="p-2">지역명 (예: 충청남도, 천안시)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">is_active</td><td class="p-2">TINYINT(1)</td><td class="p-2">DEFAULT 1</td><td class="p-2">사용 여부</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 4. Stores -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-slate-700 text-amber-400 text-xs px-2 py-0.5 rounded">확장 Phase 2</span>
+							Stores <span class="text-xs text-slate-400 font-normal">(제휴 매장 관리)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">매장 고유 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">region_id</td><td class="p-2">INT</td><td class="p-2">FK (Regions.id)</td><td class="p-2">소속 지역 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">store_name</td><td class="p-2">VARCHAR(100)</td><td class="p-2">NOT NULL</td><td class="p-2">매장명 (예: [두정동] ◯◯이자카야)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">store_type</td><td class="p-2">VARCHAR(50)</td><td class="p-2">NULL</td><td class="p-2">업종 (음식점, 마트, 카페 등)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">address</td><td class="p-2">VARCHAR(200)</td><td class="p-2">NULL</td><td class="p-2">매장 주소</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">manager_name</td><td class="p-2">VARCHAR(50)</td><td class="p-2">NULL</td><td class="p-2">담당자/점주 이름</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">is_active</td><td class="p-2">TINYINT(1)</td><td class="p-2">DEFAULT 1</td><td class="p-2">운영 상태</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">created_at</td><td class="p-2">DATETIME</td><td class="p-2">DEFAULT CURRENT_TIMESTAMP</td><td class="p-2">등록일시</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 5. EventQR -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">필수 Phase 1</span>
+							EventQR <span class="text-xs text-slate-400 font-normal">(QR 코드 개체)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">QR 고유 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">qr_code_key</td><td class="p-2">VARCHAR(50)</td><td class="p-2">NOT NULL, UNIQUE</td><td class="p-2">QR 식별 키값 (URL 매핑용)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">content_id</td><td class="p-2">INT</td><td class="p-2">FK (LanguageContents.id)</td><td class="p-2">매핑된 언어 콘텐츠 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">region_id</td><td class="p-2">INT</td><td class="p-2">FK (Regions.id)</td><td class="p-2">지역 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">store_id</td><td class="p-2">INT</td><td class="p-2">NULL, FK (Stores.id)</td><td class="p-2">매장 ID (초기엔 NULL 가능)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">scan_count</td><td class="p-2">INT</td><td class="p-2">DEFAULT 0</td><td class="p-2">총 누적 스캔 수</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">is_active</td><td class="p-2">TINYINT(1)</td><td class="p-2">DEFAULT 1</td><td class="p-2">활성 상태</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">created_at</td><td class="p-2">DATETIME</td><td class="p-2">DEFAULT CURRENT_TIMESTAMP</td><td class="p-2">생성일시</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 6. EventPrizes -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">필수 Phase 1</span>
+							EventPrizes <span class="text-xs text-slate-400 font-normal">(당첨 경품 관리)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">경품 고유 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">name</td><td class="p-2">VARCHAR(100)</td><td class="p-2">NOT NULL</td><td class="p-2">경품명 (예: Semo 7일 무료체험권)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">semo_point</td><td class="p-2">INT</td><td class="p-2">DEFAULT 0</td><td class="p-2">지급 포인트 수량</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">probability</td><td class="p-2">INT</td><td class="p-2">DEFAULT 0</td><td class="p-2">당첨 확률 (가중치 / 백분율)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">stock</td><td class="p-2">INT</td><td class="p-2">DEFAULT -1</td><td class="p-2">남은 수량 (-1: 무제한)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">is_active</td><td class="p-2">TINYINT(1)</td><td class="p-2">DEFAULT 1</td><td class="p-2">사용 여부</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 7. EventScanHistory -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">필수 Phase 1</span>
+							EventScanHistory <span class="text-xs text-slate-400 font-normal">(스캔 및 참여 로그)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">로그 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">qr_id</td><td class="p-2">INT</td><td class="p-2">FK (EventQR.id)</td><td class="p-2">스캔된 QR ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">content_id</td><td class="p-2">INT</td><td class="p-2">FK (LanguageContents.id)</td><td class="p-2">노출된 콘텐츠 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">region_id</td><td class="p-2">INT</td><td class="p-2">FK (Regions.id)</td><td class="p-2">지역 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">store_id</td><td class="p-2">INT</td><td class="p-2">NULL, FK (Stores.id)</td><td class="p-2">매장 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">prize_id</td><td class="p-2">INT</td><td class="p-2">NULL, FK (EventPrizes.id)</td><td class="p-2">당첨된 경품 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">device_key</td><td class="p-2">VARCHAR(200)</td><td class="p-2">NULL</td><td class="p-2">중복 참여 방지용 디바이스 식별값</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">created_at</td><td class="p-2">DATETIME</td><td class="p-2">DEFAULT CURRENT_TIMESTAMP</td><td class="p-2">참여 일시</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 8. SemoPointHistory -->
+				<div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+					<div class="flex justify-between items-center mb-3">
+						<h3 class="font-bold text-white text-base flex items-center gap-2">
+							<span class="bg-slate-700 text-amber-400 text-xs px-2 py-0.5 rounded">확장 Phase 2</span>
+							SemoPointHistory <span class="text-xs text-slate-400 font-normal">(유저 포인트 적립 기록)</span>
+						</h3>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-xs text-slate-300 border-collapse">
+							<thead>
+								<tr class="bg-slate-900 text-indigo-400 border-b border-slate-700">
+									<th class="p-2.5">컬럼명 (Column)</th>
+									<th class="p-2.5">타입 (Data Type)</th>
+									<th class="p-2.5">제약조건</th>
+									<th class="p-2.5">설명 (Description)</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-700/50">
+								<tr><td class="p-2 font-mono text-amber-300">id</td><td class="p-2">INT</td><td class="p-2">PK, AUTO_INCREMENT</td><td class="p-2">이력 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">user_id</td><td class="p-2">INT</td><td class="p-2">NOT NULL</td><td class="p-2">회원 ID</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">amount</td><td class="p-2">INT</td><td class="p-2">NOT NULL</td><td class="p-2">변동 포인트 수량 (+/-)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">reason</td><td class="p-2">VARCHAR(200)</td><td class="p-2">NULL</td><td class="p-2">적립/사유 (예: 충청 QR 이벤트 참여)</td></tr>
+								<tr><td class="p-2 font-mono text-amber-300">created_at</td><td class="p-2">DATETIME</td><td class="p-2">DEFAULT CURRENT_TIMESTAMP</td><td class="p-2">일시</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+		<!-- 3. CONOHA WING MYSQL DDL SQL SCRIPT -->
+		<section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 space-y-4">
+			<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-slate-700 pb-3">
+				<div>
+					<h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
+						<i class="fa-solid fa-code"></i> 3. Conoha WING (phpMyAdmin) 실행용 SQL 스크립트
+					</h2>
+					<p class="text-xs text-slate-400 mt-0.5">코노하윙 phpMyAdmin [SQL] 탭에 그대로 복사해서 실행하시면 됩니다.</p>
+				</div>
+				<button onclick="copySqlScript()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-md">
+					<i class="fa-solid fa-copy"></i> SQL 전체 복사
+				</button>
+			</div>
+
+			<!-- SQL 코드창 -->
+			<div class="bg-slate-950 p-4 rounded-xl border border-slate-800 overflow-x-auto text-xs text-slate-200 font-mono">
+<pre id="sql-code-block"><code>-- ========================================================
+-- Semo QR Event System Database DDL Script
+-- Target DBMS: MariaDB / MySQL (Conoha WING Server)
+-- UTF-8 (utf8mb4) Encoding Supported
+-- ========================================================
+
+-- 1. 언어 관리 테이블
+CREATE TABLE IF NOT EXISTS `languages` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL,
+    `code` VARCHAR(10) NOT NULL UNIQUE,
+    `is_active` TINYINT(1) DEFAULT 1,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 2. 언어 콘텐츠 테이블
+CREATE TABLE IF NOT EXISTS `language_contents` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `language_id` INT NOT NULL,
+    `text` VARCHAR(200) NOT NULL,
+    `reading` VARCHAR(200) NULL,
+    `meaning` VARCHAR(200) NOT NULL,
+    `explanation` TEXT NULL,
+    `example_text` VARCHAR(300) NULL,
+    `example_meaning` VARCHAR(300) NULL,
+    `image_url` VARCHAR(500) NULL,
+    `level` INT DEFAULT 1,
+    `is_active` TINYINT(1) DEFAULT 1,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_contents_language` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 3. 지역 관리 테이블
+CREATE TABLE IF NOT EXISTS `regions` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL,
+    `is_active` TINYINT(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 4. 제휴 매장 테이블 (Phase 2)
+CREATE TABLE IF NOT EXISTS `stores` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `region_id` INT NOT NULL,
+    `store_name` VARCHAR(100) NOT NULL,
+    `store_type` VARCHAR(50) NULL,
+    `address` VARCHAR(200) NULL,
+    `manager_name` VARCHAR(50) NULL,
+    `is_active` TINYINT(1) DEFAULT 1,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_stores_region` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 5. 당첨 경품 테이블
+CREATE TABLE IF NOT EXISTS `event_prizes` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(100) NOT NULL,
+    `semo_point` INT DEFAULT 0,
+    `probability` INT DEFAULT 0,
+    `stock` INT DEFAULT -1,
+    `is_active` TINYINT(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 6. QR 코드 관리 테이블
+CREATE TABLE IF NOT EXISTS `event_qr` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `qr_code_key` VARCHAR(50) NOT NULL UNIQUE,
+    `content_id` INT NOT NULL,
+    `region_id` INT NOT NULL,
+    `store_id` INT NULL,
+    `scan_count` INT DEFAULT 0,
+    `is_active` TINYINT(1) DEFAULT 1,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_qr_content` FOREIGN KEY (`content_id`) REFERENCES `language_contents` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_qr_region` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_qr_store` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 7. 스캔/참여 이력 로그 테이블
+CREATE TABLE IF NOT EXISTS `event_scan_history` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `qr_id` INT NOT NULL,
+    `content_id` INT NOT NULL,
+    `region_id` INT NOT NULL,
+    `store_id` INT NULL,
+    `prize_id` INT NULL,
+    `device_key` VARCHAR(200) NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_history_qr` FOREIGN KEY (`qr_id`) REFERENCES `event_qr` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_history_content` FOREIGN KEY (`content_id`) REFERENCES `language_contents` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_history_region` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_history_store` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_history_prize` FOREIGN KEY (`prize_id`) REFERENCES `event_prizes` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 8. 포인트 사용/적립 테이블
+CREATE TABLE IF NOT EXISTS `semo_point_history` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `amount` INT NOT NULL,
+    `reason` VARCHAR(200) NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ========================================================
+-- 初期データ Migration Data (시범 운영용 초기 데이터)
+-- ========================================================
+
+-- 언어 초기 데이터
+INSERT INTO `languages` (`id`, `name`, `code`) VALUES 
+(1, '日本語', 'JP'),
+(2, '한국어', 'KR'),
+(3, '中文', 'CN')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+-- 지역 초기 데이터 (충청권)
+INSERT INTO `regions` (`id`, `name`) VALUES 
+(1, '충청남도'),
+(2, '충청북도'),
+(3, '세종특별자치시'),
+(4, '천안시')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+-- 초기 일본어 콘텐츠
+INSERT INTO `language_contents` (`id`, `language_id`, `text`, `reading`, `meaning`, `explanation`) VALUES 
+(1, 1, '乾杯！', 'かんぱい！', '건배！', '술자리에서 가장 자주 쓰는 필수 표현입니다.'),
+(2, 1, '来てくれる？', 'きてくれる？', '와 줄래?', '친한 친구나 연인에게 다정하게 묻는 표현입니다.'),
+(3, 1, 'ありがとう', 'ありがとう', '고마워', '일상생활에서 가장 기본이 되는 감사 표현입니다.'),
+(4, 1, 'おいしい！', 'おいしい！', '맛있다！', '음식을 먹고 감탄할 때 쓰는 표현입니다.')
+ON DUPLICATE KEY UPDATE `text` = VALUES(`text`);
+
+-- 초기 경품 데이터
+INSERT INTO `event_prizes` (`id`, `name`, `semo_point`, `probability`, `stock`) VALUES 
+(1, '꽝 (오늘의 운세카드)', 0, 40, -1),
+(2, 'Semo 100 포인트', 100, 30, -1),
+(3, 'Semo 500 포인트', 500, 20, -1),
+(4, 'Semo 7일 무료체험권', 0, 10, 100)
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+-- 시범 QR 등록 (CN:충남, CB:충북, SJ:세종, CA:천안)
+INSERT INTO `event_qr` (`qr_code_key`, `content_id`, `region_id`) VALUES 
+('CN001', 1, 1),
+('CB001', 3, 2),
+('SJ001', 4, 3),
+('CA001', 2, 4);
+</code></pre>
+			</div>
+		</section>
+
+	</main>
+
+	<!-- 복사 성공 Toast -->
+	<div id="copy-toast" class="hidden fixed bottom-6 right-6 bg-emerald-500 text-slate-900 font-bold text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2">
+		<i class="fa-solid fa-circle-check text-base"></i> 코노하윙 SQL 스크립트가 클립보드에 복사되었습니다!
+	</div>
+
+	<script>
+		function copySqlScript() {
+			const sqlText = document.getElementById('sql-code-block').innerText;
+			navigator.clipboard.writeText(sqlText).then(() => {
+				const toast = document.getElementById('copy-toast');
+				toast.classList.remove('hidden');
+				setTimeout(() => {
+					toast.classList.add('hidden');
+				}, 3000);
+			});
+		}
+	</script>
+</body>
+</html>

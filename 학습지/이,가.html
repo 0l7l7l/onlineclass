@@ -1,0 +1,1063 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>한국어 문법 교재 - 이/가 (Subject Particle)</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--dark-blue: #1e3a8a;
+			--light-blue-bg: #eff6ff;
+			--accent-orange: #ff5722;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0; /* 페이지 카운터 시작 */
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 18mm 20mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num; /* 각 페이지마다 카운터 1씩 증가 */
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 12mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+			/* 푸터에 자동으로 'Page 번호' 표시 */
+		.footer::after {	content: "Page " counter(page-num);	}
+		.left-page .footer {left: 20mm;}
+		.right-page .footer {	right: 20mm;}
+		.grammar-no {
+			position: absolute;
+			top: 15mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+		.left-page .grammar-no {left: 20mm;}
+		.right-page .grammar-no {	right: 20mm;text-align: right;}
+		.lesson-band {
+			display: inline-block;
+			align-self: flex-start;
+			background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 800;
+			padding: 6px 18px;
+			border-radius: 20px;
+			letter-spacing: 1px;
+			margin-bottom: 12px;
+			box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+		}
+
+		/* ==========================================================================
+		 3. 타이틀 및 디자인 요소
+		 ========================================================================== */
+		.main-title {
+			font-size: 24px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 12px;
+			border-bottom: 3px solid var(--primary-blue);
+			padding-bottom: 8px;
+		}
+
+		h3.grammar-title {
+			font-size: 32px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 15px;
+			line-height: 1.2;
+		}
+
+		.sub-title {
+			font-size: 16px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-top: 14px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border-bottom: 1px solid #dbeafe;
+		}
+
+		p, li {
+			font-size: 13.5px;
+			line-height: 1.6;
+			color: #334155;
+		}
+
+		.highlight {
+			color: var(--primary-blue);
+			font-weight: bold;
+		}
+
+		.target-highlight {
+			color: var(--accent-orange);
+			font-weight: 900;
+			font-size: 1.1em;
+		}
+
+		/* 말풍선 단어장 컴포넌트 */
+		/* 1. 큰 점선 테두리와 배경을 없애고, 아래에 구분 실선을 추가 */
+		.bubble-word-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-bottom: 14px;
+			padding-bottom: 14px; /* 아래 실선과의 간격 */
+			border-bottom: 1px solid #dbeafe; /* 👈 아래에 추가된 실선 (연한 파란색) */
+		}
+
+		/* 2. 단어 개별 동그란 테두리 UI는 그대로 유지 */
+		.word-bubble {
+			background: #ffffff;
+			border: 2px solid var(--primary-blue);
+			color: var(--dark-blue);
+			padding: 6px 14px;
+			border-radius: 20px;
+			font-size: 14px;
+			font-weight: bold;
+			box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+			.word-bubble .ja-sub {
+				font-size: 11px;
+				color: #64748b;
+				font-weight: normal;
+				margin-left: 2px;
+			}
+
+		/* 규칙 비주얼 표 */
+		.rule-visual-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 6px;
+			margin-top: 6px;
+		}
+
+			.rule-visual-table th {
+				padding: 8px;
+				font-size: 14px;
+				font-weight: 800;
+				border-radius: 8px;
+				color: #ffffff;
+				text-align: center;
+			}
+
+				.rule-visual-table th.has-patchim {
+					background-color: #2563eb;
+				}
+
+				.rule-visual-table th.no-patchim {
+					background-color: #0284c7;
+				}
+
+			.rule-visual-table td {
+				background-color: #ffffff;
+				border: 1px solid #dbeafe;
+				border-radius: 8px;
+				padding: 10px;
+				text-align: center;
+			}
+
+		/* 예문 및 캐릭터 박스 */
+		.speech-bubble-box {
+			position: relative;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 16px;
+			padding: 14px 18px;
+			margin: 10px 0;
+		}
+
+		.character-card {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			padding: 10px 14px;
+			border-radius: 0 8px 8px 0;
+			margin-bottom: 10px;
+		}
+
+		.char-avatar {
+			font-size: 28px;
+		}
+
+		.char-speech {
+			font-size: 15px;
+			font-weight: bold;
+			color: #0f172a;
+		}
+
+		.char-trans {
+			font-size: 12px;
+			color: #64748b;
+		}
+
+		/* 연습문제 리스트 */
+		.quiz-item {
+			margin-bottom: 10px;
+			background-color: #fafafa;
+			padding: 10px 14px;
+			border-radius: 8px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 14.5px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 12px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 80px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--accent-orange);
+			padding: 0 4px;
+		}
+
+		/* 정답 버튼 & 박스 */
+		.answer-btn {
+			margin-top: 8px;
+			padding: 6px 14px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 2px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 12px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 8px;
+			padding: 10px 12px;
+			border: 2px solid var(--primary-blue);
+			border-radius: 8px;
+			display: none;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 13px;
+			color: var(--dark-blue);
+			line-height: 1.6;
+		}
+
+		/* 대형 그래픽 강조 박스 (1페이지용) */
+		.big-concept-box {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			border: 2px solid #bfdbfe;
+			border-radius: 16px;
+			padding: 16px;
+			text-align: center;
+			margin-bottom: 12px;
+		}
+
+		.big-concept-title {
+			font-size: 26px;
+			font-weight: 900;
+			color: #1e3a8a;
+		}
+
+		/* ==========================================================================
+		 📱 모바일 & 🖨️ 인쇄(Print) 대응
+		 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+		/* 심플 미니멀 단원 구분 스타일 */
+		.divider-page-simple {
+			background-color: #ffffff;
+			padding: 20mm !important;
+		}
+
+		.divider-dashed-box {
+			width: 100%;
+			height: 100%;
+			border: 2px dashed #94a3b8; /* 점선 테두리 */
+			border-radius: 16px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			background-color: #f8fafc;
+		}
+
+		.divider-icon {
+			font-size: 40px;
+			margin-bottom: 15px;
+		}
+
+		.divider-tag {
+			color: #2563eb;
+			font-size: 14px;
+			font-weight: bold;
+			letter-spacing: 2px;
+			margin-bottom: 8px;
+		}
+
+		.divider-title-simple {
+			font-size: 36px;
+			color: #1e293b;
+			font-weight: 900;
+			margin-bottom: 6px;
+		}
+
+		.divider-ja-text {
+			font-size: 15px;
+			color: #64748b;
+		}
+		/* 모서리 포인트 테두리 스타일 */
+		.divider-page-corner {
+			background-color: #f1f5f9;
+			padding: 20mm !important;
+		}
+
+		.corner-frame {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			background-color: #ffffff;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+		}
+
+		/* 네 모서리 선 표현 */
+		.corner-tl, .corner-tr, .corner-bl, .corner-br {
+			position: absolute;
+			width: 30px;
+			height: 30px;
+			border-color: #2563eb;
+			border-style: solid;
+		}
+
+		.corner-tl {
+			top: 15px;
+			left: 15px;
+			border-width: 3px 0 0 3px;
+		}
+
+		.corner-tr {
+			top: 15px;
+			right: 15px;
+			border-width: 3px 3px 0 0;
+		}
+
+		.corner-bl {
+			bottom: 15px;
+			left: 15px;
+			border-width: 0 0 3px 3px;
+		}
+
+		.corner-br {
+			bottom: 15px;
+			right: 15px;
+			border-width: 0 3px 3px 0;
+		}
+
+		.corner-content {
+			text-align: center;
+		}
+
+		.corner-num {
+			font-size: 13px;
+			font-weight: 800;
+			color: #2563eb;
+			letter-spacing: 2px;
+			margin-bottom: 10px;
+		}
+
+		.corner-title {
+			font-size: 30px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 8px;
+		}
+
+		.corner-sub {
+			font-size: 15px;
+			color: #64748b;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<div class="page divider-page-simple">
+			<div class="divider-dashed-box">
+				<span class="divider-icon">📖</span>
+				<span class="divider-tag">LESSON 02</span>
+				<h2 class="divider-title-simple">은 / 는</h2>
+				<p class="divider-ja-text">Topic Particle</p>
+			</div>
+			<div class="footer">Lesson 02</div>
+		</div>
+
+
+		<div class="page divider-page-corner">
+			<div class="corner-frame">
+				<span class="corner-tl"></span>
+				<span class="corner-tr"></span>
+				<span class="corner-bl"></span>
+				<span class="corner-br"></span>
+
+				<div class="corner-content">
+					<p class="corner-num">PART 01</p>
+					<h1 class="corner-title">기초 문법 완성</h1>
+					<p class="corner-sub">이/가 & 은/는 Master</p>
+				</div>
+			</div>
+			<div class="footer">Lesson 02</div>
+		</div>
+		  
+		<!-- ==========================================================================
+	📖 [첫 번째 펼침면: 1-2쪽] 이/가 문법 설명 & 쉬운 예문 (시각화)
+	========================================================================== -->
+		<div class="book-container">
+			<!-- 1쪽: 왼쪽 (핵심 설명) -->
+			<div class="page left-page">
+				<div class="lesson-band">LESSON 02</div>
+				<h1 class="main-title">주어 말하기</h1>
+				<h3 class="grammar-title">명사 + 이 / 가</h3>
+
+				<!-- 핵심 개념 강조 박스 -->
+				<div class="big-concept-box">
+					<div class="big-concept-title">이 / 가</div>
+					<p style="font-size:16px; font-weight:bold; color:#2563eb; margin-top:4px;">
+						"누가?" &nbsp;|&nbsp; "무엇이?"
+					</p>
+				</div>
+
+				<div class="sub-title">💡 接続公式 (使い分けルール)</div>
+				<table class="rule-visual-table">
+					<thead>
+						<tr>
+							<th class="has-patchim">받침 O ➔ 이</th>
+							<th class="no-patchim">받침 X ➔ 가</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<span class="rule-example">학생</span> + <span class="rule-target">이</span><br>
+								<span class="rule-example">책</span> + <span class="rule-target">이</span><br>
+								<span class="rule-example">한국</span> + <span class="rule-target">이</span>
+							</td>
+							<td>
+								<span class="rule-example">사과</span> + <span class="rule-target">가</span><br>
+								<span class="rule-example">의자</span> + <span class="rule-target">가</span><br>
+								<span class="rule-example">지우개</span> + <span class="rule-target">가</span>
+							</td>
+						</tr>
+						<tr class="rule-result-row">
+							<td><strong>학생이 / 책이 / 한국이</strong></td>
+							<td><strong>사과가 / 의자가 / 지우개가</strong></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="speech-bubble-box" style="margin-top: 15px;">
+					<h4 style="font-size:13px; color:var(--dark-blue); font-weight:bold; margin-bottom:4px;">💬 ポイント</h4>
+					<p style="font-size:12.5px; color:#334155;">
+						• 新しく話題にする人やモノに使います。<br>
+						• 日本語の<b>「誰が」「何が」</b>にあたるニュアンスです。
+					</p>
+				</div>
+
+				<div class="footer">Page 1</div>
+			</div>
+
+			<!-- 2쪽: 오른쪽 (쉬운 예문 및 캐릭터 말풍선) -->
+			<div class="page right-page">
+				<div class="grammar-no">LESSON 02</div>
+				<h1 class="main-title">例文 (例文で覚える)</h1>
+				<p style="margin-bottom: 14px; color: #64748b; font-size: 13px;">声に出して読んでみましょう！</p>
+
+				<!-- 캐릭터 및 시각적 예문 -->
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">저<span class="target-highlight">가</span> 민수예요.</div>
+						<div class="char-trans">私がミンスです。(※저+가➔내가/제가)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">📖</div>
+					<div>
+						<div class="char-speech">책<span class="target-highlight">이</span> 있어요.</div>
+						<div class="char-trans">本があります。</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🍎</div>
+					<div>
+						<div class="char-speech">사과<span class="target-highlight">가</span> 맛있어요.</div>
+						<div class="char-trans">リンゴが美味しいです。</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🇰🇷</div>
+					<div>
+						<div class="char-speech">한국<span class="target-highlight">이</span> 좋아요.</div>
+						<div class="char-trans">韓国が好きです(いいです)。</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">☀️</div>
+					<div>
+						<div class="char-speech">오늘<span class="target-highlight">이</span> 생일이에요.</div>
+						<div class="char-trans">今日が誕生日です。</div>
+					</div>
+				</div>
+
+				<div class="footer">Page 2</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+	📖 [두 번째 펼침면: 3-4쪽] 사람 (누가? ➔ 이/가)
+	========================================================================== -->
+		<div class="book-container">
+			<!-- 3쪽: 왼쪽 (사람 단어장) -->
+			<div class="page left-page">
+				<div class="lesson-band">THEME 1</div>
+				<h1 class="main-title">사람 (人)</h1>
+
+				<div class="sub-title">💬 単語 (人・名前)</div>
+				<div class="bubble-word-container" style="padding: 18px 16px;">
+					<div class="word-bubble">👦 선생님<span class="ja-sub">(先生)</span></div>
+					<div class="word-bubble">학생<span class="ja-sub">(学生)</span></div>
+					<div class="word-bubble">아버지<span class="ja-sub">(父)</span></div>
+					<div class="word-bubble">어머니<span class="ja-sub">(母)</span></div>
+					<div class="word-bubble">민수<span class="ja-sub">(ミンス)</span></div>
+					<div class="word-bubble">지은<span class="ja-sub">(ジウン)</span></div>
+				</div>
+
+				<div class="speech-bubble-box" style="margin-top: 10px;">
+					<h4>💬 質問パターン</h4>
+					<p style="font-size:14px; font-weight:bold; color:var(--dark-blue);">
+						"누가 [   ]이에요/예요?" <span style="font-weight:normal; font-size:12px; color:#64748b;">(誰が〜ですか？)</span>
+					</p>
+				</div>
+
+				<div class="footer">Page 3</div>
+			</div>
+
+			<!-- 4쪽: 오른쪽 (누가? ➔ 이/가 연습) -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 1</div>
+				<h1 class="main-title">練習問題 (누가?)</h1>
+				<p style="font-size:12px; color:#666; margin-bottom: 10px;">「누가? (誰が?)」の質問に合わせて答えましょう。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">① Q: 누가 학생이에요? (誰が学生ですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 민수[이/가]<span class="quiz-line">학생</span> 이에요.
+					</div>
+					<div class="quiz-ja">ミンスが学生です。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">② Q: 누가 선생님이에요? (誰が先生ですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 지은[<span class="quiz-line">이/가</span>] 선생님이에요.
+					</div>
+					<div class="quiz-ja">ジウンが先生です。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">③ Q: 누가 의사예요? (誰が医師ですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 어머니[이/가]<span class="quiz-line">의사</span> 예요.
+					</div>
+					<div class="quiz-ja">母が医師です。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">④ Q: 누가 회사원이에요? (誰が会社員ですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 아버지[이/가]<span class="quiz-line">회사원</span> 이에요.
+					</div>
+					<div class="quiz-ja">父が会社員です。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						① <b>가</b> (민수가) &nbsp;&nbsp; ② <b>이</b> (지은이)<br>
+						③ <b>가</b> (어머니가) &nbsp;&nbsp; ④ <b>가</b> (아버지가)
+					</div>
+				</div>
+
+				<div class="footer">Page 4</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+	📖 [세 번째 펼침면: 5-6쪽] 동물 (무엇이? ➔ 형용사 익히기)
+	========================================================================== -->
+		<div class="book-container">
+			<!-- 5쪽: 왼쪽 (동물 단어장 & 형용사) -->
+			<div class="page left-page">
+				<div class="lesson-band">THEME 2</div>
+				<h1 class="main-title">동물 (動物)</h1>
+
+				<div class="sub-title">💬 단어 (動物)</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span style="font-size:20px;">🐶</span> 강아지<span class="ja-sub">(子犬)</span></div>
+					<div class="word-bubble"><span style="font-size:20px;">🐱</span> 고양이<span class="ja-sub">(猫)</span></div>
+					<div class="word-bubble"><span style="font-size:20px;">🐰</span> 토끼<span class="ja-sub">(ウサギ)</span></div>
+					<div class="word-bubble"><span style="font-size:20px;">🐦</span> 새<span class="ja-sub">(鳥)</span></div>
+					<div class="word-bubble"><span style="font-size:20px;">🐟</span> 물고기<span class="ja-sub">(魚)</span></div>
+				</div>
+
+				<div class="sub-title">✨ 함께 익히는 형용사 (形容詞)</div>
+				<div class="bubble-word-container" style="background:#fff7ed; border-color:#fed7aa;">
+					<div class="word-bubble" style="border-color:#f97316;">귀여워요<span class="ja-sub">(可愛い)</span></div>
+					<div class="word-bubble" style="border-color:#f97316;">커요<span class="ja-sub">(大きい)</span></div>
+					<div class="word-bubble" style="border-color:#f97316;">작아요<span class="ja-sub">(小さい)</span></div>
+					<div class="word-bubble" style="border-color:#f97316;">빨라요<span class="ja-sub">(速い)</span></div>
+					<div class="word-bubble" style="border-color:#f97316;">좋아요<span class="ja-sub">(良い/好き)</span></div>
+				</div>
+
+				<div class="footer">Page 5</div>
+			</div>
+
+			<!-- 6쪽: 오른쪽 (무엇이? ➔ 이/가 연습) -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 2</div>
+				<h1 class="main-title">練習問題 (무엇이?)</h1>
+				<p style="font-size:12px; color:#666; margin-bottom: 10px;">「무엇이? (何が?)」の質問に合わせて答えましょう。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">① Q: 무엇이 귀여워요? (何が可愛いですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 강아지<span class="quiz-line">[이/가]</span> 귀여워요.
+					</div>
+					<div class="quiz-ja">子犬が可愛いです。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">② Q: 무엇이 빨라요? (何が速いですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 토끼<span class="quiz-line">[이/가]</span> 빨라요.
+					</div>
+					<div class="quiz-ja">ウサギが速いです。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">③ Q: 무엇이 작아요? (何が小さいですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 새<span class="quiz-line">[이/가]</span> 작아요.
+					</div>
+					<div class="quiz-ja">鳥が小さいです。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">④ Q: 무엇이 커요? (何が大きいですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 고양이<span class="quiz-line">[이/가]</span> 커요.
+					</div>
+					<div class="quiz-ja">猫が大きいです。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認하는</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						① <b>가</b> (강아지가) &nbsp;&nbsp; ② <b>가</b> (토끼가)<br>
+						③ <b>가</b> (새가) &nbsp;&nbsp; ④ <b>가</b> (고양이가)
+					</div>
+				</div>
+
+				<div class="footer">Page 6</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+	📖 [네 번째 펼침면: 7-8쪽] 음식 (무엇이 맛있어요/좋아요?)
+	========================================================================== -->
+		<div class="book-container">
+			<!-- 7쪽: 왼쪽 (음식 단어장) -->
+			<div class="page left-page">
+				<div class="lesson-band">THEME 3</div>
+				<h1 class="main-title">음식 (食べ物)</h1>
+
+				<div class="sub-title">💬 단어 (食べ物・飲み物)</div>
+				<div class="bubble-word-container" style="padding:18px 16px;">
+					<div class="word-bubble">🍎 사과<span class="ja-sub">(リンゴ)</span></div>
+					<div class="word-bubble">🥬 김치<span class="ja-sub">(キムチ)</span></div>
+					<div class="word-bubble">🍜 라면<span class="ja-sub">(ラーメン)</span></div>
+					<div class="word-bubble">☕ 커피<span class="ja-sub">(コーヒー)</span></div>
+					<div class="word-bubble">💧 물<span class="ja-sub">(水)</span></div>
+				</div>
+
+				<div class="speech-bubble-box" style="margin-top: 15px;">
+					<h4>💬 よく使う表現</h4>
+					<p style="font-size:13px; color:var(--dark-blue);">
+						• <b>맛있어요</b> (美味しいです)<br>
+						• <b>좋아요</b> (好きです / 良いです)
+					</p>
+				</div>
+
+				<div class="footer">Page 7</div>
+			</div>
+
+			<!-- 8쪽: 오른쪽 (음식 연습문제) -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 3</div>
+				<h1 class="main-title">練習問題 (음식)</h1>
+				<p style="font-size:12px; color:#666; margin-bottom: 10px;">質問に合う答えを「이/가」を使って完成させましょう。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">① Q: 무엇이 맛있어요? (何が美味しいですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 라면<span class="quiz-line">[이/가]</span> 맛있어요.
+					</div>
+					<div class="quiz-ja">ラーメンが美味しいです。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">② Q: 무엇이 좋아요? (何が好きですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 커피<span class="quiz-line">[이/가]</span> 좋아요.
+					</div>
+					<div class="quiz-ja">コーヒーが好きです。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">③ Q: 무엇이 맛있어요? (何が美味しいですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 사과<span class="quiz-line">[이/가]</span> 맛있어요.
+					</div>
+					<div class="quiz-ja">リンゴが美味しいです。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">④ Q: 무엇이 매워요? (何が辛いですか？)</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:4px;">
+						➔ 김치<span class="quiz-line">[이/가]</span> 매워요.
+					</div>
+					<div class="quiz-ja">キムチが辛いです。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						① <b>이</b> (라면이) &nbsp;&nbsp; ② <b>가</b> (커피가)<br>
+						③ <b>가</b> (사과가) &nbsp;&nbsp; ④ <b>가</b> (김치가)
+					</div>
+				</div>
+
+				<div class="footer">Page 8</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+	📖 [다섯 번째 펼침면: 9-10쪽] 장소 + 종합 연습
+	========================================================================== -->
+		<div class="book-container">
+			<!-- 9쪽: 왼쪽 (장소 단어장 & 예문) -->
+			<div class="page left-page">
+				<div class="lesson-band">THEME 4</div>
+				<h1 class="main-title">장소 (場所)</h1>
+
+				<div class="sub-title">💬 단어 (場所)</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble">🏫 학교<span class="ja-sub">(学校)</span></div>
+					<div class="word-bubble">🏢 회사<span class="ja-sub">(会社)</span></div>
+					<div class="word-bubble">🏠 집<span class="ja-sub">(家)</span></div>
+					<div class="word-bubble">🌳 공원<span class="ja-sub">(公園)</span></div>
+					<div class="word-bubble">🏥 병원<span class="ja-sub">(病院)</span></div>
+				</div>
+
+				<div class="sub-title">✏️ 例文 (場所の質問)</div>
+				<div class="character-card">
+					<div class="char-avatar">🏞️</div>
+					<div>
+						<div class="char-speech">어디<span class="target-highlight">가</span> 좋아요?</div>
+						<div class="char-trans">どこが好きですか？ / どこが良いですか？</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏫</div>
+					<div>
+						<div class="char-speech">어디<span class="target-highlight">가</span> 커요?</div>
+						<div class="char-trans">どこが大きいですか？</div>
+					</div>
+				</div>
+
+				<div class="footer">Page 9</div>
+			</div>
+
+			<!-- 10쪽: 오른쪽 (장소 연습 + 종합 테스트) -->
+			<div class="page right-page">
+				<div class="grammar-no">FINAL</div>
+				<h1 class="main-title">종합 연습 (Final Test)</h1>
+				<p style="font-size:12px; color:#666; margin-bottom: 8px;">質問に合う答えを「이/가」を使って完成させましょう。</p>
+
+				<!-- 장소 연습 -->
+				<div class="quiz-item">
+					<div class="quiz-q">① Q: 어디가 좋아요? ➔ 공원<span class="quiz-line">[이/가]</span> 좋아요.</div>
+					<div class="quiz-ja">公園が好きです。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">② Q: 어디가 커요? ➔ 학교<span class="quiz-line">[이/가]</span> 커요.</div>
+					<div class="quiz-ja">学校が大きいです。</div>
+				</div>
+
+				<hr style="border:0; border-top:1px dashed #cbd5e1; margin:10px 0;">
+				<p style="font-size:12px; font-weight:bold; color:var(--dark-blue); margin-bottom:6px;">🌟 종합 테스트 (自由記述)</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">③ Q: 누가 학생이에요?</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:2px;">
+						➔ <span class="quiz-line" style="min-width:140px;">__________________</span>
+					</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">④ Q: 무엇이 맛있어요?</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:2px;">
+						➔ <span class="quiz-line" style="min-width:140px;">__________________</span>
+					</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">⑤ Q: 어디가 좋아요?</div>
+					<div class="quiz-q" style="color:var(--primary-blue); margin-top:2px;">
+						➔ <span class="quiz-line" style="min-width:140px;">__________________</span>
+					</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">🔑 正解例を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						① <b>이</b> (공원이) &nbsp;&nbsp; ② <b>가</b> (학교가)<br>
+						③ 例: <b>민수가 학생이에요. / 지은이 학생이에요.</b><br>
+						④ 例: <b>라면이 맛있어요. / 사과가 맛있어요.</b><br>
+						⑤ 例: <b>공원이 좋아요. / 집이 좋아요.</b>
+					</div>
+				</div>
+
+				<div class="footer">Page 10</div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+    // 정답 확인 버튼 토글 함수
+    function toggleAnswer(btn) {
+      const answerBox = btn.nextElementSibling;
+      if (answerBox.classList.contains('show')) {
+        answerBox.classList.remove('show');
+        btn.textContent = '🔑 正解を確認する';
+      } else {
+        answerBox.classList.add('show');
+        btn.textContent = '🙈 正解を隠す';
+      }
+    }
+	</script>
+</body>
+</html>

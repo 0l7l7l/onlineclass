@@ -1107,6 +1107,55 @@ color: #6f6f9b;
 			cursor: pointer;
 			margin-top: 10px;
 		}
+
+		.pdf-guide-box {
+			margin-top: 12px;
+			padding: 12px;
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+		}
+
+		.pdf-guide-title {
+			font-weight: 700;
+			color: #0f172a;
+			margin-bottom: 6px;
+		}
+
+		.pdf-guide-text {
+			font-size: 0.84rem;
+			color: #475569;
+			line-height: 1.6;
+			margin-bottom: 8px;
+		}
+
+		.pdf-guide-meta {
+			font-size: 0.8rem;
+			color: #0284c7;
+			margin-bottom: 8px;
+		}
+
+		.pdf-guide-topics {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin-bottom: 10px;
+		}
+
+		.pdf-guide-chip {
+			padding: 4px 8px;
+			border-radius: 999px;
+			background: #e0f2fe;
+			color: #0369a1;
+			font-size: 0.76rem;
+		}
+
+		.pdf-guide-list {
+			padding-left: 18px;
+			font-size: 0.82rem;
+			color: #334155;
+			line-height: 1.6;
+		}
 	</style>
 </head>
 <body>
@@ -1252,6 +1301,7 @@ color: #6f6f9b;
 				<button class="close-btn" onclick="closePdfModal()">&times;</button>
 			</div>
 			<div class="pdf-preview-box">📖 미리보기</div>
+      <div id="pdf-modal-lesson-info" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; margin-bottom:12px; font-size:0.84rem; color:#334155; line-height:1.55;"></div>
      <p id="pdf-modal-price" style="font-size:0.9rem; color:#475569; margin-bottom:14px;">가격: <strong>300세모</strong> (48시간 이용)</p>
 			<div class="pdf-modal-actions">
         <button id="pdf-pay-btn" class="pdf-pay-btn" onclick="handlePdfPurchase()">세모로 구매</button>
@@ -3494,6 +3544,31 @@ color: #6f6f9b;
 			ja: 'https://www.w3schools.com/html/movie.mp4',
 			zh: 'https://www.w3schools.com/html/mov_bbb.mp4'
 		};
+   const pdfLessonCountMap = {
+			ko: { '일상회화': 18, '친구회화': 14, '기초회화': 22, '기본회화': 16, '중급회화': 12 },
+			ja: { '日常会話': 16, '友達会話': 13, '基礎会話': 20, '基本会話': 15, '中級会話': 11 },
+			zh: { '日常对话': 15, '朋友对话': 12, '基础对话': 19, '基本对话': 14, '中级对话': 10 }
+		};
+		const pdfLessonCatalogMap = {
+			ko: {
+				'일상회화': [
+					{ no: 1, title: '인사와 자기소개', desc: '처음 만났을 때 쓰는 인사와 자기소개 회화', grammar: ['명사 + 이에요/예요'], topics: ['안녕하세요', '저는 ~예요'] },
+					{ no: 2, title: '직업과 국적 말하기', desc: '직업/국적을 묻고 답하는 기본 대화', grammar: ['의문문 기초'], topics: ['무슨 일 하세요?', '어느 나라 사람이에요?'] }
+				]
+			},
+			ja: {
+				'日常会話': [
+					{ no: 1, title: 'あいさつと自己紹介', desc: '첫 만남에서 쓰는 인사와 자기소개', grammar: ['名詞 + です'], topics: ['こんにちは', 'はじめまして'] },
+					{ no: 2, title: 'しごととくに', desc: '직업/국적 소개와 질문 표현', grammar: ['～ですか'], topics: ['どんな仕事ですか', 'どこの国ですか'] }
+				]
+			},
+			zh: {
+				'日常对话': [
+					{ no: 1, title: '问候和自我介绍', desc: '처음 만났을 때 쓰는 기본 인사와 자기소개', grammar: ['A 是 B'], topics: ['你好', '我叫~'] },
+					{ no: 2, title: '职业和国籍', desc: '직업과 국적을 묻고 답하는 입문 회화', grammar: ['疑问句基础'], topics: ['你是做什么的？', '你是哪国人？'] }
+				]
+			}
+		};
 		let pdfState = {
 			isOpen: false,
 			lang: 'ko',
@@ -3955,7 +4030,6 @@ color: #6f6f9b;
 				html += `</div>`;
 
 			} else if (category === 'travel') {
-				// [여행정보 기존 코드 그대로 사용]
 				path += '일본 여행정보';
 				html += `<div class="category-path">${path}</div>`;
 				html += `<h2>🗺️ 일본 여행정보</h2>`;
@@ -3968,7 +4042,6 @@ color: #6f6f9b;
 				html += `<div id="travel-sub-container">${getTravelSubHtml(0)}</div>`;
 
 			} else if (category === 'library') {
-				// [자료실 기존 코드 그대로 사용]
 				path += '일본자료실';
 				html += `<div class="category-path">${path}</div>`;
 				html += `<h2>📂 일본자료실</h2>`;
@@ -4103,6 +4176,65 @@ color: #6f6f9b;
 			return pdfPreviewVideoMap[lang] || 'https://www.w3schools.com/html/mov_bbb.mp4';
 		}
 
+    function getPdfLessonCount(lang, category) {
+			const count = Number(pdfLessonCountMap?.[lang]?.[category]);
+			return Number.isInteger(count) && count > 0 ? count : 30;
+		}
+
+		function getPdfLessons(lang, category) {
+			if (!category) return [];
+			const lessonCount = getPdfLessonCount(lang, category);
+			const customLessons = (pdfLessonCatalogMap?.[lang]?.[category] || []).filter(item => Number(item?.no) > 0);
+			const customMap = new Map(customLessons.map(item => [Number(item.no), item]));
+
+			const lessons = [];
+			for (let i = 1; i <= lessonCount; i++) {
+				const custom = customMap.get(i) || {};
+				lessons.push({
+					no: i,
+					title: custom.title || `${i}강 학습`,
+					desc: custom.desc || `${category} ${i}강 학습 내용을 입력해 주세요.`,
+					grammar: Array.isArray(custom.grammar) ? custom.grammar : [],
+					topics: Array.isArray(custom.topics) ? custom.topics : []
+				});
+			}
+
+			return lessons;
+		}
+
+		function getPdfCourseGuide(lang, category) {
+			const lessons = getPdfLessons(lang, category);
+			if (lessons.length === 0) return null;
+
+			const firstLesson = lessons[0];
+			return {
+				intro: `${category} 코스는 강의별로 다른 문법과 표현을 학습합니다.`,
+				target: `${pdfLangLabels[lang] || ''} 회화 학습자`,
+				lessonCount: lessons.length,
+				topics: firstLesson.topics || [],
+				curriculum: lessons.slice(0, 3).map(lesson => `${lesson.no}강: ${lesson.title}`)
+			};
+		}
+
+		function getLessonNumberFromPdfTitle(title) {
+			const match = String(title || '').match(/\s-\s(\d+)과$/u);
+			return match ? parseInt(match[1], 10) : null;
+		}
+
+		function getCategoryFromPdfTitle(title) {
+			const match = String(title || '').match(/^(.*)\s-\s(?:\d+과|전체책)$/u);
+			return match ? match[1].trim() : '';
+		}
+
+		function getPdfLessonMetaByTitle(title) {
+			const category = getCategoryFromPdfTitle(title) || pdfState.category;
+			if (!category) return null;
+			const lessons = getPdfLessons(pdfState.lang, category);
+			const lessonNo = getLessonNumberFromPdfTitle(title);
+			if (!lessonNo) return null;
+			return lessons.find(item => item.no === lessonNo) || null;
+		}
+
 		function isPdfPurchased(title) {
      if (isFreePdfTitle(title)) return true;
 			const expiredAt = purchasedPdfMap[title];
@@ -4162,6 +4294,21 @@ color: #6f6f9b;
 			const selectedCategory = pdfState.category || '';
 			const balanceText = authState.isLoggedIn ? `${Number(authState.money || 0).toLocaleString()} 세모` : '로그인 필요';
 			const courseVideo = getPdfCourseVideo(lang);
+     const lessons = getPdfLessons(lang, selectedCategory);
+     const courseGuide = getPdfCourseGuide(lang, selectedCategory);
+			const guideHtml = courseGuide ? `
+				<div class="pdf-guide-box">
+					<div class="pdf-guide-title">이 강좌에서 배우는 것</div>
+					<div class="pdf-guide-text">${courseGuide.intro}</div>
+          <div class="pdf-guide-meta">추천 대상: ${courseGuide.target} / 총 ${courseGuide.lessonCount}강</div>
+					<div class="pdf-guide-topics">
+						${(courseGuide.topics || []).map(topic => `<span class="pdf-guide-chip">${topic}</span>`).join('')}
+					</div>
+					<ul class="pdf-guide-list">
+						${(courseGuide.curriculum || []).map(item => `<li>${item}</li>`).join('')}
+					</ul>
+				</div>
+			` : '';
 			const languageTabs = Object.keys(pdfCategories)
 				.map(code => `<button class="pdf-sub-btn ${code === lang ? 'active' : ''}" onclick="switchPdfLanguage('${code}')">${pdfLangLabels[code] || code}</button>`)
 				.join('');
@@ -4185,30 +4332,34 @@ color: #6f6f9b;
 					</div>
 				`;
 			}).join('');
-
-			let lecturesHtml = '';
+		 
+      let lecturesHtml = '';
 			if (selectedCategory) {
-				for (let i = 1; i <= 30; i++) {
-					const lessonTitle = `${selectedCategory} - ${i}과`;
+				lessons.forEach(lesson => {
+					const lessonTitle = `${selectedCategory} - ${lesson.no}과`;
 					const safeTitle = escapeJsString(lessonTitle);
-          const isFreeLesson = isFreePdfTitle(lessonTitle);
+					const isFreeLesson = isFreePdfTitle(lessonTitle);
 					const purchased = isPdfPurchased(lessonTitle);
-         const canDownload = purchased;
-					const action = isFreeLesson
-						? `openPdfModal('${safeTitle}')`
-						: (canDownload ? `downloadPdfLesson('${safeTitle}')` : `openPdfModal('${safeTitle}')`);
+					const canDownload = purchased;
+
+					const action = (isFreeLesson || canDownload)
+						? `downloadPdfLesson('${safeTitle}')`
+						: `openPdfModal('${safeTitle}')`;
+
+					const lessonLabel = `${lesson.no}강 ${lesson.title}`;
 					const label = isFreeLesson
-						? `${i}강 교재 (0세모)`
-						: (canDownload ? `${i}강 교재 보기` : `${i}강 교재 (${pdfPrice}세모)`);
+						? `${lessonLabel} (무료)`
+						: (canDownload ? `${lessonLabel} 보기` : `${lessonLabel} (${pdfPrice}세모)`);
 
 					lecturesHtml += `<button class="lecture-item-btn" onclick="${action}">${label}</button>`;
-				}
+				});
 
 				const fullBookTitle = `${selectedCategory} - 전체책`;
 				const safeFullBookTitle = escapeJsString(fullBookTitle);
 				const fullBookPurchased = isPdfPurchased(fullBookTitle);
+        const firstLessonNo = lessons.length > 0 ? lessons[0].no : 1;
 				const fullBookAction = fullBookPurchased
-					? `downloadPdfLesson('${escapeJsString(`${selectedCategory} - 1과`)}')`
+          ? `downloadPdfLesson('${escapeJsString(`${selectedCategory} - ${firstLessonNo}과`)}')`
 					: `openPdfModal('${safeFullBookTitle}')`;
 				lecturesHtml += `<button class="all-buy-btn" onclick="${fullBookAction}">🎁 ${getPdfButtonLabel(fullBookTitle, fullBookPurchased)}</button>`;
 			}
@@ -4225,7 +4376,7 @@ color: #6f6f9b;
 				</div>
         <div class="pdf-sub-nav">${languageTabs}</div>
         <div style="font-size:0.86rem; color:#64748b; margin-top:10px; margin-bottom:12px;">
-					카드를 선택하면 좌측 미리보기 + 우측 1강~30강 교재 구매 메뉴가 열립니다.
+          카드를 선택하면 좌측 미리보기 + 우측 강의별 교재 구매 메뉴가 열립니다.
 				</div>
 				<div class="carousel-view" style="display:${pdfState.splitOpen ? 'none' : 'flex'}; margin-top:16px;">
 					<button class="nav-arrow" onclick="rotatePdfCarousel(-1)">&lt;</button>
@@ -4242,18 +4393,19 @@ color: #6f6f9b;
 							<div class="card-body-box">
 								<div>
 									<div class="card-title-text">${selectedCategory}</div>
-									<div class="card-desc-text">필수 회화 표현 + 30강 교재 + 전체책 할인 패키지</div>
+                  <div class="card-desc-text">필수 회화 표현 + 강의별 교재 + 전체책 할인 패키지</div>
 								</div>
 								<div style="margin-top:10px; font-size:0.82rem; color:#0284c7; font-weight:700;">
 									강좌별 가격: ${pdfPrice.toLocaleString()}세모 / 전체책: ${pdfFullBookPrice.toLocaleString()}세모
 								</div>
+                ${guideHtml}
 							</div>
 						</div>
 					</div>
 					<div class="right-lecture-menu">
 						<button class="back-to-carousel-btn" onclick="backToPdfCarousel()">← 전체 교재 카드로 돌아가기</button>
 						<h2>${selectedCategory || ''} 커리큘럼</h2>
-						<p style="font-size:0.85rem; color:#64748b; margin-top:4px;">원하는 강좌를 선택하면 미리보기/구매 모달이 열립니다.</p>
+						<p style="font-size:0.85rem; color:#64748b; margin-top:4px;">원하는 강의를 선택하세요.</p>
 						<div class="lecture-grid">${lecturesHtml}</div>
 					</div>
 				</div>
@@ -4264,10 +4416,42 @@ color: #6f6f9b;
 
 		function openPdfModal(title) {
 			pdfState.selectedLesson = title;
-			document.getElementById('pdf-modal-title').innerText = title;
+     const lessonMeta = getPdfLessonMetaByTitle(title);
+			const modalTitle = isFullBookTitle(title)
+				? `${getCategoryFromPdfTitle(title) || pdfState.category} - 전체책`
+				: (lessonMeta ? `${lessonMeta.no}강 ${lessonMeta.title}` : title);
+			document.getElementById('pdf-modal-title').innerText = modalTitle;
       const previewBox = document.querySelector('#pdfModal .pdf-preview-box');
 			if (previewBox) {
-				previewBox.innerHTML = `📖 ${title}<br>미리보기 (샘플 1~2 페이지)`;
+        previewBox.innerHTML = `📖 ${modalTitle}<br>미리보기 (샘플 1~2 페이지)`;
+			}
+      const infoBox = document.getElementById('pdf-modal-lesson-info');
+			if (infoBox) {
+				if (isFullBookTitle(title)) {
+					const category = getCategoryFromPdfTitle(title) || pdfState.category;
+					const lessons = getPdfLessons(pdfState.lang, category);
+					const lessonTitles = lessons.slice(0, 4).map(lesson => `${lesson.no}강 ${lesson.title}`).join(', ');
+					infoBox.innerHTML = `
+						<div style="font-weight:700; color:#0f172a; margin-bottom:6px;">구매 전 강의 구성</div>
+						<div>총 <strong>${lessons.length}강</strong> 패키지입니다.</div>
+						<div style="margin-top:4px; color:#475569;">예시 구성: ${lessonTitles || '강의 목록을 입력해 주세요.'}</div>
+					`;
+				} else if (lessonMeta) {
+					const grammarHtml = (lessonMeta.grammar || []).length > 0
+						? `<div style="margin-top:6px;"><strong>문법:</strong> ${lessonMeta.grammar.join(', ')}</div>`
+						: '';
+					const topicsHtml = (lessonMeta.topics || []).length > 0
+						? `<div style="margin-top:6px;"><strong>핵심 표현:</strong> ${lessonMeta.topics.join(', ')}</div>`
+						: '';
+					infoBox.innerHTML = `
+						<div style="font-weight:700; color:#0f172a; margin-bottom:6px;">강의 설명</div>
+						<div>${lessonMeta.desc}</div>
+						${grammarHtml}
+						${topicsHtml}
+					`;
+				} else {
+					infoBox.innerHTML = '강의 설명이 아직 등록되지 않았습니다.';
+				}
 			}
       const price = getPdfPriceByTitle(title);
 			const priceEl = document.getElementById('pdf-modal-price');

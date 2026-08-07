@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>충청도 소상공인 X Semo 상생 프로모션 제안서</title>
+	<!-- Tailwind CSS (디자인 패키지) -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- FontAwesome (아이콘) -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+		body {
+			font-family: 'Pretendard', sans-serif;
+		}
+	</style>
+</head>
+<body class="bg-slate-100 text-slate-800 pb-20">
+
+	<!-- 상단 헤더 -->
+	<header class="bg-indigo-900 text-white p-6 shadow-lg rounded-b-3xl">
+		<div class="max-w-md mx-auto">
+			<span class="bg-indigo-700 text-indigo-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+				충청도 지역 상생 프로젝트
+			</span>
+			<h1 class="text-2xl font-extrabold mt-2 leading-tight">
+				🇯🇵 일본어 좋아하는 손님을<br>
+				<span class="text-amber-400">우리 가게 단골</span>로 만드는 방법!
+			</h1>
+			<p class="text-indigo-200 text-sm mt-2">
+				Semo × 충청도 소상공인 공동 이벤트 제안서
+			</p>
+		</div>
+	</header>
+
+	<!-- 탭 메뉴 (제안서 / 손님 QR체험 / 매뉴얼) -->
+	<nav class="max-w-md mx-auto px-4 mt-4">
+		<div class="flex bg-white rounded-xl p-1 shadow-sm border border-slate-200">
+			<button onclick="switchTab('proposal')" id="tab-proposal" class="flex-1 py-2 text-sm font-bold text-indigo-600 bg-indigo-50 rounded-lg transition">
+				📋 제안서
+			</button>
+			<button onclick="switchTab('demo')" id="tab-demo" class="flex-1 py-2 text-sm font-bold text-slate-500 rounded-lg transition">
+				📱 QR 체험
+			</button>
+			<button onclick="switchTab('manual')" id="tab-manual" class="flex-1 py-2 text-sm font-bold text-slate-500 rounded-lg transition">
+				📑 매뉴얼
+			</button>
+		</div>
+	</nav>
+
+	<!-- 메인 컨텐츠 영역 -->
+	<main class="max-w-md mx-auto px-4 mt-4">
+
+		<!-- 1. 사장님 제안서 (PROPOSAL TAB) -->
+		<section id="content-proposal" class="space-y-4">
+
+			<!-- 핵심 포인트 (비용 0원) -->
+			<div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 flex items-center gap-4">
+				<div class="bg-amber-400 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl shrink-0">
+					<i class="fa-solid fa-coins"></i>
+				</div>
+				<div>
+					<h3 class="font-bold text-amber-900 text-base">사장님 부담금 0원!</h3>
+					<p class="text-xs text-amber-800 mt-0.5">QR 태그 제작, 경품 비용 등 모든 프로모션비는 <b>Semo가 전액 부담</b>합니다.</p>
+				</div>
+			</div>
+
+			<!-- 선순환 로직 (그림/단계) -->
+			<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+				<h2 class="font-bold text-lg text-slate-900 border-b pb-2 mb-4 flex items-center gap-2">
+					<i class="fa-solid fa-rotate text-indigo-600"></i> 어떻게 손님이 재방문하나요?
+				</h2>
+
+				<div class="space-y-3 relative">
+					<div class="flex items-start gap-3">
+						<div class="bg-indigo-100 text-indigo-700 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shrink-0">1</div>
+						<div>
+							<h4 class="font-bold text-sm">음료 주문 & QR 제공</h4>
+							<p class="text-xs text-slate-500">음료 병목에 Semo QR 태그를 걸어 손님에게 제공</p>
+						</div>
+					</div>
+					<div class="flex items-start gap-3">
+						<div class="bg-indigo-100 text-indigo-700 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shrink-0">2</div>
+						<div>
+							<h4 class="font-bold text-sm">손님 QR 스캔</h4>
+							<p class="text-xs text-slate-500">테이블에서 '오늘의 일본어 운세 & 퀴즈' 즐겁게 참여</p>
+						</div>
+					</div>
+					<div class="flex items-start gap-3">
+						<div class="bg-indigo-100 text-indigo-700 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shrink-0">3</div>
+						<div>
+							<h4 class="font-bold text-sm">100% 당첨 혜택 지급</h4>
+							<p class="text-xs text-slate-500">Semo 학습권 및 <b>'매장 재방문 쿠폰'</b> 당첨!</p>
+						</div>
+					</div>
+					<div class="flex items-start gap-3">
+						<div class="bg-indigo-500 text-white w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shrink-0">4</div>
+						<div>
+							<h4 class="font-bold text-sm text-indigo-600">단골 형성 & 지속 주문</h4>
+							<p class="text-xs text-slate-500">손님 재방문 ➔ 사장님은 다음 음료 발주 시 태그 재신청</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 매장 이득 요약 -->
+			<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+				<h2 class="font-bold text-lg text-slate-900 border-b pb-2 mb-3">
+					💡 우리 가게에 좋은 점 3가지
+				</h2>
+				<ul class="space-y-2 text-sm text-slate-700">
+					<li class="flex items-center gap-2">
+						<i class="fa-solid fa-check text-emerald-500"></i>
+						<span><b>테이블 재미 요소:</b> 술자리 대화거리가 생김</span>
+					</li>
+					<li class="flex items-center gap-2">
+						<i class="fa-solid fa-check text-emerald-500"></i>
+						<span><b>재방문 유도:</b> 당첨 쿠폰 사용을 위한 재방문율 증가</span>
+					</li>
+					<li class="flex items-center gap-2">
+						<i class="fa-solid fa-check text-emerald-500"></i>
+						<span><b>충청도 지역 홍보:</b> Semo 채널에 제휴 매장 무료 홍보</span>
+					</li>
+				</ul>
+			</div>
+
+			<!-- 하단 콜투액션 -->
+			<div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 text-center">
+				<p class="text-xs text-indigo-700 font-bold mb-1">손님 반응이 좋으셨다면?</p>
+				<p class="text-sm font-extrabold text-indigo-900">다음 음료 주문 시에도 Semo 태그를 함께 신청해주세요!</p>
+			</div>
+
+		</section>
+
+		<!-- 2. 손님용 QR 랜딩 시뮬레이션 (DEMO TAB) -->
+		<section id="content-demo" class="hidden space-y-4">
+			<div class="bg-white rounded-2xl p-5 shadow-lg border-2 border-indigo-500 text-center">
+				<span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
+					손님 스캔 화면 예시
+				</span>
+
+				<div class="my-6">
+					<div class="text-5xl mb-2">🍶</div>
+					<h3 class="text-xl font-extrabold text-slate-900">오늘의 일본어 운세</h3>
+					<p class="text-xs text-slate-500 mt-1">음료와 함께 즐기는 소소한 행운 퀴즈!</p>
+				</div>
+
+				<!-- 이벤트 참여 버튼 -->
+				<button onclick="runEventDemo()" id="demo-btn" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition">
+					🔮 운세 확인 & 당첨 결과 뽑기
+				</button>
+
+				<!-- 당첨 결과 박스 (숨김 영역) -->
+				<div id="demo-result" class="hidden mt-6 p-4 bg-amber-50 border border-amber-300 rounded-xl text-left space-y-3">
+					<div class="text-center">
+						<span class="text-xs font-bold text-amber-800 bg-amber-200 px-2 py-0.5 rounded">🎉 축하합니다!</span>
+						<h4 class="text-lg font-black text-amber-900 mt-1">Semo 무료 체험권 당첨!</h4>
+					</div>
+					<hr class="border-amber-200">
+					<div class="text-xs space-y-1 text-slate-700">
+						<p><b>오늘의 운세:</b> 대길(大吉) 🌟</p>
+						<p><b>오늘의 일본어:</b> 乾杯 (かんぱい / 칸파이 = 건배)</p>
+						<p class="text-indigo-600 font-bold mt-2">🎁 혜택: Semo 7일 이용권 + 매장 음료 쿠폰</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- 3. 사장님 운영 매뉴얼 (MANUAL TAB) -->
+		<section id="content-manual" class="hidden space-y-4">
+			<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+				<h2 class="font-bold text-lg text-slate-900 border-b pb-2 mb-4 flex items-center gap-2">
+					<i class="fa-solid fa-list-check text-indigo-600"></i> 사장님 3초 간이 매뉴얼
+				</h2>
+
+				<ol class="space-y-4 text-sm">
+					<li class="flex gap-3">
+						<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">1</span>
+						<div>
+							<p class="font-bold text-slate-800">Semo 태그 준비</p>
+							<p class="text-xs text-slate-500 mt-0.5">전달해 드린 태그 묶음을 음료 냉장고 옆에 배치합니다.</p>
+						</div>
+					</li>
+					<li class="flex gap-3">
+						<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">2</span>
+						<div>
+							<p class="font-bold text-slate-800">음료 병목에 걸어 서빙</p>
+							<p class="text-xs text-slate-500 mt-0.5">음료/주류 나갈 때 병목에 쏙 걸어서 손님께 전달합니다.</p>
+						</div>
+					</li>
+					<li class="flex gap-3">
+						<span class="bg-slate-100 text-slate-700 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">3</span>
+						<div>
+							<p class="font-bold text-slate-800">운영 끝!</p>
+							<p class="text-xs text-slate-500 mt-0.5">손님이 QR을 찍고 참여하는 모든 과정은 자동 진행됩니다.</p>
+						</div>
+					</li>
+				</ol>
+
+				<div class="mt-6 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-500 space-y-1">
+					<p>⚠️ <b>주의사항</b></p>
+					<p>• 태그가 물기에 젖거나 훼손되면 새 태그로 교체해 주세요.</p>
+					<p>• 라벨 상표가 가려지지 않도록 병목 상단에 가볍게 걸어주세요.</p>
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<!-- 하단 제휴 문의 고정 바 -->
+	<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-3 shadow-lg">
+		<div class="max-w-md mx-auto flex items-center justify-between gap-2">
+			<div>
+				<p class="text-xs text-slate-400">충청 소상공인 제휴 문의</p>
+				<p class="text-sm font-bold text-slate-800">Semo 프로모션 팀</p>
+			</div>
+			<a href="tel:010-0000-0000" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-1.5">
+				<i class="fa-solid fa-phone"></i> 바로 제휴 신청
+			</a>
+		</div>
+	</div>
+
+	<!-- 탭 전환 및 데모 동작 스크립트 -->
+	<script>
+        function switchTab(tabName) {
+            // 모든 컨텐츠 숨기기
+            document.getElementById('content-proposal').classList.add('hidden');
+            document.getElementById('content-demo').classList.add('hidden');
+            document.getElementById('content-manual').classList.add('hidden');
+
+            // 모든 탭 스타일 리셋
+            const tabs = ['proposal', 'demo', 'manual'];
+            tabs.forEach(tab => {
+                const btn = document.getElementById(`tab-${tab}`);
+                btn.className = "flex-1 py-2 text-sm font-bold text-slate-500 rounded-lg transition";
+            });
+
+            // 선택한 탭 활성화
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.className = "flex-1 py-2 text-sm font-bold text-indigo-600 bg-indigo-50 rounded-lg transition";
+        }
+
+        function runEventDemo() {
+            const resultBox = document.getElementById('demo-result');
+            const btn = document.getElementById('demo-btn');
+
+            btn.innerText = "추첨 진행 중...";
+            btn.classList.add('opacity-50');
+
+            setTimeout(() => {
+                resultBox.classList.remove('hidden');
+                btn.innerText = "🔮 다시 뽑아보기";
+                btn.classList.remove('opacity-50');
+            }, 800);
+        }
+	</script>
+</body>
+</html>

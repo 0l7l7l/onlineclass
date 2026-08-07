@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Semo - 너에게 한마디 💌</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti (당첨 폭죽 효과) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+JP:wght@500;700;900&family=Pretendard:wght@600;800;900&display=swap');
+
+    /* 폰트 설정 */
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: #fdf6ec; /* 따뜻한 크림톤 일본 감성 배경 */
+      color: #2b2b2b;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-jp {
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .font-jp-pop {
+      font-family: 'Mochiy Pop One', sans-serif;
+    }
+
+    /* 3D 귀여운 버튼 애니메이션 (Neubrutalism) */
+    .btn-pop {
+      box-shadow: 0 6px 0 #1e1e1e;
+      transition: all 0.15s ease-in-out;
+    }
+
+      .btn-pop:active {
+        transform: translateY(4px);
+        box-shadow: 0 2px 0 #1e1e1e;
+      }
+
+    /* 통둥실 하트/말풍선 애니메이션 */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px) rotate(-2deg);
+      }
+
+      50% {
+        transform: translateY(-8px) rotate(2deg);
+      }
+    }
+
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* 카드 뒤집기/등장 애니메이션 */
+    @keyframes cardPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .animate-card-pop {
+      animation: cardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 sm:p-6">
+
+  <!-- 모바일 프레임 컨테이너 (최대 너비 420px 고정) -->
+  <div class="w-full max-w-[400px] min-h-[680px] bg-white rounded-[36px] border-4 border-[#1e1e1e] shadow-[8px_12px_0px_#1e1e1e] overflow-hidden flex flex-col justify-between relative p-6">
+
+    <!-- Background Decorative Pattern -->
+    <div class="absolute -top-10 -right-10 w-32 h-32 bg-[#ff6b6b]/20 rounded-full blur-xl pointer-events-none"></div>
+    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-[#4ecdc4]/20 rounded-full blur-xl pointer-events-none"></div>
+
+    <!-- =================================================================== -->
+    <!-- 1. HEADER (Semo Branding)                                           -->
+    <!-- =================================================================== -->
+    <header class="flex justify-between items-center z-10">
+      <!-- Semo Logo -->
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 bg-[#ff6b6b] rounded-2xl border-2 border-[#1e1e1e] flex items-center justify-center shadow-[2px_2px_0px_#1e1e1e]">
+          <span class="text-white font-black text-lg font-jp-pop">セ</span>
+        </div>
+        <span class="font-black text-xl tracking-tight text-[#1e1e1e]">Semo</span>
+      </div>
+
+      <!-- Top Tag -->
+      <span class="bg-[#ffe66d] border-2 border-[#1e1e1e] text-[#1e1e1e] font-bold text-xs px-3 py-1 rounded-full shadow-[2px_2px_0px_#1e1e1e]">
+        🇯🇵 오늘의 한마디
+      </span>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- 2. SCREEN 1: 첫 화면 (의미 확인하기 전)                             -->
+    <!-- =================================================================== -->
+    <main id="screen-question" class="flex-1 flex flex-col justify-center items-center my-6 text-center z-10 transition-all duration-300">
+
+      <!-- 귀여운 캐릭터/이모지 라벨 -->
+      <div class="animate-float mb-4 inline-block bg-[#ffe66d]/40 border-2 border-[#1e1e1e] px-4 py-1.5 rounded-2xl shadow-[2px_2px_0px_#1e1e1e]">
+        <span class="text-sm font-extrabold text-[#1e1e1e]">💌 너에게 전하는 한마디</span>
+      </div>
+
+      <!-- Main Question Card -->
+      <div class="w-full bg-[#fdf6ec] border-3 border-[#1e1e1e] rounded-[28px] p-8 my-2 shadow-[4px_6px_0px_#1e1e1e] relative">
+        <!-- Decorative Quotes -->
+        <span class="absolute -top-4 left-6 text-4xl text-[#ff6b6b] font-jp-pop">“</span>
+        <span class="absolute -bottom-8 right-6 text-4xl text-[#ff6b6b] font-jp-pop">”</span>
+
+        <!-- Japanese Text (DB 매핑될 영역) -->
+        <h1 id="q-japanese-text" class="font-jp font-black text-3xl sm:text-4xl text-[#1e1e1e] leading-snug tracking-wide my-2">
+          来てくれる？
+        </h1>
+
+        <!-- Pronunciation Hint (Optional) -->
+        <p id="q-reading-text" class="font-jp text-sm text-slate-500 font-bold mt-1">
+          [きてくれる？]
+        </p>
+      </div>
+
+      <p class="text-xs text-slate-500 font-bold mt-4 flex items-center gap-1">
+        <i class="fa-solid fa-sparkles text-[#ff6b6b]"></i>
+        무슨 뜻일까? 아래 버튼을 눌러 확인해봐!
+      </p>
+    </main>
+
+
+    <!-- =================================================================== -->
+    <!-- 3. SCREEN 2: 결과 화면 (의미 확인 후 & 당첨 결과)                  -->
+    <!-- =================================================================== -->
+    <main id="screen-result" class="hidden flex-1 flex-col justify-center items-center my-4 text-center z-10 animate-card-pop">
+
+      <!-- 1. 의미 해석 카드 -->
+      <div class="w-full bg-white border-3 border-[#1e1e1e] rounded-[24px] p-5 shadow-[4px_4px_0px_#1e1e1e] relative mb-4 text-left">
+        <span class="bg-[#4ecdc4] border-2 border-[#1e1e1e] text-white font-extrabold text-[11px] px-2.5 py-0.5 rounded-md shadow-[1px_1px_0px_#1e1e1e] inline-block mb-2">
+          💡 뜻 해설
+        </span>
+
+        <div class="flex items-baseline gap-2 mb-1">
+          <h2 id="r-japanese-text" class="font-jp font-black text-2xl text-[#1e1e1e]">来てくれる？</h2>
+          <span id="r-reading-text" class="font-jp text-xs font-bold text-slate-400">きてくれる？</span>
+        </div>
+
+        <!-- Meaning (한국어 뜻) -->
+        <p id="r-meaning-text" class="text-lg font-black text-[#ff6b6b] mb-2">
+          "와 줄래? (와 줄 수 있어?)"
+        </p>
+
+        <!-- Explanation (설명) -->
+        <p id="r-explanation-text" class="text-xs text-slate-600 leading-relaxed bg-[#fdf6ec] p-2.5 rounded-xl border border-slate-200">
+          친한 친구나 연인에게 '와 줄 수 있는지' 다정하게 물어볼 때 쓰는 구어체 표현이에요!
+        </p>
+      </div>
+
+      <!-- 2. 당첨 이벤트 결과 카드 -->
+      <div class="w-full bg-gradient-to-br from-[#ffe66d] to-[#ffd166] border-3 border-[#1e1e1e] rounded-[24px] p-4 shadow-[4px_4px_0px_#1e1e1e] relative text-center">
+        <div class="inline-block bg-[#1e1e1e] text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full mb-1">
+          🎉 BONUS EVENT
+        </div>
+
+        <h3 class="font-extrabold text-sm text-[#1e1e1e]">Semo 스페셜 혜택 당첨!</h3>
+
+        <!-- 당첨 상품 명칭 (DB 매핑) -->
+        <div class="my-2 bg-white border-2 border-[#1e1e1e] rounded-xl py-2 px-3 shadow-[2px_2px_0px_#1e1e1e] flex items-center justify-center gap-2">
+          <span id="prize-icon" class="text-2xl">🎁</span>
+          <span id="prize-name" class="font-black text-base text-[#1e1e1e]">
+            Semo 300 세모(포인트) 당첨!
+          </span>
+        </div>
+
+        <p class="text-[11px] text-slate-700 font-bold">
+          무료 회원가입 후 적립금을 바로 받아보세요!
+        </p>
+      </div>
+
+    </main>
+
+
+    <!-- =================================================================== -->
+    <!-- 4. BOTTOM ACTION BUTTONS                                            -->
+    <!-- =================================================================== -->
+    <footer class="z-10 mt-2">
+      <!-- Screen 1 Action Button -->
+      <button id="btn-reveal" onclick="revealMeaning()" class="btn-pop w-full bg-[#ff6b6b] hover:bg-[#ff5252] text-white font-black text-lg py-4 rounded-2xl border-3 border-[#1e1e1e] flex items-center justify-center gap-2 cursor-pointer">
+        <span>의미 확인하기</span>
+        <i class="fa-solid fa-arrow-right text-base"></i>
+      </button>
+
+      <!-- Screen 2 Action Buttons (의미 확인 후 노출) -->
+      <div id="result-actions" class="hidden flex-col gap-2">
+        <!-- 브랜드 전환 가입 버튼 -->
+        <a href="https://www.semo-lang.com/signup" target="_blank" class="btn-pop w-full bg-[#4ecdc4] hover:bg-[#3dbdb4] text-white font-black text-base py-3.5 rounded-2xl border-3 border-[#1e1e1e] flex items-center justify-center gap-2 text-center decoration-none">
+          <span>🎁 혜택 받고 Semo 시작하기</span>
+        </a>
+
+        <!-- 재참여 / 공유 버튼 -->
+        <button onclick="location.reload()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2 rounded-xl border-2 border-[#1e1e1e] transition">
+          🔄 다른 한마디도 확인하기
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- 5. FRONTEND JLS / DB DUMMY BINDING LOGIC                            -->
+  <!-- =================================================================== -->
+  <script>
+    /* =================================================================
+       [추후 PHP/DB 연동 시 데이터 구조 예시]
+       QR 코드로 접속할 때 URL 파라미터(?qr=CA001)를 받아 PHP API에서 아래 구조의 JSON을 응답합니다.
+    ================================================================= */
+    const eventData = {
+      // LanguageContent Table Data
+      content: {
+        id: 2,
+        text: "来てくれる？",
+        reading: "きてくれる？",
+        meaning: "와 줄래? (와 줄 수 있어?)",
+        explanation: "친한 친구나 연인에게 다정하게 와 줄 수 있는지 물어볼 때 쓰는 자연스러운 회화 표현입니다."
+      },
+      // EventPrize Table Data (랜덤 당첨)
+      prize: {
+        id: 2,
+        name: "Semo 300개 당첨! 🎉",
+        icon: "🪙",
+        point: 300
+      }
+    };
+
+    // 초기 화면 바인딩
+    document.addEventListener("DOMContentLoaded", () => {
+      // DB 데이터를 화면 요소에 채워넣기
+      document.getElementById('q-japanese-text').innerText = eventData.content.text;
+      document.getElementById('q-reading-text').innerText = `[${eventData.content.reading}]`;
+
+      document.getElementById('r-japanese-text').innerText = eventData.content.text;
+      document.getElementById('r-reading-text').innerText = eventData.content.reading;
+      document.getElementById('r-meaning-text').innerText = `"${eventData.content.meaning}"`;
+      document.getElementById('r-explanation-text').innerText = eventData.content.explanation;
+
+      document.getElementById('prize-icon').innerText = eventData.prize.icon;
+      document.getElementById('prize-name').innerText = eventData.prize.name;
+    });
+
+    // "의미 확인하기" 버튼 클릭 액션
+    function revealMeaning() {
+      // 1. 화면 전환 (첫 화면 숨기고 결과 화면 노출)
+      document.getElementById('screen-question').classList.add('hidden');
+      document.getElementById('screen-result').classList.remove('hidden');
+      document.getElementById('screen-result').classList.add('flex');
+
+      // 2. 하단 버튼 전환
+      document.getElementById('btn-reveal').classList.add('hidden');
+      document.getElementById('result-actions').classList.remove('hidden');
+      document.getElementById('result-actions').classList.add('flex');
+
+      // 3. 축하 폭죽 애니메이션 터뜨리기 (Canvas Confetti)
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 },
+        colors: ['#ff6b6b', '#ffe66d', '#4ecdc4', '#1e1e1e']
+      });
+
+      /* =================================================================
+         [추후 PHP API 서버로 스캔 로그 전송]
+         fetch('/api.php?action=scan_log', {
+             method: 'POST',
+             body: JSON.stringify({ qr_key: 'CA001', prize_id: eventData.prize.id })
+         });
+      ================================================================= */
+    }
+  </script>
+</body>
+</html>
+
+<!--<script>// 1. URL 파라미터에서 QR 키값 가져오기 (예: event.html?qr=CA001)
+    const urlParams = new URLSearchParams(window.location.search);
+    const qrKey = urlParams.get('qr') || 'CA001'; // URL에 ?qr= 이 없으면 기본값 CA001 사용
+
+    // 2. 페이지 열릴 때 api.php 호출해서 DB에서 데이터 불러오기
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            // api.php 로 DB 데이터 요청
+            const response = await fetch(`api.php?action=event_scan&qr_key=${qrKey}`);
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                const data = result.data;
+
+                // ① 첫 화면 (일본어 퀴즈) 데이터 바인딩
+                document.getElementById('q-japanese-text').innerText = data.content.text;
+                document.getElementById('q-reading-text').innerText = data.content.reading ? `[${data.content.reading}]` : '';
+
+                // ② 결과 화면 (뜻 해설 + 당첨) 데이터 바인딩
+                document.getElementById('r-japanese-text').innerText = data.content.text;
+                document.getElementById('r-reading-text').innerText = data.content.reading || '';
+                document.getElementById('r-meaning-text').innerText = `"${data.content.meaning}"`;
+                document.getElementById('r-explanation-text').innerText = data.content.explanation || '즐거운 일상 일본어 표현입니다!';
+
+                document.getElementById('prize-name').innerText = data.prize.name;
+            } else {
+                alert(result.message || '이벤트 데이터를 불러오지 못했습니다.');
+            }
+        } catch (error) {
+            console.error('DB 연동 에러:', error);
+        }
+    });
+
+    // 3. "의미 확인하기" 버튼 클릭 시 동작
+    function revealMeaning() {
+        // 화면 전환
+        document.getElementById('screen-question').classList.add('hidden');
+        document.getElementById('screen-result').classList.remove('hidden');
+        document.getElementById('screen-result').classList.add('flex');
+
+        // 버튼 전환
+        document.getElementById('btn-reveal').classList.add('hidden');
+        document.getElementById('result-actions').classList.remove('hidden');
+        document.getElementById('result-actions').classList.add('flex');
+
+        // 축하 폭죽 애니메이션
+        confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { y: 0.7 },
+            colors: ['#ff6b6b', '#ffe66d', '#4ecdc4', '#1e1e1e']
+        });
+    }</script>-->

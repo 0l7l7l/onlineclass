@@ -252,6 +252,30 @@
 			align-items: start;
 		}
 
+		.event-toolbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.event-toolbar-left {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.event-status-inline {
+			font-size: 12px;
+			color: #6b7280;
+		}
+
+		.event-action-buttons {
+			display: flex;
+			gap: 6px;
+		}
+
 		@media (max-width: 1024px) {
 			.textbook-helper-grid {
 				grid-template-columns: 1fr;
@@ -285,6 +309,7 @@
 		<button class="menu-btn" onclick="switchPage('approvals-page', this)">💰 충전/입금 승인</button>
 		<button class="menu-btn" onclick="switchPage('products-page', this)">🎟️ 상품 및 티켓 관리</button>
     <button class="menu-btn" onclick="switchPage('textbook-helper-page', this)">📚 교재 추가</button>
+    <button class="menu-btn" onclick="switchPage('event-page', this)">🎉 이벤트 글 관리</button>
 	</div>
 
 	<div class="main-content">
@@ -545,6 +570,45 @@
 						<button type="button" class="btn btn-secondary" onclick="copyTextbookOutput('textbook-sql')">복사</button>
 					</div>
 				</div>
+			</div>
+		</div>
+
+		<!-- [TAB 7] 이벤트 글 관리 -->
+		<div id="event-page" class="page-section">
+			<h2>이벤트 글 관리</h2>
+			<p style="color: #858796; margin-bottom: 20px;">이벤트 QR 노출용 문구를 목록으로 관리하고, 새 글을 추가/수정/삭제합니다.</p>
+
+			<div style="background:#fff; padding:16px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+				<div class="event-toolbar">
+					<div class="event-toolbar-left">
+						<label for="event-filter-language" style="font-size:12px; font-weight:700; color:#4b5563;">언어 필터</label>
+						<select id="event-filter-language" onchange="loadEventContents()" style="min-width:180px; padding:6px 8px; border:1px solid #d1d5db; border-radius:6px;">
+							<option value="">전체 언어 보기</option>
+						</select>
+						<span class="event-status-inline">총 <strong id="event-total-count">0</strong>개</span>
+					</div>
+					<button type="button" class="btn btn-primary" onclick="openEventContentModalForCreate()">이벤트 글 추가</button>
+				</div>
+
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>언어</th>
+							<th>원문</th>
+							<th>뜻</th>
+             <th>QR</th>
+							<th>레벨</th>
+							<th>상태</th>
+							<th>관리</th>
+						</tr>
+					</thead>
+					<tbody id="event-content-body">
+						<tr>
+              <td colspan="8" style="text-align:center; color:#858796; padding:2rem 0;">이벤트 목록을 불러오는 중...</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
@@ -1018,6 +1082,101 @@
 		</div>
 	</div>
 
+	<!-- 이벤트 글 등록/수정 모달 -->
+	<div class="modal-overlay" id="eventContentModal">
+		<div class="modal-box" style="max-width: 640px; max-height: 90vh; overflow-y: auto;">
+			<button class="modal-close" onclick="closeModal('eventContentModal')">&times;</button>
+			<h3 class="modal-title" id="event-form-title">이벤트 글 추가</h3>
+			<form id="event-content-form" onsubmit="event.preventDefault(); submitEventContentForm();">
+				<input type="hidden" id="event-form-id" value="">
+
+				<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+					<div class="form-group">
+						<label for="event-form-language-id">대상 언어</label>
+						<select id="event-form-language-id" required></select>
+					</div>
+					<div class="form-group">
+						<label for="event-form-level">난이도 Level</label>
+						<select id="event-form-level">
+							<option value="1">Level 1 (초급)</option>
+							<option value="2">Level 2 (중급)</option>
+							<option value="3">Level 3 (고급)</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="event-form-text">원어 표현 (Text)</label>
+					<input type="text" id="event-form-text" required placeholder="예: 来てくれる？">
+				</div>
+
+				<div class="form-group">
+					<label for="event-form-reading">발음 / 읽기 (Reading)</label>
+					<input type="text" id="event-form-reading" placeholder="예: きてくれる？">
+				</div>
+
+				<div class="form-group">
+					<label for="event-form-meaning">한국어 뜻 (Meaning)</label>
+					<input type="text" id="event-form-meaning" required placeholder="예: 와 줄래?">
+				</div>
+
+				<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+					<div class="form-group">
+						<label for="event-form-example-text">예문 (선택)</label>
+						<textarea id="event-form-example-text" rows="2"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="event-form-example-meaning">예문 해석 (선택)</label>
+						<textarea id="event-form-example-meaning" rows="2"></textarea>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="event-form-explanation">상세 설명 (선택)</label>
+					<textarea id="event-form-explanation" rows="3"></textarea>
+				</div>
+
+				<div style="display:grid; grid-template-columns:2fr 1fr; gap:10px;">
+					<div class="form-group">
+						<label for="event-form-image-url">이미지 URL (선택)</label>
+						<input type="url" id="event-form-image-url" placeholder="https://...">
+					</div>
+					<div class="form-group">
+						<label for="event-form-is-active">게시 상태</label>
+						<select id="event-form-is-active">
+							<option value="1">공개</option>
+							<option value="0">비공개</option>
+						</select>
+					</div>
+				</div>
+
+				<div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+					<button type="button" class="btn btn-secondary" onclick="closeModal('eventContentModal')">취소</button>
+					<button type="submit" class="btn btn-primary">저장</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="eventQrModal">
+		<div class="modal-box" style="max-width: 420px;">
+			<button class="modal-close" onclick="closeModal('eventQrModal')">&times;</button>
+			<h3 class="modal-title">생성된 이벤트 QR</h3>
+			<div style="text-align:center; padding:8px 0 4px;">
+				<div id="event-qr-key" style="font-size:13px; font-weight:700; color:#4b5563; margin-bottom:8px;"></div>
+				<img id="event-qr-image" alt="event qr" style="width:220px; height:220px; border:1px solid #e5e7eb; border-radius:8px; background:#fff;">
+			</div>
+			<div class="form-group" style="margin-top:12px;">
+				<label for="event-qr-url">이벤트 URL</label>
+				<input type="text" id="event-qr-url" readonly>
+			</div>
+			<div style="display:flex; justify-content:flex-end; gap:8px;">
+				<button type="button" class="btn btn-secondary" onclick="copyEventQrUrl()">URL 복사</button>
+				<button type="button" class="btn btn-primary" onclick="closeModal('eventQrModal')">닫기</button>
+			</div>
+		</div>
+	</div>
+
 	<script>
 		let selectedScheduleDate = new Date().toISOString().slice(0, 10);
 		let selectedSlotId = null;
@@ -1034,6 +1193,9 @@
 		let pendingStudentCandidateId = null;
 		let pendingStudentCandidateName = '';
 		let selectedTextbookFile = null;
+		const EVENT_API_URL = '../event/api/api.php';
+		let eventLanguages = [];
+		let eventLanguagesLoaded = false;
 
 		function escapeHtml(value) {
 			return String(value ?? '')
@@ -1263,6 +1425,297 @@
 			typeEl.addEventListener('change', updateTextbookOutputs);
 			langEl.addEventListener('change', updateTextbookOutputs);
 			updateTextbookOutputs();
+		}
+
+		function renderEventLanguageOptions() {
+			const filterEl = document.getElementById('event-filter-language');
+			const formEl = document.getElementById('event-form-language-id');
+			if (!filterEl || !formEl) return;
+
+			const previousFilter = filterEl.value;
+			const previousForm = formEl.value;
+
+			filterEl.innerHTML = '<option value="">전체 언어 보기</option>';
+			formEl.innerHTML = '';
+
+			eventLanguages.forEach((lang) => {
+				filterEl.innerHTML += `<option value="${escapeHtml(String(lang.id))}">${escapeHtml(lang.name)} (${escapeHtml(lang.code)})</option>`;
+				formEl.innerHTML += `<option value="${escapeHtml(String(lang.id))}">${escapeHtml(lang.name)} (${escapeHtml(lang.code)})</option>`;
+			});
+
+			if (previousFilter && eventLanguages.some(lang => String(lang.id) === String(previousFilter))) {
+				filterEl.value = previousFilter;
+			}
+			if (previousForm && eventLanguages.some(lang => String(lang.id) === String(previousForm))) {
+				formEl.value = previousForm;
+			}
+		}
+
+		async function loadEventLanguages(force = false) {
+			if (eventLanguagesLoaded && !force) {
+				renderEventLanguageOptions();
+				return true;
+			}
+
+			try {
+				const response = await fetch(`${EVENT_API_URL}?action=languages`);
+				const result = await response.json();
+				if (!response.ok || result.status !== 'success') {
+					eventLanguages = [];
+					eventLanguagesLoaded = false;
+					renderEventLanguageOptions();
+					return false;
+				}
+
+				eventLanguages = Array.isArray(result.data) ? result.data : [];
+				eventLanguagesLoaded = true;
+				renderEventLanguageOptions();
+				return true;
+			} catch (error) {
+				console.error(error);
+				eventLanguages = [];
+				eventLanguagesLoaded = false;
+				renderEventLanguageOptions();
+				return false;
+			}
+		}
+
+		function setEventTableMessage(message, tone = 'normal') {
+			const tbody = document.getElementById('event-content-body');
+			if (!tbody) return;
+			const color = tone === 'error' ? '#e74a3b' : '#858796';
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:${color}; padding:2rem 0;">${escapeHtml(message)}</td></tr>`;
+		}
+
+		function buildEventQrLinkFromKey(qrCodeKey) {
+			if (!qrCodeKey) return '';
+			const url = new URL('../event/event.html', window.location.href);
+			url.searchParams.set('qr', qrCodeKey);
+			return url.toString();
+		}
+
+		function buildEventQrImageUrl(targetUrl) {
+			return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(targetUrl)}`;
+		}
+
+		function openEventQrModal(qrCodeKey) {
+			const key = String(qrCodeKey || '').trim();
+			if (!key) {
+				alert('QR 키가 없습니다.');
+				return;
+			}
+
+			const targetUrl = buildEventQrLinkFromKey(key);
+			document.getElementById('event-qr-key').innerText = `QR Key: ${key}`;
+			document.getElementById('event-qr-url').value = targetUrl;
+			document.getElementById('event-qr-image').src = buildEventQrImageUrl(targetUrl);
+			openModal('eventQrModal');
+		}
+
+		async function copyEventQrUrl() {
+			const input = document.getElementById('event-qr-url');
+			if (!input || !input.value.trim()) {
+				alert('복사할 URL이 없습니다.');
+				return;
+			}
+
+			try {
+				if (navigator.clipboard && window.isSecureContext) {
+					await navigator.clipboard.writeText(input.value);
+				} else {
+					input.focus();
+					input.select();
+					document.execCommand('copy');
+				}
+				alert('URL이 복사되었습니다.');
+			} catch (error) {
+				console.error(error);
+				alert('URL 복사에 실패했습니다.');
+			}
+		}
+
+		async function loadEventContents() {
+			const filterEl = document.getElementById('event-filter-language');
+			const countEl = document.getElementById('event-total-count');
+			const tbody = document.getElementById('event-content-body');
+			if (!filterEl || !countEl || !tbody) return;
+
+			setEventTableMessage('이벤트 목록을 불러오는 중...');
+			const languageId = filterEl.value || '';
+
+			try {
+				const response = await fetch(`${EVENT_API_URL}?action=contents&language_id=${encodeURIComponent(languageId)}`);
+				const result = await response.json();
+				if (!response.ok || result.status !== 'success') {
+					countEl.textContent = '0';
+					setEventTableMessage('이벤트 목록을 불러오지 못했습니다.', 'error');
+					return;
+				}
+
+				const rows = Array.isArray(result.data) ? result.data : [];
+				countEl.textContent = String(rows.length);
+
+				if (rows.length === 0) {
+					setEventTableMessage('등록된 이벤트 글이 없습니다.');
+					return;
+				}
+
+				tbody.innerHTML = rows.map((item) => {
+					const statusBadge = Number(item.is_active) === 1
+						? '<span class="badge badge-student">공개</span>'
+						: '<span class="badge badge-danger">비공개</span>';
+					const qrCodeKey = String(item.qr_code_key || '').trim();
+					const qrCell = qrCodeKey
+						? `<div style="display:flex; flex-direction:column; gap:6px;"><span class="badge">${escapeHtml(qrCodeKey)}</span><button type="button" class="btn btn-secondary" onclick="openEventQrModal('${escapeHtml(qrCodeKey)}')">QR 확인</button></div>`
+						: '<span style="font-size:12px; color:#9ca3af;">미생성</span>';
+
+					return `
+						<tr>
+							<td>${escapeHtml(String(item.id))}</td>
+							<td>${escapeHtml(item.language_name)} (${escapeHtml(item.language_code)})</td>
+							<td>${escapeHtml(item.text)}${item.reading ? `<div style="font-size:11px; color:#6b7280;">${escapeHtml(item.reading)}</div>` : ''}</td>
+							<td>${escapeHtml(item.meaning)}</td>
+              <td>${qrCell}</td>
+							<td>Lv.${escapeHtml(String(item.level || 1))}</td>
+							<td>${statusBadge}</td>
+							<td>
+								<div class="event-action-buttons">
+									<button type="button" class="btn btn-secondary" onclick="openEventContentModalForEdit(${Number(item.id)})">수정</button>
+									<button type="button" class="btn btn-danger" onclick="deleteEventContent(${Number(item.id)})">삭제</button>
+								</div>
+							</td>
+						</tr>
+					`;
+				}).join('');
+			} catch (error) {
+				console.error(error);
+				countEl.textContent = '0';
+				setEventTableMessage('이벤트 목록 조회 중 오류가 발생했습니다.', 'error');
+			}
+		}
+
+		function resetEventContentForm() {
+			const form = document.getElementById('event-content-form');
+			if (form) form.reset();
+			document.getElementById('event-form-id').value = '';
+			document.getElementById('event-form-title').innerText = '이벤트 글 추가';
+			if (eventLanguages.length > 0) {
+				document.getElementById('event-form-language-id').value = String(eventLanguages[0].id);
+			}
+		}
+
+		async function openEventContentModalForCreate() {
+			const loaded = await loadEventLanguages();
+			if (!loaded || eventLanguages.length === 0) {
+				alert('언어 목록을 불러오지 못했습니다. 이벤트 API를 확인해 주세요.');
+				return;
+			}
+			resetEventContentForm();
+			openModal('eventContentModal');
+		}
+
+		async function openEventContentModalForEdit(id) {
+			const loaded = await loadEventLanguages();
+			if (!loaded || eventLanguages.length === 0) {
+				alert('언어 목록을 불러오지 못했습니다. 이벤트 API를 확인해 주세요.');
+				return;
+			}
+
+			try {
+				const response = await fetch(`${EVENT_API_URL}?action=content_detail&id=${encodeURIComponent(id)}`);
+				const result = await response.json();
+				if (!response.ok || result.status !== 'success' || !result.data) {
+					alert('이벤트 글 정보를 불러오지 못했습니다.');
+					return;
+				}
+
+				const item = result.data;
+				document.getElementById('event-form-title').innerText = '이벤트 글 수정';
+				document.getElementById('event-form-id').value = item.id || '';
+				document.getElementById('event-form-language-id').value = String(item.language_id || '');
+				document.getElementById('event-form-level').value = String(item.level || 1);
+				document.getElementById('event-form-text').value = item.text || '';
+				document.getElementById('event-form-reading').value = item.reading || '';
+				document.getElementById('event-form-meaning').value = item.meaning || '';
+				document.getElementById('event-form-example-text').value = item.example_text || '';
+				document.getElementById('event-form-example-meaning').value = item.example_meaning || '';
+				document.getElementById('event-form-explanation').value = item.explanation || '';
+				document.getElementById('event-form-image-url').value = item.image_url || '';
+				document.getElementById('event-form-is-active').value = String(item.is_active ?? 1);
+
+				openModal('eventContentModal');
+			} catch (error) {
+				console.error(error);
+				alert('이벤트 글 정보를 불러오는 중 오류가 발생했습니다.');
+			}
+		}
+
+		async function submitEventContentForm() {
+			const id = document.getElementById('event-form-id').value;
+			const payload = {
+				id: id ? Number(id) : null,
+				language_id: Number(document.getElementById('event-form-language-id').value),
+				text: document.getElementById('event-form-text').value.trim(),
+				reading: document.getElementById('event-form-reading').value.trim(),
+				meaning: document.getElementById('event-form-meaning').value.trim(),
+				explanation: document.getElementById('event-form-explanation').value.trim(),
+				example_text: document.getElementById('event-form-example-text').value.trim(),
+				example_meaning: document.getElementById('event-form-example-meaning').value.trim(),
+				image_url: document.getElementById('event-form-image-url').value.trim(),
+				level: Number(document.getElementById('event-form-level').value || 1),
+				is_active: Number(document.getElementById('event-form-is-active').value || 1)
+			};
+
+			if (!payload.language_id || !payload.text || !payload.meaning) {
+				alert('필수 항목(언어, 원어 표현, 뜻)을 입력해 주세요.');
+				return;
+			}
+
+			const action = id ? 'update' : 'create';
+			try {
+				const response = await fetch(`${EVENT_API_URL}?action=${action}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(payload)
+				});
+				const result = await response.json();
+				if (!response.ok || result.status !== 'success') {
+					alert(result.message || '저장에 실패했습니다.');
+					return;
+				}
+
+				alert(result.message || '저장되었습니다.');
+				closeModal('eventContentModal');
+				await loadEventContents();
+       if (!id && result.data?.qr_code_key) {
+					openEventQrModal(result.data.qr_code_key);
+				}
+			} catch (error) {
+				console.error(error);
+				alert('이벤트 글 저장 중 오류가 발생했습니다.');
+			}
+		}
+
+		async function deleteEventContent(id) {
+			if (!confirm('정말 삭제하시겠습니까?')) return;
+			try {
+				const response = await fetch(`${EVENT_API_URL}?action=delete`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ id })
+				});
+				const result = await response.json();
+				if (!response.ok || result.status !== 'success') {
+					alert(result.message || '삭제에 실패했습니다.');
+					return;
+				}
+
+				alert(result.message || '삭제되었습니다.');
+				await loadEventContents();
+			} catch (error) {
+				console.error(error);
+				alert('이벤트 글 삭제 중 오류가 발생했습니다.');
+			}
 		}
 
 		function tryParseApiJson(raw) {
@@ -2627,6 +3080,10 @@
 
 			if (pageId === 'users-page') {
 				fetchAdminUsers();
+			}
+
+			if (pageId === 'event-page') {
+				loadEventLanguages().then(() => loadEventContents());
 			}
 		}
 
