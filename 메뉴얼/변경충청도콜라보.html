@@ -1,4 +1,240 @@
-﻿<!DOCTYPE html>
+﻿<!--관리자에서 콘텐츠 등록
+
+예:
+
+일본어:今日何してる？
+
+읽기:きょう なにしてる？
+
+뜻:오늘 뭐 하고 있어?
+
+설명:친구 사이에서 자연스럽게 사용하는 표현
+
+저장 버튼.
+
+
+
+2. 자동 처리
+
+저장 후:
+
+language_contents
+
+생성
+
+
+
+id = 25
+
+text:
+今日何してる？
+
+↓
+
+자동으로:
+
+event_qr
+
+생성
+
+
+
+id
+1
+
+qr_code_key
+JP000025
+
+content_id
+25
+
+↓
+
+자동 QR 생성
+
+
+
+https://semo.com/event?q=JP000025
+
+3. 그리고 인쇄용 태그 데이터 생성
+
+여기가 중요합니다.
+
+QR만 만드는 게 아니라:
+
+자동으로:
+
+
+
+┌──────────┐
+│  Semo    │
+│          │
+│今日何してる？│
+│          │
+│   [QR]   │
+│          │
+└──────────┘
+
+이 디자인 데이터를 만드는 거예요.
+
+그러면 인쇄 업체에는:
+
+ 일본어 문구
+
+ QR 이미지
+
+ 디자인 파일
+
+이 세트로 넘기면 됩니다.
+
+event_qr에 QR 이미지를 저장하는 게 아니라,
+
+
+
+추가 테이블 하나 정도:
+
+TagDesign (선택)
+
+컬럼내용
+
+id
+
+번호
+
+content_id
+
+콘텐츠
+
+qr_id
+
+QR
+
+image_url
+
+완성 태그 이미지
+
+pdf_url
+
+인쇄파일
+
+정도.
+
+아이디어에서는 "QR을 여러 개 뿌리는 것"보다:
+
+콘텐츠 → QR → 태그 디자인 → 인쇄 파일
+네. 처음 구상한 흐름과 지금 구현은 “방향은 같지만, 아직 축약형” 입니다.
+지금 구현된 것
+현재는 아래까지만 들어가 있습니다.
+1) 콘텐츠 등록
+language_contents 저장됨
+2) QR 자동 생성
+저장 직후 event_qr도 자동 생성됨
+3) 관리자에서 QR 확인
+dashboard.html의 이벤트 목록에서 QR 확인 가능
+---
+처음 구상과 같은 점
+구상: 콘텐츠 → QR → 태그 디자인 → 인쇄 파일
+현재: 콘텐츠 → QR
+즉, 앞 2단계만 구현됨 입니다.
+---
+지금과 다른 점
+1) qr_code_key 규칙이 다름
+원래 구상:
+•	JP000025 같은 규칙형 키
+현재 구현:
+•	EV250807... 같은 랜덤/시간기반 키
+즉,
+지금은 language code + content id 조합 방식이 아님
+---
+2) QR URL 형식이 다름
+원래 구상 예시:
+•	https://semo.com/event?q=JP000025
+현재 구현:
+•	.../event/event.html?qr=생성키
+즉,
+•	파라미터명이 q가 아니라 qr
+•	경로도 event가 아니라 event/event.html
+---
+3) region_id가 자동 기본값으로 들어감
+현재는 event_qr.region_id가 NOT NULL이라서,
+•	활성화된 regions 중 첫 번째 지역을 자동 연결하게 해두었습니다.
+원래 구상은
+•	지역/매장 전략까지 포함한 설계였고,
+•	QR 발급 시 어떤 지역/매장용인지 더 명확히 관리하는 흐름에 가까웠습니다.
+즉, 지금은 임시 기본 연결 방식입니다.
+---
+4) QR 이미지를 “생성해서 보여주기만” 함
+현재:
+•	관리자 화면에서 외부 QR 이미지 API로 미리보기만 생성
+•	DB에 QR 이미지 파일 저장 안 함
+원래 구상:
+•	인쇄업체 전달용으로
+•	QR 이미지
+•	디자인 파일
+•	출력용 파일 까지 세트화
+즉, 지금은 운영용 미리보기 수준이고
+인쇄 자산 관리 단계는 아직 없음입니다.
+---
+5) 태그 디자인 데이터가 아직 없음
+구상에서 중요했던:
+•	문구
+•	QR
+•	디자인 결과물
+•	PDF/인쇄 파일
+이 흐름은 현재 미구현입니다.
+즉, 아래 같은 테이블은 아직 없음:
+•	tag_designs 또는 event_tag_designs
+예시 컬럼:
+•	id
+•	content_id
+•	qr_id
+•	image_url
+•	pdf_url
+•	template_name
+•	created_at
+---
+정리
+지금 상태
+•	콘텐츠 등록 ✅
+•	QR 자동 생성 ✅
+•	관리자에서 QR 확인 ✅
+아직 없는 것
+•	JP000025 같은 규칙형 QR 키 ❌
+•	인쇄용 태그 디자인 생성 ❌
+•	디자인 결과 이미지 저장 ❌
+•	PDF/인쇄 파일 생성 ❌
+•	인쇄업체 전달용 세트 관리 ❌
+---
+결론
+네가 처음 구상한 구조와 지금 구현은 완전히 같은 건 아닙니다.
+정확히 말하면:
+•	지금은 “콘텐츠 → QR”까지만 구현된 1차 버전
+•	원래 구상은 “콘텐츠 → QR → 태그 디자인 → 인쇄 파일”까지 포함한 2차 구조
+입니다.
+---
+원래 구상대로 맞추려면 다음이 필요함
+1.	qr_code_key를 JP000025 규칙으로 변경
+2.	URL 규칙 통일 (?q= 또는 ?qr= 중 하나)
+3.	tag_designs 테이블 추가
+4.	태그 시안 HTML 자동 생성
+5.	PNG/PDF 출력 파일 생성
+6.	관리자에서
+•	QR 보기
+•	태그 미리보기
+•	PDF 다운로드
+•	인쇄용 파일 다운로드 가능하게 구성
+원하면 다음 단계로 바로 해드릴 수 있습니다:
+1.	QR 키를 JP000025 규칙으로 변경
+2.	tag_designs 테이블 설계
+3.	관리자에 태그 미리보기 / PDF 생성까지 추가-->
+
+
+
+
+
+
+
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
@@ -312,10 +548,10 @@
 			if (!marqueeEl) return;
 
 			let itemsHtml = storeData.map(s => `
-				<span class="inline-flex items-center gap-1 shrink-0">
-					<i class="fa-solid fa-store text-amber-400"></i> ${s.nameKo}
-				</span>
-			`).join('<span class="text-slate-600">|</span>');
+						<span class="inline-flex items-center gap-1 shrink-0">
+							<i class="fa-solid fa-store text-amber-400"></i> ${s.nameKo}
+						</span>
+					`).join('<span class="text-slate-600">|</span>');
 
 			// 끊김 없는 루프를 위해 동일 내용을 2번 반복
 			marqueeEl.innerHTML = itemsHtml + '<span class="text-slate-600">|</span>' + itemsHtml;
@@ -330,34 +566,34 @@
 			const regionBox = document.getElementById('region-ranking-ko');
 			if (regionBox) {
 				regionBox.innerHTML = regionData.map((item, idx) => `
-					<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-white border-2 border-amber-300 shadow' : 'bg-white/90'}">
-						<div class="flex items-center gap-2">
-							<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-700'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
-							<span>${item.nameKo}</span>
-						</div>
-						<div class="flex items-center gap-1 text-amber-600 text-[11px]">
-							<i class="fa-solid fa-qrcode"></i>
-							<span class="font-extrabold">${item.count.toLocaleString()} 스캔</span>
-						</div>
-					</div>
-				`).join('');
+							<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-white border-2 border-amber-300 shadow' : 'bg-white/90'}">
+								<div class="flex items-center gap-2">
+									<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-700'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
+									<span>${item.nameKo}</span>
+								</div>
+								<div class="flex items-center gap-1 text-amber-600 text-[11px]">
+									<i class="fa-solid fa-qrcode"></i>
+									<span class="font-extrabold">${item.count.toLocaleString()} 스캔</span>
+								</div>
+							</div>
+						`).join('');
 			}
 
 			// 2. 점포별 순위 렌더링
 			const storeBox = document.getElementById('store-ranking-ko');
 			if (storeBox) {
 				storeBox.innerHTML = storeData.slice(0, 5).map((item, idx) => `
-					<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-indigo-900 text-white border-2 border-amber-400 shadow-lg' : 'bg-white text-slate-900'}">
-						<div class="flex items-center gap-2">
-							<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-indigo-100 text-indigo-900'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
-							<span class="${idx === 0 ? 'text-amber-300 font-extrabold' : ''}">${item.nameKo}</span>
-						</div>
-						<div class="flex items-center gap-1 ${idx === 0 ? 'text-amber-300' : 'text-indigo-600'} text-[11px]">
-							<i class="fa-solid fa-fire"></i>
-							<span class="font-extrabold">${item.count.toLocaleString()}회</span>
-						</div>
-					</div>
-				`).join('');
+							<div class="ranking-item p-2.5 rounded-xl flex items-center justify-between ${idx === 0 ? 'bg-indigo-900 text-white border-2 border-amber-400 shadow-lg' : 'bg-white text-slate-900'}">
+								<div class="flex items-center gap-2">
+									<span class="${idx === 0 ? 'bg-amber-400 text-slate-900' : 'bg-indigo-100 text-indigo-900'} w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">${idx + 1}</span>
+									<span class="${idx === 0 ? 'text-amber-300 font-extrabold' : ''}">${item.nameKo}</span>
+								</div>
+								<div class="flex items-center gap-1 ${idx === 0 ? 'text-amber-300' : 'text-indigo-600'} text-[11px]">
+									<i class="fa-solid fa-fire"></i>
+									<span class="font-extrabold">${item.count.toLocaleString()}회</span>
+								</div>
+							</div>
+						`).join('');
 			}
 		}
 
@@ -416,7 +652,7 @@
 		}
 
 		// 초기화
-		window.onload = function() {
+		window.onload = function () {
 			renderMarquee();
 			renderRankings();
 			startSimulation();
