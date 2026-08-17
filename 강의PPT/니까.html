@@ -787,20 +787,73 @@
 			undoStacks[currentSlide].push(ctx.getImageData(0, 0, canvas.width, canvas.height));
 		}
 
+		/* Canvas Mouse Events */
 		canvas.addEventListener('mousedown', (e) => {
 			const rect = canvas.getBoundingClientRect();
 			const x = e.clientX - rect.left;
 			const y = e.clientY - rect.top;
 
+			// Zoom 스타일 텍스트 입력기
 			if (currentTool === 'text') {
-				const userText = prompt('入力するテキストを入力してください:');
-				if (userText) {
-					saveState();
-					const color = document.getElementById('drawColor').value;
-					ctx.font = 'bold 20px "Helvetica Neue", Arial, sans-serif';
-					ctx.fillStyle = color;
-					ctx.fillText(userText, x, y);
+				const existingInput = document.getElementById('active-canvas-input');
+				if (existingInput) {
+					existingInput.blur();
 				}
+
+				const color = document.getElementById('drawColor').value;
+				const fontSize = 20;
+
+				const input = document.createElement('input');
+				input.id = 'active-canvas-input';
+				input.type = 'text';
+				input.style.position = 'absolute';
+				input.style.left = x + 'px';
+				input.style.top = (y - 12) + 'px';
+				input.style.fontSize = fontSize + 'px';
+				input.style.fontFamily = '"Helvetica Neue", Arial, sans-serif';
+				input.style.fontWeight = 'bold';
+				input.style.color = color;
+				input.style.background = 'transparent';
+				input.style.border = '1px dashed #27ae60';
+				input.style.outline = 'none';
+				input.style.padding = '2px 4px';
+				input.style.zIndex = '100';
+
+				// viewport 영역에 자식으로 삽입
+				const viewport = document.querySelector('.viewport');
+				viewport.appendChild(input);
+
+				setTimeout(() => input.focus(), 0);
+
+				function commitText() {
+					const userText = input.value.trim();
+					if (userText) {
+						saveState();
+						ctx.font = `bold ${fontSize}px "Helvetica Neue", Arial, sans-serif`;
+						ctx.fillStyle = color;
+						ctx.textBaseline = 'middle';
+						ctx.fillText(userText, x, y);
+					}
+					if (input.parentNode) {
+						input.parentNode.removeChild(input);
+					}
+				}
+
+				input.addEventListener('keydown', (evt) => {
+					// 텍스트 입력 중 키보드 이벤트가 슬라이드로 전파되는 것을 방지
+					evt.stopPropagation();
+
+					if (evt.key === 'Enter') {
+						commitText();
+					} else if (evt.key === 'Escape') {
+						if (input.parentNode) input.parentNode.removeChild(input);
+					}
+				});
+
+				input.addEventListener('blur', () => {
+					commitText();
+				});
+
 				return;
 			}
 
@@ -848,7 +901,6 @@
 				ctx.closePath();
 			}
 		});
-
 
 		/* 초급자용 연습문제 10개 */
 		const problems = [
