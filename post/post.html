@@ -1165,7 +1165,7 @@ color: #6f6f9b;
 			<h2>Semo 자료실</h2>
 
 			<div class="lang-section">
-				<button class="lang-btn" onclick="toggleSection(this)">✏️언어 자료실</button>
+				<button class="lang-btn" onclick="toggleSection(this)">💬언어 문법</button>
 				<div class="sub-menu">
 					<button class="nav-item" onclick="loadMainDashboard('ja', 'grammar')">일본어 문법</button>
 					<button class="nav-item" onclick="loadMainDashboard('ja', 'words')">일본어 단어</button>
@@ -1196,7 +1196,7 @@ color: #6f6f9b;
 
 
 
-			<div class="lang-section">
+			<!--<div class="lang-section">
 				<button class="lang-btn" onclick="toggleSection(this)">한국정보</button>
 				<div class="sub-menu">
 					<div class="coming-soon">🚧 준비중입니다.</div>
@@ -1206,10 +1206,10 @@ color: #6f6f9b;
 			<div class="lang-section">
 				<button class="lang-btn" onclick="toggleSection(this)">중국정보</button>
 				<div class="sub-menu"><div class="coming-soon">🚧 준비중입니다.</div></div>
-			</div>
+			</div>-->
 
 			<div class="lang-section">
-				<button class="lang-btn" onclick="toggleSection(this)">📚 회화 교재 PDF</button>
+				<button class="lang-btn" onclick="toggleSection(this)">💬 세모 교재 PDF</button>
 				<div class="sub-menu">
 					<button class="nav-item" onclick="loadPdfDashboard('all')">전체 교재 둘러보기</button>
 				</div>
@@ -1226,7 +1226,6 @@ color: #6f6f9b;
 	</nav>
 
 	<div class="sidebar-overlay" onclick="closeSidebar()"></div>
-
 	<!-- 우측 전체 콘텐츠 영역 (단 하나만 존재해야 합니다) -->
 	<main class="content-area">
 		<!-- 1. 사이드바 토글 버튼 (내용이 바뀌어도 항상 고정 유지) -->
@@ -3913,15 +3912,14 @@ color: #6f6f9b;
 					desc: "기초 히라가나부터 실전 회화까지 완벽 가이드",
 					date: "2026-07-23",
 					// 클릭 시 보여줄 상세 글 내용
-					content: `
-<h2>지식과 행동, 그리고 응용에 관하여: 당신의 지식은 어디에 살고 있습니까?</h2>
-<blockquote class="quote-box">
-                    "지식을 머리로만 알고 남을 판단하는 데 쓰는가, 아니면 내 삶에서 유연하게 행동하고 응용하는 데 쓰는가? 그것은 결국 개인의 선택이다."
-</blockquote>
-<p>세간에는 '말 따로, 행동 따로'라는 말이 있습니다. 수많은 지식을 머릿속에 담고 있고 말로는 무엇이든 할 수 있을 것 같지만, 정작 실전에서는 행동으로 이어지지 않는 모습을 꼬집는 말입니다. 우리는 보통 무언가를 '안다'고 하면 그것으로 충분하다고 착각하곤 합니다. 하지만 진짜 앎은 '아는 것(지식)'에서 '행동하는 것(실천)'으로, 더 나아가 '상황에 맞게 쓰는 것(응용)'으로 나아가야 비로소 가치를 지닙니다.</p>
+					content: `<h2>지식과 행동, 그리고 응용에 관하여: 당신의 지식은 어디에 살고 있습니까?</h2>
+					<blockquote class="quote-box">
+					"지식을 머리로만 알고 남을 판단하는 데 쓰는가, 아니면 내 삶에서 유연하게 행동하고 응용하는 데 쓰는가? 그것은 결국 개인의 선택이다."
+					</blockquote>
+					<p>세간에는 '말 따로, 행동 따로'라는 말이 있습니다. 수많은 지식을 머릿속에 담고 있고 말로는 무엇이든 할 수 있을 것 같지만, 정작 실전에서는 행동으로 이어지지 않는 모습을 꼬집는 말입니다. 우리는 보통 무언가를 '안다'고 하면 그것으로 충분하다고 착각하곤 합니다. 하지만 진짜 앎은 '아는 것(지식)'에서 '행동하는 것(실천)'으로, 더 나아가 '상황에 맞게 쓰는 것(응용)'으로 나아가야 비로소 가치를 지닙니다.</p>
  
                 <h3>1. 아는 것과 응용하는 것: 파스타와 젓가락의 관계</h3>
-<p>여기 '파스타'라는 음식을 예로 들어보겠습니다. "파스타는 보통 무엇으로 먹나요?"라고 물으면, 십중팔구 "포크로 먹습니다"라고 정답을 말합니다. 이것은 우리가 학습을 통해 얻은 규칙이자 '지식'입니다.</p>
+								<p>여기 '파스타'라는 음식을 예로 들어보겠습니다. "파스타는 보통 무엇으로 먹나요?"라고 물으면, 십중팔구 "포크로 먹습니다"라고 정답을 말합니다. 이것은 우리가 학습을 통해 얻은 규칙이자 '지식'입니다.</p>
 <p>하지만 고급 레스토랑이 아닌, 포크가 구비되지 않은 일상적인 공간에서 파스타를 마주했을 때 우리는 어떻게 하나요? 포크가 없다고 해서 음식을 포기하지 않습니다. 젓가락을 들기도 하고, 숟가락을 쓰기도 하며, 때로는 손을 대기도 합니다. 상황에 맞게 수단을 바꾸어 목적을 달성하는 것, 이것이 바로 지식을 넘어선 '행동'이자 '응용'입니다.</p>
 <p>지식의 틀에 갇힌 사람은 포크가 없으면 당황하거나 "파스타는 포크로 먹어야 하는데"라며 툴툴대지만, 지식을 삶으로 체화한 사람은 젓가락으로도 맛있게 파스타를 즐깁니다. 중요한 것은 형식(포크)이 아니라 본질(식사)이기 때문입니다.</p>
  
@@ -3995,15 +3993,13 @@ color: #6f6f9b;
 				path += '메인';
 				html += `<div class="category-path">${path}</div>`;
 				html += `<div class="content-header-flex"><h2>🌟 일본 메인 대시보드</h2></div>`;
-				html += `
-<div class="word-grid-container">
-<div class="word-item-card" style="border-color: #ff5722; cursor: pointer;" onclick="loadJapanSub('language')">
-<span class="word-badge" style="background:#fff3e0; color:#ff5722;">최신/추천</span>
-<h3 class="word-main-title">${japanData.mainInfo.title}</h3>
-<p class="word-desc">${japanData.mainInfo.desc}</p>
-<div style="margin-top:10px; font-size:0.8rem; color:#0066cc;">게시글 보러가기 ➔</div>
-</div>
-</div>`;
+				html += `<div class="word-grid-container"><div class="word-item-card" style="border-color: #ff5722; cursor: pointer;" onclick="loadJapanSub('language')">
+				<span class="word-badge" style="background:#fff3e0; color:#ff5722;">최신/추천</span>
+				<h3 class="word-main-title">${japanData.mainInfo.title}</h3>
+				<p class="word-desc">${japanData.mainInfo.desc}</p>
+				<div style="margin-top:10px; font-size:0.8rem; color:#0066cc;">게시글 보러가기 ➔</div>
+				</div>
+				</div>`;
 				html += `<div class="section-divider" style="margin: 30px 0 15px 0;"></div>`;
 				html += `<h3>✈️ 인기 여행지 카테고리 바로가기</h3>`;
 				html += `<div class="theme-btn-container">`;
@@ -4013,7 +4009,6 @@ color: #6f6f9b;
 				html += `</div>`;
 
 			} else if (category === 'language') {
-				// [일본'어' 정보 화면] - 수정된 부분!
 				path += `일본'어' 정보`;
 				html += `<div class="category-path">${path}</div>`;
 				html += `<h2>📖 일본'어' 정보 게시글 목록</h2>`;
@@ -4325,7 +4320,7 @@ color: #6f6f9b;
 						<div class="card-body-box">
 							<div>
 								<div class="card-title-text">${course}</div>
-								<div class="card-desc-text">실전 회화 + PDF 교재 + 48시간 다운로드 이용권</div>
+								<div class="card-desc-text"> PDF 교재 + 48시간 다운로드 이용권</div>
 							</div>
 							<button class="card-action-btn" onclick="event.stopPropagation(); openPdfCourse('${safeCourse}')">강좌 및 교재 보기</button>
 						</div>
@@ -4478,10 +4473,10 @@ color: #6f6f9b;
 				return;
 			}
 
-      if (!isFreePdfTitle(title) && !isStudentAccount()) {
-				alert('학생 계정만 교재 다운로드가 가능합니다.');
-				return;
-			}
+   //   if (!isFreePdfTitle(title) && !isStudentAccount()) {
+			//	alert('학생 계정만 교재 다운로드가 가능합니다.');
+			//	return;
+			//}
 
      if (!isFreePdfTitle(title) && !isPdfPurchased(title)) {
 				openPdfModal(title);
@@ -4533,15 +4528,15 @@ color: #6f6f9b;
 				return;
 			}
 
-			if (isTeacherAccount()) {
-				alert('선생님 계정은 교재 구매가 제한됩니다.');
-				return;
-			}
+			//if (isTeacherAccount()) {
+			//	alert('선생님 계정은 교재 구매가 제한됩니다.');
+			//	return;
+			//}
 
-			if (!isStudentAccount()) {
-				alert('학생 계정만 교재를 구매할 수 있습니다.');
-				return;
-			}
+			//if (!isStudentAccount()) {
+			//	alert('학생 계정만 교재를 구매할 수 있습니다.');
+			//	return;
+			//}
 
       if ((authState.money || 0) < selectedPrice) {
 				alert(`세모 잔액이 부족합니다. (필요: ${selectedPrice.toLocaleString()}세모)`);
@@ -4587,12 +4582,12 @@ color: #6f6f9b;
 				return;
 			}
 
-			if (!isStudentAccount()) {
-				alert('학생 계정만 이용 가능한 기능입니다.');
-				return;
-			}
+			//if (!isStudentAccount()) {
+			//	alert('학생 계정만 이용 가능한 기능입니다.');
+			//	return;
+			//}
 
-			alert(`[${pdfState.selectedLesson || '선택 교재'}] 무통장 입금 문의가 접수되었습니다.`);
+			alert(`[${pdfState.selectedLesson || '선택 교재'}] 무통장 입금이 접수되었습니다.`);
 			closePdfModal();
 		}
 
@@ -4653,7 +4648,7 @@ color: #6f6f9b;
 			}
 
 			if (!canWritePost()) {
-				alert('학생 계정은 게시물을 등록할 수 없습니다.');
+				alert('이 계정은 게시물을 등록할 수 없습니다.');//학생계정
 				return;
 			}
 
@@ -4824,7 +4819,7 @@ color: #6f6f9b;
 			if (isTeacherAccount()) {
 				alert('선생님 계정으로 로그인되었습니다. 게시물 등록 기능이 활성화됩니다.');
 			} else if (isStudentAccount()) {
-				alert('학생 계정으로 로그인되었습니다. PDF 구매/다운로드를 사용할 수 있습니다.');
+				alert('로그인되었습니다.');
 			}
 
 			rerenderCurrentView();

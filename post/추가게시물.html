@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo 글로벌 상호 교차 언어 학습 플랫폼</title>
+	<!-- Tailwind CSS CDN -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- FontAwesome Icon CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+		body {
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		.tab-active {
+			background-color: #4f46e5 !important;
+			color: #ffffff !important;
+		}
+
+		.sub-tab-active {
+			background-color: #059669 !important;
+			color: #ffffff !important;
+		}
+	</style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+	<!-- 상단 글로벌 바 (학습자 모국어 / UI 언어 스위칭) -->
+	<header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+		<div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+			<div class="flex items-center gap-3">
+				<span class="text-xl font-black text-indigo-400">Semo Global</span>
+				<span class="text-xs bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded border border-indigo-700">
+					한·일·중 교차 학습
+				</span>
+			</div>
+
+			<!-- 학습자 모국어(UI 언어) 선택 -->
+			<div class="flex items-center gap-2 text-xs">
+				<span class="text-slate-400 font-semibold"><i class="fa-solid fa-earth-asia text-amber-400"></i> 내 모국어 (UI):</span>
+				<div class="bg-slate-800 p-1 rounded-lg border border-slate-700 flex gap-1">
+					<button onclick="setNativeLanguage('ko')" id="user-lang-ko" class="px-2.5 py-1 rounded font-bold bg-amber-400 text-slate-900 transition">
+						🇰🇷 한국어
+					</button>
+					<button onclick="setNativeLanguage('ja')" id="user-lang-ja" class="px-2.5 py-1 rounded font-bold text-slate-400 hover:text-white transition">
+						🇯🇵 日本語
+					</button>
+					<button onclick="setNativeLanguage('zh')" id="user-lang-zh" class="px-2.5 py-1 rounded font-bold text-slate-400 hover:text-white transition">
+						🇨🇳 中文
+					</button>
+				</div>
+			</div>
+
+			<!-- 로그인 상태 및 계정 전환 (테스트용) -->
+			<div class="flex items-center gap-2 text-xs">
+				<span id="role-badge" class="px-2 py-0.5 rounded font-bold bg-emerald-800 text-emerald-200">
+					선생님 (TEACHER)
+				</span>
+				<button onclick="toggleUserRole()" class="bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded text-slate-200">
+					권한 변경
+				</button>
+			</div>
+		</div>
+	</header>
+
+	<!-- 메인 컨테이너 -->
+	<div class="max-w-6xl mx-auto w-full flex-1 p-4 grid grid-cols-1 md:grid-cols-4 gap-6">
+
+		<!-- 좌측 사이드바: 학습 목표 언어 및 메뉴 -->
+		<aside class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-5 h-fit">
+			<div>
+				<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">1. 공부할 언어 선택</h3>
+				<div id="target-lang-selector" class="space-y-1.5">
+					<!-- JS 동적 생성 -->
+				</div>
+			</div>
+
+			<hr class="border-slate-200">
+
+			<div>
+				<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">2. 학습 구분</h3>
+				<div class="space-y-1 text-sm font-semibold">
+					<button onclick="switchStudyType('grammar')" id="type-btn-grammar" class="w-full text-left px-3 py-2 rounded-xl transition bg-indigo-50 text-indigo-700 border border-indigo-200">
+						💬 문법 학습 (Grammar)
+					</button>
+					<button onclick="switchStudyType('words')" id="type-btn-words" class="w-full text-left px-3 py-2 rounded-xl transition text-slate-600 hover:bg-slate-50">
+						📚 단어 학습 (Words)
+					</button>
+				</div>
+			</div>
+
+			<div id="teacher-action-box" class="pt-3 border-t border-slate-200">
+				<button onclick="openWriteModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5 text-xs">
+					<i class="fa-solid fa-plus"></i> 새 자료 & 미디어 등록
+				</button>
+			</div>
+		</aside>
+
+		<!-- 우측 메인 콘텐츠 영역 -->
+		<main class="md:col-span-3 space-y-4">
+
+			<!-- 타이틀 및 카테고리 헤더 -->
+			<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+				<div class="flex justify-between items-start flex-wrap gap-2">
+					<div>
+						<span id="path-indicator" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+							한국어 해설 ➔ 일본어 학습
+						</span>
+						<h1 id="main-title" class="text-xl font-black text-slate-900 mt-2">일본어 문법 자료실</h1>
+					</div>
+					<span id="data-count-badge" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+						총 0개
+					</span>
+				</div>
+
+				<!-- 1차 대분류 테마 탭 -->
+				<div id="theme-tab-container" class="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
+					<!-- JS 동적 생성 -->
+				</div>
+
+				<!-- 2차 세분류 탭 (단어 전용) -->
+				<div id="subtheme-tab-container" class="hidden flex-wrap gap-1.5 p-2 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+					<!-- JS 동적 생성 -->
+				</div>
+			</div>
+
+			<!-- 카드리스트 출력 컨테이너 -->
+			<div id="materials-card-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<!-- JS 동적 카드 생성 -->
+			</div>
+
+		</main>
+	</div>
+
+	<!-- 작성/미디어 업로드 모달 (선생님 전용) -->
+	<div id="write-modal" class="fixed inset-0 bg-slate-900/50 z-50 hidden flex items-center justify-center p-4">
+		<div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+			<div class="flex justify-between items-center border-b pb-3">
+				<h3 class="font-bold text-slate-900 text-base">✏️ 학습 자료 및 미디어 등록</h3>
+				<button onclick="closeWriteModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+			</div>
+
+			<form id="write-form" onsubmit="handleFormSubmit(event)" class="space-y-3 text-xs">
+				<div class="grid grid-cols-2 gap-2">
+					<div>
+						<label class="font-bold text-slate-700 block mb-1">해설 언어 (UI)</label>
+						<select id="form-ui-lang" class="w-full border rounded-lg p-2 bg-slate-50">
+							<option value="ko">한국어 (ko)</option>
+							<option value="ja">日本語 (ja)</option>
+							<option value="zh">中文 (zh)</option>
+						</select>
+					</div>
+					<div>
+						<label class="font-bold text-slate-700 block mb-1">학습 목표 언어</label>
+						<select id="form-target-lang" class="w-full border rounded-lg p-2 bg-slate-50">
+							<option value="ja">일본어 (ja)</option>
+							<option value="ko">한국어 (ko)</option>
+							<option value="zh">중국어 (zh)</option>
+							<option value="en">영어 (en)</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="grid grid-cols-2 gap-2">
+					<div>
+						<label class="font-bold text-slate-700 block mb-1">1차 테마/대분류</label>
+						<input type="text" id="form-theme" value="기초" required class="w-full border rounded-lg p-2">
+					</div>
+					<div>
+						<label class="font-bold text-slate-700 block mb-1">2차 세분류 (단어용)</label>
+						<input type="text" id="form-subtheme" value="가족" class="w-full border rounded-lg p-2">
+					</div>
+				</div>
+
+				<div>
+					<label class="font-bold text-slate-700 block mb-1">제목 / 표제어</label>
+					<input type="text" id="form-title" placeholder="예: 家族 (かぞく)" required class="w-full border rounded-lg p-2">
+				</div>
+
+				<div>
+					<label class="font-bold text-slate-700 block mb-1">한 줄 요약 / 뜻 (해설 언어 기준)</label>
+					<input type="text" id="form-summary" placeholder="예: 가족을 뜻하는 기본 단어" required class="w-full border rounded-lg p-2">
+				</div>
+
+				<div>
+					<label class="font-bold text-slate-700 block mb-1">상세 설명 / 품사</label>
+					<textarea id="form-detail" rows="2" class="w-full border rounded-lg p-2" required></textarea>
+				</div>
+
+				<div>
+					<label class="font-bold text-slate-700 block mb-1">예문 및 활용</label>
+					<textarea id="form-example" rows="2" class="w-full border rounded-lg p-2" required></textarea>
+				</div>
+
+				<!-- 사진/미디어 첨부 섹션 -->
+				<div class="bg-amber-50 p-3 rounded-xl border border-amber-200 space-y-2">
+					<label class="font-bold text-amber-900 block flex items-center gap-1">
+						<i class="fa-solid fa-image text-amber-600"></i> 사진 및 미디어 첨부 (이미지/음성)
+					</label>
+					<input type="file" id="form-media" accept="image/*,audio/*" multiple onchange="previewMediaFiles(this)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-200 file:text-amber-900 hover:file:bg-amber-300">
+					<div id="media-preview-box" class="flex gap-2 overflow-x-auto pt-1">
+						<!-- 파일 미리보기 -->
+					</div>
+				</div>
+
+				<div class="flex gap-2 pt-2">
+					<button type="submit" class="flex-1 bg-indigo-600 text-white font-bold py-2.5 rounded-xl hover:bg-indigo-700 transition">
+						저장하기
+					</button>
+					<button type="button" onclick="closeWriteModal()" class="px-4 bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl hover:bg-slate-300">
+						취소
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- JavaScript SPA Logic -->
+	<script>
+		// 1. 상태 객체
+		let appState = {
+			nativeLang: 'ko',      // UI/해설 언어 (ko, ja, zh)
+			targetLang: 'ja',      // 학습할 언어 (ja, ko, zh, en)
+			studyType: 'grammar',  // grammar 또는 words
+			activeTheme: '전체',
+			activeSubTheme: '전체',
+			userRole: 'TEACHER'    // TEACHER 또는 STUDENT
+		};
+
+		// 2. 가상 멀티 다국어 DB (한·일·중 교차 데이터 + 미디어 첨부)
+		let mockDatabase = [
+			// A. 한국인용 (ui_lang: ko) -> 일본어 학습 (target_lang: ja)
+			{
+				id: 1, ui_lang: 'ko', target_lang: 'ja', type: 'grammar', theme: '기초', sub_theme: '전체',
+				title: '名詞 + です', summary: '~입니다. 자신을 소개하거나 설명하는 정중형',
+				detail: '명사 뒤에 바로 です를 붙여 정중한 표현을 만듭니다.', example: '私は学生です。 (저는 학생입니다.)',
+				media: [{ type: 'image', url: 'https://picsum.photos/seed/japan1/400/250' }]
+			},
+			{
+				id: 2, ui_lang: 'ko', target_lang: 'ja', type: 'words', theme: '기초어휘', sub_theme: '가족',
+				title: '家族 (かぞく)', summary: '가족을 뜻하는 기본 단어',
+				detail: 'お母さん(어머니), お父さん(아버지)', example: '私の家族は4人です。 (제 가족은 4명입니다.)',
+				media: [{ type: 'image', url: 'https://picsum.photos/seed/family/400/250' }]
+			},
+
+			// B. 한국인용 (ui_lang: ko) -> 중국어 학습 (target_lang: zh)
+			{
+				id: 3, ui_lang: 'ko', target_lang: 'zh', type: 'grammar', theme: '기초', sub_theme: '전체',
+				title: 'A 是 B (A는 B이다)', summary: 'A와 B가 동일함을 단정하는 기본 구조',
+				detail: '是(shì)는 명사와 명사를 연결하여 지정하는 역할을 합니다.', example: '我是韩国人。 (저는 한국인입니다.)',
+				media: []
+			},
+
+			// C. 일본인용 (ui_lang: ja) -> 한국어 학습 (target_lang: ko)
+			{
+				id: 4, ui_lang: 'ja', target_lang: 'ko', type: 'grammar', theme: '기초', sub_theme: '전체',
+				title: '名詞 + 이에요/예요', summary: '「〜です」自己紹介や説明をする時の丁寧な語尾',
+				detail: 'パッチムがある場合は「이에요」、無い場合は「예요」をつけます。', example: '저는 학생이에요. (私は学生です。)',
+				media: [{ type: 'image', url: 'https://picsum.photos/seed/korea1/400/250' }]
+			},
+			{
+				id: 5, ui_lang: 'ja', target_lang: 'ko', type: 'words', theme: '기초어휘', sub_theme: '가족',
+				title: '가족 (家族)', summary: '家族を表す韓国語の basic 単語',
+				detail: '어머니(お母さん), 아버지(お父さん)', example: '우리 가족이에요. (私の家族です。)',
+				media: []
+			},
+
+			// D. 중국인용 (ui_lang: zh) -> 한국어 학습 (target_lang: ko)
+			{
+				id: 6, ui_lang: 'zh', target_lang: 'ko', type: 'grammar', theme: '기초', sub_theme: '전체',
+				title: '名词 + 이에요/예요', summary: '表示“是~”的韩语基础敬语句尾',
+				detail: '有收音时用 이에요，无收音时用 예요。', example: '저는 한국 사람이에요. (我是韩国人。)',
+				media: []
+			}
+		];
+
+		// 3. UI 언어 변경 (모국어 선택)
+		function setNativeLanguage(lang) {
+			appState.nativeLang = lang;
+			['ko', 'ja', 'zh'].forEach(l => {
+				const btn = document.getElementById(`user-lang-${l}`);
+				btn.className = l === lang
+					? "px-2.5 py-1 rounded font-bold bg-amber-400 text-slate-900 transition"
+					: "px-2.5 py-1 rounded font-bold text-slate-400 hover:text-white transition";
+			});
+
+			// 모국어 변경 시 타겟 언어 자동 기본값 설정
+			if (lang === 'ko') appState.targetLang = 'ja';
+			else if (lang === 'ja') appState.targetLang = 'ko';
+			else if (lang === 'zh') appState.targetLang = 'ko';
+
+			renderTargetLangSelector();
+			renderDashboard();
+		}
+
+		// 4. 공부할 언어 선택 버튼 렌더링
+		function renderTargetLangSelector() {
+			const container = document.getElementById('target-lang-selector');
+			const targets = {
+				ko: [{ code: 'ja', name: '🇯🇵 일본어 공부' }, { code: 'zh', name: '🇨🇳 중국어 공부' }, { code: 'en', name: '🇺🇸 영어 공부' }],
+				ja: [{ code: 'ko', name: '🇰🇷 韓国語 学習' }, { code: 'zh', name: '🇨🇳 中国語 学習' }, { code: 'en', name: '🇺🇸 英語 学習' }],
+				zh: [{ code: 'ko', name: '🇰🇷 韩语 学习' }, { code: 'ja', name: '🇯🇵 日语 学习' }, { code: 'en', name: '🇺🇸 英语 学习' }]
+			};
+
+			const list = targets[appState.nativeLang] || targets['ko'];
+			container.innerHTML = list.map(item => `
+					<button onclick="setTargetLanguage('${item.code}')" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition flex items-center justify-between ${appState.targetLang === item.code ? 'bg-indigo-600 text-white shadow' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+						<span>${item.name}</span>
+						<i class="fa-solid fa-chevron-right text-[10px]"></i>
+					</button>
+				`).join('');
+		}
+
+		function setTargetLanguage(code) {
+			appState.targetLang = code;
+			appState.activeTheme = '전체';
+			appState.activeSubTheme = '전체';
+			renderTargetLangSelector();
+			renderDashboard();
+		}
+
+		function switchStudyType(type) {
+			appState.studyType = type;
+			appState.activeTheme = '전체';
+			appState.activeSubTheme = '전체';
+
+			document.getElementById('type-btn-grammar').className = type === 'grammar'
+				? 'w-full text-left px-3 py-2 rounded-xl transition bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold'
+				: 'w-full text-left px-3 py-2 rounded-xl transition text-slate-600 hover:bg-slate-50 font-semibold';
+
+			document.getElementById('type-btn-words').className = type === 'words'
+				? 'w-full text-left px-3 py-2 rounded-xl transition bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold'
+				: 'w-full text-left px-3 py-2 rounded-xl transition text-slate-600 hover:bg-slate-50 font-semibold';
+
+			renderDashboard();
+		}
+
+		// 5. 메인 대시보드 렌더링
+		function renderDashboard() {
+			const { nativeLang, targetLang, studyType, activeTheme, activeSubTheme } = appState;
+
+			// 경로 표시
+			const langLabels = { ko: '한국어', ja: '일본어', zh: '중국어', en: '영어' };
+			document.getElementById('path-indicator').innerText = `${langLabels[nativeLang]} 해설 ➔ ${langLabels[targetLang]} 학습`;
+			document.getElementById('main-title').innerText = `${langLabels[targetLang]} ${studyType === 'grammar' ? '문법 자료실' : '단어 자료실'}`;
+
+			// 필터링
+			let filtered = mockDatabase.filter(item => item.ui_lang === nativeLang && item.target_lang === targetLang && item.type === studyType);
+
+			// 테마 목록 수집 및 탭 렌더링
+			let themes = ['전체', ...new Set(filtered.map(i => i.theme))];
+			const themeContainer = document.getElementById('theme-tab-container');
+			themeContainer.innerHTML = themes.map(t => `
+					<button onclick="setThemeFilter('${t}')" class="px-3 py-1 rounded-full text-xs font-bold transition border ${activeTheme === t ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'}">
+						${t}
+					</button>
+				`).join('');
+
+			if (activeTheme !== '전체') {
+				filtered = filtered.filter(i => i.theme === activeTheme);
+			}
+
+			// 2차 세분류 (단어 전용)
+			const subContainer = document.getElementById('subtheme-tab-container');
+			if (studyType === 'words') {
+				subContainer.classList.remove('hidden');
+				subContainer.classList.add('flex');
+
+				let subThemes = ['전체', ...new Set(filtered.map(i => i.sub_theme))];
+				subContainer.innerHTML = subThemes.map(st => `
+						<button onclick="setSubThemeFilter('${st}')" class="px-2.5 py-0.5 rounded-md text-[11px] font-bold transition ${activeSubTheme === st ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 border hover:bg-slate-100'}">
+							${st}
+						</button>
+					`).join('');
+
+				if (activeSubTheme !== '전체') {
+					filtered = filtered.filter(i => i.sub_theme === activeSubTheme);
+				}
+			} else {
+				subContainer.classList.add('hidden');
+			}
+
+			document.getElementById('data-count-badge').innerText = `총 ${filtered.length}개`;
+
+			// 카드 렌더링
+			const listContainer = document.getElementById('materials-card-list');
+			if (filtered.length === 0) {
+				listContainer.innerHTML = `
+						<div class="col-span-full bg-white p-8 rounded-2xl border border-slate-200 text-center space-y-2">
+							<i class="fa-solid fa-folder-open text-3xl text-slate-300"></i>
+							<p class="text-xs text-slate-500 font-bold">조건에 해당하는 등록된 자료가 없습니다.</p>
+						</div>
+					`;
+				return;
+			}
+
+			listContainer.innerHTML = filtered.map(item => `
+					<div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3 hover:border-indigo-400 transition">
+						<div class="flex justify-between items-center">
+							<span class="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+								${item.theme} ${item.sub_theme !== '전체' ? '➔ ' + item.sub_theme : ''}
+							</span>
+							<span class="text-[10px] text-slate-400">ID: #${item.id}</span>
+						</div>
+
+						<div>
+							<h3 class="font-extrabold text-base text-slate-900">${item.title}</h3>
+							<p class="text-xs text-indigo-700 font-semibold mt-0.5">${item.summary}</p>
+						</div>
+
+						<!-- 미디어 첨부 영역 -->
+						${item.media && item.media.length > 0 ? `
+							<div class="rounded-xl overflow-hidden border border-slate-100">
+								<img src="${item.media[0].url}" alt="첨부 사진" class="w-full h-36 object-cover">
+							</div>
+						` : ''}
+
+						<div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-1 text-slate-600">
+							<p><b>💡 설명:</b> ${item.detail}</p>
+							<p><b>📖 예문:</b> ${item.example}</p>
+						</div>
+					</div>
+				`).join('');
+		}
+
+		function setThemeFilter(t) {
+			appState.activeTheme = t;
+			appState.activeSubTheme = '전체';
+			renderDashboard();
+		}
+
+		function setSubThemeFilter(st) {
+			appState.activeSubTheme = st;
+			renderDashboard();
+		}
+
+		// 6. 권한 스위칭 테스트
+		function toggleUserRole() {
+			appState.userRole = appState.userRole === 'TEACHER' ? 'STUDENT' : 'TEACHER';
+			const badge = document.getElementById('role-badge');
+			const actionBox = document.getElementById('teacher-action-box');
+
+			if (appState.userRole === 'TEACHER') {
+				badge.innerText = '선생님 (TEACHER)';
+				badge.className = 'px-2 py-0.5 rounded font-bold bg-emerald-800 text-emerald-200';
+				actionBox.classList.remove('hidden');
+			} else {
+				badge.innerText = '학생 (STUDENT)';
+				badge.className = 'px-2 py-0.5 rounded font-bold bg-indigo-800 text-indigo-200';
+				actionBox.classList.add('hidden');
+			}
+		}
+
+		// 7. 모달 & 폼 제출 (미디어 첨부 시뮬레이션)
+		function openWriteModal() {
+			document.getElementById('write-modal').classList.remove('hidden');
+		}
+
+		function closeWriteModal() {
+			document.getElementById('write-modal').classList.add('hidden');
+		}
+
+		let uploadedMediaPreviews = [];
+
+		function previewMediaFiles(input) {
+			const box = document.getElementById('media-preview-box');
+			box.innerHTML = '';
+			uploadedMediaPreviews = [];
+
+			if (input.files) {
+				Array.from(input.files).forEach(file => {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						uploadedMediaPreviews.push(e.target.result);
+						box.innerHTML += `
+								<div class="w-16 h-16 rounded-lg overflow-hidden border border-amber-300 shrink-0">
+									<img src="${e.target.result}" class="w-full h-full object-cover">
+								</div>
+							`;
+					};
+					reader.readAsDataURL(file);
+				});
+			}
+		}
+
+		function handleFormSubmit(e) {
+			e.preventDefault();
+
+			const newMaterial = {
+				id: mockDatabase.length + 1,
+				ui_lang: document.getElementById('form-ui-lang').value,
+				target_lang: document.getElementById('form-target-lang').value,
+				type: appState.studyType,
+				theme: document.getElementById('form-theme').value,
+				sub_theme: document.getElementById('form-subtheme').value || '전체',
+				title: document.getElementById('form-title').value,
+				summary: document.getElementById('form-summary').value,
+				detail: document.getElementById('form-detail').value,
+				example: document.getElementById('form-example').value,
+				media: uploadedMediaPreviews.length > 0 ? [{ type: 'image', url: uploadedMediaPreviews[0] }] : []
+			};
+
+			mockDatabase.unshift(newMaterial);
+			alert('새 학습 자료와 사진 미디어가 저장되었습니다! 🎉');
+			closeWriteModal();
+
+			// 등록된 언어 환경으로 자동 맞춤 전환
+			appState.nativeLang = newMaterial.ui_lang;
+			appState.targetLang = newMaterial.target_lang;
+			setNativeLanguage(appState.nativeLang);
+		}
+
+		// 초기화
+		window.onload = function () {
+			renderTargetLangSelector();
+			renderDashboard();
+		};
+	</script>
+</body>
+</html>

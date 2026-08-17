@@ -1,0 +1,833 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語文法マスター: -아서/어서 vs -(으)니까</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Helvetica Neue', Arial, sans-serif;
+			background-color: #f0f2f5;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		.container {
+			width: 900px;
+			height: 600px;
+			background: #ffffff;
+			border-radius: 12px;
+			box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.slide-container {
+			display: flex;
+			width: 6300px; /* 7 slides * 900px */
+			height: 500px;
+			transition: transform 0.4s ease-in-out;
+		}
+
+		.slide {
+			width: 900px;
+			height: 500px;
+			padding: 35px 50px;
+			overflow-y: auto;
+			flex-shrink: 0;
+		}
+
+		h2 {
+			font-size: 22px;
+			color: #333;
+			margin-bottom: 15px;
+			border-bottom: 2px solid #3498db;
+			padding-bottom: 8px;
+		}
+
+		p, li {
+			font-size: 15px;
+			color: #444;
+			line-height: 1.6;
+			margin-bottom: 10px;
+		}
+
+		ul {
+			padding-left: 20px;
+			margin-bottom: 15px;
+		}
+
+		.highlight {
+			background-color: #e8f4fd;
+			padding: 12px 15px;
+			border-left: 5px solid #3498db;
+			margin: 12px 0;
+			border-radius: 4px;
+		}
+
+		.example-box {
+			display: flex;
+			flex-direction: column;
+			background: #f9f9f9;
+			padding: 12px 15px;
+			border-radius: 6px;
+			margin-bottom: 10px;
+			border: 1px solid #eee;
+		}
+
+		.kr {
+			font-weight: bold;
+			color: #2c3e50;
+			font-size: 16px;
+		}
+
+		.jp {
+			color: #7f8c8d;
+			font-size: 14px;
+		}
+
+		.grammar-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 10px;
+		}
+
+			.grammar-table th, .grammar-table td {
+				border: 1px solid #d5dbdb;
+				padding: 8px 12px;
+				text-align: left;
+				font-size: 14px;
+			}
+
+			.grammar-table th {
+				background-color: #3498db;
+				color: white;
+			}
+
+		/* Navigation Controls */
+		.nav-footer {
+			height: 100px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 40px;
+			background: #fafafa;
+			border-top: 1px solid #eee;
+		}
+
+		button.nav-btn {
+			padding: 10px 20px;
+			background: #3498db;
+			color: white;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: background 0.2s;
+		}
+
+			button.nav-btn:hover {
+				background: #2980b9;
+			}
+
+			button.nav-btn:disabled {
+				background: #bdc3c7;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 14px;
+			color: #666;
+		}
+
+		/* Modal Styles */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.6);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+			display: none;
+		}
+
+		.modal {
+			background: white;
+			padding: 25px;
+			border-radius: 12px;
+			width: 750px;
+			max-height: 85vh;
+			overflow-y: auto;
+			box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+			position: relative;
+		}
+
+			.modal h3 {
+				margin-bottom: 15px;
+				color: #2c3e50;
+				text-align: center;
+			}
+
+		.modal-menu-btn {
+			display: block;
+			width: 100%;
+			padding: 15px;
+			margin: 10px 0;
+			background: #f8f9fa;
+			border: 2px solid #e9ecef;
+			border-radius: 8px;
+			font-size: 16px;
+			font-weight: bold;
+			color: #2c3e50;
+			cursor: pointer;
+			text-align: left;
+			transition: all 0.2s;
+		}
+
+			.modal-menu-btn:hover {
+				background: #e8f4fd;
+				border-color: #3498db;
+				color: #2980b9;
+			}
+
+		.close-btn {
+			display: block;
+			margin: 15px auto 0 auto;
+			background: #e74c3c;
+			color: white;
+			padding: 8px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		/* Practice Problem Component in Modal */
+		.problem-nav {
+			display: flex;
+			gap: 5px;
+			flex-wrap: wrap;
+			margin-bottom: 15px;
+			justify-content: center;
+		}
+
+		.prob-btn {
+			padding: 6px 12px;
+			background: #f1f2f6;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+
+			.prob-btn.active {
+				background: #3498db;
+				color: white;
+				border-color: #3498db;
+			}
+
+		.practice-card {
+			display: flex;
+			gap: 15px;
+			background: #fdfefe;
+			border: 1px solid #e1e8ed;
+			padding: 15px;
+			border-radius: 8px;
+			min-height: 280px;
+		}
+
+		.practice-left {
+			flex: 1;
+			border-radius: 6px;
+			overflow: hidden;
+			background: #eee;
+			max-height: 250px;
+		}
+
+			.practice-left img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+		.practice-right {
+			flex: 1.2;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.answer-box {
+			background: #e8f8f5;
+			padding: 10px;
+			border-radius: 5px;
+			border: 1px solid #a3e4d7;
+			display: none;
+			margin-top: 10px;
+		}
+
+		.show-ans-btn {
+			align-self: flex-end;
+			padding: 8px 15px;
+			background: #27ae60;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+
+		/* Tab Controls in Conjugation Modal */
+		.tab-menu {
+			display: flex;
+			gap: 10px;
+			margin-bottom: 15px;
+			border-bottom: 2px solid #eee;
+		}
+
+		.tab-btn {
+			padding: 8px 16px;
+			background: none;
+			border: none;
+			border-bottom: 3px solid transparent;
+			cursor: pointer;
+			font-size: 15px;
+			font-weight: bold;
+			color: #7f8c8d;
+		}
+
+			.tab-btn.active {
+				color: #3498db;
+				border-bottom-color: #3498db;
+			}
+	</style>
+</head>
+<body>
+
+	<div class="container">
+		<div class="slide-container" id="slideContainer">
+
+			<!-- 슬라이드 1: 01. 導入 (도입) -->
+			<div class="slide">
+				<h2>01. 導入 (Introduction)</h2>
+				<p>韓国語で「〜だから」「〜ので」と理由を言う時、主に以下の2つの文法を使います。</p>
+				<div style="display:flex; gap:15px; margin: 20px 0;">
+					<div style="flex:1; background:#e8f4fd; padding:15px; border-radius:8px; text-align:center;">
+						<strong style="font-size:18px; color:#2980b9;">-아서/어서</strong>
+					</div>
+					<div style="flex:1; background:#e8f8f5; padding:15px; border-radius:8px; text-align:center;">
+						<strong style="font-size:18px; color:#27ae60;">-(으)니까</strong>
+					</div>
+				</div>
+				<p>どちらも理由を表しますが、使う状況や文末の形によって明確な違いがあります！</p>
+				<div class="highlight">
+					💡 <strong>ポイント:</strong> 説明スライドを一通り見た後、キーボードの <span style="background:#fff; padding:2px 6px; border-radius:4px; border:1px solid #ccc;">Ctrl + M</span> を押すと「練習問題」と「活用練習」のモーダルが開きます。
+				</div>
+			</div>
+
+			<!-- 슬라이드 2: 02. 読んでみよう (읽어보기) -->
+			<div class="slide">
+				<h2>02. 読んでみよう (Read & Notice)</h2>
+				<p>次の2つの会話を読み比べて、文末の違いに注目してみましょう。</p>
+
+				<div class="example-box" style="border-left: 4px solid #3498db;">
+					<p class="kr">会話 A:</p>
+					<p class="kr">가: 왜 어제 학교에 안 왔어요?</p>
+					<p class="kr">나: 배가 아파서 병원에 갔어요.</p>
+					<p class="jp">(お腹が痛くて病院に行きました。)</p>
+				</div>
+
+				<div class="example-box" style="border-left: 4px solid #27ae60; margin-top:15px;">
+					<p class="kr">会話 B:</p>
+					<p class="kr">가: 배가 너무 아파요.</p>
+					<p class="kr">나: 배가 아프니까 병원에 가세요.</p>
+					<p class="jp">(お腹が痛いから、病院に行ってください。)</p>
+				</div>
+
+				<p style="margin-top:10px; font-size:14px; color:#666;">👉 会話Aの「-아서」の後ろは過去の事実、会話B의 「-니까」の後ろは「~하세요(指示/命令)」になっています！</p>
+			</div>
+
+			<!-- 슬라이드 3: 03. 意味 (의미) -->
+			<div class="slide">
+				<h2>03. 意味 (Meaning)</h2>
+				<div style="margin-top:15px;">
+					<div style="margin-bottom:20px;">
+						<h3 style="color:#2980b9; margin-bottom:5px;">1. -아서/어서</h3>
+						<p>先行の事実や行動が、後行の自然な<strong>「原因・理由」</strong>となることを表します。（客観的な事実描写）</p>
+					</div>
+					<div>
+						<h3 style="color:#27ae60; margin-bottom:5px;">2. -(으)니까</h3>
+						<p>話し手の<strong>「主観的な理由・判断の根拠」</strong>を表します。「〜だから（こうしよう/こうしてください）」と相手に行動を促すニュアンスが強くなります。</p>
+					</div>
+				</div>
+				<div class="highlight" style="margin-top:20px;">
+					日本語ではどちらも「〜ので」「〜から」と訳されますが、韓国語では後ろに来る文のタイプによって厳密に使い分けます。
+				</div>
+			</div>
+
+			<!-- 슬라이드 4: 04. 用途 (용도) -->
+			<div class="slide">
+				<h2>04. 用途 (Usage & Constraints)</h2>
+				<p>最も重要な制限：文末に<strong>命令(〜세요)</strong>や<strong>提案(〜ㅂ시다/자)</strong>が来るかどうか！</p>
+
+				<table class="grammar-table">
+					<tr>
+						<th>文末の文型</th>
+						<th>-아서/어서</th>
+						<th>-(으)니까</th>
+					</tr>
+					<tr>
+						<td>平叙文 / 過去形 (〜했어요)</td>
+						<td>⭕ 可能</td>
+						<td>⭕ 可能</td>
+					</tr>
+					<tr>
+						<td>命令文 (〜(으)세요 / 〜지 마세요)</td>
+						<td>❌ <strong>不可</strong></td>
+						<td>⭕ <strong>可能</strong></td>
+					</tr>
+					<tr>
+						<td>勧誘・提案文 (〜(으)ㅂ시다 / 〜자)</td>
+						<td>❌ <strong>不可</strong></td>
+						<td>⭕ <strong>可能</strong></td>
+					</tr>
+					<tr>
+						<td>挨拶表現 (반갑습니다 / 미안합니다)</td>
+						<td>⭕ <strong>可能</strong></td>
+						<td>❌ <strong>不可</strong></td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- 슬라이드 5: 05. 活用方法 (변형방법) -->
+			<div class="slide">
+				<h2>05. 活用方法 (Conjugation Rules)</h2>
+
+				<h3 style="font-size:16px; color:#2980b9; margin-bottom:5px;">[ -(으)니까 の結合規則 ]</h3>
+				<p style="font-size:14px;">語幹の最後の文字にパッチムがあるかどうかで決まります。</p>
+
+				<table class="grammar-table">
+					<tr>
+						<th>条件</th>
+						<th>結合形</th>
+						<th>例</th>
+					</tr>
+					<tr>
+						<td>パッチム<strong>なし</strong> / <strong>ㄹ</strong>パッチム</td>
+						<td><strong>-니까</strong></td>
+						<td>가다 ➔ 가<strong>니까</strong><br>놀다 ➔ 놀<strong>니까</strong> (ㄹ脱落)</td>
+					</tr>
+					<tr>
+						<td>パッチム<strong>あり</strong> (ㄹ以外)</td>
+						<td><strong>-으니까</strong></td>
+						<td>먹다 ➔ 먹<strong>으니까</strong><br>앉다 ➔ 앉<strong>으니까</strong></td>
+					</tr>
+				</table>
+
+				<div class="highlight" style="margin-top:15px; font-size:13px;">
+					※ <strong>変則活用に注意:</strong><br>
+					- ㄷ変則: 듣다 ➔ 들으니까<br>
+					- ㅂ変則: 춥다 ➔ 추우니까
+				</div>
+			</div>
+
+			<!-- 슬라이드 6: 06. 違いと比較 (차이점/비교) -->
+			<div class="slide">
+				<h2>06. 違いと比較 (Comparison)</h2>
+				<p>同じ理由でも、どちらを使うかで文の自然さが全く変わります。</p>
+
+				<div class="example-box">
+					<span class="kr">⭕ 비가 오니까 우산을 가져가세요.</span>
+					<span class="jp">雨が降っているから傘を持っていってください。(命令・指示)</span>
+				</div>
+				<div class="example-box" style="background:#fdedec;">
+					<span class="kr" style="color:#c0392b;">❌ 비가 와서 우산을 가져가세요. (不自然)</span>
+					<span class="jp">-아서/어서 の後ろに命令形は使えません！</span>
+				</div>
+
+				<div class="example-box" style="margin-top:15px;">
+					<span class="kr">⭕ 만나서 반갑습니다.</span>
+					<span class="jp">お会いできて嬉しいです。(挨拶)</span>
+				</div>
+				<div class="example-box" style="background:#fdedec;">
+					<span class="kr" style="color:#c0392b;">❌ 만나니까 반갑습니다. (不自然)</span>
+					<span class="jp">挨拶の表現には -(으)니까 を使いません！</span>
+				</div>
+			</div>
+
+			<!-- 슬라이드 7: 07. まとめ (정리) -->
+			<div class="slide">
+				<h2>07. まとめ (Summary)</h2>
+				<div style="display:flex; gap:15px; margin-top:20px;">
+					<div style="flex:1; background:#e8f4fd; padding:15px; border-radius:8px;">
+						<h3 style="color:#2980b9; margin-bottom:10px;">-아서/어서</h3>
+						<ul>
+							<li>自然な原因 ➔ 結果</li>
+							<li>過去形 (-았/었-) と結合不可</li>
+							<li>命令・提案文には使えない</li>
+							<li>感情・挨拶表現によく使う</li>
+						</ul>
+					</div>
+					<div style="flex:1; background:#e8f8f5; padding:15px; border-radius:8px;">
+						<h3 style="color:#27ae60; margin-bottom:10px;">-(으)니까</h3>
+						<ul>
+							<li>主観的な理由 ➔ 判断・行動</li>
+							<li>過去形 (-았/었-) と結合可能</li>
+							<li>命令 (〜하세요) / 提案 (〜합시다) に最適</li>
+							<li>ㄹパッチムは脱落する</li>
+						</ul>
+					</div>
+				</div>
+
+				<p style="text-align:center; color:#e67e22; font-weight:bold; margin-top:25px; font-size:16px;">
+					🎉 説明は以上です！<br>キーボードの <span style="background:#eee; padding:3px 8px; border-radius:4px; border:1px solid #ccc; color:#333;">Ctrl + M</span> を押して「練習問題」と「活用練習」を行いましょう！
+				</p>
+			</div>
+
+		</div>
+
+		<!-- 네비게이션 하단 바 -->
+		<div class="nav-footer">
+			<button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀ 前へ</button>
+			<span class="page-indicator" id="pageIndicator">1 / 7</span>
+			<button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">次へ ▶</button>
+		</div>
+	</div>
+
+	<!-- メ인 메뉴 모달 (Ctrl + M) -->
+	<div class="modal-overlay" id="mainMenuModal">
+		<div class="modal" style="width:450px;">
+			<h3>🎯 学習メニュー選択</h3>
+			<p style="text-align:center; color:#666; font-size:14px; margin-bottom:15px;">行いたい練習を選択してください。</p>
+			<button class="modal-menu-btn" onclick="openSubModal('practiceModal')">
+				1. 練習問題 (10問)
+				<div style="font-size:12px; font-weight:normal; color:#777; margin-top:3px;">写真と例文を見て適切な活用を選ぶ練習</div>
+			</button>
+			<button class="modal-menu-btn" onclick="openSubModal('conjugationModal')">
+				2. 活用練習 (動詞・形容詞変형表)
+				<div style="font-size:12px; font-weight:normal; color:#777; margin-top:3px;">動詞・形容詞の -(으)니까 変形テスト＆表</div>
+			</button>
+			<button class="close-btn" onclick="closeAllModals()">閉じる (Esc)</button>
+		</div>
+	</div>
+
+	<!-- 서브 모달 1: 연습문제 (10개) -->
+	<div class="modal-overlay" id="practiceModal">
+		<div class="modal">
+			<h3>📝 1. 練習問題 (10問)</h3>
+
+			<!-- 문제 번호 버튼 -->
+			<div class="problem-nav" id="probNav">
+				<!-- JS로 버튼 1~10 생성 -->
+			</div>
+
+			<!-- 문제 카드 -->
+			<div class="practice-card" id="practiceCard">
+				<div class="practice-left">
+					<img id="probImg" src="" alt="Problem Image">
+				</div>
+				<div class="practice-right">
+					<div>
+						<div style="font-size:13px; color:#3498db; font-weight:bold; margin-bottom:5px;" id="probNumText">Q1.</div>
+						<div style="font-size:17px; font-weight:bold; color:#2c3e50; margin-bottom:10px;" id="probQuestion"></div>
+						<p style="font-size:13px; color:#7f8c8d;" id="probHint"></p>
+					</div>
+					<div>
+						<div class="answer-box" id="probAnswerBox">
+							<p class="kr" id="probAnsKr" style="color:#27ae60;"></p>
+							<p class="jp" id="probAnsJp" style="margin-top:4px;"></p>
+						</div>
+						<button class="show-ans-btn" style="margin-top:10px;" onclick="toggleProblemAnswer()">答えを見る</button>
+					</div>
+				</div>
+			</div>
+
+			<button class="close-btn" onclick="backToMainMenu()">◀ メニューに戻る</button>
+		</div>
+	</div>
+
+	<!-- 서브 모달 2: 변형 연습 (동사 / 형용사) -->
+	<div class="modal-overlay" id="conjugationModal">
+		<div class="modal">
+			<h3>📊 2. 活用練習表</h3>
+
+			<div class="tab-menu">
+				<button class="tab-btn active" id="verbTabBtn" onclick="switchTab('verb')">動詞 (Verbs)</button>
+				<button class="tab-btn" id="adjTabBtn" onclick="switchTab('adj')">形容詞 (Adjectives)</button>
+			</div>
+
+			<!-- 동사 탭 -->
+			<div id="verbTabContent">
+				<p style="font-size:13px; color:#666; margin-bottom:10px;">基本形を見て、-(으)니까 の形を思い出してから「答え」を確認してみましょう。</p>
+				<table class="grammar-table">
+					<tr>
+						<th>基本形</th>
+						<th>タイプ</th>
+						<th>-(으)니까 活用</th>
+						<th>確認</th>
+					</tr>
+					<tr><td>가다 (行く)</td><td>パッチムなし</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">가니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>먹다 (食べる)</td><td>パッチムあり</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">먹으니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>놀다 (遊ぶ)</td><td>ㄹパッチム</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">놀니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>듣다 (聞く)</td><td>ㄷ変則</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">들으니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>만들다 (作る)</td><td>ㄹパッチム</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">만들니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>읽다 (読む)</td><td>パッチムあり</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">읽으니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+				</table>
+			</div>
+
+			<!-- 형용사 탭 -->
+			<div id="adjTabContent" style="display:none;">
+				<p style="font-size:13px; color:#666; margin-bottom:10px;">形容詞の活用練習です。変則活用にも注意しましょう。</p>
+				<table class="grammar-table">
+					<tr>
+						<th>基本形</th>
+						<th>タイプ</th>
+						<th>-(으)니까 活用</th>
+						<th>確認</th>
+					</tr>
+					<tr><td>바쁘다 (忙しい)</td><td>パッチムなし</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">바쁘니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>작다 (小さい)</td><td>パッチムあり</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">작으니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>길다 (長い)</td><td>ㄹパッチム</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">길니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>춥다 (寒い)</td><td>ㅂ変則</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">추우니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>좋다 (良い)</td><td>パッチムあり</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">좋으니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+					<tr><td>크다 (大きい)</td><td>パッチムなし</td><td><span class="conj-ans" style="display:none; color:#27ae60; font-weight:bold;">크니까</span></td><td><button onclick="toggleConj(this)" style="padding:2px 8px; cursor:pointer;">表示</button></td></tr>
+				</table>
+			</div>
+
+			<button class="close-btn" onclick="backToMainMenu()">◀ メニューに戻る</button>
+		</div>
+	</div>
+
+	<script>
+    /* 스라이드 제어 */
+    let currentSlide = 0;
+    const totalSlides = 7;
+    const slideContainer = document.getElementById('slideContainer');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateSlide() {
+        slideContainer.style.transform = `translateX(-${currentSlide * 900}px)`;
+        pageIndicator.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        updateSlide();
+    }
+
+    /* 연습문제 데이터 10개 */
+    const problems = [
+        {
+            img: "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=400&auto=format&fit=crop",
+            q: "Q1. (비가 오다) 우산을 가져가세요.",
+            hint: "※ 文末が「〜(으)세요 (命令)」になっています。",
+            ansKr: "正解: 비가 오니까",
+            ansJp: "解説: 命令文には -(으)니까 を使用します。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=400&auto=format&fit=crop",
+            q: "Q2. (배가 아프다) 병원에 갔어요.",
+            hint: "※ 単純な過去の事実・結果を表す文です。",
+            ansKr: "正解: 배가 아파서",
+            ansJp: "解説: 自然な原因と結果の過去文には -아서/어서 を使用します。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&auto=format&fit=crop",
+            q: "Q3. (날씨가 좋다) 같이 산책합시다.",
+            hint: "※ 文末が「〜(으)ㅂ시다 (提案)」になっています。",
+            ansKr: "正解: 날씨가 좋으니까",
+            ansJp: "解説: 提案文には -(으)니까 を使用します。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&auto=format&fit=crop",
+            q: "Q4. (피곤하다) 일찍 자요.",
+            hint: "※ 相手に行動を促す提案のニュアンスです。",
+            ansKr: "正解: 피곤하니까",
+            ansJp: "解説: 「疲れているから早く寝よう」と促す場合は -(으)니까 が適切です。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&auto=format&fit=crop",
+            q: "Q5. (커피가 뜨겁다) 조심히 드세요.",
+            hint: "※ 뜨겁다 の ㅂ変則活用と命令文に注目！",
+            ansKr: "正解: 커피가 뜨거우니까",
+            ansJp: "解説: ㅂ変則活用(뜨거우-) ＋ 니까 を結合します。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&auto=format&fit=crop",
+            q: "Q6. (돈이 없다) 물건을 못 샀어요.",
+            hint: "※ 単純な理由と買えなかった結果です。",
+            ansKr: "正解: 돈이 없어서",
+            ansJp: "解説: 因果関係を示す過去の結果には -아서/어서 を使います。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&auto=format&fit=crop",
+            q: "Q7. (시간이 있다) 천천히 오세요.",
+            hint: "※ 있- (パッチムあり) ＋ 命令文",
+            ansKr: "正解: 시간이 있으니까",
+            ansJp: "解説: パッチムがあるため -으니까 を結合します。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&auto=format&fit=crop",
+            q: "Q8. (내일 시험이 있다) 공부를 해야 해요.",
+            hint: "※ 自分の判断の根拠を述べています。",
+            ansKr: "正解: 내일 시험이 있으니까",
+            ansJp: "解説: 「〜だから（勉強しなければ）」という根拠に -(으)니까 を使用。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&auto=format&fit=crop",
+            q: "Q9. (이 식당이 맛있 다) 여기로 갑시다.",
+            hint: "※ 맛있- (パッチムあり) ＋ 提案文",
+            ansKr: "正解: 이 식당이 맛있으니까",
+            ansJp: "解説: 提案文(갑시다)につながるため -으니까 を使用。"
+        },
+        {
+            img: "https://images.unsplash.com/photo-1528747045269-390fe33c19f2?w=400&auto=format&fit=crop",
+            q: "Q10. (버스가 오다) 어서 탚시다.",
+            hint: "※ 오- (パッチムなし) ＋ 提案文",
+            ansKr: "正解: 버스가 오니까",
+            ansJp: "解説: パッチムがないため -니까 を結合します。"
+        }
+    ];
+
+    let currentProbIdx = 0;
+
+    function initProblemNav() {
+        const nav = document.getElementById('probNav');
+        nav.innerHTML = '';
+        problems.forEach((_, i) => {
+            const btn = document.createElement('button');
+            btn.className = `prob-btn ${i === 0 ? 'active' : ''}`;
+            btn.innerText = `Q${i + 1}`;
+            btn.onclick = () => loadProblem(i);
+            nav.appendChild(btn);
+        });
+        loadProblem(0);
+    }
+
+    function loadProblem(idx) {
+        currentProbIdx = idx;
+        const p = problems[idx];
+        document.querySelectorAll('.prob-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', i === idx);
+        });
+        document.getElementById('probImg').src = p.img;
+        document.getElementById('probNumText').innerText = `Q${idx + 1}.`;
+        document.getElementById('probQuestion').innerText = p.q;
+        document.getElementById('probHint').innerText = p.hint;
+        document.getElementById('probAnsKr').innerText = p.ansKr;
+        document.getElementById('probAnsJp').innerText = p.ansJp;
+        document.getElementById('probAnswerBox').style.display = 'none';
+    }
+
+    function toggleProblemAnswer() {
+        const box = document.getElementById('probAnswerBox');
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+
+    /* 모달 관리 */
+    function closeAllModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    }
+
+    function openMainMenu() {
+        closeAllModals();
+        document.getElementById('mainMenuModal').style.display = 'flex';
+    }
+
+    function openSubModal(id) {
+        closeAllModals();
+        document.getElementById(id).style.display = 'flex';
+        if (id === 'practiceModal') {
+            initProblemNav();
+        }
+    }
+
+    function backToMainMenu() {
+        openMainMenu();
+    }
+
+    /* 活用練習 탭 및 정답 토글 */
+    function switchTab(type) {
+        const verbBtn = document.getElementById('verbTabBtn');
+        const adjBtn = document.getElementById('adjTabBtn');
+        const verbContent = document.getElementById('verbTabContent');
+        const adjContent = document.getElementById('adjTabContent');
+
+        if (type === 'verb') {
+            verbBtn.classList.add('active');
+            adjBtn.classList.remove('active');
+            verbContent.style.display = 'block';
+            adjContent.style.display = 'none';
+        } else {
+            adjBtn.classList.add('active');
+            verbBtn.classList.remove('active');
+            adjContent.style.display = 'block';
+            verbContent.style.display = 'none';
+        }
+    }
+
+    function toggleConj(btn) {
+        const span = btn.parentElement.parentElement.querySelector('.conj-ans');
+        if (span.style.display === 'none') {
+            span.style.display = 'inline';
+            btn.innerText = '非表示';
+        } else {
+            span.style.display = 'none';
+            btn.innerText = '表示';
+        }
+    }
+
+    /* 키보드 이벤트 (Ctrl + M & 슬라이드 이동) */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeAllModals();
+            return;
+        }
+
+        const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-overlay')).some(m => m.style.display === 'flex');
+
+        if (!isAnyModalOpen) {
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        }
+
+        if (e.ctrlKey && e.key.toLowerCase() === 'm') {
+            e.preventDefault();
+            const mainMenu = document.getElementById('mainMenuModal');
+            if (mainMenu.style.display === 'flex') {
+                closeAllModals();
+            } else {
+                openMainMenu();
+            }
+        }
+    });
+
+    updateSlide();
+	</script>
+
+</body>
+</html>

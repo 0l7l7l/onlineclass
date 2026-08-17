@@ -1,0 +1,1197 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo 언어 학습 & 정보 플랫폼</title>
+	<!-- FontAwesome Icon CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+		/* Reset & Base Styles */
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Pretendard', sans-serif;
+			background-color: #f1f5f9;
+			color: #1e293b;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+
+		button, input, select, textarea {
+			font-family: inherit;
+		}
+
+		.hidden {
+			display: none !important;
+		}
+
+		/* Header Styles */
+		header {
+			background-color: #0f172a;
+			color: #ffffff;
+			position: sticky;
+			top: 0;
+			z-index: 50;
+			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+		}
+
+		.header-container {
+			max-width: 1152px;
+			margin: 0 auto;
+			padding: 0.75rem 1rem;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.brand-box {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+		}
+
+		.brand-logo {
+			font-size: 1.25rem;
+			font-weight: 900;
+			color: #818cf8;
+		}
+
+		.brand-badge {
+			font-size: 0.75rem;
+			background-color: #312e81;
+			color: #c7d2fe;
+			padding: 0.125rem 0.5rem;
+			border-radius: 0.25rem;
+			border: 1px solid #4338ca;
+		}
+
+		.lang-select-box {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-size: 0.75rem;
+		}
+
+		.lang-select-label {
+			color: #94a3b8;
+			font-weight: 600;
+		}
+
+		.lang-btn-group {
+			background-color: #1e293b;
+			padding: 0.25rem;
+			border-radius: 0.5rem;
+			border: 1px solid #334155;
+			display: flex;
+			gap: 0.25rem;
+		}
+
+		.lang-btn {
+			padding: 0.25rem 0.625rem;
+			border-radius: 0.25rem;
+			font-weight: 700;
+			border: none;
+			cursor: pointer;
+			background: transparent;
+			color: #94a3b8;
+			transition: all 0.2s;
+		}
+
+			.lang-btn:hover {
+				color: #ffffff;
+			}
+
+			.lang-btn.active {
+				background-color: #fbbf24;
+				color: #0f172a;
+			}
+
+		.role-box {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-size: 0.75rem;
+		}
+
+		.role-badge {
+			padding: 0.125rem 0.5rem;
+			border-radius: 0.25rem;
+			font-weight: 700;
+			background-color: #064e3b;
+			color: #a7f3d0;
+		}
+
+		.role-btn {
+			background-color: #334155;
+			color: #e2e8f0;
+			border: none;
+			padding: 0.25rem 0.625rem;
+			border-radius: 0.25rem;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+
+			.role-btn:hover {
+				background-color: #475569;
+			}
+
+		/* Main Layout */
+		.main-container {
+			max-width: 1152px;
+			margin: 0 auto;
+			width: 100%;
+			flex: 1;
+			padding: 1rem;
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		@media (min-width: 768px) {
+			.main-container {
+				grid-template-columns: 1fr 3fr;
+			}
+		}
+
+		/* Sidebar */
+		aside {
+			background-color: #ffffff;
+			padding: 1rem;
+			border-radius: 1rem;
+			border: 1px solid #e2e8f0;
+			box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+			height: fit-content;
+		}
+
+			aside .section-title {
+				font-size: 0.75rem;
+				font-weight: 700;
+				color: #94a3b8;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				margin-bottom: 0.5rem;
+			}
+
+		.menu-group {
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+			font-size: 0.875rem;
+			font-weight: 600;
+		}
+
+		.menu-btn {
+			width: 100%;
+			text-align: left;
+			padding: 0.625rem 0.75rem;
+			border-radius: 0.75rem;
+			border: 1px solid transparent;
+			background: transparent;
+			color: #334155;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-size: 0.875rem;
+			font-weight: 600;
+			transition: all 0.2s;
+		}
+
+			.menu-btn:hover {
+				background-color: #f1f5f9;
+			}
+
+			.menu-btn.active {
+				background-color: #4f46e5;
+				color: #ffffff;
+				font-weight: 700;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+			}
+
+		.sub-menu-btn {
+			width: 100%;
+			text-align: left;
+			padding: 0.5rem 0.75rem;
+			border-radius: 0.75rem;
+			font-size: 0.75rem;
+			font-weight: 700;
+			border: 1px solid transparent;
+			background: transparent;
+			color: #475569;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+			.sub-menu-btn.active {
+				background-color: #e0e7ff;
+				color: #4338ca;
+				border-color: #c7d2fe;
+			}
+
+		hr {
+			border: none;
+			border-top: 1px solid #e2e8f0;
+			margin: 1.25rem 0;
+		}
+
+		.grid-2 {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.25rem;
+		}
+
+		.study-type-btn {
+			padding: 0.5rem 0;
+			text-align: center;
+			border-radius: 0.5rem;
+			font-size: 0.75rem;
+			font-weight: 600;
+			border: 1px solid #e2e8f0;
+			background: transparent;
+			color: #475569;
+			cursor: pointer;
+		}
+
+			.study-type-btn.active {
+				background-color: #e0e7ff;
+				color: #4338ca;
+				border-color: #c7d2fe;
+				font-weight: 700;
+			}
+
+		.teacher-action {
+			padding-top: 0.75rem;
+			border-top: 1px solid #e2e8f0;
+		}
+
+		.write-open-btn {
+			width: 100%;
+			background-color: #059669;
+			color: #ffffff;
+			font-weight: 700;
+			padding: 0.625rem 0;
+			border-radius: 0.75rem;
+			border: none;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.375rem;
+			font-size: 0.75rem;
+			box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+			transition: background 0.2s;
+		}
+
+			.write-open-btn:hover {
+				background-color: #047857;
+			}
+
+		/* Main Content Area */
+		main {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.header-card {
+			background-color: #ffffff;
+			padding: 1.25rem;
+			border-radius: 1rem;
+			border: 1px solid #e2e8f0;
+			box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.header-card-top {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+		}
+
+		.path-indicator {
+			font-size: 0.75rem;
+			font-weight: 700;
+			color: #4f46e5;
+			background-color: #e0e7ff;
+			padding: 0.25rem 0.625rem;
+			border-radius: 9999px;
+			display: inline-block;
+		}
+
+		.main-title {
+			font-size: 1.25rem;
+			font-weight: 900;
+			color: #0f172a;
+			margin-top: 0.5rem;
+		}
+
+		.data-count-badge {
+			font-size: 0.75rem;
+			font-weight: 700;
+			color: #64748b;
+			background-color: #f1f5f9;
+			padding: 0.25rem 0.75rem;
+			border-radius: 9999px;
+		}
+
+		.theme-tab-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+			padding-top: 0.5rem;
+			border-top: 1px solid #f1f5f9;
+		}
+
+		.theme-btn {
+			padding: 0.25rem 0.75rem;
+			border-radius: 9999px;
+			font-size: 0.75rem;
+			font-weight: 700;
+			border: 1px solid #e2e8f0;
+			background-color: #f8fafc;
+			color: #475569;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+			.theme-btn.active {
+				background-color: #4f46e5;
+				color: #ffffff;
+				border-color: #4f46e5;
+			}
+
+		/* Content Display Cards */
+		.content-display-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 1rem;
+		}
+
+		@media (min-width: 768px) {
+			.content-display-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		.data-card {
+			background-color: #ffffff;
+			border-radius: 1rem;
+			padding: 1.25rem;
+			border: 1px solid #e2e8f0;
+			box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+			display: flex;
+			flex-direction: column;
+			gap: 0.75rem;
+			transition: border-color 0.2s;
+		}
+
+			.data-card:hover {
+				border-color: #a5b4fc;
+			}
+
+		.card-tag {
+			font-size: 0.625rem;
+			font-weight: 900;
+			color: #4f46e5;
+			background-color: #e0e7ff;
+			padding: 0.125rem 0.5rem;
+			border-radius: 0.25rem;
+			width: fit-content;
+		}
+
+		.card-title {
+			font-size: 1rem;
+			font-weight: 800;
+			color: #0f172a;
+		}
+
+		.card-summary {
+			font-size: 0.75rem;
+			color: #4338ca;
+			font-weight: 600;
+		}
+
+		.card-img {
+			width: 100%;
+			height: 9rem;
+			object-fit: cover;
+			border-radius: 0.75rem;
+		}
+
+		.card-detail-box {
+			background-color: #f8fafc;
+			padding: 0.75rem;
+			border-radius: 0.75rem;
+			border: 1px solid #e2e8f0;
+			font-size: 0.75rem;
+			color: #475569;
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+
+		.card-post-meta {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 0.625rem;
+			color: #94a3b8;
+		}
+
+		.card-post-tag {
+			font-weight: 700;
+			color: #d97706;
+			background-color: #fffbeb;
+			padding: 0.125rem 0.5rem;
+			border-radius: 0.25rem;
+			border: 1px solid #fde68a;
+		}
+
+		.card-post-desc {
+			font-size: 0.75rem;
+			color: #64748b;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.read-more-btn {
+			width: 100%;
+			background-color: #f1f5f9;
+			color: #334155;
+			font-weight: 700;
+			padding: 0.5rem 0;
+			border-radius: 0.75rem;
+			border: none;
+			font-size: 0.75rem;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+			.read-more-btn:hover {
+				background-color: #e0e7ff;
+				color: #4f46e5;
+			}
+
+		/* Modal Styles */
+		.modal-backdrop {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(15, 23, 42, 0.5);
+			z-index: 50;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 1rem;
+		}
+
+		.modal-card {
+			background-color: #ffffff;
+			border-radius: 1rem;
+			max-width: 32rem;
+			width: 100%;
+			padding: 1.5rem;
+			box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			max-height: 90vh;
+			overflow-y: auto;
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-bottom: 1px solid #e2e8f0;
+			padding-bottom: 0.75rem;
+		}
+
+		.modal-title {
+			font-weight: 700;
+			color: #0f172a;
+			font-size: 1rem;
+		}
+
+		.modal-close-btn {
+			background: none;
+			border: none;
+			color: #94a3b8;
+			font-size: 1.25rem;
+			cursor: pointer;
+		}
+
+		.form-group {
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+			font-size: 0.75rem;
+		}
+
+		.form-label {
+			font-weight: 700;
+			color: #334155;
+		}
+
+		.form-control {
+			width: 100%;
+			border: 1px solid #cbd5e1;
+			border-radius: 0.5rem;
+			padding: 0.5rem;
+			font-size: 0.75rem;
+			background-color: #ffffff;
+		}
+
+			.form-control:focus {
+				outline: none;
+				border-color: #6366f1;
+			}
+
+		.radio-card-group {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.5rem;
+		}
+
+		.radio-card {
+			border: 1px solid #cbd5e1;
+			padding: 0.5rem;
+			border-radius: 0.5rem;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			cursor: pointer;
+			background-color: #f8fafc;
+			font-weight: 700;
+		}
+
+		.media-upload-section {
+			background-color: #fffbeb;
+			padding: 0.75rem;
+			border-radius: 0.75rem;
+			border: 1px solid #fde68a;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.media-upload-label {
+			font-weight: 700;
+			color: #78350f;
+			display: flex;
+			align-items: center;
+			gap: 0.25rem;
+		}
+
+		.preview-box {
+			display: flex;
+			gap: 0.5rem;
+			overflow-x: auto;
+			padding-top: 0.25rem;
+		}
+
+		.preview-thumb {
+			width: 4rem;
+			height: 4rem;
+			border-radius: 0.5rem;
+			overflow: hidden;
+			border: 1px solid #fcd34d;
+			flex-shrink: 0;
+		}
+
+			.preview-thumb img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+		.btn-group {
+			display: flex;
+			gap: 0.5rem;
+			padding-top: 0.5rem;
+		}
+
+		.btn-submit {
+			flex: 1;
+			background-color: #4f46e5;
+			color: #ffffff;
+			font-weight: 700;
+			padding: 0.625rem 0;
+			border-radius: 0.75rem;
+			border: none;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+
+			.btn-submit:hover {
+				background-color: #4338ca;
+			}
+
+		.btn-cancel {
+			padding: 0.625rem 1rem;
+			background-color: #e2e8f0;
+			color: #334155;
+			font-weight: 700;
+			border-radius: 0.75rem;
+			border: none;
+			cursor: pointer;
+		}
+
+			.btn-cancel:hover {
+				background-color: #cbd5e1;
+			}
+	</style>
+</head>
+<body>
+
+	<!-- 상단 글로벌 바 (학습자 모국어 / UI 언어 스위칭) -->
+	<header>
+		<div class="header-container">
+			<div class="brand-box">
+				<span class="brand-logo">Semo</span>
+				<span class="brand-badge">자료실</span>
+			</div>
+
+			<!-- 학습자 모국어(UI 언어) 선택 -->
+			<div class="lang-select-box">
+				<span class="lang-select-label"><i class="fa-solid fa-earth-asia" style="color: #fbbf24;"></i> 언어:</span>
+				<div class="lang-btn-group">
+					<button onclick="setNativeLanguage('ko')" id="user-lang-ko" class="lang-btn active">
+						한국어
+					</button>
+					<button onclick="setNativeLanguage('ja')" id="user-lang-ja" class="lang-btn">
+						日本語
+					</button>
+					<button onclick="setNativeLanguage('zh')" id="user-lang-zh" class="lang-btn">
+						中文
+					</button>
+				</div>
+			</div>
+
+			<!-- 권한 스위칭 (테스트용) -->
+			<div class="role-box">
+				<span id="role-badge" class="role-badge">
+					선생님 (TEACHER)
+				</span>
+				<button onclick="toggleUserRole()" class="role-btn">
+					권한 변경
+				</button>
+			</div>
+		</div>
+	</header>
+
+	<!-- 메인 컨테이너 -->
+	<div class="main-container">
+
+		<!-- 좌측 사이드바: 대분류 메뉴 -->
+		<aside>
+
+			<!-- 1. 큰 틀 메뉴 (언어 학습 vs 일반 포스트) -->
+			<div>
+				<div class="section-title">메뉴 선택</div>
+				<div class="menu-group">
+					<button onclick="switchMainTab('study')" id="main-tab-study" class="menu-btn active">
+						<i class="fa-solid fa-graduation-cap"></i> 💬 언어 학습
+					</button>
+					<button onclick="switchMainTab('post')" id="main-tab-post" class="menu-btn">
+						<i class="fa-solid fa-newspaper"></i> 📰 일반 포스트/여행
+					</button>
+				</div>
+			</div>
+
+			<hr>
+
+			<!-- 2-A. 언어 학습 서브메뉴 -->
+			<div id="sub-menu-study" style="display: flex; flex-direction: column; gap: 1rem;">
+				<div>
+					<div class="section-title">공부할 언어</div>
+					<div id="target-lang-selector" style="display: flex; flex-direction: column; gap: 0.375rem;">
+						<!-- JS 동적 생성 -->
+					</div>
+				</div>
+				<div>
+					<div class="section-title">학습 구별</div>
+					<div class="grid-2">
+						<button onclick="switchStudyType('grammar')" id="type-btn-grammar" class="study-type-btn active">
+							문법
+						</button>
+						<button onclick="switchStudyType('words')" id="type-btn-words" class="study-type-btn">
+							단어
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- 2-B. 일반 포스트 서브메뉴 -->
+			<div id="sub-menu-post" class="hidden" style="display: flex; flex-direction: column; gap: 0.75rem;">
+				<div class="section-title">포스트 카테고리</div>
+				<div class="menu-group" style="font-size: 0.75rem;">
+					<button onclick="setPostCategory('travel')" id="post-cat-travel" class="sub-menu-btn active">
+						✈️ 일본/해외 여행정보
+					</button>
+					<button onclick="setPostCategory('column')" id="post-cat-column" class="sub-menu-btn">
+						💡 언어 & 문화 컬럼
+					</button>
+					<button onclick="setPostCategory('notice')" id="post-cat-notice" class="sub-menu-btn">
+						📢 공지사항 & 이벤트
+					</button>
+				</div>
+			</div>
+
+			<!-- 글쓰기 버튼 (선생님 전용) -->
+			<div id="teacher-action-box" class="teacher-action">
+				<button onclick="openWriteModal()" class="write-open-btn">
+					<i class="fa-solid fa-pen-to-square"></i> 새 글 / 미디어 등록
+				</button>
+			</div>
+		</aside>
+
+		<!-- 우측 메인 콘텐츠 영역 -->
+		<main>
+
+			<!-- 타이틀 및 카테고리 헤더 -->
+			<div class="header-card">
+				<div class="header-card-top">
+					<div>
+						<span id="path-indicator" class="path-indicator">
+							한국어 해설 ➔ 일본어 학습
+						</span>
+						<h1 id="main-title" class="main-title">일본어 문법 자료실</h1>
+					</div>
+					<span id="data-count-badge" class="data-count-badge">
+						총 0개
+					</span>
+				</div>
+
+				<!-- 1차 대분류 테마 탭 (언어학습 or 여행 세부지역) -->
+				<div id="theme-tab-container" class="theme-tab-container">
+					<!-- JS 동적 생성 -->
+				</div>
+
+				<!-- 2차 세분류 탭 (단어 전용) -->
+				<div id="subtheme-tab-container" class="hidden theme-tab-container" style="background-color: #f8fafc; padding: 0.5rem; border-radius: 0.75rem; border: 1px solid #e2e8f0;">
+					<!-- JS 동적 생성 -->
+				</div>
+			</div>
+
+			<!-- 카드리스트/게시글 출력 컨테이너 -->
+			<div id="content-display-area" class="content-display-grid">
+				<!-- JS 동적 생성 -->
+			</div>
+
+		</main>
+	</div>
+
+	<!-- 작성/미디어 업로드 통합 모달 (선생님 전용) -->
+	<div id="write-modal" class="modal-backdrop hidden">
+		<div class="modal-card">
+			<div class="modal-header">
+				<h3 class="modal-title">✏️ 새 콘텐츠 작성 (미디어 첨부)</h3>
+				<button onclick="closeWriteModal()" class="modal-close-btn">&times;</button>
+			</div>
+
+			<form id="write-form" onsubmit="handleFormSubmit(event)" style="display: flex; flex-direction: column; gap: 0.75rem;">
+
+				<!-- 0. 콘텐츠 유형 선택 -->
+				<div class="form-group">
+					<label class="form-label">콘텐츠 작성 유형</label>
+					<div class="radio-card-group">
+						<label class="radio-card">
+							<input type="radio" name="write_type" value="study" checked onclick="toggleWriteFormType('study')">
+							<span>💬 언어 학습 자료</span>
+						</label>
+						<label class="radio-card">
+							<input type="radio" name="write_type" value="post" onclick="toggleWriteFormType('post')">
+							<span>📰 일반 포스트/여행</span>
+						</label>
+					</div>
+				</div>
+
+				<!-- 언어 설정 -->
+				<div class="grid-2">
+					<div class="form-group">
+						<label class="form-label">해설/작성 언어 (UI)</label>
+						<select id="form-ui-lang" class="form-control" style="background-color: #f8fafc;">
+							<option value="ko">한국어 (ko)</option>
+							<option value="ja">日本語 (ja)</option>
+							<option value="zh">中文 (zh)</option>
+						</select>
+					</div>
+					<div id="form-target-lang-box" class="form-group">
+						<label class="form-label">학습 목표 언어</label>
+						<select id="form-target-lang" class="form-control" style="background-color: #f8fafc;">
+							<option value="ja">일본어 (ja)</option>
+							<option value="ko">한국어 (ko)</option>
+							<option value="zh">중국어 (zh)</option>
+							<option value="en">영어 (en)</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- 대분류/소분류 -->
+				<div class="grid-2">
+					<div class="form-group">
+						<label id="lbl-theme" class="form-label">1차 테마/카테고리</label>
+						<input type="text" id="form-theme" value="교토" required class="form-control">
+					</div>
+					<div id="form-subtheme-box" class="form-group">
+						<label class="form-label">2차 세분류 (단어/지역)</label>
+						<input type="text" id="form-subtheme" value="기온거리" class="form-control">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label">제목</label>
+					<input type="text" id="form-title" placeholder="제목을 입력하세요." required class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label class="form-label">한 줄 요약 / 설명</label>
+					<input type="text" id="form-summary" placeholder="목록에 노출될 요약글" required class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label id="lbl-detail" class="form-label">상세 내용 / 본문 (HTML 가능)</label>
+					<textarea id="form-detail" rows="3" class="form-control" required></textarea>
+				</div>
+
+				<div id="form-example-box" class="form-group">
+					<label class="form-label">예문 및 활용</label>
+					<textarea id="form-example" rows="2" class="form-control"></textarea>
+				</div>
+
+				<!-- 사진/미디어 첨부 섹션 -->
+				<div class="media-upload-section">
+					<label class="media-upload-label">
+						<i class="fa-solid fa-image" style="color: #d97706;"></i> 사진 및 미디어 첨부
+					</label>
+					<input type="file" id="form-media" accept="image/*,audio/*" multiple onchange="previewMediaFiles(this)" class="form-control">
+					<div id="media-preview-box" class="preview-box">
+						<!-- 미리보기 -->
+					</div>
+				</div>
+
+				<div class="btn-group">
+					<button type="submit" class="btn-submit">
+						저장하기
+					</button>
+					<button type="button" onclick="closeWriteModal()" class="btn-cancel">
+						취소
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- JavaScript Logic -->
+	<script>
+		// 1. 글로벌 상태 객체
+		let appState = {
+			mainTab: 'study',      // 'study' (언어학습) 또는 'post' (일반포스트)
+			nativeLang: 'ko',      // UI/해설 언어 (ko, ja, zh)
+			targetLang: 'ja',      // 학습할 언어 (ja, ko, zh, en)
+			studyType: 'grammar',  // grammar 또는 words
+			postCategory: 'travel',// travel, column, notice
+			activeTheme: '전체',
+			activeSubTheme: '전체',
+			userRole: 'TEACHER'    // TEACHER 또는 STUDENT
+		};
+
+		// 2. 가상 목 데이터 (언어 학습 + 일반 포스트)
+		let mockStudyDatabase = [
+			{
+				id: 1, ui_lang: 'ko', target_lang: 'ja', type: 'grammar', theme: '기초', sub_theme: '전체',
+				title: '名詞 + です', summary: '~입니다. 자신을 소개하는 정중형',
+				detail: '명사 뒤에 바로 です를 붙입니다.', example: '私は学生です。 (저는 학생입니다.)',
+				media: [{ type: 'image', url: 'https://picsum.photos/seed/japan1/400/250' }]
+			},
+			{
+				id: 2, ui_lang: 'ko', target_lang: 'ja', type: 'words', theme: '기초어휘', sub_theme: '가족',
+				title: '家族 (かぞく)', summary: '가족을 뜻하는 기본 단어',
+				detail: 'お母さん(어머니), お父さん(아버지)', example: '私の家族は4人です。',
+				media: [{ type: 'image', url: 'https://picsum.photos/seed/family/400/250' }]
+			}
+		];
+
+		let mockPostDatabase = [
+			{
+				id: 101, ui_lang: 'ko', category: 'travel', theme: '교토', sub_theme: '기온거리',
+				title: '교토 기온거리 야경과 전통 이자카야 탐방',
+				summary: '고즈넉한 교토의 밤거리와 현지인 맛집 추천 코스입니다.',
+				content: '<p>교토 기온거리는 밤이 되면 붉은 등불이 켜지며 멋진 분위기를 자아냅니다...</p>',
+				date: '2026-08-15', views: 142,
+				media: [{ type: 'image', url: 'https://picsum.photos/seed/kyoto/500/300' }]
+			},
+			{
+				id: 102, ui_lang: 'ko', category: 'column', theme: '문화', sub_theme: '식사예절',
+				title: '일본 이자카야에서 오토오시(お通し)란 무엇일까?',
+				summary: '자리에 앉으면 나오는 자릿세 개념의 기본 안주 문화 정리',
+				content: '<p>일본 이자카야에 가시면 주문하지 않은 음식이 먼저 나오는 경우가 있습니다...</p>',
+				date: '2026-08-10', views: 89,
+				media: [{ type: 'image', url: 'https://picsum.photos/seed/izakaya/500/300' }]
+			}
+		];
+
+		// 3. 메인 탭 전환 (언어학습 vs 일반포스트)
+		function switchMainTab(tab) {
+			appState.mainTab = tab;
+			appState.activeTheme = '전체';
+			appState.activeSubTheme = '전체';
+
+			const studyBtn = document.getElementById('main-tab-study');
+			const postBtn = document.getElementById('main-tab-post');
+			const studySub = document.getElementById('sub-menu-study');
+			const postSub = document.getElementById('sub-menu-post');
+
+			if (tab === 'study') {
+				studyBtn.className = "menu-btn active";
+				postBtn.className = "menu-btn";
+				studySub.classList.remove('hidden');
+				postSub.classList.add('hidden');
+			} else {
+				postBtn.className = "menu-btn active";
+				studyBtn.className = "menu-btn";
+				postSub.classList.remove('hidden');
+				studySub.classList.add('hidden');
+			}
+
+			renderDashboard();
+		}
+
+		// 4. 언어 설정
+		function setNativeLanguage(lang) {
+			appState.nativeLang = lang;
+			['ko', 'ja', 'zh'].forEach(l => {
+				const btn = document.getElementById(`user-lang-${l}`);
+				btn.className = l === lang ? "lang-btn active" : "lang-btn";
+			});
+
+			if (lang === 'ko') appState.targetLang = 'ja';
+			else appState.targetLang = 'ko';
+
+			renderTargetLangSelector();
+			renderDashboard();
+		}
+
+		function renderTargetLangSelector() {
+			const container = document.getElementById('target-lang-selector');
+			const targets = {
+				ko: [{ code: 'ja', name: '🇯🇵 일본어' }, { code: 'zh', name: '🇨🇳 중국어' }],
+				ja: [{ code: 'ko', name: '🇰🇷 韓国語' }, { code: 'zh', name: '🇨🇳 中国語' }],
+				zh: [{ code: 'ko', name: '🇰🇷 韩语' }, { code: 'ja', name: '🇯🇵 日语' }]
+			};
+			const list = targets[appState.nativeLang] || targets['ko'];
+			container.innerHTML = list.map(item => `
+					<button onclick="setTargetLanguage('${item.code}')" class="sub-menu-btn ${appState.targetLang === item.code ? 'active' : ''}">
+						${item.name}
+					</button>
+				`).join('');
+		}
+
+		function setTargetLanguage(code) {
+			appState.targetLang = code;
+			renderTargetLangSelector();
+			renderDashboard();
+		}
+
+		function switchStudyType(type) {
+			appState.studyType = type;
+			renderDashboard();
+		}
+
+		function setPostCategory(cat) {
+			appState.postCategory = cat;
+			['travel', 'column', 'notice'].forEach(c => {
+				const btn = document.getElementById(`post-cat-${c}`);
+				btn.className = c === cat ? "sub-menu-btn active" : "sub-menu-btn";
+			});
+			renderDashboard();
+		}
+
+		// 5. 핵심 대시보드 렌더링
+		function renderDashboard() {
+			const { mainTab, nativeLang, targetLang, studyType, postCategory, activeTheme, activeSubTheme } = appState;
+			const displayArea = document.getElementById('content-display-area');
+
+			// 학습구별 버튼 상태 업데이트
+			document.getElementById('type-btn-grammar').className = studyType === 'grammar' ? 'study-type-btn active' : 'study-type-btn';
+			document.getElementById('type-btn-words').className = studyType === 'words' ? 'study-type-btn active' : 'study-type-btn';
+
+			if (mainTab === 'study') {
+				// A. 언어 학습 렌더링
+				document.getElementById('path-indicator').innerText = `언어학습 ➔ ${targetLang.toUpperCase()}`;
+				document.getElementById('main-title').innerText = `${targetLang.toUpperCase()} ${studyType === 'grammar' ? '문법' : '단어'} 자료실`;
+
+				let filtered = mockStudyDatabase.filter(i => i.ui_lang === nativeLang && i.target_lang === targetLang && i.type === studyType);
+
+				// 테마 탭
+				let themes = ['전체', ...new Set(filtered.map(i => i.theme))];
+				document.getElementById('theme-tab-container').innerHTML = themes.map(t => `
+						<button onclick="setThemeFilter('${t}')" class="theme-btn ${activeTheme === t ? 'active' : ''}">${t}</button>
+					`).join('');
+
+				if (activeTheme !== '전체') filtered = filtered.filter(i => i.theme === activeTheme);
+
+				document.getElementById('subtheme-tab-container').classList.add('hidden');
+				document.getElementById('data-count-badge').innerText = `총 ${filtered.length}개`;
+
+				displayArea.innerHTML = filtered.length === 0 ? '<p style="grid-column: 1/-1; text-align: center; font-size: 0.75rem; color: #94a3b8; padding: 2rem;">등록된 자료가 없습니다.</p>' : filtered.map(item => `
+						<div class="data-card">
+							<span class="card-tag">${item.theme}</span>
+							<h3 class="card-title">${item.title}</h3>
+							<p class="card-summary">${item.summary}</p>
+							${item.media && item.media.length > 0 ? `<img src="${item.media[0].url}" class="card-img">` : ''}
+							<div class="card-detail-box">
+								<p><b>설명:</b> ${item.detail}</p>
+								<p><b>예문:</b> ${item.example}</p>
+							</div>
+						</div>
+					`).join('');
+
+			} else {
+				// B. 일반 포스트/여행정보 렌더링
+				const catNames = { travel: '일본/해외 여행정보', column: '언어 & 문화 컬럼', notice: '공지사항 & 이벤트' };
+				document.getElementById('path-indicator').innerText = `포스트 ➔ ${catNames[postCategory]}`;
+				document.getElementById('main-title').innerText = catNames[postCategory];
+
+				let filtered = mockPostDatabase.filter(i => i.ui_lang === nativeLang && i.category === postCategory);
+
+				let themes = ['전체', ...new Set(filtered.map(i => i.theme))];
+				document.getElementById('theme-tab-container').innerHTML = themes.map(t => `
+						<button onclick="setThemeFilter('${t}')" class="theme-btn ${activeTheme === t ? 'active' : ''}">${t}</button>
+					`).join('');
+
+				if (activeTheme !== '전체') filtered = filtered.filter(i => i.theme === activeTheme);
+
+				document.getElementById('subtheme-tab-container').classList.add('hidden');
+				document.getElementById('data-count-badge').innerText = `총 ${filtered.length}개`;
+
+				displayArea.innerHTML = filtered.length === 0 ? '<p style="grid-column: 1/-1; text-align: center; font-size: 0.75rem; color: #94a3b8; padding: 2rem;">등록된 포스트가 없습니다.</p>' : filtered.map(post => `
+						<div class="data-card">
+							${post.media && post.media.length > 0 ? `<img src="${post.media[0].url}" class="card-img" style="height: 10rem;">` : ''}
+							<div class="card-post-meta">
+								<span class="card-post-tag">${post.theme}</span>
+								<span>${post.date} · 조회 ${post.views}</span>
+							</div>
+							<h3 class="card-title">${post.title}</h3>
+							<p class="card-post-desc">${post.summary}</p>
+							<button class="read-more-btn">
+								글 본문 읽기 ➔
+							</button>
+						</div>
+					`).join('');
+			}
+		}
+
+		function setThemeFilter(t) { appState.activeTheme = t; renderDashboard(); }
+
+		// 6. 모달 폼 제어
+		function openWriteModal() { document.getElementById('write-modal').classList.remove('hidden'); }
+		function closeWriteModal() { document.getElementById('write-modal').classList.add('hidden'); }
+
+		function toggleWriteFormType(type) {
+			const targetBox = document.getElementById('form-target-lang-box');
+			const subthemeBox = document.getElementById('form-subtheme-box');
+			const exampleBox = document.getElementById('form-example-box');
+
+			if (type === 'post') {
+				targetBox.style.display = 'none';
+				subthemeBox.style.display = 'none';
+				exampleBox.style.display = 'none';
+				document.getElementById('lbl-theme').innerText = '카테고리/지역';
+				document.getElementById('lbl-detail').innerText = '포스트 본문 (HTML 가능)';
+			} else {
+				targetBox.style.display = 'flex';
+				subthemeBox.style.display = 'flex';
+				exampleBox.style.display = 'flex';
+				document.getElementById('lbl-theme').innerText = '1차 테마/대분류';
+				document.getElementById('lbl-detail').innerText = '상세 설명 / 품사';
+			}
+		}
+
+		let uploadedMediaPreviews = [];
+		function previewMediaFiles(input) {
+			const box = document.getElementById('media-preview-box');
+			box.innerHTML = '';
+			uploadedMediaPreviews = [];
+			if (input.files) {
+				Array.from(input.files).forEach(file => {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						uploadedMediaPreviews.push(e.target.result);
+						box.innerHTML += `<div class="preview-thumb"><img src="${e.target.result}"></div>`;
+					};
+					reader.readAsDataURL(file);
+				});
+			}
+		}
+
+		function handleFormSubmit(e) {
+			e.preventDefault();
+			const writeType = document.querySelector('input[name="write_type"]:checked').value;
+
+			if (writeType === 'post') {
+				const newPost = {
+					id: mockPostDatabase.length + 100,
+					ui_lang: document.getElementById('form-ui-lang').value,
+					category: appState.postCategory,
+					theme: document.getElementById('form-theme').value,
+					title: document.getElementById('form-title').value,
+					summary: document.getElementById('form-summary').value,
+					content: `<p>${document.getElementById('form-detail').value}</p>`,
+					date: new Date().toISOString().split('T')[0], views: 1,
+					media: uploadedMediaPreviews.length > 0 ? [{ type: 'image', url: uploadedMediaPreviews[0] }] : []
+				};
+				mockPostDatabase.unshift(newPost);
+				alert('일반 포스트 및 사진이 정상 저장되었습니다! 📰');
+				switchMainTab('post');
+			} else {
+				const newStudy = {
+					id: mockStudyDatabase.length + 1,
+					ui_lang: document.getElementById('form-ui-lang').value,
+					target_lang: document.getElementById('form-target-lang').value,
+					type: appState.studyType,
+					theme: document.getElementById('form-theme').value,
+					sub_theme: document.getElementById('form-subtheme').value || '전체',
+					title: document.getElementById('form-title').value,
+					summary: document.getElementById('form-summary').value,
+					detail: document.getElementById('form-detail').value,
+					example: document.getElementById('form-example').value,
+					media: uploadedMediaPreviews.length > 0 ? [{ type: 'image', url: uploadedMediaPreviews[0] }] : []
+				};
+				mockStudyDatabase.unshift(newStudy);
+				alert('언어 학습 자료 및 사진이 정상 저장되었습니다! 💬');
+				switchMainTab('study');
+			}
+
+			closeWriteModal();
+		}
+
+		function toggleUserRole() {
+			appState.userRole = appState.userRole === 'TEACHER' ? 'STUDENT' : 'TEACHER';
+			document.getElementById('role-badge').innerText = appState.userRole === 'TEACHER' ? '선생님 (TEACHER)' : '학생 (STUDENT)';
+			document.getElementById('teacher-action-box').style.display = appState.userRole === 'TEACHER' ? 'block' : 'none';
+		}
+
+		window.onload = function () {
+			renderTargetLangSelector();
+			renderDashboard();
+		};
+	</script>
+</body>
+</html>
