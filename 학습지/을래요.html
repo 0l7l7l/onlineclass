@@ -1,0 +1,663 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語初級文法教材 - -(으)ㄹ래요</title>
+	<style>
+		/* ==========================================================================
+			 1. 変数定義 & 基本スタイル初期化
+			 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--dark-blue: #1e3a8a;
+			--light-blue-bg: #eff6ff;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+		}
+
+		/* スケ일リングレスポンシブ設定 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+			 2. 見開き(Book) 基本構造 & レイアウト
+			 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			/* 本の中央折り目効果 */
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 20mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 12mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+		.left-page .footer {
+			left: 20mm;
+		}
+
+		.right-page .footer {
+			right: 20mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 15mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 20mm;
+		}
+
+		.right-page .grammar-no {
+			right: 20mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+			 🏷️ 上部バンドバッジ (.lesson-band)
+			 ========================================================================== */
+		.lesson-band {
+			display: inline-block;
+			align-self: flex-start;
+			background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 800;
+			padding: 6px 18px;
+			border-radius: 20px;
+			letter-spacing: 1px;
+			margin-bottom: 12px;
+			box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+		}
+
+		/* ==========================================================================
+			 3. 本文タイトル & 共通要素
+			 ========================================================================== */
+		.main-title {
+			font-size: 24px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 12px;
+			border-bottom: 3px solid var(--primary-blue);
+			padding-bottom: 8px;
+		}
+
+		h3.grammar-title {
+			font-size: 32px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		.sub-title {
+			font-size: 16px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-top: 14px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border-bottom: 1px solid #dbeafe;
+		}
+
+			.sub-title::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		p, li {
+			font-size: 13.5px;
+			line-height: 1.6;
+			color: #334155;
+		}
+
+		ul {
+			padding-left: 18px;
+			margin-top: 4px;
+		}
+
+		li {
+			margin-bottom: 6px;
+		}
+
+		.highlight {
+			color: var(--primary-blue);
+			font-weight: bold;
+		}
+
+		/* ポイント説明ボックス */
+		.point-box {
+			background-color: var(--light-blue-bg);
+			border-left: 5px solid var(--primary-blue);
+			padding: 12px 16px;
+			border-radius: 4px;
+			margin: 12px 0;
+		}
+
+			.point-box h4 {
+				font-size: 15px;
+				color: #1e293b;
+				margin-bottom: 6px;
+			}
+
+			.point-box ul {
+				list-style: none;
+				padding-left: 0;
+			}
+
+			.point-box li {
+				font-size: 14px;
+				margin-bottom: 4px;
+			}
+
+		/* ==========================================================================
+			 💬 吹き出し (Speech Bubble) + 規則ビジュアル表
+			 ========================================================================== */
+		.speech-bubble-box {
+			position: relative;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 16px;
+			padding: 14px 18px;
+			margin: 12px 0 16px 0;
+		}
+
+			.speech-bubble-box::after {
+				content: '';
+				position: absolute;
+				top: -10px;
+				left: 24px;
+				border-width: 0 10px 10px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.speech-bubble-box h4 {
+				font-size: 14px;
+				color: var(--dark-blue);
+				margin-bottom: 10px;
+				font-weight: bold;
+			}
+
+		.rule-visual-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 6px;
+			margin-top: 4px;
+		}
+
+			.rule-visual-table th {
+				padding: 6px;
+				font-size: 13px;
+				font-weight: 800;
+				border-radius: 8px;
+				color: #ffffff;
+				text-align: center;
+			}
+
+				.rule-visual-table th.has-patchim {
+					background-color: #2563eb;
+				}
+
+				.rule-visual-table th.no-patchim {
+					background-color: #0284c7;
+				}
+
+			.rule-visual-table td {
+				background-color: #ffffff;
+				border: 1px solid #dbeafe;
+				border-radius: 8px;
+				padding: 8px;
+				text-align: center;
+				vertical-align: middle;
+			}
+
+		.rule-example {
+			font-weight: 700;
+			color: #334155;
+			font-size: 14px;
+		}
+
+		.rule-plus {
+			color: #94a3b8;
+			font-size: 12px;
+			margin: 0 2px;
+		}
+
+		.rule-target {
+			font-weight: 900;
+			color: #2563eb;
+			font-size: 15px;
+		}
+
+		/* ==========================================================================
+			 📝 例文カード & 単語テーブル & 練習問題
+			 ========================================================================== */
+		.example-card {
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px 16px;
+			margin-bottom: 10px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+		}
+
+		.ex-ko {
+			font-size: 16px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.ex-ja {
+			font-size: 13px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		/* 単語帳テーブル */
+		.word-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 8px 0 16px 0;
+			font-size: 13px;
+		}
+
+			.word-table th, .word-table td {
+				border: 1px solid #dbeafe;
+				padding: 6px 10px;
+				text-align: center;
+			}
+
+			.word-table th {
+				background-color: #dbeafe;
+				color: var(--dark-blue);
+				font-weight: bold;
+			}
+
+		/* 練習問題 */
+		.quiz-item {
+			margin-bottom: 10px;
+			background-color: #fafafa;
+			padding: 10px 14px;
+			border-radius: 8px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 14px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 100px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+		}
+
+		/* ==========================================================================
+			 🔑 正解ボックス & ボタン
+			 ========================================================================== */
+		.answer-btn {
+			margin-top: 8px;
+			padding: 6px 14px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 2px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 12px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+				color: #1d4ed8;
+				border-color: #1d4ed8;
+			}
+
+		.answer-box {
+			margin-top: 8px;
+			padding: 10px 12px;
+			border: 2px solid var(--primary-blue);
+			border-radius: 8px;
+			display: none;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 13px;
+			color: var(--dark-blue);
+			line-height: 1.5;
+		}
+
+		/* ==========================================================================
+			 📱 モバイル & 🖨️ 印刷(Print) 対応
+			 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1;
+			}
+
+			.book-container {
+				display: flex;
+				flex-direction: row;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm;
+				height: 257mm;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact;
+				print-color-adjust: exact;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+		<div class="book-container">
+
+			<div class="page left-page">
+				<div class="grammar-no">GRAMMAR 01</div>
+				<div class="lesson-band">LESSON 01</div>
+				<h2 class="main-title">意思・提案の表現</h2>
+				<h3 class="grammar-title">-(으)ㄹ래요</h3>
+
+				<div class="point-box">
+					<h4>💡 文法のポイント</h4>
+					<ul>
+						<li><b>① 自分の意思を表す：</b> 「〜します」「〜したいです」</li>
+						<li><b>② 相手の意思を訊く / 提案する：</b> 「〜しますか？」「〜しませんか？」</li>
+						<li><b>※ 注意：</b> 親しい間柄（日常会話）で使う表現です。<b>動詞</b>にのみ接続します。</li>
+					</ul>
+				</div>
+
+				<div class="sub-title">活用ルール (Conjugation)</div>
+				<div class="speech-bubble-box">
+					<h4>パッチムの有無による変化</h4>
+					<table class="rule-visual-table">
+						<thead>
+							<tr>
+								<th class="no-patchim">パッチムなし / ㄹパッチム</th>
+								<th class="has-patchim">パッチムあり</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span class="rule-example">가다</span> <span class="rule-plus">+</span> <span class="rule-target">-ㄹ래요</span><br>
+									➔ <b class="rule-target">갈래요</b>
+								</td>
+								<td>
+									<span class="rule-example">먹다</span> <span class="rule-plus">+</span> <span class="rule-target">-을래요</span><br>
+									➔ <b class="rule-target">먹을래요</b>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="rule-example">놀다</span> <span class="rule-plus">+</span> <span class="rule-target">-래요</span><br>
+									➔ <b class="rule-target">놀래요</b> <small>(ㄹ脱落)</small>
+								</td>
+								<td>
+									<span class="rule-example">읽다</span> <span class="rule-plus">+</span> <span class="rule-target">-을래요</span><br>
+									➔ <b class="rule-target">읽을래요</b>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="sub-title">基本単語 (Vocabulary)</div>
+				<table class="word-table">
+					<thead>
+						<tr>
+							<th>基本形</th>
+							<th>意味</th>
+							<th>活用形 (-(으)ㄹ래요)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>보다</td>
+							<td>見る</td>
+							<td>볼래요</td>
+						</tr>
+						<tr>
+							<td>마시다</td>
+							<td>飲む</td>
+							<td>마실래요</td>
+						</tr>
+						<tr>
+							<td>앉다</td>
+							<td>座る</td>
+							<td>앉을래요</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="footer">14</div>
+			</div>
+
+			<div class="page right-page">
+				<div class="grammar-no">GRAMMAR 01</div>
+
+				<div class="sub-title">会話例文 (Examples)</div>
+
+				<div class="example-card">
+					<div class="ex-ko">가: 주말에 같이 영화 <span class="highlight">볼래요?</span></div>
+					<div class="ex-ja">（週末に一緒に映画を見ませんか？）</div>
+				</div>
+
+				<div class="example-card">
+					<div class="ex-ko">나: 좋아요! 저는 코미디 영화 <span class="highlight">볼래요.</span></div>
+					<div class="ex-ja">（いいですね！私はコメディ映画を見たいです。）</div>
+				</div>
+
+				<div class="example-card">
+					<div class="ex-ko">가: 점심에 뭐 <span class="highlight">먹을래요?</span></div>
+					<div class="ex-ja">（お昼ご飯に何を食べますか？）</div>
+				</div>
+
+				<div class="example-card">
+					<div class="ex-ko">나: 저는 비빔밥 <span class="highlight">먹을래요.</span></div>
+					<div class="ex-ja">（私はビビンバにします。）</div>
+				</div>
+
+				<div class="sub-title">練習問題 (Practice)</div>
+				<p style="margin-bottom: 8px;">【問1】かっこ内の動詞を「-(으)ㄹ래요」の形に変えなさい。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1) 쉬다 (休む) ➔ (<span class="quiz-line"></span>)</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2) 만들다 (作る) ➔ (<span class="quiz-line"></span>)</div>
+				</div>
+
+				<p style="margin-top: 12px; margin-bottom: 8px;">【问2】日本語を韓国語に訳しなさい。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1) 一緒に遊びませんか？<br>➔ 같이 (<span class="quiz-line" style="min-width: 140px;"></span>)?</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>【問1】</b> 1) 쉬실래요 / 쉬래요 &nbsp; 2) 만들래요<br>
+						<b>【問2】</b> 1) 놀래요
+					</div>
+				</div>
+
+				<div class="footer">15</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script>function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '正解を隠す';
+    } else {
+      btn.innerText = '正解を確認する';
+    }
+  }</script>
+
+</body>
+</html>

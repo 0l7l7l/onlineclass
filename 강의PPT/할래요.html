@@ -1,0 +1,610 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>한국어 문법 -할래요 학습 PPT</title>
+	<style>
+		:root {
+			--primary: #4F46E5;
+			--primary-light: #EEF2FF;
+			--accent: #F59E0B;
+			--text: #1F2937;
+			--bg: #F3F4F6;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+		}
+
+		body {
+			background-color: var(--bg);
+			color: var(--text);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		/* 메인 Presentation 스크린 */
+		.ppt-container {
+			width: 90vw;
+			max-width: 1000px;
+			height: 56.25vw; /* 16:9 비율 */
+			max-height: 562.5px;
+			background: white;
+			border-radius: 16px;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+			position: relative;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+		}
+
+		/* 슬라이드 영역 */
+		.slide-content {
+			flex: 1;
+			padding: 40px 60px;
+			display: none;
+			flex-direction: column;
+			justify-content: center;
+			z-index: 1;
+		}
+
+			.slide-content.active {
+				display: flex;
+				animation: fadeIn 0.4s ease-in-out;
+			}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		/* 판서 캔버스 레이어 */
+		#drawing-canvas {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+			pointer-events: none; /* 기본 상태에서는 슬라이드 클릭 허용 */
+		}
+
+			#drawing-canvas.drawing-active {
+				pointer-events: auto; /* 그리기 모드 활성화 시 판서 가능 */
+				cursor: crosshair;
+			}
+
+		/* 텍스트 입력 레이어 */
+		.text-box {
+			position: absolute;
+			border: 1px dashed var(--primary);
+			background: rgba(255,255,255,0.8);
+			outline: none;
+			padding: 4px;
+			font-size: 18px;
+			color: var(--text);
+			z-index: 11;
+			min-width: 100px;
+		}
+
+		/* 상단/하단 툴바 */
+		.toolbar {
+			position: absolute;
+			top: 15px;
+			right: 20px;
+			z-index: 20;
+			display: flex;
+			gap: 8px;
+			background: rgba(255, 255, 255, 0.9);
+			padding: 6px 12px;
+			border-radius: 30px;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+		}
+
+		.btn {
+			padding: 6px 12px;
+			border: none;
+			border-radius: 20px;
+			background: var(--primary-light);
+			color: var(--primary);
+			font-weight: 600;
+			font-size: 13px;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+			.btn:hover, .btn.active {
+				background: var(--primary);
+				color: white;
+			}
+
+		.nav-controls {
+			position: absolute;
+			bottom: 15px;
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			padding: 0 30px;
+			z-index: 20;
+		}
+
+		.slide-number {
+			font-weight: bold;
+			color: #9CA3AF;
+			font-size: 14px;
+		}
+
+		/* 슬라이드별 디자인 스타일 */
+		h1 {
+			font-size: 2.5rem;
+			color: var(--primary);
+			margin-bottom: 15px;
+		}
+
+		h2 {
+			font-size: 2rem;
+			color: var(--primary);
+			margin-bottom: 20px;
+			border-bottom: 3px solid var(--primary-light);
+			padding-bottom: 10px;
+		}
+
+		p {
+			font-size: 1.2rem;
+			line-height: 1.6;
+			color: #4B5563;
+		}
+
+		.highlight {
+			color: var(--accent);
+			font-weight: bold;
+		}
+
+		.big-text {
+			font-size: 1.8rem;
+			font-weight: bold;
+			text-align: center;
+			margin: 20px 0;
+			color: #111827;
+		}
+
+		/* 표 스타일 */
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 15px;
+			background: white;
+		}
+
+		th, td {
+			border: 1px solid #E5E7EB;
+			padding: 12px;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		th {
+			background-color: var(--primary-light);
+			color: var(--primary);
+			font-weight: bold;
+		}
+
+		/* 예문 카드 스타일 */
+		.example-card {
+			background: var(--primary-light);
+			padding: 15px 20px;
+			border-radius: 10px;
+			margin-bottom: 12px;
+			border-left: 5px solid var(--primary);
+			font-size: 1.1rem;
+		}
+
+		/* Ctrl+M 메뉴 모달 */
+		.modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.5);
+			z-index: 100;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.modal.active {
+				display: flex;
+			}
+
+		.modal-content {
+			background: white;
+			width: 500px;
+			padding: 30px;
+			border-radius: 16px;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+		}
+
+		.modal-menu-list {
+			list-style: none;
+			margin-top: 20px;
+		}
+
+		.modal-menu-item {
+			padding: 15px;
+			margin-bottom: 10px;
+			background: var(--primary-light);
+			color: var(--primary);
+			border-radius: 8px;
+			font-weight: bold;
+			cursor: pointer;
+			transition: 0.2s;
+		}
+
+			.modal-menu-item:hover {
+				background: var(--primary);
+				color: white;
+			}
+
+		/* 연습용 스크린 내부 모달 */
+		.practice-area {
+			margin-top: 15px;
+			padding: 15px;
+			background: #F9FAFB;
+			border-radius: 8px;
+			min-height: 150px;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="ppt-container" id="pptContainer">
+		<canvas id="drawing-canvas"></canvas>
+
+		<div class="toolbar">
+			<button class="btn" id="btn-draw" onclick="toggleDrawMode()">✏️ 그림 그리기</button>
+			<button class="btn" id="btn-text" onclick="enableTextMode()">🅰️ 글자 쓰기</button>
+			<button class="btn" onclick="undo()">↩️ 되돌리기 (Ctrl+Z)</button>
+			<button class="btn" onclick="redo()">↪️ 다시실행 (Ctrl+Y)</button>
+			<button class="btn" onclick="clearCanvas()">🗑️ 판서 지우기</button>
+			<button class="btn" style="background: #FEE2E2; color: #DC2626;" onclick="toggleMenu()">☰ 메뉴 (Ctrl+M)</button>
+		</div>
+
+		<div class="slide-content active">
+			<h1>한국어 쉬운 문법 시리즈</h1>
+			<p class="big-text">오늘 배울 문법: <span class="highlight">"-할래요"</span></p>
+			<p style="text-align: center;">내 생각이나 의지를 부드럽게 말하고 싶을 때 사용해요!</p>
+		</div>
+
+		<div class="slide-content">
+			<h2>1. '-할래요'는 무슨 뜻일까요?</h2>
+			<p><strong>의미:</strong> 자신의 <span class="highlight">의지(의도)</span>를 말하거나, 상대방의 <span class="highlight">의견을 부드럽게 물어볼 때</span> 사용합니다.</p>
+			<br>
+			<div class="example-card">
+				👉 <strong>한국어:</strong> 저는 커피 마실래요. (내 생각 말하기)<br>
+				👉 <strong>일본어 느낌:</strong> 私、コーヒー飲みたいです / 飲みます。
+			</div>
+			<div class="example-card">
+				👉 <strong>한국어:</strong> 뭐 먹을래요? (상대방에게 묻기)<br>
+				👉 <strong>일본어 느낌:</strong> 何を食べますか？ / 何にしますか？
+			</div>
+		</div>
+
+		<div class="slide-content">
+			<h2>2. 언제 어떻게 쓸까요?</h2>
+			<p>1. 친근하지만 예의를 차리는 상황에서 써요. (해요체)</p>
+			<p>2. 주로 <span class="highlight">동사(Action Verb)</span> 뒤에 붙어서 사용됩니다.</p>
+			<p>3. 질문할 때는 끝을 올리고(⤴), 대답할 때는 끝을 내려요(⤵).</p>
+			<br>
+			<div style="background:#FFFBEB; padding:15px; border-radius:8px; border:1px solid #FCD34D;">
+				💡 <strong>주의!</strong> 격식 있고 매우 정중한 자리(비즈니스, 발표)에서는 <strong>'-겠습니까 / -겠습니다'</strong>를 쓰는 것이 좋아요.
+			</div>
+		</div>
+
+		<div class="slide-content">
+			<h2>3. 단어 변형 규칙 (받침 확인!)</h2>
+			<p>동사 다 앞의 글자에 <strong>받침</strong>이 있는지 확인하세요!</p>
+			<table>
+				<thead>
+					<tr>
+						<th>구분</th>
+						<th>조건</th>
+						<th>변형 공식</th>
+						<th>예시 단어</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><strong>받침 없음 / 'ㄹ' 받침</strong></td>
+						<td>가다, 마시다, 놀다</td>
+						<td><span class="highlight">-ㄹ래요</span></td>
+						<td>가 + ㄹ래요 → <strong>갈래요</strong><br>놀 + 래 요 → <strong>놀래요</strong></td>
+					</tr>
+					<tr>
+						<td><strong>받침 있음</strong></td>
+						<td>먹다, 읽다, 앉다</td>
+						<td><span class="highlight">-을래요</span></td>
+						<td>먹 + 을래요 → <strong>먹을래요</strong><br>읽 + 을래요 → <strong>읽을래요</strong></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="slide-content">
+			<h2>4. 자주 쓰는 대화 예문</h2>
+			<div class="example-card">
+				<strong>A:</strong> 점심에 뭐 먹을래요? (What do you want to eat?)<br>
+				<strong>B:</strong> 저는 비빔밥 <span class="highlight">먹을래요</span>! (I'll eat Bibimbap!)
+			</div>
+			<div class="example-card">
+				<strong>A:</strong> 주말에 같이 영화 볼래요? (Do you want to watch a movie?)<br>
+				<strong>B:</strong> 좋아요! 같이 <span class="highlight">볼래요</span>. (Sounds good! I'll watch with you.)
+			</div>
+		</div>
+
+		<div class="slide-content">
+			<h2>5. 오늘 공부 마무리!</h2>
+			<p class="big-text">🎉 수고하셨습니다!</p>
+			<p style="text-align: center;">받침이 <strong>없으면 -ㄹ래요</strong>, 받침이 <strong>있으면 -을래요</strong>!</p>
+			<br>
+			<p style="text-align: center; color: var(--primary); font-weight: bold;">
+				단어 연습이 필요하다면 <span style="background:var(--accent); color:white; padding:2px 8px; border-radius:4px;">Ctrl + M</span>을 눌러 연습 메뉴를 열어보세요!
+			</p>
+		</div>
+
+		<div class="nav-controls">
+			<button class="btn" onclick="prevSlide()">◀ 이전 슬라이드</button>
+			<span class="slide-number" id="slide-num">1 / 6</span>
+			<button class="btn" onclick="nextSlide()">다음 슬라이드 ▶</button>
+		</div>
+	</div>
+
+	<div class="modal" id="menuModal">
+		<div class="modal-content">
+			<h2>🎯 연습 메뉴 (Select Practice)</h2>
+			<p style="font-size:14px;">원하는 연습 모드를 선택하세요 (닫기: ESC)</p>
+			<ul class="modal-menu-list">
+				<li class="modal-menu-item" onclick="openPractice(1)">1. 기본 변형 연습 (-ㄹ래요/을래요 고르기)</li>
+				<li class="modal-menu-item" onclick="openPractice(2)">2. 간단한 일본어 ➔ 한국어 변형하기</li>
+				<li class="modal-menu-item" onclick="openPractice(3)">3. 일본어를 한국어로 바꿔보기 (문장 완성)</li>
+			</ul>
+			<div id="practiceDisplay" class="practice-area" style="display:none;"></div>
+			<button class="btn" style="width:100%; margin-top:15px; padding:10px;" onclick="toggleMenu()">닫기</button>
+		</div>
+	</div>
+
+	<script>/* --- 슬라이드 전환 로직 --- */
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-content');
+        const slideNumDisplay = document.getElementById('slide-num');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            slideNumDisplay.innerText = `${index + 1} / ${slides.length}`;
+            // 슬라이드 이동 시 판서 캔버스 크기 재조정
+            resizeCanvas();
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        /* --- 판서 (Canvas) & Undo / Redo 기능 --- */
+        const canvas = document.getElementById('drawing-canvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('pptContainer');
+
+        let isDrawing = false;
+        let drawMode = false;
+        let textMode = false;
+
+        // Undo & Redo 히스토리 관리
+        let undoStack = [];
+        let redoStack = [];
+
+        function resizeCanvas() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            restoreState();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        setTimeout(resizeCanvas, 100); // 초기화 시 판서 레이어 크기 맞춤
+
+        function saveState() {
+            if (undoStack.length >= 20) undoStack.shift(); // 최대 20개까지 저장
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            redoStack = []; // 새로운 동작 발생 시 Redo 초기화
+        }
+
+        function undo() {
+            if (undoStack.length > 0) {
+                redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                let state = undoStack.pop();
+                ctx.putImageData(state, 0, 0);
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                let state = redoStack.pop();
+                ctx.putImageData(state, 0, 0);
+            }
+        }
+
+        function restoreState() {
+            if (undoStack.length > 0) {
+                ctx.putImageData(undoStack[undoStack.length - 1], 0, 0);
+            }
+        }
+
+        function toggleDrawMode() {
+            drawMode = !drawMode;
+            textMode = false;
+            const btn = document.getElementById('btn-draw');
+            if (drawMode) {
+                canvas.classList.add('drawing-active');
+                btn.classList.add('active');
+            } else {
+                canvas.classList.remove('drawing-active');
+                btn.classList.remove('active');
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!drawMode) return;
+            saveState();
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+            ctx.strokeStyle = '#EF4444'; // 빨간색 펜
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDrawing && drawMode) {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+        function clearCanvas() {
+            saveState();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        /* --- 글자 쓰기 (Text Mode) 기능 --- */
+        function enableTextMode() {
+            textMode = true;
+            if(drawMode) toggleDrawMode();
+            alert("슬라이드 위 원하는 위치를 클릭하여 텍스트를 입력하세요.");
+        }
+
+        container.addEventListener('click', function(e) {
+            if (!textMode) return;
+
+            // 툴바나 버튼 클릭 시 반응하지 않음
+            if (e.target.closest('.toolbar') || e.target.closest('.nav-controls')) return;
+
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const textBox = document.createElement('div');
+            textBox.className = 'text-box';
+            textBox.contentEditable = true;
+            textBox.style.left = x + 'px';
+            textBox.style.top = y + 'px';
+
+            container.appendChild(textBox);
+            textBox.focus();
+
+            textBox.addEventListener('blur', function() {
+                if (textBox.innerText.trim() === '') {
+                    textBox.remove();
+                }
+            });
+
+            textMode = false; // 입력창 생성 후 글쓰기 모드 해제
+        });
+
+        /* --- 단축키 지원 (Ctrl+Z, Ctrl+Y, Ctrl+M, 화살표) --- */
+        document.addEventListener('keydown', function(e) {
+            // 입력 중일 때는 슬라이드 이동 단축키 비활성화
+            if (e.target.isContentEditable || e.target.tagName === 'INPUT') return;
+
+            if (e.ctrlKey && (e.key === 'z' || e.key === 'Z' || e.key === 'ㅋ')) {
+                e.preventDefault();
+                undo();
+            } else if (e.ctrlKey && (e.key === 'y' || e.key === 'Y' || e.key === 'ㅛ')) {
+                e.preventDefault();
+                redo();
+            } else if (e.ctrlKey && (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ')) {
+                e.preventDefault();
+                toggleMenu();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'Escape') {
+                document.getElementById('menuModal').classList.remove('active');
+            }
+        });
+
+        /* --- 메뉴 (Ctrl+M 모달 & 연습 모드) --- */
+        function toggleMenu() {
+            const modal = document.getElementById('menuModal');
+            modal.classList.toggle('active');
+            document.getElementById('practiceDisplay').style.display = 'none';
+        }
+
+        function openPractice(type) {
+            const display = document.getElementById('practiceDisplay');
+            display.style.display = 'block';
+
+            if (type === 1) {
+                display.innerHTML = `
+                    <h4>1. 기본 변형 연습</h4>
+                    <p style="margin: 10px 0;">Q. <strong>'보다(Watch)'</strong> + -할래요?</p>
+                    <button class="btn" onclick="alert('정답입니다! (보다 -> 볼래요)')">보을래요</button>
+                    <button class="btn" onclick="alert('정답입니다! (받침이 없으므로 ㄹ래요)')">볼래요</button>
+                `;
+            } else if (type === 2) {
+                display.innerHTML = `
+                    <h4>2. 간단한 일본어 ➔ 한국어 변형하기</h4>
+                    <p style="margin: 10px 0;">Q. <strong>「食べます (먹다)」</strong> 를 '-할래요' 형태로 바꾸면?</p>
+                    <input type="text" id="p-ans1" placeholder="정답 입력" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                    <button class="btn" onclick="checkAns('먹을래요', 'p-ans1')">확인</button>
+                `;
+            } else if (type === 3) {
+                display.innerHTML = `
+                    <h4>3. 일본어 문장을 한국어로 바꿔보기</h4>
+                    <p style="margin: 10px 0;">Q. <strong>「明日、映画を見ますか？ (내일 영화 볼래요?)」</strong></p>
+                    <input type="text" id="p-ans2" placeholder="한국어로 문장 완성하기" style="width: 80%; padding: 5px; margin-bottom: 5px;">
+                    <button class="btn" onclick="checkAns('내일 영화 볼래요?', 'p-ans2')">정답 확인</button>
+                `;
+            }
+        }
+
+        function checkAns(target, inputId) {
+            const val = document.getElementById(inputId).value.trim();
+            if (val === target) {
+                alert("🎉 정답입니다!");
+            } else {
+                alert(`아쉽네요. 정답은 [ ${target} ] 입니다.`);
+            }
+        }</script>
+</body>
+</html>

@@ -1,0 +1,822 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo 한국어  / 韓国語  / 韩语 </title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		body {
+			background-color: #ffffff;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 20px 20px 60px 20px;
+		}
+
+		/* ==========================================
+			 언어 스위처 탑 바 (日本語 / 中文)
+			 ========================================== */
+		.lang-switcher-bar {
+			width: 100%;
+			max-width: 960px;
+			margin-bottom: 20px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.lang-btn {
+			background-color: #f1f5f9;
+			border: 1px solid #cbd5e1;
+			color: #475569;
+			padding: 6px 14px;
+			border-radius: 20px;
+			font-size: 0.82rem;
+			font-weight: 700;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.2s;
+		}
+
+			.lang-btn.active {
+				background-color: #4f46e5;
+				color: #ffffff;
+				border-color: #4f46e5;
+				box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+			}
+
+		/* ==========================================
+			 위젯 메인 그리드 컨테이너
+			 ========================================== */
+		.openrun-container {
+			width: 100%;
+			max-width: 960px;
+			display: grid;
+			grid-template-columns: 340px 1fr;
+			gap: 40px;
+			align-items: stretch;
+		}
+
+		/* ==========================================
+			 좌측 타임라인 영역
+			 ========================================== */
+		.timeline-wrapper {
+			position: relative;
+			padding-left: 28px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+		}
+
+			.timeline-wrapper::before {
+				content: '';
+				position: absolute;
+				left: 7px;
+				top: 15px;
+				bottom: 35px;
+				width: 1px;
+				background-color: #e2e8f0;
+				z-index: 1;
+			}
+
+		.timeline-list {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+			list-style: none;
+		}
+
+		.timeline-item {
+			position: relative;
+			cursor: pointer;
+			padding: 6px 0 6px 12px;
+			transition: all 0.3s ease;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.timeline-clock-icon {
+			position: absolute;
+			left: -28px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 16px;
+			height: 16px;
+			background-color: #ffffff;
+			color: #334155;
+			font-size: 0.85rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 2;
+			transition: all 0.3s ease;
+		}
+
+		.timeline-time {
+			font-size: 0.95rem;
+			font-weight: 700;
+			color: #0f172a;
+			margin-bottom: 4px;
+		}
+
+		.timeline-title {
+			font-size: 0.95rem;
+			font-weight: 500;
+			color: #334155;
+			line-height: 1.35;
+		}
+
+		.timeline-item.active {
+			background-color: #111827;
+			color: #ffffff;
+			border-radius: 4px;
+			padding: 16px 20px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			margin-left: -4px;
+		}
+
+			.timeline-item.active .timeline-clock-icon {
+				opacity: 0;
+			}
+
+			.timeline-item.active::after {
+				content: '';
+				position: absolute;
+				right: -8px;
+				top: 50%;
+				transform: translateY(-50%);
+				border-top: 6px solid transparent;
+				border-bottom: 6px solid transparent;
+				border-left: 8px solid #111827;
+			}
+
+			.timeline-item.active .badge-text {
+				font-size: 0.85rem;
+				font-weight: 800;
+				color: #facc15;
+				margin-bottom: 4px;
+				display: block;
+			}
+
+			.timeline-item.active .timeline-title {
+				font-size: 1.05rem;
+				font-weight: 700;
+				color: #ffffff;
+			}
+
+		.timeline-arrow {
+			text-align: center;
+			padding-top: 10px;
+			color: #64748b;
+			font-size: 0.9rem;
+			animation: bounce 1.5s infinite;
+		}
+
+		@keyframes bounce {
+			0%, 100% {
+				transform: translateY(0);
+			}
+
+			50% {
+				transform: translateY(5px);
+			}
+		}
+
+		/* ==========================================
+			 우측 섹션 (이미지 + 정보 + 버튼)
+			 ========================================== */
+		.content-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		.image-box {
+			position: relative;
+			width: 100%;
+			height: 380px;
+			border-radius: 4px;
+			overflow: hidden;
+			background-color: #f1f5f9;
+		}
+
+			.image-box img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: opacity 0.3s ease;
+			}
+
+		.ai-tag {
+			position: absolute;
+			right: 12px;
+			bottom: 12px;
+			background: rgba(0, 0, 0, 0.4);
+			color: #ffffff;
+			font-size: 0.7rem;
+			font-weight: 600;
+			padding: 2px 6px;
+			border-radius: 3px;
+			backdrop-filter: blur(2px);
+		}
+
+		.info-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 0.85rem;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.applicant-count {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+		}
+
+		.timer-display {
+			font-family: 'Courier New', Courier, monospace;
+			font-size: 1.05rem;
+			letter-spacing: 1px;
+		}
+
+		.action-group {
+			display: flex;
+			gap: 8px;
+		}
+
+		.share-btn {
+			width: 48px;
+			height: 48px;
+			border: 1px solid #cbd5e1;
+			background-color: #ffffff;
+			border-radius: 4px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			color: #334155;
+			font-size: 1rem;
+			transition: background 0.2s;
+		}
+
+			.share-btn:hover {
+				background-color: #f8fafc;
+			}
+
+		.notify-btn {
+			flex: 1;
+			height: 48px;
+			background-color: #111827;
+			color: #ffffff;
+			border: none;
+			border-radius: 4px;
+			font-size: 0.95rem;
+			font-weight: 700;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 8px;
+			transition: background 0.2s;
+		}
+
+			.notify-btn:hover {
+				background-color: #1f2937;
+			}
+
+		/* ==========================================
+			 오늘의 한국어 (가운데 정렬)
+			 ========================================== */
+		.daily-japanese-bar {
+			width: 100%;
+			max-width: 960px;
+			margin-top: 25px;
+			background-color: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 6px;
+			padding: 14px 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 16px;
+		}
+
+		.daily-badge {
+			background-color: #4f46e5;
+			color: #ffffff;
+			font-size: 0.75rem;
+			font-weight: 800;
+			padding: 4px 12px;
+			border-radius: 20px;
+			white-space: nowrap;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			flex-shrink: 0;
+		}
+
+		.daily-content {
+			font-size: 0.95rem;
+			color: #0f172a;
+			font-weight: 500;
+			text-align: center;
+		}
+
+			.daily-content .ko-text {
+				font-weight: 800;
+				color: #1e1b4b;
+				margin-right: 8px;
+			}
+
+			.daily-content .reading-text {
+				font-size: 0.85rem;
+				color: #64748b;
+				margin-right: 12px;
+			}
+
+			.daily-content .meaning-text {
+				font-size: 0.9rem;
+				color: #059669;
+				font-weight: 600;
+			}
+
+		/* ==========================================
+			 하단 무한 흘러가는 실시간 댓글 바
+			 ========================================== */
+		.comment-marquee-container {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: #0f172a;
+			color: #ffffff;
+			border-top: 1px solid #334155;
+			padding: 10px 0;
+			z-index: 100;
+			overflow: hidden;
+			box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+		.marquee-inner {
+			max-width: 960px;
+			margin: 0 auto;
+			position: relative;
+			display: flex;
+			align-items: center;
+		}
+
+		.marquee-label {
+			background-color: #facc15;
+			color: #0f172a;
+			font-size: 0.7rem;
+			font-weight: 800;
+			padding: 3px 8px;
+			border-radius: 3px;
+			position: absolute;
+			left: 10px;
+			z-index: 10;
+			flex-shrink: 0;
+		}
+
+		.marquee-track-wrapper {
+			overflow: hidden;
+			width: 100%;
+			padding-left: 110px; /* 라벨 자리 확보 */
+		}
+
+		@keyframes marqueeSlide {
+			0% {
+				transform: translateX(0%);
+			}
+
+			100% {
+				transform: translateX(-50%);
+			}
+		}
+
+		.marquee-track {
+			display: flex;
+			width: max-content;
+			animation: marqueeSlide 28s linear infinite;
+			gap: 30px;
+		}
+
+			.marquee-track:hover {
+				animation-play-state: paused;
+			}
+
+		.comment-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 0.82rem;
+			color: #e2e8f0;
+			white-space: nowrap;
+		}
+
+		.comment-user {
+			font-weight: 700;
+			color: #facc15;
+		}
+
+		.comment-text {
+			color: #cbd5e1;
+		}
+
+		.comment-divider {
+			color: #475569;
+			margin-left: 15px;
+		}
+
+		@media (max-width: 768px) {
+			.openrun-container {
+				grid-template-columns: 1fr;
+				gap: 24px;
+			}
+
+			.timeline-wrapper {
+				height: auto;
+			}
+
+			.timeline-list {
+				gap: 16px;
+			}
+
+			.image-box {
+				height: 280px;
+			}
+
+			.daily-japanese-bar {
+				flex-direction: column;
+				gap: 8px;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="lang-switcher-bar">
+		<button class="lang-btn active" id="btn-ja" onclick="changeLanguage('ja')">
+			 日本語 (Japanese)
+		</button>
+		<button class="lang-btn" id="btn-zh" onclick="changeLanguage('zh')">
+			 中文 (Chinese)
+		</button>
+	</div>
+
+	<div class="openrun-container">
+
+		<div class="timeline-wrapper">
+			<ul class="timeline-list" id="timelineList">
+			</ul>
+			<div class="timeline-arrow">
+				<i class="fa-solid fa-chevron-down"></i>
+			</div>
+		</div>
+
+		<div class="content-wrapper">
+			<div class="image-box">
+				<img id="productImage" src="" alt="한국어 학습 이미지">
+				<span class="ai-tag">AI</span>
+			</div>
+
+			<div class="info-bar">
+				<div class="applicant-count">
+					<i class="fa-solid fa-user-group text-slate-700"></i>
+					<span id="applicantCount">0</span><span id="txtApplicantUnit">명이 신청 중</span>
+				</div>
+				<div class="timer-display" id="timerDisplay">
+					00 : 00 : 00
+				</div>
+			</div>
+
+			<div class="action-group">
+				<button class="share-btn" title="공유하기" id="shareBtn" onclick="handleShare()">
+					<i class="fa-solid fa-arrow-up-from-bracket"></i>
+				</button>
+				<button class="notify-btn" id="notifyBtn" onclick="handleNotify()">
+					<i class="fa-regular fa-bell"></i> <span id="txtNotifyBtn">알림 신청</span>
+				</button>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="daily-japanese-bar">
+		<div class="daily-badge" id="dailyBadgeTitle">
+			<i class="fa-solid fa-comment-dots"></i> 오늘의 한국어
+		</div>
+		<div class="daily-content" id="dailyKoreanText">
+		</div>
+	</div>
+
+	<div class="comment-marquee-container">
+		<div class="marquee-inner">
+			<div class="marquee-label" id="txtMarqueeLabel">실시간 댓글</div>
+			<div class="marquee-track-wrapper">
+				<div class="marquee-track" id="commentMarqueeTrack">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>// 현재 선택된 언어 ('ja': 일본어 학습자용, 'zh': 중국어 학습자용)
+		let currentLang = 'ja';
+
+		// 다국어 라벨 번역 데이터
+		const uiTranslations = {
+			ja: {
+				applicantUnit: "人が申込中",
+				notifyBtn: "通知を予約する",
+				dailyBadge: "今日の韓国語",
+				marqueeLabel: "リアルタイムコメント",
+				shareAlert: "リンクがコピーされました。",
+				notifyAlert: "通知予約が完了しました。"
+			},
+			zh: {
+				applicantUnit: "人正在申请",
+				notifyBtn: "预约提醒",
+				dailyBadge: "每日韩语",
+				marqueeLabel: "实时评论",
+				shareAlert: "链接已复制。",
+				notifyAlert: "提醒预约成功。"
+			}
+		};
+
+		// 오픈런 이벤트 타임라인 데이터 (한국어 학습 교재/강의 중심)
+		const openrunDataMap = {
+			ja: [
+				{
+					badge: "締め切り間近！",
+					time: "本日 16:00",
+					title: "耳から覚える！韓国語リスニングマスター",
+					image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=1000&auto=format&fit=crop",
+					applicants: 222,
+					secondsLeft: 24874
+				},
+				{
+					badge: "ハングル完全攻略",
+					time: "8/19(水) 09:00",
+					title: "超初心者向け：ハングル文字完璧マスター",
+					image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop",
+					applicants: 310,
+					secondsLeft: 86400
+				},
+				{
+					badge: "単独特価！",
+					time: "8/19(水) 09:00",
+					title: "ドラマで学ぶリアルな韓国語日常会話",
+					image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop",
+					applicants: 154,
+					secondsLeft: 86400
+				},
+				{
+					badge: "韓国旅行の準備",
+					time: "8/19(水) 16:00",
+					title: "ソウル旅行でスグ使える旅行韓国語パック",
+					image: "https://images.unsplash.com/photo-1538485399081-7191377e8241?q=80&w=1000&auto=format&fit=crop",
+					applicants: 89,
+					secondsLeft: 111600
+				}
+			],
+			zh: [
+				{
+					badge: "即将截止！",
+					time: "今天 16:00",
+					title: "用耳朵学韩语！听力强化训练",
+					image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=1000&auto=format&fit=crop",
+					applicants: 222,
+					secondsLeft: 24874
+				},
+				{
+					badge: "零基础必备",
+					time: "8/19(三) 09:00",
+					title: "零基础秒懂：韩文谚文发音全攻略",
+					image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop",
+					applicants: 310,
+					secondsLeft: 86400
+				},
+				{
+					badge: "独家特惠",
+					time: "8/19(三) 09:00",
+					title: "看韩剧学地道口语生活会话",
+					image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop",
+					applicants: 154,
+					secondsLeft: 86400
+				},
+				{
+					badge: "韩国旅游必备",
+					time: "8/19(三) 16:00",
+					title: "首尔自由行：即学即用的旅游韩语",
+					image: "https://images.unsplash.com/photo-1538485399081-7191377e8241?q=80&w=1000&auto=format&fit=crop",
+					applicants: 89,
+					secondsLeft: 111600
+				}
+			]
+		};
+
+		// 하루마다 변경되는 오늘의 한국어 표현 (한국어 + 발음 + 일본어/중국어 번역)
+		const dailyKoreanListMap = {
+			ja: [
+				{ ko: "열심히 공부해요", reading: "ヨルシミ コンブヘヨ", meaning: "一生懸命勉強します" },
+				{ ko: "천 리 길도 한 걸음부터", reading: "チョンリ 길ド ハンゴルムブト", meaning: "千里の道も一歩から" },
+				{ ko: "오늘 하루도 화이팅!", reading: "オヌル ハルドア ファイティン!", meaning: "今日も一日ファイト！" },
+				{ ko: "포기하지 마세요", reading: "ポギハジ マセヨ", meaning: "諦めないでください" },
+				{ ko: "시작이 반이다", reading: "シジャギ バニダ", meaning: "案ずるより生むが易し (始まりは半分)" }
+			],
+			zh: [
+				{ ko: "열심히 공부해요", reading: "Yeol-sim-hi gong-bu-hae-yo", meaning: "努力学习" },
+				{ ko: "천 리 길도 한 걸음부터", reading: "Cheon-ri gil-do han geor-eum-bu-teo", meaning: "千里之行，始于足下" },
+				{ ko: "오늘 하루도 화이팅!", reading: "O-neul ha-ru-do hwa-i-ting!", meaning: "今天一天也要加油！" },
+				{ ko: "포기하지 마세요", reading: "Po-gi-ha-ji ma-se-yo", meaning: "请不要放弃" },
+				{ ko: "시작이 반이다", reading: "Si-ja-gi ban-i-da", meaning: "良好的开端是成功的一半" }
+			]
+		};
+
+		// 하단 실시간 댓글 데이터 (일본인/중국인 학습자의 한국어 공부 후기)
+		const commentListMap = {
+			ja: [
+				{ user: "T*naka", text: "通勤中に聞き流すだけでハングルが聞き取れるようになりました！" },
+				{ user: "S*tani", text: "発음コース申し込みました。楽しみです！" },
+				{ user: "K*moto", text: "ドラマの台詞がそのまま聞き取れて感動です！" },
+				{ user: "M*yazaki", text: "ソウル旅行前に勉強できて助かりました。" },
+				{ user: "A*e", text: "毎日コツコツ続けるのが一番ですね。" }
+			],
+			zh: [
+				{ user: "张*伟", text: "上下班路上听很方便，韩语听力明显提升了！" },
+				{ user: "李*娜", text: "零基础发音课已报名，期待！" },
+				{ user: "王*强", text: "学完后看韩剧不用一直盯着字幕了！" },
+				{ user: "刘*洋", text: "去首尔旅游之前复习一下，非常实用。" },
+				{ user: "陈*杰", text: "每天坚持卡打，感觉韩语变简单了！" }
+			]
+		};
+
+		let currentIndex = 0;
+		let autoSlideTimer = null;
+		let countTimer = null;
+
+		// 언어 스위처 변경 함수
+		function changeLanguage(lang) {
+			currentLang = lang;
+
+			// 버튼 활성화 클래스 변경
+			document.getElementById('btn-ja').className = `lang-btn ${lang === 'ja' ? 'active' : ''}`;
+			document.getElementById('btn-zh').className = `lang-btn ${lang === 'zh' ? 'active' : ''}`;
+
+			// UI 라벨 갱신
+			const t = uiTranslations[lang];
+			document.getElementById('txtApplicantUnit').innerText = t.applicantUnit;
+			document.getElementById('txtNotifyBtn').innerText = t.notifyBtn;
+			document.getElementById('dailyBadgeTitle').innerHTML = `<i class="fa-solid fa-comment-dots"></i> ${t.dailyBadge}`;
+			document.getElementById('txtMarqueeLabel').innerText = t.marqueeLabel;
+
+			// 데이터 새로고침
+			currentIndex = 0;
+			renderTimeline();
+			renderDailyKorean();
+			renderCommentMarquee();
+			resetAutoSlide();
+		}
+
+		// 1. 타임라인 목록 렌더링
+		function renderTimeline() {
+			const dataList = openrunDataMap[currentLang];
+			const listEl = document.getElementById('timelineList');
+			listEl.innerHTML = dataList.map((item, index) => {
+				const isActive = index === currentIndex;
+				return `
+					<li class="timeline-item ${isActive ? 'active' : ''}" onclick="selectItem(${index})">
+						<span class="timeline-clock-icon">
+							<i class="fa-regular fa-clock"></i>
+						</span>
+						${isActive ? `<span class="badge-text">${item.badge}</span>` : `<div class="timeline-time">${item.time}</div>`}
+						<div class="timeline-title">${item.title}</div>
+					</li>
+				`;
+			}).join('');
+
+			updateContent(dataList[currentIndex]);
+		}
+
+		// 2. 우측 콘텐츠 갱신
+		function updateContent(item) {
+			const imgEl = document.getElementById('productImage');
+			imgEl.style.opacity = '0.3';
+			setTimeout(() => {
+				imgEl.src = item.image;
+				imgEl.style.opacity = '1';
+			}, 150);
+
+			document.getElementById('applicantCount').innerText = item.applicants.toLocaleString();
+			startTimer(item.secondsLeft);
+		}
+
+		// 3. 타이머 카운트다운
+		function startTimer(seconds) {
+			if (countTimer) clearInterval(countTimer);
+
+			let currentSeconds = seconds;
+
+			function updateDisplay() {
+				const hrs = String(Math.floor(currentSeconds / 3600)).padStart(2, '0');
+				const mins = String(Math.floor((currentSeconds % 3600) / 60)).padStart(2, '0');
+				const secs = String(currentSeconds % 60).padStart(2, '0');
+				document.getElementById('timerDisplay').innerText = `${hrs} : ${mins} : ${secs}`;
+			}
+
+			updateDisplay();
+			countTimer = setInterval(() => {
+				if (currentSeconds > 0) {
+					currentSeconds--;
+					updateDisplay();
+				}
+			}, 1000);
+		}
+
+		// 4. 수동 아이템 선택
+		function selectItem(index) {
+			currentIndex = index;
+			renderTimeline();
+			resetAutoSlide();
+		}
+
+		// 5. 자동 이동
+		function startAutoSlide() {
+			autoSlideTimer = setInterval(() => {
+				const dataList = openrunDataMap[currentLang];
+				currentIndex = (currentIndex + 1) % dataList.length;
+				renderTimeline();
+			}, 3500);
+		}
+
+		function resetAutoSlide() {
+			if (autoSlideTimer) clearInterval(autoSlideTimer);
+			startAutoSlide();
+		}
+
+		// 6. 오늘의 한국어 표현 (가운데 정렬)
+		function renderDailyKorean() {
+			const list = dailyKoreanListMap[currentLang];
+			const today = new Date();
+			const dayNumber = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
+			const index = dayNumber % list.length;
+			const item = list[index];
+
+			const el = document.getElementById('dailyKoreanText');
+			el.innerHTML = `
+				<span class="ko-text">"${item.ko}"</span>
+				<span class="reading-text">(${item.reading})</span>
+				<span class="meaning-text">- ${item.meaning}</span>
+			`;
+		}
+
+		// 7. 하단 댓글 끊김 없는 무한 흘러가기 트랙 생성
+		function renderCommentMarquee() {
+			const list = commentListMap[currentLang];
+			const trackEl = document.getElementById('commentMarqueeTrack');
+			if (!trackEl) return;
+
+			const htmlContent = list.map(c => `
+				<div class="comment-item">
+					<span class="comment-user">${c.user}:</span>
+					<span class="comment-text">"${c.text}"</span>
+					<span class="comment-divider">|</span>
+				</div>
+			`).join('');
+
+			trackEl.innerHTML = htmlContent + htmlContent;
+		}
+
+		function handleShare() {
+			alert(uiTranslations[currentLang].shareAlert);
+		}
+
+		function handleNotify() {
+			alert(uiTranslations[currentLang].notifyAlert);
+		}
+
+		window.onload = function() {
+			changeLanguage('ja'); // 기본값: 일본어 대응 버전
+		};</script>
+</body>
+</html>

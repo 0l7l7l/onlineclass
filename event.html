@@ -1,0 +1,675 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>세모 이벤트</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		body {
+			background-color: #ffffff;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 20px 20px 60px 20px; /* 하단 댓글바 공간 확보 */
+		}
+
+		/* ==========================================
+			 위젯 메인 그리드 컨테이너
+			 ========================================== */
+		.openrun-container {
+			width: 100%;
+			max-width: 960px;
+			display: grid;
+			grid-template-columns: 340px 1fr;
+			gap: 40px;
+			align-items: stretch;
+		}
+
+		/* ==========================================
+			 좌측 타임라인 영역
+			 ========================================== */
+		.timeline-wrapper {
+			position: relative;
+			padding-left: 28px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+		}
+
+			.timeline-wrapper::before {
+				content: '';
+				position: absolute;
+				left: 7px;
+				top: 15px;
+				bottom: 35px;
+				width: 1px;
+				background-color: #e2e8f0;
+				z-index: 1;
+			}
+
+		.timeline-list {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+			list-style: none;
+		}
+
+		.timeline-item {
+			position: relative;
+			cursor: pointer;
+			padding: 6px 0 6px 12px;
+			transition: all 0.3s ease;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.timeline-clock-icon {
+			position: absolute;
+			left: -28px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 16px;
+			height: 16px;
+			background-color: #ffffff;
+			color: #334155;
+			font-size: 0.85rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 2;
+			transition: all 0.3s ease;
+		}
+
+		.timeline-time {
+			font-size: 0.95rem;
+			font-weight: 700;
+			color: #0f172a;
+			margin-bottom: 4px;
+		}
+
+		.timeline-title {
+			font-size: 0.95rem;
+			font-weight: 500;
+			color: #334155;
+			line-height: 1.35;
+		}
+
+		.timeline-item.active {
+			background-color: #111827;
+			color: #ffffff;
+			border-radius: 4px;
+			padding: 16px 20px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			margin-left: -4px;
+		}
+
+			.timeline-item.active .timeline-clock-icon {
+				opacity: 0;
+			}
+
+			.timeline-item.active::after {
+				content: '';
+				position: absolute;
+				right: -8px;
+				top: 50%;
+				transform: translateY(-50%);
+				border-top: 6px solid transparent;
+				border-bottom: 6px solid transparent;
+				border-left: 8px solid #111827;
+			}
+
+			.timeline-item.active .badge-text {
+				font-size: 0.85rem;
+				font-weight: 800;
+				color: #facc15;
+				margin-bottom: 4px;
+				display: block;
+			}
+
+			.timeline-item.active .timeline-title {
+				font-size: 1.05rem;
+				font-weight: 700;
+				color: #ffffff;
+			}
+
+		.timeline-arrow {
+			text-align: center;
+			padding-top: 10px;
+			color: #64748b;
+			font-size: 0.9rem;
+			animation: bounce 1.5s infinite;
+		}
+
+		@keyframes bounce {
+			0%, 100% {
+				transform: translateY(0);
+			}
+
+			50% {
+				transform: translateY(5px);
+			}
+		}
+
+		/* ==========================================
+			 우측 섹션 (이미지 + 정보 + 버튼)
+			 ========================================== */
+		.content-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		.image-box {
+			position: relative;
+			width: 100%;
+			height: 380px;
+			border-radius: 4px;
+			overflow: hidden;
+			background-color: #f1f5f9;
+		}
+
+			.image-box img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: opacity 0.3s ease;
+			}
+
+		.ai-tag {
+			position: absolute;
+			right: 12px;
+			bottom: 12px;
+			background: rgba(0, 0, 0, 0.4);
+			color: #ffffff;
+			font-size: 0.7rem;
+			font-weight: 600;
+			padding: 2px 6px;
+			border-radius: 3px;
+			backdrop-filter: blur(2px);
+		}
+
+		.info-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 0.85rem;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.applicant-count {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+		}
+
+		.timer-display {
+			font-family: 'Courier New', Courier, monospace;
+			font-size: 1.05rem;
+			letter-spacing: 1px;
+		}
+
+		.action-group {
+			display: flex;
+			gap: 8px;
+		}
+
+		.share-btn {
+			width: 48px;
+			height: 48px;
+			border: 1px solid #cbd5e1;
+			background-color: #ffffff;
+			border-radius: 4px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			color: #334155;
+			font-size: 1rem;
+			transition: background 0.2s;
+		}
+
+			.share-btn:hover {
+				background-color: #f8fafc;
+			}
+
+		.notify-btn {
+			flex: 1;
+			height: 48px;
+			background-color: #111827;
+			color: #ffffff;
+			border: none;
+			border-radius: 4px;
+			font-size: 0.95rem;
+			font-weight: 700;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 8px;
+			transition: background 0.2s;
+		}
+
+			.notify-btn:hover {
+				background-color: #1f2937;
+			}
+
+		/* ==========================================
+			 🔥 오늘의 일본어 (가운데 정렬)
+			 ========================================== */
+		.daily-japanese-bar {
+			width: 100%;
+			max-width: 960px;
+			margin-top: 25px;
+			background-color: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 6px;
+			padding: 14px 20px;
+			display: flex;
+			justify-content: center; /* 가운데 정렬 */
+			align-items: center;
+			gap: 16px;
+		}
+
+		.daily-badge {
+			background-color: #4f46e5;
+			color: #ffffff;
+			font-size: 0.75rem;
+			font-weight: 800;
+			padding: 4px 12px;
+			border-radius: 20px;
+			white-space: nowrap;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			shrink: 0;
+		}
+
+		.daily-content {
+			font-size: 0.95rem;
+			color: #0f172a;
+			font-weight: 500;
+			text-align: center; /* 가운데 정렬 */
+		}
+
+			.daily-content .jp-text {
+				font-weight: 700;
+				color: #1e1b4b;
+				margin-right: 8px;
+			}
+
+			.daily-content .reading-text {
+				font-size: 0.85rem;
+				color: #64748b;
+				margin-right: 12px;
+			}
+
+			.daily-content .ko-text {
+				font-size: 0.9rem;
+				color: #334155;
+				font-weight: 600;
+			}
+
+		/* ==========================================
+			 🔥 신규 추가: 하단 무한 흘러가는 댓글 바
+			 ========================================== */
+		.comment-marquee-container {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: #0f172a;
+			color: #ffffff;
+			border-top: 1px solid #334155;
+			padding: 10px 0;
+			z-index: 100;
+			overflow: hidden;
+			box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+		.marquee-inner {
+			max-width: 960px;
+			margin: 0 auto;
+			position: relative;
+			display: flex;
+			align-items: center;
+		}
+
+		.marquee-label {
+			background-color: #facc15;
+			color: #0f172a;
+			font-size: 0.7rem;
+			font-weight: 800;
+			padding: 3px 8px;
+			border-radius: 3px;
+			position: absolute;
+			left: 10px;
+			z-index: 10;
+			shrink: 0;
+		}
+
+		.marquee-track-wrapper {
+			overflow: hidden;
+			width: 100%;
+			padding-left: 90px; /* 라벨 자리 확보 */
+		}
+
+		@keyframes marqueeSlide {
+			0% {
+				transform: translateX(0%);
+			}
+
+			100% {
+				transform: translateX(-50%);
+			}
+		}
+
+		.marquee-track {
+			display: flex;
+			width: max-content;
+			animation: marqueeSlide 28s linear infinite;
+			gap: 30px;
+		}
+
+			.marquee-track:hover {
+				animation-play-state: paused; /* 마우스 호버 시 이동 멈춤 */
+			}
+
+		.comment-item {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 0.82rem;
+			color: #e2e8f0;
+			white-space: nowrap;
+		}
+
+		.comment-user {
+			font-weight: 700;
+			color: #facc15;
+		}
+
+		.comment-text {
+			color: #cbd5e1;
+		}
+
+		.comment-divider {
+			color: #475569;
+			margin-left: 15px;
+		}
+
+		@media (max-width: 768px) {
+			.openrun-container {
+				grid-template-columns: 1fr;
+				gap: 24px;
+			}
+
+			.timeline-wrapper {
+				height: auto;
+			}
+
+			.timeline-list {
+				gap: 16px;
+			}
+
+			.image-box {
+				height: 280px;
+			}
+
+			.daily-japanese-bar {
+				flex-direction: column;
+				gap: 8px;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="openrun-container">
+
+		<div class="timeline-wrapper">
+			<ul class="timeline-list" id="timelineList">
+			</ul>
+			<div class="timeline-arrow">
+				<i class="fa-solid fa-chevron-down"></i>
+			</div>
+		</div>
+
+		<div class="content-wrapper">
+			<div class="image-box">
+				<img id="productImage" src="" alt="상품 이미지">
+				<span class="ai-tag">AI</span>
+			</div>
+
+			<div class="info-bar">
+				<div class="applicant-count">
+					<i class="fa-solid fa-user-group text-slate-700"></i>
+					<span id="applicantCount">0</span>명 신청중
+				</div>
+				<div class="timer-display" id="timerDisplay">
+					00 : 00 : 00
+				</div>
+			</div>
+
+			<div class="action-group">
+				<button class="share-btn" title="공유하기" onclick="alert('링크가 복사되었습니다.')">
+					<i class="fa-solid fa-arrow-up-from-bracket"></i>
+				</button>
+				<button class="notify-btn" onclick="alert('알림 신청이 완료되었습니다.')">
+					<i class="fa-regular fa-bell"></i> 알림신청
+				</button>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="daily-japanese-bar">
+		<div class="daily-badge">
+			<i class="fa-solid fa-comment-dots"></i> 오늘의 일본어
+		</div>
+		<div class="daily-content" id="dailyJapaneseText">
+		</div>
+	</div>
+
+	<div class="comment-marquee-container">
+		<div class="marquee-inner">
+			<div class="marquee-label">실시간 댓글</div>
+			<div class="marquee-track-wrapper">
+				<div class="marquee-track" id="commentMarqueeTrack">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// 타임라인 상품 데이터
+		const openrunData = [
+			{
+				badge: "늦으면 끝남 주의",
+				time: "오늘 16:00",
+				title: "나는 들으면서 일본어한다",
+				image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
+				applicants: 222,
+				secondsLeft: 24874
+			},
+			{
+				badge: "마감 임박",
+				time: "8/19(수) 09:00",
+				title: "첫 일본어는글자부터!글자완전정복!",
+				image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000&auto=format&fit=crop",
+				applicants: 310,
+				secondsLeft: 86400
+			},
+			{
+				badge: "단독 특가",
+				time: "8/19(수) 09:00",
+				title: "'나중에'는없어.'지금 당장'",
+				image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000&auto=format&fit=crop",
+				applicants: 154,
+				secondsLeft: 86400
+			},
+			{
+				badge: "가을 일본여행 준비",
+				time: "8/19(수) 16:00",
+				title: "세모와 함께하는 가을 일본여행",
+				image: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=80&w=1000&auto=format&fit=crop",
+				applicants: 89,
+				secondsLeft: 111600
+			}
+		];
+
+		// 하루마다 변경되는 오늘의 일본어 목록
+		const dailyJapaneseList = [
+			{ jp: "一期一会", reading: "いちごいちえ (이치고이치에)", ko: "일생에 단 한 번뿐인 인연" },
+			{ jp: "千里の道も一歩から", reading: "せんりのみちもいっぽから (센리노 미치모 이뽀카라)", ko: "천 리 길도 한 걸음부터" },
+			{ jp: "継続は力なり", reading: "けいぞくはちからなり (케이조쿠와 치카라나리)", ko: "꾸준함이 곧 힘이다" },
+			{ jp: "明日は明日の風が吹く", reading: "あしたはあしたのかぜがふく (아시타와 아시타노 카제가 후쿠)", ko: "내일은 내일의 바람이 분다" },
+			{ jp: "七転び八起き", reading: "ななころびやおき (나나코로비 야오키)", ko: "칠전팔기 (일곱 번 넘어져도 여덟 번 일어나라)" },
+			{ jp: "初心忘るべからず", reading: "しょしんわするべからず (쇼신 와스루베카라즈)", ko: "초심을 잃지 마라" },
+			{ jp: "笑う門には福来たる", reading: "わらうかどにはふくきたる (와라우 카도니와 후쿠 키타루)", ko: "웃는 문으로 복이 들어온다 (소문만복래)" }
+		];
+
+		// 🔥 흐르는 하단 실시간 댓글 데이터
+		const commentList = [
+			{ user: "김*민", text: "퇴근길에 들으면서 공부하니까 머리에 잘 들어오네요!" },
+			{ user: "박*우", text: "글자 정복 강의 신청 완료했습니다 ㅎㅎ" },
+			{ user: "T*naka", text: "日本語の勉強にすごく役に立ちます！" },
+			{ user: "이*진", text: "가을 일본 여행 가기 전에 알림 신청해둡니다~" },
+			{ user: "최*서", text: "매일매일 꾸준히 하니까 조금씩 들리기 시작해요" },
+			{ user: "S*tani", text: "イベント参加しました！楽しみです。" }
+		];
+
+		let currentIndex = 0;
+		let autoSlideTimer = null;
+		let countTimer = null;
+
+		// 1. 타임라인 목록 렌더링
+		function renderTimeline() {
+			const listEl = document.getElementById('timelineList');
+			listEl.innerHTML = openrunData.map((item, index) => {
+				const isActive = index === currentIndex;
+				return `
+						<li class="timeline-item ${isActive ? 'active' : ''}" onclick="selectItem(${index})">
+							<span class="timeline-clock-icon">
+								<i class="fa-regular fa-clock"></i>
+							</span>
+							${isActive ? `<span class="badge-text">${item.badge}</span>` : `<div class="timeline-time">${item.time}</div>`}
+							<div class="timeline-title">${item.title}</div>
+						</li>
+					`;
+			}).join('');
+
+			updateContent(openrunData[currentIndex]);
+		}
+
+		// 2. 우측 콘텐츠 갱신
+		function updateContent(item) {
+			const imgEl = document.getElementById('productImage');
+			imgEl.style.opacity = '0.3';
+			setTimeout(() => {
+				imgEl.src = item.image;
+				imgEl.style.opacity = '1';
+			}, 150);
+
+			document.getElementById('applicantCount').innerText = item.applicants.toLocaleString();
+			startTimer(item.secondsLeft);
+		}
+
+		// 3. 타이머 카운트다운
+		function startTimer(seconds) {
+			if (countTimer) clearInterval(countTimer);
+
+			let currentSeconds = seconds;
+
+			function updateDisplay() {
+				const hrs = String(Math.floor(currentSeconds / 3600)).padStart(2, '0');
+				const mins = String(Math.floor((currentSeconds % 3600) / 60)).padStart(2, '0');
+				const secs = String(currentSeconds % 60).padStart(2, '0');
+				document.getElementById('timerDisplay').innerText = `${hrs} : ${mins} : ${secs}`;
+			}
+
+			updateDisplay();
+			countTimer = setInterval(() => {
+				if (currentSeconds > 0) {
+					currentSeconds--;
+					updateDisplay();
+				}
+			}, 1000);
+		}
+
+		// 4. 수동 아이템 선택
+		function selectItem(index) {
+			currentIndex = index;
+			renderTimeline();
+			resetAutoSlide();
+		}
+
+		// 5. 자동 이동
+		function startAutoSlide() {
+			autoSlideTimer = setInterval(() => {
+				currentIndex = (currentIndex + 1) % openrunData.length;
+				renderTimeline();
+			}, 3500);
+		}
+
+		function resetAutoSlide() {
+			if (autoSlideTimer) clearInterval(autoSlideTimer);
+			startAutoSlide();
+		}
+
+		// 6. 오늘의 일본어 (가운데 정렬 계산)
+		function renderDailyJapanese() {
+			const today = new Date();
+			const dayNumber = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
+			const index = dayNumber % dailyJapaneseList.length;
+			const item = dailyJapaneseList[index];
+
+			const el = document.getElementById('dailyJapaneseText');
+			el.innerHTML = `
+					<span class="jp-text">${item.jp}</span>
+					<span class="reading-text">${item.reading}</span>
+					<span class="ko-text">- "${item.ko}"</span>
+				`;
+		}
+
+		// 🔥 7. 하단 댓글 끊김 없는 무한 흘러가기 트랙 생성
+		function renderCommentMarquee() {
+			const trackEl = document.getElementById('commentMarqueeTrack');
+			if (!trackEl) return;
+
+			const htmlContent = commentList.map(c => `
+					<div class="comment-item">
+						<span class="comment-user">${c.user}:</span>
+						<span class="comment-text">"${c.text}"</span>
+						<span class="comment-divider">|</span>
+					</div>
+				`).join('');
+
+			// 무한 루프를 위해 동일 트랙 2번 배치
+			trackEl.innerHTML = htmlContent + htmlContent;
+		}
+
+		window.onload = function () {
+			renderTimeline();
+			startAutoSlide();
+			renderDailyJapanese();
+			renderCommentMarquee(); // 댓글 트랙 로드
+		};
+	</script>
+</body>
+</html>

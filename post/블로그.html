@@ -1,0 +1,556 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo 통합 플랫폼 - SPA & PDF 마켓</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		body {
+			display: flex;
+			height: 100vh;
+			background-color: #f8fafc;
+			color: #1e293b;
+			overflow: hidden;
+		}
+
+		/* ==========================================
+			 1. 접이식 좌측 사이드바 스타일
+			 ========================================== */
+		.sidebar {
+			width: 280px;
+			background-color: #ffffff;
+			border-right: 1px solid #e2e8f0;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			flex-shrink: 0;
+			z-index: 100;
+			height: 100vh;
+			position: relative;
+		}
+
+		/* 사이드바 접힘 상태 */
+		body.sidebar-collapsed .sidebar {
+			width: 0;
+			padding: 0;
+			border-right: none;
+			overflow: hidden;
+		}
+
+		.sidebar-header {
+			padding: 20px;
+			border-bottom: 1px solid #f1f5f9;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.logo {
+			font-size: 1.3rem;
+			font-weight: 900;
+			color: #4f46e5;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.sidebar-menu {
+			padding: 15px;
+			overflow-y: auto;
+			flex: 1;
+		}
+
+		/* 아코디언 메뉴 스타일 */
+		.menu-group {
+			margin-bottom: 8px;
+		}
+
+		.menu-btn {
+			width: 100%;
+			background: none;
+			border: none;
+			padding: 10px 12px;
+			text-align: left;
+			font-size: 0.95rem;
+			font-weight: 700;
+			color: #334155;
+			border-radius: 8px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			transition: background 0.2s;
+		}
+
+			.menu-btn:hover, .menu-btn.active {
+				background-color: #f1f5f9;
+				color: #4f46e5;
+			}
+
+			.menu-btn .arrow {
+				font-size: 0.75rem;
+				transition: transform 0.2s;
+			}
+
+		.menu-group.open > .menu-btn .arrow {
+			transform: rotate(180deg);
+		}
+
+		/* 서브메뉴 (2차, 3차) */
+		.sub-menu {
+			display: none;
+			padding-left: 12px;
+			margin-top: 4px;
+		}
+
+		.menu-group.open > .sub-menu {
+			display: block;
+		}
+
+		.sub-item {
+			width: 100%;
+			background: none;
+			border: none;
+			padding: 8px 12px;
+			text-align: left;
+			font-size: 0.88rem;
+			font-weight: 600;
+			color: #64748b;
+			border-radius: 6px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-top: 2px;
+			transition: all 0.2s;
+		}
+
+			.sub-item:hover, .sub-item.active {
+				color: #4f46e5;
+				background-color: #e0e7ff;
+			}
+
+		/* 하단 유저 프로필 영역 */
+		.sidebar-footer {
+			padding: 15px;
+			border-top: 1px solid #f1f5f9;
+			background: #fafafa;
+		}
+
+		.user-info {
+			font-size: 0.85rem;
+			font-weight: 700;
+			color: #0f172a;
+			margin-bottom: 6px;
+		}
+
+		.logout-btn {
+			width: 100%;
+			padding: 8px;
+			background: #ffffff;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			font-size: 0.8rem;
+			font-weight: 700;
+			color: #475569;
+			cursor: pointer;
+		}
+
+		/* ==========================================
+			 2. 우측 메인 콘텐츠 영역 (SPA)
+			 ========================================== */
+		.main-content {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+			overflow: hidden;
+			position: relative;
+		}
+
+		/* 사이드바 토글 버튼 (상단 고정) */
+		.toggle-btn {
+			position: absolute;
+			top: 15px;
+			left: 15px;
+			z-index: 90;
+			background: #ffffff;
+			border: 1px solid #cbd5e1;
+			color: #334155;
+			padding: 8px 14px;
+			border-radius: 8px;
+			font-size: 0.9rem;
+			font-weight: 700;
+			cursor: pointer;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.content-body {
+			flex: 1;
+			padding: 70px 30px 30px 30px;
+			overflow-y: auto;
+		}
+
+		.category-breadcrumb {
+			font-size: 0.85rem;
+			font-weight: 600;
+			color: #64748b;
+			margin-bottom: 8px;
+		}
+
+		.page-title {
+			font-size: 1.6rem;
+			font-weight: 900;
+			color: #0f172a;
+			margin-bottom: 20px;
+		}
+
+		/* ==========================================
+			 3. PDF 구매 전용 (3D 겹침 카드 캐러셀)
+			 ========================================== */
+		.pdf-carousel-container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 20px;
+			margin-top: 40px;
+			perspective: 1000px;
+		}
+
+		.carousel-nav-btn {
+			background: #ffffff;
+			border: 1px solid #cbd5e1;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			cursor: pointer;
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: #334155;
+			box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+			transition: all 0.2s;
+			z-index: 10;
+		}
+
+			.carousel-nav-btn:hover {
+				background: #4f46e5;
+				color: #ffffff;
+				border-color: #4f46e5;
+			}
+
+		.card-stack {
+			display: flex;
+			position: relative;
+			width: 600px;
+			height: 380px;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.overlap-card {
+			position: absolute;
+			width: 240px;
+			height: 340px;
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 16px;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+			cursor: pointer;
+			transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, border-color 0.3s ease;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+			/* 3개 카드 3D 위치 스태킹 */
+			.overlap-card.pos-0 {
+				transform: translateX(-140px) scale(0.88);
+				z-index: 1;
+				opacity: 0.6;
+			}
+
+			.overlap-card.pos-1 {
+				transform: translateX(0) scale(1);
+				z-index: 3;
+				opacity: 1;
+				border: 2px solid #4f46e5;
+				box-shadow: 0 15px 30px rgba(79, 70, 229, 0.15);
+			}
+
+			.overlap-card.pos-2 {
+				transform: translateX(140px) scale(0.88);
+				z-index: 1;
+				opacity: 0.6;
+			}
+
+		.card-badge {
+			font-size: 0.7rem;
+			font-weight: 800;
+			color: #4f46e5;
+			background: #e0e7ff;
+			padding: 3px 8px;
+			border-radius: 4px;
+			width: fit-content;
+		}
+
+		.card-title {
+			font-size: 1.15rem;
+			font-weight: 800;
+			color: #0f172a;
+			margin-top: 10px;
+		}
+
+		.card-price {
+			font-size: 1rem;
+			font-weight: 900;
+			color: #f59e0b;
+			margin-top: 5px;
+		}
+
+		.card-buy-btn {
+			width: 100%;
+			padding: 10px;
+			background: #4f46e5;
+			color: #ffffff;
+			border: none;
+			border-radius: 8px;
+			font-weight: 700;
+			font-size: 0.85rem;
+			cursor: pointer;
+		}
+
+		/* 모바일 대응 레이아웃 */
+		@media (max-width: 768px) {
+			.sidebar {
+				position: fixed;
+				left: 0;
+				top: 0;
+				transform: translateX(0);
+			}
+
+			body.sidebar-collapsed .sidebar {
+				transform: translateX(-100%);
+				width: 280px;
+			}
+
+			.card-stack {
+				width: 100%;
+			}
+
+			.overlap-card.pos-0 {
+				transform: translateX(-60px) scale(0.8);
+			}
+
+			.overlap-card.pos-2 {
+				transform: translateX(60px) scale(0.8);
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<aside class="sidebar" id="sidebar">
+		<div>
+			<div class="sidebar-header">
+				<div class="logo">
+					<i class="fa-solid fa-cube"></i> Semo 블로그
+				</div>
+			</div>
+
+			<div class="sidebar-menu">
+
+				<div class="menu-group open">
+					<button class="menu-btn" onclick="toggleAccordion(this)">
+						<span><i class="fa-solid fa-blog"></i> 블로그</span>
+						<i class="fa-solid fa-chevron-down arrow"></i>
+					</button>
+					<div class="sub-menu">
+
+						<div class="menu-group open">
+							<button class="menu-btn" style="font-size: 0.9rem;" onclick="toggleAccordion(this)">
+								<span>✈️ 여행</span>
+								<i class="fa-solid fa-chevron-down arrow"></i>
+							</button>
+							<div class="sub-menu">
+								<button class="sub-item" onclick="loadContent('blog', '여행 > 여행 준비', '🧳 여행 준비 가이드')">
+									ㆍ 여행 준비
+								</button>
+
+								<div class="menu-group">
+									<button class="sub-item" onclick="toggleAccordion(this)">
+										<span>ㆍ 🇯🇵 일본</span>
+										<i class="fa-solid fa-chevron-down arrow"></i>
+									</button>
+									<div class="sub-menu">
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 일본 > 오사카', '🏯 오사카 여행 정보')">ㆍ 오사카</button>
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 일본 > 도쿄', '🗼 도쿄 여행 정보')">ㆍ 도쿄</button>
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 일본 > 교토', '⛩️ 교토 여행 정보')">ㆍ 교토</button>
+									</div>
+								</div>
+
+								<div class="menu-group">
+									<button class="sub-item" onclick="toggleAccordion(this)">
+										<span>ㆍ 🇨🇳 중국</span>
+										<i class="fa-solid fa-chevron-down arrow"></i>
+									</button>
+									<div class="sub-menu">
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 중국 > 상해', '🏙️ 상해 여행 정보')">ㆍ 상해</button>
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 중국 > 사천', '🐼 사천 여행 정보')">ㆍ 사천</button>
+									</div>
+								</div>
+
+								<div class="menu-group">
+									<button class="sub-item" onclick="toggleAccordion(this)">
+										<span>ㆍ 🇰🇷 한국</span>
+										<i class="fa-solid fa-chevron-down arrow"></i>
+									</button>
+									<div class="sub-menu">
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 한국 > 서울', '🌃 서울 여행 정보')">ㆍ 서울</button>
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 한국 > 부산', '🌊 부산 여행 정보')">ㆍ 부산</button>
+										<button class="sub-item" onclick="loadContent('blog', '여행 > 한국 > 충청도', '🌿 충청도 여행 정보')">ㆍ 충청도</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="menu-group">
+					<button class="menu-btn" onclick="loadPdfMarket()">
+						<span><i class="fa-solid fa-file-pdf text-rose-500"></i> 📚 PDF 교재 구매</span>
+					</button>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="sidebar-footer">
+			<div class="user-info">홍길동 회원님 (300 세모)</div>
+			<button class="logout-btn">로그아웃</button>
+		</div>
+	</aside>
+
+	<main class="main-content">
+		<button class="toggle-btn" onclick="toggleSidebar()">
+			<i class="fa-solid fa-bars" id="toggle-icon"></i>
+			<span id="toggle-text">메뉴 접기</span>
+		</button>
+
+		<div class="content-body" id="main-view">
+		</div>
+	</main>
+
+	<script>// 1. 사이드바 접기/펼치기 토글 로직
+		function toggleSidebar() {
+			document.body.classList.toggle('sidebar-collapsed');
+			const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+
+			document.getElementById('toggle-icon').className = isCollapsed ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+			document.getElementById('toggle-text').innerText = isCollapsed ? '메뉴 열기' : '메뉴 접기';
+		}
+
+		// 2. 다단계 아코디언 토글
+		function toggleAccordion(buttonEl) {
+			const group = buttonEl.parentElement;
+			group.classList.toggle('open');
+		}
+
+		// 3. SPA 블로그 콘텐츠 로더
+		function loadContent(type, path, title) {
+			const view = document.getElementById('main-view');
+
+			view.innerHTML = `
+				<div class="category-breadcrumb">${path}</div>
+				<h1 class="page-title">${title}</h1>
+				<div style="background: #ffffff; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; min-height: 300px;">
+					<p style="color: #64748b; line-height: 1.6;">
+						<b>${title}</b> 카테고리의 게시글 목록을 불러오는 중입니다...<br>
+						선택하신 경로 [ ${path} ]에 맞는 최신 여행 블로그 포스트가 이곳에 실시간 노출됩니다.
+					</p>
+				</div>
+			`;
+		}
+
+		// 4. PDF 구매 마켓 로더 (3D 겹침 카드 캐러셀)
+		let pdfCenterIndex = 1; // 가운데 카드 인덱스
+		const pdfBooks = [
+			{ id: 1, badge: "인기 교재", title: "일본어 필수 회화 PDF", price: "2,880 세모" },
+			{ id: 2, badge: "BEST 추천", title: "초급 한자 정복 PDF", price: "3,200 세모" },
+			{ id: 3, badge: "신상 출시", title: "여행 일본어 단어장 PDF", price: "1,500 세모" }
+		];
+
+		function loadPdfMarket() {
+			const view = document.getElementById('main-view');
+			renderPdfCarousel();
+		}
+
+		function renderPdfCarousel() {
+			const view = document.getElementById('main-view');
+
+			let cardsHtml = pdfBooks.map((book, idx) => {
+				// 3개 카드의 위치 클래스 계산 (pos-0, pos-1, pos-2)
+				const pos = (idx - pdfCenterIndex + pdfBooks.length) % pdfBooks.length;
+				return `
+					<div class="overlap-card pos-${pos}" onclick="rotatePdf(${idx})">
+						<div>
+							<span class="card-badge">${book.badge}</span>
+							<h3 class="card-title">${book.title}</h3>
+							<p style="font-size: 0.8rem; color: #64748b; margin-top: 8px;">다운로드 후 48시간 열람 가능</p>
+						</div>
+						<div>
+							<div class="card-price">${book.price}</div>
+							<button class="card-buy-btn" style="margin-top: 10px;" onclick="event.stopPropagation(); alert('${book.title} 구매 모달을 열어줍니다.')">구매하기</button>
+						</div>
+					</div>
+				`;
+			}).join('');
+
+			view.innerHTML = `
+				<div class="category-breadcrumb">Semo 마켓 > 디지털 교재</div>
+				<h1 class="page-title">📚 PDF 교재 둘러보기</h1>
+				<p style="font-size: 0.9rem; color: #64748b;">원하는 교재 카드를 클릭하거나 화살표를 눌러 둘러보세요.</p>
+
+				<div class="pdf-carousel-container">
+					<button class="carousel-nav-btn" onclick="rotatePdfStep(-1)">&lt;</button>
+					<div class="card-stack">
+						${cardsHtml}
+					</div>
+					<button class="carousel-nav-btn" onclick="rotatePdfStep(1)">&gt;</button>
+				</div>
+			`;
+		}
+
+		// 카드 캐러셀 회전 로직
+		function rotatePdf(targetIdx) {
+			pdfCenterIndex = targetIdx;
+			renderPdfCarousel();
+		}
+
+		function rotatePdfStep(step) {
+			pdfCenterIndex = (pdfCenterIndex + step + pdfBooks.length) % pdfBooks.length;
+			renderPdfCarousel();
+		}
+
+		// 초기 실행 시 기본 화면 로드
+		window.onload = function() {
+			loadContent('blog', '여행 > 일본 > 오사카', '🏯 오사카 여행 정보');
+		};</script>
+</body>
+</html>
