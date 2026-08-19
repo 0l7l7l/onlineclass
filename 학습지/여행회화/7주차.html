@@ -1,0 +1,841 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>여행 3개월 전 일본어 - 3주차 : ~をお願いします 완벽 마스터</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+			.footer::after {
+				content: "Page " counter(page-num);
+			}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+		 🖼️ 이미지 디자인 완벽 복제 UI 컴포넌트
+		 ========================================================================== */
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+		}
+
+		.section-lesson-title {
+			font-size: 20px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 14px;
+			line-height: 1.2;
+		}
+
+		.pin-subtitle {
+			font-size: 15px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		.speech-label-title {
+			font-size: 13px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 13px;
+			}
+
+		p, li {
+			font-size: 13px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+		/* ==========================================================================
+		 📊 [접속 공식] 2열 카드 UI
+		 ========================================================================== */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			text-align: center;
+			padding: 8px;
+			border-radius: 8px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+		.formula-box {
+			background-color: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			font-size: 14px;
+			font-weight: 800;
+			color: #1e293b;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+		}
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+			.formula-box .blue-target {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+		/* ==========================================================================
+		 💡 [Point 박스] 상단 꼬리가 달린 말풍선 박스
+		 ========================================================================== */
+		.point-speech-card {
+			position: relative;
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 14px 16px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+			.point-speech-card::before {
+				content: '';
+				position: absolute;
+				top: -8px;
+				left: 24px;
+				border-width: 0 8px 8px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card::after {
+				content: '';
+				position: absolute;
+				top: -6px;
+				left: 25px;
+				border-width: 0 7px 7px;
+				border-style: solid;
+				border-color: #eff6ff transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12.5px;
+				line-height: 1.6;
+				color: #334155;
+				margin-bottom: 6px;
+			}
+
+				.point-speech-card li:last-child {
+					margin-bottom: 0;
+				}
+
+		/* ==========================================================================
+		 🎯 단어장 및 퀴즈 컴포넌트
+		 ========================================================================== */
+		.bubble-word-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.word-bubble {
+			background: #f8fafc;
+			border: 1px solid #cbd5e1;
+			color: #0f172a;
+			padding: 6px 10px;
+			border-radius: 6px;
+			font-size: 12.5px;
+			font-weight: 700;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+			.word-bubble .ja-sub {
+				font-size: 11px;
+				color: #64748b;
+				font-weight: normal;
+			}
+
+		.character-card {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			padding: 10px 12px;
+			border-radius: 0 8px 8px 0;
+			margin-bottom: 8px;
+		}
+
+		.char-avatar {
+			font-size: 20px;
+		}
+
+		.char-speech {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.char-trans {
+			font-size: 11.5px;
+			color: #64748b;
+		}
+
+		.quiz-item {
+			margin-bottom: 6px;
+			background-color: #fafafa;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 12px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 70px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+		.answer-btn {
+			margin-top: 6px;
+			padding: 5px 12px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 11.5px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 6px;
+			padding: 8px 10px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			display: none;
+			background-color: #f8fafc;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12px;
+			color: #1e3a8a;
+			line-height: 1.5;
+		}
+
+		.big-concept-box {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			border: 1.5px solid #bfdbfe;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-title {
+			font-size: 18px;
+			font-weight: 900;
+			color: #1e3a8a;
+		}
+
+		/* ==========================================================================
+		 📱 모바일 & 🖨️ 인쇄(Print) 대응
+		 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+		 [펼침면 1] 핵심 문법 원리 & 기본 형태 변형 연습
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 핵심 문법 원리 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 03 - CORE GRAMMAR</div>
+				<div class="lesson-badge-oval">3과</div>
+				<div class="section-lesson-title">제 3 과 : 정중히 요청하기</div>
+				<h3 class="grammar-title">[명사] を お願いします</h3>
+
+				<div class="pin-subtitle">의미</div>
+				<p style="margin-bottom: 8px;">
+					명사 뒤에 조사 <b>を(을/를)</b>와 <b>お願いします(부탁합니다)</b>를 붙여, 식당·카페·호텔에서 원하는 서비스를 <b>"~로 부탁합니다 / ~ 주세요"</b>라고 정중하게 요청하는 핵심 표현입니다.
+				</p>
+
+				<div class="pin-subtitle">💡 접속공식</div>
+				<div class="speech-label-title">기본 요청 구조</div>
+
+				<div class="formula-container">
+					<div class="formula-column">
+						<div class="formula-header">명사 + を</div>
+						<div class="formula-box">これ を (이것을)</div>
+						<div class="formula-box">お水 を (물)</div>
+					</div>
+					<div class="formula-column">
+						<div class="formula-header sky">お願いします ⭕</div>
+						<div class="formula-box highlight-text">これをお願いします</div>
+						<div class="formula-box highlight-text">お水をお願いします</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">Point</div>
+				<div class="point-speech-card">
+					<ul>
+						<li><b>조사 생략 가능:</b> 현장에서는 조사 <b>を</b>를 생략하고 <b>「명사 + お願いします」</b>만 말해도 완벽하게 통합니다. (예: これ、お願いします。)</li>
+						<li><b>ください와의 차이:</b> 「ください」가 물건을 달라고 할 때 쓰인다면, 「お願いします」는 물건뿐만 아니라 서비스(체크인, 택시, 주문 등)를 요청할 때도 넓게 쓰이는 더 공손한 표현입니다.</li>
+					</ul>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 기본 형태 변형 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 03 - CORE DRILL</div>
+				<div class="pin-subtitle">기본 요청 문장 연습</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. 이것으로 부탁합니다.</div>
+					<div class="quiz-ja">これ を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. 물 부탁합니다.</div>
+					<div class="quiz-ja">お水(みず) を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. 메뉴판 부탁합니다.</div>
+					<div class="quiz-ja">メニュー を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. 영수증 부탁합니다.</div>
+					<div class="quiz-ja">領収書(りょうしゅうしょ) を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">5. 체크인 부탁합니다.</div>
+					<div class="quiz-ja">チェックイン を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>정답:</b> 모두 <b>お願いします</b> (오네가이시마스) 가 들어갑니다.<br>
+						1) これをお願いします。 (코레오 오네가이시마스)<br>
+						2) お水をお願いします。 (오미즈오 오네가이시마스)<br>
+						3) メニューをお願いします。 (메뉴-오 오네가이시마스)<br>
+						4) 領収書をお願いします。 (료-슈-쇼오 오네가이시마스)<br>
+						5) チェックインをお願いします。 (체쿠인오 오네가이시마스)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 2] 테마 01 : 식당 & 카페에서 부탁하기
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 식당/카페 어휘 및 주문 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 01 - RESTAURANT & CAFE</div>
+				<div class="lesson-badge-oval">3주차</div>
+				<div class="section-lesson-title">테마 01 : 식당 & 카페</div>
+				<h3 class="grammar-title">[음식/음료] を お願いします</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">注文(ちゅうもん)を お願いします。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(주문 부탁합니다.)</p>
+				</div>
+
+				<div class="pin-subtitle">식당 & 카페 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>お水</span> <span class="ja-sub">おみず (물)</span></div>
+					<div class="word-bubble"><span>お会計</span> <span class="ja-sub">おかいけい (계산)</span></div>
+					<div class="word-bubble"><span>コーヒー</span> <span class="ja-sub">코히- (커피)</span></div>
+					<div class="word-bubble"><span>ホット / アイス</span> <span class="ja-sub">따뜻한 / 차가운</span></div>
+				</div>
+
+				<div class="pin-subtitle">주문 및 요청 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 아이스 커피로 부탁합니다.</div>
+					<div class="quiz-ja">アイスコーヒー を <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 따뜻한 아메리카노 부탁합니다.</div>
+					<div class="quiz-ja">ホットアメリカーノ を <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 계산 부탁합니다.</div>
+					<div class="quiz-ja">お会計(かいけい) を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) お願いします (アイスコーヒーをお願いします)<br>
+						2) お願いします (ホットアメリカーノをお願いします)<br>
+						3) お願いします (お会計をお願いします)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 식당/카페 실전 회화 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 01 - PRACTICE</div>
+				<div class="pin-subtitle">식당 & 카페 실전 회화 연습</div>
+
+				<div class="character-card">
+					<div class="char-avatar">👨‍🍳</div>
+					<div>
+						<div class="char-speech">ご注文(ちゅうもん)は お決(き)まりですか。</div>
+						<div class="char-trans">(주문은 결정하셨나요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">これと これを お願いします。</div>
+						<div class="char-trans">(이것과 이것으로 부탁합니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">실전 응용 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 메뉴판 가리키며: "이것 부탁합니다."</div>
+					<div class="quiz-ja">これ <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 식사 후 계산대에서: "계산 부탁합니다."</div>
+					<div class="quiz-ja">お会計(かいけい) <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) を お願いします (これをお願いします)<br>
+						2) を お願いします (お会計をお願いします)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 3] 테마 02 : 호텔에서 부탁하기 & 서비스 요청
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 호텔 필수 어휘 및 요청 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 02 - HOTEL</div>
+				<div class="lesson-badge-oval">3주차</div>
+				<div class="section-lesson-title">테마 02 : 호텔 서비스</div>
+				<h3 class="grammar-title">[호텔 서비스] を お願いします</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">チェックインを お願いします。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(체크인 부탁합니다.)</p>
+				</div>
+
+				<div class="pin-subtitle">호텔 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>チェックイン</span> <span class="ja-sub">체크인</span></div>
+					<div class="word-bubble"><span>チェックアウト</span> <span class="ja-sub">체크아웃</span></div>
+					<div class="word-bubble"><span>荷物預かり</span> <span class="ja-sub">にもつあずかり (짐 보관)</span></div>
+					<div class="word-bubble"><span>タクシー</span> <span class="ja-sub">타쿠시- (택시)</span></div>
+					<div class="word-bubble"><span>タオル</span> <span class="ja-sub">타오루 (수건)</span></div>
+					<div class="word-bubble"><span>モーニングコール</span> <span class="ja-sub">모닝콜</span></div>
+				</div>
+
+				<div class="pin-subtitle">호텔 요청 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 짐 보관 부탁합니다.</div>
+					<div class="quiz-ja">荷物(にもつ)の 預(あず)かり を <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 택시 호출 부탁합니다.</div>
+					<div class="quiz-ja">タクシー を <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 수건 추가 부탁합니다.</div>
+					<div class="quiz-ja">タオル を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>정답:</b> 모두 <b>お願いします</b> (오네가이시마스) 가 들어갑니다.
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 호텔 실전 회화 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 02 - PRACTICE</div>
+				<div class="pin-subtitle">호텔 프런트 실전 회화 연습</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏨</div>
+					<div>
+						<div class="char-speech">いらっしゃいませ。ご用件(ようけん)は 何(なん)でしょうか。</div>
+						<div class="char-trans">(어서 오세요. 무엇을 도와드릴까요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">チェックインを お願いします。予約(よやく)した キムです。</div>
+						<div class="char-trans">(체크인 부탁합니다. 예약한 김입니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">호텔 응용 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 프런트에 짐을 맡길 때: "짐 보관 부탁합니다."</div>
+					<div class="quiz-ja">荷物(にもつ)の 預(あず)かり <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. 체크아웃할 때: "체크아웃 부탁합니다."</div>
+					<div class="quiz-ja">チェックアウト <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) を お願いします (荷物の預かりをお願いします)<br>
+						2) を お願いします (チェックアウトをお願いします)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '정답 가리기';
+    } else {
+      btn.innerText = '정답 확인';
+    }
+  }
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,1059 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語初級文法: -자고 하다</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', 'Malgun Gothic', sans-serif;
+			background-color: #f0f2f5;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		.container {
+			width: 900px;
+			height: 600px;
+			background: #ffffff;
+			border-radius: 12px;
+			box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			overflow: hidden;
+		}
+
+		/* Drawing Toolbar */
+		.drawing-toolbar {
+			height: 45px;
+			background: #1e3a8a;
+			display: flex;
+			align-items: center;
+			padding: 0 15px;
+			gap: 8px;
+			z-index: 100;
+			color: white;
+			font-size: 13px;
+		}
+
+		.tool-btn {
+			background: #2563eb;
+			color: white;
+			border: 1px solid #3b82f6;
+			padding: 5px 9px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 12px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+			.tool-btn.active {
+				background: #059669;
+				border-color: #10b981;
+			}
+
+			.tool-btn:hover {
+				background: #1d4ed8;
+			}
+
+			.tool-btn.active:hover {
+				background: #047857;
+			}
+
+		.drawing-toolbar input[type="color"] {
+			border: none;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			cursor: pointer;
+			background: none;
+		}
+
+		/* Slide View Area */
+		.viewport {
+			position: relative;
+			width: 900px;
+			height: 455px;
+			overflow: hidden;
+		}
+
+		.slide-container {
+			display: flex;
+			width: 16200px; /* 18 slides * 900px */
+			height: 455px;
+			transition: transform 0.4s ease-in-out;
+		}
+
+		.slide {
+			width: 900px;
+			height: 455px;
+			padding: 25px 45px;
+			overflow-y: auto;
+			flex-shrink: 0;
+		}
+
+		/* Drawing Canvas Layer */
+		#drawingCanvas {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 900px;
+			height: 455px;
+			z-index: 10;
+			pointer-events: auto;
+		}
+
+		h2 {
+			font-size: 22px;
+			color: #1e3a8a;
+			margin-bottom: 12px;
+			border-bottom: 3px solid #2563eb;
+			padding-bottom: 6px;
+		}
+
+		p, li {
+			font-size: 15px;
+			color: #334155;
+			line-height: 1.6;
+			margin-bottom: 8px;
+		}
+
+		.highlight {
+			background-color: #eff6ff;
+			padding: 12px 15px;
+			border-left: 5px solid #2563eb;
+			margin: 10px 0;
+			border-radius: 4px;
+		}
+
+		.example-box {
+			display: flex;
+			flex-direction: column;
+			background: #f8fafc;
+			padding: 10px 14px;
+			border-radius: 8px;
+			margin-bottom: 8px;
+			border: 1px solid #e2e8f0;
+		}
+
+		.kr {
+			font-weight: bold;
+			color: #1e293b;
+			font-size: 16px;
+		}
+
+		.jp {
+			color: #64748b;
+			font-size: 13.5px;
+			margin-top: 2px;
+		}
+
+		.grammar-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 8px;
+		}
+
+			.grammar-table th, .grammar-table td {
+				border: 1px solid #cbd5e1;
+				padding: 8px 10px;
+				text-align: center;
+				font-size: 14px;
+			}
+
+			.grammar-table th {
+				background-color: #2563eb;
+				color: white;
+			}
+
+		/* Interactive Elements */
+		.option-btn {
+			display: block;
+			width: 100%;
+			padding: 10px 15px;
+			margin: 6px 0;
+			background: #ffffff;
+			border: 2px solid #cbd5e1;
+			border-radius: 6px;
+			text-align: left;
+			font-size: 15px;
+			font-weight: bold;
+			color: #1e293b;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+			.option-btn:hover {
+				border-color: #2563eb;
+				background: #eff6ff;
+			}
+
+			.option-btn.correct {
+				border-color: #059669;
+				background: #ecfdf5;
+				color: #047857;
+			}
+
+			.option-btn.wrong {
+				border-color: #ef4444;
+				background: #fef2f2;
+				color: #b91c1c;
+			}
+
+		.toggle-ans-btn {
+			padding: 6px 12px;
+			background: #2563eb;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 13px;
+			margin-top: 5px;
+		}
+
+		/* Navigation Controls */
+		.nav-footer {
+			height: 100px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 40px;
+			background: #fafafa;
+			border-top: 1px solid #eee;
+			z-index: 20;
+		}
+
+		button.nav-btn {
+			padding: 10px 20px;
+			background: #2563eb;
+			color: white;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: background 0.2s;
+		}
+
+			button.nav-btn:hover {
+				background: #1d4ed8;
+			}
+
+			button.nav-btn:disabled {
+				background: #cbd5e1;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 15px;
+			color: #64748b;
+			font-weight: bold;
+		}
+
+		/* Modal Styles */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.6);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+			display: none;
+		}
+
+		.modal {
+			background: white;
+			padding: 25px;
+			border-radius: 12px;
+			width: 750px;
+			max-height: 85vh;
+			overflow-y: auto;
+			box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+			position: relative;
+		}
+
+			.modal h3 {
+				margin-bottom: 15px;
+				color: #1e3a8a;
+				text-align: center;
+			}
+
+		.modal-menu-btn {
+			display: block;
+			width: 100%;
+			padding: 14px;
+			margin: 8px 0;
+			background: #f8fafc;
+			border: 2px solid #e2e8f0;
+			border-radius: 8px;
+			font-size: 15px;
+			font-weight: bold;
+			color: #1e293b;
+			cursor: pointer;
+			text-align: left;
+			transition: all 0.2s;
+		}
+
+			.modal-menu-btn:hover {
+				background: #eff6ff;
+				border-color: #2563eb;
+				color: #1d4ed8;
+			}
+
+		.close-btn {
+			display: block;
+			margin: 15px auto 0 auto;
+			background: #ef4444;
+			color: white;
+			padding: 8px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.conj-btn {
+			background: transparent;
+			border: none;
+			color: #2563eb;
+			font-weight: bold;
+			cursor: pointer;
+			font-size: 13px;
+			padding: 3px 6px;
+			border-radius: 4px;
+		}
+
+			.conj-btn:hover {
+				background: #eff6ff;
+			}
+	</style>
+</head>
+<body>
+
+	<div class="container">
+		<!-- Drawing Toolbar -->
+		<div class="drawing-toolbar">
+			<button class="tool-btn active" id="penToolBtn" onclick="setTool('pen')">✏️ ペン</button>
+			<button class="tool-btn" id="eraserToolBtn" onclick="setTool('eraser')">🧽 消しゴム</button>
+			<button class="tool-btn" id="textToolBtn" onclick="setTool('text')">📝 テキスト</button>
+
+			<span style="border-left: 1px solid #3b82f6; height: 20px; margin: 0 2px;"></span>
+
+			<button class="tool-btn" onclick="undoDraw()" title="Ctrl + Z">↩️ 戻す</button>
+			<button class="tool-btn" onclick="redoDraw()" title="Ctrl + Y">↪️ やり直し</button>
+
+			<span style="border-left: 1px solid #3b82f6; height: 20px; margin: 0 2px;"></span>
+
+			<label style="font-size: 12px;">色:</label>
+			<input type="color" id="drawColor" value="#ef4444">
+
+			<label style="font-size: 12px; margin-left: 3px;">太さ:</label>
+			<select id="drawLineWidth" style="background: #1e293b; color: white; border: 1px solid #3b82f6; padding: 2px 5px; border-radius: 4px;">
+				<option value="2">細い</option>
+				<option value="5" selected>普通</option>
+				<option value="10">太い</option>
+			</select>
+
+			<button class="tool-btn" style="margin-left: auto; background: #ef4444; border-color: #dc2626;" onclick="clearCanvas()">🗑️ 全消去</button>
+		</div>
+
+		<!-- Viewport with Canvas Layer -->
+		<div class="viewport">
+			<canvas id="drawingCanvas" width="900" height="455"></canvas>
+
+			<div class="slide-container" id="slideContainer">
+
+				<!-- Slide 01: 오늘의 문법 -->
+				<div class="slide">
+					<h2>01. 오늘의 문법 </h2>
+					<div class="highlight" style="text-align:center; padding:20px;">
+						<p style="font-size:24px; font-weight:bold; color:#1e3a8a; margin-bottom:8px;">-자고 하다</p>
+						<p style="font-size:16px; color:#2563eb; font-weight:bold;">「～しよう」と言う / 伝える</p>
+					</div>
+					<p style="font-size:16px; margin-top:15px; text-align:center;">오늘은 다른 사람이 한 말을 전달해 봅시다!</p>
+					<div class="example-box" style="margin-top:15px; padding:15px; text-align:center;">
+						<p class="kr" style="font-size:18px;">친구가 "같이 가자!"라고 했어요.</p>
+						<p style="font-size:20px; color:#2563eb; margin:5px 0;">⬇️</p>
+						<p class="kr" style="font-size:19px; color:#1e3a8a;">친구가 같이 가자고 했어요.</p>
+					</div>
+				</div>
+
+				<!-- Slide 02: 상황 제시 -->
+				<div class="slide">
+					<h2>02. 상황 제시</h2>
+					<div style="display:flex; gap:15px; margin-bottom:15px;">
+						<div style="flex:1; background:#eff6ff; padding:12px; border-radius:8px; border:1px solid #bfdbfe;">
+							<p style="font-weight:bold; color:#1e3a8a;">👩‍🏫 선생님</p>
+							<p class="kr" style="margin-top:5px;">"주말에 뭐 할까요?"</p>
+						</div>
+						<div style="flex:1; background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
+							<p style="font-weight:bold; color:#166534;">👩 친구</p>
+							<p class="kr" style="margin-top:5px;">"영화 보자!"</p>
+						</div>
+					</div>
+
+					<p style="font-weight:bold; color:#1e3a8a; margin-bottom:10px;">❓ 질문: 친구가 뭐라고 했어요?</p>
+					<button class="option-btn" onclick="checkQuiz(this, false)">A. 영화를 봐요.</button>
+					<button class="option-btn" onclick="checkQuiz(this, true)">B. 영화를 보자고 했어요. (正解!)</button>
+					<button class="option-btn" onclick="checkQuiz(this, false)">C. 영화를 봤어요.</button>
+				</div>
+
+				<!-- Slide 03: -자 복습 -->
+				<div class="slide">
+					<h2>03. '-자' 복습</h2>
+					<p>친근한 사이에서 제안할 때 사용하는 표현을 복습해 봅시다!</p>
+
+					<table class="grammar-table">
+						<tr>
+							<th>기본형</th>
+							<th>-자 (제안)</th>
+							<th>日本語</th>
+						</tr>
+						<tr><td>가다</td><td><strong>가자!</strong></td><td>行こう！</td></tr>
+						<tr><td>먹다</td><td><strong>먹자!</strong></td><td>食べよう！</td></tr>
+						<tr><td>보다</td><td><strong>보자!</strong></td><td>見よう！</td></tr>
+						<tr><td>공부하다</td><td><strong>공부하자!</strong></td><td>勉強しよう！</td></tr>
+					</table>
+
+					<div class="highlight" style="margin-top:15px; text-align:center;">
+						<p class="kr" style="font-size:17px; color:#1e3a8a;">"가자!"는 일본어로 ➔ <strong>「行こう！」</strong></p>
+					</div>
+				</div>
+
+				<!-- Slide 04: -자고 등장 -->
+				<div class="slide">
+					<h2>04. '-자고' 등장</h2>
+
+					<div style="background:#f8fafc; border:2px solid #e2e8f0; border-radius:10px; padding:15px; margin-bottom:15px;">
+						<p style="font-size:14px; color:#64748b; font-weight:bold;">🗣️ 직접 말하면 (Direct Speech)</p>
+						<p class="kr" style="font-size:18px; color:#1e293b;">👩 "같이 가자!"</p>
+						<div style="text-align:center; margin:8px 0; font-size:18px; color:#2563eb;">⬇️ 다른 사람에게 전달하면? (Indirect)</div>
+						<p class="kr" style="font-size:19px; color:#2563eb;">👩 친구가 같이 가자고 했어요.</p>
+					</div>
+
+					<div class="highlight">
+						<p style="font-size:18px; font-weight:bold; color:#1e3a8a; text-align:center;">
+							가자 + 고 ➔ <span style="color:#ef4444;">가자고</span>
+						</p>
+						<p style="font-size:14px; text-align:center; color:#475569; margin-top:4px;">
+							여기서 <strong>'고'</strong>의 역할은 일본어의 <strong>「～と」</strong> 입니다. (가자고 ➔ 「行こう」と)
+						</p>
+					</div>
+				</div>
+
+				<!-- Slide 05: 핵심 비교 -->
+				<div class="slide">
+					<h2>05. 핵심 비교 (Core Comparison)</h2>
+
+					<div style="display:flex; gap:15px; margin:20px 0;">
+						<div style="flex:1; background:#f8fafc; padding:20px; border-radius:10px; border:2px solid #cbd5e1; text-align:center;">
+							<p style="font-size:14px; font-weight:bold; color:#475569;">🗣️ 직접 말하기</p>
+							<p class="kr" style="font-size:22px; color:#1e293b; margin:10px 0;">가자!</p>
+							<p class="jp" style="font-size:15px;">「行こう！」</p>
+							<p style="font-size:12px; color:#059669; margin-top:8px; font-weight:bold;">내가 직접 제안</p>
+						</div>
+						<div style="display:flex; align-items:center; font-size:24px; color:#2563eb;">➡️</div>
+						<div style="flex:1; background:#eff6ff; padding:20px; border-radius:10px; border:2px solid #bfdbfe; text-align:center;">
+							<p style="font-size:14px; font-weight:bold; color:#2563eb;">💬 말 전달하기</p>
+							<p class="kr" style="font-size:22px; color:#1e3a8a; margin:10px 0;">가자고 했어요.</p>
+							<p class="jp" style="font-size:15px;">「行こう」と言いました。</p>
+							<p style="font-size:12px; color:#2563eb; margin-top:8px; font-weight:bold;">다른 사람의 제안을 전달</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Slide 06: 문법 공식 -->
+				<div class="slide">
+					<h2>06. 문법 공식 </h2>
+
+					<div class="highlight" style="padding:15px;">
+						<p style="font-size:18px; font-weight:bold; color:#1e3a8a; text-align:center;">
+							⭐ 동사 + 자고 하다
+						</p>
+					</div>
+
+					<table class="grammar-table" style="margin-top:15px;">
+						<tr>
+							<th>기본형</th>
+							<th>동사 + 자고 하다</th>
+						</tr>
+						<tr><td>가다</td><td>가<strong>자고 하다</strong></td></tr>
+						<tr><td>먹다</td><td>먹<strong>자고 하다</strong></td></tr>
+						<tr><td>보다</td><td>보<strong>자고 하다</strong></td></tr>
+						<tr><td>공부하다</td><td>공부하<strong>자고 하다</strong></td></tr>
+					</table>
+
+					<p style="margin-top:15px; font-weight:bold; color:#2563eb; text-align:center;">
+						의미: 「～しよう」と言う / 「～しよう」って言う
+					</p>
+				</div>
+
+				<!-- Slide 07: 변형 연습 ① -->
+				<div class="slide">
+					<h2>07. 변형 연습 ①</h2>
+					<p>다음을 바꿔 보세요! ( '-자!' ➔ '-자고 했어요.' )</p>
+
+					<div class="example-box">
+						<p class="kr">1. 가다 ➔ 가자! ➔ <span class="ans-span" style="display:none; color:#2563eb;">가자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="kr">2. 먹다 ➔ 먹자! ➔ <span class="ans-span" style="display:none; color:#2563eb;">먹자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="kr">3. 보다 ➔ 보자! ➔ <span class="ans-span" style="display:none; color:#2563eb;">보자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="kr">4. 공부하다 ➔ 공부하자! ➔ <span class="ans-span" style="display:none; color:#2563eb;">공부하자고 했어요.</span></p>
+					</div>
+
+					<button class="toggle-ans-btn" onclick="toggleSlideAnswers(this)">정답 확인</button>
+				</div>
+
+				<!-- Slide 08: 변형 연습 ② -->
+				<div class="slide">
+					<h2>08. 변형 연습 ② </h2>
+					<p>기본형에서 바로 <strong>'-자고 하다'</strong>로 변형해 보세요!</p>
+
+					<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+						<div class="example-box"><p class="kr">먹다 ➔ <span class="ans-span" style="display:none; color:#2563eb;">먹자고 하다</span></p></div>
+						<div class="example-box"><p class="kr">마시다 ➔ <span class="ans-span" style="display:none; color:#2563eb;">마시자고 하다</span></p></div>
+						<div class="example-box"><p class="kr">자다 ➔ <span class="ans-span" style="display:none; color:#2563eb;">자자고 하다</span></p></div>
+						<div class="example-box"><p class="kr">만나다 ➔ <span class="ans-span" style="display:none; color:#2563eb;">만나자고 하다</span></p></div>
+						<div class="example-box"><p class="kr">공부하다 ➔ <span class="ans-span" style="display:none; color:#2563eb;">공부하자고 하다</span></p></div>
+						<div class="example-box"><p class="kr">놀다 ➔ <span class="ans-span" style="display:none; color:#2563eb;">놀자고 하다</span></p></div>
+					</div>
+
+					<button class="toggle-ans-btn" onclick="toggleSlideAnswers(this)" style="margin-top:15px;">정답 확인</button>
+				</div>
+
+				<!-- Slide 09: 조금 더 어려운 변형 -->
+				<div class="slide">
+					<h2>09. 문장 변형 연습 </h2>
+					<p>문장 전체를 전달 표현으로 바꿔 봅시다!</p>
+
+					<div class="example-box">
+						<p class="kr">친구: "같이 밥 먹자." ➔ <span style="color:#2563eb;">친구가 같이 밥 먹자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="kr">1. 친구: "카페에 가자."</p>
+						<p class="kr" style="margin-top:4px;">➔ 친구가 <span class="ans-span" style="display:none; color:#2563eb;">카페에 가자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="kr">2. 친구: "영화를 보자."</p>
+						<p class="kr" style="margin-top:4px;">➔ 친구가 <span class="ans-span" style="display:none; color:#2563eb;">영화를 보자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="kr">3. 친구: "한국어를 공부하자."</p>
+						<p class="kr" style="margin-top:4px;">➔ 친구가 <span class="ans-span" style="display:none; color:#2563eb;">한국어를 공부하자고 했어요.</span></p>
+					</div>
+
+					<button class="toggle-ans-btn" onclick="toggleSlideAnswers(this)">정답 확인</button>
+				</div>
+
+				<!-- Slide 10: 했어요 vs 했잖아요 -->
+				<div class="slide">
+					<h2>10. 했어요 vs 했잖아요 </h2>
+
+					<div style="display:flex; gap:15px; margin-top:15px;">
+						<div style="flex:1; background:#f8fafc; padding:15px; border-radius:8px; border:2px solid #cbd5e1;">
+							<p style="font-size:16px; font-weight:bold; color:#1e293b;">🔵 가자고 했어요.</p>
+							<p class="kr" style="margin-top:8px; font-size:15px;">친구가 가자고 했어요.</p>
+							<p class="jp" style="font-size:13px; margin-top:4px;">친구가 「行こう」と言いました。</p>
+							<p style="font-size:12px; color:#64748b; margin-top:10px; font-weight:bold;">👉 단순한 사실 전달</p>
+						</div>
+						<div style="flex:1; background:#eff6ff; padding:15px; border-radius:8px; border:2px solid #bfdbfe;">
+							<p style="font-size:16px; font-weight:bold; color:#2563eb;">🔴 가자고 했잖아요!</p>
+							<p class="kr" style="margin-top:8px; font-size:15px;">친구가 가자고 했잖아요.</p>
+							<p class="jp" style="font-size:13px; margin-top:4px;">友達が「行こう」って言ったじゃないですか。</p>
+							<p style="font-size:12px; color:#2563eb; margin-top:10px; font-weight:bold;">👉 이미 알고 있는 사실을 상기/확인</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Slide 11: 상황 연습 -->
+				<div class="slide">
+					<h2>11. 상황 연습 </h2>
+
+					<div style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
+						<p style="font-weight:bold; color:#1e3a8a; font-size:14px;">상황 ① (사실 전달)</p>
+						<p style="font-size:13px;">선생님: 어제 친구하고 약속했어요. 친구가 "토요일에 만나자!"라고 했어요. 뭐라고 할까요?</p>
+						<p class="kr" style="color:#2563eb; font-size:15px; margin-top:4px;">➔ "친구가 토요일에 만나자고 했어요."</p>
+					</div>
+
+					<div style="background:#eff6ff; padding:12px; border-radius:8px; border:1px solid #bfdbfe;">
+						<p style="font-weight:bold; color:#2563eb; font-size:14px;">상황 ② (기억 상기)</p>
+						<p style="font-size:13px;">선생님: 그런데 친구가 오늘 약속을 잊어버렸어요! 뭐라고 말할까요?</p>
+						<p class="kr" style="color:#1e3a8a; font-size:15px; margin-top:4px;">➔ "같이 만나자고 했잖아요!"</p>
+					</div>
+				</div>
+
+				<!-- Slide 12: 선택 문제 -->
+				<div class="slide">
+					<h2>12. 선택 문제 </h2>
+					<div class="highlight">
+						<p style="font-size:15px; font-weight:bold;">친구가 말했어요: <span style="color:#2563eb;">"내일 같이 공부하자!"</span></p>
+						<p style="font-size:14px; margin-top:4px;">어떻게 말할까요?</p>
+					</div>
+
+					<button class="option-btn" onclick="checkQuiz(this, false)">① 친구가 같이 공부한다고 했어요.</button>
+					<button class="option-btn" onclick="checkQuiz(this, true)">② 친구가 같이 공부하자고 했어요. (正解!)</button>
+					<button class="option-btn" onclick="checkQuiz(this, false)">③ 친구가 같이 공부했어요.</button>
+				</div>
+
+				<!-- Slide 13: 일본어 -> 한국어 -->
+				<div class="slide">
+					<h2>13. 일본어 ➔ 한국어 </h2>
+					<p>다음 일본어를 한국어로 바꿔 보세요!</p>
+
+					<div class="example-box">
+						<p class="jp">1. 「一緒に行こう」と言いました。</p>
+						<p class="kr" style="margin-top:4px;">➔ <span class="ans-span" style="display:none; color:#2563eb;">같이 가자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="jp">2. 「ご飯を食べよう」って言いました。</p>
+						<p class="kr" style="margin-top:4px;">➔ <span class="ans-span" style="display:none; color:#2563eb;">밥을 먹자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p class="jp">3. 「映画を見よう」と言いました。</p>
+						<p class="kr" style="margin-top:4px;">➔ <span class="ans-span" style="display:none; color:#2563eb;">영화를 보자고 했어요.</span></p>
+					</div>
+
+					<button class="toggle-ans-btn" onclick="toggleSlideAnswers(this)">정답 확인</button>
+				</div>
+
+				<!-- Slide 14: 듣고 말하기 -->
+				<div class="slide">
+					<h2>14. 듣고 말하기</h2>
+					<p>선생님의 말을 듣고 제안 전달 문장으로 바꿔 보세요! ⭐</p>
+
+					<div class="example-box">
+						<p style="font-size:13px; color:#64748b;">👩‍🏫 선생님: "주말에 같이 카페 가자!"</p>
+						<p class="kr" style="margin-top:4px;">학생 ➔ <span class="ans-span" style="display:none; color:#2563eb;">카페에 가자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p style="font-size:13px; color:#64748b;">👩‍🏫 선생님: "내일 같이 밥 먹자!"</p>
+						<p class="kr" style="margin-top:4px;">학생 ➔ <span class="ans-span" style="display:none; color:#2563eb;">밥 먹자고 했어요.</span></p>
+					</div>
+					<div class="example-box">
+						<p style="font-size:13px; color:#64748b;">👩‍🏫 선생님: "한국어 공부하자!"</p>
+						<p class="kr" style="margin-top:4px;">학생 ➔ <span class="ans-span" style="display:none; color:#2563eb;">한국어 공부하자고 했어요.</span></p>
+					</div>
+
+					<button class="toggle-ans-btn" onclick="toggleSlideAnswers(this)">정답 확인</button>
+				</div>
+
+				<!-- Slide 15: 학생이 직접 문장 만들기 -->
+				<div class="slide">
+					<h2>15. 문장 만들기 </h2>
+					<p>주어와 내용을 직접 골라 문장을 만들어 봅시다!</p>
+
+					<div class="highlight" style="padding:15px;">
+						<p style="font-size:15px; font-weight:bold;">1단계: 친구에게 제안하기</p>
+						<p class="kr" style="font-size:18px; color:#2563eb; margin-top:5px;">"같이 여행 가자!"</p>
+					</div>
+
+					<div class="example-box" style="margin-top:15px; padding:15px;">
+						<p style="font-size:14px; color:#64748b;">2단계: 선생님의 질문에 답하기 ("친구에게 뭐라고 했어요?")</p>
+						<p class="kr" style="font-size:18px; color:#1e3a8a; margin-top:5px;">➔ "친구에게 여행 가자고 했어요."</p>
+					</div>
+				</div>
+
+				<!-- Slide 16: 역할극 -->
+				<div class="slide">
+					<h2>16. 🎭 역할극 (Role Play)</h2>
+					<p>1:1 대화 상황입니다. 제안 카드에서 하나를 골라 대화해 보세요!</p>
+
+					<div style="display:flex; gap:10px; margin-bottom:12px;">
+						<span style="background:#eff6ff; padding:5px 10px; border-radius:15px; border:1px solid #bfdbfe; font-size:13px; font-weight:bold; color:#2563eb;">🎬 카테고리: 영화 보기 / 밥 먹기 / 카페 가기 / 쇼핑하기 / 공부하기</span>
+					</div>
+
+					<div class="example-box">
+						<p class="kr" style="color:#166534;">A: "우리 [ 영화 보기 ] 하자!"</p>
+						<p class="kr" style="color:#1e3a8a; margin-top:4px;">B: "친구가 뭐라고 했어요?"</p>
+						<p class="kr" style="color:#2563eb; margin-top:4px;">A: "친구가 [ 영화 보자고 ] 했어요."</p>
+					</div>
+				</div>
+
+				<!-- Slide 17: 마지막 응용 -->
+				<div class="slide">
+					<h2>17. 실전 응용 (Real Practice)</h2>
+					<p>실제 대화에서 '-자고 했잖아요!'를 사용하는 상황들입니다.</p>
+
+					<div class="example-box">
+						<p style="font-size:13px; color:#ef4444; font-weight:bold;">😮 상황 1: 친구가 약속을 잊어버렸을 때</p>
+						<p class="kr" style="margin-top:2px;">친구: "오늘 뭐 하지?" ➔ 학생: "같이 영화 보자고 했잖아요!"</p>
+					</div>
+
+					<div class="example-box">
+						<p style="font-size:13px; color:#ef4444; font-weight:bold;">😮 상황 2: 친구가 다른 식당에 가려고 할 때</p>
+						<p class="kr" style="margin-top:2px;">학생: "저 식당에 가자고 했잖아요!"</p>
+					</div>
+
+					<div class="example-box">
+						<p style="font-size:13px; color:#ef4444; font-weight:bold;">😮 상황 3: 친구가 혼자 공부하려고 할 때</p>
+						<p class="kr" style="margin-top:2px;">학생: "같이 공부하자고 했잖아요!"</p>
+					</div>
+				</div>
+
+				<!-- Slide 18: 오늘 배운 것 -->
+				<div class="slide">
+					<h2>18. 오늘 배운 것 (Summary)</h2>
+
+					<div class="highlight" style="padding:15px;">
+						<p style="font-size:16px; font-weight:bold; color:#1e3a8a; margin-bottom:8px;">🌱 오늘 배운 핵심 정리</p>
+						<div style="line-height:1.8;">
+							<p><strong>① -자:</strong> 같이 하자! 가자! (➔ 行こう！)</p>
+							<p><strong>② -자고 하다:</strong> 「～しよう」と言う (가자고 했어요. ➔ 「行こう」と言いました。)</p>
+							<p><strong>③ -자고 했잖아요:</strong> 「～しよう」って言ったじゃん (가자고 했잖아요. ➔ 「行こう」と言ったじゃないですか。)</p>
+						</div>
+					</div>
+
+					<p style="text-align:center; color:#2563eb; font-weight:bold; margin-top:20px; font-size:16px;">
+						🎉 오늘 수업 끝! 수고하셨습니다!<br>
+						<span style="background:#eee; padding:3px 8px; border-radius:4px; border:1px solid #ccc; color:#333; font-size:13px;">Ctrl + M</span> 을 누르면 연습 메뉴를 확인할 수 있습니다.
+					</p>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Navigation -->
+		<div class="nav-footer">
+			<button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀ 前へ</button>
+			<span class="page-indicator" id="pageIndicator">1 / 18</span>
+			<button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">次へ ▶</button>
+		</div>
+	</div>
+
+	<!-- Main Modal (Ctrl + M) -->
+	<div class="modal-overlay" id="mainMenuModal">
+		<div class="modal" style="width:480px;">
+			<h3>🎯 練習メニュー (-자고 하다)</h3>
+			<button class="modal-menu-btn" onclick="openSubModal('conjModal')">
+				1. 기본 변형 연습 (-자 ➔ -자고 하다)
+			</button>
+			<button class="modal-menu-btn" onclick="openSubModal('transModal')">
+				2. 간단한 한일 변형 연습
+			</button>
+			<button class="modal-menu-btn" onclick="openSubModal('sentModal')">
+				3. 일본어를 한국어로 바꿔보기
+			</button>
+			<button class="close-btn" onclick="closeAllModals()">閉じる (Esc)</button>
+		</div>
+	</div>
+
+	<!-- Sub Modal 1 -->
+	<div class="modal-overlay" id="conjModal">
+		<div class="modal">
+			<h3>📊 1. 기본 변형 연습</h3>
+			<table class="grammar-table">
+				<tr><th>기본형</th><th>-자</th><th>-자고 하다</th><th>確認</th></tr>
+				<tr><td>가다</td><td>가자</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">가자고 하다</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>먹다</td><td>먹자</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">먹자고 하다</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>보다</td><td>보자</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">보자고 하다</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>공부하다</td><td>공부하자</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">공부하자고 하다</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+			</table>
+			<button class="close-btn" onclick="backToMainMenu()">◀ メニューに戻る</button>
+		</div>
+	</div>
+
+	<!-- Sub Modal 2 -->
+	<div class="modal-overlay" id="transModal">
+		<div class="modal">
+			<h3>💬 2. 간단한 한일 변형 연습</h3>
+			<table class="grammar-table">
+				<tr><th>직접 말하기</th><th>전달하기 (-자고 했어요)</th><th>確認</th></tr>
+				<tr><td>"카페에 가자."</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">카페에 가자고 했어요.</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>"영화를 보자."</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">영화를 보자고 했어요.</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>"한국어를 공부하자."</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">한국어를 공부하자고 했어요.</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+			</table>
+			<button class="close-btn" onclick="backToMainMenu()">◀ 메뉴に戻る</button>
+		</div>
+	</div>
+
+	<!-- Sub Modal 3 -->
+	<div class="modal-overlay" id="sentModal">
+		<div class="modal">
+			<h3>📝 3. 일본어를 한국어로 바꿔보기</h3>
+			<table class="grammar-table">
+				<tr><th>일본어</th><th>한국어 (-자고 했어요)</th><th>確認</th></tr>
+				<tr><td>「一緒に行こう」と言いました。</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">같이 가자고 했어요.</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>「ご飯を食べよう」って言いました。</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">밥을 먹자고 했어요.</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>「映画を見よう」と言いました。</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">영화를 보자고 했어요.</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+			</table>
+			<button class="close-btn" onclick="backToMainMenu()">◀ 메뉴に戻る</button>
+		</div>
+	</div>
+
+	<script>/* Slide Navigation */
+    let currentSlide = 0;
+    const totalSlides = 18;
+    const slideContainer = document.getElementById('slideContainer');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateSlide() {
+        slideContainer.style.transform = `translateX(-${currentSlide * 900}px)`;
+        pageIndicator.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+        loadSlideCanvas();
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        updateSlide();
+    }
+
+    /* Canvas Drawing Functionality with Undo/Redo */
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let currentTool = 'pen';
+
+    const undoStacks = Array.from({ length: totalSlides }, () => []);
+    const redoStacks = Array.from({ length: totalSlides }, () => []);
+
+    function saveState() {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        undoStacks[currentSlide].push(imageData);
+        redoStacks[currentSlide] = [];
+    }
+
+    function loadSlideCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const stack = undoStacks[currentSlide];
+        if (stack.length > 0) {
+            ctx.putImageData(stack[stack.length - 1], 0, 0);
+        }
+    }
+
+    function undoDraw() {
+        if (undoStacks[currentSlide].length > 0) {
+            const lastState = undoStacks[currentSlide].pop();
+            redoStacks[currentSlide].push(lastState);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const currentStack = undoStacks[currentSlide];
+            if (currentStack.length > 0) {
+                ctx.putImageData(currentStack[currentStack.length - 1], 0, 0);
+            }
+        }
+    }
+
+    function redoDraw() {
+        if (redoStacks[currentSlide].length > 0) {
+            const nextState = redoStacks[currentSlide].pop();
+            undoStacks[currentSlide].push(nextState);
+            ctx.putImageData(nextState, 0, 0);
+        }
+    }
+
+    function setTool(tool) {
+        currentTool = tool;
+        document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+        if (tool === 'pen') document.getElementById('penToolBtn').classList.add('active');
+        if (tool === 'eraser') document.getElementById('eraserToolBtn').classList.add('active');
+        if (tool === 'text') document.getElementById('textToolBtn').classList.add('active');
+    }
+
+    function clearCanvas() {
+        saveState();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        undoStacks[currentSlide].push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    }
+
+    /* Zoom Style Inline Text Input */
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (currentTool === 'text') {
+            const existingInput = document.getElementById('active-canvas-input');
+            if (existingInput) existingInput.blur();
+
+            const color = document.getElementById('drawColor').value;
+            const fontSize = 20;
+
+            const input = document.createElement('input');
+            input.id = 'active-canvas-input';
+            input.type = 'text';
+            input.style.position = 'absolute';
+            input.style.left = (rect.left + x) + 'px';
+            input.style.top = (rect.top + y - fontSize / 2) + 'px';
+            input.style.fontSize = fontSize + 'px';
+            input.style.fontFamily = '"Helvetica Neue", Arial, sans-serif';
+            input.style.fontWeight = 'bold';
+            input.style.color = color;
+            input.style.background = 'transparent';
+            input.style.border = '1px dashed #2563eb';
+            input.style.outline = 'none';
+            input.style.padding = '2px 4px';
+            input.style.zIndex = '1000';
+
+            document.body.appendChild(input);
+            setTimeout(() => input.focus(), 0);
+
+            function commitText() {
+                const userText = input.value.trim();
+                if (userText) {
+                    saveState();
+                    ctx.font = `bold ${fontSize}px "Helvetica Neue", Arial, sans-serif`;
+                    ctx.fillStyle = color;
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(userText, x, y);
+                }
+                if (input.parentNode) {
+                    input.parentNode.removeChild(input);
+                }
+            }
+
+            input.addEventListener('keydown', (evt) => {
+                if (evt.key === 'Enter') {
+                    commitText();
+                } else if (evt.key === 'Escape') {
+                    if (input.parentNode) input.parentNode.removeChild(input);
+                }
+            });
+
+            input.addEventListener('blur', () => {
+                commitText();
+            });
+
+            return;
+        }
+
+        isDrawing = true;
+        saveState();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const color = document.getElementById('drawColor').value;
+        const lineWidth = document.getElementById('drawLineWidth').value;
+
+        if (currentTool === 'pen') {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        } else if (currentTool === 'eraser') {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineWidth = lineWidth * 3;
+            ctx.lineCap = 'round';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        if (isDrawing) { isDrawing = false; ctx.closePath(); }
+    });
+    canvas.addEventListener('mouseleave', () => {
+        if (isDrawing) { isDrawing = false; ctx.closePath(); }
+    });
+
+    /* Interactive Quiz Check */
+    function checkQuiz(btn, isCorrect) {
+        const parent = btn.parentElement;
+        parent.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('correct', 'wrong');
+        });
+        if (isCorrect) {
+            btn.classList.add('correct');
+        } else {
+            btn.classList.add('wrong');
+        }
+    }
+
+    function toggleSlideAnswers(btn) {
+        const slide = btn.closest('.slide');
+        const spans = slide.querySelectorAll('.ans-span');
+        let isAnyHidden = Array.from(spans).some(s => s.style.display === 'none');
+        spans.forEach(s => {
+            s.style.display = isAnyHidden ? 'inline' : 'none';
+        });
+        btn.innerText = isAnyHidden ? '정답 숨기기' : '정답 확인';
+    }
+
+    /* Modal Controls */
+    function closeAllModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    }
+
+    function openMainMenu() {
+        closeAllModals();
+        document.getElementById('mainMenuModal').style.display = 'flex';
+    }
+
+    function openSubModal(id) {
+        closeAllModals();
+        document.getElementById(id).style.display = 'flex';
+    }
+
+    function backToMainMenu() { openMainMenu(); }
+
+    function toggleConj(btn) {
+        const span = btn.parentElement.parentElement.querySelector('.conj-ans');
+        if (span.style.display === 'none') {
+            span.style.display = 'inline';
+            btn.innerText = '非表示';
+        } else {
+            span.style.display = 'none';
+            btn.innerText = '表示';
+        }
+    }
+
+    /* Keyboard Shortcuts */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { closeAllModals(); return; }
+
+        if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undoDraw(); return; }
+        if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redoDraw(); return; }
+
+        const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-overlay')).some(m => m.style.display === 'flex');
+
+        if (!isAnyModalOpen) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        }
+
+        if (e.ctrlKey && e.key.toLowerCase() === 'm') {
+            e.preventDefault();
+            const mainMenu = document.getElementById('mainMenuModal');
+            if (mainMenu.style.display === 'flex') closeAllModals();
+            else openMainMenu();
+        }
+    });
+
+    updateSlide();</script>
+
+</body>
+</html>

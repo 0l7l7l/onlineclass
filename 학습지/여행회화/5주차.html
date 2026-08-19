@@ -1,0 +1,1125 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>여행 3개월 전 일본어 - 4주차 : あります / います 완벽 마스터</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+			.footer::after {
+				content: "Page " counter(page-num);
+			}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+		 🖼️ UI 컴포넌트
+		 ========================================================================== */
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+		}
+
+		.section-lesson-title {
+			font-size: 20px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 14px;
+			line-height: 1.2;
+		}
+
+		.pin-subtitle {
+			font-size: 15px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		.speech-label-title {
+			font-size: 13px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 13px;
+			}
+
+		p, li {
+			font-size: 13px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+		/* ==========================================================================
+		 📊 [접속 공식] 2열 카드 UI
+		 ========================================================================== */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			text-align: center;
+			padding: 8px;
+			border-radius: 8px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+		.formula-box {
+			background-color: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			font-size: 14px;
+			font-weight: 800;
+			color: #1e293b;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+		}
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+			.formula-box .blue-target {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+		/* ==========================================================================
+		 💡 [Point 박스] 상단 꼬리가 달린 말풍선 박스
+		 ========================================================================== */
+		.point-speech-card {
+			position: relative;
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 14px 16px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+			.point-speech-card::before {
+				content: '';
+				position: absolute;
+				top: -8px;
+				left: 24px;
+				border-width: 0 8px 8px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card::after {
+				content: '';
+				position: absolute;
+				top: -6px;
+				left: 25px;
+				border-width: 0 7px 7px;
+				border-style: solid;
+				border-color: #eff6ff transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12.5px;
+				line-height: 1.6;
+				color: #334155;
+				margin-bottom: 6px;
+			}
+
+				.point-speech-card li:last-child {
+					margin-bottom: 0;
+				}
+
+		/* ==========================================================================
+		 🎯 단어장 및 퀴즈 컴포넌트
+		 ========================================================================== */
+		.bubble-word-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.word-bubble {
+			background: #f8fafc;
+			border: 1px solid #cbd5e1;
+			color: #0f172a;
+			padding: 6px 10px;
+			border-radius: 6px;
+			font-size: 12.5px;
+			font-weight: 700;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+			.word-bubble .ja-sub {
+				font-size: 11px;
+				color: #64748b;
+				font-weight: normal;
+			}
+
+		.character-card {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			padding: 10px 12px;
+			border-radius: 0 8px 8px 0;
+			margin-bottom: 8px;
+		}
+
+		.char-avatar {
+			font-size: 20px;
+		}
+
+		.char-speech {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.char-trans {
+			font-size: 11.5px;
+			color: #64748b;
+		}
+
+		.quiz-item {
+			margin-bottom: 6px;
+			background-color: #fafafa;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 12px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 70px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+		.answer-btn {
+			margin-top: 6px;
+			padding: 5px 12px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 11.5px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 6px;
+			padding: 8px 10px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			display: none;
+			background-color: #f8fafc;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12px;
+			color: #1e3a8a;
+			line-height: 1.5;
+		}
+
+		.big-concept-box {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			border: 1.5px solid #bfdbfe;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-title {
+			font-size: 18px;
+			font-weight: 900;
+			color: #1e3a8a;
+		}
+
+		/* ==========================================================================
+		 🎒 여행 플래너 UI
+		 ========================================================================== */
+		.planner-card-box {
+			background-color: #f8fafc;
+			border: 2px dashed #bfdbfe;
+			border-radius: 12px;
+			padding: 14px;
+			margin-top: 8px;
+			margin-bottom: 12px;
+		}
+
+		.planner-q-item {
+			margin-bottom: 10px;
+		}
+
+		.planner-q-title {
+			font-size: 13px;
+			font-weight: 800;
+			color: #1e3a8a;
+			margin-bottom: 4px;
+		}
+
+		.planner-input-line {
+			background-color: #ffffff;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			padding: 6px 10px;
+			font-size: 13px;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		.planner-summary-box {
+			background-color: #eff6ff;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px;
+			text-align: center;
+		}
+
+		.planner-summary-title {
+			font-size: 14px;
+			font-weight: 800;
+			color: var(--primary-blue);
+			margin-bottom: 6px;
+		}
+
+		.planner-summary-text {
+			font-size: 13px;
+			line-height: 1.6;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		/* ==========================================================================
+		 📱 모바일 & 🖨️ 인쇄(Print) 대응
+		 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+		 [펼침면 1] 핵심 문법 정리 : あります vs います
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 문법 원리 및 구분법 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 04 - CORE GRAMMAR</div>
+				<div class="lesson-badge-oval">4과</div>
+				<div class="section-lesson-title">제 4 과 : 존재 표현 & 장소 찾기</div>
+				<h3 class="grammar-title">あります / います</h3>
+
+				<div class="pin-subtitle">의미 및 구분법</div>
+				<p style="margin-bottom: 8px;">
+					한국어의 <b>「있습니다」</b>에 해당하는 표현으로, 대상이 <b>무생물/식물(사물)</b>인가 <b>사람/동물(생물)</b>인가에 따라 완전히 다른 단어를 사용합니다.
+				</p>
+
+				<div class="speech-label-title">존재 표현 구분 공식</div>
+
+				<div class="formula-container">
+					<div class="formula-column">
+						<div class="formula-header">사물 / 장소 / 식물 📦</div>
+						<div class="formula-box"><b>あります</b> (있습니다)</div>
+						<div class="formula-box highlight-text">コンビニが あります</div>
+					</div>
+					<div class="formula-column">
+						<div class="formula-header sky">사람 / 동물 🙋‍♂️</div>
+						<div class="formula-box"><b>います</b> (있습니다)</div>
+						<div class="formula-box highlight-text">友達が います</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">Point</div>
+				<div class="point-speech-card">
+					<ul>
+						<li><b>조사 「が」:</b> 「~이/가 있습니다」라고 할 때는 대상 뒤에 조사 <b>が(가)</b>를 붙입니다.</li>
+						<li><b>질문하기 (~있습니까?):</b> 문장 끝에 <b>か</b>를 붙여 <b>「ありますか」「いますか」</b>로 물어봅니다.</li>
+					</ul>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 기본 변형 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 04 - CORE DRILL</div>
+				<div class="pin-subtitle">존재 표현 구별 연습</div>
+				<p style="margin-bottom: 8px;">알맞은 존재 표현(あります / います)을 골라 빈칸을 채워보세요.</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. 편의점이 있습니다. (사물)</div>
+					<div class="quiz-ja">コンビニが <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. 친구가 있습니다. (사람)</div>
+					<div class="quiz-ja">友達(ともだち)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. 화장실이 있습니까? (사물/질문)</div>
+					<div class="quiz-ja">トイレが <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. 고양이가 있습니다. (동물)</div>
+					<div class="quiz-ja">猫(ねこ)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">5. 근처에 역이 있습니까?</div>
+					<div class="quiz-ja">近くに 駅(えき)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) あります (아리마스)<br>
+						2) います (이마스)<br>
+						3) ありますか (아리마스카)<br>
+						4) います (이마스)<br>
+						5) ありますか (아리마스카)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 2] 테마 01 : 장소 찾기 (近くに コンビニが ありますか)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 어휘 및 문장 생성 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 01 - FIND PLACE</div>
+				<div class="lesson-badge-oval">4주차</div>
+				<div class="section-lesson-title">테마 01 : 근처 장소 찾기</div>
+				<h3 class="grammar-title">近くに [장소]が ありますか</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">近くに コンビニが ありますか。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(근처에 편의점이 있습니까?)</p>
+				</div>
+
+				<div class="pin-subtitle">여행 필수 장소 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>コンビニ</span> <span class="ja-sub">편의점</span></div>
+					<div class="word-bubble"><span>トイレ</span> <span class="ja-sub">화장실</span></div>
+					<div class="word-bubble"><span>駅</span> <span class="ja-sub">えき (역)</span></div>
+					<div class="word-bubble"><span>薬局</span> <span class="ja-sub">やっきょく (약국)</span></div>
+					<div class="word-bubble"><span>ATM</span> <span class="ja-sub">エーティーエム</span></div>
+					<div class="word-bubble"><span>バス停</span> <span class="ja-sub">バスてい (버스정류장)</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 만들기 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 근처에 화장실이 있습니까?</div>
+					<div class="quiz-ja">近くに トイレが <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 근처에 역이 있습니까?</div>
+					<div class="quiz-ja">近くに 駅(えき)が <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 근처에 약국이 있습니까?</div>
+					<div class="quiz-ja">近くに 薬局(やっきょく)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content"><b>정답:</b> 모두 <b>ありますか</b> (아리마스카) 가 들어갑니다.</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 실전 대화 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 01 - PRACTICE</div>
+				<div class="pin-subtitle">실전 대화하기 (있다 / 없다)</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">すみません、近くに コンビニが ありますか。</div>
+						<div class="char-trans">(죄송합니다, 근처에 편의점이 있습니까?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♀️</div>
+					<div>
+						<div class="char-speech">はい、あそこに ありますよ。</div>
+						<div class="char-trans">(네, 저기에 있어요.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙅‍♂️</div>
+					<div>
+						<div class="char-speech">いいえ、近くに ありません。</div>
+						<div class="char-trans">(아니요, 근처에 없습니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">Point - 부정 표현</div>
+				<div class="point-speech-card">
+					<ul>
+						<li><b>ありません (없습니다):</b> 사물이 없다고 대답할 때는 <b>ありません</b>을 사용합니다.</li>
+						<li><b>あそこ (저기):</b> 눈에 보이는 위치를 알려줄 때는 <b>あそこに あります (저기에 있습니다)</b>라고 대답합니다.</li>
+					</ul>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 3] 테마 02 : 상세 위치 표현 (前 / 隣 / 中 / 近く)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 위치 어휘 및 문법 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 02 - LOCATION</div>
+				<div class="lesson-badge-oval">4주차</div>
+				<div class="section-lesson-title">테마 02 : 상세 위치 알려주기</div>
+				<h3 class="grammar-title">[장소]の [위치]に あります</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">駅の 前に あります。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(역 앞에 있습니다.)</p>
+				</div>
+
+				<div class="pin-subtitle">필수 위치 명사</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>前</span> <span class="ja-sub">まえ (앞)</span></div>
+					<div class="word-bubble"><span>隣</span> <span class="ja-sub">となり (옆)</span></div>
+					<div class="word-bubble"><span>中</span> <span class="ja-sub">なか (안)</span></div>
+					<div class="word-bubble"><span>後ろ</span> <span class="ja-sub">うしろ (뒤)</span></div>
+					<div class="word-bubble"><span>横</span> <span class="ja-sub">よこ (옆)</span></div>
+					<div class="word-bubble"><span>近く</span> <span class="ja-sub">ちかく (근처)</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 역 앞에 있습니다.</div>
+					<div class="quiz-ja">駅(えき)の 前(まえ)に <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 편의점 옆에 있습니다.</div>
+					<div class="quiz-ja">コンビニの 隣(となり)に <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 호텔 안에 있습니다.</div>
+					<div class="quiz-ja">ホテルの 中(なか)に <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content"><b>정답:</b> 모두 <b>あります</b> (아리마스) 가 들어갑니다.</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 위치 실전 문제 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 02 - PRACTICE</div>
+				<div class="pin-subtitle">상세 위치 응용 문제</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. "ATM은 어디에 있습니까?" ➔ "편의점 안에 있습니다."</div>
+					<div class="quiz-ja">コンビニの 中(なか)に <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. "약국은 어디에 있습니까?" ➔ "역 옆에 있습니다."</div>
+					<div class="quiz-ja">駅(えき)の 隣(となり)に <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. "화장실은 어디에 있습니까?" ➔ "호텔 뒤에 있습니다."</div>
+					<div class="quiz-ja">ホテルの 後ろ(うしろ)に <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="point-speech-card" style="margin-top: 15px;">
+					<ul>
+						<li><b>조사 「の」 + 「に」:</b> 「장소 + <b>の</b> + 위치 + <b>に</b> あります」 구문을 외워두면 어떤 장소든 정확하게 찾고 설명할 수 있습니다!</li>
+					</ul>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) あります (아리마스)<br>
+						2) あります (아리마스)<br>
+						3) あります (아리마스)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 4] 테마 03 : 사람 / 동물 (います)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: います 어휘 및 문형 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 03 - PEOPLE & ANIMAL</div>
+				<div class="lesson-badge-oval">4주차</div>
+				<div class="section-lesson-title">테마 03 : 사람과 동물의 유무</div>
+				<h3 class="grammar-title">[사람/동물]が います</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">ここに 日本人の スタッフが いますか。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(여기에 한국어/일본어 스태프가 있습니까?)</p>
+				</div>
+
+				<div class="pin-subtitle">사람 및 동물 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>スタッフ</span> <span class="ja-sub">스태프</span></div>
+					<div class="word-bubble"><span>店員</span> <span class="ja-sub">てんいん (점원)</span></div>
+					<div class="word-bubble"><span>子供</span> <span class="ja-sub">こども (아이)</span></div>
+					<div class="word-bubble"><span>犬</span> <span class="ja-sub">いぬ (개)</span></div>
+					<div class="word-bubble"><span>猫</span> <span class="ja-sub">ねこ (고양이)</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 점원이 있습니까?</div>
+					<div class="quiz-ja">店員(てんいん)が <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 아이가 있습니다.</div>
+					<div class="quiz-ja">子供(こども)が <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 강아지가 있습니까?</div>
+					<div class="quiz-ja">犬(いぬ)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) いますか (이마스카)<br>
+						2) います (이마스)<br>
+						3) いますか (이마스카)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: います 실전 회화 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 03 - PRACTICE</div>
+				<div class="pin-subtitle">여행 현장 실전 대화</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">韓国語が できる スタッフは いますか。</div>
+						<div class="char-trans">(한국어를 할 수 있는 스태프가 있나요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏪</div>
+					<div>
+						<div class="char-speech">はい、奥(おく)に いますよ。</div>
+						<div class="char-trans">(네, 안쪽에 계십니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">실전 응용 퀴즈</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "안쪽에 점원이 있습니까?"</div>
+					<div class="quiz-ja">奥(おく)に 店員(てんいん)が <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "아니요, 지금은 없습니다 (계시지 않습니다)."</div>
+					<div class="quiz-ja">いいえ、今(いま)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="point-speech-card">
+					<ul>
+						<li><b>부정 표현 (いません):</b> 사람이나 동물이 없다고 할 때는 <b>いません</b>을 사용합니다.</li>
+					</ul>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) いますか (이마스카)<br>
+						2) いません (이마센)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 5] 실전 연습 & 길찾기 플래너
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 나만의 길찾기 스피치 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 04 - MY PLAN</div>
+				<div class="lesson-badge-oval">4주차</div>
+				<div class="section-lesson-title">나의 길찾기 스피치</div>
+				<h3 class="grammar-title">🗺️ 街で 場所を 探そう！</h3>
+
+				<p style="margin-bottom: 8px;">
+					여행지 거리에서 길을 물어보고 답하는 플랜을 직접 작성해봅시다!
+				</p>
+
+				<div class="planner-card-box">
+					<div class="planner-q-item">
+						<div class="planner-q-title">① 길 물어보기 (근처에 화장실이 있나요?)</div>
+						<div class="planner-input-line">👉 近くに トイレが ありますか。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">② 위치 답변하기 (역 옆에 있습니다)</div>
+						<div class="planner-input-line">👉 駅(えき)の 隣(となり)に あります。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">③ 감사 인사하기</div>
+						<div class="planner-input-line">👉 あらがとうございます！</div>
+					</div>
+				</div>
+
+				<div class="planner-summary-box">
+					<div class="planner-summary-title">✨ 연결해서 대화 완성하기</div>
+					<div class="planner-summary-text">
+						「すみません、近くに トイレが ありますか。」<br>
+						「駅の 隣に ありますよ。」<br>
+						「ありがとうございます！」
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 종합 변형 문제 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 04 - DRILL</div>
+				<div class="pin-subtitle">있습니다 / 없습니까 종합 문제</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. 약국 (あります / います)</div>
+					<div class="quiz-ja">薬局(やっきょく)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. 고양이 (あります / います)</div>
+					<div class="quiz-ja">猫(ねこ)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. ATM (ありますか / いますか)</div>
+					<div class="quiz-ja">ATMが <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. 점원 (ありません / いません)</div>
+					<div class="quiz-ja">店員(てんいん)が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) あります &nbsp; 2) います<br>
+						3) ありますか &nbsp; 4) いません
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 6] 12. 쉬어가기 칼럼
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 에세이 전반부 -->
+			<div class="page left-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+				<div class="lesson-badge-oval">쉬어가기</div>
+				<div class="section-lesson-title">☕ 쉬어가기 칼럼</div>
+				<h3 class="grammar-title">「～は どこですか」 현지 만능 만능 만능 길찾기!</h3>
+
+				<div class="pin-subtitle">길을 잃었을 때는 이 한마디만!</div>
+				<p style="margin-bottom: 8px;">
+					우리는 오늘 <b>「近くに コンビニが ありますか(근처에 편의점이 있습니까?)」</b>를 배웠어요. 하지만 목적지가 명확할 때는 더 간단한 치트키 표현이 있습니다.
+				</p>
+
+				<div class="character-card">
+					<div class="char-avatar">📍</div>
+					<div>
+						<div class="char-speech">「すみません、～は どこですか。」</div>
+						<div class="char-trans">(죄송합니다, ~는 어디인가요?)</div>
+					</div>
+				</div>
+
+				<p style="margin-top: 10px; margin-bottom: 8px;">
+					예를 들어 명동성당, 도쿄타워, 특정 호텔 이름을 넣어서 <b>「〇〇は どこですか」</b>라고 물어보면 누구나 알아듣고 길을 친절하게 안내해 준답니다.
+				</p>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 에세이 후반부 & 현지 팁 -->
+			<div class="page right-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+
+				<div class="pin-subtitle">🌿 손짓과 지도를 활용하세요</div>
+				<p style="margin-bottom: 8px;">
+					상대방이 일본어로 길을 복잡하게 설명해 줄 때 다 알아듣지 못해도 당황하지 마세요!
+				</p>
+
+				<div class="point-speech-card">
+					<ul>
+						<li><b>손가락 방향 보기:</b> 점원이나 길가는 사람이 손가락으로 가리키는 방향(あっち, まっすぐ)만 봐도 대략적인 위치를 알 수 있습니다.</li>
+						<li><b>스마트폰 구글 맵:</b> 화면을 보여주며 <b>「ここに行きたいです (여기에 가고 싶어요)」</b>라고 말하는 것도 멋진 여행 기술입니다!</li>
+					</ul>
+				</div>
+
+				<div class="big-concept-box" style="margin-top: 15px;">
+					<div class="big-concept-title">🌱 이번 주 여행 자신감!</div>
+					<p style="font-size: 12px; color: #1e3a8a; margin-top: 4px;">
+						길을 잃는 것도 여행의 즐거운 추억입니다.<br>
+						주저하지 말고 현지인에게 물어보세요.<br>
+						<b style="font-size: 14px; color: #2563eb;">「すみません、トイレは どこですか！」</b>
+					</p>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '정답 가리기';
+    } else {
+      btn.innerText = '정답 확인';
+    }
+  }
+	</script>
+
+</body>
+</html>

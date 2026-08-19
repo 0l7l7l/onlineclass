@@ -1,0 +1,1840 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語初級文法教材 - -네요 (10페이지)</title>
+	<style>
+		/* ==========================================================================
+			 1. 変数定義 & 基本スタイル初期化
+			 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--dark-blue: #1e3a8a;
+			--light-blue-bg: #eff6ff;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+		}
+
+		/* スケーリングレスポンシブ設定 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+			 2. 見開き(Book) 基本構造 & レイアウト
+			 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			/* 本の中央折り目効果 */
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 20mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 12mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+		.left-page .footer {
+			left: 20mm;
+		}
+
+		.right-page .footer {
+			right: 20mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 15mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 20mm;
+		}
+
+		.right-page .grammar-no {
+			right: 20mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+			 🏷️ 上部バンドバッジ (.lesson-band)
+			 ========================================================================== */
+		.lesson-band {
+			display: inline-block;
+			align-self: flex-start;
+			background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 800;
+			padding: 6px 18px;
+			border-radius: 20px;
+			letter-spacing: 1px;
+			margin-bottom: 12px;
+			box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+		}
+
+		/* ==========================================================================
+			 3. 本文タイトル & 共通要素
+			 ========================================================================== */
+		.main-title {
+			font-size: 24px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 12px;
+			border-bottom: 3px solid var(--primary-blue);
+			padding-bottom: 8px;
+		}
+
+		h3.grammar-title {
+			font-size: 32px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 16px;
+			line-height: 1.2;
+		}
+
+		.sub-title {
+			font-size: 16px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border-bottom: 1px solid #dbeafe;
+		}
+
+			.sub-title::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		p, li {
+			font-size: 13.5px;
+			line-height: 1.6;
+			color: #334155;
+		}
+
+		ul {
+			padding-left: 18px;
+			margin-top: 4px;
+		}
+
+		li {
+			margin-bottom: 6px;
+		}
+
+		.highlight {
+			color: var(--primary-blue);
+			font-weight: bold;
+		}
+
+		/* ポイント説明ボックス */
+		.point-box {
+			background-color: var(--light-blue-bg);
+			border-left: 5px solid var(--primary-blue);
+			padding: 12px 16px;
+			border-radius: 4px;
+			margin: 12px 0;
+		}
+
+			.point-box h4 {
+				font-size: 15px;
+				color: #1e293b;
+				margin-bottom: 6px;
+			}
+
+			.point-box ul {
+				list-style: none;
+				padding-left: 0;
+			}
+
+			.point-box li {
+				font-size: 13.5px;
+				margin-bottom: 4px;
+			}
+
+		/* 3ステップ ビジュアル */
+		.step-box-container {
+			display: flex;
+			justify-content: space-between;
+			gap: 10px;
+			margin: 16px 0;
+		}
+
+		.step-box {
+			flex: 1;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 12px;
+			text-align: center;
+		}
+
+			.step-box .emoji {
+				font-size: 28px;
+				margin-bottom: 4px;
+			}
+
+			.step-box .title {
+				font-size: 13px;
+				font-weight: bold;
+				color: var(--dark-blue);
+			}
+
+		/* ==========================================================================
+			 💬 吹き出し (Speech Bubble) + 規則ビジュアル表
+			 ========================================================================== */
+		.speech-bubble-box {
+			position: relative;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 16px;
+			padding: 14px 18px;
+			margin: 12px 0 16px 0;
+		}
+
+			.speech-bubble-box::after {
+				content: '';
+				position: absolute;
+				top: -10px;
+				left: 24px;
+				border-width: 0 10px 10px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.speech-bubble-box h4 {
+				font-size: 14px;
+				color: var(--dark-blue);
+				margin-bottom: 8px;
+				font-weight: bold;
+			}
+
+		.rule-visual-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 6px;
+			margin-top: 4px;
+		}
+
+			.rule-visual-table th {
+				padding: 8px;
+				font-size: 13px;
+				font-weight: 800;
+				border-radius: 6px;
+				color: #ffffff;
+				text-align: center;
+				background-color: #2563eb;
+			}
+
+			.rule-visual-table td {
+				background-color: #ffffff;
+				border: 1px solid #dbeafe;
+				border-radius: 6px;
+				padding: 8px;
+				text-align: center;
+				vertical-align: middle;
+				font-size: 13px;
+			}
+
+		.rule-target {
+			font-weight: 900;
+			color: #2563eb;
+		}
+
+		/* ==========================================================================
+			 📝 例文カード & 対比テーブル & 変形練習表
+			 ========================================================================== */
+		.example-card {
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px 16px;
+			margin-bottom: 12px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+		}
+
+		.ex-ko {
+			font-size: 15.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.ex-ja {
+			font-size: 13px;
+			color: #64748b;
+			margin-top: 3px;
+		}
+
+		.compare-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 12px 0;
+			font-size: 13px;
+		}
+
+			.compare-table th, .compare-table td {
+				border: 1px solid #dbeafe;
+				padding: 8px 10px;
+				text-align: left;
+			}
+
+			.compare-table th {
+				background-color: #dbeafe;
+				color: var(--dark-blue);
+				font-weight: bold;
+				text-align: center;
+			}
+
+		/* 変形練習表 (NEW) */
+		.drill-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 8px 0;
+			font-size: 12.5px;
+		}
+
+			.drill-table th, .drill-table td {
+				border: 1px solid #cbd5e1;
+				padding: 6px 8px;
+				text-align: center;
+			}
+
+			.drill-table th {
+				background-color: #f1f5f9;
+				color: var(--dark-blue);
+				font-weight: bold;
+			}
+
+			.drill-table td.ja-col {
+				color: #64748b;
+				font-size: 12px;
+			}
+
+		/* 新しい単語ボックス */
+		.vocab-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin: 10px 0 16px 0;
+		}
+
+		.vocab-card {
+			background-color: #f0fdf4;
+			border: 1px solid #bbf7d0;
+			border-radius: 8px;
+			padding: 8px 12px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.vocab-ko {
+			font-weight: bold;
+			font-size: 14px;
+			color: #166534;
+		}
+
+		.vocab-ja {
+			font-size: 12.5px;
+			color: #15803d;
+		}
+
+		/* 練習問題 */
+		.quiz-item {
+			margin-bottom: 10px;
+			background-color: #fafafa;
+			padding: 10px 14px;
+			border-radius: 8px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 100px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+		}
+
+		/* ==========================================================================
+			 🔑 正解ボックス & ボタン
+			 ========================================================================== */
+		.answer-btn {
+			margin-top: 10px;
+			padding: 8px 16px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 2px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 13px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+				color: #1d4ed8;
+				border-color: #1d4ed8;
+			}
+
+		.answer-box {
+			margin-top: 10px;
+			padding: 10px 14px;
+			border: 2px solid var(--primary-blue);
+			border-radius: 8px;
+			display: none;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12.5px;
+			color: var(--dark-blue);
+			line-height: 1.6;
+		}
+
+		/* ==========================================================================
+			 📱 モバイル & 🖨️ 印刷(Print) 対応
+			 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1;
+			}
+
+			.book-container {
+				display: flex;
+				flex-direction: row;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm;
+				height: 257mm;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact;
+				print-color-adjust: exact;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+				 BOOK 1 (Page 1 & Page 2)
+				 ========================================================================== -->
+		<div class="book-container">
+			<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 1</div>
+				<div class="lesson-band">LESSON 02</div>
+				<h2 class="main-title">感嘆・新発見의 語尾</h2>
+				<h3 class="grammar-title">-네요</h3>
+
+				<div class="point-box">
+					<h4>🌱 「-네요」ってどんな意味？</h4>
+					<p>何かを「見て、聞いて、体験して」初めて知った時に、<b>「あ！そうなんだ！」</b>と感嘆・新発見した気持ちを伝える語尾です。</p>
+					<p style="margin-top: 6px; font-weight: bold; color: #2563eb;">日本語訳： 「～ですね」「～なんですね」「～だなあ」</p>
+				</div>
+
+				<div class="sub-title">一般的な述語와의 違い</div>
+				<div class="example-card">
+					<div class="ex-ko">한국어를 공부해요.</div>
+					<div class="ex-ja">（韓国語を勉強します ➔ 単なる事実の説明）</div>
+				</div>
+				<div class="example-card">
+					<div class="ex-ko">한국어를 공부하네요!</div>
+					<div class="ex-ja">（あ、韓国語を勉強しているんですね！ ➔ 発見・感嘆）</div>
+				</div>
+				<div class="footer">1</div>
+			</div>
+
+			<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 1</div>
+				<div class="sub-title">一番大切な感覚 ⭐⭐⭐</div>
+				<p>「-네요」を使う時は、この3つのステップを思い浮かべましょう！</p>
+
+				<div class="step-box-container">
+					<div class="step-box"><div class="emoji">👀</div><div class="title">1. 見て/体験して</div></div>
+					<div class="step-box"><div class="emoji">😮</div><div class="title">2. 「へぇ！」と感じて</div></div>
+					<div class="step-box"><div class="emoji">💬</div><div class="title">3. 口に出す (-네요)</div></div>
+				</div>
+
+				<div class="speech-bubble-box">
+					<h4>☕ 例えばカフェでコーヒーを一口飲んだ時…</h4>
+					<p>単に「おいしい」と知識として言う場合：<br><b>커피가 맛있어요.</b> (コーヒーがおいしいです。)</p>
+					<p style="margin-top: 6px; font-weight: bold; color: #2563eb;">飲んだ直後に「おっ！」と感じて言う場合：<br>커피가 맛있네요! (あ、おいしいですね！)</p>
+				</div>
+
+				<div class="point-box">
+					<h4>💡 日本語の「ですね」との違い</h4>
+					<p>「今日は暑いですね (오늘은 덥네요)」のように使えますが、韓国語の「-네요」には<b>話し手が直接経験した発見のニュアンス</b>が強く含まれます。</p>
+				</div>
+				<div class="footer">2</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 2 (Page 3 & Page 4)
+				 ========================================================================== -->
+		<div class="book-container">
+			<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 2</div>
+				<div class="lesson-band">LESSON 02</div>
+				<h2 class="main-title">形の作り方</h2>
+				<h3 class="grammar-title">活用ルール</h3>
+
+				<div class="speech-bubble-box">
+					<h4>① 形容詞 ＆ ② 動詞 ➔ 語幹 ＋ 네요</h4>
+					<p>パッチムの有無に関係なく、そのまま <b>-네요</b> をつけます！</p>
+				</div>
+
+				<table class="rule-visual-table">
+					<thead>
+						<tr><th>区分</th><th>基本形</th><th>-네요 形</th><th>日本語訳</th></tr>
+					</thead>
+					<tbody>
+						<tr><td rowspan="2"><b>形容詞</b></td><td>크다</td><td><b class="rule-target">크네요</b></td><td>大きいですね</td></tr>
+						<tr><td>맛있다</td><td><b class="rule-target">맛있네요</b></td><td>おいしいですね</td></tr>
+						<tr><td rowspan="2"><b>動詞</b></td><td>먹다</td><td><b class="rule-target">먹네요</b></td><td>食べていますね</td></tr>
+						<tr><td>공부하다</td><td><b class="rule-target">공부하네요</b></td><td>勉強していますね</td></tr>
+					</tbody>
+				</table>
+
+				<div class="sub-title">③ 名詞 ➔ 이네요 / 네요</div>
+				<ul style="margin-top: 6px;">
+					<li>・ <b>パッチムあり ➔ + 이네요</b> (학생 ➔ <b class="highlight">학생이네요</b>)</li>
+					<li>・ <b>パッチムなし ➔ + 네요</b> (의사 ➔ <b class="highlight">의사네요</b>)</li>
+				</ul>
+				<div class="footer">3</div>
+			</div>
+
+			<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 2</div>
+				<div class="sub-title">「-아요/어요」 VS 「-네요」 比較</div>
+				<p>初級者が一番迷いやすい部分です。場面の違いを整理しましょう。</p>
+
+				<table class="compare-table">
+					<thead><tr><th>比較場面</th><th>-아요/어요 (事実)</th><th>-네요 (体験・感嘆)</th></tr></thead>
+					<tbody>
+						<tr><td><b>① 天気</b></td><td><b>날씨가 추워요.</b></td><td><b>날씨가 춥네요!</b></td></tr>
+						<tr><td><b>② 料理</b></td><td><b>음식이 맛있어요.</b></td><td><b>음식이 맛있네요!</b></td></tr>
+						<tr><td><b>③ 勉強</b></td><td><b>한국어가 어려워요.</b></td><td><b>한국어가 어렵네요..</b></td></tr>
+					</tbody>
+				</table>
+
+				<div class="point-box">
+					<h4>🧠 一行で覚えるコツ！</h4>
+					<p style="font-size: 15px; font-weight: bold; color: #2563eb; text-align: center;">「-네요」 ＝ 「あ、～ですね！」</p>
+				</div>
+				<div class="footer">4</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 3 (Page 5 [NEW: 변형 연습표] & Page 6)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Page 5: [추가] 동사/형용사/명사 변형 연습표 -->
+			<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 3</div>
+				<div class="lesson-band">DRILL</div>
+				<h2 class="main-title">活用トレーニング</h2>
+				<h3 class="grammar-title">変形練習表</h3>
+
+				<p style="margin-bottom: 6px;">単語の品詞とパッチムに注意して「-네요」形に変形させてみましょう。</p>
+
+				<!-- 1. 形容詞 변형표 -->
+				<div class="sub-title" style="margin-top: 6px; font-size: 14px;">① 形容詞 (Adjectives)</div>
+				<table class="drill-table">
+					<thead><tr><th>基本形</th><th>日本語</th><th>-네요 形</th></tr></thead>
+					<tbody>
+						<tr><td>예쁘다</td><td class="ja-col">(きれいだ)</td><td><span class="quiz-line">예쁘네요</span></td></tr>
+						<tr><td>작다</td><td class="ja-col">(小さい)</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>좋다</td><td class="ja-col">(良い)</td><td><span class="quiz-line"></span></td></tr>
+					</tbody>
+				</table>
+
+				<!-- 2. 動詞 변형표 -->
+				<div class="sub-title" style="margin-top: 8px; font-size: 14px;">② 動詞 (Verbs)</div>
+				<table class="drill-table">
+					<thead><tr><th>基本形</th><th>日本語</th><th>-네요 形</th></tr></thead>
+					<tbody>
+						<tr><td>가다</td><td class="ja-col">(行く)</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>웃다</td><td class="ja-col">(笑う)</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>자다</td><td class="ja-col">(寝る)</td><td><span class="quiz-line"></span></td></tr>
+					</tbody>
+				</table>
+
+				<!-- 3. 名詞 변형표 -->
+				<div class="sub-title" style="margin-top: 8px; font-size: 14px;">③ 名詞 (Nouns)</div>
+				<table class="drill-table">
+					<thead><tr><th>単語</th><th>日本語</th><th>-네요 / -이네요 形</th></tr></thead>
+					<tbody>
+						<tr><td>한국 사람</td><td class="ja-col">(韓国人)</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>친구</td><td class="ja-col">(友達)</td><td><span class="quiz-line"></span></td></tr>
+					</tbody>
+				</table>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>① 形容詞:</b> 작네요 / 좋네요<br>
+						<b>② 動詞:</b> 가네요 / 웃네요 / 자네요<br>
+						<b>③ 名詞:</b> 한국 사람이네요 / 친구네요
+					</div>
+				</div>
+
+				<div class="footer">5</div>
+			</div>
+
+			<!-- Page 6: ニュアンスの広がり & 過去形 -->
+			<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 3</div>
+				<div class="sub-title">褒め言葉だけじゃない！様々な感情</div>
+				<div class="example-card">
+					<div class="ex-ko">😮 사람이 정말 많네요!</div>
+					<div class="ex-ja">（うわ、人がすごく多いですね！ ➔ 驚き）</div>
+				</div>
+				<div class="example-card">
+					<div class="ex-ko">😮 생각보다 비싸네요.</div>
+					<div class="ex-ja">（思ったより高いですね… ➔ 予想外の価格）</div>
+				</div>
+
+				<div class="sub-title">過去形： -았/었네요</div>
+				<p>すでに終わったことに対して「あ、〜だったんですね！」と言う場合です。</p>
+				<div class="example-card">
+					<div class="ex-ko">벌써 밥을 먹었네요!</div>
+					<div class="ex-ja">（もうご飯を食べたんですね！）</div>
+				</div>
+				<div class="example-card">
+					<div class="ex-ko">어렸을 때 정말 예뻤네요.</div>
+					<div class="ex-ja">（子供の頃、本当にきれいだったんですね。）</div>
+				</div>
+				<div class="footer">6</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 4 (Page 7 & Page 8)
+				 ========================================================================== -->
+		<div class="book-container">
+			<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 4</div>
+				<div class="sub-title">初心者用おすすめフレーズ 10選</div>
+				<ul style="font-size: 12.5px; line-height: 1.5; margin-bottom: 12px;">
+					<li>1. 오늘 춥네요. (今日、寒いですね。)</li>
+					<li>2. 날씨가 좋네요. (天気がいいですね。)</li>
+					<li>3. 집이 크네요. (家が大きいですね。)</li>
+					<li>4. 친구가 웃네요. (友達が笑っていますね。)</li>
+					<li>5. 학생이네요. (学生なんですね。)</li>
+				</ul>
+
+				<div class="sub-title">練習問題 (Practice)</div>
+				<div class="quiz-item"><div class="quiz-q">1) 음식이 정말 (맛있다) ➔ 음식이 정말 (<span class="quiz-line"></span>)!</div></div>
+				<div class="quiz-item"><div class="quiz-q">2) 민수가 공부를 (하다) ➔ 민수가 공부를 (<span class="quiz-line"></span>).</div></div>
+				<div class="quiz-item"><div class="quiz-q">3) 이 사람이 (의사) ➔ 이 사람이 (<span class="quiz-line"></span>).</div></div>
+
+				<p style="margin-top: 10px; margin-bottom: 6px;">【問2】過去の事実への新発見「-았/었네요」に変えなさい。</p>
+				<div class="quiz-item"><div class="quiz-q">한국에 (가다) ➔ 한국에 (<span class="quiz-line"></span>).</div></div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content"><b>【問1】</b> 1) 맛있네요 2) 하네요 3) 의사네요<br><b>【問2】</b> 갔네요</div>
+				</div>
+				<div class="footer">7</div>
+			</div>
+
+			<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 4</div>
+				<div class="lesson-band">NEW VOCAB</div>
+				<h2 class="main-title">語彙 & 活用練習</h2>
+				<h3 class="grammar-title">形容詞・動詞編</h3>
+
+				<div class="sub-title">新しい単語を覚えましょう！</div>
+				<div class="vocab-container">
+					<div class="vocab-card"><span class="vocab-ko">바쁘다</span> <span class="vocab-ja">忙しい</span></div>
+					<div class="vocab-card"><span class="vocab-ko">비가 오다</span> <span class="vocab-ja">雨が降る</span></div>
+					<div class="vocab-card"><span class="vocab-ko">조용하다</span> <span class="vocab-ja">静かだ</span></div>
+					<div class="vocab-card"><span class="vocab-ko">노래하다</span> <span class="vocab-ja">歌う</span></div>
+				</div>
+
+				<div class="sub-title">【練習】「-네요」を活用して文を完成させてみましょう</div>
+				<div class="quiz-item"><div class="quiz-q">1) 今日は本当に忙しいですね！<br>➔ 오늘은 정말 (<span class="quiz-line" style="min-width: 120px;"></span>)!</div></div>
+				<div class="quiz-item"><div class="quiz-q">2) あ、雨が降っていますね。<br>➔ 아, 비가 (<span class="quiz-line" style="min-width: 120px;"></span>).</div></div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box"><div class="answer-content">1) 바쁘네요 2) 오네요</div></div>
+				<div class="footer">8</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 5 (Page 9 & Page 10)
+				 ========================================================================== -->
+		<div class="book-container">
+			<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 5</div>
+				<div class="sub-title">新しい単語を覚えましょう！ (名詞)</div>
+				<div class="vocab-container">
+					<div class="vocab-card"><span class="vocab-ko">가수 (名)</span> <span class="vocab-ja">歌手</span></div>
+					<div class="vocab-card"><span class="vocab-ko">선생님 (名)</span> <span class="vocab-ja">先生</span></div>
+					<div class="vocab-card"><span class="vocab-ko">일본 사람 (名)</span> <span class="vocab-ja">日本人</span></div>
+					<div class="vocab-card"><span class="vocab-ko">오늘 (名)</span> <span class="vocab-ja">今日</span></div>
+				</div>
+
+				<div class="sub-title">【練習】会話を完成させましょう (名詞 / 感嘆)</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1) 가: 이 분은 노래를 정말 잘해요.<br>&nbsp;&nbsp;&nbsp;&nbsp;나: 아, (<span class="quiz-line" style="min-width: 100px;"></span>)! (歌手なんですね！)</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2) 가: 언제 한국에 와요?<br>&nbsp;&nbsp;&nbsp;&nbsp;나: ( <span class="quiz-line" style="min-width: 100px;"></span> )! (今日なんですね！)</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box"><div class="answer-content">1) 가수네요 2) 오늘이네요</div></div>
+				<div class="footer">9</div>
+			</div>
+
+			<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - FINISH</div>
+				<div class="lesson-band">SUMMARY</div>
+				<h2 class="main-title">まとめ</h2>
+				<h3 class="grammar-title">총정리 (Lesson Review)</h3>
+
+				<div class="point-box">
+					<h4>🌟 「-네요」のまとめ</h4>
+					<ul>
+						<li><b>1. 意味：</b> 直接見たり体感したことへの新発見・感嘆（「あ、～ですね！」）</li>
+						<li><b>2. 接続：</b> 形容詞・動詞は語幹＋<b>네요</b> / 名詞はパッチム有無で<b>이네요 / 네요</b></li>
+						<li><b>3. 心構え：</b> 「보고 ➔ 느끼고 ➔ 네요!」の感覚をマスターしましょう！</li>
+					</ul>
+				</div>
+
+				<div class="speech-bubble-box" style="text-align: center; margin-top: 30px;">
+					<h4 style="font-size: 16px; color: #2563eb;">🎉 수고하셨습니다! (お疲れ様でした！)</h4>
+					<p style="margin-top: 8px;">「-네요」を使って、日常の発見をどんどん韓国語で表現してみましょう！</p>
+				</div>
+				<div class="footer">10</div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+	function toggleAnswer(btn) {
+			const box = btn.nextElementSibling;
+			box.classList.toggle('show');
+			if (box.classList.contains('show')) {
+				btn.innerText = '正解を隠す';
+			} else {
+				btn.innerText = '正解を確認する';
+			}
+		}</script>
+
+</body>
+</html>
+
+
+
+
+
+<!--<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語初級文法教材 - -네요 (8페이지)</title>
+	<style>
+		/* ==========================================================================
+			 1. 変数定義 & 基本スタイル初期化
+			 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--dark-blue: #1e3a8a;
+			--light-blue-bg: #eff6ff;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+		}
+
+		/* スケーリングレスポンシブ設定 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+			 2. 見開き(Book) 基本構造 & 레이아웃
+			 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			/* 本の中央折り目効果 */
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 20mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 12mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+		.left-page .footer {
+			left: 20mm;
+		}
+
+		.right-page .footer {
+			right: 20mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 15mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 20mm;
+		}
+
+		.right-page .grammar-no {
+			right: 20mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+			 🏷️ 上部バンドバッジ (.lesson-band)
+			 ========================================================================== */
+		.lesson-band {
+			display: inline-block;
+			align-self: flex-start;
+			background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 800;
+			padding: 6px 18px;
+			border-radius: 20px;
+			letter-spacing: 1px;
+			margin-bottom: 12px;
+			box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+		}
+
+		/* ==========================================================================
+			 3. 本文タイトル & 共通要素
+			 ========================================================================== */
+		.main-title {
+			font-size: 24px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 12px;
+			border-bottom: 3px solid var(--primary-blue);
+			padding-bottom: 8px;
+		}
+
+		h3.grammar-title {
+			font-size: 32px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 16px;
+			line-height: 1.2;
+		}
+
+		.sub-title {
+			font-size: 16px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-top: 14px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border-bottom: 1px solid #dbeafe;
+		}
+
+			.sub-title::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		p, li {
+			font-size: 13.5px;
+			line-height: 1.6;
+			color: #334155;
+		}
+
+		ul {
+			padding-left: 18px;
+			margin-top: 4px;
+		}
+
+		li {
+			margin-bottom: 6px;
+		}
+
+		.highlight {
+			color: var(--primary-blue);
+			font-weight: bold;
+		}
+
+		/* 포인트 설명 박스 */
+		.point-box {
+			background-color: var(--light-blue-bg);
+			border-left: 5px solid var(--primary-blue);
+			padding: 12px 16px;
+			border-radius: 4px;
+			margin: 12px 0;
+		}
+
+			.point-box h4 {
+				font-size: 15px;
+				color: #1e293b;
+				margin-bottom: 6px;
+			}
+
+			.point-box ul {
+				list-style: none;
+				padding-left: 0;
+			}
+
+			.point-box li {
+				font-size: 13.5px;
+				margin-bottom: 4px;
+			}
+
+		/* 3ステップ ビジュアル */
+		.step-box-container {
+			display: flex;
+			justify-content: space-between;
+			gap: 10px;
+			margin: 16px 0;
+		}
+
+		.step-box {
+			flex: 1;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 12px;
+			text-align: center;
+		}
+
+			.step-box .emoji {
+				font-size: 28px;
+				margin-bottom: 4px;
+			}
+
+			.step-box .title {
+				font-size: 13px;
+				font-weight: bold;
+				color: var(--dark-blue);
+			}
+
+		/* ==========================================================================
+			 💬 吹き出し (Speech Bubble) + 規則ビジュアル表
+			 ========================================================================== */
+		.speech-bubble-box {
+			position: relative;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 16px;
+			padding: 14px 18px;
+			margin: 12px 0 16px 0;
+		}
+
+			.speech-bubble-box::after {
+				content: '';
+				position: absolute;
+				top: -10px;
+				left: 24px;
+				border-width: 0 10px 10px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.speech-bubble-box h4 {
+				font-size: 14px;
+				color: var(--dark-blue);
+				margin-bottom: 8px;
+				font-weight: bold;
+			}
+
+		.rule-visual-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 6px;
+			margin-top: 4px;
+		}
+
+			.rule-visual-table th {
+				padding: 8px;
+				font-size: 13px;
+				font-weight: 800;
+				border-radius: 6px;
+				color: #ffffff;
+				text-align: center;
+				background-color: #2563eb;
+			}
+
+			.rule-visual-table td {
+				background-color: #ffffff;
+				border: 1px solid #dbeafe;
+				border-radius: 6px;
+				padding: 8px;
+				text-align: center;
+				vertical-align: middle;
+				font-size: 13px;
+			}
+
+		.rule-target {
+			font-weight: 900;
+			color: #2563eb;
+		}
+
+		/* ==========================================================================
+			 📝 例文カード & 対比テーブル & 単語カード & 練習問題
+			 ========================================================================== */
+		.example-card {
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px 16px;
+			margin-bottom: 12px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+		}
+
+		.ex-ko {
+			font-size: 15.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.ex-ja {
+			font-size: 13px;
+			color: #64748b;
+			margin-top: 3px;
+		}
+
+		.compare-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 12px 0;
+			font-size: 13px;
+		}
+
+			.compare-table th, .compare-table td {
+				border: 1px solid #dbeafe;
+				padding: 8px 10px;
+				text-align: left;
+			}
+
+			.compare-table th {
+				background-color: #dbeafe;
+				color: var(--dark-blue);
+				font-weight: bold;
+				text-align: center;
+			}
+
+		/* 新しい単語ボックス (NEW) */
+		.vocab-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin: 10px 0 16px 0;
+		}
+
+		.vocab-card {
+			background-color: #f0fdf4;
+			border: 1px solid #bbf7d0;
+			border-radius: 8px;
+			padding: 8px 12px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.vocab-ko {
+			font-weight: bold;
+			font-size: 14px;
+			color: #166534;
+		}
+
+		.vocab-ja {
+			font-size: 12.5px;
+			color: #15803d;
+		}
+
+		/* 練習問題 */
+		.quiz-item {
+			margin-bottom: 10px;
+			background-color: #fafafa;
+			padding: 10px 14px;
+			border-radius: 8px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 100px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+		}
+
+		/* ==========================================================================
+			 🔑 正解ボックス & ボタン
+			 ========================================================================== */
+		.answer-btn {
+			margin-top: 10px;
+			padding: 8px 16px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 2px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 13px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+				color: #1d4ed8;
+				border-color: #1d4ed8;
+			}
+
+		.answer-box {
+			margin-top: 10px;
+			padding: 10px 14px;
+			border: 2px solid var(--primary-blue);
+			border-radius: 8px;
+			display: none;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 13px;
+			color: var(--dark-blue);
+			line-height: 1.6;
+		}
+
+		/* ==========================================================================
+			 📱 モバイル & 🖨️ 印刷(Print) 対応
+			 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1;
+			}
+
+			.book-container {
+				display: flex;
+				flex-direction: row;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm;
+				height: 257mm;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact;
+				print-color-adjust: exact;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">-->
+
+		<!-- ==========================================================================
+				 BOOK 1 (見開き 1 : Page 1 & Page 2)
+				 ========================================================================== -->
+		<!--<div class="book-container">-->
+
+			<!-- Page 1: 導入と基本概念 -->
+			<!--<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 1</div>
+				<div class="lesson-band">LESSON 02</div>
+				<h2 class="main-title">感嘆・新発見의 語尾</h2>
+				<h3 class="grammar-title">-네요</h3>
+
+				<div class="point-box">
+					<h4>🌱 「-네요」ってどんな意味？</h4>
+					<p>
+						何かを「見て、聞いて、体験して」初めて知った時に、<b>「あ！そうなんだ！」</b>と感嘆・新発見した気持ちを伝える語尾です。
+					</p>
+					<p style="margin-top: 6px; font-weight: bold; color: #2563eb;">
+						日本語訳： 「～ですね」「～なんですね」「～だなあ」
+					</p>
+				</div>
+
+				<div class="sub-title">一般的な述語との違い</div>
+				<p style="margin-bottom: 8px;">事実だけを伝える文とニュアンスが変わります。</p>
+
+				<div class="example-card">
+					<div class="ex-ko">한국어를 공부해요.</div>
+					<div class="ex-ja">（韓国語を勉強します ➔ 単なる事実の説明）</div>
+				</div>
+
+				<div class="example-card">
+					<div class="ex-ko">한국어를 공부하네요!</div>
+					<div class="ex-ja">（あ、韓国語を勉強しているんですね！ ➔ 勉強している姿を見て発見・感嘆）</div>
+				</div>
+
+				<div class="footer">1</div>
+			</div>-->
+
+			<!-- Page 2: 一番大切な「3ステップの感覚」 -->
+			<!--<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 1</div>
+
+				<div class="sub-title">一番大切な感覚 ⭐⭐⭐</div>
+				<p>「-네요」を使う時は、この3つのステップを思い浮かべましょう！</p>
+
+				<div class="step-box-container">
+					<div class="step-box">
+						<div class="emoji">👀</div>
+						<div class="title">1. 見て / 体験して</div>
+					</div>
+					<div class="step-box">
+						<div class="emoji">😮</div>
+						<div class="title">2. 「へぇ！」と感じて</div>
+					</div>
+					<div class="step-box">
+						<div class="emoji">💬</div>
+						<div class="title">3. 口に出す (-네요)</div>
+					</div>
+				</div>
+
+				<div class="speech-bubble-box">
+					<h4>☕ 例えばカフェでコーヒーを一口飲んだ時…</h4>
+					<p>単に「おいしい」と知識として言う場合：<br><b>커피가 맛있어요.</b> (コーヒーがおいしいです。)</p>
+					<p style="margin-top: 6px; font-weight: bold; color: #2563eb;">
+						飲んだ直後に「おっ！」と感じて言う場合：<br>커피가 맛있네요! (あ、おいしいですね！)
+					</p>
+				</div>
+
+				<div class="point-box">
+					<h4>💡 日本語の「ですね」との違い</h4>
+					<p>「今日は暑いですね (오늘은 덥네요)」のように「ですね」とほぼ同じに使えますが、韓国語の「-네요」には<b>話し手が直接経験した発見のニュアンス</b>が強く含まれます。</p>
+				</div>
+
+				<div class="footer">2</div>
+			</div>
+
+		</div>-->
+
+
+		<!-- ==========================================================================
+				 BOOK 2 (見開き 2 : Page 3 & Page 4)
+				 ========================================================================== -->
+		<!--<div class="book-container">-->
+
+			<!-- Page 3: 活用ルール (Conjugation) -->
+			<!--<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 2</div>
+				<div class="lesson-band">LESSON 02</div>
+				<h2 class="main-title">形の作り方</h2>
+				<h3 class="grammar-title">活用ルール (活用)</h3>
+
+				<div class="speech-bubble-box">
+					<h4>① 形容詞 ＆ ② 動詞 ➔ 語幹 ＋ 네요</h4>
+					<p>パッチムの有無に関係なく、そのまま <b>-네요</b> をつけます！</p>
+				</div>
+
+				<table class="rule-visual-table">
+					<thead>
+						<tr>
+							<th>区分</th>
+							<th>基本形</th>
+							<th>-네요 形</th>
+							<th>日本語訳</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td rowspan="3"><b>形容詞</b></td>
+							<td>크다 (大きい)</td>
+							<td><b class="rule-target">크네요</b></td>
+							<td>広いですね / 大きいですね</td>
+						</tr>
+						<tr>
+							<td>맛있다 (おいしい)</td>
+							<td><b class="rule-target">맛있네요</b></td>
+							<td>おいしいですね</td>
+						</tr>
+						<tr>
+							<td>춥다 (寒い)</td>
+							<td><b class="rule-target">춥네요</b></td>
+							<td>寒いですね</td>
+						</tr>
+						<tr>
+							<td rowspan="2"><b>動詞</b></td>
+							<td>먹다 (食べる)</td>
+							<td><b class="rule-target">먹네요</b></td>
+							<td>食べていますね</td>
+						</tr>
+						<tr>
+							<td>공부하다 (勉強する)</td>
+							<td><b class="rule-target">공부하네요</b></td>
+							<td>勉強していますね</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="sub-title">③ 名詞 ➔ 이네요 / 네요</div>
+				<ul style="margin-top: 6px;">
+					<li>・ <b>パッチムあり ➔ + 이네요</b> (학생 ➔ <b class="highlight">학생이네요</b> / 学生なんですね)</li>
+					<li>・ <b>パッチムなし ➔ + 네요</b> (의사 ➔ <b class="highlight">의사네요</b> / 医者なんですね)</li>
+				</ul>
+
+				<div class="footer">3</div>
+			</div>-->
+
+			<!-- Page 4: -아/어요 との徹底比較 -->
+			<!--<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 2</div>
+
+				<div class="sub-title">「-아요/어요」 VS 「-네요」 比較</div>
+				<p>初級者が一番迷いやすい部分です。場面の違いを整理しましょう。</p>
+
+				<table class="compare-table">
+					<thead>
+						<tr>
+							<th>比較場面</th>
+							<th>-아요/어요 (事実)</th>
+							<th>-네요 (体験・感嘆)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><b>① 天気</b></td>
+							<td><b>날씨가 추워요.</b><br>(今日は寒いです)</td>
+							<td><b>날씨가 춥네요!</b><br>(外に出たら「あ、寒い！」)</td>
+						</tr>
+						<tr>
+							<td><b>② 料理</b></td>
+							<td><b>음식이 맛있어요.</b><br>(料理がおいしいです)</td>
+							<td><b>음식이 맛있네요!</b><br>(食べてみて「お、おいしい！」)</td>
+						</tr>
+						<tr>
+							<td><b>③ 勉強</b></td>
+							<td><b>한국어가 어려워요.</b><br>(韓国語は難しいです)</td>
+							<td><b>한국어가 어렵네요..</b><br>(解いてみて「あ、難しいな」)</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="point-box">
+					<h4>🧠 一行で覚えるコツ！</h4>
+					<p style="font-size: 15px; font-weight: bold; color: #2563eb; text-align: center;">
+						「-네요」 ＝ 「あ、～ですね！」
+					</p>
+				</div>
+
+				<div class="footer">4</div>
+			</div>
+
+		</div>-->
+
+
+		<!-- ==========================================================================
+				 BOOK 3 (見開き 3 : Page 5 & Page 6)
+				 ========================================================================== -->
+		<!--<div class="book-container">-->
+
+			<!-- Page 5: ニュアンスの広がり & 時制 (過去形) -->
+			<!--<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 3</div>
+				<div class="lesson-band">LESSON 02</div>
+				<h2 class="main-title">応用表現</h2>
+				<h3 class="grammar-title">感情と過去形</h3>
+
+				<div class="sub-title">褒め言葉だけじゃない！様々な感情</div>
+				<p>「-네요」は褒める時だけでなく、驚きや残念な気持ちにも使えます。</p>
+
+				<div class="example-card">
+					<div class="ex-ko">😮 사람이 정말 많네요!</div>
+					<div class="ex-ja">（うわ、人がすごく多いですね！ ➔ 驚き）</div>
+				</div>
+
+				<div class="example-card">
+					<div class="ex-ko">😮 생각보다 비싸네요.</div>
+					<div class="ex-ja">（思ったより高いですね… ➔ 予想外の価格）</div>
+				</div>
+
+				<div class="sub-title">過去形： -았/었네요</div>
+				<p>すでに終わったことに対して「あ、〜だったんですね！」と言う場合です。</p>
+
+				<div class="example-card">
+					<div class="ex-ko">벌써 밥을 먹었네요!</div>
+					<div class="ex-ja">（もうご飯を食べたんですね！）</div>
+				</div>
+
+				<div class="example-card">
+					<div class="ex-ko">어렸을 때 정말 예뻤네요.</div>
+					<div class="ex-ja">（子供の頃、本当にきれいだったんですね。）</div>
+				</div>
+
+				<div class="footer">5</div>
+			</div>-->
+
+			<!-- Page 6: 例文10選 & 総合練習問題 -->
+			<!--<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 3</div>
+
+				<div class="sub-title">初心者用おすすめフレーズ 10選</div>
+				<ul style="font-size: 12.5px; line-height: 1.5; margin-bottom: 12px;">
+					<li>1. 오늘 춥네요. (今日、寒いですね。)</li>
+					<li>2. 날씨가 좋네요. (天気がいいですね。)</li>
+					<li>3. 집이 크네요. (家が大きいですね。)</li>
+					<li>4. 친구가 웃네요. (友達が笑っていますね。)</li>
+					<li>5. 학생이네요. (学生なんですね。)</li>
+				</ul>
+
+				<div class="sub-title">練習問題 (Practice)</div>
+				<p style="margin-bottom: 6px;">【問1】かっこ内の言葉を「-네요」の形に変えなさい。</p>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1) 음식이 정말 (맛있다) ➔ 음식이 정말 (<span class="quiz-line"></span>)!</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2) 민수가 공부를 (하다) ➔ 민수가 공부를 (<span class="quiz-line"></span>).</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3) 이 사람이 (의사) ➔ 이 사람이 (<span class="quiz-line"></span>).</div>
+				</div>
+
+				<p style="margin-top: 10px; margin-bottom: 6px;">【問2】過去の事実への新発見「-았/었네요」に変えなさい。</p>
+				<div class="quiz-item">
+					<div class="quiz-q">한국에 (가다) ➔ 한국에 (<span class="quiz-line"></span>).</div>
+				</div>-->
+
+				<!-- 答え確認ボタン & ボックス -->
+				<!--<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>【問1】</b> 1) 맛있네요 &nbsp; 2) 하네요 &nbsp; 3) 의사네요<br>
+						<b>【問2】</b> 갔네요
+					</div>
+				</div>
+
+				<div class="footer">6</div>
+			</div>
+
+		</div>-->
+
+
+		<!-- ==========================================================================
+				 BOOK 4 (見開き 4 : Page 7 & Page 8) - NEW VOCABULARY & PRACTICE
+				 ========================================================================== -->
+		<!--<div class="book-container">-->
+
+			<!-- Page 7: 形容詞・動詞 単語 ＆ 活用練習問題 -->
+			<!--<div class="page left-page">
+				<div class="grammar-no">LESSON 02 - PART 4</div>
+				<div class="lesson-band">NEW VOCAB</div>
+				<h2 class="main-title">語彙 & 活用練習</h2>
+				<h3 class="grammar-title">形容詞・動詞編</h3>
+
+				<div class="sub-title">新しい単語を覚えましょう！</div>
+				<div class="vocab-container">
+					<div class="vocab-card"><span class="vocab-ko">바쁘다</span> <span class="vocab-ja">忙しい</span></div>
+					<div class="vocab-card"><span class="vocab-ko">비가 오다</span> <span class="vocab-ja">雨が降る</span></div>
+					<div class="vocab-card"><span class="vocab-ko">조용하다</span> <span class="vocab-ja">静かだ</span></div>
+					<div class="vocab-card"><span class="vocab-ko">노래하다</span> <span class="vocab-ja">歌う</span></div>
+					<div class="vocab-card"><span class="vocab-ko">시원하다</span> <span class="vocab-ja">涼しい/気持ちいい</span></div>
+					<div class="vocab-card"><span class="vocab-ko">잘 만들다</span> <span class="vocab-ja">上手に作る</span></div>
+				</div>
+
+				<div class="sub-title">【練習】「-네요」を活用して文を完成させてみましょう</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1) 今日は本当に忙しいですね！<br>➔ 오늘은 정말 (<span class="quiz-line" style="min-width: 120px;"></span>)!</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2) あ、雨が降っていますね。<br>➔ 아, 비가 (<span class="quiz-line" style="min-width: 120px;"></span>).</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3) 部屋がとても静かですね。<br>➔ 방이 아주 (<span class="quiz-line" style="min-width: 120px;"></span>).</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">4) 風が涼しい（気持ちいい）ですね！<br>➔ 바람이 (<span class="quiz-line" style="min-width: 120px;"></span>)!</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) 바쁘네요 &nbsp; 2) 오네요 &nbsp; 3) 조용하네요 &nbsp; 4) 시원하네요
+					</div>
+				</div>
+
+				<div class="footer">7</div>
+			</div>-->
+
+			<!-- Page 8: 名詞 単語 ＆ 会話文練習問題 -->
+			<!--<div class="page right-page">
+				<div class="grammar-no">LESSON 02 - PART 4</div>
+
+				<div class="sub-title">新しい単語を覚えましょう！</div>
+				<div class="vocab-container">
+					<div class="vocab-card"><span class="vocab-ko">가수 (名)</span> <span class="vocab-ja">歌手</span></div>
+					<div class="vocab-card"><span class="vocab-ko">선생님 (名)</span> <span class="vocab-ja">先生</span></div>
+					<div class="vocab-card"><span class="vocab-ko">일본 사람 (名)</span> <span class="vocab-ja">日本人</span></div>
+					<div class="vocab-card"><span class="vocab-ko">오늘 (名)</span> <span class="vocab-ja">今日</span></div>
+				</div>
+
+				<div class="sub-title">【練習】会話を完成させましょう (名詞 / 感嘆)</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">
+						1) 가: 이 분은 노래를 정말 잘해요.<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;나: 아, (<span class="quiz-line" style="min-width: 100px;"></span>)! (歌手なんですね！)
+					</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">
+						2) 가: 한국어를 정말 잘하시네요!<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;나: 저는 한국 사람이 아니에요. (<span class="quiz-line" style="min-width: 100px;"></span>).<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(日本人なんですね！)
+					</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">
+						3) 가: 언제 한국에 와요?<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;나: ( <span class="quiz-line" style="min-width: 100px;"></span> )! (今日なんですね！)
+					</div>
+				</div>-->
+
+				<!-- 答え確認ボタン & ボックス -->
+				<!--<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>1)</b> 가수네요 (パッチムなし ➔ 네요)<br>
+						<b>2)</b> 일본 사람이네요 (パッチムあり ➔ 이네요)<br>
+						<b>3)</b> 오늘이네요 (パッチムあり ➔ 이네요)
+					</div>
+				</div>
+
+				<div class="footer">8</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<script>
+		function toggleAnswer(btn) {
+			const box = btn.nextElementSibling;
+			box.classList.toggle('show');
+			if (box.classList.contains('show')) {
+				btn.innerText = '正解を隠す';
+			} else {
+				btn.innerText = '正解を確認する';
+			}
+		}
+	</script>
+
+</body>
+</html>-->

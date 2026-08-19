@@ -1,0 +1,1094 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>여행 3개월 전 일본어 - 9주차 : 못 알아들었을 때 표현 완벽 마스터</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+			.footer::after {
+				content: "Page " counter(page-num);
+			}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+		 🖼️ 이미지 디자인 완벽 복제 UI 컴포넌트
+		 ========================================================================== */
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+		}
+
+		.section-lesson-title {
+			font-size: 20px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 14px;
+			line-height: 1.2;
+		}
+
+		.pin-subtitle {
+			font-size: 15px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		.speech-label-title {
+			font-size: 13px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 13px;
+			}
+
+		p, li {
+			font-size: 13px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+		/* ==========================================================================
+		 📊 2열 카드 UI
+		 ========================================================================== */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			text-align: center;
+			padding: 8px;
+			border-radius: 8px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+		.formula-box {
+			background-color: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			font-size: 14px;
+			font-weight: 800;
+			color: #1e293b;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+		}
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+			.formula-box .blue-target {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+		/* ==========================================================================
+		 💡 [Point 박스] 상단 꼬리가 달린 말풍선 박스
+		 ========================================================================== */
+		.point-speech-card {
+			position: relative;
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 14px 16px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+			.point-speech-card::before {
+				content: '';
+				position: absolute;
+				top: -8px;
+				left: 24px;
+				border-width: 0 8px 8px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card::after {
+				content: '';
+				position: absolute;
+				top: -6px;
+				left: 25px;
+				border-width: 0 7px 7px;
+				border-style: solid;
+				border-color: #eff6ff transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12.5px;
+				line-height: 1.6;
+				color: #334155;
+				margin-bottom: 6px;
+			}
+
+				.point-speech-card li:last-child {
+					margin-bottom: 0;
+				}
+
+		/* ==========================================================================
+		 🎯 단어장 및 퀴즈 컴포넌트
+		 ========================================================================== */
+		.bubble-word-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.word-bubble {
+			background: #f8fafc;
+			border: 1px solid #cbd5e1;
+			color: #0f172a;
+			padding: 6px 10px;
+			border-radius: 6px;
+			font-size: 12.5px;
+			font-weight: 700;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+			.word-bubble .ja-sub {
+				font-size: 11px;
+				color: #64748b;
+				font-weight: normal;
+			}
+
+		.character-card {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			padding: 10px 12px;
+			border-radius: 0 8px 8px 0;
+			margin-bottom: 8px;
+		}
+
+		.char-avatar {
+			font-size: 20px;
+		}
+
+		.char-speech {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.char-trans {
+			font-size: 11.5px;
+			color: #64748b;
+		}
+
+		.quiz-item {
+			margin-bottom: 6px;
+			background-color: #fafafa;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 12px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 70px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+		.answer-btn {
+			margin-top: 6px;
+			padding: 5px 12px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 11.5px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 6px;
+			padding: 8px 10px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			display: none;
+			background-color: #f8fafc;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12px;
+			color: #1e3a8a;
+			line-height: 1.5;
+		}
+
+		.big-concept-box {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			border: 1.5px solid #bfdbfe;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-title {
+			font-size: 18px;
+			font-weight: 900;
+			color: #1e3a8a;
+		}
+
+		/* ==========================================================================
+		 🎒 여행 플래너 전용 UI
+		 ========================================================================== */
+		.planner-card-box {
+			background-color: #f8fafc;
+			border: 2px dashed #bfdbfe;
+			border-radius: 12px;
+			padding: 14px;
+			margin-top: 8px;
+			margin-bottom: 12px;
+		}
+
+		.planner-q-item {
+			margin-bottom: 10px;
+		}
+
+		.planner-q-title {
+			font-size: 13px;
+			font-weight: 800;
+			color: #1e3a8a;
+			margin-bottom: 4px;
+		}
+
+		.planner-input-line {
+			background-color: #ffffff;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			padding: 6px 10px;
+			font-size: 13px;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		.planner-summary-box {
+			background-color: #eff6ff;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px;
+			text-align: center;
+		}
+
+		.planner-summary-title {
+			font-size: 14px;
+			font-weight: 800;
+			color: var(--primary-blue);
+			margin-bottom: 6px;
+		}
+
+		.planner-summary-text {
+			font-size: 13px;
+			line-height: 1.6;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		/* ==========================================================================
+		 📱 모바일 & 🖨️ 인쇄(Print) 대응
+		 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+		 [펼침면 1] 1. 이번 주 미리보기 & 2. 핵심 3문장 문법 구조
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 1. 이번 주 미리보기 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 09 - PREVIEW</div>
+				<div class="lesson-badge-oval">9과</div>
+				<div class="section-lesson-title">제 9 과 : 위기 대처 회화</div>
+				<h3 class="grammar-title">못 알아들었을 때의 필수 표현</h3>
+
+				<div class="pin-subtitle">이번 주 미리보기</div>
+				<p style="margin-bottom: 8px;">
+					여행지에서 일본어가 너무 빠르거나 이해하기 어려울 때, 당황하지 않고 <b>정중하게 다시 요청하거나 상태를 전달하는 3가지 핵심 표현</b>을 배웁니다.
+				</p>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">すみません、わかりません。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(죄송합니다, 잘 모르겠습니다.)</p>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">❓</div>
+					<div>
+						<div class="char-speech">わかりません。</div>
+						<div class="char-trans">(모르겠습니다 / 이해하지 못했습니다.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🔄</div>
+					<div>
+						<div class="char-speech">もう一度 お願いします。</div>
+						<div class="char-trans">(다시 한 번 부탁드립니다.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🗣️</div>
+					<div>
+						<div class="char-speech">日本語が わかりません。</div>
+						<div class="char-trans">(일본어를 잘 못합니다.)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 2. 핵심 3문장 형태별 비교 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 09 - CORE GRAMMAR</div>
+				<div class="pin-subtitle">상황별 핵심 3문장 비교</div>
+				<p style="margin-bottom: 8px;">
+					상대방의 말을 못 알아들었을 때, 상황에 맞는 가장 적절한 문장을 선택해 사용할 수 있습니다.
+				</p>
+
+				<div class="speech-label-title">핵심 표현 구조</div>
+				<div class="formula-container">
+					<div class="formula-column">
+						<div class="formula-header">상황</div>
+						<div class="formula-box">내용 이해 불가</div>
+						<div class="formula-box">다시 듣고 싶음</div>
+						<div class="formula-box">언어 장벽 전달</div>
+					</div>
+					<div class="formula-column">
+						<div class="formula-header sky">일본어 필수 표현 ⭕</div>
+						<div class="formula-box highlight-text">わかりません</div>
+						<div class="formula-box highlight-text">もう一度 お願いします</div>
+						<div class="formula-box highlight-text">日本語が わかりません</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">Point</div>
+				<div class="point-speech-card">
+					<ul>
+						<li><b>가장 정중한 매너:</b> 문장 앞에 <b>「すみません(죄송합니다/저기요)」</b>을 붙이면 상대방이 훨씬 친절하게 반응해 줍니다.</li>
+						<li><b>천천히 부탁할 때:</b> <b>「ゆっくり(천천히)」</b>를 더해 <b>「ゆっくり お願いします(천천히 부탁드립니다)」</b>라고도 활용할 수 있습니다.</li>
+					</ul>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 2] 3. わかりません & 4. もう一度お願いします
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 3. わかりません (이해하지 못했을 때) -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 01 - EXPRESSION 1</div>
+				<div class="lesson-badge-oval">9주차</div>
+				<div class="section-lesson-title">표현 1 : 모르겠습니다</div>
+				<h3 class="grammar-title">わかりません</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">すみません、わかりません。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(죄송합니다, 잘 모르겠습니다.)</p>
+				</div>
+
+				<div class="pin-subtitle">관련 확장 단어</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>わかる</span> <span class="ja-sub">알다 / 이해하다</span></div>
+					<div class="word-bubble"><span>わかりません</span> <span class="ja-sub">모르겠습니다</span></div>
+					<div class="word-bubble"><span>すみません</span> <span class="ja-sub">죄송합니다</span></div>
+					<div class="word-bubble"><span>ちょっと</span> <span class="ja-sub">조금 / 약간</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 죄송합니다, 잘 모르겠습니다.</div>
+					<div class="quiz-ja">すみません、 <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 약간 잘 모르겠습니다. (부드러운 표현)</div>
+					<div class="quiz-ja">ちょっと <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content"><b>정답:</b> 모두 <b>わかりません</b> (와카리마센) 이 들어갑니다.</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 4. もう一度お願いします (다시 한 번 부탁합니다) -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 02 - EXPRESSION 2</div>
+				<div class="pin-subtitle">표현 2 : 다시 한 번 부탁합니다</div>
+				<h3 class="grammar-title">もう一度 お願いします</h3>
+
+				<div class="character-card">
+					<div class="char-avatar">🔄</div>
+					<div>
+						<div class="char-speech">もう一度(いちど) お願い(ねが)します。</div>
+						<div class="char-trans">(다시 한 번 부탁드립니다.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🐢</div>
+					<div>
+						<div class="char-speech">ゆっくり お願い(ねが)します。</div>
+						<div class="char-trans">(천천히 부탁드립니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">상황별 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 점원이 말을 너무 빠르게 했을 때</div>
+					<div class="quiz-ja">すみません、もう一度 <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 천천히 말해달라고 요청할 때</div>
+					<div class="quiz-ja">すみません、ゆっくり <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) お願いします (오네가이시마스)<br>
+						2) お願いします (오네가이시마스)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 3] 5. 日本語がわかりません & 6. 위기 대처 종합 어휘
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 5. 日本語がわかりません -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 03 - EXPRESSION 3</div>
+				<div class="lesson-badge-oval">9주차</div>
+				<div class="section-lesson-title">표현 3 : 언어 상태 전달</div>
+				<h3 class="grammar-title">日本語が わかりません</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">日本語が わかりません。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(일본어를 잘 못합니다 / 알아듣지 못합니다.)</p>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🗣️</div>
+					<div>
+						<div class="char-speech">日本語(にほんご)が わかりません。</div>
+						<div class="char-trans">(일본어를 알지 못합니다.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🔤</div>
+					<div>
+						<div class="char-speech">英語(えいご)は できますか。</div>
+						<div class="char-trans">(영어가 가능한가요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🇰🇷</div>
+					<div>
+						<div class="char-speech">韓国語(かんこくご)は できますか。</div>
+						<div class="char-trans">(한국어가 가능한가요?)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 6. 위기 대처 종합 필수 단어장 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 09 - VOCABULARY</div>
+				<div class="pin-subtitle">위기 대처 필수 단어장</div>
+				<p style="margin-bottom: 8px;">
+					상대방과 대화가 통하지 않을 때 유용하게 쓰이는 필수 어휘 목록입니다.
+				</p>
+
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>もう一度</span> <span class="ja-sub">もういちど (다시 한 번)</span></div>
+					<div class="word-bubble"><span>ゆっくり</span> <span class="ja-sub">천천히</span></div>
+					<div class="word-bubble"><span>英語</span> <span class="ja-sub">えいご (영어)</span></div>
+					<div class="word-bubble"><span>韓国語</span> <span class="ja-sub">かんこくご (한국어)</span></div>
+					<div class="word-bubble"><span>書いて</span> <span class="ja-sub">かいて (써서)</span></div>
+					<div class="word-bubble"><span>見せて</span> <span class="ja-sub">みせて (보여줘)</span></div>
+				</div>
+
+				<div class="pin-subtitle">단어 활용 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 써 주세요 (써서 부탁드립니다).</div>
+					<div class="quiz-ja">書いて(かいて) <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 보여 주세요 (보여줘서 부탁드립니다).</div>
+					<div class="quiz-ja">見せて(みせて) <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ください / お願いします<br>
+						2) ください / お願いします
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 4] 7. 실전 상황별 회화 (식당/길찾기/쇼핑)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 식당 및 쇼핑 상황 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 09 - SITUATION 1</div>
+				<div class="lesson-badge-oval">9주차</div>
+				<div class="section-lesson-title">실전 상황별 대처 회화 (1)</div>
+				<h3 class="grammar-title">식당 & 쇼핑 현장</h3>
+
+				<div class="pin-subtitle">1. 식당에서 빠른 설명을 들었을 때</div>
+				<div class="character-card">
+					<div class="char-avatar">👨‍🍳</div>
+					<div>
+						<div class="char-speech">店員: 〇〇は いかがなさいますか？</div>
+						<div class="char-trans">(점원: 〇〇은 어떻게 하시겠습니까?)</div>
+					</div>
+				</div>
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">客: すみません、もう一度 お願いします。</div>
+						<div class="char-trans">(손님: 죄송합니다, 다시 한 번 부탁드립니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">2. 쇼핑몰 안내를 이해하지 못했을 때</div>
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♀️</div>
+					<div>
+						<div class="char-speech">客: すみません、日本語が わかりません。</div>
+						<div class="char-trans">(손님: 죄송합니다, 일본어를 잘 못합니다.)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 길찾기 및 수속 상황 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 09 - SITUATION 2</div>
+				<div class="pin-subtitle">실전 상황별 대처 회화 (2)</div>
+				<h3 class="grammar-title">길찾기 & 호텔 수속</h3>
+
+				<div class="pin-subtitle">3. 길 안내가 너무 빠를 때</div>
+				<div class="character-card">
+					<div class="char-avatar">🚶</div>
+					<div>
+						<div class="char-speech">通行人: そこを 右に 曲がって……</div>
+						<div class="char-trans">(행인: 거기서 우회전해서……)</div>
+					</div>
+				</div>
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">客: すみません、ゆっくり お願いします。</div>
+						<div class="char-trans">(손님: 죄송합니다, 천천히 부탁드립니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">4. 호텔 체크인 중 질문을 받았을 때</div>
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♀️</div>
+					<div>
+						<div class="char-speech">客: すみません、英語は できますか。</div>
+						<div class="char-trans">(손님: 죄송합니다, 영어가 가능한가요?)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 5] 8. 나의 위기 대처 계획 & 9. 종합 연습 문제
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 8. 나의 위기 대처 카드 완성하기 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 09 - MY ACTION PLAN</div>
+				<div class="lesson-badge-oval">9주차</div>
+				<div class="section-lesson-title">나의 위기 대처 계획</div>
+				<h3 class="grammar-title">🎒 Emergency Travel Card</h3>
+
+				<p style="margin-bottom: 8px;">
+					여행지에서 말이 통하지 않을 때 사용할 나만의 만능 문장 카드를 완성해보세요!
+				</p>
+
+				<div class="planner-card-box">
+					<div class="planner-q-item">
+						<div class="planner-q-title">① 상대방 말이 너무 빠를 때 말할 문장</div>
+						<div class="planner-input-line">👉 すみません、ゆっくり お願いします。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">② 내용을 전혀 알아듣지 못했을 때 말할 문장</div>
+						<div class="planner-input-line">👉 すみません、わかりません。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">③ 다시 듣거나 써달라고 요청할 문장</div>
+						<div class="planner-input-line">👉 もう一度 お願いします。 / 書いてください。</div>
+					</div>
+				</div>
+
+				<div class="planner-summary-box">
+					<div class="planner-summary-title">✨ 만능 위기 대처 스피치</div>
+					<div class="planner-summary-text">
+						「すみません、日本語が わかりません。<br>
+						もう一度 ゆっくり お願いします。」
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 9. 종합 연습 문제 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 09 - DRILL</div>
+				<div class="pin-subtitle">위기 대처 표현 종합 연습</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. "모르겠습니다"를 완성하세요.</div>
+					<div class="quiz-ja">すみません、 <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. "다시 한 번 부탁드립니다"를 완성하세요.</div>
+					<div class="quiz-ja">もう一度 <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. "일본어를 잘 못합니다"를 완성하세요.</div>
+					<div class="quiz-ja">日本語が <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. "천천히 부탁드립니다"를 완성하세요.</div>
+					<div class="quiz-ja">ゆっくり <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">5. "영어가 가능한가요?"를 완성하세요.</div>
+					<div class="quiz-ja">英語は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) わかりません (와카리마센)<br>
+						2) お願いします (오네가이시마스)<br>
+						3) わかりません (와카리마센)<br>
+						4) お願いします (오네가이시마스)<br>
+						5) できますか (데키마스카)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 6] 10. 쉬어가기 (못 알아들어까봐 두려운 당신에게)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 칼럼 전반부 -->
+			<div class="page left-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+				<div class="lesson-badge-oval">쉬어가기</div>
+				<div class="section-lesson-title">☕ 쉬어가기 칼럼</div>
+				<h3 class="grammar-title">못 알아들을까 봐 두려운 당신에게</h3>
+
+				<div class="pin-subtitle">완벽하게 알아듣지 못해도 괜찮아요</div>
+				<p style="margin-bottom: 8px;">
+					일본 여행을 앞두고 가장 많이 걱정하는 것 중 하나가 바로 <b>"상대방이 말할 때 못 알아들으면 어쩌지?"</b> 하는 두려움입니다.
+				</p>
+
+				<div class="character-card">
+					<div class="char-avatar">💭</div>
+					<div>
+						<div class="char-speech">"점원이 긴 문장으로 말하면 당황할 것 같아요."</div>
+						<div class="char-trans">(많은 여행자들이 느끼는 공통된 솔직한 마음)</div>
+					</div>
+				</div>
+
+				<p style="margin-top: 8px;">
+					하지만 현지 일본인들도 외국인 여행자가 완벽한 일본어를 구사할 것이라고 기대하지 않습니다. 못 알아들었을 때 미소 지으며 <b>「わかりません」</b> 혹은 <b>「もう一度お願いします」</b>라고 솔직하게 표현하는 것 자체가 아주 자연스러운 소통의 시작입니다.
+				</p>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 칼럼 후반부 & 현지 팁 -->
+			<div class="page right-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+
+				<div class="pin-subtitle">🌿 솔직한 한마디가 만드는 친절한 기적</div>
+				<p style="margin-bottom: 8px;">
+					모르는 척 고개를 끄덕이기보다 솔직하게 대답하면, 상대방은 바로 쉬운 단어나 손짓, 혹은 번역기를 활용해 친절하게 다시 설명해 줍니다.
+				</p>
+
+				<div class="point-speech-card">
+					<ul>
+						<li><b>마법의 한마디 すみません:</b> 정중하게 미안함과 부탁을 함께 담아 표현하면 현지 점원들은 더욱 적극적으로 도와줍니다.</li>
+						<li><b>바디랭귀지와 도구 활용:</b> 스마트폰 메모장이나 번역기 앱을 보여주며 <b>「書いてください(써주세요)」</b>라고 청하는 것도 멋진 방법입니다.</li>
+					</ul>
+				</div>
+
+				<div class="big-concept-box" style="margin-top: 10px;">
+					<div class="big-concept-title">🌱 이번 주의 여행 한마디!</div>
+					<p style="font-size: 12px; color: #1e3a8a; margin-top: 4px;">
+						당황하지 말고 미소와 함께 말해보세요.<br>
+						<b style="font-size: 14px; color: #2563eb;">「すみません、もう一度 お願いします！」</b><br>
+						이 한마디가 여러분의 여행을 훨씬 안전하고 당당하게 만들어 줄 것입니다.
+					</p>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '정답 가리기';
+    } else {
+      btn.innerText = '정답 확인';
+    }
+  }
+	</script>
+
+</body>
+</html>

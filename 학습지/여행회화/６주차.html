@@ -1,0 +1,1097 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>여행 3개월 전 일본어 - 2개월차 : 5주차 ~ください 완벽 마스터</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+			.footer::after {
+				content: "Page " counter(page-num);
+			}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+		 🖼️ UI 컴포넌트
+		 ========================================================================== */
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+		}
+
+		.section-lesson-title {
+			font-size: 20px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 14px;
+			line-height: 1.2;
+		}
+
+		.pin-subtitle {
+			font-size: 15px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		.speech-label-title {
+			font-size: 13px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 13px;
+			}
+
+		p, li {
+			font-size: 13px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+		/* ==========================================================================
+		 📘 2개월차 구분(Divider) 전용 스타일
+		 ========================================================================== */
+		.divider-box {
+			width: 100%;
+			height: 100%;
+			border: 2px dashed #bfdbfe;
+			border-radius: 16px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+			padding: 20px;
+		}
+
+		.divider-tag {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 6px 18px;
+			border-radius: 20px;
+			letter-spacing: 1px;
+			margin-bottom: 15px;
+		}
+
+		.divider-main-title {
+			font-size: 32px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 12px;
+			line-height: 1.3;
+		}
+
+		.divider-sub-title {
+			font-size: 16px;
+			color: var(--primary-blue);
+			font-weight: 700;
+			margin-bottom: 25px;
+		}
+
+		.divider-desc-card {
+			background-color: #ffffff;
+			border: 1px solid #dbeafe;
+			border-radius: 12px;
+			padding: 16px 20px;
+			max-width: 80%;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+			text-align: left;
+		}
+
+			.divider-desc-card p {
+				font-size: 13.5px;
+				line-height: 1.7;
+				color: #334155;
+				margin-bottom: 8px;
+			}
+
+				.divider-desc-card p:last-child {
+					margin-bottom: 0;
+				}
+
+		/* ==========================================================================
+		 📊 2열 공식 및 Point 카드
+		 ========================================================================== */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			text-align: center;
+			padding: 8px;
+			border-radius: 8px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+		.formula-box {
+			background-color: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			font-size: 14px;
+			font-weight: 800;
+			color: #1e293b;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+		}
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+			.formula-box .blue-target {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+		.point-speech-card {
+			position: relative;
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 14px 16px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+			.point-speech-card::before {
+				content: '';
+				position: absolute;
+				top: -8px;
+				left: 24px;
+				border-width: 0 8px 8px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card::after {
+				content: '';
+				position: absolute;
+				top: -6px;
+				left: 25px;
+				border-width: 0 7px 7px;
+				border-style: solid;
+				border-color: #eff6ff transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12.5px;
+				line-height: 1.6;
+				color: #334155;
+				margin-bottom: 6px;
+			}
+
+				.point-speech-card li:last-child {
+					margin-bottom: 0;
+				}
+
+		/* ==========================================================================
+		 🎯 단어장 및 퀴즈 컴포넌트
+		 ========================================================================== */
+		.bubble-word-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.word-bubble {
+			background: #f8fafc;
+			border: 1px solid #cbd5e1;
+			color: #0f172a;
+			padding: 6px 10px;
+			border-radius: 6px;
+			font-size: 12.5px;
+			font-weight: 700;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+			.word-bubble .ja-sub {
+				font-size: 11px;
+				color: #64748b;
+				font-weight: normal;
+			}
+
+		.character-card {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			padding: 10px 12px;
+			border-radius: 0 8px 8px 0;
+			margin-bottom: 8px;
+		}
+
+		.char-avatar {
+			font-size: 20px;
+		}
+
+		.char-speech {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.char-trans {
+			font-size: 11.5px;
+			color: #64748b;
+		}
+
+		.quiz-item {
+			margin-bottom: 6px;
+			background-color: #fafafa;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 12px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 70px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+		.answer-btn {
+			margin-top: 6px;
+			padding: 5px 12px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 11.5px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 6px;
+			padding: 8px 10px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			display: none;
+			background-color: #f8fafc;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12px;
+			color: #1e3a8a;
+			line-height: 1.5;
+		}
+
+		.big-concept-box {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			border: 1.5px solid #bfdbfe;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-title {
+			font-size: 18px;
+			font-weight: 900;
+			color: #1e3a8a;
+		}
+
+		/* ==========================================================================
+		 📱 모바일 & 🖨️ 인쇄(Print) 대응
+		 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+		 [1개월차 마무리 & 2개월차 구분 페이지]
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 1개월차 학습 완료 소회 -->
+			<div class="page left-page">
+				<div class="grammar-no">MONTH 01 - COMPLETE</div>
+
+				<div class="divider-box">
+					<div class="divider-tag">STAGE 01 COMPLETE</div>
+					<div class="divider-main-title">🎉 1개월차 학습 완료!</div>
+					<div class="divider-sub-title">"기초 문장 만들기의 틀을 완성했습니다"</div>
+
+					<div class="divider-desc-card">
+						<p>✨ <b>1~4주차 복습 체크:</b></p>
+						<p>• <b>～です</b> (~입니다) ➔ 기본 명사 문장 만들기</p>
+						<p>• <b>～たいです</b> (~하고 싶어요) ➔ 내 희망과 취향 표현하기</p>
+						<p>• <b>～ます / ～ません</b> ➔ 동사를 이용한 일상 표현하기</p>
+						<p style="margin-top: 10px; color: var(--primary-blue); font-weight: bold;">
+							이제 기초 문법의 틀이 잡혔습니다. 2개월차부터는 현장에서 곧바로 사용하는 실전 회화로 들어갑니다!
+						</p>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 2개월차 대제목 도입 (여행 중 필요한 말) -->
+			<div class="page right-page">
+				<div class="grammar-no">MONTH 02 - START</div>
+
+				<div class="divider-box">
+					<div class="divider-tag" style="background-color: var(--sky-blue);">MONTH 2</div>
+					<div class="divider-main-title">2개월차<br>“여행 중 필요한 말”</div>
+					<div class="divider-sub-title">"주문, 부탁, 쇼핑을 현지인처럼 자유롭게!"</div>
+
+					<div class="divider-desc-card">
+						<p>🎯 <b>2개월차 핵심 목표:</b></p>
+						<p>• <b>5주차:</b> ～ください (주문 및 부탁하기)</p>
+						<p>• <b>6주차:</b> ～はどこですか (위치 및 길 묻기)</p>
+						<p>• <b>7주차:</b> ～ありますか (점포 유무 및 재고 확인)</p>
+						<p>• <b>8주차:</b> ～できますか (가능 여부 및 서비스 요청)</p>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [5주차 - 펼침면 1] 5주차 문법 소개 (~ください / ~を 주세요)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 문법 개념 및 기본 공식 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 05 - CORE GRAMMAR</div>
+				<div class="lesson-badge-oval">5과</div>
+				<div class="section-lesson-title">제 5 과 : 주문 및 부탁하기</div>
+				<h3 class="grammar-title">[명사] + ください</h3>
+
+				<div class="pin-subtitle">의미</div>
+				<p style="margin-bottom: 8px;">
+					명사 뒤에 붙어 <b>「~주세요 / ~해 주세요」</b>라는 뜻으로 주문하거나 물건/서비스를 부탁할 때 사용하는 가장 기본적인 핵심 표현입니다.
+				</p>
+
+				<div class="pin-subtitle">💡 접속공식</div>
+				<div class="speech-label-title">명사 연결 공식</div>
+
+				<div class="formula-container">
+					<div class="formula-column">
+						<div class="formula-header">명사만 말할 때</div>
+						<div class="formula-box">[명사] + <span class="blue-target">ください</span></div>
+						<div class="formula-box highlight-text">これ ください<br><span style="font-size:11px; color:#64748b;">(이것 주세요)</span></div>
+					</div>
+					<div class="formula-column">
+						<div class="formula-header sky">조사(を)를 붙일 때 ⭕</div>
+						<div class="formula-box">[명사] + を + <span class="blue-target">ください</span></div>
+						<div class="formula-box highlight-text">水(みず)を ください<br><span style="font-size:11px; color:#64748b;">(물을 주세요)</span></div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">Point</div>
+				<div class="point-speech-card">
+					<ul>
+						<li><b>조사 생략 가능:</b> 회화에서는 <b>を(을/를)</b>를 생략하고 <b>「これ、ください(이것 주세요)」</b>처럼 단어 직후에 붙여도 완벽하게 통합니다.</li>
+						<li><b>수량과 함께 쓰기:</b> 수량 뒤에도 그대로 붙여 <b>「ひとつ ください(하나 주세요)」</b>로 응용할 수 있습니다.</li>
+					</ul>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 기본 변형 연습 문제 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 05 - CORE DRILL</div>
+				<div class="pin-subtitle">기본 형태 연습</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. "이것(これ) 주세요."</div>
+					<div class="quiz-ja">これ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. "물(水)을 주세요."</div>
+					<div class="quiz-ja">水(みず)を <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. "메뉴(メニュー) 주세요."</div>
+					<div class="quiz-ja">メニュー <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. "영수증(領収書) 주세요."</div>
+					<div class="quiz-ja">領収書(りょうしゅうしょ) <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">5. "하나(ひとつ) 주세요."</div>
+					<div class="quiz-ja">ひとつ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>정답:</b> 모두 <b>ください</b> (쿠다사이) 가 들어갑니다.<br>
+						1) これ ください &nbsp; 2) 水を ください<br>
+						3) メニュー ください &nbsp; 4) 領収書 ください &nbsp; 5) ひとつ ください
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [5주차 - 펼침면 2] 식당 편 (음료 주문 & 불판 교체 부탁하기)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 식당 음료 주문 어휘 및 회화 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 01 - RESTAURANT</div>
+				<div class="lesson-badge-oval">5주차</div>
+				<div class="section-lesson-title">테마 01 : 식당 음료 주문</div>
+				<h3 class="grammar-title">[음료] ください</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">お水(みず) ください。</div>
+					<p style="font-size:12px; color:#64748b; margin-top:2px;">(물 주세요.)</p>
+				</div>
+
+				<div class="pin-subtitle">식당 필수 음료 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>お水</span> <span class="ja-sub">おみず (물)</span></div>
+					<div class="word-bubble"><span>生ビール</span> <span class="ja-sub">なまビール (생맥주)</span></div>
+					<div class="word-bubble"><span>ウーロン茶</span> <span class="ja-sub">ウーロンちゃ (우롱차)</span></div>
+					<div class="word-bubble"><span>ハイボール</span> <span class="ja-sub">하이볼</span></div>
+				</div>
+
+				<div class="pin-subtitle">실전 주문 회화</div>
+				<div class="character-card">
+					<div class="char-avatar">🍺</div>
+					<div>
+						<div class="char-speech">生(なま)ビール ひとつ ください。</div>
+						<div class="char-trans">(생맥주 하나 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🥛</div>
+					<div>
+						<div class="char-speech">お水(みず) ふたつ ください。</div>
+						<div class="char-trans">(물 두 개 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 식당 요청사항 (불판 교체 등) -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 01 - REQUEST</div>
+				<div class="pin-subtitle">식당 서비스 요청하기 (불판/휴지 등)</div>
+
+				<div class="speech-label-title">야키니쿠집 필수! 불판 교체 요청</div>
+				<div class="character-card">
+					<div class="char-avatar">🥩</div>
+					<div>
+						<div class="char-speech">網(あみ)、かえて ください。</div>
+						<div class="char-trans">(불판/석쇠 바꿔 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="speech-label-title">기타 식당 요청 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>網 (あみ)</span> <span class="ja-sub">불판/석쇠</span></div>
+					<div class="word-bubble"><span>取り皿 (とりざら)</span> <span class="ja-sub">앞접시</span></div>
+					<div class="word-bubble"><span>お箸 (おはし)</span> <span class="ja-sub">젓가락</span></div>
+					<div class="word-bubble"><span>ナプキン</span> <span class="ja-sub">휴지/나프킨</span></div>
+				</div>
+
+				<div class="pin-subtitle">식당 실전 연습 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "불판(網) 바꿔 주세요."</div>
+					<div class="quiz-ja">網(あみ)、かえて <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "앞접시(取り皿) 주세요."</div>
+					<div class="quiz-ja">取り皿(とりざら) <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ください (あみ、かえて ください)<br>
+						2) ください (とりざら ください)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [5주차 - 펼침면 3] 카페 편 (커피 주문 및 커스텀 요청)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 카페 주문 필수 어휘 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 02 - CAFE</div>
+				<div class="lesson-badge-oval">5주차</div>
+				<div class="section-lesson-title">테마 02 : 카페 주문</div>
+				<h3 class="grammar-title">[카페 메뉴] ください</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">アイスコーヒー ください。</div>
+					<p style="font-size:12px; color:#64748b; margin-top:2px;">(아이스 아메리카노/커피 주세요.)</p>
+				</div>
+
+				<div class="pin-subtitle">카페 필수 메뉴 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>ブレンド</span> <span class="ja-sub">드립/따뜻한 커피</span></div>
+					<div class="word-bubble"><span>アイスコーヒー</span> <span class="ja-sub">아이스 커피</span></div>
+					<div class="word-bubble"><span>カフェラテ</span> <span class="ja-sub">카페라떼</span></div>
+					<div class="word-bubble"><span>ホット / アイス</span> <span class="ja-sub">따뜻한 것 / 차가운 것</span></div>
+				</div>
+
+				<div class="pin-subtitle">카페 실전 주문 연습</div>
+				<div class="character-card">
+					<div class="char-avatar">☕</div>
+					<div>
+						<div class="char-speech">ホット カフェラテ ひとつ ください。</div>
+						<div class="char-trans">(따뜻한 카페라떼 하나 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🧊</div>
+					<div>
+						<div class="char-speech">アイスコーヒー ふたつ ください。</div>
+						<div class="char-trans">(아이스 커피 두 개 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 카페 포장 및 옵션 요청 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 02 - OPTION</div>
+				<div class="pin-subtitle">포장 및 부자재 요청하기</div>
+
+				<div class="speech-label-title">매장 vs 포장(테이크아웃) 선택</div>
+				<div class="character-card">
+					<div class="char-avatar">🥡</div>
+					<div>
+						<div class="char-speech">テイクアウトで ください。</div>
+						<div class="char-trans">(포장/테이크아웃으로 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="speech-label-title">카페 부자재 요청 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>シロップ</span> <span class="ja-sub">시럽</span></div>
+					<div class="word-bubble"><span>ストロー</span> <span class="ja-sub">빨대</span></div>
+					<div class="word-bubble"><span>ミルク / 砂糖</span> <span class="ja-sub">우유 / 설탕</span></div>
+					<div class="word-bubble"><span>袋 (ふくろ)</span> <span class="ja-sub">비닐봉지/쇼핑백</span></div>
+				</div>
+
+				<div class="pin-subtitle">카페 실전 응용 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "빨대(ストロー) 주세요."</div>
+					<div class="quiz-ja">ストロー <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "포장(テイクアウト)으로 주세요."</div>
+					<div class="quiz-ja">テイクアウトで <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ください (ストロー ください)<br>
+						2) ください (テイクアウトで ください)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [5주차 - 펼침면 4] 쇼핑 편 (물건 지정 & 봉투/영수증 요청)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 쇼핑 물건 지칭 주문 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 03 - SHOPPING</div>
+				<div class="lesson-badge-oval">5주차</div>
+				<div class="section-lesson-title">테마 03 : 쇼핑할 때</div>
+				<h3 class="grammar-title">これ ください (이것 주세요)</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">これ、ください。</div>
+					<p style="font-size:12px; color:#64748b; margin-top:2px;">(이것 주세요 - 쇼핑 최고의 만능 문장)</p>
+				</div>
+
+				<div class="pin-subtitle">지시대명사 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>これ</span> <span class="ja-sub">이것 (가까운 것)</span></div>
+					<div class="word-bubble"><span>それ</span> <span class="ja-sub">그것 (상대방 쪽)</span></div>
+					<div class="word-bubble"><span>あれ</span> <span class="ja-sub">저것 (멀리 있는 것)</span></div>
+					<div class="word-bubble"><span>この 〇〇</span> <span class="ja-sub">이 〇〇</span></div>
+				</div>
+
+				<div class="pin-subtitle">쇼핑 실전 대화</div>
+				<div class="character-card">
+					<div class="char-avatar">🛍️</div>
+					<div>
+						<div class="char-speech">これと これ、ください。</div>
+						<div class="char-trans">(이것과 이것, 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">👕</div>
+					<div>
+						<div class="char-speech">この シャツ、ください。</div>
+						<div class="char-trans">(이 셔츠 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 계산대 봉투/영수증 요청 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 03 - CHECKOUT</div>
+				<div class="pin-subtitle">계산대 필수 요청사항</div>
+
+				<div class="speech-label-title">봉투 및 영수증 달라고 할 때</div>
+				<div class="character-card">
+					<div class="char-avatar">🛍️</div>
+					<div>
+						<div class="char-speech">袋(ふくろ)、ください。</div>
+						<div class="char-trans">(봉투 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🧾</div>
+					<div>
+						<div class="char-speech">レシート / 領収書(りょうしゅうしょ) ください。</div>
+						<div class="char-trans">(영수증 주세요.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">쇼핑 계산대 실전 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "저것(あれ) 주세요."</div>
+					<div class="quiz-ja">あれ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. "영수증(レシート) 주세요."</div>
+					<div class="quiz-ja">レシート <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ください (あれ ください)<br>
+						2) ください (レシート ください)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [5주차 - 펼침면 5] 5주차 쉬어가기 칼럼
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 에세이 전반부 -->
+			<div class="page left-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+				<div class="lesson-badge-oval">쉬어가기</div>
+				<div class="section-lesson-title">☕ 쉬어가기 칼럼</div>
+				<h3 class="grammar-title">「これ、ください」 하나로 충분해요!</h3>
+
+				<div class="pin-subtitle">완벽한 단어를 몰라도 괜찮아요</div>
+				<p style="margin-bottom: 8px;">
+					일본 여행을 가면 생각보다 메뉴판이나 물건의 이름을 일본어로 정확히 읽기 어려운 경우가 많습니다. 한자가 가득하거나 생소한 단어가 많기 때문이죠.
+				</p>
+				<p style="margin-bottom: 10px;">
+					그럴 때는 당황하지 말고 손가락으로 메뉴나 물건을 가리키며 <b>「これ、ください(이것 주세요)」</b>라고 한마디만 건네보세요!
+				</p>
+
+				<div class="character-card">
+					<div class="char-avatar">👈</div>
+					<div>
+						<div class="char-speech">「これ、ひとつ ください。」</div>
+						<div class="char-trans">(이것, 하나 주세요.)</div>
+					</div>
+				</div>
+
+				<p style="margin-top: 8px;">
+					점원분들은 손가락 위치와 여러분의 표정으로 무엇을 원하는지 100% 이해합니다. 단어를 완벽히 외우지 못했다고 해서 주문을 주저할 필요가 전혀 없답니다.
+				</p>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 에세이 후반부 및 실전 팁 -->
+			<div class="page right-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+
+				<div class="pin-subtitle">🌿 편의점에서 유용한 팁</div>
+				<p style="margin-bottom: 8px;">
+					일본 편의점(コンビニ)에서 계산할 때 점원이 유독 말을 많이 걸어서 놀란 적이 있으신가요?
+				</p>
+
+				<div class="character-card">
+					<div class="char-avatar">🏪</div>
+					<div>
+						<div class="char-speech">「袋(ふくろ)は ご利用(りよう)ですか。」</div>
+						<div class="char-trans">(봉투는 이용하시나요?)</div>
+					</div>
+				</div>
+
+				<div class="point-speech-card">
+					<ul>
+						<li><b>봉투가 필요할 때:</b> <b>「袋(ふくろ)、ください(봉투 주세요)」</b>라고 말해보세요.</li>
+						<li><b>봉투가 필요 없을 때:</b> <b>「大丈夫(だいじょうぶ)です(괜찮습니다)」</b>라고 웃으며 대답하면 깔끔합니다.</li>
+					</ul>
+				</div>
+
+				<div class="big-concept-box" style="margin-top: 10px;">
+					<div class="big-concept-title">🌱 이번 주 실전 과제!</div>
+					<p style="font-size: 12px; color: #1e3a8a; margin-top: 4px;">
+						카페나 식당에 가셨다면 망설이지 말고 미소와 함께 말씀해보세요.<br>
+						<b style="font-size: 14px; color: #2563eb;">「これ、ください！」</b><br>
+						여러분의 주문이 한 번에 통하는 유쾌한 경험을 하게 될 것입니다.
+					</p>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+		function toggleAnswer(btn) {
+			const box = btn.nextElementSibling;
+			box.classList.toggle('show');
+			if (box.classList.contains('show')) {
+				btn.innerText = '정답 가리기';
+			} else {
+				btn.innerText = '정답 확인';
+			}
+		}
+	</script>
+
+</body>
+</html>

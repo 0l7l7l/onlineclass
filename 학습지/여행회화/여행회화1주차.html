@@ -1,0 +1,1283 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>여행 3개월 전 일본어 - 1주차 : 명사 + です</title>
+  <style> 
+    :root {
+      --book-scale: 0.75;
+      --primary-blue: #2563eb;
+      --header-blue: #1d4ed8;
+      --sky-blue: #0284c7;
+      --dark-navy: #1e293b;
+      --light-blue-bg: #eff6ff;
+      --border-color: #dbeafe;
+      --accent-orange: #ea580c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .book-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      zoom: var(--book-scale);
+      transition: zoom 0.2s ease;
+      counter-reset: page-num 0;
+    }
+
+    /* 스케일링 반응형 설정 */
+    @media (max-width: 1500px) { :root { --book-scale: 0.65; } }
+    @media (max-width: 1300px) { :root { --book-scale: 0.55; } }
+    @media (max-width: 1100px) { :root { --book-scale: 0.45; } }
+
+    /* ==========================================================================
+     2. 펼침면(Book) 기본 구조 & 레이아웃
+     ========================================================================== */
+    .book-container {
+      display: flex;
+      width: 364mm;
+      height: 257mm;
+      background-color: #fff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .book-container::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 3%;
+      width: 1px;
+      height: 94%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+      z-index: 10;
+    }
+
+    .page {
+      width: 182mm;
+      height: 257mm;
+      padding: 16mm 18mm;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+      counter-increment: page-num;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 10mm;
+      font-size: 12px;
+      color: #a1a1aa;
+      font-weight: bold;
+    }
+    .footer::after { content: "Page " counter(page-num); }
+    .left-page .footer { left: 18mm; }
+    .right-page .footer { right: 18mm; }
+
+    .grammar-no {
+      position: absolute;
+      top: 12mm;
+      font-size: 13px;
+      color: var(--primary-blue);
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .left-page .grammar-no { left: 18mm; }
+    .right-page .grammar-no { right: 18mm; text-align: right; }
+
+    /* ==========================================================================
+     🖼️ 이미지 디자인 완벽 복제 UI 컴포넌트
+     ========================================================================== */
+    /* 1. 상단 타원 배지 (1과) */
+    .lesson-badge-oval {
+      display: inline-block;
+      align-self: flex-start;
+      background: var(--primary-blue);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    /* 2. 과 메인 제목 + 아래 실선 */
+    .section-lesson-title {
+      font-size: 20px;
+      color: #1e3a8a;
+      font-weight: 800;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--primary-blue);
+    }
+
+    /* 3. 문법 대제목 */
+    h3.grammar-title {
+      font-size: 26px;
+      color: #0f172a;
+      font-weight: 900;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    /* 4. 📌 핀 아이콘 서브타이틀 */
+    .pin-subtitle {
+      font-size: 15px;
+      color: #1e3a8a;
+      font-weight: 800;
+      margin-top: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .pin-subtitle::before {
+      content: "📌";
+      font-size: 14px;
+    }
+
+    /* 5. 💬 말풍선 아이콘 소제목 */
+    .speech-label-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #334155;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .speech-label-title::before {
+      content: "💬";
+      font-size: 13px;
+    }
+
+    p, li {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #334155;
+    }
+
+    /* ==========================================================================
+     📊 [접속 공식] 이미지와 동일한 2열 카드 UI
+     ========================================================================== */
+    .formula-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .formula-column {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .formula-header {
+      background-color: var(--primary-blue);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    .formula-header.sky {
+      background-color: var(--sky-blue);
+    }
+
+    .formula-box {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #1e293b;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .formula-box.highlight-text {
+      background-color: #f8fafc;
+      color: var(--primary-blue);
+    }
+
+    .formula-box .blue-target {
+      color: var(--primary-blue);
+      font-weight: 900;
+    }
+
+    /* ==========================================================================
+     💡 [Point 박스] 상단 꼬리가 달린 말풍선 박스
+     ========================================================================== */
+    .point-speech-card {
+      position: relative;
+      background-color: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .point-speech-card::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 24px;
+      border-width: 0 8px 8px;
+      border-style: solid;
+      border-color: #bfdbfe transparent;
+      display: block;
+      width: 0;
+    }
+
+    .point-speech-card::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 25px;
+      border-width: 0 7px 7px;
+      border-style: solid;
+      border-color: #eff6ff transparent;
+      display: block;
+      width: 0;
+    }
+
+    .point-speech-card ul {
+      padding-left: 14px;
+    }
+
+    .point-speech-card li {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .point-speech-card li:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+     🎯 단어장 및 퀴즈 컴포넌트
+     ========================================================================== */
+    .bubble-word-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .word-bubble {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .word-bubble .ja-sub {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: normal;
+    }
+
+    .character-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: #f8fafc;
+      border-left: 4px solid var(--primary-blue);
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 8px;
+    }
+
+    .char-avatar { font-size: 20px; }
+    .char-speech { font-size: 13.5px; font-weight: 700; color: #0f172a; }
+    .char-trans { font-size: 11.5px; color: #64748b; }
+
+    .quiz-item {
+      margin-bottom: 6px;
+      background-color: #fafafa;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .quiz-q { font-size: 13px; font-weight: 700; color: #1e293b; }
+    .quiz-ja { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+    .quiz-line {
+      display: inline-block;
+      min-width: 70px;
+      border-bottom: 2px solid var(--primary-blue);
+      text-align: center;
+      margin: 0 4px;
+      font-weight: bold;
+      color: var(--accent-orange);
+    }
+
+    .answer-btn {
+      margin-top: 6px;
+      padding: 5px 12px;
+      background-color: transparent;
+      color: var(--primary-blue);
+      border: 1.5px solid var(--primary-blue);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .answer-btn:hover {
+      background-color: #eff6ff;
+    }
+
+    .answer-box {
+      margin-top: 6px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--primary-blue);
+      border-radius: 6px;
+      display: none;
+      background-color: #f8fafc;
+    }
+
+    .answer-box.show { display: block; }
+    .answer-content { font-size: 12px; color: #1e3a8a; line-height: 1.5; }
+
+    .big-concept-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1.5px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .big-concept-title { font-size: 18px; font-weight: 900; color: #1e3a8a; }
+
+    /* ==========================================================================
+     📱 모바일 & 🖨️ 인쇄(Print) 대응
+     ========================================================================== */
+    @media (max-width: 900px) {
+      body { padding: 10px; }
+      .book-wrapper { zoom: 1 !important; width: 100%; gap: 20px; }
+      .book-container { flex-direction: column; width: 100%; height: auto; box-shadow: none; }
+      .book-container::after { display: none; }
+      .page { width: 100%; height: auto; padding: 30px 20px; border-bottom: 2px dashed #e2e8f0; }
+      .footer { position: relative; bottom: 0; margin-top: 20px; text-align: center; }
+    }
+
+    @media print {
+      @page { size: 364mm 257mm; margin: 0; }
+      body { background-color: #fff; padding: 0; }
+      .book-wrapper { gap: 0; zoom: 1 !important; }
+      .book-container { display: flex !important; flex-direction: row !important; width: 364mm; height: 257mm; page-break-after: always; box-shadow: none; border: none; }
+      .book-container::after { display: none; }
+      .page { width: 182mm !important; height: 257mm !important; }
+      .answer-btn { display: none; }
+      .answer-box { display: block !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact ; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="book-wrapper">
+
+  <!-- ==========================================================================
+   [문법 완벽 마스터] 명사 + です 핵심 개념 정리 (단독 펼침면)
+   ========================================================================== -->
+  <div class="book-container">
+    <!-- 왼쪽 페이지: 첨부 이미지 레이아웃 완벽 반영 -->
+    <div class="page left-page">
+      <!--<div class="grammar-no">WEEK 01 - CORE GRAMMAR</div>-->
+      
+      <!-- 1. 타원 배지 -->
+       <!--<div class="lesson-badge-oval">1과</div>-->
+      
+    <div class="lesson-badge-oval">1주차</div>
+      <!-- 2. 과 메인 제목 -->
+      <div class="section-lesson-title">제 1 과 : 소개하기<br> [～です / ～じゃないです]</div>
+      
+      <!-- 3. 문법 대제목<h3 class="grammar-title">～です / ～じゃないです</h3> -->
+     
+
+      <!-- 4. 📌 의미 -->
+      <div class="pin-subtitle">의미</div>
+      <p style="margin-bottom: 8px;">
+        명사 뒤에 붙어 <b>「~입니다」</b>라는 의미를 나타내는 정중형 어미입니다. 단어 뒤에 붙이는 것만으로 상대방에게 예의를 갖춘 완벽한 회화 문장이 됩니다.
+      </p>
+
+      <!-- 5. 📌 💡 접속공식 -->
+      <div class="pin-subtitle">💡 접속공식</div>
+      <div class="speech-label-title">긍정 · 의문 · 부정 형태별 변화</div>
+
+      <!-- 이미지 형태의 2열 공식 테이블 -->
+      <div class="formula-container">
+        <!-- 왼쪽: 긍정 / 의문 -->
+        <div class="formula-column">
+          <div class="formula-header">긍정 / 의문 ⭕</div>
+          <div class="formula-box">명사 + <span class="blue-target">です</span></div>
+          <div class="formula-box highlight-text">ホテル です</div>
+        </div>
+        <!-- 오른쪽: 부정 -->
+        <div class="formula-column">
+          <div class="formula-header sky">부정 (회화체) ❌</div>
+          <div class="formula-box">명사 + <span class="blue-target">じゃないです</span></div>
+          <div class="formula-box highlight-text">ホテル じゃないです</div>
+        </div>
+      </div>
+
+      <!-- 6. 📌 Point (말풍선 꼬리 박스) -->
+      <div class="pin-subtitle">Point</div>
+      <div class="point-speech-card">
+        <ul>
+          <li><b>의문문 (~입니까?):</b> 문장 끝에 <b>か</b>만 붙여 <b>「～ですか。」</b>로 질문합니다. (예: ホテルですか。)</li>
+          <li><b>여행 회화 핵심:</b> 주어나 목적어를 생략해도 단어 뒤에 <b>です</b>만 붙이면 바로 뜻이 통하는 문장이 완성됩니다.</li>
+        </ul>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+
+    <!-- 오른쪽 페이지: 종합 변형 기초 연습문제 -->
+    <div class="page right-page">
+      <div class="pin-subtitle">기본 형태 변형 연습</div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">1. [긍정] "학생(学生)입니다."</div>
+        <div class="quiz-ja">学生(がくせい) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">2. [의문] "학생(学生)입니까?"</div>
+        <div class="quiz-ja">学生(がくせい) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">3. [부정] "학생(学生)이 아닙니다." </div>
+        <div class="quiz-ja">学生(がくせい) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">4. [긍정] "역(駅)입니다."</div>
+        <div class="quiz-ja">駅(えき) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">5. [의문] "역(駅)입니까?"</div>
+        <div class="quiz-ja">駅(えき) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <div class="quiz-item">
+        <div class="quiz-q">6. [부정] "역(駅)이 아닙니다." </div>
+        <div class="quiz-ja">駅(えき) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">
+          1) です (がくせいです)<br>
+          2) ですか (がくせいですか)<br>
+          3) じゃないです (がくせいじゃないです)<br>
+          4) です (えきです)<br>
+          5) ですか (えきですか)<br>
+          6) じゃないです (えきじゃないです)
+        </div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+   [테마 1] 나라 (NATION)
+   ========================================================================== -->
+  <div class="book-container">
+    <div class="page left-page">
+      <div class="section-lesson-title"> 나라</div>
+      <!--<h3 class="grammar-title">[나라] + です</h3>-->
+
+      <div class="big-concept-box">
+        <div class="big-concept-title">국적 + です</div>
+        <p style="font-size:12px; color:#64748b; margin-top:2px;">(~국적/출신 입니다)</p>
+      </div>
+
+      <div class="pin-subtitle">대답 어휘</div>
+<div class="bubble-word-container">
+  <div class="word-bubble"><span> <ruby>はい<rt>하이</rt></ruby></span> <span class="ja-sub">네</span></div>
+  <div class="word-bubble"><span> <ruby>いいえ<rt>이이에</rt></ruby></span> <span class="ja-sub">아니요</span></div>
+</div>
+      <div class="pin-subtitle">나라 필수 어휘</div>
+      <div class="bubble-word-container">
+        <div class="word-bubble"><span> <ruby>韓国<rt>かんこく</rt></ruby></span> <span class="ja-sub">한국</span></div>
+        <div class="word-bubble"><span> <ruby>日本<rt>にほん</rt></ruby></span> <span class="ja-sub">일본</span></div>
+        <div class="word-bubble"><span> <ruby>アメリカ<rt>아메리카</rt></ruby></span> <span class="ja-sub">미국</span></div>
+        <div class="word-bubble"><span> <ruby>中国<rt>ちゅうごく</rt></ruby></span> <span class="ja-sub">중국</span></div>
+      </div>
+
+      <div class="pin-subtitle">문장 만들기 연습</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. 한국입니다.</div>
+        <div class="quiz-ja">韓国(かんこく) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 일본입니다.</div>
+        <div class="quiz-ja">日本(にほん) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">3. 미국입니까?</div>
+        <div class="quiz-ja">アメリカ <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">4. 중국이 아닙니다.</div>
+        <div class="quiz-ja">中国(ちゅうごく) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です &nbsp; 2) です &nbsp; 3) ですか &nbsp; 4) じゃないです</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+
+    <div class="page right-page">
+  <div class="pin-subtitle">나라 관련 실전 회화 연습</div>
+  <br>
+
+  <div class="character-card">
+    <div class="char-avatar">Q</div>
+    <div>
+      <div class="char-speech">
+        <ruby>
+          どこから来ましたか。
+          <rt>도코카라 키마시타카</rt>
+        </ruby>
+      </div>
+      <div class="char-trans">(어디에서 오셨나요?)</div>
+    </div>
+
+    <div class="char-avatar">A</div>
+    <div>
+      <div class="char-speech">
+        <ruby>
+          韓国からです。
+          <rt>칸코쿠카라 데스</rt>
+        </ruby>
+      </div>
+      <div class="char-trans">(한국에서 왔습니다 / 한국입니다.)</div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="pin-subtitle">실전 회화 응용 문제</div>
+
+  <div class="quiz-item">
+    <div class="quiz-q">1. "<ruby>出身<rt>슛신</rt>は<rt>와</rt>どこ<rt>도코</rt></ruby><ruby>ですか。<rt>데스카</rt></ruby>"</div>
+    <div class="quiz-q"> ( "어디 출신이에요?" )</div>
+    <div class="quiz-ja">
+      ➔<ruby>韓国<rt>칸코쿠</rt> </ruby>
+      <span class="quiz-line"></span>。<br>
+      ( "한국이에요 *한국에서왔어요.")
+    </div>
+  </div>
+
+  <div class="quiz-item">
+    <div class="quiz-q">2. "<ruby>日本<rt>니혼</rt></ruby><ruby>ですか<rt>데스카</rt></ruby>" </div>
+     <div class="quiz-q"> ( "일본입니까?" )</div>
+    <div class="quiz-ja">
+      ➔<ruby>いいえ、<rt>이이에</rt></ruby><ruby>日本<rt>니혼</rt></ruby>
+      <span class="quiz-line"></span>。<br>
+      ( "아니요, 일본이 아닙니다.")
+    </div>
+  </div>
+      <div class="quiz-item">
+  <div class="quiz-q">
+    3. "<ruby>中国<rt>추고쿠</rt></ruby><ruby>ですか<rt>데스카</rt></ruby>"
+  </div>
+  <div class="quiz-q">
+    ( "중국입니까?" )
+  </div>
+  <div class="quiz-ja">
+    ➔<ruby>いいえ<rt>이이에</rt></ruby>、
+    <ruby>中国<rt>추고쿠</rt></ruby>
+    <span class="quiz-line"></span>。<br>
+    ( "아니요, 중국이 아닙니다." )
+  </div>
+</div>
+
+<br>
+
+<div class="quiz-item">
+  <div class="quiz-q">
+    4. "<ruby>出身<rt>슛신</rt></ruby>は
+    <ruby>韓国<rt>칸코쿠</rt></ruby>
+    <ruby>ですか<rt>데스카</rt></ruby>"
+  </div>
+  <div class="quiz-q">
+    ( "한국 출신입니까?" )
+  </div>
+  <div class="quiz-ja">
+    ➔<ruby>はい<rt>하이</rt></ruby>、
+    <ruby>韓国<rt>칸코쿠</rt></ruby>
+    <span class="quiz-line"></span>。<br>
+    ( "네, 한국 출신입니다." )
+  </div>
+</div>
+
+<br>
+
+<div class="quiz-item">
+  <div class="quiz-q">
+    5. "<ruby>どこ<rt>도코</rt>から<rt>카라</rt>来<rt>키</rt></ruby>ましたか"
+  </div>
+  <div class="quiz-q">
+    ( "어디에서 왔습니까?" )
+  </div>
+  <div class="quiz-ja">
+    ➔<ruby>日本<rt>니혼</rt>から<rt>카라</rt></ruby>
+    <span class="quiz-line"></span>。<br>
+    ( "일본에서 왔습니다." )
+  </div>
+</div>
+       
+
+
+  <br>
+
+  <button class="answer-btn" onclick="toggleAnswer(this)">
+    정답 확인
+  </button>
+
+  <div class="answer-box">
+    <div class="answer-content">
+      1) です (かんこくです)<br>
+      2) じゃないです (にほんじゃないです)
+    </div>
+  </div>
+
+  <br>
+
+  <div class="footer"></div>
+</div>
+  </div>
+
+
+
+  <!-- ==========================================================================
+   [테마 2] 사람 (PEOPLE)
+   ========================================================================== -->
+
+
+
+  <div class="book-container">
+  <div class="page left-page">
+    <div class="section-lesson-title"> 국적/신분</div>
+    <!--<h3 class="grammar-title">[나라] + です</h3>-->
+
+    <div class="big-concept-box">
+      <div class="big-concept-title">나라 사람 + です</div>
+      <p style="font-size:12px; color:#64748b; margin-top:2px;">(~국적/출신 국가입니다)</p>
+    </div>
+
+    <div class="pin-subtitle">나라 필수 어휘</div>
+    <div class="bubble-word-container">
+      <div class="word-bubble"><span>韓国人</span> <span class="ja-sub">칸꼬쿠</span></div>
+      <div class="word-bubble"><span>日本人</span> <span class="ja-sub">니혼진</span></div>
+      <div class="word-bubble"><span>アメリカ人</span> <span class="ja-sub">아메리카진</span></div>
+      <div class="word-bubble"><span>中国人</span> <span class="ja-sub">츄-코쿠진</span></div>
+      <div class="word-bubble"><span>ベトナム人</span> <span class="ja-sub">베토나무진</span></div>
+    </div>
+
+    <div class="pin-subtitle">문장 만들기 연습</div>    
+      <div class="quiz-item">
+        <div class="quiz-q">1. 한국인입니다.</div>
+        <div class="quiz-ja">韓国人(칸꼬쿠) <span class="quiz-line"></span>。</div>
+      </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. 일본인입니다.</div>
+      <div class="quiz-ja">日本人(니홍진) <span class="quiz-line"></span>。</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">3. 일본인이 아니에요.</div>
+      <div class="quiz-ja">日本人(니홍진) <span class="quiz-line"></span>。</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">4. 미국인입니까?</div>
+      <div class="quiz-ja">アメリカ人(아메리카진) <span class="quiz-line"></span>。</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">5. 중국사람이 아니에요.</div>
+      <div class="quiz-ja">中国人(츄-코쿠진) <span class="quiz-line"></span>。</div>
+    </div>
+    <div class="quiz-item">
+  <div class="quiz-q">5. 베트남사람이 아니에요.</div>
+  <div class="quiz-ja">ベトナム人(베토나무진) <span class="quiz-line"></span>。</div>
+</div>
+
+    <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+    <div class="answer-box">
+      <div class="answer-content">1) です &nbsp; 2) です &nbsp; 3) じゃないです&nbsp; 4) ですか &nbsp; 5) じゃないです &nbsp; 5) じゃないです</div>
+    </div>
+
+    <div class="footer"></div>
+  </div>
+
+  <div class="page right-page">　
+    <div class="pin-subtitle">나라 관련 실전 회화 연습</div>
+
+    <div class="character-card">
+      <div class="char-avatar">Q</div>
+      <div>
+        <div class="char-speech">どの国の人ですか</div>
+        <div class="char-trans">(어느나라사람이에요?)</div>
+      </div>
+      <div class="char-avatar">A</div>
+      <div>
+        <div class="char-speech">韓国人です。</div>
+        <div class="char-trans">(한국인입니다.)</div>
+      </div>
+    </div>
+
+    
+
+    <div class="pin-subtitle">실전 회화 응용 문제</div>
+    <div class="quiz-item">　どの国の人ですか
+      <div class="quiz-q">1. "어느나라사람이에요?"</div>
+      <div class="quiz-ja">➔　韓国(かんこく) <span class="quiz-line"></span>。</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. "한국사람이에요?" ➔ "아니요, 일본이 아닙니다."</div>
+      <div class="quiz-ja">　➔はい、韓国人(にほん) <span class="quiz-line"></span>。</div>
+    </div>
+
+    <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+    <div class="answer-box">
+      <div class="answer-content">1) です (かんこくです) <br>2) じゃないです (にほんじゃないです)</div>
+    </div>
+
+    <div class="footer"></div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+    <!-- ==========================================================================
+   [테마 3] 직업 (PEOPLE)
+   ========================================================================== -->
+
+  <div class="book-container">
+    <div class="page left-page">
+      <div class="grammar-no">THEME 02 - PEOPLE</div>
+      <div class="lesson-badge-oval">1주차</div>
+      <div class="section-lesson-title">테마 02 : 사람/신분</div>
+      <h3 class="grammar-title">[사람/직업] + です</h3>
+
+      <div class="big-concept-box">
+        <div class="big-concept-title">신분/직업 + です</div>
+        <p style="font-size:12px; color:#64748b; margin-top:2px;">(~사람/직업입니다)</p>
+      </div>
+
+      <div class="pin-subtitle">사람/신분 필수 어휘</div>
+      <div class="bubble-word-container">
+        <div class="word-bubble"><span><ruby>会社員<rt>かいしゃいん</rt></ruby></span> <span class="ja-sub">카이샤진</span></div>
+        <div class="word-bubble"><span><ruby>学生<rt>がくせい</rt></ruby></span> <span class="ja-sub">가쿠세이</span></div>
+        <div class="word-bubble"><span><ruby>韓国人<rt>かんこくじん</rt></ruby></span> <span class="ja-sub">칸꼬쿠진</span></div>
+        <div class="word-bubble"><span><ruby>観光客<rt>かんこうきゃく</rt></ruby></span> <span class="ja-sub">칸코우캬쿠</span></div>
+      </div>
+
+      <div class="pin-subtitle">문장 만들기 연습</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. 회사원입니다.</div>
+        <div class="quiz-ja">会社員(かいしゃいん) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 한국인입니다.</div>
+        <div class="quiz-ja">韓国人(かんこくじん) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">3. 학생입니까?</div>
+        <div class="quiz-ja">学生(がくせい) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">4. 관광객이 아닙니다.</div>
+        <div class="quiz-ja">観光客(かんこうきゃく) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です &nbsp; 2) です &nbsp; 3) ですか &nbsp; 4) じゃないです</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+
+    <div class="page right-page">
+      <div class="grammar-no">THEME 02 - PRACTICE</div>
+      <div class="pin-subtitle">자기소개 및 신분 실전 회화 연습</div>
+
+      <div class="character-card">
+        <div class="char-avatar">Q</div>
+        <div>
+          <div class="char-speech">初(はじめ)まして。キムです。</div>
+          <div class="char-trans">(처음 뵙겠습니다. 김입니다.)</div>
+        </div>
+      </div>
+
+      <div class="character-card">
+        <div class="char-avatar">A</div>
+        <div>
+          <div class="char-speech">韓国人(かんこくじん)です。観光客(かんこうきゃく)です。</div>
+          <div class="char-trans">(한국인입니다. 관광객입니다.)</div>
+        </div>
+      </div>
+
+      <div class="pin-subtitle">실전 자기소개 응용 문제</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. "저는 학생입니다."</div>
+        <div class="quiz-ja">私(わたし)は 学生(がくせい) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. "입국심사에서: 관광객입니다."</div>
+        <div class="quiz-ja">観光客(かんこうきゃく) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です (がくせいです) <br>2) です (かんこうきゃくです)</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+   [테마 3] 장소 (PLACE)
+   ========================================================================== -->
+  <div class="book-container">
+    <div class="page left-page">
+      <div class="grammar-no">THEME 03 - PLACE</div>
+      <div class="lesson-badge-oval">1주차</div>
+      <div class="section-lesson-title">테마 03 : 장소</div>
+      <h3 class="grammar-title">[장소] + です</h3>
+
+      <div class="big-concept-box">
+        <div class="big-concept-title">장소 명사 + です</div>
+        <p style="font-size:12px; color:#64748b; margin-top:2px;">(~장소입니다)</p>
+      </div>
+
+      <div class="pin-subtitle">여행 필수 장소 어휘</div>
+      <div class="bubble-word-container">
+        <div class="word-bubble"><span>ホテル</span> <span class="ja-sub">호텔</span></div>
+        <div class="word-bubble"><span>駅</span> <span class="ja-sub">えき</span></div>
+        <div class="word-bubble"><span>コンビニ</span> <span class="ja-sub">편의점</span></div>
+        <div class="word-bubble"><span>トイレ</span> <span class="ja-sub">화장실</span></div>
+      </div>
+
+      <div class="pin-subtitle">문장 만들기 연습</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. 호텔입니다.</div>
+        <div class="quiz-ja">ホテル <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 화장실입니까?</div>
+        <div class="quiz-ja">トイレ <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">3. 편의점이 아닙니다.</div>
+        <div class="quiz-ja">コンビニ <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です &nbsp; 2) ですか &nbsp; 3) じゃないです</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+
+    <div class="page right-page">
+      <div class="grammar-no">THEME 03 - PRACTICE</div>
+      <div class="pin-subtitle">길찾기 및 위치 실전 회화 연습</div>
+
+      <div class="character-card">
+        <div class="char-avatar">Q</div>
+        <div>
+          <div class="char-speech">目的地(もくてきち)は どこですか。</div>
+          <div class="char-trans">(목적지는 어디인가요?)</div>
+        </div>
+      </div>
+
+      <div class="character-card">
+        <div class="char-avatar">A</div>
+        <div>
+          <div class="char-speech">東京(とうきょう)駅(えき)です。</div>
+          <div class="char-trans">(도쿄역입니다.)</div>
+        </div>
+      </div>
+
+      <div class="pin-subtitle">실전 위치 회화 응용 문제</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. 택시에서: "여기입니다."</div>
+        <div class="quiz-ja">ここ <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 질문하기: "여기가 화장실입니까?"</div>
+        <div class="quiz-ja">ここは トイレ <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です (ここです) <br>2) ですか (トイレですか)</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+   [테마 4] 숫자 (NUMBER)
+   ========================================================================== -->
+  <div class="book-container">
+    <div class="page left-page">
+      <div class="grammar-no">THEME 04 - NUMBER</div>
+      <div class="lesson-badge-oval">1주차</div>
+      <div class="section-lesson-title">테마 04 : 숫자/수량</div>
+      <h3 class="grammar-title">[숫자] + です</h3>
+
+      <div class="big-concept-box">
+        <div class="big-concept-title">숫자/수량 + です</div>
+        <p style="font-size:12px; color:#64748b; margin-top:2px;">(~번/개/시 입니다)</p>
+      </div>
+
+      <div class="pin-subtitle">필수 숫자/수량 어휘</div>
+      <div class="bubble-word-container">
+        <div class="word-bubble"><span>一つ</span> <span class="ja-sub">ひとつ (1개)</span></div>
+        <div class="word-bubble"><span>二つ</span> <span class="ja-sub">ふたつ (2개)</span></div>
+        <div class="word-bubble"><span>2人</span> <span class="ja-sub">ふたり (2명)</span></div>
+        <div class="word-bubble"><span>1時</span> <span class="ja-sub">いちじ (1시)</span></div>
+      </div>
+
+      <div class="pin-subtitle">문장 만들기 연습</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. 한 개입니다.</div>
+        <div class="quiz-ja">一つ(ひとつ) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 2명입니까?</div>
+        <div class="quiz-ja">2人(ふたり) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">3. 1시가 아닙니다.</div>
+        <div class="quiz-ja">1時(いちじ) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です &nbsp; 2) ですか &nbsp; 3) じゃないです</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+
+    <div class="page right-page">
+      <div class="grammar-no">THEME 04 - PRACTICE</div>
+      <div class="pin-subtitle">식당/인원 실전 회화 연습</div>
+
+      <div class="character-card">
+        <div class="char-avatar">Q</div>
+        <div>
+          <div class="char-speech">何名(なんめい)様(さま)ですか。</div>
+          <div class="char-trans">(몇 분이신가요?)</div>
+        </div>
+      </div>
+
+      <div class="character-card">
+        <div class="char-avatar">A</div>
+        <div>
+          <div class="char-speech">2人(ふたり)です。</div>
+          <div class="char-trans">(두 명입니다.)</div>
+        </div>
+      </div>
+
+      <div class="pin-subtitle">식당 주문 응용 문제</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. 식당 입장에서: "3명입니다."</div>
+        <div class="quiz-ja">3人(さんにん) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 개수 말할 때: "두 개입니다."</div>
+        <div class="quiz-ja">二つ(ふたつ) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です (さんにんです) <br>2) です (ふたつです)</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+  </div>
+  <!-- ==========================================================================
+   [쉬어가기] ☕ 계산할 때 숫자가 안 들려요! (단독 펼침면)
+   ========================================================================== -->
+  <div class="book-container">
+    <!-- 왼쪽 페이지: 에세이 전반부 -->
+    <div class="page left-page">
+      <div class="grammar-no">COLUMN - BREAK TIME</div>
+      <br>
+      <!-- 1. 타원 배지 -->
+      <div class="lesson-badge-oval">쉬어가기</div>
+      
+      <!-- 2. 과 메인 제목 -->
+      <div class="section-lesson-title">☕ 읽는 것과 듣는 것의 차이 </div>
+      
+      <!-- 3. 대제목 -->
+      <h3 class="grammar-title">💴 계산할 때 숫자가 안 들려요!</h3>
+
+      <!-- 4. 📌 본문 섹션 1 -->
+      <div class="pin-subtitle">여행지에서 흔히 겪는 일</div>
+      <p style="margin-bottom: 8px;">
+        일본어를 공부했으니까 여행 가서 일본어로 말해보고 싶다! 그런데 막상 계산할 때가 되면 점원분이 금액을 말하는 순간, <b>「……え？」</b> 하고 당황하게 되죠. 😳
+      </p>
+      <p style="margin-bottom: 10px;">
+        결국 계산기나 카드 단말기 화면을 바라보거나, 금액을 손으로 가리키면서 계산하는 경우가 많아요. <b>「これ……？」</b> 하고 가리키는 일은 사실 여행에서 아주 흔한 일입니다.
+      </p>
+
+      <div class="character-card">
+        <div class="char-avatar">🛍️</div>
+        <div>
+          <div class="char-speech">「〇〇円です。」</div>
+          <div class="char-trans">💭 “방금 뭐라고 했지……?”</div>
+        </div>
+      </div>
+
+      <div class="character-card">
+        <div class="char-avatar">🍜</div>
+        <div>
+          <div class="char-speech">「一、二、〇〇円です。」</div>
+          <div class="char-trans">💭 “숫자가 하나도 안 들려……!”</div>
+        </div>
+      </div>
+
+      <!-- 5. 📌 본문 섹션 2 -->
+      <div class="pin-subtitle">읽는 것과 듣는 것의 차이</div>
+      <p>
+        일본어를 공부한 사람이라도 숫자를 <b>'읽는 것'</b>과 <b>'듣는 것'</b>은 완전히 다르게 느껴질 수 있어요. 특히 계산할 때는 금액을 한 번에 빠르게 말하기 때문에 처음에는 더 어렵게 느껴집니다.
+      </p>
+
+      <div class="footer"></div>
+    </div>
+
+    <!-- 오른쪽 페이지: 에세이 후반부 & 조언 -->
+    <div class="page right-page">
+      <div class="grammar-no">쉬어가기</div>
+
+      <!-- 1. 📌 본문 섹션 3 -->
+      <div class="pin-subtitle">조금 한적한 곳으로 가보세요</div>
+      <p style="margin-bottom: 8px;">
+        도쿄나 오사카처럼 사람이 많은 관광지에서는 직원이 빠르게 손님을 응대해야 해서 천천히 대화하기 어려울 수 있어요. 그래서 <i>“일본어를 한마디도 못 해봤네?”</i> 하고 아쉬움이 남기도 하죠.
+      </p>
+      <p style="margin-bottom: 10px;">
+        하지만 관광객이 많은 곳에서 조금 벗어나면 손님과 천천히 이야기할 수 있는 작고 한적한 가게들을 만날 수 있습니다.
+      </p>
+
+      <div class="character-card">
+        <div class="char-avatar">🙋‍♂️</div>
+        <div>
+          <div class="char-speech">「これは何ですか？」 / 「いくらですか？」</div>
+          <div class="char-trans">(이것은 무엇인가요? / 얼마인가요?)</div>
+        </div>
+      </div>
+
+      <div class="character-card">
+        <div class="char-avatar">🏪</div>
+        <div>
+          <div class="char-speech">「これは〇〇ですよ。」 / 「〇〇円です。」</div>
+          <div class="char-trans">(이것은 〇〇이에요 / 〇〇엔입니다.)</div>
+        </div>
+      </div>
+
+      <!-- 2. 📌 Point (말풍선 꼬리 박스) -->
+      <div class="pin-subtitle">💡 일본어를 ‘말해보고 싶다면’</div>
+      <div class="point-speech-card">
+        <ul>
+          <li><b>작은 용기 내보기:</b> 이번 여행에서는 한두 곳쯤 한적한 동네 카페나 가게에서 직접 물건을 사고 물어보세요.</li>
+          <li><b>완벽하지 않아도 괜찮아요:</b> “일본어를 공부했으니까 한 번 써보자!” 하는 작은 경험이 다음 일본어 공부를 계속하게 만드는 재미가 됩니다.</li>
+        </ul>
+      </div>
+
+      <div class="big-concept-box" style="margin-top: 10px;">
+        <div class="big-concept-title"> 이번 여행에서는 이렇게!</div>
+        <p style="font-size: 12px; color: #1e3a8a; margin-top: 4px;">
+          화면을 가리키는 대신, 한마디 먼저 말해보세요.<br>
+          <b style="font-size: 14px; color: #2563eb;">「これはいくらですか？」</b><br>
+          그리고 직원의 대답을 이번에는 귀로 한번 들어보세요!
+        </p>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+  </div>
+  <!-- ==========================================================================
+   [테마 5] 가격 (PRICE)
+   ========================================================================== -->
+  <div class="book-container">
+    <div class="page left-page">
+      <div class="grammar-no">THEME 05 - PRICE</div>
+      <div class="lesson-badge-oval">1주차</div>
+      <div class="section-lesson-title">테마 05 : 가격</div>
+      <h3 class="grammar-title">[가격] + です</h3>
+
+      <div class="big-concept-box">
+        <div class="big-concept-title">금액(円) + です</div>
+        <p style="font-size:12px; color:#64748b; margin-top:2px;">(~엔 입니다)</p>
+      </div>
+
+      <div class="pin-subtitle">쇼핑 필수 금액 어휘</div>
+      <div class="bubble-word-container">
+        <div class="word-bubble"><span>100円</span> <span class="ja-sub">ひゃくえん</span></div>
+        <div class="word-bubble"><span>1,000円</span> <span class="ja-sub">せんえん</span></div>
+        <div class="word-bubble"><span>5,000円</span> <span class="ja-sub">ごせんえん</span></div>
+        <div class="word-bubble"><span>10,000円</span> <span class="ja-sub">いちまんえん</span></div>
+      </div>
+
+      <div class="pin-subtitle">문장 만들기 연습</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. 100엔입니다.</div>
+        <div class="quiz-ja">100円(ひゃくえん) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 1,000엔입니까?</div>
+        <div class="quiz-ja">1,000円(せんえん) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">3. 5,000엔이 아닙니다.</div>
+        <div class="quiz-ja">5,000円(ごせんえん) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です &nbsp; 2) ですか &nbsp; 3) じゃないです</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+
+    <div class="page right-page">
+      <div class="grammar-no">THEME 05 - PRACTICE</div>
+      <div class="pin-subtitle">쇼핑/계산 실전 회화 연습</div>
+
+      <div class="character-card">
+        <div class="char-avatar">Q</div>
+        <div>
+          <div class="char-speech">いくらですか。</div>
+          <div class="char-trans">(얼마인가요?)</div>
+        </div>
+      </div>
+
+      <div class="character-card">
+        <div class="char-avatar">A</div>
+        <div>
+          <div class="char-speech">1,500円(せんごひゃくえん)です。</div>
+          <div class="char-trans">(1,500엔입니다.)</div>
+        </div>
+      </div>
+
+      <div class="pin-subtitle">계산대 회화 응용 문제</div>
+      <div class="quiz-item">
+        <div class="quiz-q">1. "계산대에서: 300엔입니다."</div>
+        <div class="quiz-ja">300円(さんびゃくえん) <span class="quiz-line"></span>。</div>
+      </div>
+      <div class="quiz-item">
+        <div class="quiz-q">2. 가격 묻기: "1,000엔입니까?"</div>
+        <div class="quiz-ja">1,000円(せんえん) <span class="quiz-line"></span>。</div>
+      </div>
+
+      <button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+      <div class="answer-box">
+        <div class="answer-content">1) です (さんびゃくえんです) <br>2) ですか (せんえんですか)</div>
+      </div>
+
+      <div class="footer"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+  
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '정답 가리기';
+    } else {
+      btn.innerText = '정답 확인';
+    }
+  }
+    document.addEventListener("DOMContentLoaded", function () {
+		// 1. 페이지 번호 자동 계산 기능
+		const allPages = document.querySelectorAll(".page");
+		const totalPages = allPages.length;
+
+		allPages.forEach((page, index) => {
+				const pageNum = index + 1;
+				const footer = page.querySelector(".footer");
+				if (footer) {
+					const label = footer.getAttribute("data-label") || "";
+					footer.textContent = `semo.${pageNum} `;
+				}
+		});
+});
+</script>
+
+</body>
+</html>

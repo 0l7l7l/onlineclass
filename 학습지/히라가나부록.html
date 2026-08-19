@@ -1,0 +1,601 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>히라가나 교재 - 부록 및 이론</title>
+	<style>
+		/* =========================================================
+					 [인쇄 설정] A4 가로 용지 규격 (인쇄할 때만 작동)
+					 ========================================================= */
+		@page {
+			size: 297mm 210mm;
+			margin: 0;
+		}
+
+		/* =========================================================
+					 [기본 스타일] 화면(컴퓨터)과 인쇄 공통
+					 ========================================================= */
+		body {
+			margin: 0;
+			padding: 40px 0; /* 화면에서 볼 때 책장 사이 여백 확보 */
+			font-family: 'Helvetica Neue', Arial, 'Malgun Gothic', sans-serif;
+			background-color: #f0f2f5; /* 화면 배경을 편안하고 입체감 있게 */
+			-webkit-print-color-adjust: exact;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: 50px; /* 각 책(A4 2페이지 세트) 간의 간격 */
+			min-height: 100vh;
+		}
+
+		/* 전체를 감싸는 컨테이너: 컴퓨터 화면에서는 A4 가로 황금 비율 유지 */
+		.book-container {
+			width: 100%;
+			max-width: 1200px;
+			aspect-ratio: 297 / 210;
+			box-sizing: border-box;
+			display: flex;
+			background: #ffffff;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+		}
+
+		/* 왼쪽 면(1쪽)과 오른쪽 면(2쪽) 비율 분할 */
+		.book-page {
+			width: 50%;
+			height: 100%;
+			box-sizing: border-box;
+			padding: 5% 4%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			position: relative;
+			background: #ffffff;
+		}
+
+		/* 가운데 접지선 (책 느낌 구현) */
+		.left-page {
+			border-right: 1px dashed #ccc;
+		}
+
+		/* 상단 타이틀 구역 */
+		.header {
+			border-bottom: 3px double #333;
+			padding-bottom: 10px;
+			margin-bottom: 15px;
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+		}
+
+			.header h1 {
+				margin: 0;
+				font-size: 1.6rem;
+				color: #222;
+			}
+
+			.header .page-num {
+				font-size: 1rem;
+				font-weight: bold;
+				color: #666;
+			}
+
+		/* 글자 학습 테이블 구역 */
+		.content-table {
+			width: 100%;
+			border-collapse: collapse;
+			flex-grow: 1;
+			table-layout: fixed; /* 셀 크기가 고정되어 글자가 밖으로 안 삐져나감 */
+		}
+
+			.content-table th, .content-table td {
+				border: 1px solid #aaa;
+				text-align: center;
+				vertical-align: middle;
+				padding: 8px; /* 추가된 여백 */
+			}
+
+		.table-head {
+			background-color: #f5f5f5;
+			height: 40px;
+			font-size: 0.95rem;
+			font-weight: bold;
+		}
+
+		.char-row {
+			height: calc((100% - 40px) / 5); /* 테이블 높이를 딱 5등분하여 조화롭게 배치 */
+		}
+
+		.main-char {
+			font-size: 2.2rem; /* 삐져나가지 않는 안전한 폰트 사이즈 조정 */
+			font-weight: bold;
+			font-family: 'Yu Gothic', 'MS Gothic', sans-serif;
+			width: 15%;
+			background-color: #fafafa;
+		}
+
+		.info-cell {
+			width: 30%;
+			font-size: 0.85rem;
+			line-height: 1.4;
+			text-align: left;
+			padding: 6px 8px;
+			box-sizing: border-box;
+		}
+
+			.info-cell .pron {
+				font-size: 1.05rem;
+				font-weight: bold;
+				color: #e74c3c;
+				margin-bottom: 2px;
+			}
+
+			.info-cell .tip {
+				font-size: 0.75rem;
+				color: #27ae60;
+				font-style: italic;
+				margin-bottom: 4px;
+				font-weight: bold;
+			}
+
+			.info-cell .word {
+				color: #555;
+				border-top: 1px dashed #ddd;
+				padding-top: 4px;
+				font-size: 0.8rem;
+			}
+
+		/* 쓰기 연습 칸 공통 */
+		.practice-cell {
+			font-family: 'Yu Gothic', 'MS Gothic', sans-serif;
+			font-size: 2.0rem; /* 칸 크기에 딱 맞는 최적화된 글자 크기 */
+			position: relative;
+			width: 13.75%;
+			height: 100%;
+			display: table-cell;
+			vertical-align: middle;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.guide-line {
+			background-image: linear-gradient(to right, #ddd 1px, transparent 1px), linear-gradient(to bottom, #ddd 1px, transparent 1px);
+			background-position: center;
+			background-size: 100% 100%, 100% 100%;
+			background-repeat: no-repeat;
+		}
+
+		.trace {
+			color: #ddd;
+		}
+
+		.blank {
+			color: transparent;
+		}
+
+		/* 읽기 연습 구역 */
+		.reading-container {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+
+		.reading-intro {
+			font-size: 0.9rem;
+			color: #444;
+			margin-bottom: 15px;
+			line-height: 1.6;
+			background-color: #f9f9f9;
+			padding: 12px;
+			border-left: 4px solid #34495e;
+		}
+
+		.reading-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 12px;
+			flex-grow: 1;
+		}
+
+		.reading-box {
+			border: 1px solid #bbb;
+			border-radius: 6px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-family: 'Yu Gothic', 'MS Gothic', sans-serif;
+			font-size: 1.5rem; /* 긴 단어가 와도 박스가 깨지지 않게 크기 조정 */
+			font-weight: 500;
+			letter-spacing: 1px;
+			background-color: #fff;
+			box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+			min-height: 45px; /* 박스 높이가 찌그러지지 않게 최소 높이 보장 */
+			padding: 5px;
+			box-sizing: border-box;
+		}
+
+		/* 하단 푸터 */
+		.footer {
+			text-align: center;
+			font-size: 0.8rem;
+			color: #999;
+			border-top: 1px solid #eee;
+			padding-top: 10px;
+			margin-top: 15px;
+		}
+
+		/* =========================================================
+					 [새로 추가된 CSS] 부록: 모양 비교 팁 세트 전용 스타일
+					 ========================================================= */
+		.tip-container {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.comparison-section {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.comparison-card {
+			border: 1px solid #cbd5e1;
+			border-radius: 8px;
+			background-color: #f8fafc; /* 연한 배경 */
+			overflow: hidden;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+		}
+
+		.card-title {
+			background-color: #e2e8f0; /* 살짝 진한 헤더 */
+			padding: 8px 12px;
+			font-weight: bold;
+			font-size: 0.95rem;
+			color: #1e293b;
+			border-bottom: 1px solid #cbd5e1;
+		}
+
+		.card-body {
+			padding: 12px;
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+		/* 글자 보여주는 흰색 박스 (2개짜리, 3개짜리) */
+		.char-display, .char-display-triple {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: #ffffff;
+			padding: 10px 15px;
+			border-radius: 6px;
+			border: 1px dashed #94a3b8;
+			gap: 12px;
+			min-width: 130px;
+		}
+
+		.char-box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			font-size: 0.75rem;
+			color: #64748b;
+		}
+
+		.highlight-char {
+			font-size: 2.2rem;
+			font-weight: bold;
+			color: #e53e3e; /* 눈에 띄는 빨간색 포인트 */
+			font-family: 'Yu Gothic', 'MS Gothic', sans-serif;
+			margin-bottom: 2px;
+		}
+
+		.vs-text {
+			font-weight: bold;
+			color: #94a3b8;
+			font-size: 0.85rem;
+		}
+
+		.explanation-box {
+			font-size: 0.85rem;
+			line-height: 1.6;
+			color: #334155;
+			flex: 1;
+		}
+
+		/* =========================================================
+					 [인쇄 전용 미디어 쿼리]
+					 ========================================================= */
+		@media print {
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-container {
+				width: 297mm;
+				height: 210mm;
+				max-width: none;
+				box-shadow: none;
+				page-break-after: always; /* 각 책(아행, 카행 등) 마다 페이지 넘김 */
+			}
+
+				.book-container:last-child {
+					page-break-after: avoid;
+				}
+
+			.reading-box {
+				height: 20mm; /* 인쇄 시 안정적인 카드 크기 고정 */
+			}
+
+			.comparison-card {
+				break-inside: avoid; /* 카드가 페이지 중간에 잘리지 않게 방지 */
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<!-- ========================================== -->
+	<!--   제 3권 부록 : 모양 비교 팁 세트 (Page 19 ~ 20)  -->
+	<!-- ========================================== -->
+	<div class="book-container">
+
+		<!-- 왼쪽 면 [19쪽]: 헷갈리는 글자 집중 분석 (1) -->
+		<div class="book-page left-page">
+			<div class="header">
+				<h1>눈이 번쩍! 헷갈리는 히라가나 모양 비교 </h1>
+				<div class="page-num">19</div>
+			</div>
+
+			<div class="tip-container">
+				<div class="reading-intro">
+					<strong>💡 잠깐! 글자 모양이 너무 비슷해서 헷갈리시나요?</strong><br>
+					결정적인 '한 끗 차이'를 기억하면 절대 까먹지 않습니다. 눈으로 먼저 비교하고 손으로 익혀보세요!
+				</div>
+
+				<div class="comparison-section">
+					<!-- 쌍 1: る vs ろ -->
+					<div class="comparison-card">
+						<div class="card-title">📌 [루]와 [로] — 꼬리가 있나요, 없나요?</div>
+						<div class="card-body">
+							<div class="char-display">
+								<div class="char-box"><span class="highlight-char">る</span> [ru] 루</div>
+								<div class="vs-text">VS</div>
+								<div class="char-box"><span class="highlight-char">ろ</span> [ro] 로</div>
+							</div>
+							<div class="explanation-box">
+								• <b>る (루)</b>: 숫자 '3'을 쓰다가 마지막에 <b>꼬리를 동그랗게 말아 마무리</b>합니다.<br>
+								• <b>ろ (로)</b>: 모양은 같지만 마지막에 <b>말지 않고 부드럽게 삐쳐서</b> 끝냅니다.
+							</div>
+						</div>
+					</div>
+
+					<!-- 쌍 2: わ vs れ vs ね -->
+					<div class="comparison-card">
+						<div class="card-title">📌 [와] · [레] · [네] — 오른쪽 끝 모양을 주목하세요!</div>
+						<div class="card-body">
+							<div class="char-display-triple">
+								<div class="char-box"><span class="highlight-char">わ</span> [wa] 와</div>
+								<div class="char-box"><span class="highlight-char">れ</span> [re] 레</div>
+								<div class="char-box"><span class="highlight-char">ね</span> [ne] 네</div>
+							</div>
+							<div class="explanation-box">
+								• <b>わ (와)</b>: 오른쪽 부분이 배부른 모양으로 <b>안쪽으로 둥글게</b> 말립니다.<br>
+								• <b>れ (레)</b>: 오른쪽 끝이 <b>바깥쪽을 향해 시원하게 뻗어</b> 나갑니다.<br>
+								• <b>ね (네)</b>: 오른쪽 끝부분에 <b>작은 돼지꼬리(동그라미)</b>가 달려있습니다.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="footer">
+				© 세상모든언어 '세모' 히라가나
+			</div>
+		</div>
+
+		<!-- 오른쪽 면 [20쪽]: 헷갈리는 글자 집중 분석 (2) -->
+		<div class="book-page">
+			<div class="header">
+				<h1>눈이 번쩍! 헷갈리는 히라가나 모양 비교 </h1>
+				<div class="page-num">20</div>
+			</div>
+
+			<div class="tip-container">
+				<div class="comparison-section">
+					<!-- 쌍 3: あ vs お -->
+					<div class="comparison-card">
+						<div class="card-title">📌 [아]와 [오] — 점이 어디에 붙어있나요?</div>
+						<div class="card-body">
+							<div class="char-display">
+								<div class="char-box"><span class="highlight-char">あ</span> [a] 아</div>
+								<div class="vs-text">VS</div>
+								<div class="char-box"><span class="highlight-char">お</span> [o] 오</div>
+							</div>
+							<div class="explanation-box">
+								• <b>あ (아)</b>: 세로선이 <b>중앙을 관통</b>하며, 오른쪽에 따로 찍는 점이 없습니다.<br>
+								• <b>お (오)</b>: 오른쪽 윗부분에 <b>'작은 점'이 반드시 독립적으로</b> 찍혀 있습니다.
+							</div>
+						</div>
+					</div>
+
+					<!-- 쌍 4: い vs り -->
+					<div class="comparison-card">
+						<div class="card-title">📌 [이]와 [리] — 어느 쪽 선이 더 긴가요?</div>
+						<div class="card-body">
+							<div class="char-display">
+								<div class="char-box"><span class="highlight-char">い</span> [i] 이</div>
+								<div class="vs-text">VS</div>
+								<div class="char-box"><span class="highlight-char">り</span> [ri] 리</div>
+							</div>
+							<div class="explanation-box">
+								• <b>い (이)</b>: <b>왼쪽 선이 더 길고</b> 끝에 갈고리가 있으며, 오른쪽 선이 짧습니다.<br>
+								• <b>り (리)</b>: 반대로 <b>오른쪽 선이 아래로 길게</b> 뻗어 내려옵니다.
+							</div>
+						</div>
+					</div>
+
+					<!-- 쌍 5: ぬ vs め -->
+					<div class="comparison-card">
+						<div class="card-title">📌 [누]와 [메] — 마무리에 꼬리가 있나요?</div>
+						<div class="card-body">
+							<div class="char-display">
+								<div class="char-box"><span class="highlight-char">ぬ</span> [nu] 누</div>
+								<div class="vs-text">VS</div>
+								<div class="char-box"><span class="highlight-char">め</span> [me] 메</div>
+							</div>
+							<div class="explanation-box">
+								• <b>ぬ (누)</b>: 마무리에 <b>둥근 돼지꼬리 매듭</b>이 있습니다.<br>
+								• <b>め (메)</b>: 매듭 없이 <b>부드럽게 대각선으로 흘리며</b> 끝납니다. (눈 '目' 모양 연상)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="footer">
+				본 교재의 무단복사를 금지합니다.
+			</div>
+		</div>
+
+	</div>
+
+
+	<!-- ========================================== -->
+	<!--     제 4권 : [탁음/반탁음 원리] 이론 마스터 (새로운 양면 페이지)   -->
+	<!-- ========================================== -->
+	<div class="book-container">
+
+		<!-- 왼쪽 면: 탁음(濁音)의 원리 완벽 이해 -->
+		<div class="book-page left-page">
+			<div class="header">
+				<h1>히라가나 [탁음] 원리 가이드</h1>
+				<div class="page-num">이론-01</div>
+			</div>
+
+			<div class="reading-container">
+				<div class="reading-intro" style="border-left: 5px solid #2b6cb0;">
+					<strong style="color: #2b6cb0; font-size: 1.2rem;">✨ 목청이 울리는 소리, 탁음(濁音)이란?</strong><br>
+					탁음은 기본 히라가나 글자의 오른쪽 위에 *탁점( ゛ )을 붙여서 만듭니다. 맑은소리(청음)를 낼 때보다 <strong>목의 성대를 부르르 떨며(유성음)</strong> 조금 더 무겁고 두터운 소리를 내는 것이 특징입니다.
+				</div>
+
+				<!-- 탁음 변형의 4가지 법칙 -->
+				<h3 style="margin-top: 25px; color: #333; border-bottom: 2px solid #ddd; padding-bottom: 5px;">🎯 탁음이 되는 4개의 '행'</h3>
+				<table class="content-table" style="margin-top: 10px; font-size: 0.95rem;">
+					<thead>
+						<tr class="table-head" style="background-color: #ebf8ff;">
+							<th style="width: 25%;">기본 행 (청음)</th>
+							<th style="width: 10%;">▶</th>
+							<th style="width: 25%;">탁음 행</th>
+							<th style="width: 40%;">발음의 변화 비밀</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align: center; font-weight: bold;">か행 (k)<br><span style="font-size: 0.8rem; color: #666;">か·き·く·け·こ</span></td>
+							<td style="text-align: center; color: #2b6cb0;">゛</td>
+							<td style="text-align: center; font-weight: bold; color: #2b6cb0;">が행 (g)<br><span style="font-size: 0.8rem;">が·ぎ·ぐ·げ·ご</span></td>
+							<td style="text-align: left;">'카' 계열 소리가 목 속에서 울려 <strong>'가, 기, 구, 게, 고'</strong>로 부드러워집니다.</td>
+						</tr>
+						<tr>
+							<td style="text-align: center; font-weight: bold;">さ행 (s)<br><span style="font-size: 0.8rem; color: #666;">さ·し·す·せ·そ</span></td>
+							<td style="text-align: center; color: #2b6cb0;">゛</td>
+							<td style="text-align: center; font-weight: bold; color: #2b6cb0;">ざ행 (z)<br><span style="font-size: 0.8rem;">ざ·じ·ず·ぜ·ぞ</span></td>
+							<td style="text-align: left;">영어의 <strong>[Z]</strong>처럼 앞니를 스치며 기름지게 울리는 <strong>'자, 지, 즈, 제, 조'</strong> 소리가 납니다.</td>
+						</tr>
+						<tr>
+							<td style="text-align: center; font-weight: bold;">た행 (t)<br><span style="font-size: 0.8rem; color: #666;">た·ち·つ·て·と</span></td>
+							<td style="text-align: center; color: #2b6cb0;">゛</td>
+							<td style="text-align: center; font-weight: bold; color: #2b6cb0;">だ행 (d)<br><span style="font-size: 0.8rem;">だ·ぢ·づ·で·ど</span></td>
+							<td style="text-align: left;">혀끝을 잇몸에 튕기며 울리는 <strong>'다, 지, 즈, 데, 도'</strong> 소리가 납니다.</td>
+						</tr>
+						<tr>
+							<td style="text-align: center; font-weight: bold;">は행 (h)<br><span style="font-size: 0.8rem; color: #666;">は·ひ·ふ·へ·ほ</span></td>
+							<td style="text-align: center; color: #2b6cb0;">゛</td>
+							<td style="text-align: center; font-weight: bold; color: #2b6cb0;">ば행 (b)<br><span style="font-size: 0.8rem;">ば·び·ぶ·べ·ぼ</span></td>
+							<td style="text-align: left;">두 입술을 가볍게 부딪치며 울리는 <strong>'바, 비, 부, 베, 보'</strong> 소리가 납니다.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<blockquote style="margin-top: 20px; background: #f7fafc; padding: 15px; border-left: 4px solid #4a5568; border-radius: 4px; font-size: 0.9rem; line-height: 1.5;">
+					<strong>💡 여기서 잠깐! 모양과 발음이 같은 쌍둥이 글자</strong><br>
+					• じ(za행)와 ぢ(da행) ➔ 둘 다 한국어로는 <strong>[지]</strong>로 발음돼요.<br>
+					• ず(za행)와 づ(da행) ➔ 둘 다 한국어로는 <strong>[즈]</strong>로 발음돼요.<br>
+					<span style="color: #c53030; font-weight: bold;">* 현대 일본어에서는 대부분 じ, ず를 주로 사용한답니다!</span>
+				</blockquote>
+			</div>
+
+			<div class="footer">
+				© 세상모든언어 '세모' 히라가나
+			</div>
+		</div>
+
+		<!-- 오른쪽 면: 반탁음(半濁音)의 원리 완벽 이해 -->
+		<div class="book-page">
+			<div class="header">
+				<h1>히라가나 [반탁음] 원리 가이드</h1>
+				<div class="page-num">이론-02</div>
+			</div>
+
+			<div class="reading-container">
+				<div class="reading-intro" style="border-left: 5px solid #b7791f;">
+					<strong style="color: #b7791f; font-size: 1.2rem;">🎈 입술을 경쾌하게 튕기는 소리, 반탁음(半濁音)이란?</strong><br>
+					반탁음은 오직 은은한 한 가지 행(は행)에만 존재합니다! 글자 오른쪽 위에 작은 동그라미인 <strong>반탁점( ゜ )</strong>을 붙여서 만들며, 입술을 팝콘 터지듯 경쾌하게 튕겨내며 내는 거센소리입니다.
+				</div>
+
+				<!-- 반탁음 변형의 법칙 -->
+				<h3 style="margin-top: 25px; color: #333; border-bottom: 2px solid #ddd; padding-bottom: 5px;">🎯 반탁음이 되는 오직 하나의 '행'</h3>
+				<table class="content-table" style="margin-top: 10px; font-size: 0.95rem;">
+					<thead>
+						<tr class="table-head" style="background-color: #fffaf0;">
+							<th style="width: 25%;">기본 행 (청음)</th>
+							<th style="width: 10%;">▶</th>
+							<th style="width: 25%;">반탁음 행</th>
+							<th style="width: 40%;">발음의 변화 비밀</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align: center; font-weight: bold;">は행 (h)<br><span style="font-size: 0.8rem; color: #666;">は·ひ·ふ·へ·ほ</span></td>
+							<td style="text-align: center; color: #b7791f;">゜</td>
+							<td style="text-align: center; font-weight: bold; color: #b7791f;">ぱ행 (p)<br><span style="font-size: 0.8rem;">ぱ·ぴ·ぷ·ぺ·ぽ</span></td>
+							<td style="text-align: left;">바람이 훅 빠지던 소리에서, 입술을 탄력 있게 튕기는 영어 <strong>[P]</strong> 계열의 <strong>'파/빠'</strong> 소리로 변합니다.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- 핵심 비교 요약 구조 -->
+				<h3 style="margin-top: 35px; color: #333;">🔍 눈으로 직접 확인하는 점( ゛ )과 동그라미( ゜ )의 차이</h3>
+				<div style="display: flex; gap: 15px; margin-top: 10px;">
+					<div style="flex: 1; padding: 15px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; text-align: center;">
+						<div style="font-size: 2.2rem; font-weight: bold; color: #2b6cb0; font-family: 'Yu Gothic', 'MS Gothic', sans-serif;">ば</div>
+						<div style="font-size: 1rem; font-weight: bold; margin-top: 5px; color:#1a202c;">탁점 (땡땡)</div>
+						<div style="font-size: 0.85rem; color: #4a5568; margin-top: 5px;">성대를 울리는 부드러운 소리<br><strong style="color:#2b6cb0;">[ba] 바</strong></div>
+					</div>
+					<div style="flex: 1; padding: 15px; background: #fffaf0; border: 1px solid #feebc8; border-radius: 6px; text-align: center;">
+						<div style="font-size: 2.2rem; font-weight: bold; color: #b7791f; font-family: 'Yu Gothic', 'MS Gothic', sans-serif;">ぱ</div>
+						<div style="font-size: 1rem; font-weight: bold; margin-top: 5px; color:#1a202c;">반탁점 (동그라미)</div>
+						<div style="font-size: 0.85rem; color: #4a5568; margin-top: 5px;">입술을 터뜨리는 거센 소리<br><strong style="color:#b7791f;">[pa] 파/빠</strong></div>
+					</div>
+				</div>
+
+				<div style="margin-top: 35px; padding: 12px; background-color: #edf2f7; border-radius: 6px; font-size: 0.95rem; text-align: center; font-weight: bold; color: #4a5568;">
+					👉 자, 원리를 완벽히 이해했다면 다음 페이지로 넘어가 직접 쓰고 읽으며 익혀봅시다!
+				</div>
+			</div>
+
+			<div class="footer">
+				본 교재의 무단복사를 금지합니다.
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

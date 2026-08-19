@@ -1,0 +1,1069 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語初級文法: -네요</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', sans-serif;
+			background-color: #f0f2f5;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		.container {
+			width: 900px;
+			height: 600px;
+			background: #ffffff;
+			border-radius: 12px;
+			box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			overflow: hidden;
+		}
+
+		/* Drawing Toolbar */
+		.drawing-toolbar {
+			height: 45px;
+			background: #1e3a8a;
+			display: flex;
+			align-items: center;
+			padding: 0 15px;
+			gap: 8px;
+			z-index: 100;
+			color: white;
+			font-size: 13px;
+		}
+
+		.tool-btn {
+			background: #2563eb;
+			color: white;
+			border: 1px solid #3b82f6;
+			padding: 5px 9px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 12px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+			.tool-btn.active {
+				background: #059669;
+				border-color: #10b981;
+			}
+
+			.tool-btn:hover {
+				background: #1d4ed8;
+			}
+
+			.tool-btn.active:hover {
+				background: #047857;
+			}
+
+		.drawing-toolbar input[type="color"] {
+			border: none;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			cursor: pointer;
+			background: none;
+		}
+
+		/* Slide View Area */
+		.viewport {
+			position: relative;
+			width: 900px;
+			height: 455px;
+			overflow: hidden;
+		}
+
+		.slide-container {
+			display: flex;
+			width: 7200px; /* 8 slides * 900px */
+			height: 455px;
+			transition: transform 0.4s ease-in-out;
+		}
+
+		.slide {
+			width: 900px;
+			height: 455px;
+			padding: 30px 50px;
+			overflow-y: auto;
+			flex-shrink: 0;
+		}
+
+		/* Drawing Canvas Layer */
+		#drawingCanvas {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 900px;
+			height: 455px;
+			z-index: 10;
+			pointer-events: auto;
+		}
+
+		h2 {
+			font-size: 22px;
+			color: #1e3a8a;
+			margin-bottom: 15px;
+			border-bottom: 3px solid #2563eb;
+			padding-bottom: 6px;
+		}
+
+		p, li {
+			font-size: 15px;
+			color: #334155;
+			line-height: 1.6;
+			margin-bottom: 10px;
+		}
+
+		.highlight {
+			background-color: #eff6ff;
+			padding: 12px 15px;
+			border-left: 5px solid #2563eb;
+			margin: 12px 0;
+			border-radius: 4px;
+		}
+
+		.example-box {
+			display: flex;
+			flex-direction: column;
+			background: #f8fafc;
+			padding: 12px;
+			border-radius: 8px;
+			margin-bottom: 10px;
+			border: 1px solid #e2e8f0;
+		}
+
+		.kr {
+			font-weight: bold;
+			color: #1e293b;
+			font-size: 17px;
+		}
+
+		.jp {
+			color: #64748b;
+			font-size: 14px;
+			margin-top: 2px;
+		}
+
+		.grammar-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 10px;
+		}
+
+			.grammar-table th, .grammar-table td {
+				border: 1px solid #cbd5e1;
+				padding: 8px 10px;
+				text-align: center;
+				font-size: 14px;
+			}
+
+			.grammar-table th {
+				background-color: #2563eb;
+				color: white;
+			}
+
+		/* 3 Step Visual Container */
+		.step-container {
+			display: flex;
+			justify-content: space-between;
+			gap: 15px;
+			margin: 15px 0;
+		}
+
+		.step-card {
+			flex: 1;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 15px;
+			text-align: center;
+		}
+
+			.step-card .emoji {
+				font-size: 32px;
+				margin-bottom: 5px;
+			}
+
+			.step-card .title {
+				font-weight: bold;
+				color: #1e3a8a;
+				font-size: 14px;
+			}
+
+		/* Navigation Controls */
+		.nav-footer {
+			height: 100px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 40px;
+			background: #fafafa;
+			border-top: 1px solid #eee;
+			z-index: 20;
+		}
+
+		button.nav-btn {
+			padding: 10px 20px;
+			background: #2563eb;
+			color: white;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: background 0.2s;
+		}
+
+			button.nav-btn:hover {
+				background: #1d4ed8;
+			}
+
+			button.nav-btn:disabled {
+				background: #cbd5e1;
+				cursor: not-allowed;
+			}
+
+		.page-indicator {
+			font-size: 15px;
+			color: #64748b;
+			font-weight: bold;
+		}
+
+		/* Modal Styles */
+		.modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.6);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+			display: none;
+		}
+
+		.modal {
+			background: white;
+			padding: 25px;
+			border-radius: 12px;
+			width: 750px;
+			max-height: 85vh;
+			overflow-y: auto;
+			box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+			position: relative;
+		}
+
+			.modal h3 {
+				margin-bottom: 15px;
+				color: #1e3a8a;
+				text-align: center;
+			}
+
+		.modal-menu-btn {
+			display: block;
+			width: 100%;
+			padding: 18px;
+			margin: 12px 0;
+			background: #f8fafc;
+			border: 2px solid #e2e8f0;
+			border-radius: 8px;
+			font-size: 16px;
+			font-weight: bold;
+			color: #1e293b;
+			cursor: pointer;
+			text-align: left;
+			transition: all 0.2s;
+		}
+
+			.modal-menu-btn:hover {
+				background: #eff6ff;
+				border-color: #2563eb;
+				color: #1d4ed8;
+			}
+
+		.close-btn {
+			display: block;
+			margin: 15px auto 0 auto;
+			background: #ef4444;
+			color: white;
+			padding: 8px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		/* Practice Card Component */
+		.problem-nav {
+			display: flex;
+			gap: 6px;
+			flex-wrap: wrap;
+			margin-bottom: 15px;
+			justify-content: center;
+		}
+
+		.prob-btn {
+			padding: 6px 12px;
+			background: #f1f5f9;
+			border: 1px solid #cbd5e1;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+
+			.prob-btn.active {
+				background: #2563eb;
+				color: white;
+				border-color: #2563eb;
+			}
+
+		.practice-card {
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			padding: 20px;
+			border-radius: 8px;
+			min-height: 220px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.answer-box {
+			background: #eff6ff;
+			padding: 12px;
+			border-radius: 5px;
+			border: 1px solid #bfdbfe;
+			display: none;
+			margin-top: 10px;
+		}
+
+		.show-ans-btn {
+			padding: 8px 16px;
+			background: #2563eb;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.prob-control-btn {
+			padding: 8px 14px;
+			background: #334155;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+
+			.prob-control-btn:disabled {
+				background: #cbd5e1;
+				cursor: not-allowed;
+			}
+
+		/* Conj Tab */
+		.conj-btn {
+			background: transparent;
+			border: none;
+			color: #2563eb;
+			font-weight: bold;
+			cursor: pointer;
+			font-size: 14px;
+			padding: 4px 8px;
+			border-radius: 4px;
+		}
+
+			.conj-btn:hover {
+				background: #eff6ff;
+			}
+	</style>
+</head>
+<body>
+
+	<div class="container">
+		<!-- Toolbar -->
+		<div class="drawing-toolbar">
+			<button class="tool-btn active" id="penToolBtn" onclick="setTool('pen')">✏️ ペン</button>
+			<button class="tool-btn" id="eraserToolBtn" onclick="setTool('eraser')">🧽 消しゴム</button>
+			<button class="tool-btn" id="textToolBtn" onclick="setTool('text')">📝 テキスト</button>
+
+			<span style="border-left: 1px solid #3b82f6; height: 20px; margin: 0 2px;"></span>
+
+			<button class="tool-btn" onclick="undoDraw()" title="Ctrl + Z">↩️ 戻す</button>
+			<button class="tool-btn" onclick="redoDraw()" title="Ctrl + Y">↪️ やり直し</button>
+
+			<span style="border-left: 1px solid #3b82f6; height: 20px; margin: 0 2px;"></span>
+
+			<label style="font-size: 12px;">色:</label>
+			<input type="color" id="drawColor" value="#ef4444">
+
+			<label style="font-size: 12px; margin-left: 3px;">太さ:</label>
+			<select id="drawLineWidth" style="background: #1e293b; color: white; border: 1px solid #3b82f6; padding: 2px 5px; border-radius: 4px;">
+				<option value="2">細い</option>
+				<option value="5" selected>普通</option>
+				<option value="10">太い</option>
+			</select>
+
+			<button class="tool-btn" style="margin-left: auto; background: #ef4444; border-color: #dc2626;" onclick="clearCanvas()">🗑️ 全消去</button>
+		</div>
+
+		<!-- Viewport & Canvas Layer -->
+		<div class="viewport">
+			<canvas id="drawingCanvas" width="900" height="455"></canvas>
+
+			<div class="slide-container" id="slideContainer">
+
+				<!-- Slide 01: 導入 -->
+				<div class="slide">
+					<h2>01. 導入 (Introduction)</h2>
+					<p>今日は感嘆や新発見を伝える文法 <strong>-네요</strong> を学びましょう！</p>
+
+					<div class="step-container">
+						<div class="step-card">
+							<div class="emoji">👀</div>
+							<div class="title">1. 見て / 体験して</div>
+						</div>
+						<div class="step-card">
+							<div class="emoji">😮</div>
+							<div class="title">2. 「へぇ！」と感じて</div>
+						</div>
+						<div class="step-card">
+							<div class="emoji">💬</div>
+							<div class="title">3. 口に出す (-네요)</div>
+						</div>
+					</div>
+
+					<div class="highlight">
+						<p style="font-size:15px; text-align:center; color:#1e3a8a; font-weight:bold;">
+							「〜ですね」「〜なんですね」「〜だなあ」<br>
+							直接体験して「あ、そうなんだ！」と新しく知った時に使います。
+						</p>
+					</div>
+					<p style="margin-top: 15px; color: #d97706; font-weight: bold;">
+						➡️ 上のツールバーで自由にお絵描きできます！ (Ctrl+Z: 戻す / Ctrl+Y: やり直し)<br>
+						➡️ <span style="background:#eee; padding:2px 6px; border-radius:4px; border:1px solid #ccc; color:#333;">Ctrl + M</span> を押すといつでも練習メニューが開きます。
+					</p>
+				</div>
+
+				<!-- Slide 02: 意味と違い -->
+				<div class="slide">
+					<h2>02. 意味とニュアンス (Meaning)</h2>
+					<p>「-아요/어요」と「-네요」はどう違うでしょうか？</p>
+
+					<div style="display:flex; gap:15px; margin: 15px 0;">
+						<div style="flex:1; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #cbd5e1;">
+							<p style="font-weight:bold; color:#475569; font-size:16px;">⚪ -아요/어요</p>
+							<p style="font-size:13px; margin-top:5px; color:#333;">＝ <strong>事実や習慣の説明</strong><br>(一般的な事実を伝える)</p>
+							<p class="kr" style="margin-top:10px; font-size:15px;">날씨가 추워요.</p>
+							<p class="jp" style="font-size:13px;">(今日は寒いです。)</p>
+						</div>
+						<div style="flex:1; background:#eff6ff; padding:15px; border-radius:8px; border:1px solid #bfdbfe;">
+							<p style="font-weight:bold; color:#2563eb; font-size:16px;">🔵 -네요</p>
+							<p style="font-size:13px; margin-top:5px; color:#333;">＝ <strong>直接体感した新発見・感嘆</strong><br>(「あ、〜だ！」という実感)</p>
+							<p class="kr" style="margin-top:10px; font-size:15px;">날씨가 춥네요!</p>
+							<p class="jp" style="font-size:13px;">(あ、今日は寒いですね！)</p>
+						</div>
+					</div>
+					<p>☕ コーヒーを一口飲んで「あ、おいしい！」と思った時は <strong>맛있네요!</strong> と言います。</p>
+				</div>
+
+				<!-- Slide 03: 形の作り方 -->
+				<div class="slide">
+					<h2>03. 形の作り方 (Conjugation)</h2>
+					<p>パッチムの有無に関係なく、語幹にそのまま付けます！</p>
+
+					<table class="grammar-table">
+						<tr>
+							<th>품사 (品詞)</th>
+							<th>接続方法</th>
+							<th>例 (基本形 ➔ -네요)</th>
+						</tr>
+						<tr>
+							<td><strong>形容詞 (형용사)</strong></td>
+							<td>語幹 + <strong>-네요</strong></td>
+							<td>크다 ➔ 크<strong>네요</strong><br>춥다 ➔ 춥<strong>네요</strong></td>
+						</tr>
+						<tr>
+							<td><strong>動詞 (동사)</strong></td>
+							<td>語幹 + <strong>-네요</strong></td>
+							<td>먹다 ➔ 먹<strong>네요</strong><br>자다 ➔ 자<strong>네요</strong></td>
+						</tr>
+						<tr>
+							<td><strong>名詞 (명사)</strong></td>
+							<td>パッチムあり: <strong>+ 이네요</strong><br>パッチムなし: <strong>+ 네요</strong></td>
+							<td>학생 ➔ 학생<strong>이네요</strong><br>의사 ➔ 의사<strong>네요</strong></td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- Slide 04: 変形練習 -->
+				<div class="slide">
+					<h2>04. 変形練習 (Drill)</h2>
+					<p>単語の品詞とパッチムに気を付けて変形してみましょう。</p>
+
+					<table class="grammar-table">
+						<tr>
+							<th>区分</th>
+							<th>基本形</th>
+							<th>-네요 形</th>
+							<th>日本語訳</th>
+						</tr>
+						<tr>
+							<td>形容詞</td>
+							<td>예쁘다</td>
+							<td><strong>예쁘네요</strong></td>
+							<td>きれいですね</td>
+						</tr>
+						<tr>
+							<td>形容詞</td>
+							<td>좋다</td>
+							<td><strong>좋네요</strong></td>
+							<td>良いですね</td>
+						</tr>
+						<tr>
+							<td>動詞</td>
+							<td>웃다</td>
+							<td><strong>웃네요</strong></td>
+							<td>笑っていますね</td>
+						</tr>
+						<tr>
+							<td>名詞</td>
+							<td>한국 사람</td>
+							<td><strong>한국 사람이네요</strong></td>
+							<td>韓国人なんですね</td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- Slide 05: 例文 -->
+				<div class="slide">
+					<h2>05. 例文 (Examples)</h2>
+					<p>会話の場面をイメージして声に出してみましょう！</p>
+
+					<div class="example-box">
+						<p class="kr">가: 주말에 같이 영화 볼래요?</p>
+						<p class="jp">(週末に一緒に映画を見ませんか？)</p>
+					</div>
+
+					<div class="example-box">
+						<p class="kr">나: 이 카페는 사람이 정말 많네요!</p>
+						<p class="jp">(このカフェは人が本当に多いですね！ ➔ お店に入って驚いた時)</p>
+					</div>
+
+					<div class="example-box">
+						<p class="kr">가: 이 분이 선생님이에요. / 나: 키가 정말 크시네요!</p>
+						<p class="jp">(この方が先生です。 / 背が本当に高いですね！)</p>
+					</div>
+				</div>
+
+				<!-- Slide 06: 感情と過去形 -->
+				<div class="slide">
+					<h2>06. 感情の広がりと過去形 (Usage & Past)</h2>
+					<p>褒める時だけでなく、驚き・残念さ・過去の気づきにも使えます。</p>
+
+					<div style="display:flex; gap:15px; margin-bottom:10px;">
+						<div style="flex:1; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
+							<p style="font-weight:bold; color:#1e3a8a; font-size:14px;">😮 予想外・残念さ</p>
+							<p class="kr" style="font-size:14px;">생각보다 비싸네요.</p>
+							<p class="jp" style="font-size:12px;">(思ったより高いですね…)</p>
+						</div>
+						<div style="flex:1; background:#eff6ff; padding:10px; border-radius:6px; border:1px solid #bfdbfe;">
+							<p style="font-weight:bold; color:#2563eb; font-size:14px;">🕰️ 過去形 (-았/었네요)</p>
+							<p class="kr" style="font-size:14px;">벌써 밥을 먹었네요!</p>
+							<p class="jp" style="font-size:12px;">(もうご飯を食べたんですね！)</p>
+						</div>
+					</div>
+
+					<div class="example-box">
+						<p class="kr">어렸을 때 정말 예뻤네요.</p>
+						<p class="jp">(子供の頃、 really きれいだったんですね。)</p>
+					</div>
+				</div>
+
+				<!-- Slide 07: おすすめフレーズ -->
+				<div class="slide">
+					<h2>07. おすすめフレーズ 10選</h2>
+					<p>日常会話でよく使う表現です。</p>
+
+					<div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:13px;">
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">1. 오늘 춥네요.</p><p class="jp">今日、寒いですね。</p></div>
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">2. 날씨가 좋네요.</p><p class="jp">天気がいいですね。</p></div>
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">3. 이 음식이 맛있네요.</p><p class="jp">この料理、おいしいですね。</p></div>
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">4. 집이 크네요.</p><p class="jp">家が大きいですね。</p></div>
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">5. 사람이 많네요.</p><p class="jp">人が多いですね。</p></div>
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">6. 한국어가 어렵네요.</p><p class="jp">韓国語、難しいですね。</p></div>
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">7. 친구가 웃네요.</p><p class="jp">友達が笑っていますね。</p></div>
+						<div class="example-box" style="padding:8px;"><p class="kr" style="font-size:14px;">8. 학생이네요.</p><p class="jp">学生なんですね。</p></div>
+					</div>
+				</div>
+
+				<!-- Slide 08: まとめ -->
+				<div class="slide">
+					<h2>08. まとめ (Summary)</h2>
+
+					<div class="highlight">
+						<p><strong>1. 意味:</strong> 見たり体感したりして「あ、〜だ！」と新しく気づいた感嘆の表現。</p>
+						<p style="margin-top:6px; font-weight:bold; color:#2563eb;">
+							👀 見て ➔ 😮 感じて ➔ 💬 -네요!
+						</p>
+						<p style="margin-top:10px;"><strong>2. 作り方:</strong></p>
+						<p style="padding-left:15px;">• 形容詞 / 動詞 ➔ 語幹 + <strong>-네요</strong> (예쁘네요 / 먹네요)</p>
+						<p style="padding-left:15px;">• 名詞 ➔ <strong>-이네요 / -네요</strong> (학생이네요 / 의사네요)</p>
+					</div>
+
+					<p style="text-align:center; color:#2563eb; font-weight:bold; margin-top:20px; font-size:17px;">
+						🎉 説明は完了です！<br>
+						<span style="background:#eee; padding:4px 10px; border-radius:4px; border:1px solid #ccc; color:#333;">Ctrl + M</span> を押して練習問題に挑戦しましょう！
+					</p>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Navigation -->
+		<div class="nav-footer">
+			<button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀ 前へ</button>
+			<span class="page-indicator" id="pageIndicator">1 / 8</span>
+			<button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">次へ ▶</button>
+		</div>
+	</div>
+
+	<!-- Main Modal (Ctrl + M) -->
+	<div class="modal-overlay" id="mainMenuModal">
+		<div class="modal" style="width:480px;">
+			<h3>🎯 練習メニュー</h3>
+			<button class="modal-menu-btn" onclick="openSubModal('conjugationModal')">
+				1. 基本変形練習表
+				<div style="font-size:13px; font-weight:normal; color:#666; margin-top:4px;">動詞・形容詞・名詞の -네요 변형 테스트</div>
+			</button>
+			<button class="modal-menu-btn" onclick="openSubModal('fillModal')">
+				2. 簡単な韓日・変형 練習 (5問)
+				<div style="font-size:13px; font-weight:normal; color:#666; margin-top:4px;">문장 속 빈칸 채우기 연습</div>
+			</button>
+			<button class="modal-menu-btn" onclick="openSubModal('translationModal')">
+				3. 日本語を韓国語に変えてみる (5問)
+				<div style="font-size:13px; font-weight:normal; color:#666; margin-top:4px;">日本語から -네요 문장 완성하기</div>
+			</button>
+			<button class="close-btn" onclick="closeAllModals()">閉じる (Esc)</button>
+		</div>
+	</div>
+
+	<!-- Sub Modal 1: 변형 연습표 -->
+	<div class="modal-overlay" id="conjugationModal">
+		<div class="modal">
+			<h3>📊 1. 基本変形練習表</h3>
+
+			<table class="grammar-table">
+				<tr>
+					<th>基本形 / 단어</th>
+					<th>품사 (品詞)</th>
+					<th>-네요 形</th>
+					<th>確認</th>
+				</tr>
+				<tr><td>예쁘다 (きれいだ)</td><td>形容詞</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">예쁘네요</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>작다 (小さい)</td><td>形容詞</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">작네요</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>가다 (行く)</td><td>動詞</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">가네요</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>웃다 (笑う)</td><td>動詞</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">웃네요</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>한국 사람 (韓国人)</td><td>名詞 (パッチム有)</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">한국 사람이네요</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+				<tr><td>친구 (友達)</td><td>名詞 (パッチム無)</td><td><span class="conj-ans" style="display:none; color:#2563eb; font-weight:bold;">친구네요</span></td><td><button class="conj-btn" onclick="toggleConj(this)">表示</button></td></tr>
+			</table>
+
+			<button class="close-btn" onclick="backToMainMenu()">◀ メニューに戻る</button>
+		</div>
+	</div>
+
+	<!-- Sub Modal 2: 빈칸 채우기 (5問) -->
+	<div class="modal-overlay" id="fillModal">
+		<div class="modal">
+			<h3>📝 2. 簡単な韓日・変形練習</h3>
+			<div class="problem-nav" id="fillNav"></div>
+
+			<div class="practice-card">
+				<div>
+					<div style="font-size:14px; color:#2563eb; font-weight:bold; margin-bottom:5px;" id="fillNumText">Q1.</div>
+					<div style="font-size:18px; font-weight:bold; color:#1e293b; margin-bottom:8px;" id="fillQuestion"></div>
+					<p style="font-size:13px; color:#64748b;" id="fillHint"></p>
+				</div>
+				<div>
+					<div class="answer-box" id="fillAnswerBox">
+						<p class="kr" id="fillAnsKr" style="color:#2563eb;"></p>
+						<p class="jp" id="fillAnsJp" style="margin-top:4px;"></p>
+					</div>
+
+					<div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+						<button class="show-ans-btn" onclick="toggleAnswerBox('fillAnswerBox')">答えを見る</button>
+						<div style="display:flex; gap:5px;">
+							<button class="prob-control-btn" id="prevFillBtn" onclick="changeFillProb(-1)">◀ 前へ</button>
+							<button class="prob-control-btn" id="nextFillBtn" onclick="changeFillProb(1)">次へ ▶</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<button class="close-btn" onclick="backToMainMenu()">◀ メニューに戻る</button>
+		</div>
+	</div>
+
+	<!-- Sub Modal 3: 번역 연습 (5問) -->
+	<div class="modal-overlay" id="translationModal">
+		<div class="modal">
+			<h3>💬 3. 日本語を韓国語に変えてみる</h3>
+			<div class="problem-nav" id="transNav"></div>
+
+			<div class="practice-card">
+				<div>
+					<div style="font-size:14px; color:#2563eb; font-weight:bold; margin-bottom:5px;" id="transNumText">Q1.</div>
+					<div style="font-size:18px; font-weight:bold; color:#1e293b; margin-bottom:8px;" id="transQuestion"></div>
+					<p style="font-size:13px; color:#64748b;" id="transHint"></p>
+				</div>
+				<div>
+					<div class="answer-box" id="transAnswerBox">
+						<p class="kr" id="transAnsKr" style="color:#2563eb;"></p>
+						<p class="jp" id="transAnsJp" style="margin-top:4px;"></p>
+					</div>
+
+					<div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+						<button class="show-ans-btn" onclick="toggleAnswerBox('transAnswerBox')">答えを見る</button>
+						<div style="display:flex; gap:5px;">
+							<button class="prob-control-btn" id="prevTransBtn" onclick="changeTransProb(-1)">◀ 前へ</button>
+							<button class="prob-control-btn" id="nextTransBtn" onclick="changeTransProb(1)">次へ ▶</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<button class="close-btn" onclick="backToMainMenu()">◀ メニューに戻る</button>
+		</div>
+	</div>
+
+	<script>/* Slide Navigation */
+    let currentSlide = 0;
+    const totalSlides = 8;
+    const slideContainer = document.getElementById('slideContainer');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateSlide() {
+        slideContainer.style.transform = `translateX(-${currentSlide * 900}px)`;
+        pageIndicator.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+        loadSlideCanvas();
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        updateSlide();
+    }
+
+    /* Canvas Drawing Functionality */
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let currentTool = 'pen';
+
+    const undoStacks = Array.from({ length: totalSlides }, () => []);
+    const redoStacks = Array.from({ length: totalSlides }, () => []);
+
+    function saveState() {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        undoStacks[currentSlide].push(imageData);
+        redoStacks[currentSlide] = [];
+    }
+
+    function loadSlideCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const stack = undoStacks[currentSlide];
+        if (stack.length > 0) {
+            ctx.putImageData(stack[stack.length - 1], 0, 0);
+        }
+    }
+
+    function undoDraw() {
+        if (undoStacks[currentSlide].length > 0) {
+            const lastState = undoStacks[currentSlide].pop();
+            redoStacks[currentSlide].push(lastState);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const currentStack = undoStacks[currentSlide];
+            if (currentStack.length > 0) {
+                ctx.putImageData(currentStack[currentStack.length - 1], 0, 0);
+            }
+        }
+    }
+
+    function redoDraw() {
+        if (redoStacks[currentSlide].length > 0) {
+            const nextState = redoStacks[currentSlide].pop();
+            undoStacks[currentSlide].push(nextState);
+            ctx.putImageData(nextState, 0, 0);
+        }
+    }
+
+    function setTool(tool) {
+        currentTool = tool;
+        document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+        if (tool === 'pen') document.getElementById('penToolBtn').classList.add('active');
+        if (tool === 'eraser') document.getElementById('eraserToolBtn').classList.add('active');
+        if (tool === 'text') document.getElementById('textToolBtn').classList.add('active');
+    }
+
+    function clearCanvas() {
+        saveState();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        undoStacks[currentSlide].push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    }
+
+    /* Zoom Style Inline Text Input */
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (currentTool === 'text') {
+            const existingInput = document.getElementById('active-canvas-input');
+            if (existingInput) existingInput.blur();
+
+            const color = document.getElementById('drawColor').value;
+            const fontSize = 20;
+
+            const input = document.createElement('input');
+            input.id = 'active-canvas-input';
+            input.type = 'text';
+            input.style.position = 'absolute';
+            input.style.left = (rect.left + x) + 'px';
+            input.style.top = (rect.top + y - fontSize / 2) + 'px';
+            input.style.fontSize = fontSize + 'px';
+            input.style.fontFamily = '"Helvetica Neue", Arial, sans-serif';
+            input.style.fontWeight = 'bold';
+            input.style.color = color;
+            input.style.background = 'transparent';
+            input.style.border = '1px dashed #2563eb';
+            input.style.outline = 'none';
+            input.style.padding = '2px 4px';
+            input.style.zIndex = '1000';
+
+            document.body.appendChild(input);
+            setTimeout(() => input.focus(), 0);
+
+            function commitText() {
+                const userText = input.value.trim();
+                if (userText) {
+                    saveState();
+                    ctx.font = `bold ${fontSize}px "Helvetica Neue", Arial, sans-serif`;
+                    ctx.fillStyle = color;
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(userText, x, y);
+                }
+                if (input.parentNode) {
+                    input.parentNode.removeChild(input);
+                }
+            }
+
+            input.addEventListener('keydown', (evt) => {
+                if (evt.key === 'Enter') {
+                    commitText();
+                } else if (evt.key === 'Escape') {
+                    if (input.parentNode) input.parentNode.removeChild(input);
+                }
+            });
+
+            input.addEventListener('blur', () => {
+                commitText();
+            });
+
+            return;
+        }
+
+        isDrawing = true;
+        saveState();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const color = document.getElementById('drawColor').value;
+        const lineWidth = document.getElementById('drawLineWidth').value;
+
+        if (currentTool === 'pen') {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        } else if (currentTool === 'eraser') {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineWidth = lineWidth * 3;
+            ctx.lineCap = 'round';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        if (isDrawing) { isDrawing = false; ctx.closePath(); }
+    });
+    canvas.addEventListener('mouseleave', () => {
+        if (isDrawing) { isDrawing = false; ctx.closePath(); }
+    });
+
+    /* Sub Modal 2 Problems (빈칸 채우기) */
+    const fillProblems = [
+        { q: "1. 오늘은 정말 (바쁘다) ➔ 바쁘( ? )!", hint: "※ 忙しいですね！", ansKr: "正解: 바쁘네요", ansJp: "解説: 바쁘다 ➔ 바쁘네요" },
+        { q: "2. 아, 비가 (오다) ➔ 오( ? ).", hint: "※ 雨が降っていますね", ansKr: "正解: 오네요", ansJp: "解説: 오다 ➔ 오네요" },
+        { q: "3. 방이 아주 (조용하다) ➔ 조용하( ? ).", hint: "※ 部屋がとても静かですね", ansKr: "正解: 조용하네요", ansJp: "解説: 조용하다 ➔ 조용하네요" },
+        { q: "4. 이 분은 (가수) ➔ 가수( ? ).", hint: "※ 歌手なんですね (パッチムなし)", ansKr: "正解: 가수네요", ansJp: "解説: 名詞(パッチムなし) ➔ 네요" },
+        { q: "5. 저 분은 (선생님) ➔ 선생님( ? ).", hint: "※ 先生なんですね (パッチムあり)", ansKr: "正解: 선생님이네요", ansJp: "解説: 名詞(パッチムあり) ➔ 이네요" }
+    ];
+
+    /* Sub Modal 3 Problems (번역) */
+    const transProblems = [
+        { q: "1. 「あ、今日寒いですね！」", hint: "※ 오늘 / 춥다", ansKr: "正解: 오늘 춥네요!", ansJp: "解説: 춥다 ➔ 춥네요" },
+        { q: "2. 「この料理、おいしいですね！」", hint: "※ 이 음식 / 맛있다", ansKr: "正解: 이 음식이 맛있네요!", ansJp: "解説: 맛있다 ➔ 맛있네요" },
+        { q: "3. 「ミンス、勉強していますね。」", hint: "※ 민수 / 공부하다", ansKr: "正解: 민수가 공부하네요.", ansJp: "解説: 공부하다 ➔ 공부하네요" },
+        { q: "4. 「あ、日本人なんですね。」", hint: "※ 일본 사람", ansKr: "正解: 일본 사람이네요.", ansJp: "解説: 명사(받침 O) ➔ 이네요" },
+        { q: "5. 「もうご飯を食べたんですね！」", hint: "※ 벌써 / 밥 / 먹었다 (過去形)", ansKr: "正解: 벌써 밥을 먹었네요!", ansJp: "解説: 過去形 먹었다 ➔ 먹었네요" }
+    ];
+
+    let currentFillIdx = 0;
+    let currentTransIdx = 0;
+
+    function initNav(navId, list, loadFunc) {
+        const nav = document.getElementById(navId);
+        nav.innerHTML = '';
+        list.forEach((_, i) => {
+            const btn = document.createElement('button');
+            btn.className = `prob-btn ${i === 0 ? 'active' : ''}`;
+            btn.innerText = `Q${i + 1}`;
+            btn.onclick = () => loadFunc(i);
+            nav.appendChild(btn);
+        });
+        loadFunc(0);
+    }
+
+    function loadFillProblem(idx) {
+        currentFillIdx = idx;
+        const p = fillProblems[idx];
+        document.querySelectorAll('#fillNav .prob-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+        document.getElementById('fillNumText').innerText = `Q${idx + 1}.`;
+        document.getElementById('fillQuestion').innerText = p.q;
+        document.getElementById('fillHint').innerText = p.hint;
+        document.getElementById('fillAnsKr').innerText = p.ansKr;
+        document.getElementById('fillAnsJp').innerText = p.ansJp;
+        document.getElementById('fillAnswerBox').style.display = 'none';
+        document.getElementById('prevFillBtn').disabled = (idx === 0);
+        document.getElementById('nextFillBtn').disabled = (idx === fillProblems.length - 1);
+    }
+
+    function changeFillProb(dir) {
+        const newIdx = currentFillIdx + dir;
+        if (newIdx >= 0 && newIdx < fillProblems.length) loadFillProblem(newIdx);
+    }
+
+    function loadTransProblem(idx) {
+        currentTransIdx = idx;
+        const p = transProblems[idx];
+        document.querySelectorAll('#transNav .prob-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+        document.getElementById('transNumText').innerText = `Q${idx + 1}.`;
+        document.getElementById('transQuestion').innerText = p.q;
+        document.getElementById('transHint').innerText = p.hint;
+        document.getElementById('transAnsKr').innerText = p.ansKr;
+        document.getElementById('transAnsJp').innerText = p.ansJp;
+        document.getElementById('transAnswerBox').style.display = 'none';
+        document.getElementById('prevTransBtn').disabled = (idx === 0);
+        document.getElementById('nextTransBtn').disabled = (idx === transProblems.length - 1);
+    }
+
+    function changeTransProb(dir) {
+        const newIdx = currentTransIdx + dir;
+        if (newIdx >= 0 && newIdx < transProblems.length) loadTransProblem(newIdx);
+    }
+
+    function toggleAnswerBox(id) {
+        const box = document.getElementById(id);
+        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+
+    /* Modal Control */
+    function closeAllModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    }
+
+    function openMainMenu() {
+        closeAllModals();
+        document.getElementById('mainMenuModal').style.display = 'flex';
+    }
+
+    function openSubModal(id) {
+        closeAllModals();
+        document.getElementById(id).style.display = 'flex';
+        if (id === 'fillModal') initNav('fillNav', fillProblems, loadFillProblem);
+        if (id === 'translationModal') initNav('transNav', transProblems, loadTransProblem);
+    }
+
+    function backToMainMenu() { openMainMenu(); }
+
+    function toggleConj(btn) {
+        const span = btn.parentElement.parentElement.querySelector('.conj-ans');
+        if (span.style.display === 'none') {
+            span.style.display = 'inline';
+            btn.innerText = '非表示';
+        } else {
+            span.style.display = 'none';
+            btn.innerText = '表示';
+        }
+    }
+
+    /* Shortcuts */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { closeAllModals(); return; }
+
+        if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undoDraw(); return; }
+        if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redoDraw(); return; }
+
+        const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-overlay')).some(m => m.style.display === 'flex');
+
+        if (!isAnyModalOpen) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        }
+
+        if (e.ctrlKey && e.key.toLowerCase() === 'm') {
+            e.preventDefault();
+            const mainMenu = document.getElementById('mainMenuModal');
+            if (mainMenu.style.display === 'flex') closeAllModals();
+            else openMainMenu();
+        }
+    });
+
+    updateSlide();</script>
+
+</body>
+</html>

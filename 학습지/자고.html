@@ -1,0 +1,952 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>韓国語初級文法 - -자고 하다 (18 Slides)</title>
+	<style>
+		/* ==========================================================================
+			 1. 変数定義 & 基本スタイル初期化
+			 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--dark-blue: #1e3a8a;
+			--light-blue-bg: #eff6ff;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+		}
+
+		/* スケーリングレスポンシブ設定 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+			 2. 見開き(Book) 基本構造 & レイアウト
+			 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 20mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 12mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+		.left-page .footer {
+			left: 20mm;
+		}
+
+		.right-page .footer {
+			right: 20mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 15mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 20mm;
+		}
+
+		.right-page .grammar-no {
+			right: 20mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+			 🏷️ 上部バンドバッジ
+			 ========================================================================== */
+		.lesson-band {
+			display: inline-block;
+			align-self: flex-start;
+			background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			color: #ffffff;
+			font-size: 14px;
+			font-weight: 800;
+			padding: 6px 18px;
+			border-radius: 20px;
+			letter-spacing: 1px;
+			margin-bottom: 12px;
+			box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+		}
+
+		/* ==========================================================================
+			 3. 本文タイトル & 共通要素
+			 ========================================================================== */
+		.main-title {
+			font-size: 24px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-bottom: 12px;
+			border-bottom: 3px solid var(--primary-blue);
+			padding-bottom: 8px;
+		}
+
+		h3.grammar-title {
+			font-size: 30px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 16px;
+			line-height: 1.2;
+		}
+
+		.sub-title {
+			font-size: 15px;
+			color: var(--dark-blue);
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			border-bottom: 1px solid #dbeafe;
+		}
+
+			.sub-title::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		p, li {
+			font-size: 13.5px;
+			line-height: 1.6;
+			color: #334155;
+		}
+
+		ul {
+			padding-left: 18px;
+			margin-top: 4px;
+		}
+
+		li {
+			margin-bottom: 4px;
+		}
+
+		.highlight {
+			color: var(--primary-blue);
+			font-weight: bold;
+		}
+
+		/* 포인트 설명 박스 */
+		.point-box {
+			background-color: var(--light-blue-bg);
+			border-left: 5px solid var(--primary-blue);
+			padding: 12px 16px;
+			border-radius: 4px;
+			margin: 12px 0;
+		}
+
+			.point-box h4 {
+				font-size: 15px;
+				color: #1e293b;
+				margin-bottom: 6px;
+			}
+
+		/* 💬 吹き出し & カード */
+		.speech-bubble-box {
+			position: relative;
+			background: #eff6ff;
+			border: 2px solid #bfdbfe;
+			border-radius: 16px;
+			padding: 14px 18px;
+			margin: 12px 0;
+		}
+
+		.example-card {
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 10px 14px;
+			margin-bottom: 10px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+		}
+
+		.ex-ko {
+			font-size: 15px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.ex-ja {
+			font-size: 12.5px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		/* 表 & ドリル */
+		.drill-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 8px 0;
+			font-size: 12.5px;
+		}
+
+			.drill-table th, .drill-table td {
+				border: 1px solid #cbd5e1;
+				padding: 6px 8px;
+				text-align: center;
+			}
+
+			.drill-table th {
+				background-color: #f1f5f9;
+				color: var(--dark-blue);
+				font-weight: bold;
+			}
+
+		/* 練習問題 */
+		.quiz-item {
+			margin-bottom: 10px;
+			background-color: #fafafa;
+			padding: 10px 14px;
+			border-radius: 8px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 110px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--primary-blue);
+		}
+
+		/* 🔑 正解ボックス & ボタン */
+		.answer-btn {
+			margin-top: 10px;
+			padding: 6px 14px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 2px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 12px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 8px;
+			padding: 10px 12px;
+			border: 2px solid var(--primary-blue);
+			border-radius: 8px;
+			display: none;
+			background-color: #ffffff;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12.5px;
+			color: var(--dark-blue);
+			line-height: 1.5;
+		}
+
+		/* 📱 モバイル & 🖨️ 印刷対応 */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1;
+			}
+
+			.book-container {
+				display: flex;
+				flex-direction: row;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm;
+				height: 257mm;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact;
+				print-color-adjust: exact;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+				 BOOK 1 (Slide 1 & Slide 2)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 1: 오늘의 문법 -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 01</div>
+				<div class="lesson-band">LESSON 03</div>
+				<h2 class="main-title">間接話法 (勧誘)</h2>
+				<h3 class="grammar-title">-자고 하다</h3>
+
+				<div class="point-box">
+					<h4>📢 今日学習すること</h4>
+					<p>「～しよう」と他の人が言った提案・勧誘の言葉を第三者に伝える表現です。</p>
+				</div>
+
+				<div class="speech-bubble-box" style="margin-top: 20px;">
+					<p style="font-size: 14px; color: #64748b; margin-bottom: 6px;">💬 友達がこう言いました：</p>
+					<p style="font-size: 18px; font-weight: bold; color: #1e293b;">"같이 가자!"</p>
+					<p style="font-size: 14px; color: #2563eb; margin-top: 10px; font-weight: bold;">
+						➔ 친구가 같이 가자고 했어요.
+					</p>
+				</div>
+				<p style="font-size: 12.5px; color: #64748b; margin-top: 8px;">(友達が「一緒に行こう」と言いました。)</p>
+
+				<div class="footer">1</div>
+			</div>
+
+			<!-- Slide 2: 상황 제시 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 02</div>
+				<div class="sub-title">状況から考えよう</div>
+
+				<div class="example-card" style="padding: 16px; margin-top: 15px;">
+					<p style="font-size: 13.5px; color: #1e3a8a; font-weight: bold; margin-bottom: 8px;">👩‍🏫 先生と会話してみましょう：</p>
+					<p class="ex-ko">👩‍🏫 先生: "주말에 뭐 할까요?"</p>
+					<p class="ex-ko" style="margin-top: 4px;">👩‍🎓 友達: "영화 보자!"</p>
+				</div>
+
+				<div class="quiz-item" style="margin-top: 20px; background-color: #eff6ff; border-color: #bfdbfe;">
+					<p style="font-size: 14px; font-weight: bold; color: #1e3a8a; margin-bottom: 8px;">❓ 友達は何と言いましたか？</p>
+					<p style="font-size: 13.5px; margin-bottom: 4px;">A. 영화를 봐요.</p>
+					<p style="font-size: 13.5px; font-weight: bold; color: #2563eb; margin-bottom: 4px;">B. 영화를 보자고 했어요.</p>
+					<p style="font-size: 13.5px;">C. 영화를 봤어요.</p>
+				</div>
+
+				<div class="footer">2</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 2 (Slide 3 & Slide 4)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 3: -자 복습 -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 03</div>
+				<div class="lesson-band">LESSON 03</div>
+				<h2 class="main-title">既習文法の復習</h2>
+				<h3 class="grammar-title">-자 (～しよう)</h3>
+
+				<p style="margin-bottom: 10px;">友達に直接「～しよう！」と提案するタメ口の表現です。</p>
+
+				<table class="drill-table">
+					<thead>
+						<tr><th>기본형 (基本形)</th><th>-자 (提案)</th><th>日本語訳</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>가다</td><td><b>가자!</b></td><td>行こう！</td></tr>
+						<tr><td>먹다</td><td><b>먹자!</b></td><td>食べよう！</td></tr>
+						<tr><td>보다</td><td><b>보자!</b></td><td>見よう！</td></tr>
+						<tr><td>공부하다</td><td><b>공부하자!</b></td><td>勉強しよう！</td></tr>
+					</tbody>
+				</table>
+
+				<div class="point-box" style="margin-top: 15px;">
+					<h4>💡 日本語のイメージ</h4>
+					<p><b>"가자!"</b> は日本語で <b>「行こう！」</b> ですね。</p>
+				</div>
+
+				<div class="footer">3</div>
+			</div>
+
+			<!-- Slide 4: -자고 등장 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 04</div>
+				<div class="sub-title">「-자고」の登場</div>
+
+				<p style="margin-bottom: 12px;">直接言った言葉を、他の人に伝える時の変化を見てみましょう。</p>
+
+				<div class="example-card" style="background-color: #ffffff; border: 2px solid #cbd5e1;">
+					<p style="font-size: 12.5px; color: #64748b;">🗣️ 直接言うとき：</p>
+					<p class="ex-ko" style="color: #2563eb; font-size: 17px;">👩 "같이 가자!"</p>
+				</div>
+
+				<div style="text-align: center; font-size: 20px; color: #2563eb; margin: 8px 0;">⬇️ (伝言)</div>
+
+				<div class="example-card" style="background-color: #eff6ff; border-left: 4px solid #2563eb;">
+					<p style="font-size: 12.5px; color: #64748b;">💬 他の人に伝えるとき：</p>
+					<p class="ex-ko" style="font-size: 17px;">👩 친구가 같이 <span class="highlight">가자고 했어요</span>.</p>
+				</div>
+
+				<div class="point-box" style="margin-top: 15px;">
+					<h4>🔍 「고」の役割</h4>
+					<p><b>가자 + 고 ➔ 가자고</b></p>
+					<p>ここでの <b>「고」</b> は日本語の <b>「～と」</b> に該当します。(「行こう」<b>と</b>)</p>
+				</div>
+
+				<div class="footer">4</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 3 (Slide 5 & Slide 6)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 5: 핵심 비교 -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 05</div>
+				<div class="lesson-band">LESSON 03</div>
+				<h2 class="main-title">ニュアンス比較</h2>
+				<h3 class="grammar-title">가자! vs 가자고 했어요</h3>
+
+				<div class="example-card" style="margin-top: 10px;">
+					<p style="font-size: 13px; color: #2563eb; font-weight: bold;">🗣️ 直接提案する (自分が発話)</p>
+					<p class="ex-ko" style="font-size: 18px;">가자!</p>
+					<p class="ex-ja">「行こう！」</p>
+				</div>
+
+				<div style="text-align: center; font-size: 18px; color: #94a3b8; margin: 10px 0;">≠</div>
+
+				<div class="example-card">
+					<p style="font-size: 13px; color: #1e3a8a; font-weight: bold;">💬 発言を伝える (第三者へ伝言)</p>
+					<p class="ex-ko" style="font-size: 18px;">가자고 했어요.</p>
+					<p class="ex-ja">「行こうと言いました。」</p>
+				</div>
+
+				<div class="point-box" style="margin-top: 15px;">
+					<p style="text-align: center; font-weight: bold; color: #1e3a8a;">
+						自分が直接提案 ➔ 他の人の提案を伝達
+					</p>
+				</div>
+
+				<div class="footer">5</div>
+			</div>
+
+			<!-- Slide 6: 문법 공식 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 06</div>
+				<div class="sub-title">文法公式 (Conjugation Formula)</div>
+
+				<div class="speech-bubble-box" style="text-align: center; padding: 16px;">
+					<p style="font-size: 16px; font-weight: bold; color: #1e3a8a;">⭐ 동사 (動詞) + 자고 하다</p>
+				</div>
+
+				<table class="drill-table" style="margin-top: 15px;">
+					<thead>
+						<tr><th>기본형 (動詞)</th><th>-자고 하다 (公式)</th><th>日本語訳</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>가다</td><td><b>가자고 하다</b></td><td>行こうと言う</td></tr>
+						<tr><td>먹다</td><td><b>먹자고 하다</b></td><td>食べようと言う</td></tr>
+						<tr><td>보다</td><td><b>보자고 하다</b></td><td>見ようと言う</td></tr>
+						<tr><td>공부하다</td><td><b>공부하자고 하다</b></td><td>勉強しようと言う</td></tr>
+					</tbody>
+				</table>
+
+				<div class="point-box" style="margin-top: 15px;">
+					<p><b>意味：</b> 「～しよう」と言う / 「～しよう」って言う</p>
+				</div>
+
+				<div class="footer">6</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 4 (Slide 7 & Slide 8)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 7: 변형 연습 ① -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 07</div>
+				<div class="lesson-band">DRILL</div>
+				<h2 class="main-title">活用トレーニング ①</h2>
+				<h3 class="grammar-title">-자 ➔ -자고 했어요</h3>
+
+				<p style="margin-bottom: 10px;">直接の提案から伝言の形に変形してみましょう！</p>
+
+				<div class="quiz-item"><div class="quiz-q">1) 가다 ➔ 가자! ➔ <span class="quiz-line">가자고 했어요</span></div></div>
+				<div class="quiz-item"><div class="quiz-q">2) 먹다 ➔ 먹자! ➔ <span class="quiz-line"></span></div></div>
+				<div class="quiz-item"><div class="quiz-q">3) 보다 ➔ 보자! ➔ <span class="quiz-line"></span></div></div>
+				<div class="quiz-item"><div class="quiz-q">4) 공부하다 ➔ 공부하자! ➔ <span class="quiz-line"></span></div></div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">2) 먹자고 했어요 &nbsp; 3) 보자고 했어요 &nbsp; 4) 공부하자고 했어요</div>
+				</div>
+
+				<div class="footer">7</div>
+			</div>
+
+			<!-- Slide 8: 변형 연습 ② -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 08</div>
+				<div class="sub-title">活用トレーニング ② (基本形 ➔ -자고 하다)</div>
+
+				<p style="margin-bottom: 10px;">基本形から直接 `-자고 하다` に変形してみましょう。</p>
+
+				<table class="drill-table">
+					<thead><tr><th>기본형</th><th>-자고 하다 形</th></tr></thead>
+					<tbody>
+						<tr><td>먹다</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>마시다</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>자다</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>만나다</td><td><span class="quiz-line"></span></td></tr>
+						<tr><td>놀다</td><td><span class="quiz-line"></span></td></tr>
+					</tbody>
+				</table>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">먹자고 하다 / 마시자고 하다 / 자자고 하다 / 만나자고 하다 / 놀자고 하다</div>
+				</div>
+
+				<div class="footer">8</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 5 (Slide 9 & Slide 10)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 9: 문장 변형 -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 09</div>
+				<div class="lesson-band">PRACTICE</div>
+				<h2 class="main-title">文章の変形</h2>
+				<h3 class="grammar-title">一文全体を変えてみよう</h3>
+
+				<div class="quiz-item">
+					<div class="quiz-q">
+						친구: "같이 밥 먹자."<br>
+						➔ 친구가 <span class="quiz-line" style="min-width: 180px;">같이 밥 먹자고 했어요</span>.
+					</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">
+						친구: "카페에 가자."<br>
+						➔ 친구가 <span class="quiz-line" style="min-width: 180px;"></span>.
+					</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">
+						친구: "영화를 보자."<br>
+						➔ 친구가 <span class="quiz-line" style="min-width: 180px;"></span>.
+					</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						카페에 가자고 했어요 / 영화를 보자고 했어요
+					</div>
+				</div>
+
+				<div class="footer">9</div>
+			</div>
+
+			<!-- Slide 10: 했어요 vs 했잖아요 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 10</div>
+				<div class="sub-title">「했어요」 vs 「했잖아요」 のニュアンス</div>
+
+				<div class="example-card" style="margin-top: 10px;">
+					<p style="font-size: 13px; color: #2563eb; font-weight: bold;">① -자고 했어요 (事実の伝達)</p>
+					<p class="ex-ko">친구가 가자고 했어요.</p>
+					<p class="ex-ja">「友達が行こうと言いました。」 (単に事実を報告)</p>
+				</div>
+
+				<div class="example-card" style="margin-top: 12px; border-left-color: #e11d48;">
+					<p style="font-size: 13px; color: #e11d48; font-weight: bold;">② -자고 했잖아요 (確認・思い出させる)</p>
+					<p class="ex-ko">친구가 가자고 했잖아요!</p>
+					<p class="ex-ja">「友達が行こうって言ったじゃないですか！」 (相手が忘れている時)</p>
+				</div>
+
+				<div class="point-box" style="margin-top: 15px;">
+					<p><b>-했잖아요</b> は、お互いに知っている事実を「～じゃないですか！」と再確認させる時に使います。</p>
+				</div>
+
+				<div class="footer">10</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 6 (Slide 11 & Slide 12)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 11: 상황 연습 -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 11</div>
+				<div class="lesson-band">DIALOGUE</div>
+				<h2 class="main-title">シチュエーション会話</h2>
+				<h3 class="grammar-title">約束のやり取り</h3>
+
+				<div class="speech-bubble-box" style="margin-top: 10px;">
+					<p style="font-size: 13px; color: #2563eb; font-weight: bold;">🔹 状況 ①：報告する</p>
+					<p class="ex-ko" style="margin-top: 4px;">👩‍🏫 先生:어제 친구하고 약속했어요. 친구가 "토요일에 만나자!"라고 했어요.</p>
+					<p class="ex-ko" style="color: #2563eb; margin-top: 4px;">👩‍🎓 生徒: 친구가 토요일에 만나자고 했어요.</p>
+				</div>
+
+				<div class="speech-bubble-box" style="margin-top: 10px; border-color: #fca5a5; background-color: #fff1f2;">
+					<p style="font-size: 13px; color: #e11d48; font-weight: bold;">🔹 状況 ②：友達が約束を忘れた時</p>
+					<p class="ex-ko" style="margin-top: 4px;">👩‍🏫 先生: 그런데 친구가 오늘 약속을 잊어버렸어요. 뭐라고 말할까요?</p>
+					<p class="ex-ko" style="color: #e11d48; margin-top: 4px;">👩‍🎓 生徒: 토요일에 만나자고 했잖아요!</p>
+				</div>
+
+				<div class="footer">11</div>
+			</div>
+
+			<!-- Slide 12: 선택 문제 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 12</div>
+				<div class="sub-title">選択問題 (Multiple Choice)</div>
+
+				<p style="margin-bottom: 10px;">友達がこう言いました： <b>"내일 같이 공부하자!"</b><br>正しく伝達している文を選びましょう。</p>
+
+				<div class="quiz-item" style="margin-top: 15px;">
+					<p style="font-size: 14px; margin-bottom: 6px;">① 친구가 같이 공부한다고 했어요.</p>
+					<p style="font-size: 14px; margin-bottom: 6px; font-weight: bold; color: #2563eb;">② 친구가 같이 공부하자고 했어요. (正解)</p>
+					<p style="font-size: 14px;">③ 친구가 같이 공부했어요.</p>
+				</div>
+
+				<div class="point-box" style="margin-top: 20px;">
+					<h4>💡 解説</h4>
+					<p>「～しよう (공부하자)」という勧誘の伝言なので、<b>-자고 했어요</b> が正しい形です。</p>
+				</div>
+
+				<div class="footer">12</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 7 (Slide 13 & Slide 14)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 13: 일본어 -> 한국어 -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 13</div>
+				<div class="lesson-band">TRANSLATION</div>
+				<h2 class="main-title">日韓翻訳練習</h2>
+				<h3 class="grammar-title">日本語 ➔ 韓国語</h3>
+
+				<div class="quiz-item">
+					<p style="font-size: 13px; color: #64748b;">1) 「一緒に行こう」と言いました。</p>
+					<p class="ex-ko">➔ <span class="quiz-line" style="min-width: 180px;">같이 가자고 했어요</span>.</p>
+				</div>
+
+				<div class="quiz-item">
+					<p style="font-size: 13px; color: #64748b;">2) 「ご飯を食べよう」って言いました。</p>
+					<p class="ex-ko">➔ <span class="quiz-line" style="min-width: 180px;"></span>.</p>
+				</div>
+
+				<div class="quiz-item">
+					<p style="font-size: 13px; color: #64748b;">3) 「映画を見よう」と言いました。</p>
+					<p class="ex-ko">➔ <span class="quiz-line" style="min-width: 180px;"></span>.</p>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を確認する</button>
+				<div class="answer-box">
+					<div class="answer-content">2) 밥을 먹자고 했어요 &nbsp; 3) 영화를 보자고 했어요</div>
+				</div>
+
+				<div class="footer">13</div>
+			</div>
+
+			<!-- Slide 14: 말하기 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 14</div>
+				<div class="sub-title">スピーキング練習 (Listening & Speaking)</div>
+
+				<p style="margin-bottom: 12px;">先生の発言を聞いて、すぐに伝言の形（-자고 했어요）で答えてみましょう！</p>
+
+				<div class="example-card">
+					<p class="ex-ko">👩‍🏫 先生: "주말에 같이 카페 가자!"</p>
+					<p class="ex-ko" style="color: #2563eb; margin-top: 4px;">🗣️ 生徒: 카페에 가자고 했어요.</p>
+				</div>
+
+				<div class="example-card">
+					<p class="ex-ko">👩‍🏫 先生: "내일 같이 밥 먹자!"</p>
+					<p class="ex-ko" style="color: #2563eb; margin-top: 4px;">🗣️ 生徒: (<span class="quiz-line">밥 먹자고 했어요</span>)</p>
+				</div>
+
+				<div class="example-card">
+					<p class="ex-ko">👩‍🏫 先生: "한국어 공부하자!"</p>
+					<p class="ex-ko" style="color: #2563eb; margin-top: 4px;">🗣️ 生徒: (<span class="quiz-line">공부하자고 했어요</span>)</p>
+				</div>
+
+				<div class="footer">14</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 8 (Slide 15 & Slide 16)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 15: 학생이 직접 문장 만들기 -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 15</div>
+				<div class="lesson-band">CREATIVE</div>
+				<h2 class="main-title">自由作文</h2>
+				<h3 class="grammar-title">自分で文を作ってみよう</h3>
+
+				<div class="point-box">
+					<h4>STEP 1: 友達への提案を決める</h4>
+					<p class="ex-ko" style="margin-top: 4px;">"같이 <span class="quiz-line">여행 가자</span>!"</p>
+				</div>
+
+				<div style="text-align: center; font-size: 18px; color: #2563eb; margin: 10px 0;">⬇️ (先生からの質問: "友達に何と言いましたか？")</div>
+
+				<div class="point-box" style="background-color: #eff6ff;">
+					<h4>STEP 2: 伝言の形に変換して答える</h4>
+					<p class="ex-ko" style="margin-top: 4px; color: #2563eb;">"친구에게 <span class="quiz-line">여행 가자고 했어요</span>."</p>
+				</div>
+
+				<div class="footer">15</div>
+			</div>
+
+			<!-- Slide 16: 역할극 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 16</div>
+				<div class="sub-title">ロールプレイ (Role Play 🎭)</div>
+
+				<p style="margin-bottom: 10px;">AとBになりきって、提案と伝達の会話をしてみましょう。</p>
+
+				<div class="speech-bubble-box">
+					<p style="font-size: 13px; font-weight: bold; color: #1e3a8a; margin-bottom: 6px;">📋 提案のテーマを選ぶ：</p>
+					<p style="font-size: 13px; color: #334155;">[ 영화 보기 / 밥 먹기 / 카페 가기 / 쇼핑하기 / 공부하기 ]</p>
+				</div>
+
+				<div class="example-card" style="margin-top: 10px;">
+					<p class="ex-ko"><b>A:</b> "우리 <span class="quiz-line" style="min-width: 80px;">영화</span> 하자/보자!"</p>
+					<p class="ex-ko" style="margin-top: 6px;"><b>B:</b> "친구가 뭐라고 했어요?"</p>
+					<p class="ex-ko" style="margin-top: 6px; color: #2563eb;"><b>A:</b> "친구가 <span class="quiz-line" style="min-width: 120px;">영화 보자고 했어요</span>."</p>
+				</div>
+
+				<div class="footer">16</div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+				 BOOK 9 (Slide 17 & Slide 18)
+				 ========================================================================== -->
+		<div class="book-container">
+			<!-- Slide 17: 마지막 응용 (-자고 했잖아요) -->
+			<div class="page left-page">
+				<div class="grammar-no">SLIDE 17</div>
+				<div class="lesson-band">ADVANCED</div>
+				<h2 class="main-title">実践応用</h2>
+				<h3 class="grammar-title">-자고 했잖아요!</h3>
+
+				<div class="example-card">
+					<p style="font-size: 12.5px; color: #e11d48; font-weight: bold;">😮 友達が約束を忘れた時：</p>
+					<p class="ex-ko">친구: "오늘 뭐 하지?"</p>
+					<p class="ex-ko" style="color: #e11d48; margin-top: 2px;">나: "같이 영화 보자고 했잖아요!"</p>
+				</div>
+
+				<div class="example-card">
+					<p style="font-size: 12.5px; color: #e11d48; font-weight: bold;">😮 友達が違うお店に行こうとする時：</p>
+					<p class="ex-ko" style="color: #e11d48;">나: "저 식당에 가자고 했잖아요!"</p>
+				</div>
+
+				<div class="example-card">
+					<p style="font-size: 12.5px; color: #e11d48; font-weight: bold;">😮 友達が一人で勉強しようとする時：</p>
+					<p class="ex-ko" style="color: #e11d48;">나: "같이 공부하자고 했잖아요!"</p>
+				</div>
+
+				<div class="footer">17</div>
+			</div>
+
+			<!-- Slide 18: 오늘 배운 것 정리 -->
+			<div class="page right-page">
+				<div class="grammar-no">SLIDE 18</div>
+				<div class="lesson-band">SUMMARY</div>
+				<h2 class="main-title">まとめ</h2>
+				<h3 class="grammar-title">오늘 배운 것 (Review)</h3>
+
+				<div class="point-box" style="margin-top: 10px;">
+					<p style="font-size: 14px; font-weight: bold; color: #1e3a8a;">① -자 (직접 제안)</p>
+					<p class="ex-ko" style="margin-top: 2px;">"같이 가자!" <span style="font-size: 13px; font-weight: normal; color: #64748b;">(行こう！)</span></p>
+				</div>
+
+				<div class="point-box" style="margin-top: 10px;">
+					<p style="font-size: 14px; font-weight: bold; color: #1e3a8a;">② -자고 하다 (제안 전달)</p>
+					<p class="ex-ko" style="margin-top: 2px;">"가자고 했어요." <span style="font-size: 13px; font-weight: normal; color: #64748b;">(「行こう」と言いました)</span></p>
+				</div>
+
+				<div class="point-box" style="margin-top: 10px;">
+					<p style="font-size: 14px; font-weight: bold; color: #e11d48;">③ -자고 했잖아요 (기억 상기)</p>
+					<p class="ex-ko" style="margin-top: 2px;">"가자고 했잖아요!" <span style="font-size: 13px; font-weight: normal; color: #64748b;">(「行こう」って言ったじゃないですか)</span></p>
+				</div>
+
+				<div class="speech-bubble-box" style="text-align: center; margin-top: 15px;">
+					<p style="font-size: 15px; font-weight: bold; color: #2563eb;">🎉 오늘도 수고하셨습니다!</p>
+				</div>
+
+				<div class="footer">18</div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '正解を隠す';
+    } else {
+      btn.innerText = '正解を確認する';
+    }
+  }
+	</script>
+
+</body>
+</html>

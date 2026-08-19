@@ -1,0 +1,1248 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>여행 3개월 전 일본어 - 7주차 : ~てもいいですか 완벽 마스터</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+			.footer::after {
+				content: "Page " counter(page-num);
+			}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+		 🖼️ UI 컴포넌트
+		 ========================================================================== */
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+		}
+
+		.section-lesson-title {
+			font-size: 20px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 14px;
+			line-height: 1.2;
+		}
+
+		.pin-subtitle {
+			font-size: 15px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		.speech-label-title {
+			font-size: 13px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 13px;
+			}
+
+		p, li {
+			font-size: 13px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+		/* 📊 2열 카드 UI */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			text-align: center;
+			padding: 8px;
+			border-radius: 8px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+		.formula-box {
+			background-color: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			font-size: 14px;
+			font-weight: 800;
+			color: #1e293b;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+		}
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+			.formula-box .blue-target {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+		/* 💡 Point 말풍선 박스 */
+		.point-speech-card {
+			position: relative;
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 14px 16px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+			.point-speech-card::before {
+				content: '';
+				position: absolute;
+				top: -8px;
+				left: 24px;
+				border-width: 0 8px 8px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card::after {
+				content: '';
+				position: absolute;
+				top: -6px;
+				left: 25px;
+				border-width: 0 7px 7px;
+				border-style: solid;
+				border-color: #eff6ff transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12.5px;
+				line-height: 1.6;
+				color: #334155;
+				margin-bottom: 6px;
+			}
+
+				.point-speech-card li:last-child {
+					margin-bottom: 0;
+				}
+
+		/* 🎯 단어장 및 퀴즈 컴포넌트 */
+		.bubble-word-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.word-bubble {
+			background: #f8fafc;
+			border: 1px solid #cbd5e1;
+			color: #0f172a;
+			padding: 6px 10px;
+			border-radius: 6px;
+			font-size: 12.5px;
+			font-weight: 700;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+			.word-bubble .ja-sub {
+				font-size: 11px;
+				color: #64748b;
+				font-weight: normal;
+			}
+
+		.character-card {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			padding: 10px 12px;
+			border-radius: 0 8px 8px 0;
+			margin-bottom: 8px;
+		}
+
+		.char-avatar {
+			font-size: 20px;
+		}
+
+		.char-speech {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.char-trans {
+			font-size: 11.5px;
+			color: #64748b;
+		}
+
+		.quiz-item {
+			margin-bottom: 6px;
+			background-color: #fafafa;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 12px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 70px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+		.answer-btn {
+			margin-top: 6px;
+			padding: 5px 12px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 11.5px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 6px;
+			padding: 8px 10px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			display: none;
+			background-color: #f8fafc;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12px;
+			color: #1e3a8a;
+			line-height: 1.5;
+		}
+
+		.big-concept-box {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			border: 1.5px solid #bfdbfe;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-title {
+			font-size: 18px;
+			font-weight: 900;
+			color: #1e3a8a;
+		}
+
+		/* 🎒 여행 미션 플래너 UI */
+		.planner-card-box {
+			background-color: #f8fafc;
+			border: 2px dashed #bfdbfe;
+			border-radius: 12px;
+			padding: 14px;
+			margin-top: 8px;
+			margin-bottom: 12px;
+		}
+
+		.planner-q-item {
+			margin-bottom: 10px;
+		}
+
+		.planner-q-title {
+			font-size: 13px;
+			font-weight: 800;
+			color: #1e3a8a;
+			margin-bottom: 4px;
+		}
+
+		.planner-input-line {
+			background-color: #ffffff;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			padding: 6px 10px;
+			font-size: 13px;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		.planner-summary-box {
+			background-color: #eff6ff;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px;
+			text-align: center;
+		}
+
+		.planner-summary-title {
+			font-size: 14px;
+			font-weight: 800;
+			color: var(--primary-blue);
+			margin-bottom: 6px;
+		}
+
+		.planner-summary-text {
+			font-size: 13px;
+			line-height: 1.6;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		/* 📱 모바일 & 🖨️ 인쇄 대응 */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+		 [펼침면 1] 1. 핵심 문법 개념 정리 (~てもいいですか)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 핵심 개념 및 접속 공식 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 07 - CORE GRAMMAR</div>
+				<div class="lesson-badge-oval">7과</div>
+				<div class="section-lesson-title">제 7 과 : 허락 구하기</div>
+				<h3 class="grammar-title">～ても いいですか</h3>
+
+				<div class="pin-subtitle">의미</div>
+				<p style="margin-bottom: 8px;">
+					동사의 て형 뒤에 붙어 <b>「~해도 될까요? / ~해도 괜찮습니까?」</b>라는 의미로, 여행지에서 행동을 하기 전 상대방에게 허락을 구할 때 사용하는 가장 기본적인 표현입니다.
+				</p>
+
+				<div class="pin-subtitle">💡 접속공식</div>
+				<div class="speech-label-title">동사 て형 + もいいですか</div>
+
+				<div class="formula-container">
+					<div class="formula-column">
+						<div class="formula-header">기본 동사</div>
+						<div class="formula-box">撮(と)ります (찍습니다)</div>
+						<div class="formula-box">座(すわ)ります (앉습니다)</div>
+						<div class="formula-box">使(つか)います (사용합니다)</div>
+						<div class="formula-box">入(はい)ります (들어갑니다)</div>
+					</div>
+					<div class="formula-column">
+						<div class="formula-header sky">て형 + もいいですか ⭕</div>
+						<div class="formula-box highlight-text">撮(と)っても いいですか</div>
+						<div class="formula-box highlight-text">座(すわ)っても いいですか</div>
+						<div class="formula-box highlight-text">使(つか)っても いいですか</div>
+						<div class="formula-box highlight-text">入(はい)っても いいですか</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 만능 회화 팁 & 기본 변형 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 07 - CORE DRILL</div>
+
+				<div class="pin-subtitle">Point</div>
+				<div class="point-speech-card">
+					<ul>
+						<li><b>만능 마법의 문장:</b> 긴 문장을 만들기 어려울 때는 명사나 동작을 가리키며 <b>「いいですか。(괜찮습니까?)」</b>만 말해도 의미가 통합니다.</li>
+						<li><b>대답 듣기 연습:</b> 점원이 <b>「いいですよ(괜찮아요 / 그럼요)」</b> 또는 <b>「どうぞ(그러세요)」</b>라고 대답하면 허락의 의미입니다.</li>
+					</ul>
+				</div>
+
+				<div class="pin-subtitle">기본 형태 변형 연습</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. [찍다] "사진을 찍어도 될까요?"</div>
+					<div class="quiz-ja">写真(しゃしん)を 撮(と)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. [앉다] "여기 앉아도 될까요?"</div>
+					<div class="quiz-ja">ここに 座(すわ)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. [사용하다] "화장실을 써도 될까요?"</div>
+					<div class="quiz-ja">トイレを 使(つか)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. [들어오다] "들어와도 될까요?"</div>
+					<div class="quiz-ja">入(はい)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>정답:</b> 모두 <b>ても いいですか</b> (테모 이이데스카) 가 들어갑니다.<br>
+						1) 撮ってもいいですか &nbsp; 2) 座ってもいいですか<br>
+						3) 使ってもいいですか &nbsp; 4) 入ってもいいですか
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 2] 테마 01 : 사진 (PHOTO)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 사진 관련 어휘 및 기본 문장 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 01 - PHOTO</div>
+				<div class="lesson-badge-oval">7주차</div>
+				<div class="section-lesson-title">테마 01 : 사진 찍기</div>
+				<h3 class="grammar-title">写真(しゃしん)を 撮(と)っても いいですか</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">写真(しゃしん)を 撮(と)っても いいですか。</div>
+					<p style="font-size:12px; color:#64748b; margin-top:2px;">(사진을 찍어도 될까요?)</p>
+				</div>
+
+				<div class="pin-subtitle">사진 촬영 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>写真</span> <span class="ja-sub">しゃしん (사진)</span></div>
+					<div class="word-bubble"><span>ここ</span> <span class="ja-sub">여기</span></div>
+					<div class="word-bubble"><span>一緒</span> <span class="ja-sub">いっしょ (함께)</span></div>
+					<div class="word-bubble"><span>撮る</span> <span class="ja-sub">とる (찍다)</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 만들기 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 사진을 찍어도 될까요?</div>
+					<div class="quiz-ja">写真(しゃしん)を <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 여기서 찍어도 될까요?</div>
+					<div class="quiz-ja">ここで <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 함께 찍어도 될까요?</div>
+					<div class="quiz-ja">一緒(いっしょ)に <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content"><b>정답:</b> 모두 <b>撮(と)っても いいですか</b> 가 들어갑니다.</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 실전 사진 촬영 회화 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 01 - PRACTICE</div>
+				<div class="pin-subtitle">사진 촬영 실전 회화</div>
+
+				<div class="character-card">
+					<div class="char-avatar">📷</div>
+					<div>
+						<div class="char-speech">すみません、写真を 撮っても いいですか。</div>
+						<div class="char-trans">(실례합니다, 사진을 찍어도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">はい、いいですよ！どうぞ。</div>
+						<div class="char-trans">(네, 괜찮아요! 찍으세요.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🤳</div>
+					<div>
+						<div class="char-speech">一緒に 撮っても いいですか。</div>
+						<div class="char-trans">(같이 찍어도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">실전 응용 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "미술관/가게에서: 사진 찍어도 될까요?"</div>
+					<div class="quiz-ja">写真(しゃしん)を <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "부탁할 때: 여기서 촬영해도 될까요?"</div>
+					<div class="quiz-ja">ここで 撮(と)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) 撮っても いいですか (とっても いいですか)<br>
+						2) ても いいですか (ても いいですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 3] 테마 02 : 좌석 (SEAT)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 좌석 관련 어휘 및 기본 문장 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 02 - SEAT</div>
+				<div class="lesson-badge-oval">7주차</div>
+				<div class="section-lesson-title">테마 02 : 좌석 이용</div>
+				<h3 class="grammar-title">ここに 座(すわ)っても いいですか</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">ここに 座(すわ)っても いいですか。</div>
+					<p style="font-size:12px; color:#64748b; margin-top:2px;">(여기 앉아도 될까요?)</p>
+				</div>
+
+				<div class="pin-subtitle">좌석 관련 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>席</span> <span class="ja-sub">せき (자릿/좌석)</span></div>
+					<div class="word-bubble"><span>ここ</span> <span class="ja-sub">여기</span></div>
+					<div class="word-bubble"><span>座る</span> <span class="ja-sub">すわる (앉다)</span></div>
+					<div class="word-bubble"><span>移動</span> <span class="ja-sub">いどう (이동)</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 만들기 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 여기 앉아도 될까요?</div>
+					<div class="quiz-ja">ここに <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 이 자리에 앉아도 될까요?</div>
+					<div class="quiz-ja">この 席(せき)に <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 자리를 옮겨도(이동해도) 될까요?</div>
+					<div class="quiz-ja">席(せき)を 移動(いどう)し <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) 座っても いいですか &nbsp; 2) 座っても いいですか<br>
+						3) ても いいですか (してもいいですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 실전 좌석 이용 회화 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 02 - PRACTICE</div>
+				<div class="pin-subtitle">카페/식당 좌석 회화</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🪑</div>
+					<div>
+						<div class="char-speech">すみません、ここ 座っても いいですか。</div>
+						<div class="char-trans">(실례합니다, 여기 앉아도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">☕</div>
+					<div>
+						<div class="char-speech">あ、はい！どうぞ。</div>
+						<div class="char-trans">(아, 네! 앉으세요.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🍽️</div>
+					<div>
+						<div class="char-speech">あっちの 席に 移動しても いいですか。</div>
+						<div class="char-trans">(저쪽 자리로 이동해도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">실전 응용 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "빈자리를 가리키며: 앉아도 될까요?"</div>
+					<div class="quiz-ja">座(すわ)っ <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "옆자리에 짐을 놓으며: 앉아도 괜찮습니까?"</div>
+					<div class="quiz-ja">ここに 座(すわ)っても <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ても いいですか (ても いいですか)<br>
+						2) いいですか (いいですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 4] 테마 03 : 화장실 (RESTROOM)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 화장실 사용 관련 어휘 및 문장 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 03 - RESTROOM</div>
+				<div class="lesson-badge-oval">7주차</div>
+				<div class="section-lesson-title">테마 03 : 화장실 사용</div>
+				<h3 class="grammar-title">トイレを 使(つか)っても いいですか</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">トイレを 使(つか)っても いいですか。</div>
+					<p style="font-size:12px; color:#64748b; margin-top:2px;">(화장실을 빌려 써도 될까요?)</p>
+				</div>
+
+				<div class="pin-subtitle">편의점/가게 이용 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>トイレ</span> <span class="ja-sub">화장실</span></div>
+					<div class="word-bubble"><span>使う</span> <span class="ja-sub">つかう (사용하다)</span></div>
+					<div class="word-bubble"><span>借りる</span> <span class="ja-sub">かりる (빌리다)</span></div>
+					<div class="word-bubble"><span>充電</span> <span class="ja-sub">じゅうでん (충전)</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 만들기 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 화장실을 써도 될까요?</div>
+					<div class="quiz-ja">トイレを 使(つか)っ <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 화장실 좀 빌려 써도 될까요?</div>
+					<div class="quiz-ja">トイレを 借(か)りっ <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 콘센트로 충전해도 될까요?</div>
+					<div class="quiz-ja">充電(じゅうでん)し <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ても いいですか &nbsp; 2) ても いいですか &nbsp; 3) ても いいですか
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 편의점/카페 화장실 회화 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 03 - PRACTICE</div>
+				<div class="pin-subtitle">가게 화장실 사용 회화</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏪</div>
+					<div>
+						<div class="char-speech">すみません、トイレ 使っても いいですか。</div>
+						<div class="char-trans">(실례합니다, 화장실 사용해도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏪</div>
+					<div>
+						<div class="char-speech">どうぞ、奥(おく)に あります。</div>
+						<div class="char-trans">(쓰세요, 안쪽에 있습니다.)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🔌</div>
+					<div>
+						<div class="char-speech">コンセント、使っても いいですか。</div>
+						<div class="char-trans">(콘센트 사용해도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">실전 응용 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "편의점 점원에게: 화장실 써도 될까요?"</div>
+					<div class="quiz-ja">トイレ 使(つか)っ <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "급하게 빌릴 때: 화장실 괜찮습니까?"</div>
+					<div class="quiz-ja">トイレ、いい <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ても いいですか (ても いいですか)<br>
+						2) ですか (ですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 5] 테마 04 : 입장 (ENTER / CHECK-IN)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 입장 및 체크인 관련 어휘 및 문장 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 04 - ENTER</div>
+				<div class="lesson-badge-oval">7주차</div>
+				<div class="section-lesson-title">테마 04 : 입장 / 들어감</div>
+				<h3 class="grammar-title">入(はい)っても いいですか</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">入(はい)っても いいですか。</div>
+					<p style="font-size:12px; color:#64748b; margin-top:2px;">(들어리가도 될까요? / 입장해도 될까요?)</p>
+				</div>
+
+				<div class="pin-subtitle">입장 및 시설 이용 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>入る</span> <span class="ja-sub">はいる (들어오다/가다)</span></div>
+					<div class="word-bubble"><span>見学</span> <span class="ja-sub">けんがく (견학/구경)</span></div>
+					<div class="word-bubble"><span>試着</span> <span class="ja-sub">しちゃく (시착/입어봄)</span></div>
+					<div class="word-bubble"><span>荷物</span> <span class="ja-sub">にもつ (짐)</span></div>
+				</div>
+
+				<div class="pin-subtitle">문장 만들기 연습</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 들어가도 될까요?</div>
+					<div class="quiz-ja">入(はい)っ <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 잠깐 구경(견학)해도 될까요?</div>
+					<div class="quiz-ja">見学(けんがく)し <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">3. 옷을 입어봐도(시착) 될까요?</div>
+					<div class="quiz-ja">試着(しちゃく)し <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) ても いいですか &nbsp; 2) ても いいですか &nbsp; 3) ても いいですか
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 입장 및 시설 이용 실전 회화 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 04 - PRACTICE</div>
+				<div class="pin-subtitle">시설 입장 및 옷가게 회화</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🚪</div>
+					<div>
+						<div class="char-speech">すみません、中に入っても いいですか。</div>
+						<div class="char-trans">(실례합니다, 안에 들어가도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">👕</div>
+					<div>
+						<div class="char-speech">これ、試着しても いいですか。</div>
+						<div class="char-trans">(이것, 입어봐도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🧳</div>
+					<div>
+						<div class="char-speech">荷物を 置いても いいですか。</div>
+						<div class="char-trans">(짐을 놓아두어도 될까요?)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">실전 응용 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "옷가게에서: 입어봐도 괜찮습니까?"</div>
+					<div class="quiz-ja">試着(しちゃく)しても <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "호텔에 짐을 맡길 때: 짐 놓아도 될까요?"</div>
+					<div class="quiz-ja">荷物(にもつ) 置(お)い <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) いいですか (いいですか)<br>
+						2) ても いいですか (ても いいですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 6] 7주차 미션 플래너 & 변형 종합 연습
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 여행 미션 플래너 (私の許可クエスト) -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 07 - MY MISSION</div>
+				<div class="lesson-badge-oval">7주차</div>
+				<div class="section-lesson-title">나의 현장 허락 미션</div>
+				<h3 class="grammar-title">🎒 現地で 使ってみよう！</h3>
+
+				<p style="margin-bottom: 8px;">
+					여행지 상황에서 점원에게 당당하게 허락을 구하는 3가지 미션 문장을 완성해봅시다!
+				</p>
+
+				<div class="planner-card-box">
+					<div class="planner-q-item">
+						<div class="planner-q-title">① 카페에서 사진 찍을 때</div>
+						<div class="planner-input-line">👉 写真(しゃしん)を 撮(と)っても いいですか。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">② 식당 자리를 정할 때</div>
+						<div class="planner-input-line">👉 ここに 座(すわ)っても いいですか。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">③ 편의점 화장실을 이용할 때</div>
+						<div class="planner-input-line">👉 トイレを 使(つか)っても いいですか。</div>
+					</div>
+				</div>
+
+				<div class="planner-summary-box">
+					<div class="planner-summary-title">✨ 점원의 대답을 들어보세요!</div>
+					<div class="planner-summary-text">
+						점원: 「はい、どうぞ！(네, 그러세요!)」<br>
+						점원: 「いいですよ！(괜찮습니다!)」
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 종합 동사 て형 변형 연습 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 07 - DRILL</div>
+				<div class="pin-subtitle">동사 て형 + もいいですか 종합 연습</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. 撮(と)ります (찍다) ➔ "찍어도 될까요?"</div>
+					<div class="quiz-ja">撮(と)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. 座(すわ)ります (앉다) ➔ "앉아도 될까요?"</div>
+					<div class="quiz-ja">座(すわ)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. 使(つか)います (사용하다) ➔ "써도 될까요?"</div>
+					<div class="quiz-ja">使(つか)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. 入(はい)ります (들어오다) ➔ "들어와도 될까요?"</div>
+					<div class="quiz-ja">入(はい)っ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">5. 試着(しちゃく)します (입어보다) ➔ "입어봐도 될까요?"</div>
+					<div class="quiz-ja">試着(しちゃく)し <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						<b>정답:</b> 모두 <b>ても いいですか</b> 가 들어갑니다.<br>
+						1) 撮ってもいいですか &nbsp; 2) 座ってもいいですか<br>
+						3) 使ってもいいですか &nbsp; 4) 入ってもいいですか<br>
+						5) 試着してもいいですか
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 7] 7주차 쉬어가기 칼럼
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 에세이 전반부 -->
+			<div class="page left-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+				<div class="lesson-badge-oval">쉬어가기</div>
+				<div class="section-lesson-title">☕ 쉬어가기 칼럼</div>
+				<h3 class="grammar-title">「いいですよ」라는 말을 들었을 때</h3>
+
+				<div class="pin-subtitle">용기 내어 말했을 때 돌아오는 다정함</div>
+				<p style="margin-bottom: 8px;">
+					일본 여행에서 가게에 들어가 <b>「写真を 撮っても いいですか(사진 찍어도 될까요?)」</b>나 <b>「ここに 座っても いいですか(여기 앉아도 될까요?)」</b>라고 물어볼 때, 처음엔 정말 입이 잘 떨어지지 않죠.
+				</p>
+				<p style="margin-bottom: 10px;">
+					하지만 가슴 졸이며 용기 내어 말했을 때, 점원이나 현지인이 미소를 지으며 <b>「あ、いいですよ！(아, 그럼요!)」</b> 혹은 <b>「どうぞ、どうぞ！(어서 앉으세요!)」</b> 하고 대답해 주는 순간 마음이 사르르 녹아내립니다.
+				</p>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">「撮っても いいですか。」</div>
+						<div class="char-trans">💭 (떨리는 마음으로 물어보았을 때...)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">😊</div>
+					<div>
+						<div class="char-speech">「いいですよ！どうぞ！」</div>
+						<div class="char-trans">(흔쾌히 웃으며 받아주는 현지인)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 에세이 후반부 & 현지 팁 -->
+			<div class="page right-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+
+				<div class="pin-subtitle">🌿 거절당해도 상처받지 않기</div>
+				<p style="margin-bottom: 8px;">
+					혹시 점원이 <b>「すみません、ちょっと……(죄송합니다, 좀……)」</b> 하면서 난처한 표정을 짓더라도 너무 속상해하지 마세요!
+				</p>
+				<p style="margin-bottom: 10px;">
+					사진 촬영 금지 구역이거나 예약석일 가능성이 높습니다. 그럴 땐 <b>「あ、わかりました(아, 알겠습니다)」</b> 하고 웃으며 돌아서면 그만입니다. 허락을 미리 구했기 때문에 오히려 무례를 범하지 않고 매너 있는 여행객이 된 것입니다.
+				</p>
+
+				<div class="point-speech-card">
+					<ul>
+						<li><b>여행 매너의 완성:</b> 허락을 구하는 말 한마디는 단순한 문법이 아니라 현지 문화와 상대방을 존중하는 훌륭한 매너입니다.</li>
+						<li><b>자신감 갖기:</b> 틀려도 괜찮으니 이번 여행에서는 꼭 <b>「~てもいいですか」</b>를 외쳐보세요!</li>
+					</ul>
+				</div>
+
+				<div class="big-concept-box" style="margin-top: 10px;">
+					<div class="big-concept-title">🌱 이번 주 여행 꿀팁!</div>
+					<p style="font-size: 12px; color: #1e3a8a; margin-top: 4px;">
+						멋진 카페나 음식점에 갔을 때 당당하게 물어보세요.<br>
+						<b style="font-size: 14px; color: #2563eb;">「写真を 撮っても いいですか。」</b><br>
+						기분 좋은 여행의 추억이 하나 더 쌓일 것입니다.
+					</p>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '정답 가리기';
+    } else {
+      btn.innerText = '정답 확인';
+    }
+  }
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,1042 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>여행 3개월 전 일본어 - 8주차 : ～はいくらですか 완벽 마스터</title>
+	<style>
+		/* ==========================================================================
+		 1. 변수 정의 & 기본 스타일 초기화
+		 ========================================================================== */
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Hiragino Sans', sans-serif;
+		}
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+		/* 스케일링 반응형 설정 */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+		/* ==========================================================================
+		 2. 펼침면(Book) 기본 구조 & 레이아웃
+		 ========================================================================== */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+			.footer::after {
+				content: "Page " counter(page-num);
+			}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+		/* ==========================================================================
+		 🖼️ 이미지 디자인 완벽 복제 UI 컴포넌트
+		 ========================================================================== */
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+		}
+
+		.section-lesson-title {
+			font-size: 20px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 14px;
+			line-height: 1.2;
+		}
+
+		.pin-subtitle {
+			font-size: 15px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 12px;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 14px;
+			}
+
+		.speech-label-title {
+			font-size: 13px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 8px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 13px;
+			}
+
+		p, li {
+			font-size: 13px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+		/* ==========================================================================
+		 📊 [접속 공식] 2열 카드 UI
+		 ========================================================================== */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 800;
+			text-align: center;
+			padding: 8px;
+			border-radius: 8px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+		.formula-box {
+			background-color: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			font-size: 14px;
+			font-weight: 800;
+			color: #1e293b;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+		}
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+			.formula-box .blue-target {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+		/* ==========================================================================
+		 💡 [Point 박스] 상단 꼬리가 달린 말풍선 박스
+		 ========================================================================== */
+		.point-speech-card {
+			position: relative;
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 14px 16px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+			.point-speech-card::before {
+				content: '';
+				position: absolute;
+				top: -8px;
+				left: 24px;
+				border-width: 0 8px 8px;
+				border-style: solid;
+				border-color: #bfdbfe transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card::after {
+				content: '';
+				position: absolute;
+				top: -6px;
+				left: 25px;
+				border-width: 0 7px 7px;
+				border-style: solid;
+				border-color: #eff6ff transparent;
+				display: block;
+				width: 0;
+			}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12.5px;
+				line-height: 1.6;
+				color: #334155;
+				margin-bottom: 6px;
+			}
+
+				.point-speech-card li:last-child {
+					margin-bottom: 0;
+				}
+
+		/* ==========================================================================
+		 🎯 단어장 및 퀴즈 컴포넌트
+		 ========================================================================== */
+		.bubble-word-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.word-bubble {
+			background: #f8fafc;
+			border: 1px solid #cbd5e1;
+			color: #0f172a;
+			padding: 6px 10px;
+			border-radius: 6px;
+			font-size: 12.5px;
+			font-weight: 700;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+			.word-bubble .ja-sub {
+				font-size: 11px;
+				color: #64748b;
+				font-weight: normal;
+			}
+
+		.character-card {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: #f8fafc;
+			border-left: 4px solid var(--primary-blue);
+			padding: 10px 12px;
+			border-radius: 0 8px 8px 0;
+			margin-bottom: 8px;
+		}
+
+		.char-avatar {
+			font-size: 20px;
+		}
+
+		.char-speech {
+			font-size: 13.5px;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.char-trans {
+			font-size: 11.5px;
+			color: #64748b;
+		}
+
+		.quiz-item {
+			margin-bottom: 6px;
+			background-color: #fafafa;
+			padding: 8px 12px;
+			border-radius: 6px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 12px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 70px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 4px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+		.answer-btn {
+			margin-top: 6px;
+			padding: 5px 12px;
+			background-color: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 11.5px;
+			font-weight: bold;
+			transition: all 0.2s ease;
+		}
+
+			.answer-btn:hover {
+				background-color: #eff6ff;
+			}
+
+		.answer-box {
+			margin-top: 6px;
+			padding: 8px 10px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 6px;
+			display: none;
+			background-color: #f8fafc;
+		}
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 12px;
+			color: #1e3a8a;
+			line-height: 1.5;
+		}
+
+		.big-concept-box {
+			background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+			border: 1.5px solid #bfdbfe;
+			border-radius: 8px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-title {
+			font-size: 18px;
+			font-weight: 900;
+			color: #1e3a8a;
+		}
+
+		/* ==========================================================================
+		 🎒 여행 플래너 전용 UI
+		 ========================================================================== */
+		.planner-card-box {
+			background-color: #f8fafc;
+			border: 2px dashed #bfdbfe;
+			border-radius: 12px;
+			padding: 14px;
+			margin-top: 8px;
+			margin-bottom: 12px;
+		}
+
+		.planner-q-item {
+			margin-bottom: 10px;
+		}
+
+		.planner-q-title {
+			font-size: 13px;
+			font-weight: 800;
+			color: #1e3a8a;
+			margin-bottom: 4px;
+		}
+
+		.planner-input-line {
+			background-color: #ffffff;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			padding: 6px 10px;
+			font-size: 13px;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		.planner-summary-box {
+			background-color: #eff6ff;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 8px;
+			padding: 12px;
+			text-align: center;
+		}
+
+		.planner-summary-title {
+			font-size: 14px;
+			font-weight: 800;
+			color: var(--primary-blue);
+			margin-bottom: 6px;
+		}
+
+		.planner-summary-text {
+			font-size: 13px;
+			line-height: 1.6;
+			color: #0f172a;
+			font-weight: 700;
+		}
+
+		/* ==========================================================================
+		 📱 모바일 & 🖨️ 인쇄(Print) 대응
+		 ========================================================================== */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact !important;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<div class="book-wrapper">
+
+		<!-- ==========================================================================
+		 [펼침면 1] 1. 핵심 문법 원리 & 2. 가격 물어보기 기초 (~はいくらですか)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 핵심 문법 원리 및 접속 공식 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 08 - CORE GRAMMAR</div>
+				<div class="lesson-badge-oval">8과</div>
+				<div class="section-lesson-title">제 8 과 : 쇼핑과 티켓 구매</div>
+				<h3 class="grammar-title">～はいくらですか</h3>
+
+				<div class="pin-subtitle">의미</div>
+				<p style="margin-bottom: 8px;">
+					물건이나 티켓, 서비스의 가격을 물어볼 때 사용하는 핵심 표현으로, <b>「~은/는 얼마입니까?」</b>라는 뜻입니다.
+				</p>
+
+				<div class="pin-subtitle">💡 접속공식</div>
+				<div class="speech-label-title">기본 가격 질문 구조</div>
+
+				<div class="formula-container">
+					<div class="formula-column">
+						<div class="formula-header">대상 (명사/지시어)</div>
+						<div class="formula-box">これ (이것)</div>
+						<div class="formula-box">チケット (티켓)</div>
+						<div class="formula-box">入場料 (입장료)</div>
+					</div>
+					<div class="formula-column">
+						<div class="formula-header sky">＋ はいくらですか ⭕</div>
+						<div class="formula-box highlight-text">これ はいくらですか</div>
+						<div class="formula-box highlight-text">チケット はいくらですか</div>
+						<div class="formula-box highlight-text">入場料 はいくらですか</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">Point</div>
+				<div class="point-speech-card">
+					<ul>
+						<li><b>지시어 활용:</b> 물건의 이름을 몰라도 <b>これ(이것)</b>를 가리키며 <b>「これ、いくらですか」</b>라고 하면 만능으로 통합니다.</li>
+						<li><b>조사 생략:</b> 짧게 말할 때는 조사 <b>は</b>를 빼고 <b>「これ、いくらですか」</b>라고 해도 아주 자연스럽습니다.</li>
+					</ul>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 기본 변형 연습 문제 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 08 - CORE DRILL</div>
+				<div class="pin-subtitle">기본 형태 변형 연습</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. "이것은 얼마입니까?"</div>
+					<div class="quiz-ja">これ <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. "티켓은 얼마입니까?"</div>
+					<div class="quiz-ja">チケットは <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. "입장료는 얼마입니까?"</div>
+					<div class="quiz-ja">入場料(にゅうじょうりょう)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. "이 옷은 얼마입니까?"</div>
+					<div class="quiz-ja">この服(ふく)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">5. "어른 1장은 얼마입니까?"</div>
+					<div class="quiz-ja">大人(おとな)1枚(いちまい)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) はいくらですか (はいくらですか)<br>
+						2) いくらですか (いくらですか)<br>
+						3) いくらですか (いくらですか)<br>
+						4) いくらですか (いくらですか)<br>
+						5) いくらですか (いくらですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 2] 3. 쇼핑할 때 가격 묻기 & 4. 티켓 및 입장료 묻기
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 쇼핑 필수 어휘 및 상황별 문장 -->
+			<div class="page left-page">
+				<div class="grammar-no">THEME 01 - SHOPPING</div>
+				<div class="lesson-badge-oval">8주차</div>
+				<div class="section-lesson-title">테마 01 : 쇼핑 가격 묻기</div>
+				<h3 class="grammar-title">[상품] は いくらですか</h3>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">これ、いくらですか。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(이것, 얼마인가요?)</p>
+				</div>
+
+				<div class="pin-subtitle">쇼핑 필수 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>これ</span> <span class="ja-sub">이것</span></div>
+					<div class="word-bubble"><span>それ</span> <span class="ja-sub">그것</span></div>
+					<div class="word-bubble"><span>あれ</span> <span class="ja-sub">저것</span></div>
+					<div class="word-bubble"><span>この服</span> <span class="ja-sub">このふく (이 옷)</span></div>
+					<div class="word-bubble"><span>この靴</span> <span class="ja-sub">このくつ (이 신발)</span></div>
+					<div class="word-bubble"><span>お土産</span> <span class="ja-sub">おみやげ (기념품)</span></div>
+				</div>
+
+				<div class="pin-subtitle">쇼핑 실전 회화 카드</div>
+				<div class="character-card">
+					<div class="char-avatar">🛍️</div>
+					<div>
+						<div class="char-speech">すみません、これいくらですか。</div>
+						<div class="char-trans">(저기요, 이것 얼마인가요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏪</div>
+					<div>
+						<div class="char-speech">それは 1,200円(せんにひゃくえん)です。</div>
+						<div class="char-trans">(그것은 1,200엔입니다.)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 티켓 및 입장료 구매 상황 -->
+			<div class="page right-page">
+				<div class="grammar-no">THEME 02 - TICKET</div>
+				<div class="pin-subtitle">테마 02 : 티켓 및 입장료 묻기</div>
+
+				<div class="big-concept-box">
+					<div class="big-concept-title">入場料は いくらですか。</div>
+					<p style="font-size: 12px; color: #64748b; margin-top: 2px;">(입장료는 얼마인가요?)</p>
+				</div>
+
+				<div class="pin-subtitle">티켓 어휘</div>
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>チケット</span> <span class="ja-sub">티켓</span></div>
+					<div class="word-bubble"><span>入場料</span> <span class="ja-sub">にゅうじょうりょう (입장료)</span></div>
+					<div class="word-bubble"><span>大人</span> <span class="ja-sub">おとな (성인)</span></div>
+					<div class="word-bubble"><span>子供</span> <span class="ja-sub">こども (소인/어린이)</span></div>
+					<div class="word-bubble"><span>1枚</span> <span class="ja-sub">いちまい (1장)</span></div>
+					<div class="word-bubble"><span>2枚</span> <span class="ja-sub">にまい (2장)</span></div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🎟️</div>
+					<div>
+						<div class="char-speech">大人(おとな) 1枚(いちまい)は いくらですか。</div>
+						<div class="char-trans">(성인 1장은 얼마인가요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">💁‍♂️</div>
+					<div>
+						<div class="char-speech">大人(おとな)は 800円(はちひゃくえん)です。</div>
+						<div class="char-trans">(성인은 800엔입니다.)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 3] 5. 금액 듣기와 숫자 응답 & 6. 실전 상황별 회화 연습
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 주요 가격 수량 읽기 및 답변 매칭 -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 08 - PRICE LISTEN</div>
+				<div class="lesson-badge-oval">8주차</div>
+				<div class="section-lesson-title">점원의 금액 답변 익히기</div>
+				<h3 class="grammar-title">[금액] + です</h3>
+
+				<div class="pin-subtitle">자주 나오는 금액 표기 및 발음</div>
+				<p style="margin-bottom: 8px;">
+					가격 질문 후 점원이 대답하는 핵심 단위를 익혀둡시다.
+				</p>
+
+				<div class="bubble-word-container">
+					<div class="word-bubble"><span>100円</span> <span class="ja-sub">ひゃくえん</span></div>
+					<div class="word-bubble"><span>500円</span> <span class="ja-sub">ごひゃくえん</span></div>
+					<div class="word-bubble"><span>1,000円</span> <span class="ja-sub">せんえん</span></div>
+					<div class="word-bubble"><span>1,500円</span> <span class="ja-sub">せんごひゃくえん</span></div>
+					<div class="word-bubble"><span>3,000円</span> <span class="ja-sub">さんぜんえん</span></div>
+					<div class="word-bubble"><span>10,000円</span> <span class="ja-sub">いちまんえん</span></div>
+				</div>
+
+				<div class="pin-subtitle">금액 답변 듣기 연습 퀴즈</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. "500엔입니다."</div>
+					<div class="quiz-ja">500円(ごひゃくえん) <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. "3,000엔입니다."</div>
+					<div class="quiz-ja">3,000円(さんぜんえん) <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) です (ごひゃくえんです)<br>
+						2) です (さんぜんえんです)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 실전 대화 연습 (현장 상황) -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 08 - CONVERSATION</div>
+				<div class="pin-subtitle">현장 대화 완성 연습</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♀️</div>
+					<div>
+						<div class="char-speech">すみません、この お土産(みやげ)は いくらですか。</div>
+						<div class="char-trans">(저기요, 이 기념품은 얼마인가요?)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏪</div>
+					<div>
+						<div class="char-speech">それは 1,500円(せんごひゃくえん)です。</div>
+						<div class="char-trans">(그것은 1,500엔입니다.)</div>
+					</div>
+				</div>
+
+				<div class="pin-subtitle">실전 빈칸 완성 문제</div>
+				<div class="quiz-item">
+					<div class="quiz-q">1. 매장에서: "저기요, 이 옷은 얼마인가요?"</div>
+					<div class="quiz-ja">すみません、この服(ふく)は <span class="quiz-line"></span>。</div>
+				</div>
+				<div class="quiz-item">
+					<div class="quiz-q">2. 매표소에서: "어린이 입장료는 얼마인가요?"</div>
+					<div class="quiz-ja">子供(こども)の 入場料(にゅうじょうりょう)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) いくらですか (いくらですか)<br>
+						2) いくらですか (いくらですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 4] 7. 나의 쇼핑 위시리스트 & 8. 종합 변형 문제
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 나의 쇼핑 및 티켓 계획 작성 (私のショッピング) -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 08 - SHOPPING PLAN</div>
+				<div class="lesson-badge-oval">8주차</div>
+				<div class="section-lesson-title">나의 현장 쇼핑 연습</div>
+				<h3 class="grammar-title">🛍️ 私のショッピング</h3>
+
+				<p style="margin-bottom: 8px;">
+					여행지 상점이나 매표소에서 가격을 물어보는 대화를 직접 완성해봅시다!
+				</p>
+
+				<div class="planner-card-box">
+					<div class="planner-q-item">
+						<div class="planner-q-title">① 물건 손으로 가리키며 가격 묻기</div>
+						<div class="planner-input-line">👉 これ、いくらですか。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">② 관심 있는 옷/기념품 가격 묻기</div>
+						<div class="planner-input-line">👉 この服(ふく)は いくらですか。</div>
+					</div>
+
+					<div class="planner-q-item">
+						<div class="planner-q-title">③ 매표소에서 티켓 가격 묻기</div>
+						<div class="planner-input-line">👉 チケットは いくらですか。</div>
+					</div>
+				</div>
+
+				<div class="planner-summary-box">
+					<div class="planner-summary-title">✨ 현장 3초 완성 스피치</div>
+					<div class="planner-summary-text">
+						「すみません、これ いくらですか。<br>
+						チケットは いくらですか。」
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 종합 변형 문제 -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 08 - DRILL</div>
+				<div class="pin-subtitle">종합 가격 질문 연습</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">1. "이 신발은 얼마입니까?"</div>
+					<div class="quiz-ja">この靴(くつ)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">2. "저것은 얼마입니까?"</div>
+					<div class="quiz-ja">あれは <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">3. "성인 2장은 얼마입니까?"</div>
+					<div class="quiz-ja">大人(おとな) 2枚(にまい)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<div class="quiz-item">
+					<div class="quiz-q">4. "이 기념품은 얼마입니까?"</div>
+					<div class="quiz-ja">このお土産(みやげ)は <span class="quiz-line"></span>。</div>
+				</div>
+
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+				<div class="answer-box">
+					<div class="answer-content">
+						1) いくらですか (いくらですか)<br>
+						2) いくらですか (いくらですか)<br>
+						3) いくらですか (いくらですか)<br>
+						4) いくらですか (いくらですか)
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+		<!-- ==========================================================================
+		 [펼침면 5] 9. 쉬어가기 칼럼 (「세금 포함(税込)과 세금 별도(税抜)를 확인하세요!」)
+		 ========================================================================== -->
+		<div class="book-container">
+			<!-- 왼쪽 페이지: 칼럼 전반부 -->
+			<div class="page left-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+				<div class="lesson-badge-oval">쉬어가기</div>
+				<div class="section-lesson-title">☕ 쉬어가기 칼럼</div>
+				<h3 class="grammar-title">💴 「税込」와 「税抜」를 꼭 확인하세요!</h3>
+
+				<div class="pin-subtitle">가격표 읽기 주의점</div>
+				<p style="margin-bottom: 8px;">
+					일본 매장에서 가격을 물어보거나 가격표를 볼 때 가장 많이 혼동하는 것이 바로 <b>소비세 표기</b>입니다.
+				</p>
+				<p style="margin-bottom: 10px;">
+					가격표 옆에 작은 글씨로 표기된 <b>税込(ぜいこみ)</b>와 <b>税抜(ぜいぬき)</b>의 차이를 알면 계산대에서 당황하지 않습니다.
+				</p>
+
+				<div class="character-card">
+					<div class="char-avatar">🏷️</div>
+					<div>
+						<div class="char-speech">税込(ぜいこみ)</div>
+						<div class="char-trans">(세금 포함 ➔ 실제 지불할 최종 가격)</div>
+					</div>
+				</div>
+
+				<div class="character-card">
+					<div class="char-avatar">🏷️</div>
+					<div>
+						<div class="char-speech">税抜(ぜいぬき) / 本体価格(ほんたいかかく)</div>
+						<div class="char-trans">(세금 별도 ➔ 계산 시 소비세 10%가 추가됨)</div>
+					</div>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+
+			<!-- 오른쪽 페이지: 칼럼 후반부 및 실전 현장 팁 -->
+			<div class="page right-page">
+				<div class="grammar-no">COLUMN - BREAK TIME</div>
+
+				<div class="pin-subtitle">💡 계산대에서의 실전 팁</div>
+				<p style="margin-bottom: 8px;">
+					가격을 들었을 때 소수점이나 소비세 계산이 헷갈린다면 망설이지 말고 <b>확인 질문</b>을 던져보세요.
+				</p>
+
+				<div class="character-card">
+					<div class="char-avatar">🙋‍♂️</div>
+					<div>
+						<div class="char-speech">「税込(ぜいこみ)で いくらですか。」</div>
+						<div class="char-trans">(세금 포함해서 얼마인가요?)</div>
+					</div>
+				</div>
+
+				<div class="point-speech-card">
+					<ul>
+						<li><b>계산기 활용:</b> 숫자가 바로 들리지 않을 때는 점원에게 <b>「これ、いくらですか」</b>라고 물은 뒤 손짓으로 <b>계산기 화면</b>을 살짝 요청해보세요.</li>
+						<li><b>면세(Tax-Free) 체크:</b> 일정 금액(보통 5,000엔) 이상 구매 시 <b>「免税(めんぜい)できますか」</b>라고 물어보는 것도 좋은 유용한 팁입니다.</li>
+					</ul>
+				</div>
+
+				<div class="big-concept-box" style="margin-top: 10px;">
+					<div class="big-concept-title">🌱 현장 추천 한마디!</div>
+					<p style="font-size: 12px; color: #1e3a8a; margin-top: 4px;">
+						가격표가 잘 안 보일 땐 망설이지 말고 가리키며 물어보세요.<br>
+						<b style="font-size: 14px; color: #2563eb;">「これ、税込で いくらですか。」</b><br>
+						더욱 정확하고 똑똑한 현지 쇼핑이 가능해집니다!
+					</p>
+				</div>
+
+				<div class="footer"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+  function toggleAnswer(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      btn.innerText = '정답 가리기';
+    } else {
+      btn.innerText = '정답 확인';
+    }
+  }
+	</script>
+
+</body>
+</html>
