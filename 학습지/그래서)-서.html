@@ -1,376 +1,661 @@
 ﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
 
-<title>韓国語文法  : ~아서/어서 (だから・ので)</title>
+	<title>初級韓国語文法 - ~아서/어서 (だから・ので) 総合練習</title>
 
 
 
-<style>
- 
-:root {
-  --book-scale: 0.75;
- 
-  --primary-blue: #2563eb;
-  --header-blue: #1d4ed8;
-  --sky-blue: #0284c7;
- 
-  --dark-navy: #1e293b;
-  --light-blue-bg: #eff6ff;
-  --border-color: #dbeafe;
- 
-  --accent-orange: #ea580c;
-  --green: #16a34a;
-}
- 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
- 
-  font-family:
-    'Hiragino Sans',
-    'Meiryo',
-    'Malgun Gothic',
-    sans-serif;
-}
- 
-body {
-  background-color: #f4f6f9;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-  color: #333;
-  overflow-x: hidden;
-}
- 
-/* 本全体 */
-.book-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
-  zoom: var(--book-scale);
-  transition: zoom 0.2s ease;
-  counter-reset: page-num 0;
-}
- 
-/* レスポンシブ */
-@media (max-width: 1500px) { :root { --book-scale: 0.65; } }
-@media (max-width: 1300px) { :root { --book-scale: 0.55; } }
-@media (max-width: 1100px) { :root { --book-scale: 0.45; } }
- 
-/* 見開き面 */
-.book-container {
-  display: flex;
-  width: 364mm;
-  height: 257mm;
-  background-color: #fff;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.03);
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
-}
- 
-.book-container::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 3%;
-  width: 1px;
-  height: 94%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
-  z-index: 10;
-}
- 
-/* ページ */
-.page {
-  width: 182mm;
-  height: 257mm;
-  padding: 16mm 18mm;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  counter-increment: page-num;
-}
- 
-.footer {
-  position: absolute;
-  bottom: 10mm;
-  font-size: 12px;
-  color: #a1a1aa;
-  font-weight: bold;
-}
-.left-page .footer { left: 18mm; }
-.right-page .footer { right: 18mm; }
- 
-.grammar-no {
-  position: absolute;
-  top: 12mm;
-  font-size: 13px;
-  color: var(--primary-blue);
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-.left-page .grammar-no { left: 18mm; }
-.right-page .grammar-no { right: 18mm; text-align: right; }
- 
-.lesson-badge-oval {
-  display: inline-block;
-  align-self: flex-start;
-  background: var(--primary-blue);
-  color: white;
-  font-size: 13px;
-  font-weight: 800;
-  padding: 4px 16px;
-  border-radius: 20px;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 10px rgba(37,99,235,0.3);
-}
- 
-.section-lesson-title {
-  font-size: 18px;
-  color: #1e3a8a;
-  font-weight: 800;
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid var(--primary-blue);
-}
- 
-h3.grammar-title {
-  font-size: 26px;
-  color: #0f172a;
-  font-weight: 900;
-  margin-bottom: 12px;
-  line-height: 1.2;
-}
- 
-.big-concept {
-  background: #f8fafc;
-  border: 2px solid var(--border-color);
-  border-radius: 12px;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 8px;
-}
-.big-concept-main {
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--primary-blue);
-}
-.big-concept-sub {
-  font-size: 13px;
-  color: #64748b;
-  font-weight: 700;
-}
- 
-.pin-subtitle {
-  font-size: 14px;
-  color: #1e3a8a;
-  font-weight: 800;
-  margin-top: 8px;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--border-color);
-}
-.pin-subtitle::before { content: "📌"; font-size: 13px; }
- 
-.speech-label-title {
-  font-size: 12.5px;
-  font-weight: bold;
-  color: #334155;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.speech-label-title::before { content: "💬"; font-size: 12.5px; }
- 
-p, li {
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: #334155;
-}
- 
-/* 公式エリア */
-.formula-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 8px;
-}
- 
-.formula-column {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
- 
-.formula-header {
-  background-color: var(--primary-blue);
-  color: white;
-  font-size: 12px;
-  font-weight: 800;
-  text-align: center;
-  padding: 6px;
-  border-radius: 6px;
-}
-.formula-header.sky { background-color: var(--sky-blue); }
- 
-.formula-box {
-  background-color: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 6px;
-  text-align: center;
-  font-size: 12.5px;
-  font-weight: 800;
-  color: #1e293b;
-}
- 
-.formula-box.highlight-text {
-  background-color: #f8fafc;
-  color: var(--primary-blue);
-}
- 
-.point-speech-card {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 12px;
-  padding: 10px 12px;
-  margin-top: 6px;
-  margin-bottom: 6px;
-}
-.point-speech-card ul { padding-left: 14px; }
-.point-speech-card li {
-  font-size: 12px;
-  line-height: 1.5;
-  color: #334155;
-  margin-bottom: 3px;
-}
- 
-.travel-card {
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 8px 10px;
-  margin-bottom: 5px;
-  background: #fff;
-}
-.travel-card .ko-main {
-  font-size: 15px;
-  font-weight: 900;
-  color: #0f172a;
-  margin-bottom: 2px;
-}
-.travel-card .jp-sub { font-size: 11.5px; color: #64748b; }
-.travel-card .point { color: var(--primary-blue); font-weight: 900; }
- 
-/* テーブル（練習表）スタイル */
-.practice-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 6px;
-  margin-bottom: 8px;
-}
- 
-.practice-table th {
-  background-color: var(--primary-blue);
-  color: white;
-  font-size: 12px;
-  font-weight: 800;
-  padding: 6px 4px;
-  border: 1px solid var(--primary-blue);
-  text-align: center;
-}
- 
-.practice-table td {
-  border: 1px solid #e2e8f0;
-  padding: 6px 8px;
-  font-size: 12px;
-  text-align: center;
-}
- 
-.practice-table tr:nth-child(even) {
-  background-color: #f8fafc;
-}
- 
-.table-tag {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: white;
-}
-.tag-a { background-color: #2563eb; }
-.tag-eo { background-color: #0284c7; }
-.tag-ha { background-color: #16a34a; }
- 
-.quiz-line {
-  display: inline-block;
-  min-width: 65px;
-  border-bottom: 2px solid var(--primary-blue);
-  text-align: center;
-  margin: 0 2px;
-  font-weight: bold;
-  color: var(--accent-orange);
-}
- 
-.answer-btn {
-  padding: 3px 8px;
-  background: transparent;
-  color: var(--primary-blue);
-  border: 1.5px solid var(--primary-blue);
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 10.5px;
-  font-weight: bold;
-}
- 
-.answer-box {
-  margin-top: 4px;
-  padding: 4px 6px;
-  border: 1.5px solid var(--primary-blue);
-  border-radius: 5px;
-  display: none;
-  background: #f8fafc;
-}
- 
-.answer-box.show { display: block; }
-.answer-content { font-size: 11.5px; color: #1e3a8a; font-weight: bold; }
- 
-/* モバイル・印刷対応 */
-@media (max-width: 900px) {
-  body { padding: 10px; }
-  .book-wrapper { zoom: 1 !important; width: 100%; gap: 20px; }
-  .book-container { flex-direction: column; width: 100%; height: auto; box-shadow: none; }
-  .book-container::after { display: none; }
-  .page { width: 100%; height: auto; padding: 30px 20px; border-bottom: 2px dashed #e2e8f0; }
-  .footer { position: relative; bottom: 0; margin-top: 20px; text-align: center; }
-}
- 
-@media print {
-  @page { size: 364mm 257mm; margin: 0; }
-  body { background-color: #fff; padding: 0; }
-  .book-wrapper { gap: 0; zoom: 1 !important; }
-  .book-container { display: flex !important; flex-direction: row !important; width: 364mm; height: 257mm; page-break-after: always; box-shadow: none; border: none; }
-  .book-container::after { display: none; }
-  .page { width: 182mm !important; height: 257mm !important; }
-  .answer-btn { display: none; }
-  .answer-box { display: block !important; }
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact; }
-}
- 
-</style>
+	<style>
+
+
+
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+			--green: #16a34a;
+		}
+
+
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family:    'Hiragino Sans',    'Meiryo',    'Malgun Gothic',    sans-serif;
+		}
+
+
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+
+
+		/* 本全体 */
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+
+
+		/* レスポンシブ */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+
+
+		/* 見開き面 */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+
+
+		/* ページ */
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+
+
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: white;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+		}
+
+
+
+		.section-lesson-title {
+			font-size: 18px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 12px;
+			line-height: 1.2;
+		}
+
+
+
+		.big-concept {
+			background: #f8fafc;
+			border: 2px solid var(--border-color);
+			border-radius: 12px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-main {
+			font-size: 22px;
+			font-weight: 900;
+			color: var(--primary-blue);
+		}
+
+		.big-concept-sub {
+			font-size: 13px;
+			color: #64748b;
+			font-weight: 700;
+		}
+
+
+
+		.pin-subtitle {
+			font-size: 14px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 8px;
+			margin-bottom: 6px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 13px;
+			}
+
+
+
+		.speech-label-title {
+			font-size: 12.5px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 4px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 12.5px;
+			}
+
+
+
+		p, li {
+			font-size: 12.5px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+
+
+		/* 公式エリア */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 8px;
+			margin-bottom: 8px;
+		}
+
+
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: white;
+			font-size: 12px;
+			font-weight: 800;
+			text-align: center;
+			padding: 6px;
+			border-radius: 6px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+
+
+		.formula-box {
+			background-color: white;
+			border: 1px solid #e2e8f0;
+			border-radius: 6px;
+			padding: 6px;
+			text-align: center;
+			font-size: 12.5px;
+			font-weight: 800;
+			color: #1e293b;
+		}
+
+
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+
+
+		.point-speech-card {
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 10px 12px;
+			margin-top: 6px;
+			margin-bottom: 6px;
+		}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12px;
+				line-height: 1.5;
+				color: #334155;
+				margin-bottom: 3px;
+			}
+
+
+
+		.travel-card {
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+			padding: 8px 10px;
+			margin-bottom: 5px;
+			background: #fff;
+		}
+
+			.travel-card .ko-main {
+				font-size: 15px;
+				font-weight: 900;
+				color: #0f172a;
+				margin-bottom: 2px;
+			}
+
+			.travel-card .jp-sub {
+				font-size: 11.5px;
+				color: #64748b;
+			}
+
+			.travel-card .point {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+
+
+		/* テーブル（練習表）スタイル */
+		.practice-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 6px;
+			margin-bottom: 8px;
+		}
+
+
+
+			.practice-table th {
+				background-color: var(--primary-blue);
+				color: white;
+				font-size: 12px;
+				font-weight: 800;
+				padding: 6px 4px;
+				border: 1px solid var(--primary-blue);
+				text-align: center;
+			}
+
+
+
+			.practice-table td {
+				border: 1px solid #e2e8f0;
+				padding: 6px 8px;
+				font-size: 12px;
+				text-align: center;
+			}
+
+
+
+			.practice-table tr:nth-child(even) {
+				background-color: #f8fafc;
+			}
+
+
+
+		.table-tag {
+			display: inline-block;
+			font-size: 10px;
+			font-weight: 800;
+			padding: 2px 6px;
+			border-radius: 4px;
+			color: white;
+		}
+
+		.tag-a {
+			background-color: #2563eb;
+		}
+
+		.tag-eo {
+			background-color: #0284c7;
+		}
+
+		.tag-ha {
+			background-color: #16a34a;
+		}
+
+
+
+		.quiz-item {
+			margin-bottom: 8px;
+			background-color: #fafafa;
+			padding: 8px 10px;
+			border-radius: 7px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 11.5px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 65px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 2px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+
+
+		.answer-btn {
+			padding: 3px 8px;
+			background: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 10.5px;
+			font-weight: bold;
+		}
+
+
+
+		.answer-box {
+			margin-top: 4px;
+			padding: 4px 6px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 5px;
+			display: none;
+			background: #f8fafc;
+		}
+
+
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 11.5px;
+			color: #1e3a8a;
+			font-weight: bold;
+		}
+
+
+
+		/* 単語リストカード（PAGE 5用） */
+		.word-box-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+		}
+
+
+
+		.word-chip {
+			background-color: #f1f5f9;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			padding: 5px;
+			text-align: center;
+			font-size: 11.5px;
+		}
+
+			.word-chip .ko-w {
+				font-weight: 800;
+				color: #0f172a;
+			}
+
+			.word-chip .jp-w {
+				font-size: 10px;
+				color: #64748b;
+			}
+
+
+
+		/* 会話バブル (PAGE 6用) */
+		.conversation {
+			margin-top: 6px;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.bubble {
+			padding: 8px 12px;
+			border-radius: 12px;
+			max-width: 95%;
+			font-size: 12px;
+			line-height: 1.4;
+		}
+
+		.bubble-a {
+			background: #eff6ff;
+			border: 1px solid #bfdbfe;
+			align-self: flex-start;
+		}
+
+		.bubble-b {
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			align-self: flex-end;
+		}
+
+		.bubble .name {
+			font-size: 10px;
+			font-weight: bold;
+			color: var(--primary-blue);
+			margin-bottom: 2px;
+		}
+
+
+
+		/* モバイル・印刷対応 */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact;
+			}
+		}
+	</style>
 </head>
  
 <body>
@@ -717,7 +1002,170 @@ p, li {
  
 </div>
 
+	<!-- =====================================================
+			 見開き 3 : PAGE 5 & PAGE 6 (練習問題 & 会話問題)
+===================================================== -->
+<div class="book-container">
 
+
+
+		<!-- ================= PAGE 5 ================= -->
+		<div class="page left-page">
+			<div class="lesson-badge-oval">総合練習 1</div>
+			<div class="section-lesson-title">単語チェック ＆ 変形練習</div>
+
+
+
+			<div class="pin-subtitle">今回使う重要単語 (基本語彙)</div>
+
+
+
+			<div class="word-box-grid">
+				<div class="word-chip"><div class="ko-w">아프다</div><div class="jp-w">痛い・病気だ</div></div>
+				<div class="word-chip"><div class="ko-w">늦다</div><div class="jp-w">遅い・遅れる</div></div>
+				<div class="word-chip"><div class="ko-w">춥다</div><div class="jp-w">寒い</div></div>
+				<div class="word-chip"><div class="ko-w">더위</div><div class="jp-w">暑さ</div></div>
+				<div class="word-chip"><div class="ko-w">어렵다</div><div class="jp-w">難しい</div></div>
+				<div class="word-chip"><div class="ko-w">쉬다</div><div class="jp-w">休む</div></div>
+				<div class="word-chip"><div class="ko-w">만나다</div><div class="jp-w">会う</div></div>
+				<div class="word-chip"><div class="ko-w">생일</div><div class="jp-w">誕生日</div></div>
+				<div class="word-chip"><div class="ko-w">雨 (비)</div><div class="jp-w">雨</div></div>
+			</div>
+
+
+
+			<div class="pin-subtitle">練習 1:カッコの中の単語を変形しましょう</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">① 아프다 (痛い) ➔ <span class="quiz-line"></span></div>
+				<div class="quiz-ja">(例: 頭が痛くて休む / 머리가 ____ 쉬어요)</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">아파서</div></div>
+			</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">② 늦다 (遅れる) ➔ <span class="quiz-line"></span></div>
+				<div class="quiz-ja">(例: 遅れてすみません / ____ 죄송합니다)</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">늦어서</div></div>
+			</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">③ 춥다 (寒い) ➔ <span class="quiz-line"></span></div>
+				<div class="quiz-ja">(例: 寒くて服を着ます / ____ 옷을 입어요)</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">추워서</div></div>
+			</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">④ 어렵다 (難しい) ➔ <span class="quiz-line"></span></div>
+				<div class="quiz-ja">(例: 難しくて質問します / ____ 질문해요)</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">어려워서</div></div>
+			</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">⑤ 생일 (誕生日) ➔ <span class="quiz-line"></span></div>
+				<div class="quiz-ja">(名詞注意！ 例: 誕生日なのでパーティをします)</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">생일이라서</div></div>
+			</div>
+
+
+
+			<div class="footer"></div>
+		</div>
+
+
+
+		<!-- ================= PAGE 6 ================= -->
+		<div class="page right-page">
+			<div class="grammar-no">総合練習 2</div>
+			<div class="lesson-badge-oval">総合練習 2</div>
+			<div class="section-lesson-title">文章完成 ＆ 会話練習</div> 
+
+
+			<div class="pin-subtitle">練習 2:カッコをうめて文章を完成させましょう</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">① (비가 오다) ➔ 비가 <span class="quiz-line"></span> 우산을 써요.</div>
+				<div class="quiz-ja">雨が降っているので傘をさします。</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">와서</div></div>
+			</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">② (친구를 만나다) ➔ 친구를 <span class="quiz-line"></span> 기뻐요.</div>
+				<div class="quiz-ja">友達に会えて(会うので) 嬉しいです。</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">만나서</div></div>
+			</div>
+
+
+
+			<div class="quiz-item">
+				<div class="quiz-q">③ (피곤하다) ➔ <span class="quiz-line"></span> 일찍 자요.</div>
+				<div class="quiz-ja">疲れたので早く寝ます。</div>
+				<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+				<div class="answer-box"><div class="answer-content">피곤해서</div></div>
+			</div>
+
+
+
+			<div class="pin-subtitle">練習 3:会話の理由部分を答えてみましょう</div>
+
+
+
+			<div class="conversation">
+				<div class="bubble bubble-a">
+					<div class="name">A</div>
+					왜 약을 먹어요? <br><small style="color:#64748b;">(どうして薬を飲むのですか？)</small>
+				</div>
+				<div class="bubble bubble-b">
+					<div class="name">B</div>
+					머리가 <span class="quiz-line"></span> 약을 먹어요. (아프다)
+					<br>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">아파서 (頭が痛いので)</div></div>
+				</div>
+
+
+
+				<div class="bubble bubble-a">
+					<div class="name">A</div>
+					왜 택시를 타요? <br><small style="color:#64748b;">(どうしてタクシーに乗るのですか？)</small>
+				</div>
+				<div class="bubble bubble-b">
+					<div class="name">B</div>
+					시간이 <span class="quiz-line">______</span> 택시를 타요. (없다)
+					<br>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">없어서 (時間が無いので)</div></div>
+				</div>
+			</div>
+
+
+
+			<div class="footer"></div>
+		</div>
+
+
+
+</div>
 
 <!-- =====================================================
      見開き 2 : 会話と例文の活用

@@ -1285,6 +1285,247 @@
 				color: var(--point-brown);
 			}
 
+			/* 변경: 보유 티켓 모달을 카드형 UI로 맞추기 위한 전용 스타일 */
+			#ticket-list-modal .ticket-modal {
+				background: #ffffff;
+				width: 90%;
+				max-width: 420px;
+				border-radius: 20px;
+				padding: 24px;
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+				transform: translateY(10px);
+				transition: transform 0.25s ease;
+			}
+
+			#ticket-list-modal:not(.hidden) .ticket-modal {
+				transform: translateY(0);
+			}
+
+			#ticket-list-modal .ticket-modal-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 20px;
+			}
+
+			#ticket-list-modal .ticket-modal-header h2 {
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: #0f172a;
+			}
+
+			#ticket-list-modal .ticket-close-button {
+				background: none;
+				border: none;
+				font-size: 1.5rem;
+				color: #94a3b8;
+				cursor: pointer;
+				line-height: 1;
+			}
+
+			#ticket-list-modal .ticket-tab-menu {
+				display: flex;
+				background-color: #f8fafc;
+				padding: 4px;
+				border-radius: 12px;
+				margin-bottom: 20px;
+			}
+
+			#ticket-list-modal .ticket-tab-btn {
+				flex: 1;
+				padding: 10px 0;
+				border: none;
+				background: transparent;
+				font-size: 0.85rem;
+				font-weight: 600;
+				color: #64748b;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s;
+			}
+
+			#ticket-list-modal .ticket-tab-btn.active {
+				background-color: #ffffff;
+				color: #4f46e5;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+			}
+
+			#ticket-list-modal .ticket-tab-panel {
+				display: none;
+				flex-direction: column;
+				gap: 12px;
+			}
+
+			#ticket-list-modal .ticket-tab-panel.active {
+				display: flex;
+			}
+
+			#ticket-list-modal .ticket-card {
+				border: 1px solid #e2e8f0;
+				border-radius: 16px;
+				padding: 20px;
+				background-color: #ffffff;
+			}
+
+			#ticket-list-modal .ticket-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 12px;
+			}
+
+			#ticket-list-modal .ticket-badge {
+				font-size: 0.7rem;
+				font-weight: 700;
+				color: #4f46e5;
+				background-color: #eef2ff;
+				padding: 4px 8px;
+				border-radius: 6px;
+			}
+
+			#ticket-list-modal .ticket-badge.secondary {
+				color: #059669;
+				background-color: #ecfdf5;
+			}
+
+			#ticket-list-modal .ticket-badge.disabled {
+				color: #64748b;
+				background-color: #f1f5f9;
+			}
+
+			#ticket-list-modal .ticket-expiry {
+				font-size: 0.75rem;
+				color: #94a3b8;
+			}
+
+			#ticket-list-modal .ticket-name {
+				font-size: 1.1rem;
+				font-weight: 700;
+				color: #1e293b;
+				margin-bottom: 16px;
+			}
+
+			#ticket-list-modal .ticket-usage {
+				margin-bottom: 20px;
+			}
+
+			#ticket-list-modal .usage-info {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				margin-bottom: 8px;
+			}
+
+			#ticket-list-modal .usage-info span {
+				font-size: 0.8rem;
+				color: #64748b;
+			}
+
+			#ticket-list-modal .usage-info .count {
+				font-size: 1.4rem;
+				font-weight: 800;
+				color: #4f46e5;
+			}
+
+			#ticket-list-modal .usage-info .count.empty {
+				color: #cbd5e1;
+			}
+
+			#ticket-list-modal .usage-info .count span {
+				font-size: 0.85rem;
+				color: #94a3b8;
+				font-weight: 500;
+			}
+
+			#ticket-list-modal .ticket-progress-bar {
+				width: 100%;
+				height: 8px;
+				background-color: #f1f5f9;
+				border-radius: 4px;
+				overflow: hidden;
+			}
+
+			#ticket-list-modal .ticket-progress-fill {
+				height: 100%;
+				background-color: #4f46e5;
+				border-radius: 4px;
+			}
+
+			#ticket-list-modal .ticket-progress-fill.duo {
+				background-color: #0284c7;
+			}
+
+			#ticket-list-modal .sub-ticket {
+				padding: 14px 16px;
+				background-color: #fafafa;
+			}
+
+			#ticket-list-modal .sub-ticket-body {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			#ticket-list-modal .ticket-name-sm {
+				font-size: 0.9rem;
+				font-weight: 600;
+				color: #334155;
+			}
+
+			#ticket-list-modal .count-sm {
+				font-size: 0.75rem;
+				color: #64748b;
+				display: block;
+				margin-top: 2px;
+			}
+
+			#ticket-list-modal .ticket-action-btn {
+				border: none;
+				border-radius: 10px;
+				font-weight: 700;
+				cursor: pointer;
+				transition: opacity 0.2s;
+			}
+
+			#ticket-list-modal .ticket-action-btn.primary {
+				width: 100%;
+				padding: 14px;
+				background-color: #4f46e5;
+				color: #ffffff;
+				font-size: 0.95rem;
+			}
+
+			#ticket-list-modal .ticket-action-btn.primary.duo {
+				background-color: #0284c7;
+			}
+
+			#ticket-list-modal .ticket-action-btn.disabled {
+				background-color: #e2e8f0;
+				color: #94a3b8;
+				cursor: not-allowed;
+			}
+
+			#ticket-list-modal .ticket-action-btn.sm {
+				padding: 8px 14px;
+				background-color: #e2e8f0;
+				color: #334155;
+				font-size: 0.8rem;
+			}
+
+			#ticket-list-modal .ticket-action-btn:not(.disabled):hover {
+				opacity: 0.9;
+			}
+
+			#ticket-list-modal .ticket-modal-footer {
+				margin-top: 20px;
+				text-align: center;
+			}
+
+			#ticket-list-modal .ticket-footer-notice {
+				font-size: 0.75rem;
+				color: #94a3b8;
+			}
+
 			.debug-switch {
 				position: fixed;
 				bottom: 1rem;
@@ -2915,29 +3156,37 @@
     </div>
   </div>
 
-  <div id="ticket-list-modal" class="modal-overlay hidden">
-    <div class="modal-content" style="max-width: 42rem; position: relative;">
-      <button onclick="closeTicketListModal()" class="modal-close">&times;</button>
-      <h3 style="font-size: 1.125rem; font-weight: bold; text-align: center; margin-bottom: 0.75rem;">보유 티켓 상세</h3>
-      <div class="table-responsive" style="margin-top: 0.5rem;">
-        <table>
-          <thead>
-            <tr>
-              <th>상품명</th>
-              <th>유형</th>
-              <th>잔여</th>
-              <th>만료일</th>
-            </tr>
-          </thead>
-          <tbody id="ticket-list-body">
-            <tr>
-              <td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">보유 티켓이 없습니다.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  <!-- 변경: 마이페이지 '보유 티켓' 모달을 카드/탭형 UI로 교체 -->
+	<div id="ticket-list-modal" class="modal-overlay hidden">
+		<div class="ticket-modal">
+			<div class="ticket-modal-header">
+				<h2>내 보유 티켓</h2>
+				<button class="ticket-close-button" onclick="closeTicketListModal()" aria-label="닫기">&times;</button>
+			</div>
+
+			<div class="ticket-tab-menu">
+				<button class="ticket-tab-btn active" data-tab="private" onclick="switchTicketListTab('private', this)">개인 (1:1)</button>
+				<button class="ticket-tab-btn" data-tab="duo" onclick="switchTicketListTab('duo', this)">듀오 (1:2)</button>
+				<button class="ticket-tab-btn" data-tab="group" onclick="switchTicketListTab('group', this)">그룹</button>
+			</div>
+
+			<div class="ticket-tab-panel active" id="ticket-tab-private">
+				<div id="ticket-panel-private"></div>
+			</div>
+
+			<div class="ticket-tab-panel" id="ticket-tab-duo">
+				<div id="ticket-panel-duo"></div>
+			</div>
+
+			<div class="ticket-tab-panel" id="ticket-tab-group">
+				<div id="ticket-panel-group"></div>
+			</div>
+
+			<div class="ticket-modal-footer">
+				<p class="ticket-footer-notice">수업 취소 및 변경은 24시간 전까지 가능합니다.</p>
+			</div>
+		</div>
+	</div>
 
   <div id="toast" role="status" aria-live="polite"></div>
 
@@ -3368,6 +3617,7 @@
     /*티켓확인모달*/
     let myTicketItems = [];
     function openTicketListModal() {
+      // 변경: 모달을 열 때 카드형 티켓 목록을 다시 그립니다.
       renderTicketListModal();
       document.getElementById('ticket-list-modal').classList.remove('hidden');
     }
@@ -3376,39 +3626,152 @@
       document.getElementById('ticket-list-modal').classList.add('hidden');
     }
 
+		function switchTicketListTab(tabKey, targetButton) {
+			const buttons = document.querySelectorAll('#ticket-list-modal .ticket-tab-btn');
+			const panels = document.querySelectorAll('#ticket-list-modal .ticket-tab-panel');
+
+			buttons.forEach(btn => btn.classList.remove('active'));
+			panels.forEach(panel => panel.classList.remove('active'));
+
+			if (targetButton) targetButton.classList.add('active');
+
+			const targetPanel = document.getElementById(`ticket-tab-${tabKey}`);
+			if (targetPanel) targetPanel.classList.add('active');
+		}
+
+		function getTicketStatusInfo(item) {
+			const remain = parseInt(item.remaining_count || 0, 10);
+			const total = parseInt(item.total_count || 0, 10);
+			const expiredDate = String(item.expired_at || '').split(' ')[0] || '-';
+			const isExpired = expiredDate !== '-' && new Date(`${expiredDate}T23:59:59`).getTime() < Date.now();
+			const isAvailable = remain > 0 && !isExpired;
+			const progress = total > 0 ? Math.max(0, Math.min(100, (remain / total) * 100)) : 0;
+
+			return { remain, total, expiredDate, isExpired, isAvailable, progress };
+		}
+
+		function getTicketGroupKey(item) {
+			const rawType = String(item.class_type || item.classType || item.ticket_type || item.type || '').toUpperCase();
+			if (rawType.includes('PRIVATE')) return 'private';
+			if (rawType.includes('DUO')) return 'duo';
+			if (rawType.includes('GROUP')) return 'group';
+
+			const title = String(item.title || '');
+			if (title.includes('개인')) return 'private';
+			if (title.includes('듀오')) return 'duo';
+			if (title.includes('그룹')) return 'group';
+
+			return 'private';
+		}
+
+		function renderTicketCard(item, isPrimary) {
+      const typeKey = getTicketGroupKey(item).toUpperCase();
+			const typeClass = typeKey === 'DUO' ? 'duo' : '';
+			const typeLabel = typeKey === 'PRIVATE' ? '사용 가능' : (typeKey === 'DUO' ? '사용 가능' : '사용 가능');
+			const status = getTicketStatusInfo(item);
+			const badgeClass = status.isAvailable ? (isPrimary ? '' : 'secondary') : 'disabled';
+			const actionLabel = status.isAvailable ? (isPrimary ? '수업 예약하기' : '사용') : '티켓 충전 필요';
+			const actionClass = status.isAvailable ? (isPrimary ? 'primary' : 'sm') : 'disabled';
+			const actionAttr = status.isAvailable ? `onclick="showSection('reserve'); closeTicketListModal();"` : 'disabled';
+			const countClass = status.remain > 0 ? 'count' : 'count empty';
+			const progressClass = typeKey === 'DUO' ? 'ticket-progress-fill duo' : 'ticket-progress-fill';
+
+			if (isPrimary) {
+				return `
+					<div class="ticket-card">
+						<div class="ticket-header">
+							<span class="ticket-badge ${badgeClass}">${status.isAvailable ? typeLabel : '소진됨'}</span>
+							<span class="ticket-expiry">${status.isExpired ? '기간 만료' : `${status.expiredDate} 만료`}</span>
+						</div>
+						<h3 class="ticket-name">${escapeHtml(item.title || '-')}</h3>
+						<div class="ticket-usage">
+							<div class="usage-info">
+								<span>남은 횟수</span>
+								<strong class="${countClass}">${status.remain}<span>/${status.total}회</span></strong>
+							</div>
+							<div class="ticket-progress-bar">
+								<div class="${progressClass}" style="width: ${status.progress}%;"></div>
+							</div>
+						</div>
+						<button type="button" class="ticket-action-btn ${actionClass}${typeClass ? ` ${typeClass}` : ''}" ${actionAttr}>${actionLabel}</button>
+					</div>
+				`;
+			}
+
+			return `
+				<div class="ticket-card sub-ticket">
+					<div class="ticket-header">
+						<span class="ticket-badge ${badgeClass}">${status.isAvailable ? '이벤트' : '소진됨'}</span>
+						<span class="ticket-expiry">${status.isExpired ? '기간 만료' : `${status.expiredDate} 만료`}</span>
+					</div>
+					<div class="sub-ticket-body">
+						<div>
+							<h4 class="ticket-name-sm">${escapeHtml(item.title || '-')}</h4>
+							<span class="count-sm">${status.remain}회 남음 / ${status.total}회</span>
+						</div>
+						<button type="button" class="ticket-action-btn ${actionClass}" ${actionAttr}>${status.isAvailable ? '사용' : '소진됨'}</button>
+					</div>
+				</div>
+			`;
+		}
+
+		function renderTicketEmptyState(message) {
+			return `<div class="ticket-card" style="text-align:center; padding: 2rem 1rem; color:#64748b;">${escapeHtml(message)}</div>`;
+		}
+
     function renderTicketListModal() {
-      const tbody = document.getElementById('ticket-list-body');
-      if (!tbody) return;
+      const panels = {
+				private: document.getElementById('ticket-panel-private'),
+				duo: document.getElementById('ticket-panel-duo'),
+				group: document.getElementById('ticket-panel-group')
+			};
 
-      tbody.innerHTML = '';
+			if (!panels.private || !panels.duo || !panels.group) return;
 
-      if (!myTicketItems || myTicketItems.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.875rem; opacity: 0.65; padding: 2rem 0;">보유 티켓이 없습니다.</td></tr>';
+			// 변경: 기존 표 형태 대신 카드형 티켓 목록으로 렌더링
+			panels.private.innerHTML = '';
+			panels.duo.innerHTML = '';
+			panels.group.innerHTML = '';
+
+			if (!myTicketItems || myTicketItems.length === 0) {
+				panels.private.innerHTML = renderTicketEmptyState('보유 티켓이 없습니다.');
+				panels.duo.innerHTML = renderTicketEmptyState('보유 티켓이 없습니다.');
+				panels.group.innerHTML = renderTicketEmptyState('보유 티켓이 없습니다.');
+				switchTicketListTab('private', document.querySelector('#ticket-list-modal .ticket-tab-btn[data-tab="private"]'));
         return;
       }
 
-      const classTypeLabel = {
-        PRIVATE: '개인',
-        DUO: '듀오',
-        GROUP: '그룹'
-      };
+      const grouped = {
+       private: myTicketItems.filter(item => getTicketGroupKey(item) === 'private'),
+				duo: myTicketItems.filter(item => getTicketGroupKey(item) === 'duo'),
+				group: myTicketItems.filter(item => getTicketGroupKey(item) === 'group')
+			};
 
-      myTicketItems.forEach(item => {
-        const tr = document.createElement('tr');
-        const typeKey = String(item.class_type || '').toUpperCase();
-        const typeText = classTypeLabel[typeKey] || '-';
-        const remain = parseInt(item.remaining_count || 0, 10);
-        const total = parseInt(item.total_count || 0, 10);
-        const expiredDate = String(item.expired_at || '').split(' ')[0] || '-';
+			const renderGroup = (list, container, emptyMessage) => {
+				if (!list || list.length === 0) {
+					container.innerHTML = renderTicketEmptyState(emptyMessage);
+					return;
+				}
 
-        tr.innerHTML = `
-                <td>${escapeHtml(item.title || '-')}</td>
-                <td>${typeText}</td>
-                <td style="font-weight: bold; color: var(--point-brown);">${remain} / ${total}</td>
-                <td>${expiredDate}</td>
-            `;
-        tbody.appendChild(tr);
-      });
+				const sorted = [...list].sort((a, b) => {
+					const aRemain = parseInt(a.remaining_count || 0, 10);
+					const bRemain = parseInt(b.remaining_count || 0, 10);
+					const aTotal = parseInt(a.total_count || 0, 10);
+					const bTotal = parseInt(b.total_count || 0, 10);
+					return bRemain - aRemain || bTotal - aTotal;
+				});
+
+				container.innerHTML = [
+					renderTicketCard(sorted[0], true),
+					...sorted.slice(1).map(item => renderTicketCard(item, false))
+				].join('');
+			};
+
+			renderGroup(grouped.private, panels.private, '개인 티켓이 없습니다.');
+			renderGroup(grouped.duo, panels.duo, '듀오 티켓이 없습니다.');
+			renderGroup(grouped.group, panels.group, '그룹 티켓이 없습니다.');
+
+      switchTicketListTab('private', document.querySelector('#ticket-list-modal .ticket-tab-btn[data-tab="private"]'));
     }
 
 

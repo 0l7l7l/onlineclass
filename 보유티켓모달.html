@@ -1,0 +1,593 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>내 보유 티켓 모달</title>
+	<style>
+
+		/* 기본 초기화 */
+			 * {
+					 box-sizing: border-box;
+					 margin: 0;
+					 padding: 0;
+					 font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+
+		}
+
+
+
+			 body {
+					 background-color: #f1f5f9;
+					 display: flex;
+					 justify-content: center;
+					 align-items: center;
+					 min-height: 100vh;
+
+		}
+
+
+
+
+		/* 모달 열기 메인 버튼 */
+			 .open-modal-btn { padding: 14px 28px; background-color: #4f46e5; color: #ffffff; border: none; border-radius: 12px; font-size: 1rem;font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3); transition: all 0.2s ease;	}
+
+			 .open-modal-btn:hover { background-color: #4338ca;	 transform: translateY(-1px);	}
+
+		/* 모달 오버레이 */
+			 .modal-backdrop { position: fixed; top: 0; left: 0;	 width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5);	 backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000;
+			/* 기본적으로 숨김 처리 */ opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease;	}
+
+			/* 모달 활성화 클래스 */
+				 .modal-backdrop.active {	 opacity: 1; visibility: visible;	}
+
+		/* 모달 컨테이너 */
+			 .ticket-modal {
+					 background: #ffffff;
+					 width: 90%;
+					 max-width: 400px;
+					 border-radius: 20px;
+					 padding: 24px;
+					 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+					 transform: translateY(10px);
+					 transition: transform 0.25s ease;
+		}
+			 .modal-backdrop.active .ticket-modal { transform: translateY(0);	}
+
+		/* 헤더 */
+			 .modal-header {
+					 display: flex;
+					 justify-content: space-between;
+					 align-items: center;
+					 margin-bottom: 20px;
+
+		}
+
+
+
+			 .modal-header h2 {
+					 font-size: 1.2rem;
+					 font-weight: 700;
+					 color: #0f172a;
+
+		}
+
+
+
+			 .close-button {
+					 background: none;
+					 border: none;
+					 font-size: 1.5rem;
+					 color: #94a3b8;
+					 cursor: pointer;
+					 line-height: 1;
+
+		}
+
+
+
+				 .close-button:hover {
+						 color: #0f172a;
+
+			}
+
+
+
+
+		/* 탭 메뉴 */
+			 .tab-menu {
+					 display: flex;
+					 background-color: #f8fafc;
+					 padding: 4px;
+					 border-radius: 12px;
+					 margin-bottom: 20px;
+
+		}
+
+
+
+			 .tab-btn {
+					 flex: 1;
+					 padding: 10px 0;
+					 border: none;
+					 background: transparent;
+					 font-size: 0.85rem;
+					 font-weight: 600;
+					 color: #64748b;
+					 border-radius: 8px;
+					 cursor: pointer;
+					 transition: all 0.2s;
+
+		}
+
+
+
+				 .tab-btn.active {
+						 background-color: #ffffff;
+						 color: #4f46e5;
+						 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+
+			}
+
+
+
+
+		/* 탭 패널 (컨텐츠) */
+			 .tab-panel {
+					 display: none;
+					 flex-direction: column;
+					 gap: 12px;
+
+		}
+
+
+
+			 .tab-panel.active {
+					 display: flex;
+
+		}
+
+
+
+
+		/* 티켓 카드 공통 */
+			 .ticket-card {
+					 border: 1px solid #e2e8f0;
+					 border-radius: 16px;
+					 padding: 20px;
+					 background-color: #ffffff;
+
+		}
+
+
+
+			 .ticket-header {
+					 display: flex;
+					 justify-content: space-between;
+					 align-items: center;
+					 margin-bottom: 12px;
+
+		}
+
+
+
+			 .badge {
+					 font-size: 0.7rem;
+					 font-weight: 700;
+					 color: #4f46e5;
+					 background-color: #eef2ff;
+					 padding: 4px 8px;
+					 border-radius: 6px;
+
+		}
+
+
+
+				 .badge.secondary {
+						 color: #059669;
+						 background-color: #ecfdf5;
+
+			}
+
+
+
+				 .badge.disabled {
+						 color: #64748b;
+						 background-color: #f1f5f9;
+
+			}
+
+
+
+			 .expiry {
+					 font-size: 0.75rem;
+					 color: #94a3b8;
+
+		}
+
+
+
+			 .ticket-name {
+					 font-size: 1.1rem;
+					 font-weight: 700;
+					 color: #1e293b;
+					 margin-bottom: 16px;
+
+		}
+
+
+
+
+		/* 잔여 횟수 및 프로그레스 바 */
+			 .ticket-usage {
+					 margin-bottom: 20px;
+
+		}
+
+
+
+			 .usage-info {
+					 display: flex;
+					 justify-content: space-between;
+					 align-items: baseline;
+					 margin-bottom: 8px;
+
+		}
+
+
+
+				 .usage-info span {
+						 font-size: 0.8rem;
+						 color: #64748b;
+
+			}
+
+
+
+				 .usage-info .count {
+						 font-size: 1.4rem;
+						 font-weight: 800;
+						 color: #4f46e5;
+
+			}
+
+
+
+					 .usage-info .count.empty {
+							 color: #cbd5e1;
+
+				}
+
+
+
+					 .usage-info .count span {
+							 font-size: 0.85rem;
+							 color: #94a3b8;
+							 font-weight: 500;
+
+				}
+
+
+
+			 .progress-bar {
+					 width: 100%;
+					 height: 8px;
+					 background-color: #f1f5f9;
+					 border-radius: 4px;
+					 overflow: hidden;
+
+		}
+
+
+
+			 .progress-fill {
+					 height: 100%;
+					 background-color: #4f46e5;
+					 border-radius: 4px;
+
+		}
+
+
+
+				 .progress-fill.duo {
+						 background-color: #0284c7;
+
+			}
+
+
+
+
+		/* 서브 티켓 카드 */
+			 .sub-ticket {
+					 padding: 14px 16px;
+					 background-color: #fafafa;
+
+		}
+
+
+
+			 .sub-ticket-body {
+					 display: flex;
+					 justify-content: space-between;
+					 align-items: center;
+
+		}
+
+
+
+			 .ticket-name-sm {
+					 font-size: 0.9rem;
+					 font-weight: 600;
+					 color: #334155;
+
+		}
+
+
+
+			 .count-sm {
+					 font-size: 0.75rem;
+					 color: #64748b;
+					 display: block;
+					 margin-top: 2px;
+
+		}
+
+
+
+
+		/* 버튼 스타일 */
+			 .action-btn {
+					 border: none;
+					 border-radius: 10px;
+					 font-weight: 700;
+					 cursor: pointer;
+					 transition: opacity 0.2s;
+
+		}
+
+
+
+			 .action-btn.primary {
+					 width: 100%;
+					 padding: 14px;
+					 background-color: #4f46e5;
+					 color: #ffffff;
+					 font-size: 0.95rem;
+
+		}
+
+
+
+				 .action-btn.primary.duo {
+						 background-color: #0284c7;
+
+			}
+
+
+
+			 .action-btn.disabled {
+					 background-color: #e2e8f0;
+					 color: #94a3b8;
+					 cursor: not-allowed;
+
+		}
+
+
+
+			 .action-btn.sm {
+					 padding: 8px 14px;
+					 background-color: #e2e8f0;
+					 color: #334155;
+					 font-size: 0.8rem;
+
+		}
+
+
+
+			 .action-btn:not(.disabled):hover {
+					 opacity: 0.9;
+
+		}
+
+
+
+
+		/* 푸터 */
+			 .modal-footer {
+					 margin-top: 20px;
+					 text-align: center;
+
+		}
+
+
+
+			 .footer-notice {
+					 font-size: 0.75rem;
+					 color: #94a3b8;
+
+		}
+	</style>
+</head>
+<body>
+
+
+
+	<!-- 화면 중앙 트리거 버튼 -->
+	<button class="open-modal-btn" id="openModalBtn">내 보유 티켓 보기</button>
+
+
+
+	<!-- 모달 오버레이 -->
+	<div class="modal-backdrop" id="modalBackdrop">
+		<div class="ticket-modal">
+
+			<!-- 헤더 -->
+			<div class="modal-header">
+				<h2>내 보유 티켓</h2>
+				<button class="close-button" id="closeModalBtn" aria-label="닫기">&times;</button>
+			</div>
+
+
+
+			<!-- 탭 메뉴 -->
+			<div class="tab-menu">
+				<button class="tab-btn active" data-tab="solo">개인 (1:1)</button>
+				<button class="tab-btn" data-tab="duo">듀오 (2:1)</button>
+				<button class="tab-btn" data-tab="group">그룹</button>
+			</div>
+
+
+
+			<!-- 탭 컨텐츠 1: 개인 티켓 -->
+			<div class="tab-panel active" id="tab-solo">
+				<div class="ticket-card">
+					<div class="ticket-header">
+						<span class="badge">사용 가능</span>
+						<span class="expiry">2026.12.31 만료</span>
+					</div>
+					<h3 class="ticket-name">1:1 개인 프리미엄 레슨</h3>
+					<div class="ticket-usage">
+						<div class="usage-info">
+							<span>남은 횟수</span>
+							<strong class="count">5<span>/10회</span></strong>
+						</div>
+						<div class="progress-bar">
+							<div class="progress-fill" style="width: 50%;"></div>
+						</div>
+					</div>
+					<button class="action-btn primary">수업 예약하기</button>
+				</div>
+
+
+
+				<div class="ticket-card sub-ticket">
+					<div class="ticket-header">
+						<span class="badge secondary">이벤트</span>
+						<span class="expiry">2026.09.30 만료</span>
+					</div>
+					<div class="sub-ticket-body">
+						<div>
+							<h4 class="ticket-name-sm">개인 체험권</h4>
+							<span class="count-sm">1회 남음</span>
+						</div>
+						<button class="action-btn sm">사용</button>
+					</div>
+				</div>
+			</div>
+
+
+
+			<!-- 탭 컨텐츠 2: 듀오 티켓 -->
+			<div class="tab-panel" id="tab-duo">
+				<div class="ticket-card">
+					<div class="ticket-header">
+						<span class="badge" style="color: #0284c7; background-color: #e0f2fe;">사용 가능</span>
+						<span class="expiry">2026.10.15 만료</span>
+					</div>
+					<h3 class="ticket-name">2:1 듀오 파트너 레슨</h3>
+					<div class="ticket-usage">
+						<div class="usage-info">
+							<span>남은 횟수</span>
+							<strong class="count" style="color: #0284c7;">2<span>/8회</span></strong>
+						</div>
+						<div class="progress-bar">
+							<div class="progress-fill duo" style="width: 25%;"></div>
+						</div>
+					</div>
+					<button class="action-btn primary duo">수업 예약하기</button>
+				</div>
+			</div>
+
+
+
+			<!-- 탭 컨텐츠 3: 그룹 티켓 -->
+			<div class="tab-panel" id="tab-group">
+				<div class="ticket-card">
+					<div class="ticket-header">
+						<span class="badge disabled">소진됨</span>
+						<span class="expiry">기간 만료</span>
+					</div>
+					<h3 class="ticket-name" style="color: #94a3b8;">소그룹 단체 레슨</h3>
+					<div class="ticket-usage">
+						<div class="usage-info">
+							<span>남은 횟수</span>
+							<strong class="count empty">0<span>/20회</span></strong>
+						</div>
+						<div class="progress-bar">
+							<div class="progress-fill" style="width: 0%;"></div>
+						</div>
+					</div>
+					<button class="action-btn disabled" disabled>티켓 충전 필요</button>
+				</div>
+			</div>
+
+
+
+			<!-- 푸터 -->
+			<div class="modal-footer">
+				<p class="footer-notice">수업 취소 및 변경은 24시간 전까지 가능합니다.</p>
+			</div>
+
+
+
+		</div>
+	</div>
+
+
+
+	<script>// Elements
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+
+
+    // 모달 열기
+    openModalBtn.addEventListener('click', () => {
+      modalBackdrop.classList.add('active');
+    });
+
+
+
+    // 모달 닫기
+    closeModalBtn.addEventListener('click', () => {
+      modalBackdrop.classList.remove('active');
+    });
+
+
+
+    // 배경 클릭 시 모달 닫기
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) {
+        modalBackdrop.classList.remove('active');
+      }
+    });
+
+
+
+    // 탭 전환 이벤트
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+
+
+
+        // 탭 버튼 활성화 상태 변경
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+
+
+        // 탭 패널 전환
+        tabPanels.forEach(panel => {
+          panel.classList.remove('active');
+          if (panel.id === `tab-${targetTab}`) {
+            panel.classList.add('active');
+          }
+        });
+      });
+    });</script>
+</body>
+</html>

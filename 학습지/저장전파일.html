@@ -1,0 +1,1352 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+	<title>初級韓国語文法 - ~아서/어서 (だから・ので) 総合練習</title>
+
+
+
+	<style>
+
+
+
+		:root {
+			--book-scale: 0.75;
+			--primary-blue: #2563eb;
+			--header-blue: #1d4ed8;
+			--sky-blue: #0284c7;
+			--dark-navy: #1e293b;
+			--light-blue-bg: #eff6ff;
+			--border-color: #dbeafe;
+			--accent-orange: #ea580c;
+			--green: #16a34a;
+		}
+
+
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family:    'Hiragino Sans',    'Meiryo',    'Malgun Gothic',    sans-serif;
+		}
+
+
+
+		body {
+			background-color: #f4f6f9;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+
+
+		/* 本全体 */
+		.book-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 50px;
+			zoom: var(--book-scale);
+			transition: zoom 0.2s ease;
+			counter-reset: page-num 0;
+		}
+
+
+
+		/* レスポンシブ */
+		@media (max-width: 1500px) {
+			:root {
+				--book-scale: 0.65;
+			}
+		}
+
+		@media (max-width: 1300px) {
+			:root {
+				--book-scale: 0.55;
+			}
+		}
+
+		@media (max-width: 1100px) {
+			:root {
+				--book-scale: 0.45;
+			}
+		}
+
+
+
+		/* 見開き面 */
+		.book-container {
+			display: flex;
+			width: 364mm;
+			height: 257mm;
+			background-color: #fff;
+			box-shadow: 0 20px 50px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.03);
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+		}
+
+
+
+			.book-container::after {
+				content: "";
+				position: absolute;
+				left: 50%;
+				top: 3%;
+				width: 1px;
+				height: 94%;
+				background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
+				z-index: 10;
+			}
+
+
+
+		/* ページ */
+		.page {
+			width: 182mm;
+			height: 257mm;
+			padding: 16mm 18mm;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background-color: #fff;
+			counter-increment: page-num;
+		}
+
+
+
+		.footer {
+			position: absolute;
+			bottom: 10mm;
+			font-size: 12px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+		.left-page .footer {
+			left: 18mm;
+		}
+
+		.right-page .footer {
+			right: 18mm;
+		}
+
+
+
+		.grammar-no {
+			position: absolute;
+			top: 12mm;
+			font-size: 13px;
+			color: var(--primary-blue);
+			font-weight: bold;
+			letter-spacing: 1px;
+		}
+
+		.left-page .grammar-no {
+			left: 18mm;
+		}
+
+		.right-page .grammar-no {
+			right: 18mm;
+			text-align: right;
+		}
+
+
+
+		.lesson-badge-oval {
+			display: inline-block;
+			align-self: flex-start;
+			background: var(--primary-blue);
+			color: white;
+			font-size: 13px;
+			font-weight: 800;
+			padding: 4px 16px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+			box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+		}
+
+
+
+		.section-lesson-title {
+			font-size: 18px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-bottom: 8px;
+			padding-bottom: 6px;
+			border-bottom: 2px solid var(--primary-blue);
+		}
+
+
+
+		h3.grammar-title {
+			font-size: 26px;
+			color: #0f172a;
+			font-weight: 900;
+			margin-bottom: 12px;
+			line-height: 1.2;
+		}
+
+
+
+		.big-concept {
+			background: #f8fafc;
+			border: 2px solid var(--border-color);
+			border-radius: 12px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 8px;
+		}
+
+		.big-concept-main {
+			font-size: 22px;
+			font-weight: 900;
+			color: var(--primary-blue);
+		}
+
+		.big-concept-sub {
+			font-size: 13px;
+			color: #64748b;
+			font-weight: 700;
+		}
+
+
+
+		.pin-subtitle {
+			font-size: 14px;
+			color: #1e3a8a;
+			font-weight: 800;
+			margin-top: 8px;
+			margin-bottom: 6px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding-bottom: 4px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+			.pin-subtitle::before {
+				content: "📌";
+				font-size: 13px;
+			}
+
+
+
+		.speech-label-title {
+			font-size: 12.5px;
+			font-weight: bold;
+			color: #334155;
+			margin-bottom: 4px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+			.speech-label-title::before {
+				content: "💬";
+				font-size: 12.5px;
+			}
+
+
+
+		p, li {
+			font-size: 12.5px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+
+
+		/* 公式エリア */
+		.formula-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 8px;
+			margin-bottom: 8px;
+		}
+
+
+
+		.formula-column {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+
+
+		.formula-header {
+			background-color: var(--primary-blue);
+			color: white;
+			font-size: 12px;
+			font-weight: 800;
+			text-align: center;
+			padding: 6px;
+			border-radius: 6px;
+		}
+
+			.formula-header.sky {
+				background-color: var(--sky-blue);
+			}
+
+
+
+		.formula-box {
+			background-color: white;
+			border: 1px solid #e2e8f0;
+			border-radius: 6px;
+			padding: 6px;
+			text-align: center;
+			font-size: 12.5px;
+			font-weight: 800;
+			color: #1e293b;
+		}
+
+
+
+			.formula-box.highlight-text {
+				background-color: #f8fafc;
+				color: var(--primary-blue);
+			}
+
+
+
+		.point-speech-card {
+			background-color: #eff6ff;
+			border: 1px solid #bfdbfe;
+			border-radius: 12px;
+			padding: 10px 12px;
+			margin-top: 6px;
+			margin-bottom: 6px;
+		}
+
+			.point-speech-card ul {
+				padding-left: 14px;
+			}
+
+			.point-speech-card li {
+				font-size: 12px;
+				line-height: 1.5;
+				color: #334155;
+				margin-bottom: 3px;
+			}
+
+
+
+		.travel-card {
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+			padding: 8px 10px;
+			margin-bottom: 5px;
+			background: #fff;
+		}
+
+			.travel-card .ko-main {
+				font-size: 15px;
+				font-weight: 900;
+				color: #0f172a;
+				margin-bottom: 2px;
+			}
+
+			.travel-card .jp-sub {
+				font-size: 11.5px;
+				color: #64748b;
+			}
+
+			.travel-card .point {
+				color: var(--primary-blue);
+				font-weight: 900;
+			}
+
+
+
+		/* テーブル（練習表）スタイル */
+		.practice-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 6px;
+			margin-bottom: 8px;
+		}
+
+
+
+			.practice-table th {
+				background-color: var(--primary-blue);
+				color: white;
+				font-size: 12px;
+				font-weight: 800;
+				padding: 6px 4px;
+				border: 1px solid var(--primary-blue);
+				text-align: center;
+			}
+
+
+
+			.practice-table td {
+				border: 1px solid #e2e8f0;
+				padding: 6px 8px;
+				font-size: 12px;
+				text-align: center;
+			}
+
+
+
+			.practice-table tr:nth-child(even) {
+				background-color: #f8fafc;
+			}
+
+
+
+		.table-tag {
+			display: inline-block;
+			font-size: 10px;
+			font-weight: 800;
+			padding: 2px 6px;
+			border-radius: 4px;
+			color: white;
+		}
+
+		.tag-a {
+			background-color: #2563eb;
+		}
+
+		.tag-eo {
+			background-color: #0284c7;
+		}
+
+		.tag-ha {
+			background-color: #16a34a;
+		}
+
+
+
+		.quiz-item {
+			margin-bottom: 8px;
+			background-color: #fafafa;
+			padding: 8px 10px;
+			border-radius: 7px;
+			border: 1px solid #f1f5f9;
+		}
+
+		.quiz-q {
+			font-size: 13px;
+			font-weight: 700;
+			color: #1e293b;
+		}
+
+		.quiz-ja {
+			font-size: 11.5px;
+			color: #64748b;
+			margin-top: 2px;
+		}
+
+
+
+		.quiz-line {
+			display: inline-block;
+			min-width: 65px;
+			border-bottom: 2px solid var(--primary-blue);
+			text-align: center;
+			margin: 0 2px;
+			font-weight: bold;
+			color: var(--accent-orange);
+		}
+
+
+
+		.answer-btn {
+			padding: 3px 8px;
+			background: transparent;
+			color: var(--primary-blue);
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 10.5px;
+			font-weight: bold;
+		}
+
+
+
+		.answer-box {
+			margin-top: 4px;
+			padding: 4px 6px;
+			border: 1.5px solid var(--primary-blue);
+			border-radius: 5px;
+			display: none;
+			background: #f8fafc;
+		}
+
+
+
+			.answer-box.show {
+				display: block;
+			}
+
+		.answer-content {
+			font-size: 11.5px;
+			color: #1e3a8a;
+			font-weight: bold;
+		}
+
+
+
+		/* 単語リストカード（PAGE 5用） */
+		.word-box-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 6px;
+			margin-bottom: 8px;
+		}
+
+
+
+		.word-chip {
+			background-color: #f1f5f9;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			padding: 5px;
+			text-align: center;
+			font-size: 11.5px;
+		}
+
+			.word-chip .ko-w {
+				font-weight: 800;
+				color: #0f172a;
+			}
+
+			.word-chip .jp-w {
+				font-size: 10px;
+				color: #64748b;
+			}
+
+
+
+		/* 会話バブル (PAGE 6用) */
+		.conversation {
+			margin-top: 6px;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.bubble {
+			padding: 8px 12px;
+			border-radius: 12px;
+			max-width: 95%;
+			font-size: 12px;
+			line-height: 1.4;
+		}
+
+		.bubble-a {
+			background: #eff6ff;
+			border: 1px solid #bfdbfe;
+			align-self: flex-start;
+		}
+
+		.bubble-b {
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			align-self: flex-end;
+		}
+
+		.bubble .name {
+			font-size: 10px;
+			font-weight: bold;
+			color: var(--primary-blue);
+			margin-bottom: 2px;
+		}
+
+
+
+		/* モバイル・印刷対応 */
+		@media (max-width: 900px) {
+			body {
+				padding: 10px;
+			}
+
+			.book-wrapper {
+				zoom: 1 !important;
+				width: 100%;
+				gap: 20px;
+			}
+
+			.book-container {
+				flex-direction: column;
+				width: 100%;
+				height: auto;
+				box-shadow: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 100%;
+				height: auto;
+				padding: 30px 20px;
+				border-bottom: 2px dashed #e2e8f0;
+			}
+
+			.footer {
+				position: relative;
+				bottom: 0;
+				margin-top: 20px;
+				text-align: center;
+			}
+		}
+
+
+
+		@media print {
+			@page {
+				size: 364mm 257mm;
+				margin: 0;
+			}
+
+			body {
+				background-color: #fff;
+				padding: 0;
+			}
+
+			.book-wrapper {
+				gap: 0;
+				zoom: 1 !important;
+			}
+
+			.book-container {
+				display: flex !important;
+				flex-direction: row !important;
+				width: 364mm;
+				height: 257mm;
+				page-break-after: always;
+				box-shadow: none;
+				border: none;
+			}
+
+				.book-container::after {
+					display: none;
+				}
+
+			.page {
+				width: 182mm !important;
+				height: 257mm !important;
+			}
+
+			.answer-btn {
+				display: none;
+			}
+
+			.answer-box {
+				display: block !important;
+			}
+
+			* {
+				-webkit-print-color-adjust: exact !important;
+				print-color-adjust: exact;
+			}
+		}
+	</style>
+</head>
+
+
+
+<body>
+
+
+
+	<div class="book-wrapper">
+
+
+
+		<!-- =====================================================
+				 見開き 1 : PAGE 1 & PAGE 2 (文法解説 & 動詞)
+		===================================================== -->
+		<div class="book-container">
+
+
+
+			<!-- ================= PAGE 1 ================= -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 03 · PAGE 1</div>
+				<div class="lesson-badge-oval">文法解説</div>
+				<div class="section-lesson-title">理由・原因を表す表現</div>
+				<h3 class="grammar-title">-아서 / -어서</h3>
+
+
+
+				<div class="big-concept">
+					<div class="big-concept-main">-아서 / -어서</div>
+					<div class="big-concept-sub">〜だから / ～ので (理由・原因)</div>
+				</div>
+
+
+
+				<div class="pin-subtitle">詳しい解説 (詳しい説明)</div>
+
+
+
+				<div class="point-speech-card">
+					<div class="speech-label-title">「-아서/어서」とは？</div>
+					<ul>
+						<li>前文が<strong>原因・理由</strong>、後文が<strong>結果</strong>になる時につなぐ表現です。（日本語の「〜だから」「〜ので」に相当）</li>
+						<li>日常会話で「どうして？」と聞かれた時や、理由を説明する時に一番よく使います！</li>
+					</ul>
+				</div>
+
+
+
+				<div class="pin-subtitle">変形方法 (変形ルール)</div>
+
+
+
+				<div class="formula-container">
+					<div class="formula-column">
+						<div class="formula-header">語幹の最後の母音</div>
+						<div class="formula-box">ㅏ, ㅗ (陽性母音)</div>
+						<div class="formula-box">ㅓ, ㅜ, ㅣ など (陰性母音)</div>
+						<div class="formula-box">하다 (〜する)</div>
+					</div>
+					<div class="formula-column">
+						<div class="formula-header sky">結合する形</div>
+						<div class="formula-box highlight-text">-아서</div>
+						<div class="formula-box highlight-text">-어서</div>
+						<div class="formula-box highlight-text">해서</div>
+					</div>
+				</div>
+
+
+
+				<div class="pin-subtitle">代表的な例文 (例文)</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">비가 <span class="point">와서</span> 집에 있어요.</div>
+					<div class="jp-sub">雨が降って(降るので) 家にいます。</div>
+				</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">배가 <span class="point">고파서</span> 밥을 먹어요.</div>
+					<div class="jp-sub">お腹が空いて(空いたので) ごはんを食べます。</div>
+				</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">날씨가 <span class="point">좋아서</span> 산책해요.</div>
+					<div class="jp-sub">天気が良くて(良いので) 散歩します。</div>
+				</div>
+
+
+
+				<div class="footer"></div>
+			</div>
+
+
+
+			<!-- ================= PAGE 2 ================= -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 03 · PAGE 2</div>
+				<div class="lesson-badge-oval">動詞 (動詞)</div>
+				<div class="section-lesson-title">動詞の活用練習</div>
+				<h3 class="grammar-title">動詞 + 아서/어서</h3>
+
+
+
+				<div class="pin-subtitle">動詞の変形練習表</div>
+
+
+
+				<table class="practice-table">
+					<thead>
+						<tr>
+							<th>基本形</th>
+							<th>タイプ</th>
+							<th>変形 (-아서/어서)</th>
+							<th>正解チェック</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><b>가다</b> (行く)</td>
+							<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+							<td>가 + 아서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">가서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>오다</b> (来る)</td>
+							<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+							<td>오 + 아서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">와서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>보다</b> (見る)</td>
+							<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+							<td>보 + 아서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">봐서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>먹다</b> (食べる)</td>
+							<td><span class="table-tag tag-eo">その他</span></td>
+							<td>먹 + 어서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">먹어서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>읽다</b> (読む)</td>
+							<td><span class="table-tag tag-eo">その他</span></td>
+							<td>읽 + 어서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">읽어서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>마시다</b> (飲む)</td>
+							<td><span class="table-tag tag-eo">その他</span></td>
+							<td>마시 + 어서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">마셔서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>공부하다</b> (勉強する)</td>
+							<td><span class="table-tag tag-ha">하다</span></td>
+							<td>공부하 + 여서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">공부해서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>일하다</b> (働く)</td>
+							<td><span class="table-tag tag-ha">하다</span></td>
+							<td>일하 + 여서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">일해서</div></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+
+
+				<div class="pin-subtitle">動詞の例文</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">친구를 <span class="point">만나서</span> 영화를 봐요.</div>
+					<div class="jp-sub">友達に会って(会うので) 映画を見ます。</div>
+				</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">책을 <span class="point">읽어서</span> 기분이 좋아요.</div>
+					<div class="jp-sub">本を読んで(読んだので) 気分が良いです。</div>
+				</div>
+
+
+
+				<div class="footer"></div>
+			</div>
+
+
+
+		</div>
+
+
+
+
+
+		<!-- =====================================================
+				 見開き 2 : PAGE 3 & PAGE 4 (形容詞 & 名詞)
+		===================================================== -->
+		<div class="book-container">
+
+
+
+			<!-- ================= PAGE 3 ================= -->
+			<div class="page left-page">
+				<div class="grammar-no">WEEK 03 · PAGE 3</div>
+				<div class="lesson-badge-oval">形容詞 (形容詞)</div>
+				<div class="section-lesson-title">形容詞の活用練習</div>
+				<h3 class="grammar-title">形容詞 + 아서/어서</h3>
+
+
+
+				<div class="pin-subtitle">形容詞の変形練習表</div>
+
+
+
+				<table class="practice-table">
+					<thead>
+						<tr>
+							<th>基本形</th>
+							<th>タイプ</th>
+							<th>変形 (-아서/어서)</th>
+							<th>正解チェック</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><b>좋다</b> (良い)</td>
+							<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+							<td>좋 + 아서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">좋아서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>비싸다</b> (高い)</td>
+							<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+							<td>비싸 + 아서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">비싸서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>바쁘다</b> (忙しい)</td>
+							<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+							<td>바쁘 + 아서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">바빠서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>맛있다</b> (美味しい)</td>
+							<td><span class="table-tag tag-eo">その他</span></td>
+							<td>맛있 + 어서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">맛있어서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>재미있다</b> (面白い)</td>
+							<td><span class="table-tag tag-eo">その他</span></td>
+							<td>재미있 + 어서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">재미있어서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>적다</b> (少ない)</td>
+							<td><span class="table-tag tag-eo">その他</span></td>
+							<td>적 + 어서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">적어서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>친절하다</b> (親切だ)</td>
+							<td><span class="table-tag tag-ha">하다</span></td>
+							<td>친절하 + 여서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">친절해서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>깨끗하다</b> (綺麗だ)</td>
+							<td><span class="table-tag tag-ha">하다</span></td>
+							<td>깨끗하 + 여서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">깨끗해서</div></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+
+
+				<div class="pin-subtitle">形容詞の例文</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">옷이 <span class="point">비싸서</span> 안 사요.</div>
+					<div class="jp-sub">服が高くて(高いので) 買いません。</div>
+				</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">한국어가 <span class="point">재미있어서</span> 공부해요.</div>
+					<div class="jp-sub">韓国語が面白くて(面白いので) 勉強します。</div>
+				</div>
+
+
+
+				<div class="footer"></div>
+			</div>
+
+
+
+			<!-- ================= PAGE 4 ================= -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 03 · PAGE 4</div>
+				<div class="lesson-badge-oval">名詞 (名詞)</div>
+				<div class="section-lesson-title">名詞の活用ルール</div>
+				<h3 class="grammar-title">名詞 + (이)라서</h3>
+
+
+
+				<div class="point-speech-card" style="background:#fff3ed; border-color:#fed7aa;">
+					<div class="speech-label-title" style="color:#c2410c;">⚠️ 名詞の後ろは「-(이)라서」！</div>
+					<ul>
+						<li>名詞につける時は「-아서/어서」ではなく<strong>「-(이)라서」</strong>を使います。</li>
+						<li>パッチムあり ➔ <b>-이라서</b> (학생 ➔ 학생<b>이라서</b>)</li>
+						<li>パッチムなし ➔ <b>-라서</b> (친구 ➔ 친구<b>라서</b>)</li>
+					</ul>
+				</div>
+
+
+
+				<div class="pin-subtitle">名詞の変形練習表</div>
+
+
+
+				<table class="practice-table">
+					<thead>
+						<tr>
+							<th>名詞 (意味)</th>
+							<th>パッチム</th>
+							<th>変形 (-(이)라서)</th>
+							<th>正解チェック</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><b>학생</b> (学生)</td>
+							<td><span class="table-tag tag-a">あり (O)</span></td>
+							<td>학생 + 이라서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">학생이라서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>일요일</b> (日曜日)</td>
+							<td><span class="table-tag tag-a">あり (O)</span></td>
+							<td>일요일 + 이라서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">일요일이라서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>한국 사람</b> (韓国人)</td>
+							<td><span class="table-tag tag-a">あり (O)</span></td>
+							<td>사람 + 이라서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">한국 사람이라서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>친구</b> (友達)</td>
+							<td><span class="table-tag tag-eo">なし (X)</span></td>
+							<td>친구 + 라서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">친구라서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>휴일</b> (休日)</td>
+							<td><span class="table-tag tag-a">あり (O)</span></td>
+							<td>휴일 + 이라서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">휴일이라서</div></div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>오늘</b> (今日)</td>
+							<td><span class="table-tag tag-a">あり (O)</span></td>
+							<td>오늘 + 이라서 ➔ <span class="quiz-line">____</span></td>
+							<td>
+								<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+								<div class="answer-box"><div class="answer-content">오늘이라서</div></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+
+
+				<div class="pin-subtitle">名詞の例文</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main">오늘 <span class="point">일요일이라서</span> 쉬어요.</div>
+					<div class="jp-sub">今日、日曜日なので休んでいます。</div>
+				</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main"><span class="point">학생이라서</span> 돈이 없어요.</div>
+					<div class="jp-sub">学生なのでお金がありません。</div>
+				</div>
+
+
+
+				<div class="travel-card">
+					<div class="ko-main"><span class="point">친구라서</span> 도와줘요.</div>
+					<div class="jp-sub">友達なので助けます。</div>
+				</div>
+
+
+
+				<div class="footer"></div>
+			</div>
+
+
+
+		</div>
+
+
+
+
+
+		<!-- =====================================================
+				 見開き 3 : PAGE 5 & PAGE 6 (練習問題 & 会話問題)
+		===================================================== -->
+		<div class="book-container">
+
+
+
+			<!-- ================= PAGE 5 ================= -->
+			<div class="page left-page">
+				<div class="lesson-badge-oval">総合練習 1</div>
+				<div class="section-lesson-title">単語チェック ＆ 変形練習</div>
+				<h3 class="grammar-title">単語を変形してみましょう！</h3>
+
+
+
+				<div class="pin-subtitle">今回使う重要単語 (基本語彙)</div>
+
+
+
+				<div class="word-box-grid">
+					<div class="word-chip"><div class="ko-w">아프다</div><div class="jp-w">痛い・病気だ</div></div>
+					<div class="word-chip"><div class="ko-w">늦다</div><div class="jp-w">遅い・遅れる</div></div>
+					<div class="word-chip"><div class="ko-w">춥다</div><div class="jp-w">寒い</div></div>
+					<div class="word-chip"><div class="ko-w">더위</div><div class="jp-w">暑さ</div></div>
+					<div class="word-chip"><div class="ko-w">어렵다</div><div class="jp-w">難しい</div></div>
+					<div class="word-chip"><div class="ko-w">쉬다</div><div class="jp-w">休む</div></div>
+					<div class="word-chip"><div class="ko-w">만나다</div><div class="jp-w">会う</div></div>
+					<div class="word-chip"><div class="ko-w">생일</div><div class="jp-w">誕生日</div></div>
+					<div class="word-chip"><div class="ko-w">雨 (비)</div><div class="jp-w">雨</div></div>
+				</div>
+
+
+
+				<div class="pin-subtitle">練習 1:カッコの中の単語を変形しましょう</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">① 아프다 (痛い) ➔ <span class="quiz-line">______</span></div>
+					<div class="quiz-ja">(例: 頭が痛くて休む / 머리가 ____ 쉬어요)</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">아파서</div></div>
+				</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">② 늦다 (遅れる) ➔ <span class="quiz-line">______</span></div>
+					<div class="quiz-ja">(例: 遅れてすみません / ____ 죄송합니다)</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">늦어서</div></div>
+				</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">③ 춥다 (寒い) ➔ <span class="quiz-line">______</span></div>
+					<div class="quiz-ja">(例: 寒くて服を着ます / ____ 옷을 입어요)</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">추워서</div></div>
+				</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">④ 어렵다 (難しい) ➔ <span class="quiz-line">______</span></div>
+					<div class="quiz-ja">(例: 難しくて質問します / ____ 질문해요)</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">어려워서</div></div>
+				</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">⑤ 생일 (誕生日) ➔ <span class="quiz-line">______</span></div>
+					<div class="quiz-ja">(名詞注意！ 例: 誕生日なのでパーティをします)</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">생일이라서</div></div>
+				</div>
+
+
+
+				<div class="footer"></div>
+			</div>
+
+
+
+			<!-- ================= PAGE 6 ================= -->
+			<div class="page right-page">
+				<div class="grammar-no">WEEK 03 · PAGE 6</div>
+				<div class="lesson-badge-oval">総合練習 2</div>
+				<div class="section-lesson-title">文章完成 ＆ 会話練習</div>
+				<h3 class="grammar-title">会話を完成させましょう！</h3>
+
+
+
+				<div class="pin-subtitle">練習 2:カッコをうめて文章を完成させましょう</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">① (비가 오다) ➔ 비가 <span class="quiz-line">______</span> 우산을 써요.</div>
+					<div class="quiz-ja">雨が降っているので傘をさします。</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">와서</div></div>
+				</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">② (친구를 만나다) ➔ 친구를 <span class="quiz-line">______</span> 기뻐요.</div>
+					<div class="quiz-ja">友達に会えて(会うので) 嬉しいです。</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">만나서</div></div>
+				</div>
+
+
+
+				<div class="quiz-item">
+					<div class="quiz-q">③ (피곤하다) ➔ <span class="quiz-line">______</span> 일찍 자요.</div>
+					<div class="quiz-ja">疲れたので早く寝ます。</div>
+					<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+					<div class="answer-box"><div class="answer-content">피곤해서</div></div>
+				</div>
+
+
+
+				<div class="pin-subtitle">練習 3:会話の理由部分を答えてみましょう</div>
+
+
+
+				<div class="conversation">
+					<div class="bubble bubble-a">
+						<div class="name">A</div>
+						왜 약을 먹어요? <br><small style="color:#64748b;">(どうして薬を飲むのですか？)</small>
+					</div>
+					<div class="bubble bubble-b">
+						<div class="name">B</div>
+						머리가 <span class="quiz-line">______</span> 약을 먹어요. (아프다)
+						<br>
+						<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+						<div class="answer-box"><div class="answer-content">아파서 (頭が痛いので)</div></div>
+					</div>
+
+
+
+					<div class="bubble bubble-a">
+						<div class="name">A</div>
+						왜 택시를 타요? <br><small style="color:#64748b;">(どうしてタクシーに乗るのですか？)</small>
+					</div>
+					<div class="bubble bubble-b">
+						<div class="name">B</div>
+						시간이 <span class="quiz-line">______</span> 택시를 타요. (없다)
+						<br>
+						<button class="answer-btn" onclick="toggleAnswer(this)">正解を見る</button>
+						<div class="answer-box"><div class="answer-content">없어서 (時間が無いので)</div></div>
+					</div>
+				</div>
+
+
+
+				<div class="footer"></div>
+			</div>
+
+
+
+		</div>
+
+
+
+	</div>
+
+
+
+	<script>document.addEventListener("DOMContentLoaded", function () {
+  const allPages = document.querySelectorAll(".page");
+  const totalPages = allPages.length;
+
+
+
+  allPages.forEach((page, index) => {
+    const pageNum = index + 1;
+    const footer = page.querySelector(".footer");
+    if (footer) {
+      footer.textContent = `Page ${pageNum} / ${totalPages}`;
+    }
+  });
+});
+
+
+
+function toggleAnswer(btn) {
+  const answerBox = btn.nextElementSibling;
+  if (answerBox.classList.contains("show")) {
+    answerBox.classList.remove("show");
+    btn.textContent = "正解を見る";
+  } else {
+    answerBox.classList.add("show");
+    btn.textContent = "隠す";
+  }
+}</script>
+
+
+
+</body>
+</html>
