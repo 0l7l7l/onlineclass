@@ -11,48 +11,34 @@
 
 
 <style>
-
-
-
+ 
 :root {
   --book-scale: 0.75;
-
-
-
+ 
   --primary-blue: #2563eb;
   --header-blue: #1d4ed8;
   --sky-blue: #0284c7;
-
-
-
+ 
   --dark-navy: #1e293b;
   --light-blue-bg: #eff6ff;
   --border-color: #dbeafe;
-
-
-
+ 
   --accent-orange: #ea580c;
   --green: #16a34a;
 }
-
-
-
+ 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-
-
-
+ 
   font-family:
-    'Hiragino Sans',
-    'Meiryo',
-    'Malgun Gothic',
-    sans-serif;
+    'Hiragino Sans',
+    'Meiryo',
+    'Malgun Gothic',
+    sans-serif;
 }
-
-
-
+ 
 body {
   background-color: #f4f6f9;
   display: flex;
@@ -63,9 +49,7 @@ body {
   color: #333;
   overflow-x: hidden;
 }
-
-
-
+ 
 /* 本全体 */
 .book-wrapper {
   display: flex;
@@ -75,16 +59,12 @@ body {
   transition: zoom 0.2s ease;
   counter-reset: page-num 0;
 }
-
-
-
+ 
 /* レスポンシブ */
 @media (max-width: 1500px) { :root { --book-scale: 0.65; } }
 @media (max-width: 1300px) { :root { --book-scale: 0.55; } }
 @media (max-width: 1100px) { :root { --book-scale: 0.45; } }
-
-
-
+ 
 /* 見開き面 */
 .book-container {
   display: flex;
@@ -96,9 +76,7 @@ body {
   overflow: hidden;
   position: relative;
 }
-
-
-
+ 
 .book-container::after {
   content: "";
   position: absolute;
@@ -109,9 +87,7 @@ body {
   background: linear-gradient(to bottom, rgba(0,0,0,0.01), rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.01));
   z-index: 10;
 }
-
-
-
+ 
 /* ページ */
 .page {
   width: 182mm;
@@ -123,9 +99,7 @@ body {
   background-color: #fff;
   counter-increment: page-num;
 }
-
-
-
+ 
 .footer {
   position: absolute;
   bottom: 10mm;
@@ -135,9 +109,7 @@ body {
 }
 .left-page .footer { left: 18mm; }
 .right-page .footer { right: 18mm; }
-
-
-
+ 
 .grammar-no {
   position: absolute;
   top: 12mm;
@@ -148,9 +120,7 @@ body {
 }
 .left-page .grammar-no { left: 18mm; }
 .right-page .grammar-no { right: 18mm; text-align: right; }
-
-
-
+ 
 .lesson-badge-oval {
   display: inline-block;
   align-self: flex-start;
@@ -163,9 +133,7 @@ body {
   margin-bottom: 10px;
   box-shadow: 0 4px 10px rgba(37,99,235,0.3);
 }
-
-
-
+ 
 .section-lesson-title {
   font-size: 18px;
   color: #1e3a8a;
@@ -174,95 +142,79 @@ body {
   padding-bottom: 6px;
   border-bottom: 2px solid var(--primary-blue);
 }
-
-
-
+ 
 h3.grammar-title {
-  font-size: 28px;
+  font-size: 26px;
   color: #0f172a;
   font-weight: 900;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   line-height: 1.2;
 }
-
-
-
+ 
 .big-concept {
   background: #f8fafc;
   border: 2px solid var(--border-color);
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .big-concept-main {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   color: var(--primary-blue);
 }
 .big-concept-sub {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748b;
   font-weight: 700;
 }
-
-
-
+ 
 .pin-subtitle {
-  font-size: 15px;
+  font-size: 14px;
   color: #1e3a8a;
   font-weight: 800;
-  margin-top: 10px;
-  margin-bottom: 8px;
+  margin-top: 8px;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
   gap: 6px;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--border-color);
 }
-.pin-subtitle::before { content: "📌"; font-size: 14px; }
-
-
-
+.pin-subtitle::before { content: "📌"; font-size: 13px; }
+ 
 .speech-label-title {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: bold;
   color: #334155;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.speech-label-title::before { content: "💬"; font-size: 13px; }
-
-
-
+.speech-label-title::before { content: "💬"; font-size: 12.5px; }
+ 
 p, li {
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.5;
   color: #334155;
 }
-
-
-
+ 
 /* 公式エリア */
 .formula-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
-
-
-
+ 
 .formula-column {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-
-
-
+ 
 .formula-header {
   background-color: var(--primary-blue);
   color: white;
@@ -273,128 +225,129 @@ p, li {
   border-radius: 6px;
 }
 .formula-header.sky { background-color: var(--sky-blue); }
-
-
-
+ 
 .formula-box {
   background-color: white;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  padding: 8px;
+  padding: 6px;
   text-align: center;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 800;
   color: #1e293b;
 }
-
-
-
+ 
 .formula-box.highlight-text {
   background-color: #f8fafc;
   color: var(--primary-blue);
 }
-
-
-
+ 
 .point-speech-card {
   background-color: #eff6ff;
   border: 1px solid #bfdbfe;
   border-radius: 12px;
-  padding: 12px 14px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  padding: 10px 12px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 .point-speech-card ul { padding-left: 14px; }
 .point-speech-card li {
   font-size: 12px;
   line-height: 1.5;
   color: #334155;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
-
-
-
+ 
 .travel-card {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 6px;
+  padding: 8px 10px;
+  margin-bottom: 5px;
   background: #fff;
 }
 .travel-card .ko-main {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   color: #0f172a;
   margin-bottom: 2px;
 }
-.travel-card .jp-sub { font-size: 12px; color: #64748b; }
+.travel-card .jp-sub { font-size: 11.5px; color: #64748b; }
 .travel-card .point { color: var(--primary-blue); font-weight: 900; }
-
-
-
-/* 会話バブル */
-.conversation {
+ 
+/* テーブル（練習表）スタイル */
+.practice-table {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.bubble {
-  padding: 8px 12px;
-  border-radius: 12px;
-  max-width: 92%;
-  font-size: 12.5px;
-  line-height: 1.4;
-}
-.bubble-a { background: #eff6ff; border: 1px solid #bfdbfe; align-self: flex-start; }
-.bubble-b { background: #f8fafc; border: 1px solid #e2e8f0; align-self: flex-end; }
-.bubble .name { font-size: 10px; font-weight: bold; color: var(--primary-blue); margin-bottom: 2px; }
-
-
-
-/* クイズ */
-.quiz-item {
   margin-bottom: 8px;
-  background-color: #fafafa;
-  padding: 8px 10px;
-  border-radius: 7px;
-  border: 1px solid #f1f5f9;
 }
-.quiz-q { font-size: 13px; font-weight: 700; color: #1e293b; }
-.quiz-ja { font-size: 11.5px; color: #64748b; margin-top: 2px; }
+ 
+.practice-table th {
+  background-color: var(--primary-blue);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 4px;
+  border: 1px solid var(--primary-blue);
+  text-align: center;
+}
+ 
+.practice-table td {
+  border: 1px solid #e2e8f0;
+  padding: 6px 8px;
+  font-size: 12px;
+  text-align: center;
+}
+ 
+.practice-table tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+ 
+.table-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+}
+.tag-a { background-color: #2563eb; }
+.tag-eo { background-color: #0284c7; }
+.tag-ha { background-color: #16a34a; }
+ 
 .quiz-line {
   display: inline-block;
-  min-width: 70px;
+  min-width: 65px;
   border-bottom: 2px solid var(--primary-blue);
   text-align: center;
-  margin: 0 4px;
+  margin: 0 2px;
   font-weight: bold;
   color: var(--accent-orange);
 }
+ 
 .answer-btn {
-  margin-top: 4px;
-  padding: 4px 10px;
+  padding: 3px 8px;
   background: transparent;
   color: var(--primary-blue);
   border: 1.5px solid var(--primary-blue);
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: bold;
 }
+ 
 .answer-box {
-  margin-top: 6px;
-  padding: 6px 8px;
+  margin-top: 4px;
+  padding: 4px 6px;
   border: 1.5px solid var(--primary-blue);
-  border-radius: 6px;
+  border-radius: 5px;
   display: none;
   background: #f8fafc;
 }
+ 
 .answer-box.show { display: block; }
-.answer-content { font-size: 11.5px; color: #1e3a8a; line-height: 1.4; }
-
-
-
+.answer-content { font-size: 11.5px; color: #1e3a8a; font-weight: bold; }
+ 
 /* モバイル・印刷対応 */
 @media (max-width: 900px) {
   body { padding: 10px; }
@@ -404,9 +357,7 @@ p, li {
   .page { width: 100%; height: auto; padding: 30px 20px; border-bottom: 2px dashed #e2e8f0; }
   .footer { position: relative; bottom: 0; margin-top: 20px; text-align: center; }
 }
-
-
-
+ 
 @media print {
   @page { size: 364mm 257mm; margin: 0; }
   body { background-color: #fff; padding: 0; }
@@ -418,155 +369,352 @@ p, li {
   .answer-box { display: block !important; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact; }
 }
-
-
-
+ 
 </style>
 </head>
-
-
-
+ 
 <body>
-
-
-
+ 
 <div class="book-wrapper">
-
-
-
+ 
 <!-- =====================================================
-     見開き 1 : 概念と活用ルール
+     見開き 1 : PAGE 1 & PAGE 2
 ===================================================== -->
 <div class="book-container">
-
-
-
-<!-- LEFT PAGE -->
-<div class="page left-page">
- <!--<div class="grammar-no">WEEK 03</div>
-  <div class="lesson-badge-oval">第3課</div> -->
-  <div class="section-lesson-title">-아서 / -어서 理由と結果を伝えましょう</div> 
-
-
-
+ 
+<!-- ================= PAGE 1 ================= -->
+<div class="page left-page"> 
+<div class="lesson-badge-oval">文法解説</div>
+<div class="section-lesson-title">-아서 / -어서: 理由・原因を表す表現</div> 
+ 
   <div class="big-concept">
-    <div class="big-concept-main">-아서 / -어서</div>
-    <div class="big-concept-sub">〜だから / ～ので (理由・原因)</div>
-  </div>
-
-
-
-  <div class="pin-subtitle">日常会話で使ってみましょう！</div>
-
-
-
-  <div class="travel-card">
-    <div class="ko-main">비가 <span class="point">와서</span> 집에 있어요.</div>
-    <div class="jp-sub">雨が降って(降るので) 家にいます。</div>
-  </div>
-
-
-
-  <div class="travel-card">
-    <div class="ko-main">배가 <span class="point">고파서</span> 밥을 먹어요.</div>
-    <div class="jp-sub">お腹が空いて(空いたので) ごはんを食べます。</div>
-  </div>
-
-
-
-  <div class="travel-card">
-    <div class="ko-main">날씨가 <span class="point">좋아서</span> 산책해요.</div>
-    <div class="jp-sub">天気が良くて(良いので) 散歩します。</div>
-  </div>
-
-
-
-  <div class="point-speech-card">
-    <div class="speech-label-title">ここがポイント！</div>
-    <ul>
-      <li>「-아서/어서」は<strong>「〜だから／〜ので」</strong>という原因や理由を表す表現です。</li>
-      <li>【前の文（原因）】＋ **[-아서/어서]** ＋【後の文（結果）】の順でつなぎます。</li>
-      <li>「왜？（どうして？）」と理由を聞かれた時の返答にも大活躍します！</li>
-    </ul>
-  </div>
-
-
-
-  <div class="footer"></div>
+<div class="big-concept-main">-아서 / -어서</div>
+<div class="big-concept-sub">〜だから / ～ので (理由・原因)</div>
 </div>
-
-
-
-<!-- RIGHT PAGE -->
-<div class="page right-page">
-  <div class="grammar-no">文法ルール</div>
-  <div class="section-lesson-title">-아서 / -어서 の作り方</div>
-  <h3 class="grammar-title">動詞・形容詞 + 아서/어서</h3>
-
-
-
-  <div class="pin-subtitle">活用ルール</div>
-
-
-
+ 
+  <div class="pin-subtitle"> 解説 </div>
+ 
+  <div class="point-speech-card">
+<div class="speech-label-title">「-아서/어서」とは？</div>
+<ul>
+<li>前文が<strong>原因・理由</strong>、後文が<strong>結果</strong>になる時につなぐ表現です。（日本語の「〜だから」「〜ので」に相当）</li>
+<li>日常会話で「どうして？」と聞かれた時や、理由を説明する時に一番よく使います！</li>
+</ul>
+</div>
+ 
+  <div class="pin-subtitle">変形方法 (変形ルール)</div>
+ 
   <div class="formula-container">
-    <div class="formula-column">
-      <div class="formula-header">語幹の母音</div>
-      <div class="formula-box">ㅏ, ㅗ (陽性母音)</div>
-      <div class="formula-box">ㅓ, ㅜ, ㅣ など (陰性母音)</div>
-      <div class="formula-box">하다 (〜する)</div>
-    </div>
-    <div class="formula-column">
-      <div class="formula-header sky">結合</div>
-      <div class="formula-box highlight-text">-아서</div>
-      <div class="formula-box highlight-text">-어서</div>
-      <div class="formula-box highlight-text">해서</div>
-    </div>
-  </div>
-
-
-
-  <div class="point-speech-card">
-    <div class="speech-label-title">3つのパターンだけ覚えましょう！</div>
-    <ul>
-      <li><strong>1. -아서 :</strong> 가다 ➔ 가서 (行って) / 오다 ➔ 와서 (来て) / 보다 ➔ 봐서 (見て)</li>
-      <li><strong>2. -어서 :</strong> 먹다 ➔ 먹어서 (食べて) / 읽다 ➔ 읽어서 (読んで)</li>
-      <li><strong>3. 해서 :</strong> 공부하다 ➔ 공부해서 (勉強して) / 피곤하다 ➔ 피곤해서 (疲れて)</li>
-    </ul>
-  </div>
-
-
-
-  <div class="pin-subtitle">よく使う単語の変形</div>
-
-
-
+<div class="formula-column">
+<div class="formula-header">語幹の最後の母音</div>
+<div class="formula-box">ㅏ, ㅗ (陽性母音)</div>
+<div class="formula-box">ㅓ, ㅜ, ㅣ など (陰性母音)</div>
+<div class="formula-box">하다 (〜する)</div>
+</div>
+<div class="formula-column">
+<div class="formula-header sky">結合する形</div>
+<div class="formula-box highlight-text">-아서</div>
+<div class="formula-box highlight-text">-어서</div>
+<div class="formula-box highlight-text">해서</div>
+</div>
+</div>
+ 
+  <div class="pin-subtitle"> 例文 </div>
+ 
   <div class="travel-card">
-    <div class="ko-main">가다 ➔ <span class="point">가서</span></div>
-    <div class="jp-sub">行って / 行くので</div>
-  </div>
-
-
-
+<div class="ko-main">비가 <span class="point">와서</span> 집에 있어요.</div>
+<div class="jp-sub">雨が降って(降るので) 家にいます。</div>
+</div>
+ 
   <div class="travel-card">
-    <div class="ko-main">먹다 ➔ <span class="point">먹어서</span></div>
-    <div class="jp-sub">食べて / 食べるので</div>
-  </div>
-
-
-
+<div class="ko-main">배가 <span class="point">고파서</span> 밥을 먹어요.</div>
+<div class="jp-sub">お腹が空いて(空いたので) ごはんを食べます。</div>
+</div>
+ 
   <div class="travel-card">
-    <div class="ko-main">바쁘다 ➔ <span class="point">바빠서</span></div>
-    <div class="jp-sub">忙しくて / 忙しいので</div>
-  </div>
-
-
-
+<div class="ko-main">날씨가 <span class="point">좋아서</span> 산책해요.</div>
+<div class="jp-sub">天気が良くて(良いので) 散歩します。</div>
+</div>
+ 
   <div class="footer"></div>
 </div>
+ 
+<!-- ================= PAGE 2 ================= -->
+<div class="page right-page"> 
+<div class="lesson-badge-oval">動詞 </div>
+<div class="section-lesson-title">動詞 + 아서/어서: 動詞の活用練習</div> 
+ 
+  <div class="pin-subtitle">動詞の変形練習表</div>
+ 
+  <table class="practice-table">
+<thead>
+<tr>
+<th>基本形</th>
+<th>タイプ</th>
+<th>変形 (-아서/어서)</th>
+<!--<th>正解チェック</th>-->
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>가다</b> (行く)</td>
+<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+<td>가 + 아서 ➔ <span class="quiz-line"> </span></td> 
+</tr>
+<tr>
+<td><b>오다</b> (来る)</td>
+<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+<td>오 + 아서 ➔ <span class="quiz-line"> </span></td> 
+</tr>
+<tr>
+<td><b>보다</b> (見る)</td>
+<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+<td>보 + 아서 ➔ <span class="quiz-line"> </span></td>
+<!--<td><button class="answer-btn" onclick="toggleAnswer(this)">正解</button><div class="answer-box"><div class="answer-content">봐서</div></div></td>-->
+</tr>
+<tr>
+<td><b>먹다</b> (食べる)</td>
+<td><span class="table-tag tag-eo">その他</span></td>
+<td>먹 + 어서 ➔ <span class="quiz-line"> </span></td>
+<!--<td>
+<button class="answer-btn" onclick="toggleAnswer(this)">正解</button>
+<div class="answer-box"><div class="answer-content">먹어서</div></div>
+</td>-->
+</tr>
+<tr>
+<td><b>읽다</b> (読む)</td>
+<td><span class="table-tag tag-eo">その他</span></td>
+<td>읽 + 어서 ➔ <span class="quiz-line"> </span></td> 
+</tr>
+<tr>
+<td><b>마시다</b> (飲む)</td>
+<td><span class="table-tag tag-eo">その他</span></td>
+<td>마시 + 어서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+<tr>
+<td><b>공부하다</b> (勉強する)</td>
+<td><span class="table-tag tag-ha">하다</span></td>
+<td>공부해 + 서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+<tr>
+<td><b>일하다</b> (働く)</td>
+<td><span class="table-tag tag-ha">하다</span></td>
+<td>일해 + 서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+</tbody>
+</table>
+ 
+  <div class="pin-subtitle">動詞の例文</div>
+ 
+  <div class="travel-card">
+<div class="ko-main">친구를 <span class="point">만나서</span> 영화를 봐요.</div>
+<div class="jp-sub">友達に会って(会うので) 映画を見ます。</div>
+</div>
+ 
+  <div class="travel-card">
+<div class="ko-main">책을 <span class="point">읽어서</span> 기분이 좋아요.</div>
+<div class="jp-sub">本を読んで(読んだので) 気分が良いです。</div>
+</div>
 
+          <div class="travel-card">
+<div class="ko-main">노래를 <span class="point">좋아해서</span> 매일 들어요.</div>
+<div class="jp-sub">歌が好きで毎日聞きます。</div>
+</div>
 
+      <div class="travel-card">
+<div class="ko-main">저기에서 <span class="point">들어서</span> 알아요.</div>
+<div class="jp-sub">あそこで聞いて(聞いたので)分かります。</div>
+</div>
+ 
+  <div class="footer"></div>
+</div>
+ 
+</div>
+ 
+ 
+<!-- =====================================================
+     見開き 2 : PAGE 3 & PAGE 4
+===================================================== -->
+<div class="book-container">
+ 
+<!-- ================= PAGE 3 ================= -->
+<div class="page left-page"> 
+<div class="lesson-badge-oval">形容詞  </div>
+<div class="section-lesson-title">形容詞 + 아서/어서:形容詞の活用練習</div> 
+ 
+  <div class="pin-subtitle">形容詞の変形練習表</div>
+ 
+  <table class="practice-table">
+<thead>
+<tr>
+<th>基本形</th>
+<th>タイプ</th>
+<th>変形 (-아서/어서)</th> 
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>좋다</b> (良い)</td>
+<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+<td>좋 + 아서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+<tr>
+<td><b>비싸다</b> (高い)</td>
+<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+<td>비싸 + 아서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+<tr>
+<td><b>바쁘다</b> (忙しい)</td>
+<td><span class="table-tag tag-a">ㅏ,ㅗ</span></td>
+<td>바쁘 + 아서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+<tr>
+<td><b>맛있다</b> (美味しい)</td>
+<td><span class="table-tag tag-eo">その他</span></td>
+<td>맛있 + 어서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+<tr>
+<td><b>재미있다</b> (面白い)</td>
+<td><span class="table-tag tag-eo">その他</span></td>
+<td>재미있 + 어서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+<tr>
+<td><b>적다</b> (少ない)</td>
+<td><span class="table-tag tag-eo">その他</span></td>
+<td>적 + 어서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+<tr>
+<td><b>친절하다</b> (親切だ)</td>
+<td><span class="table-tag tag-ha">하다</span></td>
+<td>친절해 + 서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+<tr>
+<td><b>깨끗하다</b> (綺麗だ)</td>
+<td><span class="table-tag tag-ha">하다</span></td>
+<td>깨끗해 + 서 ➔ <span class="quiz-line"></span></td>
+ 
+</tr>
+</tbody>
+</table>
+ 
+  <div class="pin-subtitle">形容詞の例文</div>
+ 
+  <div class="travel-card">
+<div class="ko-main">옷이 <span class="point">비싸서</span> 안 사요.</div>
+<div class="jp-sub">服が高くて(高いので) 買いません。</div>
+</div>
+ 
+  <div class="travel-card">
+<div class="ko-main">한국어가 <span class="point">재미있어서</span> 공부해요.</div>
+<div class="jp-sub">韓国語が面白くて(面白いので) 勉強します。</div>
+</div>
 
+      <div class="travel-card">
+<div class="ko-main">여기가 <span class="point">깨끗해서</span> 좋아요.</div>
+<div class="jp-sub">ここがキレイなので好きです。</div>
+</div>
+          <div class="travel-card">
+<div class="ko-main">거기는 <span class="point">비싸서</span> 안 가요.</div>
+<div class="jp-sub">そこは(値段)高くて行ません。</div>
+</div>
+ 
+  <div class="footer"></div>
+</div>
+ 
+<!-- ================= PAGE 4 ================= -->
+<div class="page right-page"> 
+<div class="lesson-badge-oval">名詞  </div>
+<div class="section-lesson-title">名詞 + (이)라서: 名詞の活用ルール</div> 
+ 
+  <div class="point-speech-card" style="background:#fff3ed; border-color:#fed7aa;">
+<div class="speech-label-title" style="color:#c2410c;">⚠️ 名詞の後ろは「-(이)라서」！</div>
+<ul>
+<li>名詞に接続する時は「-아서/어서」ではなく<strong>「-(이)라서」</strong>を使います。</li>
+<li>パッチムあり ➔ <b>-이라서</b> (학생 ➔ 학생<b>이라서</b>)</li>
+<li>パッチムなし ➔ <b>-라서</b> (친구 ➔ 친구<b>라서</b>)</li>
+</ul>
+</div>
+ 
+  <div class="pin-subtitle">名詞の変形練習表</div>
+ 
+  <table class="practice-table">
+<thead>
+<tr>
+<th>名詞 (意味)</th>
+<th>パッチム</th>
+<th>変形 (-(이)라서)</th> 
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>학생</b> (学生)</td>
+<td><span class="table-tag tag-a">あり (O)</span></td>
+<td>학생 + 이라서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+<tr>
+<td><b>일요일</b> (日曜日)</td>
+<td><span class="table-tag tag-a">あり (O)</span></td>
+<td>일요일 + 이라서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+<tr>
+<td><b>한국 사람</b> (韓国人)</td>
+<td><span class="table-tag tag-a">あり (O)</span></td>
+<td>사람 + 이라서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+<tr>
+<td><b>친구</b> (友達)</td>
+<td><span class="table-tag tag-eo">なし (X)</span></td>
+<td>친구 + 라서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+<tr>
+<td><b>휴일</b> (休日)</td>
+<td><span class="table-tag tag-a">あり (O)</span></td>
+<td>휴일 + 이라서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+<tr>
+<td><b>오늘</b> (今日)</td>
+<td><span class="table-tag tag-a">あり (O)</span></td>
+<td>오늘 + 이라서 ➔ <span class="quiz-line"> </span></td>
+ 
+</tr>
+</tbody>
+</table>
+ 
+  <div class="pin-subtitle">名詞の例文</div>
+ 
+  <div class="travel-card">
+<div class="ko-main">오늘 <span class="point">일요일이라서</span> 쉬어요.</div>
+<div class="jp-sub">今日、日曜日なので休んでいます。</div>
+</div>
+ 
+  <div class="travel-card">
+<div class="ko-main"><span class="point">학생이라서</span> 돈이 없어요.</div>
+<div class="jp-sub">学生なのでお金がありません。</div>
+</div>
+ 
+  <div class="travel-card">
+<div class="ko-main"><span class="point">친구라서</span> 도와줘요.</div>
+<div class="jp-sub">友達なので助けます。</div>
+</div>
+ 
+  <div class="footer"></div>
+</div>
+ 
 </div>
 
 
@@ -580,7 +728,7 @@ p, li {
 
 <!-- LEFT PAGE -->
 <div class="page left-page">
-  <div class="grammar-no">第3課 · 実践会話</div>
+  <div class="grammar-no">· 実践会話</div>
   <div class="section-lesson-title">理由を言ってみましょう</div>
   <h3 class="grammar-title">どうして行かないの？ / どうして行くの？</h3>
 
