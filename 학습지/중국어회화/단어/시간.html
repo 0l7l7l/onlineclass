@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>중국어 기초 교재 - 시간 표현 (Monochrome Ruby)</title>
+	<style>
+
+		/* =========================================================
+			 기본 초기화 & 연한 그레이 배경
+		========================================================= */
+			 * {
+					 box-sizing: border-box;
+					 margin: 0;
+					 padding: 0;
+					 font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+		}
+
+
+
+			 body {
+					 background-color: #f0f2f5;
+					 padding: 40px 20px;
+					 display: flex;
+					 flex-direction: column;
+					 align-items: center;
+					 gap: 50px;
+					 min-height: 100vh;
+
+		}
+
+
+
+
+		/* =========================================================
+			 펼침면 (B5 규격 비율 364 : 257 & 잘림 방지 반응형)
+		========================================================= */
+			 .book-container {
+					 display: flex;
+					 width: 100%;
+					 max-width: 1100px;
+					 aspect-ratio: 364 / 257;
+					 background-color: #ffffff;
+					 border: 1px solid #18181b;
+					 border-radius: 6px;
+					 box-shadow:  0 15px 35px rgba(0, 0, 0, 0.08),  0 3px 10px rgba(0, 0, 0, 0.04);
+					 overflow: hidden;
+					 position: relative;
+
+		}
+
+
+
+
+			/* 가운데 책 접히는 부분 음영 */
+				 .book-container::after {
+						 content: "";
+						 position: absolute;
+						 left: 50%;
+						 top: 2%;
+						 width: 1px;
+						 height: 96%;
+						 background: linear-gradient(        to bottom,        rgba(0, 0, 0, 0.03),        rgba(0, 0, 0, 0.2) 50%,        rgba(0, 0, 0, 0.03)      );
+						 z-index: 10;
+
+			}
+
+
+
+
+		/* =========================================================
+			 페이지 레이아웃
+		========================================================= */
+			 .page {
+					 width: 50%;
+					 height: 100%;
+					 padding: 5% 6% 6% 6%;
+					 position: relative;
+					 display: flex;
+					 flex-direction: column;
+					 justify-content: space-between;
+					 background-color: #ffffff;
+
+		}
+
+
+
+
+		/* 페이지 헤더 */
+			 .page-header {
+					 display: flex;
+					 justify-content: space-between;
+					 align-items: flex-end;
+					 border-bottom: 2px solid #18181b;
+					 padding-bottom: 6px;
+					 margin-bottom: 12px;
+
+		}
+
+
+
+			 .page-header .chapter {
+					 font-size: 0.75rem;
+					 font-weight: 900;
+					 color: #ffffff;
+					 background-color: #18181b;
+					 padding: 2px 6px;
+					 border-radius: 2px;
+					 letter-spacing: 0.5px;
+
+		}
+
+
+
+			 .page-header .title {
+					 font-size: 0.95rem;
+					 font-weight: 800;
+					 color: #18181b;
+
+		}
+
+
+
+
+		/* 상단 말풍선 */
+			 .speech-bubble-container {
+					 position: relative;
+					 background-color: #f8fafc;
+					 border: 1px solid #18181b;
+					 border-radius: 8px;
+					 padding: 10px 12px;
+					 margin-bottom: 12px;
+
+		}
+
+
+
+			 .speech-bubble-container::after {
+					 content: '';
+					 position: absolute;
+					 bottom: -8px;
+					 left: 20px;
+					 border-width: 8px 6px 0;
+					 border-style: solid;
+					 border-color: #18181b transparent;
+					 display: block;
+					 width: 0;
+
+		}
+
+
+
+			 .bubble-title {
+					 font-size: 0.7rem;
+					 font-weight: 800;
+					 color: #18181b;
+					 margin-bottom: 8px;
+					 text-transform: uppercase;
+					 letter-spacing: 0.5px;
+
+		}
+
+
+
+
+		/* 단어 그리드 & 루비(Ruby) 태그 스타일 */
+			 .word-grid {
+					 display: grid;
+					 grid-template-columns: repeat(2, 1fr);
+					 gap: 6px 8px;
+
+		}
+
+
+
+			 .word-item {
+					 display: flex;
+					 align-items: center;
+					 gap: 8px;
+					 font-size: 0.78rem;
+					 background: #ffffff;
+					 padding: 4px 8px;
+					 border: 1px solid #e4e4e7;
+					 border-radius: 3px;
+
+		}
+
+
+
+				 .word-item .kor {
+						 font-weight: 700;
+						 color: #52525b;
+						 width: 48px;
+						 flex-shrink: 0;
+
+			}
+
+
+
+
+		/* 루비 태그 스타일 (병음이 한자 위에 위치) */
+			 ruby {
+					 font-size: 0.9rem;
+					 font-weight: 800;
+					 color: #18181b;
+					 ruby-position: over;
+
+		}
+
+
+
+			 rt {
+					 font-size: 0.65rem;
+					 font-weight: 600;
+					 color: #71717a;
+					 padding-bottom: 2px;
+
+		}
+
+
+
+
+		/* 하단 연습문제 영역 */
+			 .exercise-section {
+					 flex: 1;
+					 background: #ffffff;
+					 border: 1px solid #18181b;
+					 border-radius: 8px;
+					 padding: 10px 12px;
+					 display: flex;
+					 flex-direction: column;
+
+		}
+
+
+
+			 .exercise-title {
+					 font-size: 0.75rem;
+					 font-weight: 800;
+					 color: #18181b;
+					 margin-bottom: 8px;
+
+		}
+
+
+
+			 .quiz-list {
+					 display: flex;
+					 flex-direction: column;
+					 gap: 6px;
+
+		}
+
+
+
+			 .quiz-item {
+					 display: flex;
+					 align-items: center;
+					 justify-content: space-between;
+					 font-size: 0.75rem;
+					 background: #f4f4f5;
+					 padding: 5px 10px;
+					 border-radius: 4px;
+					 border-left: 3px solid #18181b;
+
+		}
+
+
+
+			 .quiz-question {
+					 font-weight: 700;
+					 color: #27272a;
+
+		}
+
+
+
+			 .quiz-answer {
+					 font-weight: 800;
+					 color: #18181b;
+					 background-color: #e4e4e7;
+					 padding: 2px 6px;
+					 border-radius: 2px;
+					 display: none;
+
+		}
+
+
+
+				 .quiz-answer.show {
+						 display: inline-block;
+
+			}
+
+
+
+
+		/* 푸터 및 버튼 */
+			 .footer-wrapper {
+					 display: flex;
+					 justify-content: space-between;
+					 align-items: center;
+					 margin-top: 8px;
+
+		}
+
+
+
+			 .answer-btn {
+					 padding: 4px 10px;
+					 font-size: 0.7rem;
+					 font-weight: 800;
+					 color: #ffffff;
+					 background-color: #18181b;
+					 border: 1px solid #18181b;
+					 border-radius: 4px;
+					 cursor: pointer;
+					 transition: all 0.2s ease;
+
+		}
+
+
+
+				 .answer-btn:hover {
+						 background-color: #3f3f46;
+
+			}
+
+
+
+
+		/* 페이지 쪽수 */
+			 .footer {
+					 position: absolute;
+					 bottom: 4%;
+					 font-size: 0.75rem;
+					 color: #18181b;
+					 font-weight: 900;
+
+		}
+
+
+
+			 .left-page .footer {
+			left: 6%;
+		}
+
+			 .right-page .footer {
+			right: 6%;
+		}
+
+
+
+
+		/* =========================================================
+			 인쇄 미디어 쿼리
+		========================================================= */
+			 @media print {
+					 body
+
+		{
+						 background: none;
+						 padding: 0;
+
+		}
+
+				 .book-container {
+						 max-width: 100%;
+						 box-shadow: none;
+						 border: none;
+						 page-break-after: always;
+
+		}
+
+				 .answer-btn {
+						 display: none !important;
+
+		}
+
+				 .quiz-answer.show {
+						 display: none !important;
+
+		}
+
+
+		}
+	</style>
+</head>
+<body>
+
+
+
+	<!-- ==========================================
+			 펼침면 1 (1쪽 & 2쪽)
+	========================================== -->
+	<div class="book-container">
+
+		<!-- 1쪽: 날짜/주간 시간 표현 -->
+		<div class="page left-page">
+			<div>
+				<div class="page-header">
+					<span class="chapter">DAY 01</span>
+					<span class="title">기초 시간 표현 (날짜·주간)</span>
+				</div>
+
+
+
+				<div class="speech-bubble-container">
+					<div class="bubble-title">VOCABULARY</div>
+					<div class="word-grid">
+						<div class="word-item"><span class="kor">시간</span><ruby>时间<rt>shíjiān</rt></ruby></div>
+						<div class="word-item"><span class="kor">시각</span><ruby>时刻<rt>shíkè</rt></ruby></div>
+						<div class="word-item"><span class="kor">지금</span><ruby>现在<rt>xiànzài</rt></ruby></div>
+						<div class="word-item"><span class="kor">오늘</span><ruby>今天<rt>jīntiān</rt></ruby></div>
+						<div class="word-item"><span class="kor">어제</span><ruby>昨天<rt>zuótiān</rt></ruby></div>
+						<div class="word-item"><span class="kor">그저께</span><ruby>前天<rt>qiántiān</rt></ruby></div>
+						<div class="word-item"><span class="kor">내일</span><ruby>明天<rt>míngtiān</rt></ruby></div>
+						<div class="word-item"><span class="kor">모레</span><ruby>后天<rt>hòutiān</rt></ruby></div>
+						<div class="word-item"><span class="kor">이번 주</span><ruby>这周<rt>zhè zhōu</rt></ruby></div>
+						<div class="word-item"><span class="kor">다음 주</span><ruby>下周<rt>xià zhōu</rt></ruby></div>
+						<div class="word-item"><span class="kor">지난 주</span><ruby>上周<rt>shàng zhōu</rt></ruby></div>
+					</div>
+				</div>
+
+
+
+				<div class="exercise-section">
+					<div class="exercise-title">PRACTICE QUIZ</div>
+					<div class="quiz-list">
+						<div class="quiz-item"><span class="quiz-question">1. 오늘</span><span class="quiz-answer"><ruby>今天<rt>jīntiān</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">2. 내일</span><span class="quiz-answer"><ruby>明天<rt>míngtiān</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">3. 이번 주</span><span class="quiz-answer"><ruby>这周<rt>zhè zhōu</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">4. 어제</span><span class="quiz-answer"><ruby>昨天<rt>zuótiān</rt></ruby></span></div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="footer-wrapper">
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+			</div>
+			<div class="footer">1</div>
+		</div>
+
+
+
+		<!-- 2쪽: 하루 시간대 -->
+		<div class="page right-page">
+			<div>
+				<div class="page-header">
+					<span class="chapter">DAY 02</span>
+					<span class="title">하루 시간대 표현</span>
+				</div>
+
+
+
+				<div class="speech-bubble-container">
+					<div class="bubble-title">VOCABULARY</div>
+					<div class="word-grid">
+						<div class="word-item"><span class="kor">아침</span><ruby>早上<rt>zǎoshang</rt></ruby></div>
+						<div class="word-item"><span class="kor">오전</span><ruby>上午<rt>shàngwǔ</rt></ruby></div>
+						<div class="word-item"><span class="kor">정오</span><ruby>中午<rt>zhōngwǔ</rt></ruby></div>
+						<div class="word-item"><span class="kor">오후</span><ruby>下午<rt>xiàwǔ</rt></ruby></div>
+						<div class="word-item"><span class="kor">저녁</span><ruby>晚上<rt>wǎnshang</rt></ruby></div>
+						<div class="word-item"><span class="kor">밤</span><ruby>夜里<rt>yèli</rt></ruby></div>
+						<div class="word-item"><span class="kor">새벽</span><ruby>凌晨<rt>língchén</rt></ruby></div>
+					</div>
+				</div>
+
+
+
+				<div class="exercise-section">
+					<div class="exercise-title">PRACTICE QUIZ</div>
+					<div class="quiz-list">
+						<div class="quiz-item"><span class="quiz-question">1. 오전</span><span class="quiz-answer"><ruby>上午<rt>shàngwǔ</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">2. 오후</span><span class="quiz-answer"><ruby>下午<rt>xiàwǔ</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">3. 저녁</span><span class="quiz-answer"><ruby>晚上<rt>wǎnshang</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">4. 새벽</span><span class="quiz-answer"><ruby>凌晨<rt>língchén</rt></ruby></span></div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="footer-wrapper">
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+			</div>
+			<div class="footer">2</div>
+		</div>
+
+
+
+	</div>
+
+
+
+
+
+	<!-- ==========================================
+			 펼침면 2 (3쪽 & 4쪽)
+	========================================== -->
+	<div class="book-container">
+
+		<!-- 3쪽: 요일 표현 -->
+		<div class="page left-page">
+			<div>
+				<div class="page-header">
+					<span class="chapter">DAY 03</span>
+					<span class="title">요일 표현</span>
+				</div>
+
+
+
+				<div class="speech-bubble-container">
+					<div class="bubble-title">VOCABULARY</div>
+					<div class="word-grid">
+						<div class="word-item"><span class="kor">월요일</span><ruby>星期一<rt>xīngqī yī</rt></ruby></div>
+						<div class="word-item"><span class="kor">화요일</span><ruby>星期二<rt>xīngqī èr</rt></ruby></div>
+						<div class="word-item"><span class="kor">수요일</span><ruby>星期三<rt>xīngqī sān</rt></ruby></div>
+						<div class="word-item"><span class="kor">목요일</span><ruby>星期四<rt>xīngqī sì</rt></ruby></div>
+						<div class="word-item"><span class="kor">금요일</span><ruby>星期五<rt>xīngqī wǔ</rt></ruby></div>
+						<div class="word-item"><span class="kor">토요일</span><ruby>星期六<rt>xīngqī liù</rt></ruby></div>
+						<div class="word-item"><span class="kor">일요일</span><ruby>星期天<rt>xīngqī tiān</rt></ruby></div>
+					</div>
+				</div>
+
+
+
+				<div class="exercise-section">
+					<div class="exercise-title">PRACTICE QUIZ</div>
+					<div class="quiz-list">
+						<div class="quiz-item"><span class="quiz-question">1. 월요일</span><span class="quiz-answer"><ruby>星期一<rt>xīngqī yī</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">2. 금요일</span><span class="quiz-answer"><ruby>星期五<rt>xīngqī wǔ</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">3. 일요일</span><span class="quiz-answer"><ruby>星期天<rt>xīngqī tiān</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">4. 수요일</span><span class="quiz-answer"><ruby>星期三<rt>xīngqī sān</rt></ruby></span></div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="footer-wrapper">
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+			</div>
+			<div class="footer">3</div>
+		</div>
+
+
+
+		<!-- 4쪽: 자주 쓰는 시간 표현 -->
+		<div class="page right-page">
+			<div>
+				<div class="page-header">
+					<span class="chapter">DAY 04</span>
+					<span class="title">자주 쓰는 시간 부사</span>
+				</div>
+
+
+
+				<div class="speech-bubble-container">
+					<div class="bubble-title">VOCABULARY</div>
+					<div class="word-grid">
+						<div class="word-item"><span class="kor">일찍</span><ruby>早<rt>zǎo</rt></ruby></div>
+						<div class="word-item"><span class="kor">늦다</span><ruby>晚<rt>wǎn</rt></ruby></div>
+						<div class="word-item"><span class="kor">방금</span><ruby>刚刚<rt>gānggāng</rt></ruby></div>
+						<div class="word-item"><span class="kor">곧</span><ruby>马上<rt>mǎshàng</rt></ruby></div>
+						<div class="word-item"><span class="kor">항상</span><ruby>总是<rt>zǒngshì</rt></ruby></div>
+						<div class="word-item"><span class="kor">가끔</span><ruby>有时候<rt>yǒu shíhou</rt></ruby></div>
+						<div class="word-item"><span class="kor">매일</span><ruby>每天<rt>měitiān</rt></ruby></div>
+						<div class="word-item"><span class="kor">매주</span><ruby>每周<rt>měizhōu</rt></ruby></div>
+						<div class="word-item"><span class="kor">매달</span><ruby>每个月<rt>měi ge yuè</rt></ruby></div>
+						<div class="word-item"><span class="kor">매년</span><ruby>每年<rt>měinián</rt></ruby></div>
+					</div>
+				</div>
+
+
+
+				<div class="exercise-section">
+					<div class="exercise-title">PRACTICE QUIZ</div>
+					<div class="quiz-list">
+						<div class="quiz-item"><span class="quiz-question">1. 매일</span><span class="quiz-answer"><ruby>每天<rt>měitiān</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">2. 곧</span><span class="quiz-answer"><ruby>马上<rt>mǎshàng</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">3. 항상</span><span class="quiz-answer"><ruby>总是<rt>zǒngshì</rt></ruby></span></div>
+						<div class="quiz-item"><span class="quiz-question">4. 방금</span><span class="quiz-answer"><ruby>刚刚<rt>gānggāng</rt></ruby></span></div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="footer-wrapper">
+				<button class="answer-btn" onclick="toggleAnswer(this)">정답 확인</button>
+			</div>
+			<div class="footer">4</div>
+		</div>
+
+
+
+	</div>
+
+
+
+	<script>function toggleAnswer(btn) {
+      const page = btn.closest('.page');
+      const answers = page.querySelectorAll('.quiz-answer');
+     
+      let isShowing = false;
+      answers.forEach(ans => {
+        ans.classList.toggle('show');
+        if (ans.classList.contains('show')) isShowing = true;
+      });
+
+
+
+      btn.innerText = isShowing ? "정답 숨기기" : "정답 확인";
+      btn.style.backgroundColor = isShowing ? "#52525b" : "#18181b";
+    }</script>
+</body>
+</html>

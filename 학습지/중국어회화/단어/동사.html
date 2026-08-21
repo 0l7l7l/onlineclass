@@ -1,0 +1,1147 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>중국어 완전초급 동사 교재</title>
+
+
+
+	<style>
+				/* =========================================================
+			 기본 초기화 & 배경
+		========================================================= */
+				* {
+						 box-sizing: border-box;
+						 margin: 0;
+						 padding: 0;
+						 font-family:        'Pretendard',        -apple-system,        BlinkMacSystemFont,        "Segoe UI",        "Noto Sans KR",        sans-serif;
+				}
+
+
+
+				body {
+						 background: #e9eaec;
+						 color: #202124;
+						 padding: 20px 15px;
+						 display: flex;
+						 flex-direction: column;
+						 align-items: center;
+				}
+
+
+
+				/* =========================================================
+			 책 전체 컨테이너
+		========================================================= */
+				.book {
+						 width: 100%;
+						 max-width: 1100px;
+						 display: flex;
+						 flex-direction: column;
+						 gap: 30px;
+				}
+
+
+
+				/* 2페이지 펼침면: 데스크톱 화면 높이에 맞춰 완벽 스케일링 */
+				.book-spread {
+						 display: flex;
+						 width: 100%;
+						 height: calc(100vh - 60px);
+						 max-height: 680px;
+						 min-height: 520px;
+						 background: #ffffff;
+						 border-radius: 4px;
+						 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+						 position: relative;
+						 overflow: hidden;
+				}
+
+
+
+					/* 가운데 접히는 선 음영 효과 */
+					.book-spread::after {
+							 content: "";
+							 position: absolute;
+							 left: 50%;
+							 top: 2%;
+							 width: 1px;
+							 height: 96%;
+							 background: linear-gradient(        to bottom,        rgba(0,0,0,0.02),        rgba(0,0,0,0.15) 50%,        rgba(0,0,0,0.02)    );
+							 z-index: 10;
+					}
+
+
+
+				/* =========================================================
+			 페이지 (좌/우 50% 분할)
+		========================================================= */
+				.page {
+						 position: relative;
+						 width: 50%;
+						 height: 100%;
+						 background: #fff;
+						 padding: 35px 40px 45px 40px; /* 하단 패딩 확보 */
+						 display: flex;
+						 flex-direction: column;
+						 justify-content: space-between;
+				}
+
+
+
+				.page-content {
+						 flex: 1;
+						 display: flex;
+						 flex-direction: column;
+						 gap: 10px;
+						 overflow: hidden; /* 내부 오버플로우 방지 */
+				}
+
+
+
+				/* 페이지 상단 테두리 선 */
+				.page::before {
+						 content: "";
+						 position: absolute;
+						 top: 0;
+						 left: 0;
+						 width: 100%;
+						 height: 4px;
+						 background: #18181b;
+				}
+
+
+
+				/* =========================================================
+			 ruby 태그 스타일 최적화 (한자 위 병음 밀착)
+		========================================================= */
+				ruby {
+						 ruby-position: over;
+						 font-size: clamp(15px, 1.2vw, 18px);
+						 font-weight: 800;
+						 line-height: 1.4;
+				}
+
+
+
+				rt {
+						 font-size: clamp(9px, 0.7vw, 11px);
+						 color: #71717a;
+						 font-weight: 600;
+						 line-height: 1;
+						 transform: translateY(-2px);
+				}
+
+
+
+				/* =========================================================
+			 페이지 상단 & 헤더
+		========================================================= */
+				.page-top {
+						 display: flex;
+						 justify-content: space-between;
+						 align-items: center;
+						 padding-bottom: 6px;
+						 border-bottom: 1px solid #d4d4d8;
+				}
+
+
+
+				.chapter {
+						 font-size: 11px;
+						 font-weight: 800;
+						 letter-spacing: 1px;
+						 color: #71717a;
+				}
+
+
+
+				.page-number {
+						 font-size: 11px;
+						 color: #a1a1aa;
+						 font-weight: 700;
+				}
+
+
+
+				/* =========================================================
+			 제목 및 텍스트
+		========================================================= */
+				h1 {
+						 font-size: clamp(20px, 1.8vw, 25px);
+						 line-height: 1.2;
+						 letter-spacing: -1px;
+				}
+
+
+
+				h2 {
+						 font-size: clamp(16px, 1.4vw, 20px);
+				}
+
+
+
+				h3 {
+						 font-size: 14px;
+				}
+
+
+
+				.subtitle {
+						 color: #71717a;
+						 line-height: 1.4;
+						 font-size: clamp(11.5px, 0.85vw, 12.5px);
+				}
+
+
+
+				/* =========================================================
+			 강조 박스 & 예문
+		========================================================= */
+				.info-box {
+						 padding: 10px 12px;
+						 background: #f8fafc;
+						 border-left: 3px solid #18181b;
+						 line-height: 1.5;
+						 font-size: clamp(11px, 0.8vw, 12px);
+				}
+
+
+
+				.info-title {
+						 font-weight: 800;
+						 margin-bottom: 2px;
+				}
+
+
+
+				.example {
+						 border: 1px solid #e4e4e7;
+						 border-radius: 5px;
+						 padding: 6px 10px;
+						 background: #fafafa;
+				}
+
+
+
+				.example-cn {
+						 font-size: 15px;
+						 font-weight: 700;
+				}
+
+
+
+				.example-ko {
+						 font-size: 11.5px;
+				}
+
+
+
+				/* =========================================================
+			 단어 카드 (그리드)
+		========================================================= */
+				.word-list {
+						 display: grid;
+						 grid-template-columns: repeat(2, 1fr);
+						 gap: 5px;
+				}
+
+
+
+				.word-card {
+						 border: 1px solid #e4e4e7;
+						 border-radius: 4px;
+						 padding: 4px 8px;
+						 display: flex;
+						 align-items: center;
+						 gap: 6px;
+						 background: #fff;
+				}
+
+
+
+				.word-number {
+						 width: 14px;
+						 color: #a1a1aa;
+						 font-size: 10px;
+				}
+
+
+
+				.word-chinese {
+						 min-width: 65px;
+				}
+
+
+
+				.word-korean {
+						 font-size: 11px;
+						 color: #52525b;
+				}
+
+
+
+				/* =========================================================
+			 핵심 표현 & 비교표
+		========================================================= */
+				.expression {
+						 display: flex;
+						 align-items: center;
+						 border-bottom: 1px solid #eeeeef;
+						 padding: 4px 2px;
+						 gap: 8px;
+				}
+
+
+
+					.expression:last-child {
+							 border-bottom: none;
+					}
+
+
+
+				.expression-cn {
+						 width: 110px;
+				}
+
+
+
+				.expression-ko {
+						 font-size: 11.5px;
+				}
+
+
+
+				.compare {
+						 width: 100%;
+						 border-collapse: collapse;
+				}
+
+
+
+					.compare th,
+					.compare td {
+							 border-bottom: 1px solid #e4e4e7;
+							 padding: 5px 4px;
+							 text-align: left;
+					}
+
+
+
+					.compare th {
+							 font-size: 10.5px;
+							 color: #71717a;
+							 background: #fafafa;
+					}
+
+
+
+					.compare td {
+							 font-size: 11.5px;
+					}
+
+
+
+				/* =========================================================
+			 연습 문제 & 버튼
+		========================================================= */
+				.quiz-item {
+						 border: 1px solid #e4e4e7;
+						 border-radius: 4px;
+						 margin-bottom: 4px;
+						 padding: 6px 10px;
+						 background: #fafafa;
+				}
+
+
+
+				.quiz-question {
+						 font-weight: 700;
+						 margin-bottom: 2px;
+						 font-size: 11.5px;
+				}
+
+
+
+				.quiz-answer {
+						 color: #18181b;
+						 font-weight: 800;
+						 display: none;
+						 font-size: 11.5px;
+				}
+
+
+
+					.quiz-answer.show {
+							 display: block;
+					}
+
+
+
+				.answer-btn {
+						 border: none;
+						 background: #18181b;
+						 color: white;
+						 padding: 5px 10px;
+						 border-radius: 3px;
+						 cursor: pointer;
+						 font-weight: 700;
+						 font-size: 11px;
+						 align-self: flex-start;
+				}
+
+
+
+					.answer-btn:hover {
+							 background: #3f3f46;
+					}
+
+
+
+				/* =========================================================
+			 페이지 하단 (절대위치로 바닥 고정하여 잘림 완전 방지)
+		========================================================= */
+				.page-footer {
+						 position: absolute;
+						 bottom: 12px;
+						 left: 40px;
+						 right: 40px;
+						 display: flex;
+						 justify-content: space-between;
+						 font-size: 11px;
+						 color: #a1a1aa;
+						 padding-top: 6px;
+						 border-top: 1px solid #f4f4f5;
+						 background: #ffffff;
+				}
+
+
+
+				/* =========================================================
+			 모바일 대응
+		========================================================= */
+				@media(max-width:850px) {
+						 body {
+						padding: 10px;
+					}
+
+						 .book-spread {
+						flex-direction: column;
+						height: auto;
+						max-height: none;
+						min-height: auto;
+					}
+
+							 .book-spread::after {
+							display: none;
+						}
+
+						 .page {
+						width: 100%;
+						padding: 25px 20px 45px;
+					}
+
+						 .page-footer {
+						left: 20px;
+						right: 20px;
+						bottom: 10px;
+					}
+
+						 .word-list {
+						grid-template-columns: 1fr;
+					}
+				}
+
+
+
+				/* =========================================================
+			 인쇄 (프린트 시 정답 버튼 숨김)
+		========================================================= */
+				@media print {
+						 body {
+						background: white;
+						padding: 0;
+					}
+
+						 .book {
+						max-width: 100%;
+						gap: 0;
+					}
+
+						 .book-spread {
+						box-shadow: none;
+						height: 100vh;
+						max-height: none;
+						page-break-after: always;
+					}
+
+						 .answer-btn {
+						display: none !important;
+					}
+
+						 .quiz-answer.show {
+						display: none !important;
+					}
+				}
+	</style>
+</head>
+
+
+
+<body>
+
+
+
+	<div class="book">
+
+
+
+		<!-- =====================================================
+				 SPREAD 1 (PAGE 1 & PAGE 2)
+		===================================================== -->
+		<div class="book-spread">
+
+
+
+			<!-- PAGE 1 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">CHINESE BEGINNER</div>
+						<div class="page-number">01</div>
+					</div>
+
+
+
+					<h1>중국어 기본 동사</h1>
+					<p class="subtitle">
+						중국어로 일상적인 행동을 말할 때 가장 많이 사용하는
+						기본 동사를 배워 봅시다.
+					</p>
+
+
+
+					<div class="info-box">
+						<div class="info-title">오늘의 목표</div>
+						<div>
+							① 기본 동사 20개 익히기<br>
+							② 동사와 자주 사용하는 단어 연결하기<br>
+							③ 一下 / 一会儿 / 一点儿 / 有点儿 사용하기<br>
+							④ 아주 짧은 문장 만들기
+						</div>
+					</div>
+
+
+
+					<div>
+						<h3 style="margin-bottom:4px;">먼저 이것만 기억하세요!</h3>
+						<div class="example" style="margin-bottom:4px;">
+							<div class="example-cn"><ruby>吃<rt>chī</rt></ruby></div>
+							<div class="example-ko">먹다</div>
+						</div>
+						<div class="example">
+							<div class="example-cn"><ruby>吃<rt>chī</rt></ruby> <ruby>饭<rt>fàn</rt></ruby></div>
+							<div class="example-ko">밥을 먹다</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>중국어 완전초급</span>
+					<span>01</span>
+				</div>
+			</section>
+
+
+
+			<!-- PAGE 2 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">01 · 기본 동사</div>
+						<div class="page-number">02</div>
+					</div>
+
+
+
+					<h2>자주 사용하는 기본 동사</h2>
+					<p class="subtitle">
+						처음에는 모든 단어를 외우려고 하지 마세요.
+						자주 사용하는 것부터 익혀도 충분합니다.
+					</p>
+
+
+
+					<div class="word-list">
+						<div class="word-card">
+							<div class="word-number">01</div>
+							<div class="word-chinese"><ruby>做<rt>zuò</rt></ruby></div>
+							<div class="word-korean">하다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">02</div>
+							<div class="word-chinese"><ruby>去<rt>qù</rt></ruby></div>
+							<div class="word-korean">가다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">03</div>
+							<div class="word-chinese"><ruby>来<rt>lái</rt></ruby></div>
+							<div class="word-korean">오다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">04</div>
+							<div class="word-chinese"><ruby>吃<rt>chī</rt></ruby></div>
+							<div class="word-korean">먹다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">05</div>
+							<div class="word-chinese"><ruby>喝<rt>hē</rt></ruby></div>
+							<div class="word-korean">마시다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">06</div>
+							<div class="word-chinese"><ruby>看<rt>kàn</rt></ruby></div>
+							<div class="word-korean">보다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">07</div>
+							<div class="word-chinese"><ruby>听<rt>tīng</rt></ruby></div>
+							<div class="word-korean">듣다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">08</div>
+							<div class="word-chinese"><ruby>说<rt>shuō</rt></ruby></div>
+							<div class="word-korean">말하다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">09</div>
+							<div class="word-chinese"><ruby>学<rt>xué</rt></ruby></div>
+							<div class="word-korean">배우다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">10</div>
+							<div class="word-chinese"><ruby>写<rt>xiě</rt></ruby></div>
+							<div class="word-korean">쓰다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">11</div>
+							<div class="word-chinese"><ruby>想<rt>xiǎng</rt></ruby></div>
+							<div class="word-korean">생각하다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">12</div>
+							<div class="word-chinese"><ruby>要<rt>yào</rt></ruby></div>
+							<div class="word-korean">원하다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">13</div>
+							<div class="word-chinese"><ruby>喜<rt>xǐ</rt></ruby><ruby>欢<rt>huan</rt></ruby></div>
+							<div class="word-korean">좋아하다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">14</div>
+							<div class="word-chinese"><ruby>给<rt>gěi</rt></ruby></div>
+							<div class="word-korean">주다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">15</div>
+							<div class="word-chinese"><ruby>买<rt>mǎi</rt></ruby></div>
+							<div class="word-korean">사다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">16</div>
+							<div class="word-chinese"><ruby>等<rt>děng</rt></ruby></div>
+							<div class="word-korean">기다리다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">17</div>
+							<div class="word-chinese"><ruby>睡<rt>shuì</rt></ruby><ruby>觉<rt>jiào</rt></ruby></div>
+							<div class="word-korean">자다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">18</div>
+							<div class="word-chinese"><ruby>工<rt>gōng</rt></ruby><ruby>作<rt>zuò</rt></ruby></div>
+							<div class="word-korean">일하다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">19</div>
+							<div class="word-chinese"><ruby>回<rt>huí</rt></ruby></div>
+							<div class="word-korean">돌아가다</div>
+						</div>
+						<div class="word-card">
+							<div class="word-number">20</div>
+							<div class="word-chinese"><ruby>住<rt>zhù</rt></ruby></div>
+							<div class="word-korean">살다</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>기본 동사</span>
+					<span>02</span>
+				</div>
+			</section>
+
+
+
+		</div>
+
+
+
+
+
+		<!-- =====================================================
+				 SPREAD 2 (PAGE 3 & PAGE 4)
+		===================================================== -->
+		<div class="book-spread">
+
+
+
+			<!-- PAGE 3 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">02 · 단어 연결</div>
+						<div class="page-number">03</div>
+					</div>
+
+
+
+					<h2>동사 + 단어로 외워요</h2>
+					<p class="subtitle">
+						중국어는 <strong>자주 함께 사용하는 단어를 묶어서</strong> 외우면 훨씬 쉽습니다.
+					</p>
+
+
+
+					<div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>吃<rt>chī</rt></ruby> <ruby>饭<rt>fàn</rt></ruby></div>
+							<div class="expression-ko">밥을 먹다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>喝<rt>hē</rt></ruby> <ruby>水<rt>shuǐ</rt></ruby></div>
+							<div class="expression-ko">물을 마시다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>看<rt>kàn</rt></ruby> <ruby>电<rt>diàn</rt></ruby><ruby>影<rt>yǐng</rt></ruby></div>
+							<div class="expression-ko">영화를 보다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>学<rt>xué</rt></ruby> <ruby>中<rt>Zhōng</rt></ruby><ruby>文<rt>wén</rt></ruby></div>
+							<div class="expression-ko">중국어를 배우다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>买<rt>mǎi</rt></ruby> <ruby>东<rt>dōng</rt></ruby><ruby>西<rt>xi</rt></ruby></div>
+							<div class="expression-ko">물건을 사다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>回<rt>huí</rt></ruby> <ruby>家<rt>jiā</rt></ruby></div>
+							<div class="expression-ko">집에 돌아가다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>睡<rt>shuì</rt></ruby> <ruby>觉<rt>jiào</rt></ruby></div>
+							<div class="expression-ko">자다</div>
+						</div>
+					</div>
+
+
+
+					<div class="info-box">
+						<div class="info-title">TIP</div>
+						<div>
+							吃 = 먹다 / 吃饭 = 밥을 먹다<br>
+							이렇게 <strong>동사 + 단어</strong>를 함께 외워보세요.
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>단어 연결하기</span>
+					<span>03</span>
+				</div>
+			</section>
+
+
+
+			<!-- PAGE 4 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">03 · 자주 쓰는 표현</div>
+						<div class="page-number">04</div>
+					</div>
+
+
+
+					<h2>동사 + 一下</h2>
+					<p class="subtitle">
+						<strong>一下 (yíxià)</strong>는 동사 뒤에서 "잠깐 ~하다 / 한번 ~하다"라는 느낌을 줍니다.
+					</p>
+
+
+
+					<div class="info-box">
+						<div class="info-title">기본 형태</div>
+						<div style="font-size:15px; font-weight:800;">동사 + 一下</div>
+						<div style="margin-top:2px;">
+							等一下 → 잠깐 기다리다 / 看一下 → 한번 보다
+						</div>
+					</div>
+
+
+
+					<div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>等<rt>děng</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby></div>
+							<div class="expression-ko">잠깐 기다리다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>休<rt>xiū</rt></ruby><ruby>息<rt>xi</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby></div>
+							<div class="expression-ko">잠깐 쉬다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>看<rt>kàn</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby></div>
+							<div class="expression-ko">한번 보다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>听<rt>tīng</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby></div>
+							<div class="expression-ko">한번 들어보다</div>
+						</div>
+						<div class="expression">
+							<div class="expression-cn"><ruby>想<rt>xiǎng</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby></div>
+							<div class="expression-ko">잠깐 생각해보다</div>
+						</div>
+					</div>
+
+
+
+					<div class="example">
+						<div class="example-cn"><ruby>等<rt>děng</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby>。</div>
+						<div class="example-ko">잠깐 기다려.</div>
+					</div>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>一下 = 잠깐 / 한번</span>
+					<span>04</span>
+				</div>
+			</section>
+
+
+
+		</div>
+
+
+
+
+
+		<!-- =====================================================
+				 SPREAD 3 (PAGE 5 & PAGE 6)
+		===================================================== -->
+		<div class="book-spread">
+
+
+
+			<!-- PAGE 5 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">04 · 시간 표현</div>
+						<div class="page-number">05</div>
+					</div>
+
+
+
+					<h2>一会儿 · 一点儿 · 有点儿</h2>
+					<p class="subtitle">모두 "조금"처럼 보이지만 사용하는 곳이 다릅니다.</p>
+
+
+
+					<table class="compare">
+						<tr>
+							<th>표현</th>
+							<th>뜻</th>
+							<th>대상</th>
+						</tr>
+						<tr>
+							<td><ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby></td>
+							<td>잠깐 / 한번</td>
+							<td>행동</td>
+						</tr>
+						<tr>
+							<td><ruby>一<rt>yí</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>儿<rt>r</rt></ruby></td>
+							<td>잠시 동안</td>
+							<td>시간</td>
+						</tr>
+						<tr>
+							<td><ruby>一<rt>yì</rt></ruby><ruby>点<rt>diǎn</rt></ruby><ruby>儿<rt>r</rt></ruby></td>
+							<td>조금</td>
+							<td>양/정도</td>
+						</tr>
+						<tr>
+							<td><ruby>有<rt>yǒu</rt></ruby><ruby>点<rt>diǎn</rt></ruby><ruby>儿<rt>r</rt></ruby></td>
+							<td>좀 / 약간</td>
+							<td>상태/느낌</td>
+						</tr>
+					</table>
+
+
+
+					<div>
+						<div class="example" style="margin-bottom:4px;">
+							<div class="example-cn"><ruby>学<rt>xué</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>儿<rt>r</rt></ruby>。</div>
+							<div class="example-ko">잠깐 공부해.</div>
+						</div>
+						<div class="example" style="margin-bottom:4px;">
+							<div class="example-cn"><ruby>吃<rt>chī</rt></ruby> <ruby>一<rt>yì</rt></ruby><ruby>点<rt>diǎn</rt></ruby><ruby>儿<rt>r</rt></ruby>。</div>
+							<div class="example-ko">조금 먹어.</div>
+						</div>
+						<div class="example">
+							<div class="example-cn"><ruby>有<rt>yǒu</rt></ruby><ruby>点<rt>diǎn</rt></ruby><ruby>儿<rt>r</rt></ruby> <ruby>累<rt>lèi</rt></ruby>。</div>
+							<div class="example-ko">좀 피곤해.</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>조금 표현 정리</span>
+					<span>05</span>
+				</div>
+			</section>
+
+
+
+			<!-- PAGE 6 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">05 · 문장 만들기</div>
+						<div class="page-number">06</div>
+					</div>
+
+
+
+					<h2>이제 문장을 만들어 봐요</h2>
+					<p class="subtitle">배운 동사에 표현을 붙여서 짧은 문장을 만들어 봅시다.</p>
+
+
+
+					<div class="example">
+						<div class="example-cn"><ruby>我<rt>wǒ</rt></ruby> <ruby>学<rt>xué</rt></ruby> <ruby>中<rt>Zhōng</rt></ruby><ruby>文<rt>wén</rt></ruby>。</div>
+						<div class="example-ko">나는 중국어를 공부해.</div>
+					</div>
+
+
+
+					<div class="example">
+						<div class="example-cn"><ruby>我<rt>wǒ</rt></ruby> <ruby>喝<rt>hē</rt></ruby> <ruby>一<rt>yì</rt></ruby><ruby>点<rt>diǎn</rt></ruby><ruby>儿<rt>r</rt></ruby> <ruby>水<rt>shuǐ</rt></ruby>。</div>
+						<div class="example-ko">나는 물을 조금 마셔.</div>
+					</div>
+
+
+
+					<div class="example">
+						<div class="example-cn"><ruby>我<rt>wǒ</rt></ruby> <ruby>休<rt>xiū</rt></ruby><ruby>息<rt>xi</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby>。</div>
+						<div class="example-ko">나는 잠깐 쉴게.</div>
+					</div>
+
+
+
+					<div class="example">
+						<div class="example-cn"><ruby>我<rt>wǒ</rt></ruby> <ruby>学<rt>xué</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>儿<rt>r</rt></ruby> <ruby>中<rt>Zhōng</rt></ruby><ruby>文<rt>wén</rt></ruby> <ruby>就<rt>jiù</rt></ruby> <ruby>睡<rt>shuì</rt></ruby><ruby>觉<rt>jiào</rt></ruby>。</div>
+						<div class="example-ko">나 조금 공부하다가 잘 거야.</div>
+					</div>
+
+
+
+					<div class="info-box">
+						<div class="info-title">오늘의 핵심</div>
+						<div>문장을 전부 외우기보다 <strong>동사 + 표현</strong>을 먼저 익혀 보세요.</div>
+					</div>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>문장 만들기</span>
+					<span>06</span>
+				</div>
+			</section>
+
+
+
+		</div>
+
+
+
+
+
+		<!-- =====================================================
+				 SPREAD 4 (PAGE 7 & PAGE 8)
+		===================================================== -->
+		<div class="book-spread">
+
+
+
+			<!-- PAGE 7 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">06 · 연습</div>
+						<div class="page-number">07</div>
+					</div>
+
+
+
+					<h2>연습해 봅시다</h2>
+					<p class="subtitle">먼저 혼자 생각한 다음 정답을 확인하세요.</p>
+
+
+
+					<div class="quiz">
+						<div class="quiz-item">
+							<div class="quiz-question">① "밥을 먹다"는?</div>
+							<div class="quiz-answer"><ruby>吃<rt>chī</rt></ruby> <ruby>饭<rt>fàn</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">② "물을 마시다"는?</div>
+							<div class="quiz-answer"><ruby>喝<rt>hē</rt></ruby> <ruby>水<rt>shuǐ</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">③ "잠깐 기다려"는?</div>
+							<div class="quiz-answer"><ruby>等<rt>děng</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>下<rt>xià</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">④ "조금 먹어"는?</div>
+							<div class="quiz-answer"><ruby>吃<rt>chī</rt></ruby> <ruby>一<rt>yì</rt></ruby><ruby>点<rt>diǎn</rt></ruby><ruby>儿<rt>r</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">⑤ "좀 피곤해"는?</div>
+							<div class="quiz-answer"><ruby>有<rt>yǒu</rt></ruby><ruby>点<rt>diǎn</rt></ruby><ruby>儿<rt>r</rt></ruby> <ruby>累<rt>lèi</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">⑥ "잠깐 공부해"는?</div>
+							<div class="quiz-answer"><ruby>学<rt>xué</rt></ruby> <ruby>一<rt>yí</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>儿<rt>r</rt></ruby></div>
+						</div>
+					</div>
+
+
+
+					<button class="answer-btn" onclick="toggleAnswers(this)">
+						정답 확인
+					</button>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>복습 문제</span>
+					<span>07</span>
+				</div>
+			</section>
+
+
+
+			<!-- PAGE 8 -->
+			<section class="page">
+				<div class="page-content">
+					<div class="page-top">
+						<div class="chapter">07 · 오늘의 복습</div>
+						<div class="page-number">08</div>
+					</div>
+
+
+
+					<h2>오늘 배운 것</h2>
+
+
+
+					<div class="info-box">
+						<div class="info-title">기본 동사</div>
+						做 · 去 · 来 · 吃 · 喝 · 看 · 听 · 说 · 学 · 写<br>
+						想 · 要 · 喜欢 · 给 · 买 · 等 · 睡觉 · 工作 · 回 · 住
+					</div>
+
+
+
+					<div class="info-box">
+						<div class="info-title">자주 사용하는 조합</div>
+						吃饭 · 喝水 · 看电影 · 学中文<br>
+						买东西 · 回家 · 睡觉
+					</div>
+
+
+
+					<div class="info-box">
+						<div class="info-title">오늘의 표현</div>
+						一下 → 잠깐 / 한번<br>
+						一会儿 → 잠시 / 잠깐 동안<br>
+						一点儿 → 조금<br>
+						有点儿 → 좀 / 약간
+					</div>
+
+
+
+					<div style="padding:10px; text-align:center; border:1px solid #18181b; border-radius:5px;">
+						<div style="font-size:16px; font-weight:800; margin-bottom:2px;">
+							<ruby>我<rt>wǒ</rt></ruby> <ruby>学<rt>xué</rt></ruby> <ruby>中<rt>Zhōng</rt></ruby><ruby>文<rt>wén</rt></ruby>。
+						</div>
+						<div style="font-size:11.5px;">
+							나는 중국어를 공부해.
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="page-footer">
+					<span>오늘도 수고했어요!</span>
+					<span>08</span>
+				</div>
+			</section>
+
+
+
+		</div>
+
+
+
+	</div>
+
+
+
+	<script>function toggleAnswers(button) {
+    const page = button.closest(".page");
+    const answers = page.querySelectorAll(".quiz-answer");
+    let show = false;
+
+
+
+    answers.forEach(answer => {
+        answer.classList.toggle("show");
+        if(answer.classList.contains("show")){
+            show = true;
+        }
+    });
+
+
+
+    button.textContent = show ? "정답 숨기기" : "정답 확인";
+}</script>
+
+
+
+</body>
+</html>

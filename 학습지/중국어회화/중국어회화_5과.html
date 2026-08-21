@@ -1,0 +1,933 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Semo중국어 기초 회화 - 和(~하고)</title>
+	<style>
+
+		/* =========================================================
+					 기본 스타일 & 레이아웃 (cn.css 대체 통합)
+				========================================================= */
+					 * {
+								 box-sizing: border-box;
+								 margin: 0;
+								 padding: 0;
+								 font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+
+		}
+
+
+
+					 body {
+								 background: #e9eaec;
+								 color: #202124;
+								 padding: 30px 20px;
+								 display: flex;
+								 flex-direction: column;
+								 align-items: center;
+								 gap: 40px;
+
+		}
+
+
+
+
+		/* 2페이지 펼침면: 데스크톱 잘림 방지 */
+					 .book-container {
+								 display: flex;
+								 width: 100%;
+								 max-width: 1100px;
+								 height: min(calc(100vh - 80px), 720px);
+								 aspect-ratio: 1.414 / 1;
+								 background: #ffffff;
+								 border-radius: 4px;
+								 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+								 position: relative;
+								 overflow: hidden;
+
+		}
+
+
+
+
+			/* 가운데 펼침선 음영 */
+						 .book-container::after {
+									 content: "";
+									 position: absolute;
+									 left: 50%;
+									 top: 2%;
+									 width: 1px;
+									 height: 96%;
+									 background: linear-gradient(to bottom, rgba(0,0,0,0.02), rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.02));
+									 z-index: 10;
+
+			}
+
+
+
+
+		/* 페이지 (50% 분할) */
+					 .page {
+								 position: relative;
+								 width: 50%;
+								 height: 100%;
+								 background: #fff;
+								 padding: 4% 5% 5% 5%;
+								 display: flex;
+								 flex-direction: column;
+								 justify-content: space-between;
+
+		}
+
+
+
+					 .page::before {
+								 content: "";
+								 position: absolute;
+								 top: 0;
+								 left: 0;
+								 width: 100%;
+								 height: 4px;
+								 background: #18181b;
+
+		}
+
+
+
+
+		/* =========================================================
+					 프롤로그 (명언) 전용 스타일
+				========================================================= */
+					 .quote-blank-page {
+								 background: #fafafa;
+
+		}
+
+
+
+					 .quote-page {
+								 display: flex;
+								 justify-content: center;
+								 align-items: center;
+
+		}
+
+
+
+					 .quote-content {
+								 text-align: center;
+								 padding: 0 20px;
+
+		}
+
+
+
+					 .quote-label {
+								 font-size: 13px;
+								 color: #71717a;
+								 letter-spacing: 2px;
+								 margin-bottom: 20px;
+								 font-weight: 700;
+
+		}
+
+
+
+					 .quote-chinese {
+								 font-size: 22px;
+								 font-weight: 800;
+								 margin-bottom: 15px;
+
+		}
+
+
+
+					 .quote-line {
+								 width: 40px;
+								 height: 2px;
+								 background: #18181b;
+								 margin: 15px auto;
+
+		}
+
+
+
+					 .quote-korean {
+								 font-size: 14px;
+								 color: #52525b;
+								 line-height: 1.6;
+
+		}
+
+
+
+
+		/* =========================================================
+					 ruby 태그 (한자 위 병음 완전 밀착)
+				========================================================= */
+					 ruby {
+								 ruby-position: over;
+								 font-size: clamp(15px, 1.2vw, 19px);
+								 font-weight: 800;
+								 line-height: 1.5;
+
+		}
+
+
+
+					 rt {
+								 font-size: clamp(9px, 0.7vw, 11px);
+								 color: #71717a;
+								 font-weight: 600;
+								 line-height: 1;
+								 transform: translateY(-2px);
+
+		}
+
+
+
+
+		/* =========================================================
+					 본문 UI 요소
+				========================================================= */
+					 .page-header {
+								 display: flex;
+								 justify-content: space-between;
+								 align-items: center;
+								 padding-bottom: 8px;
+								 border-bottom: 1px solid #d4d4d8;
+								 margin-bottom: 10px;
+
+		}
+
+
+
+					 .chapter {
+			font-size: 11px;
+			font-weight: 800;
+			letter-spacing: 1px;
+			color: #71717a;
+		}
+
+					 .title {
+			font-size: 11px;
+			color: #a1a1aa;
+			font-weight: 700;
+		}
+
+
+
+					 .main-title .small {
+			font-size: 10px;
+			font-weight: 800;
+			color: #71717a;
+		}
+
+					 .main-title h1 {
+			font-size: clamp(20px, 1.8vw, 26px);
+			margin: 2px 0;
+		}
+
+					 .main-title .desc {
+			font-size: 12px;
+			color: #71717a;
+			margin-bottom: 10px;
+		}
+
+
+
+					 .section-title {
+			font-size: 13px;
+			font-weight: 800;
+			margin-bottom: 6px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+						 .section-title .number {
+				background: #18181b;
+				color: white;
+				width: 18px;
+				height: 18px;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 50%;
+				font-size: 10px;
+			}
+
+
+
+					 .grammar-box {
+			background: #f8fafc;
+			border-left: 4px solid #18181b;
+			padding: 10px 12px;
+			margin-bottom: 10px;
+			font-size: 12px;
+		}
+
+					 .grammar-label {
+			font-weight: 800;
+			color: #71717a;
+			font-size: 10px;
+			margin-bottom: 2px;
+		}
+
+					 .grammar-formula {
+			font-size: 15px;
+			font-weight: 800;
+			margin-bottom: 2px;
+		}
+
+						 .grammar-formula .highlight {
+				color: #2563eb;
+			}
+
+					 .grammar-help {
+			font-size: 11px;
+			color: #71717a;
+			margin-bottom: 8px;
+		}
+
+
+
+					 .example-box {
+			background: #ffffff;
+			border: 1px solid #e4e4e7;
+			padding: 6px 10px;
+			border-radius: 4px;
+			margin-bottom: 4px;
+		}
+
+					 .example-cn {
+			font-size: 15px;
+			font-weight: 700;
+		}
+
+					 .example-ko {
+			font-size: 11px;
+			color: #52525b;
+		}
+
+
+
+					 .structure-box {
+			background: #f8fafc;
+			border: 1px solid #e4e4e7;
+			padding: 8px;
+			border-radius: 4px;
+			margin-bottom: 10px;
+		}
+
+					 .structure {
+			display: flex;
+			align-items: center;
+			justify-content: space-around;
+			text-align: center;
+		}
+
+					 .structure-item strong {
+			display: block;
+			font-size: 14px;
+		}
+
+					 .structure-item span {
+			font-size: 10px;
+			color: #71717a;
+		}
+
+					 .structure-arrow {
+			font-size: 14px;
+			color: #a1a1aa;
+			font-weight: bold;
+		}
+
+
+
+					 .tip-box {
+			background: #fafafa;
+			border: 1px dashed #a1a1aa;
+			padding: 8px 10px;
+			border-radius: 4px;
+			font-size: 11px;
+			margin-bottom: 10px;
+		}
+
+					 .tip-title {
+			font-weight: 800;
+			margin-bottom: 2px;
+		}
+
+
+
+					 .core-sentence-box {
+			background: #18181b;
+			color: white;
+			padding: 10px 14px;
+			border-radius: 6px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+					 .core-sentence-main {
+			font-size: 16px;
+			font-weight: 800;
+		}
+
+					 .core-sentence-pron {
+			font-size: 11px;
+			color: #a1a1aa;
+		}
+
+					 .core-sentence-ko {
+			font-size: 12px;
+			font-weight: 600;
+			text-align: right;
+		}
+
+
+
+
+		/* 단어 그리드 */
+					 .word-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+			margin-bottom: 10px;
+		}
+
+					 .word-item {
+			background: #f8fafc;
+			border: 1px solid #e4e4e7;
+			padding: 6px 10px;
+			border-radius: 4px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+						 .word-item .kor {
+				font-size: 11px;
+				font-weight: 700;
+				color: #52525b;
+			}
+
+
+
+
+		/* 연습문제 */
+					 .exercise-title {
+			font-size: 13px;
+			font-weight: 800;
+		}
+
+					 .exercise-subtitle {
+			font-size: 11px;
+			color: #71717a;
+			margin-bottom: 6px;
+		}
+
+					 .quiz-item {
+			background: #fafafa;
+			border: 1px solid #e4e4e7;
+			padding: 6px 10px;
+			border-radius: 4px;
+			margin-bottom: 6px;
+			font-size: 11.5px;
+		}
+
+					 .quiz-question {
+			font-weight: 700;
+			margin-bottom: 2px;
+		}
+
+					 .quiz-answer {
+			font-weight: 800;
+			color: #18181b;
+			display: none;
+		}
+
+						 .quiz-answer.show {
+				display: block;
+			}
+
+
+
+					 .speaking-box {
+			background: #f8fafc;
+			border: 1px solid #18181b;
+			padding: 8px 10px;
+			border-radius: 4px;
+			font-size: 11px;
+		}
+
+					 .speaking-title {
+			font-weight: 800;
+			margin-bottom: 4px;
+		}
+
+
+
+					 .footer-wrapper {
+			display: flex;
+			justify-content: flex-end;
+			margin-top: 6px;
+		}
+
+					 .answer-btn {
+			background: #18181b;
+			color: white;
+			border: none;
+			padding: 5px 12px;
+			border-radius: 4px;
+			font-size: 11px;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+						 .answer-btn:hover {
+				background: #3f3f46;
+			}
+
+
+
+					 .footer {
+			display: flex;
+			justify-content: space-between;
+			font-size: 10px;
+			color: #a1a1aa;
+			border-top: 1px solid #f4f4f5;
+			padding-top: 6px;
+		}
+
+
+
+
+		/* 모바일 대응 & 인쇄 지원 */
+					 @media(max-width:850px) {
+								 body
+
+		{
+			padding: 10px;
+		}
+
+							 .book-container {
+			flex-direction: column;
+			height: auto;
+			aspect-ratio: auto;
+		}
+
+								 .book-container::after {
+				display: none;
+			}
+
+							 .page {
+			width: 100%;
+			padding: 30px 20px;
+		}
+
+
+		}
+
+
+
+					 @media print {
+								 body
+
+		{
+			background: white;
+			padding: 0;
+		}
+
+							 .book-container {
+			box-shadow: none;
+			height: 100vh;
+			page-break-after: always;
+		}
+
+							 .answer-btn {
+			display: none !important;
+		}
+
+							 .quiz-answer.show {
+			display: none !important;
+		}
+
+
+		}
+
+	</style>
+</head>
+<body>
+
+
+
+	<!-- =========================================================
+			 프롤로그 펼침면
+	========================================================= -->
+	<div class="book-container quote-spread">
+		<!-- 1페이지 : 빈 페이지 -->
+		<section class="page quote-blank-page">
+			<div class="footer"></div>
+		</section>
+
+
+
+		<!-- 2페이지 : 중국어 명언 -->
+		<section class="page quote-page">
+			<div class="quote-content">
+				<div class="quote-label">오늘의 중국어,</div>
+				<div class="quote-chinese">
+					<ruby>大<rt>Dà</rt></ruby><ruby>家<rt>jiā</rt></ruby><ruby>一<rt>yì</rt></ruby><ruby>起<rt>qǐ</rt></ruby> <ruby>分<rt>fēn</rt></ruby><ruby>享<rt>xiǎng</rt></ruby>。
+				</div>
+				<div class="quote-line"></div>
+				<div class="quote-korean">좋은 것은 함께 나눌 때 더 즐겁다.</div>
+			</div>
+			<div class="footer"></div>
+		</section>
+	</div>
+
+
+
+	<!-- =========================================================
+			 제1과 펼침면 (인물 & 과일)
+	========================================================= -->
+	<div class="book-container">
+		<!-- LEFT PAGE : 문법 [和 - 인물] -->
+		<section class="page left-page">
+			<div>
+				<header class="page-header">
+					<span class="chapter">CHAPTER 03</span>
+					<span class="title">대상 연결하기 (和)</span>
+				</header>
+
+
+
+				<div class="main-title">
+					<div class="small">TODAY'S GOAL</div>
+					<h1>나하고 너, 사과하고 바나나</h1>
+					<div class="desc">~와/과, ~하고를 뜻하는 중국어 접속사 和를 배워 봅시다.</div>
+				</div>
+
+
+
+				<div class="section-title">
+					<span class="number">1</span> 오늘의 문법
+				</div>
+				<div class="grammar-box">
+					<div class="grammar-label">기본 문장</div>
+					<div class="grammar-formula">A + <span class="highlight">和</span> + B</div>
+					<div class="grammar-help">和 (hé) = ~와/과, ~하고 (명사와 명사를 연결)</div>
+
+
+
+					<div class="example-box">
+						<div class="example-cn"><ruby>我<rt>wǒ</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>你<rt>nǐ</rt></ruby></div>
+						<div class="example-ko">나하고 너</div>
+					</div>
+					<div class="example-box">
+						<div class="example-cn"><ruby>爸<rt>bà</rt></ruby><ruby>爸<rt>ba</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>妈<rt>mā</rt></ruby><ruby>妈<rt>ma</rt></ruby></div>
+						<div class="example-ko">아빠와 엄마</div>
+					</div>
+				</div>
+
+
+
+				<div class="section-title">
+					<span class="number">2</span> 문장 구조
+				</div>
+				<div class="structure-box">
+					<div class="structure">
+						<div class="structure-item"><strong>我</strong><span>나</span></div>
+						<div class="structure-arrow">+</div>
+						<div class="structure-item"><strong>和</strong><span>~하고</span></div>
+						<div class="structure-arrow">+</div>
+						<div class="structure-item"><strong>朋友</strong><span>친구</span></div>
+					</div>
+				</div>
+
+
+
+				<div class="tip-box">
+					<div class="tip-title">💡 초보 TIP</div>
+					<div class="tip-text">
+						<strong>和</strong>는 단어와 단어(명사)를 연결할 때만 사용해요.<br>
+						문장과 문장을 연결할 때는 사용하지 않으니 주의하세요!
+					</div>
+				</div>
+
+
+
+				<div class="core-sentence-wrapper">
+					<div class="section-title">
+						<span class="number">3</span> 오늘의 핵심 문장
+					</div>
+					<div class="core-sentence-box">
+						<div>
+							<div class="core-sentence-main">我和朋友。</div>
+							<div class="core-sentence-pron">Wǒ hé péngyou.</div>
+						</div>
+						<div class="core-sentence-ko">나하고 친구.</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer"><span>Semo중국어</span><span>01</span></div>
+		</section>
+
+
+
+		<!-- RIGHT PAGE : 단어 [인물/과일] & 연습 -->
+		<section class="page right-page">
+			<div>
+				<header class="page-header">
+					<span class="chapter">VOCABULARY + PRACTICE</span>
+					<span class="title">단어 & 연습</span>
+				</header>
+
+
+
+				<div class="word-section">
+					<div class="section-title">
+						<span class="number">1</span> 오늘의 단어 · 인물 & 과일
+					</div>
+					<div class="word-grid">
+						<div class="word-item"><span class="kor">너/당신</span><span class="cn"><ruby>你<rt>nǐ</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">친구</span><span class="cn"><ruby>朋<rt>péng</rt></ruby><ruby>友<rt>you</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">사과</span><span class="cn"><ruby>苹<rt>píng</rt></ruby><ruby>果<rt>guǒ</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">바나나</span><span class="cn"><ruby>香<rt>xiāng</rt></ruby><ruby>蕉<rt>jiāo</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">수박</span><span class="cn"><ruby>西<rt>xī</rt></ruby><ruby>瓜<rt>guā</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">딸기</span><span class="cn"><ruby>草<rt>cǎo</rt></ruby><ruby>莓<rt>méi</rt></ruby></span></div>
+					</div>
+				</div>
+
+
+
+				<div class="exercise-section">
+					<div class="exercise-title">2. 문장을 만들어 보세요 ✏️</div>
+					<div class="exercise-subtitle">오늘 배운 「A + 和 + B」를 사용하세요.</div>
+
+
+
+					<div class="quiz-list">
+						<div class="quiz-item">
+							<div class="quiz-question">① 나하고 너</div>
+							<div class="quiz-answer"><ruby>我<rt>wǒ</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>你<rt>nǐ</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">② 사과하고 바나나</div>
+							<div class="quiz-answer"><ruby>苹<rt>píng</rt></ruby><ruby>果<rt>guǒ</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>香<rt>xiāng</rt></ruby><ruby>蕉<rt>jiāo</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">③ 수박하고 딸기</div>
+							<div class="quiz-answer"><ruby>西<rt>xī</rt></ruby><ruby>瓜<rt>guā</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>草<rt>cǎo</rt></ruby><ruby>莓<rt>méi</rt></ruby></div>
+						</div>
+					</div>
+
+
+
+					<div class="speaking-box">
+						<div class="speaking-title">🎤 3. 혼자 말해보기</div>
+						<div class="speaking-text">
+							좋아하는 과일 두 개를 고르고 연결해서 말해 보세요.<br>
+							<strong>______ 和 ______。</strong>
+						</div>
+					</div>
+
+
+
+					<div class="footer-wrapper">
+						<button class="answer-btn" onclick="toggleAnswers(this)">정답 확인</button>
+					</div>
+				</div>
+			</div>
+			<div class="footer"><span>Semo중국어</span><span>02</span></div>
+		</section>
+	</div>
+
+
+
+	<!-- =========================================================
+			 제2과 펼침면 (음료수 & 먹을것)
+	========================================================= -->
+	<div class="book-container">
+		<!-- LEFT PAGE : 문법 응용 [和 - 음식] -->
+		<section class="page left-page">
+			<div>
+				<header class="page-header">
+					<span class="chapter">CHAPTER 03</span>
+					<span class="title">음식 조합 말하기</span>
+				</header>
+
+
+
+				<div class="main-title">
+					<div class="small">TODAY'S GOAL</div>
+					<h1>커피하고 우유, 빵하고 국수</h1>
+					<div class="desc">음료와 먹을 것을 연결해 원하는 것을 말해 봅시다.</div>
+				</div>
+
+
+
+				<div class="section-title">
+					<span class="number">1</span> 오늘의 문법
+				</div>
+				<div class="grammar-box">
+					<div class="grammar-label">음식 주문하기 응용</div>
+					<div class="grammar-formula">要 + 명사A + <span class="highlight">和</span> + 명사B</div>
+					<div class="grammar-help">要 (yào) = 원하다 / ~를 주세요</div>
+
+
+
+					<div class="example-box">
+						<div class="example-cn"><ruby>咖<rt>kā</rt></ruby><ruby>排<rt>fēi</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>牛<rt>niú</rt></ruby><ruby>奶<rt>nǎi</rt></ruby></div>
+						<div class="example-ko">커피와 우유</div>
+					</div>
+					<div class="example-box">
+						<div class="example-cn"><ruby>面<rt>miàn</rt></ruby><ruby>包<rt>bāo</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>面<rt>miàn</rt></ruby><ruby>条<rt>tiáo</rt></ruby></div>
+						<div class="example-ko">빵하고 국수</div>
+					</div>
+				</div>
+
+
+
+				<div class="section-title">
+					<span class="number">2</span> 문장 구조
+				</div>
+				<div class="structure-box">
+					<div class="structure">
+						<div class="structure-item"><strong>要</strong><span>원해요</span></div>
+						<div class="structure-arrow">+</div>
+						<div class="structure-item"><strong>水</strong><span>물</span></div>
+						<div class="structure-arrow">+</div>
+						<div class="structure-item"><strong>和</strong><span>하고</span></div>
+						<div class="structure-arrow">+</div>
+						<div class="structure-item"><strong>茶</strong><span>차</span></div>
+					</div>
+				</div>
+
+
+
+				<div class="tip-box">
+					<div class="tip-title">💡 초보 TIP</div>
+					<div class="tip-text">
+						식당이나 카페에서 주문할 때 <strong>"A 和 B"</strong>를 붙여 말하면<br>
+						"A랑 B 주세요"라는 자연스러운 표현이 돼요!
+					</div>
+				</div>
+
+
+
+				<div class="core-sentence-wrapper">
+					<div class="section-title">
+						<span class="number">3</span> 오늘의 핵심 문장
+					</div>
+					<div class="core-sentence-box">
+						<div>
+							<div class="core-sentence-main">咖啡和牛奶。</div>
+							<div class="core-sentence-pron">Kāfēi hé niúnǎi.</div>
+						</div>
+						<div class="core-sentence-ko">커피하고 우유.</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer"><span>Semo중국어</span><span>03</span></div>
+		</section>
+
+
+
+		<!-- RIGHT PAGE : 단어 [음료수/먹을것] & 연습 -->
+		<section class="page right-page">
+			<div>
+				<header class="page-header">
+					<span class="chapter">VOCABULARY + PRACTICE</span>
+					<span class="title">단어 & 연습</span>
+				</header>
+
+
+
+				<div class="word-section">
+					<div class="section-title">
+						<span class="number">1</span> 오늘의 단어 · 음료수 & 먹을것
+					</div>
+					<div class="word-grid">
+						<div class="word-item"><span class="kor">커피</span><span class="cn"><ruby>咖<rt>kā</rt></ruby><ruby>啡<rt>fēi</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">우유</span><span class="cn"><ruby>牛<rt>niú</rt></ruby><ruby>奶<rt>nǎi</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">콜라</span><span class="cn"><ruby>可<rt>kě</rt></ruby><ruby>乐<rt>lè</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">빵</span><span class="cn"><ruby>面<rt>miàn</rt></ruby><ruby>包<rt>bāo</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">국수</span><span class="cn"><ruby>面<rt>miàn</rt></ruby><ruby>条<rt>tiáo</rt></ruby></span></div>
+						<div class="word-item"><span class="kor">밥</span><span class="cn"><ruby>米<rt>mǐ</rt></ruby><ruby>饭<rt>fàn</rt></ruby></span></div>
+					</div>
+				</div>
+
+
+
+				<div class="exercise-section">
+					<div class="exercise-title">2. 문장을 만들어 보세요 ✏️</div>
+					<div class="exercise-subtitle">음료수와 먹을 것을 연결해 보세요.</div>
+
+
+
+					<div class="quiz-list">
+						<div class="quiz-item">
+							<div class="quiz-question">① 커피하고 콜라</div>
+							<div class="quiz-answer"><ruby>咖<rt>kā</rt></ruby><ruby>啡<rt>fēi</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>可<rt>kě</rt></ruby><ruby>乐<rt>lè</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">② 빵하고 우유</div>
+							<div class="quiz-answer"><ruby>面<rt>miàn</rt></ruby><ruby>包<rt>bāo</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>牛<rt>niú</rt></ruby><ruby>奶<rt>nǎi</rt></ruby></div>
+						</div>
+						<div class="quiz-item">
+							<div class="quiz-question">③ 밥하고 국수</div>
+							<div class="quiz-answer"><ruby>米<rt>mǐ</rt></ruby><ruby>饭<rt>fàn</rt></ruby> <ruby>和<rt>hé</rt></ruby> <ruby>面<rt>miàn</rt></ruby><ruby>条<rt>tiáo</rt></ruby></div>
+						</div>
+					</div>
+
+
+
+					<div class="speaking-box">
+						<div class="speaking-title">🎤 3. 카페/식당에서 말해보기</div>
+						<div class="speaking-text">
+							먹고 싶은 조합을 골라 크게 주문해 보세요.<br>
+							<strong>要 ______ 和 ______。</strong>
+						</div>
+					</div>
+
+
+
+					<div class="footer-wrapper">
+						<button class="answer-btn" onclick="toggleAnswers(this)">정답 확인</button>
+					</div>
+				</div>
+			</div>
+			<div class="footer"><span>Semo중국어</span><span>04</span></div>
+		</section>
+	</div>
+
+
+
+	<!-- 스크립트 (정답 토글) -->
+	<script>
+		function toggleAnswers(button) {
+			const page = button.closest(".page");
+			const answers = page.querySelectorAll(".quiz-answer");
+			let show = false;
+
+
+
+			answers.forEach(answer => {
+				answer.classList.toggle("show");
+				if (answer.classList.contains("show")) {
+					show = true;
+				}
+			});
+
+
+
+			button.textContent = show ? "정답 숨기기" : "정답 확인";
+		}
+	</script>
+</body>
+</html>
