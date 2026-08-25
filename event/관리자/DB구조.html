@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semo 데이터베이스 구조 및 테이블 명세서</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- 상단 헤더 -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shrink-0 z-10">
+        <div class="flex items-center space-x-3">
+            <span class="text-xl font-bold text-indigo-600 tracking-tight">Semo DB Architecture</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">ConoHa WING MariaDB / MySQL 8.0</span>
+        </div>
+        <div class="flex items-center space-x-2 text-xs text-gray-500 font-mono">
+            <i class="fa-solid fa-server text-indigo-500"></i>
+            <span>Charset: utf8mb4_unicode_ci</span>
+        </div>
+    </header>
+
+    <!-- 메인 레이아웃 -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- 사이드바 (테이블 목록) -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0">
+            <div class="p-4 border-b border-gray-100 font-semibold text-xs text-gray-400 uppercase tracking-wider">테이블 목차 & ERD</div>
+            <nav class="p-3 space-y-1 flex-1 overflow-y-auto text-sm">
+                <button onclick="showSection('erd')" id="btn-erd" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition bg-indigo-50 text-indigo-600">
+                    <i class="fa-solid fa-diagram-project w-4"></i>
+                    <span>전체 ERD & 스캔 Flow</span>
+                </button>
+                <div class="pt-3 border-t border-gray-100 my-1"></div>
+                <button onclick="showSection('tbl-campaigns')" id="btn-tbl-campaigns" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">1</span>
+                    <span>campaigns (캠페인)</span>
+                </button>
+                <button onclick="showSection('tbl-regions')" id="btn-tbl-regions" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">2</span>
+                    <span>regions (지역)</span>
+                </button>
+                <button onclick="showSection('tbl-stores')" id="btn-tbl-stores" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">3</span>
+                    <span>stores (매장)</span>
+                </button>
+                <button onclick="showSection('tbl-contents')" id="btn-tbl-contents" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">4</span>
+                    <span>contents (콘텐츠)</span>
+                </button>
+                <button onclick="showSection('tbl-content-translations')" id="btn-tbl-content-translations" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">5</span>
+                    <span>content_translations</span>
+                </button>
+                <button onclick="showSection('tbl-qr-codes')" id="btn-tbl-qr-codes" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">6</span>
+                    <span>qr_codes (QR 토큰)</span>
+                </button>
+                <button onclick="showSection('tbl-distributions')" id="btn-tbl-distributions" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">7</span>
+                    <span>distributions (배포)</span>
+                </button>
+                <button onclick="showSection('tbl-scan-logs')" id="btn-tbl-scan-logs" class="nav-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+                    <span class="font-mono text-xs text-indigo-500 font-bold">8</span>
+                    <span>scan_logs (스캔 기록)</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- 본문 명세서 영역 -->
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50 space-y-8">
+
+            <!-- 0. ERD & 스캔 로직 설명 -->
+            <section id="sec-erd" class="tab-sec space-y-6">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">전체 관계도 (ERD) & 서비스 로직</h1>
+                    <p class="text-sm text-gray-500 mt-1">동일 QR 코드를 유지하면서 미배정 상태 배포와 스캔 통계를 완벽 추적하는 아키텍처입니다.</p>
+                </div>
+
+                <!-- ERD 다이어그램 -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-3">
+                    <h2 class="font-bold text-gray-800 text-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-sitemap text-indigo-600"></i>
+                        <span>테이블 간 관계 다이어그램 (ERD)</span>
+                    </h2>
+                    <pre class="bg-gray-950 text-gray-200 p-5 rounded-xl text-xs font-mono overflow-x-auto leading-relaxed">
+[campaigns] (1) ────< [regions] (1) ────< [stores] (0..1)
+     │                                        │
+     │                                        ▼
+     ├────────────────────────────────< [distributions] (0..N)
+     │                                        │
+     ▼                                        ▼
+[contents] (1) ────< [qr_codes] (1) ──────< [scan_logs] (스캔 이력)
+     │
+     └───< [content_translations] (다국어 1:N)
+                    </pre>
+                </div>
+
+
+
+<!-- DB설계 -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-3">
+                    <h2 class="font-bold text-gray-800 text-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-sitemap text-indigo-600"></i>
+                        <span>DB설계 (ERD)</span>
+                    </h2>
+                    <pre class="bg-gray-950 text-gray-200 p-5 rounded-xl text-xs font-mono overflow-x-auto leading-relaxed">
+-- 데이터베이스 및 테이블 생성 (ConoHa WING MySQL / MariaDB)
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS `scan_logs`;
+DROP TABLE IF EXISTS `distributions`;
+DROP TABLE IF EXISTS `qr_codes`;
+DROP TABLE IF EXISTS `content_translations`;
+DROP TABLE IF EXISTS `contents`;
+DROP TABLE IF EXISTS `stores`;
+DROP TABLE IF EXISTS `regions`;
+DROP TABLE IF EXISTS `campaigns`;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- 1. campaigns (캠페인)
+CREATE TABLE `campaigns` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL COMMENT '캠페인명',
+  `description` TEXT DEFAULT NULL COMMENT '설명',
+  `start_date` DATE DEFAULT NULL COMMENT '시작일',
+  `end_date` DATE DEFAULT NULL COMMENT '종료일',
+  `status` ENUM('active', 'paused', 'ended') NOT NULL DEFAULT 'active' COMMENT '상태',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='캠페인 관리';
+
+-- 2. regions (지역)
+CREATE TABLE `regions` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `campaign_id` INT UNSIGNED NOT NULL COMMENT '캠페인 ID',
+  `name` VARCHAR(50) NOT NULL COMMENT '지역명 (공주, 향남 등)',
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '활성 여부',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_regions_campaign` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='지역 관리';
+
+-- 3. stores (매장)
+CREATE TABLE `stores` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `region_id` INT UNSIGNED NOT NULL COMMENT '지역 ID',
+  `name` VARCHAR(100) NOT NULL COMMENT '매장명',
+  `store_type` VARCHAR(50) DEFAULT 'cafe' COMMENT '업종 (cafe, pub 등)',
+  `address` VARCHAR(255) DEFAULT NULL COMMENT '주소',
+  `phone` VARCHAR(30) DEFAULT NULL COMMENT '전화번호',
+  `memo` TEXT DEFAULT NULL COMMENT '메모',
+  `status` ENUM('active', 'closed') NOT NULL DEFAULT 'active' COMMENT '매장 상태',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_stores_region` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='매장 정보';
+
+-- 4. contents (콘텐츠 본체)
+CREATE TABLE `contents` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `category` VARCHAR(50) NOT NULL DEFAULT '일상회화' COMMENT '카테고리',
+  `level` VARCHAR(20) NOT NULL DEFAULT '초급' COMMENT '난이도',
+  `image_url` VARCHAR(255) DEFAULT NULL COMMENT '대표 이미지 URL',
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '활성 여부',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='콘텐츠 관리';
+
+-- 5. content_translations (콘텐츠 다국어)
+CREATE TABLE `content_translations` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `content_id` INT UNSIGNED NOT NULL COMMENT '콘텐츠 ID',
+  `language_code` VARCHAR(10) NOT NULL COMMENT '언어 코드 (ja, ko, zh, en 등)',
+  `text` VARCHAR(255) NOT NULL COMMENT '번역 텍스트',
+  `pronunciation` VARCHAR(255) DEFAULT NULL COMMENT '발음/읽는 법',
+  `meaning` VARCHAR(255) DEFAULT NULL COMMENT '의미 요약',
+  `description` TEXT DEFAULT NULL COMMENT '상세 설명',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_content_lang` (`content_id`, `language_code`),
+  CONSTRAINT `fk_translations_content` FOREIGN KEY (`content_id`) REFERENCES `contents` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='콘텐츠 다국어 관리';
+
+-- 6. qr_codes (고유 QR 토큰)
+CREATE TABLE `qr_codes` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `token` VARCHAR(32) NOT NULL COMMENT '고유 난수 토큰 (A8K29D 등)',
+  `content_id` INT UNSIGNED NOT NULL COMMENT '콘텐츠 ID',
+  `campaign_id` INT UNSIGNED NOT NULL COMMENT '캠페인 ID',
+  `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active' COMMENT '토큰 상태',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_qr_token` (`token`),
+  CONSTRAINT `fk_qrcodes_content` FOREIGN KEY (`content_id`) REFERENCES `contents` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_qrcodes_campaign` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='QR 고유 토큰';
+
+-- 7. distributions (QR 배포/매장 연결 정보)
+CREATE TABLE `distributions` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `qr_id` INT UNSIGNED NOT NULL COMMENT 'QR ID',
+  `campaign_id` INT UNSIGNED NOT NULL COMMENT '캠페인 ID',
+  `region_id` INT UNSIGNED NOT NULL COMMENT '배포 지역 ID',
+  `store_id` INT UNSIGNED DEFAULT NULL COMMENT '배포 매장 ID (NULL = 미배정)',
+  `quantity` INT UNSIGNED NOT NULL DEFAULT 1 COMMENT '인쇄/배포 수량',
+  `status` ENUM('allocated', 'unallocated', 'recalled') NOT NULL DEFAULT 'unallocated' COMMENT '배정 상태',
+  `distributed_at` DATETIME DEFAULT NULL COMMENT '실제 매장 배정 일시',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_dist_qr` FOREIGN KEY (`qr_id`) REFERENCES `qr_codes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_dist_campaign` FOREIGN KEY (`campaign_id`) REFERENCES `campaigns` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_dist_region` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_dist_store` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='QR 배포 정보';
+
+-- 8. scan_logs (스캔 로그 및 통계)
+CREATE TABLE `scan_logs` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `qr_id` INT UNSIGNED NOT NULL COMMENT 'QR ID',
+  `distribution_id` INT UNSIGNED DEFAULT NULL COMMENT '배포 ID',
+  `campaign_id` INT UNSIGNED NOT NULL COMMENT '캠페인 ID',
+  `region_id` INT UNSIGNED NOT NULL COMMENT '지역 ID',
+  `store_id` INT UNSIGNED DEFAULT NULL COMMENT '매장 ID (스캔 당시 매장)',
+  `content_id` INT UNSIGNED NOT NULL COMMENT '콘텐츠 ID',
+  `language_code` VARCHAR(10) DEFAULT 'ja' COMMENT '손님의 접속 언어',
+  `ip_hash` VARCHAR(64) DEFAULT NULL COMMENT '익명화된 IP Hash',
+  `user_agent` TEXT DEFAULT NULL COMMENT '브라우저 UA',
+  `referer` TEXT DEFAULT NULL COMMENT '유입 경로',
+  `scanned_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '스캔 일시',
+  PRIMARY KEY (`id`),
+  KEY `idx_stats_region` (`campaign_id`, `region_id`),
+  KEY `idx_stats_store` (`store_id`),
+  KEY `idx_stats_content` (`content_id`),
+  KEY `idx_scanned_at` (`scanned_at`),
+  CONSTRAINT `fk_logs_qr` FOREIGN KEY (`qr_id`) REFERENCES `qr_codes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='QR 스캔 기록';
+
+-- 初期 テスト データ (기본 데이터)
+INSERT INTO `campaigns` (`id`, `name`, `description`) VALUES (1, '2026 소상공인 QR 캠페인', '지역 상권 활성화 외국어 태그 이벤트');
+
+INSERT INTO `regions` (`id`, `campaign_id`, `name`) VALUES 
+(1, 1, '공주'),
+(2, 1, '청주'),
+(3, 1, '향남');
+
+INSERT INTO `stores` (`id`, `region_id`, `name`, `store_type`) VALUES 
+(1, 1, '○○카페', 'cafe'),
+(2, 1, '△△술집', 'pub'),
+(3, 2, '××카페', 'cafe');
+
+INSERT INTO `contents` (`id`, `category`, `level`) VALUES 
+(1, '일상회화', '초급'),
+(2, '일상회화', '초급'),
+(3, '일상회화', '초급');
+
+INSERT INTO `content_translations` (`content_id`, `language_code`, `text`, `pronunciation`, `meaning`) VALUES 
+(1, 'ja', '何してる？', 'なにしてる？', '뭐 해?'),
+(1, 'ko', '뭐 해?', NULL, '뭐 해?'),
+(1, 'zh', '你在干什么？', NULL, '뭐 해?'),
+(2, 'ja', 'おやすみ', 'おやすみ', '잘 자'),
+(2, 'ko', '잘 자', NULL, '잘 자'),
+(2, 'zh', '晚安', NULL, '잘 자'),
+(3, 'ja', '会おう', 'あおう', '만나자'),
+(3, 'ko', '만나자', NULL, '만나자'),
+(3, 'zh', '见面吧', NULL, '만나자');
+
+INSERT INTO `qr_codes` (`id`, `token`, `content_id`, `campaign_id`) VALUES 
+(1, 'A8K29D', 1, 1),
+(2, 'X82KD9', 2, 1),
+(3, 'P91LM2', 3, 1);
+
+INSERT INTO `distributions` (`id`, `qr_id`, `campaign_id`, `region_id`, `store_id`, `quantity`, `status`) VALUES 
+(1, 1, 1, 1, 1, 50, 'allocated'),
+(2, 1, 1, 3, NULL, 50, 'unallocated'),
+(3, 2, 1, 1, 2, 30, 'allocated');                    </pre>
+                </div>
+
+                <!-- QR 스캔 동작 순서 -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-4">
+                    <h2 class="font-bold text-gray-800 text-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-route text-indigo-600"></i>
+                        <span>손님 QR 스캔 시 백엔드 처리 프로세스</span>
+                    </h2>
+                    <ol class="space-y-2 text-sm text-gray-600 list-decimal list-inside">
+                        <li>손님이 <code class="bg-gray-100 text-indigo-600 px-1.5 py-0.5 rounded font-mono text-xs">https://semo.kr/q/A8K29D</code> 접속</li>
+                        <li>PHP 백엔드가 <code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">qr_codes</code> 테이블에서 <code class="bg-gray-100 text-indigo-600 px-1.5 py-0.5 rounded font-mono text-xs">token = 'A8K29D'</code> 검색</li>
+                        <li>해당 <code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">qr_id</code>와 매핑된 <code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">distributions</code> 정보를 조회하여 지역(<code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">region_id</code>)과 매장(<code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">store_id</code>) 식별</li>
+                        <li>접속자의 기기 언어(<code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">Accept-Language</code>)를 감지하여 <code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">scan_logs</code>에 1건 저장</li>
+                        <li><code class="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-mono text-xs">content_translations</code>에서 맞춤형 언어 순서로 번역 텍스트를 화면에 렌더링</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 1. campaigns -->
+            <section id="sec-tbl-campaigns" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <h1 class="text-xl font-bold font-mono text-indigo-600">1. campaigns <span class="text-base font-normal text-gray-700">(캠페인 관리)</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">소상공인 지원 사업 연도별 또는 시즌별 캠페인의 최상위 마스터 테이블입니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">캠페인 고유 ID (PK, Auto Increment)</td></tr>
+                            <tr><td class="p-3">name</td><td class="p-3">VARCHAR(100)</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">캠페인명 (예: 2026 소상공인 QR 캠페인)</td></tr>
+                            <tr><td class="p-3">description</td><td class="p-3">TEXT</td><td class="p-3">YES</td><td class="p-3"></td><td class="p-3 font-sans">캠페인 상세 설명</td></tr>
+                            <tr><td class="p-3">start_date</td><td class="p-3">DATE</td><td class="p-3">YES</td><td class="p-3"></td><td class="p-3 font-sans">시작일</td></tr>
+                            <tr><td class="p-3">end_date</td><td class="p-3">DATE</td><td class="p-3">YES</td><td class="p-3"></td><td class="p-3 font-sans">종료일</td></tr>
+                            <tr><td class="p-3">status</td><td class="p-3">ENUM('active','paused','ended')</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">캠페인 상태 (기본값: active)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 2. regions -->
+            <section id="sec-tbl-regions" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <h1 class="text-xl font-bold font-mono text-indigo-600">2. regions <span class="text-base font-normal text-gray-700">(지역 관리)</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">공주, 청주, 향남 등 각 캠페인에 속한 지자체/지역 정보입니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">지역 ID</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">campaign_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK</td><td class="p-3 font-sans">소속 캠페인 ID (FOREIGN KEY -> campaigns.id)</td></tr>
+                            <tr><td class="p-3">name</td><td class="p-3">VARCHAR(50)</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">지역명 (예: 공주, 향남)</td></tr>
+                            <tr><td class="p-3">is_active</td><td class="p-3">TINYINT(1)</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">지역 활성화 여부 (1 = 사용, 0 = 미사용)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 3. stores -->
+            <section id="sec-tbl-stores" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <h1 class="text-xl font-bold font-mono text-indigo-600">3. stores <span class="text-base font-normal text-gray-700">(매장 정보)</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">지역 내 개별 소상공인 점포(카페, 술집 등)의 상세 정보입니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">매장 ID</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">region_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK</td><td class="p-3 font-sans">소속 지역 ID (FOREIGN KEY -> regions.id)</td></tr>
+                            <tr><td class="p-3">name</td><td class="p-3">VARCHAR(100)</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">매장명 (예: ○○카페)</td></tr>
+                            <tr><td class="p-3">store_type</td><td class="p-3">VARCHAR(50)</td><td class="p-3">YES</td><td class="p-3"></td><td class="p-3 font-sans">업종 구분 (cafe, pub, restaurant 등)</td></tr>
+                            <tr><td class="p-3">status</td><td class="p-3">ENUM('active','closed')</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">매장 영업 상태</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 4. contents -->
+            <section id="sec-tbl-contents" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <h1 class="text-xl font-bold font-mono text-indigo-600">4. contents <span class="text-base font-normal text-gray-700">(콘텐츠 본체)</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">특정 언어에 종속되지 않는 콘텐츠의 메타데이터(ID, 카테고리, 난이도)를 관리합니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">콘텐츠 ID (예: 1, 2, 3...)</td></tr>
+                            <tr><td class="p-3">category</td><td class="p-3">VARCHAR(50)</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">카테고리 (기본값: 일상회화)</td></tr>
+                            <tr><td class="p-3">level</td><td class="p-3">VARCHAR(20)</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">난이도 (초급, 중급, 고급)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. content_translations -->
+            <section id="sec-tbl-content-translations" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <h1 class="text-xl font-bold font-mono text-indigo-600">5. content_translations <span class="text-base font-normal text-gray-700">(콘텐츠 다국어)</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">콘텐츠별 언어 코드(ja, ko, zh 등)에 따른 실제 번역 텍스트와 발음을 분리 저장하는 유연한 구조입니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">번역 레코드 ID</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">content_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK, UNI</td><td class="p-3 font-sans">원본 콘텐츠 ID (FOREIGN KEY -> contents.id)</td></tr>
+                            <tr><td class="p-3 font-bold text-amber-600">language_code</td><td class="p-3">VARCHAR(10)</td><td class="p-3">NO</td><td class="p-3">UNI</td><td class="p-3 font-sans">언어 코드 (ja, ko, zh, en) - (content_id, language_code) 복합 유일키</td></tr>
+                            <tr><td class="p-3">text</td><td class="p-3">VARCHAR(255)</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">표시 문구 (예: 何してる？ / 뭐 해?)</td></tr>
+                            <tr><td class="p-3">pronunciation</td><td class="p-3">VARCHAR(255)</td><td class="p-3">YES</td><td class="p-3"></td><td class="p-3 font-sans">발음 / 읽는 법 (예: なにしてる？)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 6. qr_codes -->
+            <section id="sec-tbl-qr-codes" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <h1 class="text-xl font-bold font-mono text-indigo-600">6. qr_codes <span class="text-base font-normal text-gray-700">(QR 토큰)</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">실제 QR URL에 포함되는 고유 난수 토큰(Token)과 콘텐츠 매핑 정보를 보관합니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">QR ID</td></tr>
+                            <tr><td class="p-3 font-bold text-amber-600">token</td><td class="p-3">VARCHAR(32)</td><td class="p-3">NO</td><td class="p-3">UNI</td><td class="p-3 font-sans">URL용 난수 토큰 (예: A8K29D) - UNIQUE INDEX</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">content_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK</td><td class="p-3 font-sans">연결된 콘텐츠 ID (FOREIGN KEY -> contents.id)</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">campaign_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK</td><td class="p-3 font-sans">소속 캠페인 ID (FOREIGN KEY -> campaigns.id)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 7. distributions -->
+            <section id="sec-tbl-distributions" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-xl font-bold font-mono text-indigo-600">7. distributions <span class="text-base font-normal text-gray-700">(QR 배포/매장 연결)</span></h1>
+                        <span class="px-2 py-0.5 bg-rose-100 text-rose-700 font-sans text-xs rounded-full font-bold">★ 미배정 핵심</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">QR 자체와 실재 배포 위치를 완전히 분리하여, store_id = NULL 상태로 선발행 후 나중에 매장을 지정할 수 있도록 지원합니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">배포 레코드 ID</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">qr_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK</td><td class="p-3 font-sans">배포할 QR ID (FOREIGN KEY -> qr_codes.id)</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">region_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK</td><td class="p-3 font-sans">배포 지역 ID (FOREIGN KEY -> regions.id)</td></tr>
+                            <tr class="bg-amber-50/50"><td class="p-3 font-bold text-rose-600">store_id</td><td class="p-3 font-bold text-rose-600">INT UNSIGNED</td><td class="p-3 font-bold text-rose-600">YES</td><td class="p-3">FK</td><td class="p-3 font-sans font-bold text-rose-800">배포 매장 ID (NULL = 미배정, 나중에 UPDATE 가능)</td></tr>
+                            <tr><td class="p-3">quantity</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">해당 배포 단위의 인쇄/배포 수량 (예: 50장)</td></tr>
+                            <tr><td class="p-3">status</td><td class="p-3">ENUM('allocated','unallocated','recalled')</td><td class="p-3">NO</td><td class="p-3"></td><td class="p-3 font-sans">배정 상태 (unallocated = 미배정)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 8. scan_logs -->
+            <section id="sec-tbl-scan-logs" class="tab-sec space-y-4 hidden">
+                <div class="border-b border-gray-200 pb-3">
+                    <h1 class="text-xl font-bold font-mono text-indigo-600">8. scan_logs <span class="text-base font-normal text-gray-700">(스캔 이력로그)</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">손님이 QR 태그를 스캔할 때마다 누적 기록되는 시계열 통계 테이블입니다.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-xs text-gray-500 border-b border-gray-200">
+                            <tr><th class="p-3">컬럼명</th><th class="p-3">데이터 타입</th><th class="p-3">Null</th><th class="p-3">Key</th><th class="p-3">설명</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-mono text-xs">
+                            <tr><td class="p-3 font-bold text-indigo-600">id</td><td class="p-3">BIGINT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">PRI</td><td class="p-3 font-sans">로그 고유 ID (Auto Increment)</td></tr>
+                            <tr><td class="p-3 font-bold text-emerald-600">qr_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">FK</td><td class="p-3 font-sans">스캔된 QR ID (FOREIGN KEY -> qr_codes.id)</td></tr>
+                            <tr><td class="p-3">region_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">NO</td><td class="p-3">MUL</td><td class="p-3 font-sans">스캔 당시 지역 ID (지역별 통계 속도 향상 INDEX)</td></tr>
+                            <tr><td class="p-3">store_id</td><td class="p-3">INT UNSIGNED</td><td class="p-3">YES</td><td class="p-3">MUL</td><td class="p-3 font-sans">스캔 당시 매장 ID (매장별 통계 속도 향상 INDEX)</td></tr>
+                            <tr><td class="p-3 font-bold text-indigo-600">language_code</td><td class="p-3">VARCHAR(10)</td><td class="p-3">YES</td><td class="p-3"></td><td class="p-3 font-sans">손님 브라우저 언어 (ja, ko, zh 등)</td></tr>
+                            <tr><td class="p-3">scanned_at</td><td class="p-3">DATETIME</td><td class="p-3">NO</td><td class="p-3">MUL</td><td class="p-3 font-sans">스캔 일시 (CURRENT_TIMESTAMP)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // 모든 섹션 숨김
+            document.querySelectorAll('.tab-sec').forEach(el => el.classList.add('hidden'));
+            
+            // 버튼 스타일 초기화
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-indigo-50', 'text-indigo-600');
+                el.classList.add('text-gray-600', 'hover:bg-gray-50');
+            });
+
+            // 해당 섹션 활성화
+            document.getElementById('sec-' + sectionId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + sectionId);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-50');
+                activeBtn.classList.add('bg-indigo-50', 'text-indigo-600');
+            }
+        }
+    </script>
+</body>
+</html>

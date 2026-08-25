@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semo 관리자 및 손님 서비스 시스템</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; }
+        .fade-transition { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- TOP 헤더 -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shrink-0 z-10">
+        <div class="flex items-center space-x-3">
+            <span class="text-xl font-bold text-indigo-600 tracking-tight">Semo 관리자</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="switchTab('customer-view')" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span>손님 화면 미리보기</span>
+            </button>
+            <div class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition">
+                <span class="text-sm font-medium">관리자</span>
+                <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 레이아웃 -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- 사이드바 -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0">
+            <nav class="p-4 space-y-1 flex-1">
+                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition bg-indigo-50 text-indigo-600">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span>대시보드</span>
+                </button>
+                <button onclick="switchTab('contents')" id="btn-contents" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fa-solid fa-pen-to-square w-5"></i>
+                    <span>콘텐츠 관리</span>
+                </button>
+                <button onclick="switchTab('regions')" id="btn-regions" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fa-solid fa-map-location-dot w-5"></i>
+                    <span>지역 관리</span>
+                </button>
+                <button onclick="switchTab('stores')" id="btn-stores" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fa-solid fa-store w-5"></i>
+                    <span>매장 관리</span>
+                </button>
+                <button onclick="switchTab('generator')" id="btn-generator" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fa-solid fa-qrcode w-5"></i>
+                    <span>QR/태그 생성</span>
+                </button>
+                <button onclick="switchTab('qr-manage')" id="btn-qr-manage" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fa-solid fa-list-check w-5"></i>
+                    <span>QR 관리</span>
+                </button>
+                <div class="pt-4 border-t border-gray-100 my-2"></div>
+                <button onclick="switchTab('customer-view')" id="btn-customer-view" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fa-solid fa-mobile-screen w-5 text-indigo-500"></i>
+                    <span>손님 보는 화면</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- 콘텐츠 영역 -->
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50">
+            
+            <!-- ① 대시보드 -->
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <h1 class="text-2xl font-bold tracking-tight">소상공인 QR 캠페인</h1>
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                        <div class="text-sm font-medium text-gray-500">공주</div>
+                        <div class="text-2xl font-bold mt-1">1,284</div>
+                        <div class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">1위 🥇</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                        <div class="text-sm font-medium text-gray-500">청주</div>
+                        <div class="text-2xl font-bold mt-1">932</div>
+                        <div class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">2위 🥈</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                        <div class="text-sm font-medium text-gray-500">향남</div>
+                        <div class="text-2xl font-bold mt-1">641</div>
+                        <div class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">3위 🥉</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-4">
+                        <h3 class="font-semibold text-gray-700">스캔 현황</h3>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+                            <span class="text-gray-500">오늘 스캔</span>
+                            <span class="text-xl font-bold text-indigo-600">127회</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-1">
+                            <span class="text-gray-500">전체 스캔</span>
+                            <span class="text-xl font-bold text-gray-900">2,857회</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-4">
+                        <h3 class="font-semibold text-gray-700">인기 콘텐츠</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center text-sm">
+                                <span>① 何してる？ (뭐 해?)</span>
+                                <span class="font-semibold">241회</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span>② もう一杯飲まない？ (한잔 더 할래?)</span>
+                                <span class="font-semibold">166회</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span>③ 会おう (만나자)</span>
+                                <span class="font-semibold">158회</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ② 콘텐츠 관리 -->
+            <section id="tab-contents" class="tab-content space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold tracking-tight">콘텐츠 관리</h1>
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-xs">+ 콘텐츠 등록</button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50/50 text-xs text-gray-500 font-semibold">
+                                <th class="p-4">ID</th>
+                                <th class="p-4">🇯🇵 일본어 / 발음</th>
+                                <th class="p-4">🇰🇷 한국어</th>
+                                <th class="p-4">🇨🇳 중국어</th>
+                                <th class="p-4">스캔</th>
+                                <th class="p-4 text-right">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 text-gray-500">1001</td>
+                                <td class="p-4 font-medium">何してる？ <span class="text-xs text-gray-400 font-normal block">なにしてる？</span></td>
+                                <td class="p-4">뭐 해?</td>
+                                <td class="p-4">你在干什么？</td>
+                                <td class="p-4">158</td>
+                                <td class="p-4 text-right"><button onclick="openModal('editModal')" class="text-indigo-600 hover:underline font-medium">편집</button></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 text-gray-500">1002</td>
+                                <td class="p-4 font-medium">おやすみ <span class="text-xs text-gray-400 font-normal block">おやすみ</span></td>
+                                <td class="p-4">잘 자</td>
+                                <td class="p-4">晚安</td>
+                                <td class="p-4">73</td>
+                                <td class="p-4 text-right"><button onclick="openModal('editModal')" class="text-indigo-600 hover:underline font-medium">편집</button></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 text-gray-500">1003</td>
+                                <td class="p-4 font-medium">会おう <span class="text-xs text-gray-400 font-normal block">あおう</span></td>
+                                <td class="p-4">만나자</td>
+                                <td class="p-4">见面吧</td>
+                                <td class="p-4">112</td>
+                                <td class="p-4 text-right"><button onclick="openModal('editModal')" class="text-indigo-600 hover:underline font-medium">편집</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ③ 지역 관리 -->
+            <section id="tab-regions" class="tab-content space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold tracking-tight">지역 관리</h1>
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-xs">+ 지역 추가</button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50/50 text-xs text-gray-500 font-semibold">
+                                <th class="p-4">지역</th>
+                                <th class="p-4">매장 수</th>
+                                <th class="p-4">태그 수</th>
+                                <th class="p-4">스캔 수</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm">
+                            <tr class="hover:bg-gray-50 transition"><td class="p-4 font-medium">공주</td><td class="p-4">18</td><td class="p-4">200</td><td class="p-4">1,284</td></tr>
+                            <tr class="hover:bg-gray-50 transition"><td class="p-4 font-medium">청주</td><td class="p-4">10</td><td class="p-4">100</td><td class="p-4">932</td></tr>
+                            <tr class="hover:bg-gray-50 transition"><td class="p-4 font-medium">향남</td><td class="p-4">8</td><td class="p-4">100</td><td class="p-4">641</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ④ 매장 관리 -->
+            <section id="tab-stores" class="tab-content space-y-6 hidden">
+                <div id="store-list-view" class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-2xl font-bold tracking-tight">매장 관리</h1>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-xs">+ 매장 등록</button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-200 bg-gray-50/50 text-xs text-gray-500 font-semibold">
+                                    <th class="p-4">지역</th>
+                                    <th class="p-4">매장명</th>
+                                    <th class="p-4">종류</th>
+                                    <th class="p-4">태그</th>
+                                    <th class="p-4">스캔</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                <tr onclick="showStoreDetail()" class="hover:bg-gray-50 transition cursor-pointer">
+                                    <td class="p-4 text-gray-500">공주</td>
+                                    <td class="p-4 font-medium text-indigo-600">○○카페</td>
+                                    <td class="p-4">카페</td>
+                                    <td class="p-4">50</td>
+                                    <td class="p-4">328</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="store-detail-view" class="space-y-6 hidden">
+                    <button onclick="hideStoreDetail()" class="inline-flex items-center space-x-2 text-sm text-gray-600 hover:text-indigo-600 transition">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>목록으로 돌아가기</span>
+                    </button>
+
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-6">
+                        <div class="border-b border-gray-100 pb-4">
+                            <h2 class="text-xl font-bold">○○카페</h2>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div><span class="text-gray-500">지역:</span> 공주</div>
+                            <div><span class="text-gray-500">종류:</span> 카페</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑤ QR/태그 생성 -->
+            <section id="tab-generator" class="tab-content space-y-6 hidden">
+                <h1 class="text-2xl font-bold tracking-tight">QR / 태그 생성</h1>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-gray-500">캠페인</label>
+                            <select class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+                                <option>2026 소상공인 캠페인</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-gray-500">지역</label>
+                            <select class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+                                <option>공주</option>
+                                <option>향남</option>
+                                <option>청주</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-gray-500">매장 <span class="text-gray-400 font-normal">(선택 / 미배정 가능)</span></label>
+                            <select class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+                                <option value="">미배정 ▼</option>
+                                <option value="1">○○카페</option>
+                                <option value="2">△△술집</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-gray-500">콘텐츠 선택</label>
+                            <select class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+                                <option value="1001">[ 1001 | 何してる？ | 뭐 해? ]</option>
+                                <option value="1002">[ 1002 | おやすみ | 잘 자 ]</option>
+                                <option value="1003">[ 1003 | 会おう | 만나자 ]</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-gray-500">수량</label>
+                            <input type="number" value="50" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+                        </div>
+                    </div>
+
+                    <!-- 미리보기 -->
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs flex flex-col items-center justify-center space-y-6">
+                        <span class="text-xs font-semibold text-gray-500">태그 미리보기</span>
+                        <div class="w-40 h-56 bg-gray-950 text-white p-4 rounded-xl flex flex-col justify-between items-center text-center shadow-md">
+                            <div class="text-xs font-bold tracking-widest text-indigo-400">Semo</div>
+                            <div class="text-sm font-medium leading-tight">何してる？</div>
+                            <div class="bg-white p-2 rounded-lg"><i class="fa-solid fa-qrcode text-gray-900 text-3xl"></i></div>
+                        </div>
+                        <button onclick="openModal('completeModal')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-sm font-medium transition shadow-xs">태그 생성</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⑥ QR 관리 -->
+            <section id="tab-qr-manage" class="tab-content space-y-6 hidden">
+                <h1 class="text-2xl font-bold tracking-tight">QR 관리 (배포 단위 분리)</h1>
+
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50/50 text-xs text-gray-500 font-semibold">
+                                <th class="p-4">QR ID (URL)</th>
+                                <th class="p-4">콘텐츠</th>
+                                <th class="p-4">배포 지역</th>
+                                <th class="p-4">배포 매장</th>
+                                <th class="p-4">수량</th>
+                                <th class="p-4 text-right">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 font-mono text-indigo-600 font-medium">A8K29D</td>
+                                <td class="p-4">何してる？</td>
+                                <td class="p-4">공주</td>
+                                <td class="p-4">○○카페</td>
+                                <td class="p-4">50장</td>
+                                <td class="p-4 text-right"><button onclick="openModal('connectModal')" class="text-indigo-600 hover:underline font-medium">매장 변경</button></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 font-mono text-indigo-600 font-medium">A8K29D</td>
+                                <td class="p-4">何してる？</td>
+                                <td class="p-4">향남</td>
+                                <td class="p-4 text-amber-600 font-medium">미배정</td>
+                                <td class="p-4">50장</td>
+                                <td class="p-4 text-right"><button onclick="openModal('connectModal')" class="text-indigo-600 hover:underline font-medium">매장 연결</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ⑦ 손님이 보는 화면 -->
+            <section id="tab-customer-view" class="tab-content space-y-6 hidden flex flex-col items-center justify-center">
+                <div class="text-center space-y-1">
+                    <h1 class="text-2xl font-bold tracking-tight">손님 화면 (접속자 언어 맞춤)</h1>
+                    <p class="text-sm text-gray-500">스캔한 사용자의 기기 언어를 최상단에 표시합니다.</p>
+                    
+                    <div class="pt-2 flex justify-center space-x-2">
+                        <button onclick="setCustomerLang('ja')" class="px-3 py-1 bg-gray-200 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-medium transition">🇯🇵 일본어 사용자 시뮬레이션</button>
+                        <button onclick="setCustomerLang('ko')" class="px-3 py-1 bg-gray-200 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-medium transition">🇰🇷 한국어 사용자 시뮬레이션</button>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-sm bg-white rounded-3xl border-4 border-gray-800 shadow-2xl overflow-y-auto max-h-[85vh] flex flex-col my-4">
+                    <div class="bg-gray-900 text-white px-6 py-3 flex justify-between items-center text-xs shrink-0 sticky top-0 z-20">
+                        <span class="font-bold tracking-widest text-indigo-400">△ Semo</span>
+                        <span>12:48</span>
+                    </div>
+
+                    <div id="customer-content-area" class="p-6 flex flex-col items-center text-center space-y-6 flex-1 bg-white">
+                        <div class="space-y-1 pt-2">
+                            <h2 class="text-3xl font-extrabold text-indigo-600 tracking-tight">뭐 해?</h2>
+                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇰🇷 한국어</span>
+                        </div>
+                        <div class="w-12 h-0.5 bg-gray-200"></div>
+                        <div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">日本語</span>
+                            <div class="text-xl font-bold text-gray-800 pt-1">何してる？</div>
+                            <p class="text-xs text-gray-400">なにしてる？</p>
+                        </div>
+                        <div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">中文</span>
+                            <div class="text-xl font-bold text-gray-800 pt-1">你在干什么？</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white py-3 flex justify-center shrink-0">
+                        <div class="w-32 h-1 bg-gray-300 rounded-full"></div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================= 모달 영역 ================= -->
+
+    <!-- 1. 콘텐츠 편집 모달 -->
+    <div id="editModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl space-y-4">
+            <h3 class="font-bold text-lg">콘텐츠 수정</h3>
+            <div class="space-y-3 text-sm">
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">콘텐츠 ID</label>
+                    <input type="text" value="1001" readonly class="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 mt-1 text-gray-500">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">🇯🇵 일본어</label>
+                    <input type="text" value="何してる？" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">읽는 법 (발음)</label>
+                    <input type="text" value="なにしてる？" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">🇰🇷 한국어</label>
+                    <input type="text" value="뭐 해?" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">🇨🇳 중국어</label>
+                    <input type="text" value="你在干什么？" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">카테고리</label>
+                    <select class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 mt-1"><option>일상회화</option></select>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold">난이도</label>
+                    <select class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 mt-1"><option>초급</option></select>
+                </div>
+            </div>
+            <div class="flex space-x-2 pt-2">
+                <button onclick="closeModal('editModal')" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-sm font-medium transition shadow-xs">저장</button>
+                <button onclick="closeModal('editModal')" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-600 py-2.5 rounded-xl text-sm font-medium transition">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. QR 생성 완료 모달 -->
+    <div id="completeModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center z-50">
+        <div class="bg-white w-full max-w-sm p-6 rounded-2xl shadow-xl space-y-4 text-center">
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl"><i class="fa-solid fa-check"></i></div>
+            <h3 class="font-bold text-lg">QR 생성 완료</h3>
+            <p class="text-sm text-gray-500">공주 / 미배정<br>콘텐츠 : 何してる？ (뭐 해?)<br>수량 : 50장</p>
+            <div class="space-y-2 pt-2">
+                <button onclick="closeModal('completeModal')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-sm font-medium transition shadow-xs">PDF 다운로드</button>
+                <button onclick="closeModal('completeModal')" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 py-2.5 rounded-xl text-sm font-medium transition">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 매장 연결/변경 모달 -->
+    <div id="connectModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl space-y-4">
+            <h3 class="font-bold text-lg">QR 매장 연결 및 변경</h3>
+            <div class="space-y-3 text-sm">
+                <div><span class="text-gray-500">QR ID:</span> <span class="font-mono font-medium text-indigo-600">A8K29D</span></div>
+                <div><span class="text-gray-500">지역:</span> 향남</div>
+                <div>
+                    <label class="text-xs text-gray-500 font-semibold mt-2 block">배정할 매장 선택</label>
+                    <select class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 mt-1">
+                        <option>○○카페</option>
+                        <option>△△술집</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex space-x-2 pt-2">
+                <button onclick="closeModal('connectModal')" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-sm font-medium transition shadow-xs">연결 저장</button>
+                <button onclick="closeModal('connectModal')" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-600 py-2.5 rounded-xl text-sm font-medium transition">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-indigo-50', 'text-indigo-600');
+                el.classList.add('text-gray-600', 'hover:bg-gray-50');
+            });
+
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-50');
+                activeBtn.classList.add('bg-indigo-50', 'text-indigo-600');
+            }
+        }
+
+        function showStoreDetail() {
+            document.getElementById('store-list-view').classList.add('hidden');
+            document.getElementById('store-detail-view').classList.remove('hidden');
+        }
+
+        function hideStoreDetail() {
+            document.getElementById('store-detail-view').classList.add('hidden');
+            document.getElementById('store-list-view').classList.remove('hidden');
+        }
+
+        /* 모달 제어 함수 */
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        /* 손님 화면 시뮬레이션 */
+        function setCustomerLang(lang) {
+            const container = document.getElementById('customer-content-area');
+            if (lang === 'ja') {
+                container.innerHTML = `
+                    <div class="space-y-1 pt-2">
+                        <h2 class="text-3xl font-extrabold text-indigo-600 tracking-tight">何してる？</h2>
+                        <p class="text-xs text-gray-400 font-medium">なにしてる？</p>
+                    </div>
+                    <div class="w-12 h-0.5 bg-gray-200"></div>
+                    <div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇰🇷 한국어</span>
+                        <div class="text-xl font-bold text-gray-800 pt-1">뭐 해?</div>
+                    </div>
+                    <div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇨🇳 中文</span>
+                        <div class="text-xl font-bold text-gray-800 pt-1">你在干什么？</div>
+                    </div>
+                `;
+            } else if (lang === 'ko') {
+                container.innerHTML = `
+                    <div class="space-y-1 pt-2">
+                        <h2 class="text-3xl font-extrabold text-indigo-600 tracking-tight">뭐 해?</h2>
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇰🇷 한국어</span>
+                    </div>
+                    <div class="w-12 h-0.5 bg-gray-200"></div>
+                    <div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">日本語</span>
+                        <div class="text-xl font-bold text-gray-800 pt-1">何してる？</div>
+                        <p class="text-xs text-gray-400">なにしてる？</p>
+                    </div>
+                    <div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">中文</span>
+                        <div class="text-xl font-bold text-gray-800 pt-1">你在干什么？</div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
