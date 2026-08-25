@@ -26,9 +26,604 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>세모 재팬 - 통합 관리자 대시보드</title>
+	<title>세모 - 통합 관리자 대시보드</title>
 	<link rel="stylesheet" href="style.css">
+ <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+		body,
+		.tag-manager-shell {
+			font-family: 'Pretendard', sans-serif;
+		}
+
+		.fade-transition {
+			transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+		}
+
+		#tag-manager-page {
+			background: #f6f0e8;
+		}
+
+		.tag-manager-viewport {
+			min-height: 100%;
+			padding: 18px;
+			background: #f6f0e8;
+		}
+
+		.tag-manager-topbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 14px 18px;
+			margin-bottom: 16px;
+			background: #ffffff;
+			border-radius: 14px;
+			border: 1px solid #efe3d6;
+			box-shadow: 0 4px 16px rgba(93, 64, 55, 0.06);
+		}
+
+		.tag-manager-brand {
+			font-size: 20px;
+			font-weight: 800;
+			color: #4e342e;
+		}
+
+		.tag-manager-subtitle {
+			margin-top: 2px;
+			font-size: 12px;
+			color: #a1887f;
+		}
+
+		.tag-manager-top-actions {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 12px;
+			color: #6d4c41;
+		}
+
+		.tag-manager-main {
+			background: #fffaf4;
+			border-radius: 16px;
+			border: 1px solid #efe3d6;
+			padding: 18px;
+			box-shadow: 0 6px 18px rgba(93, 64, 55, 0.05);
+		}
+
+		.tag-manager-main .tab-content {
+			padding: 24px;
+		}
+
+		.tag-manager-main .tab-content h1,
+		.tag-manager-main .tab-content h2 {
+			color: #4e342e;
+			margin-bottom: 20px;
+			font-size: 22px;
+			font-weight: 700;
+		}
+
+		.tag-manager-main .bg-white {
+			background-color: #fffaf4 !important;
+			border-color: #e8d8c9;
+			border: 1px solid #e8d8c9;
+		}
+
+		.tag-manager-main .bg-gray-50\/50 {
+			background-color: #f6f0e8 !important;
+		}
+
+		.tag-manager-main .bg-gray-50 {
+			background-color: #f6f0e8 !important;
+		}
+
+		.tag-manager-main .bg-gray-100 {
+			background-color: #e8e2d9 !important;
+		}
+
+		.tag-manager-main .hover\:bg-gray-50:hover {
+			background-color: #f0ebe5 !important;
+		}
+
+		.tag-manager-main .text-indigo-600,
+		.tag-manager-main .text-indigo-500 {
+			color: #8b6f47 !important;
+		}
+
+		.tag-manager-main .text-indigo-400 {
+			color: #b4956d !important;
+		}
+
+		.tag-manager-main .bg-indigo-600,
+		.tag-manager-main .bg-indigo-600:hover,
+		.tag-manager-main .hover\:bg-indigo-700:hover {
+			background-color: #8b6f47 !important;
+		}
+
+		.tag-manager-main .hover\:bg-indigo-700:hover {
+			background-color: #735c41 !important;
+		}
+
+		.tag-manager-main .border-gray-200 {
+			border-color: #e8d8c9 !important;
+		}
+
+		.tag-manager-main .border-gray-100 {
+			border-color: #f0ebe5 !important;
+		}
+
+		.tag-manager-main .divide-y.divide-gray-100 > * {
+			border-bottom-color: #f0ebe5 !important;
+		}
+
+		.tag-manager-main .text-gray-500 {
+			color: #a1887f !important;
+		}
+
+		.tag-manager-main .text-gray-600 {
+			color: #8b7355 !important;
+		}
+
+		.tag-manager-main .text-gray-700 {
+			color: #5d4037 !important;
+		}
+
+		.tag-manager-main .text-gray-900 {
+			color: #3d2817 !important;
+		}
+
+		.tag-manager-main .bg-amber-100 {
+			background-color: #f5e6d3 !important;
+		}
+
+		.tag-manager-main .text-amber-800 {
+			color: #8b6f47 !important;
+		}
+
+		.tag-manager-main .bg-gray-200 {
+			background-color: #dfd5ca !important;
+		}
+
+		.tag-manager-main .text-gray-400 {
+			color: #b4a89a !important;
+		}
+
+		.tag-manager-main .bg-amber-100 {
+			background-color: #f5e6d3 !important;
+		}
+
+		.tag-manager-main .text-amber-600 {
+			color: #c89858 !important;
+		}
+
+		.tag-manager-main table {
+			border-collapse: collapse;
+		}
+
+		.tag-manager-main table th,
+		.tag-manager-main table td {
+			padding: 12px 16px;
+		}
+
+		.tag-manager-main .grid {
+			gap: 20px;
+		}
+
+		.tag-manager-main .space-y-6 > * + * {
+			margin-top: 24px;
+		}
+
+		.tag-manager-main .rounded-2xl {
+			border-radius: 16px;
+		}
+
+		.tag-manager-main .p-5 {
+			padding: 20px;
+		}
+
+		.tag-manager-main .p-6 {
+			padding: 24px;
+		}
+
+   /* 모달 색상 통일 - 베이지 테마 */
+
+		.tag-modal-overlay .bg-white {
+			background-color: #fffaf4 !important;
+		}
+
+		.tag-modal-overlay .bg-black\/40 {
+			background-color: rgba(0, 0, 0, 0.2) !important;
+		}
+
+		.tag-modal-overlay .bg-indigo-600,
+		.tag-modal-overlay .hover\:bg-indigo-700:hover {
+			background-color: #8b6f47 !important;
+			color: #ffffff !important;
+		}
+
+		.tag-modal-overlay .bg-gray-50 {
+			background-color: #f6f0e8 !important;
+		}
+
+		.tag-modal-overlay .bg-gray-100 {
+			background-color: #e8e2d9 !important;
+		}
+
+		.tag-modal-overlay .border-gray-200 {
+			border-color: #e8d8c9 !important;
+		}
+
+		.tag-modal-overlay .border-gray-300 {
+			border-color: #e8d8c9 !important;
+		}
+
+		.tag-modal-overlay .text-gray-500 {
+			color: #a1887f !important;
+		}
+
+		.tag-modal-overlay .text-gray-600 {
+			color: #8b7355 !important;
+		}
+
+		.tag-modal-overlay .text-indigo-600 {
+			color: #8b6f47 !important;
+		}
+
+		.tag-modal-overlay .bg-gray-100 {
+			background-color: #e8e2d9 !important;
+		}
+
+		.tag-modal-overlay .hover\:bg-gray-200:hover {
+			background-color: #dfd5ca !important;
+		}
+
+		.tag-modal-overlay .bg-emerald-100 {
+			background-color: #d4e5d4 !important;
+		}
+
+		.tag-modal-overlay .text-emerald-600 {
+			color: #5d7a5d !important;
+		}
+
+		.tag-modal-overlay input,
+		.tag-modal-overlay select,
+		.tag-modal-overlay textarea {
+			background-color: #f6f0e8 !important;
+			border-color: #e8d8c9 !important;
+			color: #3d2817 !important;
+		}
+
+		.tag-modal-overlay input:focus,
+		.tag-modal-overlay select:focus,
+		.tag-modal-overlay textarea:focus {
+			border-color: #8b6f47 !important;
+			outline: none;
+			box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.1) !important;
+		}
+
+		.tag-modal-overlay input[readonly] {
+			background-color: #e8e2d9 !important;
+			color: #a1887f !important;
+		}
+
+		/* 일반 페이지 스타일 */
+		.system-notice-card {
+			background: #fffaf4;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+			border: 1px solid #e8d8c9;
+		}
+
+		.system-notice-text {
+			font-size: 14px;
+			color: #5d4037;
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		.qr-campaign-card {
+			margin-top: 20px;
+			background: #fffaf4;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+			border-left: 6px solid #8b6f47;
+		}
+
+		.qr-campaign-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 14px;
+		}
+
+		.qr-campaign-title {
+			margin: 0;
+			color: #4e342e;
+			font-size: 16px;
+			font-weight: 600;
+		}
+
+		.qr-campaign-btn {
+			font-size: 12px;
+		}
+
+		.qr-campaign-cards {
+			margin-bottom: 0;
+		}
+
+		.data-table-card {
+			background: #fffaf4;
+			padding: 16px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+			border: 1px solid #e8d8c9;
+		}
+
+		.data-table-card h3 {
+			margin-top: 0;
+			color: #4e342e;
+		}
+
+		.schedule-description {
+			color: #6d4c41;
+			margin-bottom: 25px;
+		}
+
+		/* 태그관리자 모달 CSS */
+		.tag-modal-overlay {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(0, 0, 0, 0.2);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 50;
+		}
+
+		.tag-modal-content {
+			background-color: #fffaf4;
+			width: 100%;
+			max-width: 420px;
+			padding: 24px;
+			border-radius: 16px;
+			box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+			border: 1px solid #e8d8c9;
+		}
+
+		.tag-modal-content-center {
+			text-align: center;
+			max-width: 360px;
+		}
+
+		.tag-modal-title {
+			font-weight: bold;
+			font-size: 18px;
+			color: #4e342e;
+			margin-bottom: 16px;
+		}
+
+		.tag-modal-text {
+			font-size: 14px;
+			color: #6d4c41;
+			margin-bottom: 16px;
+			line-height: 1.6;
+		}
+
+		.tag-modal-form {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			margin-bottom: 16px;
+		}
+
+		.tag-form-group {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.tag-form-label {
+			font-size: 12px;
+			font-weight: 600;
+			color: #a1887f;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.tag-form-input {
+			width: 100%;
+			background-color: #f6f0e8;
+			border: 1px solid #e8d8c9;
+			border-radius: 12px;
+			padding: 8px 12px;
+			font-size: 14px;
+			color: #3d2817;
+			transition: all 0.2s ease;
+		}
+
+		.tag-form-input:focus {
+			border-color: #8b6f47;
+			outline: none;
+			box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.1);
+		}
+
+		.tag-form-input[readonly] {
+			background-color: #e8e2d9;
+			color: #a1887f;
+		}
+
+		.tag-info-row {
+			font-size: 14px;
+			color: #3d2817;
+			margin-bottom: 8px;
+		}
+
+		.tag-info-label {
+			color: #a1887f;
+		}
+
+		.tag-info-value {
+			font-weight: 600;
+			color: #8b6f47;
+		}
+
+		.tag-modal-icon {
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 16px;
+			font-size: 24px;
+		}
+
+		.tag-modal-icon-success {
+			background-color: #d4e5d4;
+			color: #5d7a5d;
+		}
+
+		.tag-modal-actions {
+			display: flex;
+			gap: 8px;
+			margin-top: 16px;
+		}
+
+		.tag-modal-actions-center {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			margin-top: 16px;
+		}
+
+		.tag-modal-btn {
+			padding: 10px 16px;
+			border-radius: 12px;
+			font-size: 14px;
+			font-weight: 600;
+			transition: all 0.2s ease;
+			border: none;
+			cursor: pointer;
+			flex: 1;
+		}
+
+		.tag-modal-btn-primary {
+			background-color: #8b6f47;
+			color: #ffffff;
+		}
+
+		.tag-modal-btn-primary:hover {
+			background-color: #735c41;
+		}
+
+		.tag-modal-btn-secondary {
+			background-color: #e8e2d9;
+			color: #6d4c41;
+		}
+
+		.tag-modal-btn-secondary:hover {
+			background-color: #dfd5ca;
+		}
+
+		.qr-panel-card {
+			background: #fff;
+			padding: 16px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		}
+
+		.qr-page-description {
+			color: #858796;
+			margin-bottom: 20px;
+		}
+
+		.event-filter-label {
+			font-size: 12px;
+			font-weight: 700;
+			color: #4b5563;
+		}
+
+		.event-filter-select {
+			min-width: 180px;
+			padding: 6px 8px;
+			border: 1px solid #d1d5db;
+			border-radius: 6px;
+		}
+
+		.event-loading-row td {
+			text-align: center;
+			color: #858796;
+			padding: 2rem 0;
+		}
+
+		.modal-actions-end {
+			display: flex;
+			justify-content: flex-end;
+			gap: 8px;
+		}
+
+		.modal-top-center {
+			text-align: center;
+			padding: 8px 0 4px;
+		}
+
+		.modal-qr-key {
+			font-size: 13px;
+			font-weight: 700;
+			color: #4b5563;
+			margin-bottom: 8px;
+		}
+
+		.modal-qr-image {
+			width: 220px;
+			height: 220px;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			background: #fff;
+		}
+
+		.modal-top-max {
+			margin-top: 12px;
+		}
+
+		.modal-card-small {
+			max-width: 420px;
+		}
+
+		.modal-card-medium {
+			max-width: 500px;
+		}
+
+		.modal-card-large {
+			max-width: 520px;
+		}
+
+		.modal-card-wide {
+			max-width: 640px;
+		}
+
+		.modal-card-tall {
+			max-height: 90vh;
+			overflow-y: auto;
+		}
+
+		.modal-form-row {
+			display: flex;
+			gap: 0.75rem;
+			margin-top: 1rem;
+			justify-content: flex-end;
+		}
+
+		.event-modal-panel {
+			background: #fff;
+			padding: 16px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		}
+
 		.dashboard-cards {
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -276,9 +871,109 @@
 			gap: 6px;
 		}
 
+		.menu-accordion-group {
+			margin-top: 10px;
+			border: 1px solid #e7dccf;
+			border-radius: 10px;
+			overflow: hidden;
+			background: #fffaf4;
+		}
+
+		.menu-accordion-toggle {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 11px 12px;
+			border: 0;
+			background: #f6ece1;
+			color: #5d4037;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.menu-accordion-toggle .arrow {
+			font-size: 12px;
+			transition: transform 0.2s ease;
+		}
+
+		.menu-accordion-group.collapsed .menu-accordion-toggle .arrow {
+			transform: rotate(-90deg);
+		}
+
+		.menu-accordion-content {
+			padding: 8px;
+		}
+
+		.menu-accordion-group.collapsed .menu-accordion-content {
+			display: none;
+		}
+
+		.menu-group-splitter {
+			height: 1px;
+			background: #eadfce;
+			margin: 6px 0;
+		}
+
+		/* 소상공인부분.html 스타일 참고: 소상공인 QR 버튼 그룹 전용 UI */
+		#menu-group-qr {
+			background: #4a3e3d;
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			border-radius: 8px;
+			overflow: hidden;
+		}
+
+		#menu-group-qr .menu-accordion-toggle {
+			background: rgba(255, 255, 255, 0.08);
+			color: #d4b296;
+			font-size: 13px;
+			font-weight: 700;
+			padding: 10px 12px;
+			margin: 0;
+		}
+
+		#menu-group-qr .menu-accordion-toggle:hover {
+			background: rgba(255, 255, 255, 0.15);
+		}
+
+		#menu-group-qr .menu-accordion-content {
+			padding: 6px 8px 8px;
+			background: #4a3e3d;
+		}
+
+		#menu-group-qr .menu-btn {
+			background: transparent;
+			color: #c7b7b5;
+			font-size: 14px;
+			border-radius: 6px;
+			padding: 10px 12px;
+			margin-bottom: 4px;
+			transition: all 0.2s ease;
+		}
+
+		#menu-group-qr .menu-btn:hover,
+		#menu-group-qr .menu-btn.active {
+			background: #d4b296;
+			color: #4a3e3d;
+			font-weight: 700;
+		}
+
+		#menu-group-qr .menu-group-splitter {
+			background: rgba(255, 255, 255, 0.16);
+			margin: 6px 4px;
+		}
+
 		@media (max-width: 1024px) {
 			.textbook-helper-grid {
 				grid-template-columns: 1fr;
+			}
+
+			.tag-manager-layout {
+				flex-direction: column;
+			}
+
+			.tag-manager-sidebar {
+				width: 100%;
 			}
 		}
 	</style>
@@ -286,7 +981,7 @@
 <body>
 
 	<div class="sidebar">
-		<div class="logo">SEMO JAPAN</div>
+		<div class="logo">SEMO</div>
 
 		<div class="user-info">
 			<div id="user-logged-in">
@@ -302,14 +997,41 @@
 			</div>
 		</div>
 
-		<button class="menu-btn active" onclick="switchPage('main-home-page', this)">🏠 대시보드 홈</button>
-		<!-- 캘린더 스케줄 메뉴 위치 추가 -->
-		<button class="menu-btn" onclick="switchPage('schedule-page', this)">📅 예약 스케줄 관리</button>
-		<button class="menu-btn" onclick="switchPage('users-page', this)">👤 회원 관리</button>
-		<button class="menu-btn" onclick="switchPage('approvals-page', this)">💰 충전/입금 승인</button>
-		<button class="menu-btn" onclick="switchPage('products-page', this)">🎟️ 상품 및 티켓 관리</button>
-    <button class="menu-btn" onclick="switchPage('textbook-helper-page', this)">📚 교재 추가</button>
-    <button class="menu-btn" onclick="switchPage('event-page', this)">🎉 이벤트 글 관리</button>
+   <div class="menu-accordion-group" id="menu-group-lesson">
+			<button type="button" class="menu-accordion-toggle" onclick="toggleMenuGroup('menu-group-lesson', this)">
+				<span>📘 수업/회원 관리</span>
+				<span class="arrow">▼</span>
+			</button>
+			<div class="menu-accordion-content">
+				<button id="menu-home-btn" class="menu-btn active" onclick="switchPage('main-home-page', this)">🏠 대시보드 홈</button>
+				<button class="menu-btn" onclick="switchPage('schedule-page', this)">📅 예약 스케줄 관리</button>
+				<button class="menu-btn" onclick="switchPage('users-page', this)">👤 회원 관리</button>
+				<button class="menu-btn" onclick="switchPage('approvals-page', this)">💰 충전/입금 승인</button>
+				<button class="menu-btn" onclick="switchPage('products-page', this)">🎟️ 상품 및 티켓 관리</button>
+				<button class="menu-btn" onclick="switchPage('textbook-helper-page', this)">📚 교재 추가</button>
+			</div>
+		</div>
+
+		<div class="menu-accordion-group collapsed" id="menu-group-qr">
+			<button type="button" class="menu-accordion-toggle" onclick="toggleMenuGroup('menu-group-qr', this)">
+				<span>🏪 소상공인 QR 관리</span>
+				<span class="arrow">▼</span>
+			</button>
+			<div class="menu-accordion-content">
+       <button id="menu-tag-dashboard-btn" class="menu-btn" onclick="switchPage('tag-manager-page', this); switchTab('dashboard');">📊 대시보드</button>
+				<button id="menu-tag-contents-btn" class="menu-btn" onclick="switchPage('tag-manager-page', this); switchTab('contents');">📝 콘텐츠 관리</button>
+				<button id="menu-tag-regions-btn" class="menu-btn" onclick="switchPage('tag-manager-page', this); switchTab('regions');">🗺️ 지역 관리</button>
+				<button id="menu-tag-stores-btn" class="menu-btn" onclick="switchPage('tag-manager-page', this); switchTab('stores');">🏬 매장 관리</button>
+				<button id="menu-tag-generator-btn" class="menu-btn" onclick="switchPage('tag-manager-page', this); switchTab('generator');">🏷️ QR/태그 생성</button>
+				<button id="menu-tag-qr-btn" class="menu-btn" onclick="switchPage('tag-manager-page', this); switchTab('qr-manage');">📋 QR 관리</button>
+				<div class="menu-group-splitter"></div>
+				<button id="menu-tag-customer-btn" class="menu-btn" onclick="switchPage('tag-manager-page', this); switchTab('customer-view');">📱 손님 보는 화면</button>
+				<div class="menu-group-splitter"></div>
+				<button id="menu-qr-campaign-btn" class="menu-btn" onclick="switchPage('qr-campaign-page', this)">📊 QR 캠페인 현황</button>
+				<div class="menu-group-splitter"></div>
+				<button class="menu-btn" onclick="switchPage('event-page', this)">🎉 이벤트 글 관리</button>
+			</div>
+		</div>
 	</div>
 
 	<div class="main-content">
@@ -338,20 +1060,88 @@
 				</div>
 			</div>
 
-			<div style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+			<div class="system-notice-card">
 				<h3>시스템 공지 및 바로가기</h3>
-				<p style="font-size: 14px; color: #5a5c69; line-height: 1.6;">
+				<p class="system-notice-text">
 					• 충전 및 입금 신청이 들어오면 상단 승인 건수가 실시간으로 변경됩니다.<br>
 					• 학생들의 보유 전자머니 잔액 관리는 <strong>회원 관리</strong> 탭에서 확인해 주세요.<br>
 					• 새로운 수강권이나 교재는 <strong>상품 및 티켓 관리</strong> 우측 상단 버튼을 통해 즉시 등록 가능합니다.
 				</p>
+			</div>
+
+			<div class="qr-campaign-card">
+				<div class="qr-campaign-header">
+					<h3 class="qr-campaign-title">🏪 소상공인 QR 캠페인 현황</h3>
+					<button type="button" class="btn btn-secondary qr-campaign-btn" onclick="switchPage('qr-campaign-page', document.getElementById('menu-qr-campaign-btn'))">상세 관리로 이동</button>
+				</div>
+				<div class="dashboard-cards qr-campaign-cards">
+					<div class="card warm-1">
+						<div class="card-title">🥇 공주 스캔</div>
+						<div class="card-value">1,284 회</div>
+					</div>
+					<div class="card warm-2">
+						<div class="card-title">🥈 청주 스캔</div>
+						<div class="card-value">932 회</div>
+					</div>
+					<div class="card warm-3">
+						<div class="card-title">🥉 향남 스캔</div>
+						<div class="card-value">641 회</div>
+					</div>
+					<div class="card warm-4">
+						<div class="card-title">📷 오늘 스캔</div>
+						<div class="card-value">127 회</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- [TAB 1-2] 소상공인 QR 캠페인 현황 -->
+		<div id="qr-campaign-page" class="page-section">
+			<h2>소상공인 QR 캠페인 현황</h2>
+			<p class="qr-page-description">지역/매장별 QR 배포와 스캔 추이를 확인합니다.</p>
+
+			<div class="dashboard-cards">
+				<div class="card warm-1">
+					<div class="card-title">📈 전체 스캔</div>
+					<div class="card-value">2,857 회</div>
+				</div>
+				<div class="card warm-2">
+					<div class="card-title">📌 배포된 태그</div>
+					<div class="card-value">130 장</div>
+				</div>
+				<div class="card warm-3">
+					<div class="card-title">🏬 등록 매장</div>
+					<div class="card-value">3 곳</div>
+				</div>
+				<div class="card warm-4">
+					<div class="card-title">🧾 활성 콘텐츠</div>
+					<div class="card-value">3 개</div>
+				</div>
+			</div>
+
+			<div class="data-table-card">
+				<h3>지역별 스캔 랭킹</h3>
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>순위</th>
+							<th>지역</th>
+							<th>스캔 수</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>1</td><td>공주</td><td>1,284</td></tr>
+						<tr><td>2</td><td>청주</td><td>932</td></tr>
+						<tr><td>3</td><td>향남</td><td>641</td></tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
 		<!-- [TAB 2] 예약 스케줄 관리 -->
 		<div id="schedule-page" class="page-section">
 			<h2>예약 스케줄 및 수업 관리</h2>
-			<p style="color: #858796; margin-bottom: 25px;">날짜를 선택하고 선생님별 실시간 일정 확인 및 예약 배정을 수행합니다.</p>
+			<p class="schedule-description">날짜를 선택하고 선생님별 실시간 일정 확인 및 예약 배정을 수행합니다.</p>
 
 			<div class="scheduler-container">
 				<!-- 상단 영역 분할 (캘린더 & 선택 상세) -->
@@ -576,13 +1366,13 @@
 		<!-- [TAB 7] 이벤트 글 관리 -->
 		<div id="event-page" class="page-section">
 			<h2>이벤트 글 관리</h2>
-			<p style="color: #858796; margin-bottom: 20px;">이벤트 QR 노출용 문구를 목록으로 관리하고, 새 글을 추가/수정/삭제합니다.</p>
+     <p class="qr-page-description">이벤트 QR 노출용 문구를 목록으로 관리하고, 새 글을 추가/수정/삭제합니다.</p>
 
-			<div style="background:#fff; padding:16px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+      <div class="event-modal-panel">
 				<div class="event-toolbar">
 					<div class="event-toolbar-left">
-						<label for="event-filter-language" style="font-size:12px; font-weight:700; color:#4b5563;">언어 필터</label>
-						<select id="event-filter-language" onchange="loadEventContents()" style="min-width:180px; padding:6px 8px; border:1px solid #d1d5db; border-radius:6px;">
+            <label for="event-filter-language" class="event-filter-label">언어 필터</label>
+						<select id="event-filter-language" class="event-filter-select" onchange="loadEventContents()">
 							<option value="">전체 언어 보기</option>
 						</select>
 						<span class="event-status-inline">총 <strong id="event-total-count">0</strong>개</span>
@@ -605,10 +1395,239 @@
 					</thead>
 					<tbody id="event-content-body">
 						<tr>
-              <td colspan="8" style="text-align:center; color:#858796; padding:2rem 0;">이벤트 목록을 불러오는 중...</td>
+                <td colspan="8" class="event-loading-row">이벤트 목록을 불러오는 중...</td>
 						</tr>
 					</tbody>
 				</table>
+			</div>
+		</div>
+
+		<!-- [TAB 8] 태그 관리자 통합 -->
+		<div id="tag-manager-page" class="page-section">
+      <div class="tag-manager-viewport">
+				<div class="tag-manager-topbar">
+					<div>
+						<div class="tag-manager-brand">Semo 관리자</div>
+						<div class="tag-manager-subtitle">소상공인 QR 관리</div>
+					</div>
+					<div class="tag-manager-top-actions">
+						<span>손님 화면 미리보기</span>
+						<span>관리자</span>
+					</div>
+				</div>
+
+				<div class="tag-manager-main">
+            <section id="tab-dashboard" class="tab-content space-y-6">
+							<h2>소상공인 QR 캠페인 현황</h2>
+							<p class="qr-page-description">지역/매장별 QR 배포와 스캔 추이를 확인합니다.</p>
+						<div class="dashboard-cards" id="tag-dashboard-region-cards"></div>
+							<div class="grid grid-cols-2 gap-6">
+								<div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-4">
+									<h3 class="font-semibold text-gray-700">스캔 현황</h3>
+									<div class="flex justify-between items-center border-b border-gray-100 pb-3">
+										<span class="text-gray-500">오늘 스캔</span>
+                 <span class="text-xl font-bold text-indigo-600" id="tag-dashboard-today-scans">0회</span>
+									</div>
+									<div class="flex justify-between items-center pt-1">
+										<span class="text-gray-500">전체 스캔</span>
+                 <span class="text-xl font-bold text-gray-900" id="tag-dashboard-total-scans">0회</span>
+									</div>
+								</div>
+								<div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-4">
+									<h3 class="font-semibold text-gray-700">인기 콘텐츠</h3>
+               <div class="space-y-3" id="tag-dashboard-popular-list"></div>
+								</div>
+							</div>
+						</section>
+
+            <section id="tab-contents" class="tab-content space-y-6 hidden">
+							<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+								<h2 style="margin:0;">콘텐츠 및 다국어 표현 관리</h2>
+								<button onclick="openTagContentCreate()" class="btn btn-primary">+ 콘텐츠 등록</button>
+							</div>
+             <div>
+								<table class="data-table">
+									<thead>
+                   <tr>
+											<th>ID</th>
+											<th>🇯🇵 일본어 / 발음</th>
+											<th>🇰🇷 한국어</th>
+											<th>🇨🇳 중국어</th>
+											<th>스캔수</th>
+											<th>관리</th>
+										</tr>
+									</thead>
+                 <tbody id="tag-contents-body">
+										<tr><td style="color:#858796;" colspan="6">콘텐츠를 불러오는 중...</td></tr>
+								</tbody>
+							</table>
+						</div>
+						</section>
+
+           <section id="tab-regions" class="tab-content space-y-6 hidden">
+							<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+								<h2 style="margin:0;">지역 관리</h2>
+								<button class="btn btn-primary">+ 지역 추가</button>
+							</div>
+             <div>
+								<table class="data-table">
+									<thead>
+                   <tr>
+											<th>지역명</th>
+											<th>등록 매장 수</th>
+											<th>배포 태그 수</th>
+											<th>총 스캔 수</th>
+										</tr>
+									</thead>
+                  <tbody id="tag-regions-body">
+										<tr><td style="color:#858796;" colspan="4">지역 데이터를 불러오는 중...</td></tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+
+            <section id="tab-stores" class="tab-content space-y-6 hidden">
+							<div id="store-list-view" class="space-y-6">
+               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+									<h2 style="margin:0;">매장 관리</h2>
+									<button class="btn btn-primary">+ 매장 등록</button>
+								</div>
+               <div>
+									<table class="data-table">
+										<thead>
+                     <tr>
+												<th>지역</th>
+												<th>매장명</th>
+												<th>업종</th>
+												<th>배포 태그</th>
+												<th>스캔 수</th>
+											</tr>
+										</thead>
+                   <tbody id="tag-stores-body">
+											<tr><td style="color:#858796;" colspan="5">매장 데이터를 불러오는 중...</td></tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div id="store-detail-view" class="space-y-6 hidden">
+								<button onclick="hideStoreDetail()" class="inline-flex items-center space-x-2 text-sm text-gray-600 hover:text-indigo-600 transition">
+									<i class="fa-solid fa-arrow-left"></i>
+									<span>목록으로 돌아가기</span>
+								</button>
+               <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-6">
+									<div class="border-b border-gray-100 pb-4">
+                   <h2 class="text-xl font-bold" id="tag-store-detail-name">매장명</h2>
+									</div>
+									<div class="grid grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-gray-500">지역:</span> <span id="tag-store-detail-region">-</span></div>
+										<div><span class="text-gray-500">종류:</span> <span id="tag-store-detail-type">-</span></div>
+									</div>
+								</div>
+							</div>
+						</section>
+
+           <section id="tab-generator" class="tab-content space-y-6 hidden">
+							<h2>QR / 태그 생성</h2>
+							<p class="qr-page-description">매장이 확정되지 않은 경우 미배정 상태로 먼저 발급 가능합니다.</p>
+							<div class="grid grid-cols-2 gap-6">
+								<div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-4">
+									<div class="space-y-1">
+										<label class="text-xs font-semibold text-gray-500">캠페인</label>
+                   <select id="tag-generator-campaign" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+										</select>
+									</div>
+									<div class="space-y-1">
+										<label class="text-xs font-semibold text-gray-500">지역</label>
+                   <select id="tag-generator-region" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600" onchange="syncTagGeneratorStores()">
+										</select>
+									</div>
+									<div class="space-y-1">
+										<label class="text-xs font-semibold text-gray-500">매장 <span class="text-gray-400 font-normal">(선택 / 미배정 가능)</span></label>
+                   <select id="tag-generator-store" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+										</select>
+									</div>
+									<div class="space-y-1">
+										<label class="text-xs font-semibold text-gray-500">콘텐츠 선택</label>
+                   <select id="tag-generator-content" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600" onchange="syncTagPreviewText()">
+										</select>
+									</div>
+									<div class="space-y-1">
+										<label class="text-xs font-semibold text-gray-500">수량</label>
+                   <input id="tag-generator-quantity" type="number" value="50" min="1" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-indigo-600">
+									</div>
+								</div>
+
+								<div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs flex flex-col items-center justify-center space-y-6">
+									<span class="text-xs font-semibold text-gray-500">태그 미리보기</span>
+                  <div class="w-40 h-56 bg-gray-950 text-white p-4 rounded-xl flex flex-col justify-between items-center text-center shadow-md">
+										<div class="text-xs font-bold tracking-widest text-indigo-400">Semo</div>
+                    <div class="text-sm font-medium leading-tight" id="tag-generator-preview-text">콘텐츠 선택</div>
+										<div class="bg-white p-2 rounded-lg"><i class="fa-solid fa-qrcode text-gray-900 text-3xl"></i></div>
+									</div>
+                 <button onclick="createTagDistribution()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-sm font-medium transition shadow-xs">태그 생성</button>
+								</div>
+							</div>
+						</section>
+
+           <section id="tab-qr-manage" class="tab-content space-y-6 hidden">
+							<h2>QR 배포 관리 (배포 단위 분리)</h2>
+							<div>
+								<table class="data-table">
+									<thead>
+                   <tr>
+											<th>QR ID (토큰)</th>
+											<th>콘텐츠</th>
+											<th>배포 지역</th>
+											<th>배포 매장</th>
+											<th>수량</th>
+											<th>매장 관리</th>
+										</tr>
+									</thead>
+                  <tbody id="tag-qr-manage-body">
+										<tr><td style="color:#858796;" colspan="6">QR 배포 데이터를 불러오는 중...</td></tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+
+						<section id="tab-customer-view" class="tab-content space-y-6 hidden flex flex-col items-center justify-center">
+							<div class="text-center space-y-1">
+								<h1 class="text-2xl font-bold tracking-tight">손님 화면 (접속자 언어 맞춤)</h1>
+								<p class="text-sm text-gray-500">스캔한 사용자의 기기 언어를 최상단에 표시합니다.</p>
+								<div class="pt-2 flex justify-center space-x-2">
+									<button onclick="setCustomerLang('ja')" class="px-3 py-1 bg-gray-200 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-medium transition">🇯🇵 일본어 사용자 시뮬레이션</button>
+									<button onclick="setCustomerLang('ko')" class="px-3 py-1 bg-gray-200 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-medium transition">🇰🇷 한국어 사용자 시뮬레이션</button>
+								</div>
+							</div>
+							<div class="w-full max-w-sm bg-white rounded-3xl border-4 border-gray-800 shadow-2xl overflow-y-auto max-h-[85vh] flex flex-col my-4">
+								<div class="bg-gray-900 text-white px-6 py-3 flex justify-between items-center text-xs shrink-0 sticky top-0 z-20">
+									<span class="font-bold tracking-widest text-indigo-400">△ Semo</span>
+									<span>12:48</span>
+								</div>
+								<div id="customer-content-area" class="p-6 flex flex-col items-center text-center space-y-6 flex-1 bg-white">
+									<div class="space-y-1 pt-2">
+										<h2 class="text-3xl font-extrabold text-indigo-600 tracking-tight">뭐 해?</h2>
+										<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇰🇷 한국어</span>
+									</div>
+									<div class="w-12 h-0.5 bg-gray-200"></div>
+									<div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+										<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">日本語</span>
+										<div class="text-xl font-bold text-gray-800 pt-1">何してる？</div>
+										<p class="text-xs text-gray-400">なにしてる？</p>
+									</div>
+									<div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+										<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">中文</span>
+										<div class="text-xl font-bold text-gray-800 pt-1">你在干什么？</div>
+									</div>
+								</div>
+								<div class="bg-white py-3 flex justify-center shrink-0">
+									<div class="w-32 h-1 bg-gray-300 rounded-full"></div>
+								</div>
+							</div>
+						</section>
+					</main>
+				</div>
 			</div>
 		</div>
 
@@ -1159,20 +2178,92 @@
 	</div>
 
 	<div class="modal-overlay" id="eventQrModal">
-		<div class="modal-box" style="max-width: 420px;">
+		<div class="modal-box modal-card-small">
 			<button class="modal-close" onclick="closeModal('eventQrModal')">&times;</button>
 			<h3 class="modal-title">생성된 이벤트 QR</h3>
-			<div style="text-align:center; padding:8px 0 4px;">
-				<div id="event-qr-key" style="font-size:13px; font-weight:700; color:#4b5563; margin-bottom:8px;"></div>
-				<img id="event-qr-image" alt="event qr" style="width:220px; height:220px; border:1px solid #e5e7eb; border-radius:8px; background:#fff;">
+			<div class="modal-top-center">
+				<div id="event-qr-key" class="modal-qr-key"></div>
+				<img id="event-qr-image" alt="event qr" class="modal-qr-image">
 			</div>
-			<div class="form-group" style="margin-top:12px;">
+			<div class="form-group modal-top-max">
 				<label for="event-qr-url">이벤트 URL</label>
 				<input type="text" id="event-qr-url" readonly>
 			</div>
-			<div style="display:flex; justify-content:flex-end; gap:8px;">
+			<div class="modal-actions-end">
 				<button type="button" class="btn btn-secondary" onclick="copyEventQrUrl()">URL 복사</button>
 				<button type="button" class="btn btn-primary" onclick="closeModal('eventQrModal')">닫기</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 태그 관리자 모달 -->
+	<div id="editModal" class="tag-modal-overlay">
+		<div class="tag-modal-content">
+     <h3 class="tag-modal-title" id="tag-edit-modal-title">콘텐츠 수정</h3>
+			<div class="tag-modal-form">
+				<div class="tag-form-group">
+					<label class="tag-form-label">콘텐츠 ID</label>
+          <input type="text" id="tag-edit-content-id" readonly class="tag-form-input">
+				</div>
+				<div class="tag-form-group">
+					<label class="tag-form-label">🇯🇵 일본어</label>
+          <input type="text" id="tag-edit-ja-text" class="tag-form-input">
+				</div>
+				<div class="tag-form-group">
+					<label class="tag-form-label">읽는 법 (발음)</label>
+         <input type="text" id="tag-edit-ja-pronunciation" class="tag-form-input">
+				</div>
+				<div class="tag-form-group">
+					<label class="tag-form-label">🇰🇷 한국어</label>
+         <input type="text" id="tag-edit-ko-text" class="tag-form-input">
+				</div>
+				<div class="tag-form-group">
+					<label class="tag-form-label">🇨🇳 중국어</label>
+         <input type="text" id="tag-edit-zh-text" class="tag-form-input">
+				</div>
+				<div class="tag-form-group">
+					<label class="tag-form-label">카테고리</label>
+         <select id="tag-edit-category" class="tag-form-input"><option>일상회화</option></select>
+				</div>
+				<div class="tag-form-group">
+					<label class="tag-form-label">난이도</label>
+         <select id="tag-edit-level" class="tag-form-input"><option>초급</option><option>중급</option><option>고급</option></select>
+				</div>
+			</div>
+			<div class="tag-modal-actions">
+        <button onclick="submitTagContentEdit()" class="tag-modal-btn tag-modal-btn-primary">저장</button>
+				<button onclick="closeTagModal('editModal')" class="tag-modal-btn tag-modal-btn-secondary">취소</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="completeModal" class="tag-modal-overlay">
+		<div class="tag-modal-content tag-modal-content-center">
+			<div class="tag-modal-icon tag-modal-icon-success"><i class="fa-solid fa-check"></i></div>
+			<h3 class="tag-modal-title">QR 생성 완료</h3>
+      <p class="tag-modal-text" id="tag-complete-summary">공주 / 미배정<br>콘텐츠 : 何してる？ (뭐 해?)<br>수량 : 50장</p>
+			<div class="tag-modal-actions-center">
+        <button onclick="closeTagModal('completeModal')" class="tag-modal-btn tag-modal-btn-primary">확인</button>
+				<button onclick="closeTagModal('completeModal')" class="tag-modal-btn tag-modal-btn-secondary">닫기</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="connectModal" class="tag-modal-overlay">
+		<div class="tag-modal-content">
+			<h3 class="tag-modal-title">QR 매장 연결 및 변경</h3>
+			<div class="tag-modal-form">
+       <div class="tag-info-row"><span class="tag-info-label">배포 ID:</span> <span class="tag-info-value" id="tag-connect-distribution-id">-</span></div>
+				<div class="tag-info-row"><span class="tag-info-label">QR 토큰:</span> <span class="tag-info-value" id="tag-connect-token">-</span></div>
+				<div class="tag-info-row"><span class="tag-info-label">지역:</span> <span id="tag-connect-region">-</span></div>
+				<div class="tag-form-group">
+					<label class="tag-form-label">배정할 매장 선택</label>
+         <select id="tag-connect-store-select" class="tag-form-input"></select>
+				</div>
+			</div>
+			<div class="tag-modal-actions">
+        <button onclick="submitTagDistributionStoreChange()" class="tag-modal-btn tag-modal-btn-primary">연결 저장</button>
+				<button onclick="closeTagModal('connectModal')" class="tag-modal-btn tag-modal-btn-secondary">취소</button>
 			</div>
 		</div>
 	</div>
@@ -1194,8 +2285,16 @@
 		let pendingStudentCandidateName = '';
 		let selectedTextbookFile = null;
 		const EVENT_API_URL = '../event/api/api.php';
+    const TAG_MANAGER_API_URL = '../api/admin_qr_manager.php';
 		let eventLanguages = [];
 		let eventLanguagesLoaded = false;
+		let tagManagerBootstrapped = false;
+		let tagCurrentTab = 'dashboard';
+		let tagContentsRows = [];
+		let tagRegionsRows = [];
+		let tagStoresRows = [];
+		let tagGeneratorOptions = { campaigns: [], regions: [], stores: [], contents: [] };
+		let tagDistributionRows = [];
 
 		function escapeHtml(value) {
 			return String(value ?? '')
@@ -1715,6 +2814,405 @@
 			} catch (error) {
 				console.error(error);
 				alert('이벤트 글 삭제 중 오류가 발생했습니다.');
+			}
+		}
+
+		async function requestTagManagerApi(action, options = {}) {
+			const method = options.method || 'GET';
+			const query = new URLSearchParams({ action });
+			if (options.query && typeof options.query === 'object') {
+				Object.keys(options.query).forEach((key) => {
+					const value = options.query[key];
+					if (value !== undefined && value !== null && value !== '') query.append(key, String(value));
+				});
+			}
+
+			const url = `${TAG_MANAGER_API_URL}?${query.toString()}`;
+			const fetchOptions = { method };
+			if (method !== 'GET') {
+				fetchOptions.headers = { 'Content-Type': 'application/json' };
+				fetchOptions.body = JSON.stringify(options.body || {});
+			}
+
+			const response = await fetch(url, fetchOptions);
+			const raw = await response.text();
+			const result = tryParseApiJson(raw);
+			if (!response.ok || !result || !result.success) {
+				throw new Error((result && result.message) || '요청 처리에 실패했습니다.');
+			}
+			return result.data;
+		}
+
+		function ensureTagManagerVisibleViews() {
+			const listView = document.getElementById('store-list-view');
+			const detailView = document.getElementById('store-detail-view');
+			if (listView) listView.classList.remove('hidden');
+			if (detailView) detailView.classList.add('hidden');
+		}
+
+		function renderTagDashboard(data) {
+			const regionCards = document.getElementById('tag-dashboard-region-cards');
+			const todayEl = document.getElementById('tag-dashboard-today-scans');
+			const totalEl = document.getElementById('tag-dashboard-total-scans');
+			const popularEl = document.getElementById('tag-dashboard-popular-list');
+			if (!regionCards || !todayEl || !totalEl || !popularEl) return;
+
+			const regions = Array.isArray(data?.regions) ? data.regions : [];
+			const badges = ['1위 🥇', '2위 🥈', '3위 🥉'];
+			const badgeClasses = ['bg-amber-100 text-amber-800', 'bg-gray-100 text-gray-700', 'bg-orange-100 text-orange-800'];
+			if (regions.length === 0) {
+       regionCards.innerHTML = '<div class="card"><div class="card-title">안내</div><div class="card-value" style="font-size:16px;">스캔 데이터가 없습니다.</div></div>';
+			} else {
+				regionCards.innerHTML = regions.map((row, idx) => `
+         <div class="card">
+						<div class="card-title">${badges[idx] || `${idx + 1}위`} 지역</div>
+						<div class="card-value">${escapeHtml(row.name || '-')} · ${Number(row.scan_count || 0).toLocaleString()}회</div>
+						<div class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeClasses[idx] || 'bg-gray-100 text-gray-700'}">스캔 랭킹</div>
+					</div>
+				`).join('');
+			}
+
+			todayEl.textContent = `${Number(data?.today_scans || 0).toLocaleString()}회`;
+			totalEl.textContent = `${Number(data?.total_scans || 0).toLocaleString()}회`;
+
+			const popular = Array.isArray(data?.popular_contents) ? data.popular_contents : [];
+			if (popular.length === 0) {
+				popularEl.innerHTML = '<div class="text-sm text-gray-500">콘텐츠 스캔 데이터가 없습니다.</div>';
+			} else {
+				popularEl.innerHTML = popular.slice(0, 3).map((row, idx) => `
+					<div class="flex justify-between items-center text-sm">
+						<span>${idx + 1}. ${escapeHtml(row.ja_text || '-')} (${escapeHtml(row.ko_text || '-')})</span>
+						<span class="font-semibold">${Number(row.scan_count || 0).toLocaleString()}회</span>
+					</div>
+				`).join('');
+			}
+		}
+
+		async function loadTagDashboard() {
+			const data = await requestTagManagerApi('dashboard');
+			renderTagDashboard(data);
+		}
+
+		function renderTagContents(rows) {
+			const tbody = document.getElementById('tag-contents-body');
+			if (!tbody) return;
+			if (!Array.isArray(rows) || rows.length === 0) {
+       tbody.innerHTML = '<tr><td style="color:#858796;" colspan="6">등록된 콘텐츠가 없습니다.</td></tr>';
+				return;
+			}
+			tbody.innerHTML = rows.map((item) => `
+        <tr>
+					<td>${Number(item.id || 0)}</td>
+					<td><strong>${escapeHtml(item.ja_text || '-')}</strong><br><small style="color:#888;">${escapeHtml(item.ja_pronunciation || '-')}</small></td>
+					<td>${escapeHtml(item.ko_text || '-')}</td>
+					<td>${escapeHtml(item.zh_text || '-')}</td>
+					<td>${Number(item.scan_count || 0).toLocaleString()}회</td>
+					<td><button onclick="openTagContentEdit(${Number(item.id || 0)})" class="btn btn-primary">편집</button></td>
+				</tr>
+			`).join('');
+		}
+
+		async function loadTagContents() {
+			tagContentsRows = await requestTagManagerApi('contents');
+			renderTagContents(tagContentsRows);
+		}
+
+		function renderTagRegions(rows) {
+			const tbody = document.getElementById('tag-regions-body');
+			if (!tbody) return;
+			if (!Array.isArray(rows) || rows.length === 0) {
+        tbody.innerHTML = '<tr><td style="color:#858796;" colspan="4">등록된 지역이 없습니다.</td></tr>';
+				return;
+			}
+			tbody.innerHTML = rows.map((row) => `
+        <tr>
+					<td><strong>${escapeHtml(row.name || '-')}</strong></td>
+					<td>${Number(row.store_count || 0).toLocaleString()} 개소</td>
+					<td>${Number(row.tag_count || 0).toLocaleString()} 장</td>
+					<td>${Number(row.scan_count || 0).toLocaleString()} 회</td>
+				</tr>
+			`).join('');
+		}
+
+		async function loadTagRegions() {
+			tagRegionsRows = await requestTagManagerApi('regions');
+			renderTagRegions(tagRegionsRows);
+		}
+
+		function renderTagStores(rows) {
+			const tbody = document.getElementById('tag-stores-body');
+			if (!tbody) return;
+			if (!Array.isArray(rows) || rows.length === 0) {
+        tbody.innerHTML = '<tr><td style="color:#858796;" colspan="5">등록된 매장이 없습니다.</td></tr>';
+				return;
+			}
+			tbody.innerHTML = rows.map((row) => `
+        <tr onclick="openTagStoreDetail(${Number(row.id || 0)})" style="cursor:pointer;">
+					<td>${escapeHtml(row.region_name || '-')}</td>
+					<td><strong>${escapeHtml(row.name || '-')}</strong></td>
+					<td>${escapeHtml(row.store_type || '-')}</td>
+					<td>${Number(row.tag_count || 0).toLocaleString()} 장</td>
+					<td>${Number(row.scan_count || 0).toLocaleString()} 회</td>
+				</tr>
+			`).join('');
+		}
+
+		async function loadTagStores() {
+			ensureTagManagerVisibleViews();
+			tagStoresRows = await requestTagManagerApi('stores');
+			renderTagStores(tagStoresRows);
+		}
+
+		async function openTagStoreDetail(storeId) {
+			if (!storeId) return;
+      try {
+				const detail = await requestTagManagerApi('store_detail', { query: { store_id: storeId } });
+				document.getElementById('tag-store-detail-name').textContent = detail.name || '-';
+				document.getElementById('tag-store-detail-region').textContent = detail.region_name || '-';
+				document.getElementById('tag-store-detail-type').textContent = detail.store_type || '-';
+				showStoreDetail();
+			} catch (error) {
+				console.error(error);
+				alert(error.message || '매장 상세 정보를 불러오지 못했습니다.');
+			}
+		}
+
+		function syncTagGeneratorStores() {
+			const regionEl = document.getElementById('tag-generator-region');
+			const storeEl = document.getElementById('tag-generator-store');
+			if (!regionEl || !storeEl) return;
+			const regionId = Number(regionEl.value || 0);
+			const stores = (tagGeneratorOptions.stores || []).filter((s) => Number(s.region_id || 0) === regionId);
+			storeEl.innerHTML = '<option value="">미배정 ▼</option>' + stores.map((s) => `<option value="${Number(s.id)}">${escapeHtml(s.name || '-')}</option>`).join('');
+		}
+
+		function syncTagPreviewText() {
+			const contentEl = document.getElementById('tag-generator-content');
+			const previewEl = document.getElementById('tag-generator-preview-text');
+			if (!contentEl || !previewEl) return;
+			const selected = contentEl.options[contentEl.selectedIndex];
+			previewEl.textContent = selected ? (selected.dataset.ja || '콘텐츠 선택') : '콘텐츠 선택';
+		}
+
+		async function loadTagGeneratorOptions() {
+			tagGeneratorOptions = await requestTagManagerApi('generator_options');
+			const campaignEl = document.getElementById('tag-generator-campaign');
+			const regionEl = document.getElementById('tag-generator-region');
+			const contentEl = document.getElementById('tag-generator-content');
+			if (!campaignEl || !regionEl || !contentEl) return;
+
+			campaignEl.innerHTML = (tagGeneratorOptions.campaigns || []).map((c) => `<option value="${Number(c.id)}">${escapeHtml(c.name || '-')}</option>`).join('');
+			regionEl.innerHTML = (tagGeneratorOptions.regions || []).map((r) => `<option value="${Number(r.id)}">${escapeHtml(r.name || '-')}</option>`).join('');
+			contentEl.innerHTML = (tagGeneratorOptions.contents || []).map((c) => {
+				const label = `[ ${Number(c.id)} | ${escapeHtml(c.ja_text || '-')} | ${escapeHtml(c.ko_text || '-')} ]`;
+				return `<option value="${Number(c.id)}" data-ja="${escapeHtml(c.ja_text || '')}">${label}</option>`;
+			}).join('');
+
+			syncTagGeneratorStores();
+			syncTagPreviewText();
+		}
+
+		function renderTagDistributions(rows) {
+			const tbody = document.getElementById('tag-qr-manage-body');
+			if (!tbody) return;
+			if (!Array.isArray(rows) || rows.length === 0) {
+        tbody.innerHTML = '<tr><td style="color:#858796;" colspan="6">배포된 QR이 없습니다.</td></tr>';
+				return;
+			}
+			tbody.innerHTML = rows.map((row) => `
+        <tr>
+					<td><strong style="color:#6E5A4B;">${escapeHtml(row.token || '-')}</strong></td>
+					<td>${escapeHtml(row.content_text || '-')}</td>
+					<td>${escapeHtml(row.region_name || '-')}</td>
+					<td>${row.store_name ? escapeHtml(row.store_name) : '<span style="color:#C07A6E; font-weight:bold;">미배정</span>'}</td>
+					<td>${Number(row.quantity || 0).toLocaleString()} 장</td>
+					<td><button onclick="openTagDistributionConnect(${Number(row.distribution_id || 0)})" class="btn ${row.store_name ? 'btn-primary' : 'btn-success'}">${row.store_name ? '매장 변경' : '매장 연결'}</button></td>
+				</tr>
+			`).join('');
+		}
+
+		async function loadTagDistributions() {
+			tagDistributionRows = await requestTagManagerApi('distributions');
+			renderTagDistributions(tagDistributionRows);
+		}
+
+		function openTagContentEdit(contentId) {
+			const target = (tagContentsRows || []).find((row) => Number(row.id) === Number(contentId));
+			if (!target) {
+				alert('콘텐츠 정보를 찾을 수 없습니다. 목록을 새로고침해 주세요.');
+				return;
+			}
+     document.getElementById('tag-edit-modal-title').textContent = '콘텐츠 수정';
+			document.getElementById('tag-edit-content-id').value = String(target.id || '');
+			document.getElementById('tag-edit-ja-text').value = target.ja_text || '';
+			document.getElementById('tag-edit-ja-pronunciation').value = target.ja_pronunciation || '';
+			document.getElementById('tag-edit-ko-text').value = target.ko_text || '';
+			document.getElementById('tag-edit-zh-text').value = target.zh_text || '';
+			document.getElementById('tag-edit-category').value = target.category || '일상회화';
+			document.getElementById('tag-edit-level').value = target.level || '초급';
+			openTagModal('editModal');
+		}
+
+		function openTagContentCreate() {
+			document.getElementById('tag-edit-modal-title').textContent = '콘텐츠 등록';
+			document.getElementById('tag-edit-content-id').value = '';
+			document.getElementById('tag-edit-ja-text').value = '';
+			document.getElementById('tag-edit-ja-pronunciation').value = '';
+			document.getElementById('tag-edit-ko-text').value = '';
+			document.getElementById('tag-edit-zh-text').value = '';
+			document.getElementById('tag-edit-category').value = '일상회화';
+			document.getElementById('tag-edit-level').value = '초급';
+			openTagModal('editModal');
+		}
+
+		async function submitTagContentEdit() {
+     try {
+				const id = Number(document.getElementById('tag-edit-content-id').value || 0);
+				const jaText = document.getElementById('tag-edit-ja-text').value.trim();
+				const koText = document.getElementById('tag-edit-ko-text').value.trim();
+				if (!jaText || !koText) {
+					alert('일본어/한국어 텍스트는 필수입니다.');
+					return;
+				}
+
+				await requestTagManagerApi(id > 0 ? 'update_content' : 'create_content', {
+					method: 'POST',
+					body: {
+						id,
+						ja_text: jaText,
+						ja_pronunciation: document.getElementById('tag-edit-ja-pronunciation').value.trim(),
+						ko_text: koText,
+						zh_text: document.getElementById('tag-edit-zh-text').value.trim(),
+						category: document.getElementById('tag-edit-category').value.trim(),
+						level: document.getElementById('tag-edit-level').value.trim()
+					}
+				});
+
+				closeTagModal('editModal');
+				alert(id > 0 ? '콘텐츠가 수정되었습니다.' : '콘텐츠가 등록되었습니다.');
+				await Promise.all([loadTagContents(), loadTagDashboard(), loadTagGeneratorOptions(), loadTagDistributions()]);
+			} catch (error) {
+				console.error(error);
+				alert(error.message || '콘텐츠 저장 중 오류가 발생했습니다.');
+			}
+		}
+
+   async function openTagDistributionConnect(distributionId) {
+			const target = (tagDistributionRows || []).find((row) => Number(row.distribution_id) === Number(distributionId));
+			if (!target) {
+				alert('배포 정보를 찾을 수 없습니다.');
+				return;
+			}
+			if (!Array.isArray(tagGeneratorOptions.stores) || tagGeneratorOptions.stores.length === 0) {
+				try {
+					await loadTagGeneratorOptions();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+
+			document.getElementById('tag-connect-distribution-id').textContent = String(target.distribution_id || '-');
+			document.getElementById('tag-connect-token').textContent = target.token || '-';
+			document.getElementById('tag-connect-region').textContent = target.region_name || '-';
+
+			const stores = (tagGeneratorOptions.stores || []).filter((s) => Number(s.region_id || 0) === Number(target.region_id || 0));
+			const selectEl = document.getElementById('tag-connect-store-select');
+			if (selectEl) {
+				selectEl.innerHTML = '<option value="">미배정</option>' + stores.map((s) => `<option value="${Number(s.id)}">${escapeHtml(s.name || '-')}</option>`).join('');
+				selectEl.value = target.store_id ? String(target.store_id) : '';
+			}
+			openTagModal('connectModal');
+		}
+
+		async function submitTagDistributionStoreChange() {
+     try {
+				const distributionId = Number(document.getElementById('tag-connect-distribution-id').textContent || 0);
+				if (!distributionId) {
+					alert('배포 ID를 확인해 주세요.');
+					return;
+				}
+				const storeValue = document.getElementById('tag-connect-store-select').value;
+				await requestTagManagerApi('update_distribution_store', {
+					method: 'POST',
+					body: { distribution_id: distributionId, store_id: storeValue }
+				});
+				closeTagModal('connectModal');
+				alert('매장 연결이 저장되었습니다.');
+				await Promise.all([loadTagDistributions(), loadTagStores(), loadTagRegions(), loadTagDashboard()]);
+			} catch (error) {
+				console.error(error);
+				alert(error.message || '매장 연결 저장 중 오류가 발생했습니다.');
+			}
+		}
+
+		async function createTagDistribution() {
+     try {
+				const campaignId = Number(document.getElementById('tag-generator-campaign')?.value || 0);
+				const regionId = Number(document.getElementById('tag-generator-region')?.value || 0);
+				const storeId = document.getElementById('tag-generator-store')?.value || '';
+				const contentId = Number(document.getElementById('tag-generator-content')?.value || 0);
+				const quantity = Number(document.getElementById('tag-generator-quantity')?.value || 0);
+
+				if (!campaignId || !regionId || !contentId || quantity <= 0) {
+					alert('캠페인/지역/콘텐츠/수량을 확인해 주세요.');
+					return;
+				}
+
+				const result = await requestTagManagerApi('create_distribution', {
+					method: 'POST',
+					body: {
+						campaign_id: campaignId,
+						region_id: regionId,
+						store_id: storeId,
+						content_id: contentId,
+						quantity
+					}
+				});
+
+				const regionName = document.getElementById('tag-generator-region')?.selectedOptions?.[0]?.textContent || '-';
+				const storeName = document.getElementById('tag-generator-store')?.selectedOptions?.[0]?.textContent || '미배정';
+				const contentLabel = document.getElementById('tag-generator-content')?.selectedOptions?.[0]?.textContent || '-';
+				const summary = document.getElementById('tag-complete-summary');
+				if (summary) {
+					summary.innerHTML = `${escapeHtml(regionName)} / ${escapeHtml(storeName)}<br>콘텐츠 : ${escapeHtml(contentLabel)}<br>수량 : ${Number(quantity).toLocaleString()}장<br>토큰 : ${escapeHtml(result?.token || '-')}`;
+				}
+				openTagModal('completeModal');
+
+				await Promise.all([loadTagDistributions(), loadTagRegions(), loadTagStores(), loadTagDashboard()]);
+			} catch (error) {
+				console.error(error);
+				alert(error.message || 'QR/태그 생성 중 오류가 발생했습니다.');
+			}
+		}
+
+		async function loadTagManagerTabData(tabId) {
+			if (tabId === 'dashboard') await loadTagDashboard();
+			if (tabId === 'contents') await loadTagContents();
+			if (tabId === 'regions') await loadTagRegions();
+			if (tabId === 'stores') await loadTagStores();
+			if (tabId === 'generator') await loadTagGeneratorOptions();
+			if (tabId === 'qr-manage') await loadTagDistributions();
+		}
+
+		async function bootstrapTagManager(force = false) {
+			if (tagManagerBootstrapped && !force) {
+				await loadTagManagerTabData(tagCurrentTab);
+				return;
+			}
+
+			try {
+				await Promise.all([
+					loadTagDashboard(),
+					loadTagContents(),
+					loadTagRegions(),
+					loadTagStores(),
+					loadTagGeneratorOptions(),
+					loadTagDistributions()
+				]);
+				tagManagerBootstrapped = true;
+			} catch (error) {
+				console.error(error);
+				alert(error.message || '소상공인 QR 데이터를 불러오지 못했습니다.');
 			}
 		}
 
@@ -3085,6 +4583,16 @@
 			if (pageId === 'event-page') {
 				loadEventLanguages().then(() => loadEventContents());
 			}
+
+			if (pageId === 'tag-manager-page') {
+				bootstrapTagManager();
+			}
+		}
+
+		function toggleMenuGroup(groupId) {
+			const group = document.getElementById(groupId);
+			if (!group) return;
+			group.classList.toggle('collapsed');
 		}
 
 		function selectScheduleDate(dateStr, cell) {
@@ -3117,9 +4625,14 @@
 			renderTeacherSelectOptions([]);
 			resetSlotDetail();
 			bindTextbookHelper();
+      closeAllTagModals();
+			document.getElementById('menu-group-lesson')?.classList.remove('collapsed');
 
 			document.addEventListener('keydown', (event) => {
-				if (event.key === 'Escape') closeAllModals();
+       if (event.key === 'Escape') {
+					closeAllModals();
+					closeAllTagModals();
+				}
 			});
 
 			document.querySelectorAll('.modal-overlay').forEach(modal => {
@@ -3127,6 +4640,16 @@
 					if (event.target === modal) closeModal(modal.id);
 				});
 			});
+
+			document.querySelectorAll('.tag-modal-overlay').forEach(modal => {
+				modal.addEventListener('click', (event) => {
+					if (event.target === modal) closeTagModal(modal.id);
+				});
+			});
+
+			if (document.getElementById('tab-dashboard')) {
+				switchTab('dashboard');
+			}
 		});
 		function openCreateClassModal() {
 			const dateInput = document.getElementById('reservation-date-input');
@@ -3348,6 +4871,108 @@
 				alert('비밀번호 초기화 중 오류가 발생했습니다.');
 			}
 		}
+
+   async function switchTab(tabId) {
+			tagCurrentTab = tabId;
+			document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+			document.querySelectorAll('.nav-btn').forEach(el => {
+				el.classList.remove('bg-indigo-50', 'text-indigo-600');
+				el.classList.add('text-gray-600', 'hover:bg-gray-50');
+			});
+
+			const target = document.getElementById('tab-' + tabId);
+			if (target) target.classList.remove('hidden');
+
+			const activeBtn = document.getElementById('btn-' + tabId);
+			if (activeBtn) {
+				activeBtn.classList.remove('text-gray-600', 'hover:bg-gray-50');
+				activeBtn.classList.add('bg-indigo-50', 'text-indigo-600');
+			}
+
+			if (document.getElementById('tag-manager-page')?.classList.contains('active')) {
+				try {
+					await loadTagManagerTabData(tabId);
+				} catch (error) {
+					console.error(error);
+					alert(error.message || '탭 데이터를 불러오지 못했습니다.');
+				}
+			}
+		}
+
+		function showStoreDetail() {
+			const listView = document.getElementById('store-list-view');
+			const detailView = document.getElementById('store-detail-view');
+			if (listView) listView.classList.add('hidden');
+			if (detailView) detailView.classList.remove('hidden');
+		}
+
+		function hideStoreDetail() {
+			const listView = document.getElementById('store-list-view');
+			const detailView = document.getElementById('store-detail-view');
+			if (detailView) detailView.classList.add('hidden');
+			if (listView) listView.classList.remove('hidden');
+		}
+
+    function openTagModal(modalId) {
+			const modal = document.getElementById(modalId);
+			if (modal) {
+				modal.style.display = 'flex';
+			}
+		}
+
+		function closeTagModal(modalId) {
+			const modal = document.getElementById(modalId);
+			if (modal) {
+				modal.style.display = 'none';
+			}
+		}
+
+		function closeAllTagModals() {
+			document.querySelectorAll('.tag-modal-overlay').forEach(modal => {
+				modal.style.display = 'none';
+			});
+		}
+
+		function setCustomerLang(lang) {
+			const container = document.getElementById('customer-content-area');
+			if (!container) return;
+
+			if (lang === 'ja') {
+				container.innerHTML = `
+					<div class="space-y-1 pt-2">
+						<h2 class="text-3xl font-extrabold text-indigo-600 tracking-tight">何してる？</h2>
+						<p class="text-xs text-gray-400 font-medium">なにしてる？</p>
+					</div>
+					<div class="w-12 h-0.5 bg-gray-200"></div>
+					<div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+						<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇰🇷 한국어</span>
+						<div class="text-xl font-bold text-gray-800 pt-1">뭐 해?</div>
+					</div>
+					<div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+						<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇨🇳 中文</span>
+						<div class="text-xl font-bold text-gray-800 pt-1">你在干什么？</div>
+					</div>
+				`;
+			} else if (lang === 'ko') {
+				container.innerHTML = `
+					<div class="space-y-1 pt-2">
+						<h2 class="text-3xl font-extrabold text-indigo-600 tracking-tight">뭐 해?</h2>
+						<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">🇰🇷 한국어</span>
+					</div>
+					<div class="w-12 h-0.5 bg-gray-200"></div>
+					<div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+						<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">日本語</span>
+						<div class="text-xl font-bold text-gray-800 pt-1">何してる？</div>
+						<p class="text-xs text-gray-400">なにしてる？</p>
+					</div>
+					<div class="space-y-1 w-full bg-gray-50 p-4 rounded-2xl border border-gray-100">
+						<span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">中文</span>
+						<div class="text-xl font-bold text-gray-800 pt-1">你在干什么？</div>
+					</div>
+				`;
+			}
+		}
+
 	</script>
 </body>
 </html>
