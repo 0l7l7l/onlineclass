@@ -1,0 +1,5888 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>SEMO 가타카나 마스터반 교재</title>
+
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Noto Sans KR",
+        "Malgun Gothic",
+        sans-serif;
+
+    background: #e8e8e6;
+
+    color: #222;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   BOOK
+===================================================== */
+
+.book {
+
+    width: 100%;
+
+    padding: 40px 0;
+}
+
+
+/* =====================================================
+   A4 SHEET
+   297mm × 210mm
+===================================================== */
+
+.sheet {
+
+    width: 297mm;
+
+    height: 210mm;
+
+    margin: 0 auto 30mm;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    background: #fff;
+
+    box-shadow:
+        0 5px 25px rgba(0,0,0,.10);
+
+    position: relative;
+}
+
+
+/* =====================================================
+   PAGE
+   A4의 정확히 절반
+   148.5mm × 210mm
+===================================================== */
+
+.page {
+
+    width: 148.5mm;
+
+    height: 210mm;
+
+    padding: 14mm;
+
+    background: #fff;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/*
+   가운데는 실제 A4의 가운데
+   별도의 gap 없음
+*/
+
+.page:first-child {
+
+    border-right: 1px solid #e7e7e7;
+
+}
+
+
+/* =====================================================
+   PAGE NUMBER
+===================================================== */
+
+.page-number {
+
+    position: absolute;
+
+    right: 9mm;
+
+    bottom: 7mm;
+
+    font-size: 9px;
+
+    color: #aaa;
+}
+
+
+/* =====================================================
+   COVER
+===================================================== */
+
+.cover {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    background: #222;
+
+    color: #fff;
+}
+
+
+.logo {
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 25px;
+}
+
+
+.cover .label {
+
+    color: rgba(255,255,255,.55);
+
+    margin-bottom: 15px;
+}
+
+
+.cover h1 {
+
+    font-size: 38px;
+
+    line-height: 1.2;
+
+    letter-spacing: -2px;
+}
+
+
+.cover h1 span {
+
+    display: block;
+
+    margin-top: 15px;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    line-height: 1.6;
+
+    color: rgba(255,255,255,.7);
+}
+
+
+.cover-kana {
+
+    margin-top: 40px;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    letter-spacing: 8px;
+}
+
+
+/* =====================================================
+   COMMON
+===================================================== */
+
+.label {
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    color: #999;
+
+    margin-bottom: 8px;
+}
+
+
+h2 {
+
+    font-size: 27px;
+
+    line-height: 1.35;
+
+    letter-spacing: -1.5px;
+
+    margin-bottom: 18px;
+}
+
+
+h3 {
+
+    font-size: 17px;
+
+    line-height: 1.4;
+
+    margin-bottom: 10px;
+}
+
+
+p {
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    color: #555;
+}
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+.intro-text {
+
+    margin-top: 15px;
+}
+
+
+/* =====================================================
+   WORD GRID
+===================================================== */
+
+.word-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 20px;
+}
+
+
+.word-card {
+
+    padding: 13px;
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 11px;
+
+    background: #fff;
+}
+
+
+.word-card strong {
+
+    display: block;
+
+    font-size: 20px;
+
+    line-height: 1.3;
+
+    margin-bottom: 3px;
+}
+
+
+.word-card span {
+
+    display: block;
+
+    font-size: 11px;
+
+    color: #777;
+}
+
+
+/* =====================================================
+   KANA
+===================================================== */
+
+.kana-title {
+
+    font-size: 65px;
+
+    line-height: 1;
+
+    font-weight: 900;
+
+    margin: 15px 0 20px;
+}
+
+
+.kana-row {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 5px;
+
+    margin-bottom: 20px;
+}
+
+
+.kana-box {
+
+    padding: 9px 3px;
+
+    background: #f3f3f0;
+
+    border-radius: 9px;
+
+    text-align: center;
+
+    font-size: 25px;
+
+    font-weight: 900;
+}
+
+
+.kana-box span {
+
+    display: block;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    color: #888;
+
+    margin-top: 2px;
+}
+
+
+/* =====================================================
+   SPEAK BOX
+===================================================== */
+
+.speak-box {
+
+    margin-top: 18px;
+
+    padding: 15px;
+
+    background: #f3f3f0;
+
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+
+.speak-title {
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 7px;
+}
+
+
+.speak-text {
+
+    font-size: 23px;
+
+    line-height: 1.6;
+
+    font-weight: 900;
+
+    letter-spacing: 5px;
+}
+
+
+/* =====================================================
+   PRACTICE
+===================================================== */
+
+.practice {
+
+    margin-top: 18px;
+}
+
+
+.practice-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 7px 0;
+
+    border-bottom: 1px dashed #ddd;
+}
+
+
+.practice-kana {
+
+    width: 30px;
+
+    font-size: 22px;
+
+    font-weight: 900;
+}
+
+
+.practice-line {
+
+    flex: 1;
+
+    height: 28px;
+
+    border-bottom: 1px solid #aaa;
+}
+
+
+/* =====================================================
+   CHECK
+===================================================== */
+
+.check-box {
+
+    margin-top: 18px;
+
+    padding: 14px;
+
+    background: #222;
+
+    color: #fff;
+
+    border-radius: 12px;
+}
+
+
+.check-box strong {
+
+    display: block;
+
+    font-size: 13px;
+
+    margin-bottom: 3px;
+}
+
+
+.check-box p {
+
+    font-size: 11px;
+
+    color: #ddd;
+}
+
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+.page-image {
+
+    width: 100%;
+
+    display: block;
+
+    margin: 18px 0;
+
+    border-radius: 12px;
+
+    object-fit: cover;
+}
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+.final-message {
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+
+.final-message .big {
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+    line-height: 1.4;
+}
+
+
+.final-message p {
+
+    margin-top: 15px;
+}
+
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+@page {
+
+    size: A4 landscape;
+
+    margin: 0;
+}
+
+
+@media print {
+
+    html,
+    body {
+
+        width: 297mm;
+
+        margin: 0;
+
+        padding: 0;
+
+        background: #fff;
+    }
+
+
+    .book {
+
+        padding: 0;
+    }
+
+
+    .sheet {
+
+        width: 297mm;
+
+        height: 210mm;
+
+        margin: 0;
+
+        box-shadow: none;
+
+        break-after: page;
+
+        page-break-after: always;
+    }
+
+
+    .sheet:last-child {
+
+        break-after: auto;
+
+        page-break-after: auto;
+    }
+
+
+    .page {
+
+        width: 148.5mm;
+
+        height: 210mm;
+
+        padding: 14mm;
+
+        box-shadow: none;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media screen and (max-width: 900px) {
+
+    body {
+
+        background: #f5f5f3;
+    }
+
+
+    .book {
+
+        padding: 15px 0;
+    }
+
+
+    /*
+       모바일에서는
+       A4를 가로로 유지하지 않고
+       페이지 하나씩 보여줌
+    */
+
+    .sheet {
+
+        width: 100%;
+
+        height: auto;
+
+        margin: 0;
+
+        display: block;
+
+        background: transparent;
+
+        box-shadow: none;
+    }
+
+
+    .page {
+
+        width: 100%;
+
+        height: auto;
+
+        aspect-ratio: 148.5 / 210;
+
+        margin-bottom: 18px;
+
+        padding: 8vw;
+
+        box-shadow:
+            0 3px 15px rgba(0,0,0,.08);
+
+        overflow: hidden;
+    }
+
+
+    .page:first-child {
+
+        border-right: none;
+    }
+
+
+    .page-number {
+
+        right: 5vw;
+
+        bottom: 4vw;
+
+        font-size: 10px;
+    }
+
+
+    .cover h1 {
+
+        font-size: 10vw;
+    }
+
+
+    .cover-kana {
+
+        font-size: 8vw;
+
+        letter-spacing: 2vw;
+    }
+
+
+    .label {
+
+        font-size: 2.5vw;
+    }
+
+
+    h2 {
+
+        font-size: 7vw;
+    }
+
+
+    h3 {
+
+        font-size: 4.8vw;
+    }
+
+
+    p {
+
+        font-size: 3.5vw;
+    }
+
+
+    .kana-title {
+
+        font-size: 18vw;
+    }
+
+
+    .kana-box {
+
+        font-size: 7vw;
+
+        padding: 2vw 1vw;
+    }
+
+
+    .kana-box span {
+
+        font-size: 2.5vw;
+    }
+
+
+    .speak-text {
+
+        font-size: 6vw;
+
+        letter-spacing: 1.5vw;
+    }
+
+
+    .word-card {
+
+        padding: 3vw;
+    }
+
+
+    .word-card strong {
+
+        font-size: 5vw;
+    }
+
+
+    .word-card span {
+
+        font-size: 3vw;
+    }
+
+
+    .practice-kana {
+
+        width: 8vw;
+
+        font-size: 6vw;
+    }
+
+
+    .practice-line {
+
+        height: 8vw;
+    }
+
+}
+
+
+/* =====================================================
+   VERY SMALL MOBILE
+===================================================== */
+
+@media screen and (max-width: 400px) {
+
+    .page {
+
+        padding: 7vw;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div
+    id="book"
+    class="book">
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   📚 교재 내용
+   =====================================================
+
+   여기의 객체 하나 = 교재 1페이지
+
+   1P + 2P
+   ↓
+   A4 ①
+
+   3P + 4P
+   ↓
+   A4 ②
+
+
+   페이지를 추가하면 자동으로 A4가 늘어납니다.
+
+===================================================== */
+
+
+const pages = [
+
+    /* =================================================
+       1P
+    ================================================= */
+
+  {
+    type: "cover",
+    label: "SEMO JAPANESE",
+    title: `가타카나<br>
+            마스터반`,
+    subtitle: `한 글자씩 배우고<br>직접 읽어보세요.`,
+    kana: ` ア イ ウ エ オ  ` },
+
+
+    /* =================================================
+       2P
+    ================================================= */
+
+    {
+        label: "START",
+
+        title: `
+            가타카나는<br>
+            어디에 사용할까요?
+        `,
+
+        html: `
+
+            <p class="intro-text">
+
+                일본어에서 가타카나는
+                외래어, 외국 이름, 음식 이름,
+                상품명 등에 자주 사용됩니다.
+
+            </p>
+
+
+            <div class="word-grid">
+
+
+                <div class="word-card">
+
+                    <strong>
+                        ホテル
+                    </strong>
+
+                    <span>
+                        호텔
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        コーヒー
+                    </strong>
+
+                    <span>
+                        커피
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        レストラン
+                    </strong>
+
+                    <span>
+                        레스토랑
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        コンビニ
+                    </strong>
+
+                    <span>
+                        편의점
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="check-box">
+
+                <strong>
+                    TODAY'S GOAL
+                </strong>
+
+                <p>
+
+                    가타카나를 보고
+                    바로 소리 내어 읽을 수 있게
+                    연습합니다.
+
+                </p>
+
+            </div>
+
+        `
+    },
+
+
+    /* =================================================
+       3P
+    ================================================= */
+
+    {
+        label: "LESSON 01",
+
+        title: `
+            ア행
+        `,
+
+        html: `
+
+            <div class="kana-title">
+                ア
+            </div>
+
+
+            <div class="kana-row">
+
+
+                <div class="kana-box">
+                    ア
+                    <span>아</span>
+                </div>
+
+
+                <div class="kana-box">
+                    イ
+                    <span>이</span>
+                </div>
+
+
+                <div class="kana-box">
+                    ウ
+                    <span>우</span>
+                </div>
+
+
+                <div class="kana-box">
+                    エ
+                    <span>에</span>
+                </div>
+
+
+                <div class="kana-box">
+                    オ
+                    <span>오</span>
+                </div>
+
+
+            </div>
+
+
+            <div class="speak-box">
+
+                <div class="speak-title">
+
+                    👄 소리 내어 읽어보세요
+
+                </div>
+
+
+                <div class="speak-text">
+
+                    ア イ ウ エ オ
+
+                </div>
+
+            </div>
+
+
+            <div class="practice">
+
+                <h3>
+
+                    ✏️ 직접 써보세요
+
+                </h3>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        ア
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        イ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        ウ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        エ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        オ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+            </div>
+
+        `
+    },
+
+
+    /* =================================================
+       4P
+    ================================================= */
+
+    {
+        label: "LESSON 01 · PRACTICE",
+
+        title: `
+            ア행을<br>
+            단어로 읽어볼까요?
+        `,
+
+        html: `
+
+            <p>
+
+                배운 글자가 실제 단어에서는
+                어떻게 사용되는지 확인해봅니다.
+
+            </p>
+
+
+            <div class="word-grid">
+
+
+                <div class="word-card">
+
+                    <strong>
+                        アイス
+                    </strong>
+
+                    <span>
+                        아이스크림
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        アニメ
+                    </strong>
+
+                    <span>
+                        애니메이션
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        エアコン
+                    </strong>
+
+                    <span>
+                        에어컨
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        オイル
+                    </strong>
+
+                    <span>
+                        오일
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="speak-box">
+
+                <div class="speak-title">
+
+                    🗣️ 선생님과 함께 읽어보세요
+
+                </div>
+
+
+                <div
+                    class="speak-text"
+                    style="font-size:20px;">
+
+                    アイス<br>
+                    アニメ<br>
+                    エアコン<br>
+                    オイル
+
+                </div>
+
+            </div>
+
+
+            <div class="check-box">
+
+                <strong>
+                    CHECK
+                </strong>
+
+                <p>
+
+                    글자를 보는 순간
+                    바로 읽을 수 있나요?
+
+                </p>
+
+            </div>
+
+        `
+    },
+
+
+    /* =================================================
+       5P
+    ================================================= */
+
+    {
+        label: "REVIEW",
+
+        title: `
+            오늘 배운<br>
+            글자를 복습해요.
+        `,
+
+        html: `
+
+            <h3>
+                ① 보고 읽어보세요.
+            </h3>
+
+
+            <div class="speak-box">
+
+                <div class="speak-text">
+
+                    ア　オ　イ<br>
+                    エ　ウ　ア
+
+                </div>
+
+            </div>
+
+
+            <h3 style="margin-top:20px;">
+
+                ② 단어를 읽어보세요.
+
+            </h3>
+
+
+            <div class="word-grid">
+
+
+                <div class="word-card">
+
+                    <strong>
+                        アイス
+                    </strong>
+
+                    <span>
+                        아이스크림
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        アニメ
+                    </strong>
+
+                    <span>
+                        애니메이션
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        エアコン
+                    </strong>
+
+                    <span>
+                        에어컨
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        オイル
+                    </strong>
+
+                    <span>
+                        오일
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="check-box">
+
+                <strong>
+                    TODAY'S MESSAGE
+                </strong>
+
+                <p>
+
+                    "아는 것"보다
+                    "바로 나오는 것"이 중요합니다.
+
+                </p>
+
+            </div>
+
+        `
+    },
+
+
+    /* =================================================
+       6P
+    ================================================= */
+
+    {
+        label: "LESSON 02",
+
+        title: `
+            カ행
+        `,
+
+        html: `
+
+            <div class="kana-title">
+                カ
+            </div>
+
+
+            <div class="kana-row">
+
+
+                <div class="kana-box">
+                    カ
+                    <span>카</span>
+                </div>
+
+
+                <div class="kana-box">
+                    キ
+                    <span>키</span>
+                </div>
+
+
+                <div class="kana-box">
+                    ク
+                    <span>쿠</span>
+                </div>
+
+
+                <div class="kana-box">
+                    ケ
+                    <span>케</span>
+                </div>
+
+
+                <div class="kana-box">
+                    コ
+                    <span>코</span>
+                </div>
+
+
+            </div>
+
+
+            <div class="speak-box">
+
+                <div class="speak-title">
+
+                    👄 소리 내어 읽어보세요
+
+                </div>
+
+
+                <div class="speak-text">
+
+                    カ キ ク ケ コ
+
+                </div>
+
+            </div>
+
+
+            <div class="practice">
+
+                <h3>
+                    ✏️ 직접 써보세요
+                </h3>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        カ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        キ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        ク
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        ケ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+
+                <div class="practice-row">
+
+                    <div class="practice-kana">
+                        コ
+                    </div>
+
+                    <div class="practice-line"></div>
+
+                </div>
+
+            </div>
+
+        `
+    },
+
+
+    /* =================================================
+       7P
+    ================================================= */
+
+    {
+        label: "LESSON 02 · WORD",
+
+        title: `
+            カ행을<br>
+            단어로 연습해요.
+        `,
+
+        html: `
+
+            <div class="word-grid">
+
+
+                <div class="word-card">
+
+                    <strong>
+                        カメラ
+                    </strong>
+
+                    <span>
+                        카메라
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        カード
+                    </strong>
+
+                    <span>
+                        카드
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        コーヒー
+                    </strong>
+
+                    <span>
+                        커피
+                    </span>
+
+                </div>
+
+
+                <div class="word-card">
+
+                    <strong>
+                        キッチン
+                    </strong>
+
+                    <span>
+                        주방
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="speak-box">
+
+                <div class="speak-title">
+
+                    🗣️ 소리 내어 읽어보세요
+
+                </div>
+
+
+                <div
+                    class="speak-text"
+                    style="font-size:19px;">
+
+                    カメラ<br>
+                    カード<br>
+                    コーヒー<br>
+                    キッチン
+
+                </div>
+
+            </div>
+
+
+            <div class="check-box">
+
+                <strong>
+                    QUICK CHECK
+                </strong>
+
+                <p>
+
+                    カ와 コ를 헷갈리지 않는지
+                    확인해보세요.
+
+                </p>
+
+            </div>
+
+        `
+    },
+
+
+    /* =================================================
+       8P
+    ================================================= */
+
+    {
+        label: "FINISH",
+
+        title: `
+            오늘도<br>
+            입으로 연습했습니다.
+        `,
+
+        html: `
+
+            <div class="final-message">
+
+                <div class="big">
+
+                    눈으로 보는 일본어에서<br>
+
+                    <strong>
+                        직접 읽는 일본어로.
+                    </strong>
+
+                </div>
+
+
+                <p>
+
+                    다음 수업에서<br>
+                    새로운 가타카나를 만나요.
+
+                </p>
+
+
+                <div
+                    class="speak-box"
+                    style="width:100%;">
+
+                    <div class="speak-title">
+
+                        TODAY'S KATAKANA
+
+                    </div>
+
+
+                    <div class="speak-text">
+
+                        ア イ ウ エ オ<br>
+                        カ キ ク ケ コ
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `
+  },
+	/* =================================================
+	 9P
+================================================= */
+
+	{
+		label: "LESSON 03",
+
+		title: `
+        サ행
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            サ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                サ
+                <span>사</span>
+            </div>
+
+            <div class="kana-box">
+                シ
+                <span>시</span>
+            </div>
+
+            <div class="kana-box">
+                ス
+                <span>스</span>
+            </div>
+
+            <div class="kana-box">
+                セ
+                <span>세</span>
+            </div>
+
+            <div class="kana-box">
+                ソ
+                <span>소</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+                サ シ ス セ ソ
+            </div>
+
+        </div>
+
+        <div class="practice">
+
+            <h3>
+                ✏️ 직접 써보세요
+            </h3>
+
+            <div class="practice-row">
+                <div class="practice-kana">サ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">シ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ス</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">セ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ソ</div>
+                <div class="practice-line"></div>
+            </div>
+
+        </div>
+    `
+	},
+
+		/* =================================================
+		 10P
+	================================================= */
+
+		{
+			label: "LESSON 03 · WORD" ,
+
+				title: `
+        サ행을<br>    단어로 연습해요.
+    `,
+
+		html: `
+        <div class="word-grid">
+
+           <div class="word-card">
+               <strong>
+                   サラダ
+                </str*ng>
+                <span>
+                   샐러드
+                </*pan>
+            </div>
+
+           <div class="word-card">
+              <strong>
+                   サービス
+                </strong>
+               <span>
+                   서비스
+                </span>
+           </div>
+
+            <div*class="word-card">
+               *<strong>
+                    スープ
+               </strong>
+               <span>
+                    수프*                </span>
+           </div>
+
+            <div class="w*rd-card">
+                <strong>*                    ソファ
+              </strong>
+                <sp*n>
+                    소파
+               </span>
+            </div>
+        </div>
+
+        <div class*"speak-box">
+
+            <div cla*s="speak-title">
+                �*️ 소리 내어 읽어보세요
+            </div>
+
+           <div
+                cl*ss="speak-text"
+                st*le="font-size:19px;">
+
+               サラダ<br>
+                サービス<b*>
+                スープ<br>
+               ソファ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+                シ와 ツ는 모양이 비슷합니다.
+                획 방향을 구별해보세요.
+            </p>
+
+        </div>
+    `
+},
+	/* =================================================
+		 11P
+	================================================= */
+
+	{
+		label: "REVIEW",
+
+		itle: `
+        지금까지 배운<br>
+       가타카나를 복습해요.
+    `,
+
+		html: `
+
+*       <h3>
+            ① 읽어보세요.
+ *      </h3>
+
+        <*iv class="speak-box">
+
+           *<div class="speak-text">
+
+        *       ア イ ウ エ オ<br>
+             *  カ キ ク ケ コ<br>
+                サ * ス セ ソ
+
+            </div>
+
+      * </*iv>
+
+        <h3 style="margin-top*20px;">
+            ② 단어를 읽어보세요.
+ *      </h3>
+
+        <div class="w*rd-grid">
+
+            <div class=*word-card*>
+                <strong>アイス</str*ng>
+                <span>아이스크림</s*an>
+            </div>
+
+          * <div class="word-card">
+         *      <strong>カメラ</strong>
+       *        <span>카메라</span>
+         *  </div>
+
+            <div class="*ord-card">
+                <strong*サラダ</strong>
+                <span*샐러드</span>
+            </div>
+
+   *        <div class="word-card">
+  *             <strong>スープ</strong>
+*               <span>수프*/span>
+            </div>
+
+       *</div>
+
+        <div class="check-*ox">
+
+            <strong>
+       *        TODAY'S MESSAGE
+          * </strong>
+
+            <p>
+      *         읽* 수 있는 글자는
+                반드시 소리*내어 읽어야
+               *내 것이 됩니다.
+            </p>
+
+      * </div>
+    `
+  },
+	/* =================================================
+	 12P
+================================================= */
+
+	{
+		label: "FINISH",
+
+		itle: `
+        오늘도<br>
+        한 음 성장했습니다.
+    `,
+
+		html: `
+
+       <div class="final-message">
+
+           <div class="big">
+
+               외우는 공부에서<br>
+
+               <strong>
+                    는 공부로.
+                </strong>
+
+*           </div>
+
+            <p*
+
+                다음 수업에서는<br*
+                タ행을 배웁니다.
+
+      *     </p>
+
+            <div
+      *         class="*peak-box"
+                style="w*dth:100%;">
+
+                <div *lass="speak-title">
+
+             *      TODAY'S KATAKANA
+
+          *     </div>
+
+                <div*class="speak-text">
+
+             *      ア イ ウ エ オ<br>
+              *     カ キ ク ケ コ<br>
+               *    サ シ ス セ ソ
+
+                </d*v>
+
+            </div>
+
+        </*iv>
+    `
+	},
+	/* =================================================
+ 13P
+================================================= */
+
+	{
+		label: "LESSON 04",
+
+		title: `
+        タ행
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            タ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                タ
+                <span>타</span>
+            </div>
+
+            <div class="kana-box">
+                チ
+                <span>치</span>
+            </div>
+
+            <div class="kana-box">
+                ツ
+                <span>츠</span>
+            </div>
+
+            <div class="kana-box">
+                テ
+                <span>테</span>
+            </div>
+
+            <div class="kana-box">
+                ト
+                <span>토</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+                タ チ ツ テ ト
+            </div>
+
+        </div>
+
+        <div class="practice">
+
+            <h3>
+                ✏️ 직접 써보세요
+            </h3>
+
+            <div class="practice-row">
+                <div class="practice-kana">タ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">チ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ツ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">テ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ト</div>
+                <div class="practice-line"></div>
+            </div>
+
+        </div>
+    `
+	},/* =================================================
+   14P
+================================================= */
+
+	{
+		label: "LESSON 04 · WORD",
+
+		title: `
+        タ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    タクシー
+                </strong>
+                <span>
+                    택시
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    テスト
+                </strong>
+                <span>
+                    테스트
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    チケット
+                </strong>
+                <span>
+                    티켓
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    トマト
+                </strong>
+                <span>
+                    토마토
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div
+                class="speak-text"
+                style="font-size:19px;">
+
+                タクシー<br>
+                テスト<br>
+                チケット<br>
+                トマト
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+                シ와 ツ,
+                ソ와 ン은 모양이 비슷하니
+                함께 구별해보세요.
+            </p>
+
+        </div>
+    `
+	},/* =================================================
+   15P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        지금까지 배운<br>
+        글자를 복습해요.
+    `,
+
+		html: `
+
+        <h3>
+            ① 보고 읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                ア イ ウ エ オ<br>
+                カ キ ク ケ コ<br>
+                サ シ ス セ ソ<br>
+                タ チ ツ テ ト
+
+            </div>
+
+        </div>
+
+        <h3 style="margin-top:20px;">
+            ② 단어를 읽어보세요.
+        </h3>
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>アイス</strong>
+                <span>아이스크림</span>
+            </div>
+
+            <div class="word-card">
+                <strong>カメラ</strong>
+                <span>카메라</span>
+            </div>
+
+            <div class="word-card">
+                <strong>サラダ</strong>
+                <span>샐러드</span>
+            </div>
+
+            <div class="word-card">
+                <strong>タクシー</strong>
+                <span>택시</span>
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                TODAY'S MESSAGE
+            </strong>
+
+            <p>
+                읽는 속도보다
+                정확하게 읽는 습관이
+                더 중요합니다.
+            </p>
+
+        </div>
+    `
+	},/* =================================================
+   16P
+================================================= */
+
+	{
+		label: "FINISH",
+
+		title: `
+        오늘의 가타카나를<br>
+        완성했습니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                문자가 보이면<br>
+
+                <strong>
+                    소리부터 떠올리세요.
+                </strong>
+
+            </div>
+
+            <p>
+                다음 수업에서는<br>
+                ナ행을 배웁니다.
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+                    TODAY'S KATAKANA
+                </div>
+
+                <div class="speak-text">
+
+                    ア イ ウ エ オ<br>
+                    カ キ ク ケ コ<br>
+                    サ シ ス セ ソ<br>
+                    タ チ ツ テ ト
+
+                </div>
+
+            </div>
+
+        </div>
+    `
+  },
+	/* =================================================
+	 17P
+================================================= */
+
+	{
+		label: "LESSON 05",
+
+		title: `
+        ナ행
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ナ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ナ
+                <span>나</span>
+            </div>
+
+            <div class="kana-box">
+                ニ
+                <span>니</span>
+            </div>
+
+            <div class="kana-box">
+                ヌ
+                <span>누</span>
+            </div>
+
+            <div class="kana-box">
+                ネ
+                <span>네</span>
+            </div>
+
+            <div class="kana-box">
+                ノ
+                <span>노</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+                ナ ニ ヌ ネ ノ
+            </div>
+
+        </div>
+
+        <div class="practice">
+
+            <h3>
+                ✏️ 직접 써보세요
+            </h3>
+
+            <div class="practice-row">
+                <div class="practice-kana">ナ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ニ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ヌ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ネ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ノ</div>
+                <div class="practice-line"></div>
+            </div>
+
+        </div>
+    `
+  },
+	/* =================================================
+	 18P
+================================================= */
+
+	{
+		label: "LESSON 05 · WORD",
+
+		title: `
+        ナ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    ナイフ
+                </strong>
+                <span>
+                    나이프
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ニュース
+                </strong>
+                <span>
+                    뉴스
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ネクタイ
+                </strong>
+                <span>
+                    넥타이
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ノート
+                </strong>
+                <span>
+                    노트
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div
+                class="speak-text"
+                style="font-size:19px;">
+
+                ナイフ<br>
+                ニュース<br>
+                ネクタイ<br>
+                ノート
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+                ナ와 メ,
+                ネ와 ホ의 모양을
+                헷갈리지 않는지 확인해보세요.
+            </p>
+
+        </div>
+    `
+	},
+	/* =================================================
+	 19P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        지금까지 배운<br>
+        가타카나를 복습해요.
+    `,
+
+		html: `
+
+        <h3>
+            ① 읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                ア イ ウ エ オ<br>
+                カ キ ク ケ コ<br>
+                サ シ ス セ ソ<br>
+                タ チ ツ テ ト<br>
+                ナ ニ ヌ ネ ノ
+
+            </div>
+
+        </div>
+
+        <h3 style="margin-top:20px;">
+            ② 단어를 읽어보세요.
+        </h3>
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>カメラ</strong>
+                <span>카메라</span>
+            </div>
+
+            <div class="word-card">
+                <strong>サラダ</strong>
+                <span>샐러드</span>
+            </div>
+
+            <div class="word-card">
+                <strong>タクシー</strong>
+                <span>택시</span>
+            </div>
+
+            <div class="word-card">
+                <strong>ノート</strong>
+                <span>노트</span>
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                TODAY'S MESSAGE
+            </strong>
+
+            <p>
+                가타카나는 눈으로 외우기보다
+                입으로 읽는 횟수가 더 중요합니다.
+            </p>
+
+        </div>
+    `
+	},/* =================================================
+   20P
+================================================= */
+
+	{
+		label: "FINISH",
+
+		title: `
+        오늘도<br>
+        가타카나를 쌓았습니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                이제는 글자가 아니라<br>
+
+                <strong>
+                    소리로 기억하세요.
+                </strong>
+
+            </div>
+
+            <p>
+                다음 수업에서는<br>
+                ハ행을 배웁니다.
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+                    TODAY'S KATAKANA
+                </div>
+
+                <div class="speak-text">
+
+                    ア イ ウ エ オ<br>
+                    カ キ ク ケ コ<br>
+                    サ シ ス セ ソ<br>
+                    タ チ ツ テ ト<br>
+                    ナ ニ ヌ ネ ノ
+
+                </div>
+
+            </div>
+
+        </div>
+    `
+	},/* =================================================
+   21P
+================================================= */
+
+	{
+		label: "LESSON 06",
+
+		title: `
+        ハ행
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ハ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ハ
+                <span>하</span>
+            </div>
+
+            <div class="kana-box">
+                ヒ
+                <span>히</span>
+            </div>
+
+            <div class="kana-box">
+                フ
+                <span>후</span>
+            </div>
+
+            <div class="kana-box">
+                ヘ
+                <span>헤</span>
+            </div>
+
+            <div class="kana-box">
+                ホ
+                <span>호</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+                ハ ヒ フ ヘ ホ
+            </div>
+
+        </div>
+
+        <div class="practice">
+
+            <h3>
+                ✏️ 직접 써보세요
+            </h3>
+
+            <div class="practice-row">
+                <div class="practice-kana">ハ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ヒ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">フ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ヘ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ホ</div>
+                <div class="practice-line"></div>
+            </div>
+
+        </div>
+    `
+	},/* =================================================
+   22P
+================================================= */
+
+	{
+		label: "LESSON 06 · WORD",
+
+		title: `
+        ハ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    ホテル
+                </strong>
+                <span>
+                    호텔
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    パンフレット
+                </strong>
+                <span>
+                    팸플릿
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ヒーター
+                </strong>
+                <span>
+                    히터
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ヘルメット
+                </strong>
+                <span>
+                    헬멧
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div
+                class="speak-text"
+                style="font-size:19px;">
+
+                ホテル<br>
+                パンフレット<br>
+                ヒーター<br>
+                ヘルメット
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+                フ는 '후'에 가깝지만
+                실제 발음은 입술을 둥글게 모아 발음합니다.
+            </p>
+
+        </div>
+    `
+	},/* =================================================
+   23P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        지금까지 배운<br>
+        가타카나를 복습해요.
+    `,
+
+		html: `
+
+        <h3>
+            ① 읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                ア イ ウ エ オ<br>
+                カ キ ク ケ コ<br>
+                サ シ ス セ ソ<br>
+                タ チ ツ テ ト<br>
+                ナ ニ ヌ ネ ノ<br>
+                ハ ヒ フ ヘ ホ
+
+            </div>
+
+        </div>
+
+        <h3 style="margin-top:20px;">
+            ② 단어를 읽어보세요.
+        </h3>
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>カメラ</strong>
+                <span>카메라</span>
+            </div>
+
+            <div class="word-card">
+                <strong>サラダ</strong>
+                <span>샐러드</span>
+            </div>
+
+            <div class="word-card">
+                <strong>タクシー</strong>
+                <span>택시</span>
+            </div>
+
+            <div class="word-card">
+                <strong>ノート</strong>
+                <span>노트</span>
+            </div>
+
+            <div class="word-card">
+                <strong>ホテル</strong>
+                <span>호텔</span>
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                TODAY'S MESSAGE
+            </strong>
+
+            <p>
+                매일 5분만 읽어도
+                가타카나 인식 속도는 크게 향상됩니다.
+            </p>
+
+        </div>
+    `
+	},/* =================================================
+   24P
+================================================= */
+
+	{
+		label: "FINISH",
+
+		title: `
+        오늘도<br>
+        잘 해냈습니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                글자를 외우는 단계에서<br>
+
+                <strong>
+                    읽는 단계로 성장했습니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                マ행을 배웁니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+                    TODAY'S KATAKANA
+                </div>
+
+                <div class="speak-text">
+
+                    ア イ ウ エ オ<br>
+                    カ キ ク ケ コ<br>
+                    サ シ ス セ ソ<br>
+                    タ チ ツ テ ト<br>
+                    ナ ニ ヌ ネ ノ<br>
+                    ハ ヒ フ ヘ ホ
+
+                </div>
+
+            </div>
+
+        </div>
+    `
+  },
+	/* =================================================
+	 25P
+================================================= */
+
+	{
+		label: "LESSON 07",
+
+		title: `
+        マ행
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            マ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                マ
+                <span>마</span>
+            </div>
+
+            <div class="kana-box">
+                ミ
+                <span>미</span>
+            </div>
+
+            <div class="kana-box">
+                ム
+                <span>무</span>
+            </div>
+
+            <div class="kana-box">
+                メ
+                <span>메</span>
+            </div>
+
+            <div class="kana-box">
+                モ
+                <span>모</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+                マ ミ ム メ モ
+            </div>
+
+        </div>
+
+        <div class="practice">
+
+            <h3>
+                ✏️ 직접 써보세요
+            </h3>
+
+            <div class="practice-row">
+                <div class="practice-kana">マ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ミ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ム</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">メ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">モ</div>
+                <div class="practice-line"></div>
+            </div>
+
+        </div>
+    `
+  },
+	/* =================================================
+	 26P
+================================================= */
+
+	{
+		label: "LESSON 07 · WORD",
+
+		title: `
+        マ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    マスク
+                </strong>
+                <span>
+                    마스크
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ミルク
+                </strong>
+                <span>
+                    우유
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    メモ
+                </strong>
+                <span>
+                    메모
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    モデル
+                </strong>
+                <span>
+                    모델
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div
+                class="speak-text"
+                style="font-size:19px;">
+
+                マスク<br>
+                ミルク<br>
+                メモ<br>
+                モデル
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+                ミ와 ツ,
+                メ와 ネ는 모양이 비슷하니
+                차이를 확인해보세요.
+            </p>
+
+        </div>
+    `
+	},/* =================================================
+   27P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        지금까지 배운<br>
+        가타카나를 복습해요.
+    `,
+
+		html: `
+
+        <h3>
+            ① 보고 읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                ア イ ウ エ オ<br>
+                カ キ ク ケ コ<br>
+                サ シ ス セ ソ<br>
+                タ チ ツ テ ト<br>
+                ナ ニ ヌ ネ ノ<br>
+                ハ ヒ フ ヘ ホ<br>
+                マ ミ ム メ モ
+
+            </div>
+
+        </div>
+
+        <h3 style="margin-top:20px;">
+            ② 단어를 읽어보세요.
+        </h3>
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>カメラ</strong>
+                <span>카메라</span>
+            </div>
+
+            <div class="word-card">
+                <strong>サラダ</strong>
+                <span>샐러드</span>
+            </div>
+
+            <div class="word-card">
+                <strong>タクシー</strong>
+                <span>택시</span>
+            </div>
+
+            <div class="word-card">
+                <strong>ノート</strong>
+                <span>노트</span>
+            </div>
+
+            <div class="word-card">
+                <strong>マスク</strong>
+                <span>마스크</span>
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                TODAY'S MESSAGE
+            </strong>
+
+            <p>
+                한 번 길게 공부하는 것보다
+                매일 짧게 읽는 것이 더 효과적입니다.
+            </p>
+
+        </div>
+    `
+	},/* =================================================
+   28P
+================================================= */
+
+	{
+		label: "FINISH",
+
+		title: `
+        오늘도<br>
+        가타카나를 쌓았습니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                이제는 한 글자씩이 아니라<br>
+
+                <strong>
+                    단어로 읽어보세요.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                ヤ행을 배웁니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+                    TODAY'S KATAKANA
+                </div>
+
+                <div class="speak-text">
+
+                    ア イ ウ エ オ<br>
+                    カ キ ク ケ コ<br>
+                    サ シ ス セ ソ<br>
+                    タ チ ツ テ ト<br>
+                    ナ ニ ヌ ネ ノ<br>
+                    ハ ヒ フ ヘ ホ<br>
+                    マ ミ ム メ モ
+
+                </div>
+
+            </div>
+
+        </div>
+    `
+	},
+	/* =================================================
+	 29P
+================================================= */
+
+	{
+		label: "LESSON 08",
+
+		title: `
+        ヤ행 · ラ행
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ヤ行
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ヤ
+                <span>야</span>
+            </div>
+
+            <div class="kana-box">
+                ユ
+                <span>유</span>
+            </div>
+
+            <div class="kana-box">
+                ヨ
+                <span>요</span>
+            </div>
+
+        </div>
+
+        <div class="kana-title" style="margin-top:30px;">
+            ラ行
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ラ
+                <span>라</span>
+            </div>
+
+            <div class="kana-box">
+                リ
+                <span>리</span>
+            </div>
+
+            <div class="kana-box">
+                ル
+                <span>루</span>
+            </div>
+
+            <div class="kana-box">
+                レ
+                <span>레</span>
+            </div>
+
+            <div class="kana-box">
+                ロ
+                <span>로</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ヤ ユ ヨ<br>
+                ラ リ ル レ ロ
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   30P
+================================================= */
+
+	{
+		label: "LESSON 08 · WORD",
+
+		title: `
+        ヤ행 · ラ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    ユニフォーム
+                </strong>
+                <span>
+                    유니폼
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ヨット
+                </strong>
+                <span>
+                    요트
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ラーメン
+                </strong>
+                <span>
+                    라멘
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    レモン
+                </strong>
+                <span>
+                    레몬
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ロボット
+                </strong>
+                <span>
+                    로봇
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ユニフォーム<br>
+                ヨット<br>
+                ラーメン<br>
+                レモン<br>
+                ロボット
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+                リ와 ソ,
+                レ와 ル의 모양 차이를
+                확인해보세요.
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   31P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        이제 거의 다 왔어요!
+    `,
+
+		html: `
+
+        <h3>
+            읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                ヤ ユ ヨ<br>
+                ラ リ ル レ ロ
+
+            </div>
+
+        </div>
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>ラーメン</strong>
+                <span>라멘</span>
+            </div>
+
+            <div class="word-card">
+                <strong>レモン</strong>
+                <span>레몬</span>
+            </div>
+
+            <div class="word-card">
+                <strong>ロボット</strong>
+                <span>로봇</span>
+            </div>
+
+            <div class="word-card">
+                <strong>ヨット</strong>
+                <span>요트</span>
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                TODAY'S MESSAGE
+            </strong>
+
+            <p>
+                모르는 글자를 찾지 말고
+                아는 글자를 더 빨리 읽어보세요.
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   32P
+================================================= */
+
+	{
+		label: "NEXT",
+
+		title: `
+        마지막은<br>
+        ワ행과 ン 입니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                가타카나 완주까지<br>
+
+                <strong>
+                    얼마 남지 않았습니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                ワ ・ ヲ ・ ン 을 배웁니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+
+                    NEXT LESSON
+
+                </div>
+
+                <div class="speak-text">
+
+                    ワ ヲ ン
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   33P
+================================================= */
+
+	{
+		label: "LESSON 09",
+
+		title: `
+        ワ행 · ン
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ワ行
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ワ
+                <span>와</span>
+            </div>
+
+            <div class="kana-box">
+                ヲ
+                <span>오(조사)</span>
+            </div>
+
+            <div class="kana-box">
+                ン
+                <span>응/ㄴ</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ワ ヲ ン
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                POINT
+            </strong>
+
+            <p>
+                ヲ는 현대 일본어에서
+                거의 조사 「を」를 표기할 때만 사용합니다.
+            </p>
+
+        </div>
+
+        <div class="practice">
+
+            <h3>
+                ✏️ 직접 써보세요
+            </h3>
+
+            <div class="practice-row">
+                <div class="practice-kana">ワ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ヲ</div>
+                <div class="practice-line"></div>
+            </div>
+
+            <div class="practice-row">
+                <div class="practice-kana">ン</div>
+                <div class="practice-line"></div>
+            </div>
+
+        </div>
+
+    `
+		},/* =================================================
+   34P
+================================================= */
+
+		{
+			label: "LESSON 09 · WORD"  ,
+
+				title: `
+        ワ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    ワイン
+                </strong>
+                <span>
+                   와인
+                </span>
+            </div>
+
+           <div class="word-card">
+               <strong>
+                   ワンピース
+                </strong>
+                <span>
+                   원피스
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    レモン
+                </strong>
+                <span>
+                    레몬                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>                     サンドイッチ
+                </strong>
+                <sspan>
+                    샌드위치
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ワイン<br>
+               ワンピース<br>
+                レモン<br>
+                サンドイッチ
+             </div>
+
+        </div> 
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong> 
+            <p>
+                ソ(소)와 ン(응),
+                シ(시)와 ツ(츠)의 차이를
+                다시 확인해보세요.
+            </p>
+
+        </div>
+
+    `
+},
+	/* =================================================
+		 35P
+	================================================= */
+
+	{
+		label: "REVIEW",
+
+      itle: `
+        가타카나<br>
+        완*!
+    `,
+
+			html: `
+
+        <h3>
+            마지막으로 읽어보세요.
+        </h3>
+
+       <div class="speak-box">
+
+           <div class="speak-text">
+
+               ア イ ウ エ オ<br>
+              カ キ ク ケ コ<br>
+                サ シ ス セ ソ<br>
+                タ チ ツ*テ ト<br>
+                ナ ニ ヌ ネ ノ<*r>
+                ハ ヒ フ ヘ ホ<br>
+ 　              マ ミ ム メ モ<br>
+      　         ヤ ユ ヨ<br>
+               　ラ リ ル レ ロ<br>
+                ワ ヲ ヨ
+
+            </div>
+
+        </div>
+
+        <div class="check-box"> 
+            <strong>
+                TODAY'S MESSAGE
+            </strong>
+
+            <p>
+                이제 모든 기본 가타카나를
+                읽을 수 있습니다.
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   36P
+================================================= */
+
+	{
+		label: "FINISH",
+
+      itle: `
+        기본 가타카나를<br>
+        마스터했습니다.
+    `,
+
+			html: `
+
+       <div class="final-message">
+
+           <div class="big">
+
+             ア〜ン까지 완주!<br>
+
+               <strong>
+                   이제 일본어가 글*로 보이기 시작합니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 단계는<br>
+                ガ행, ザ행, ダ행, バ행, パ행입니다.
+
+            </p>
+
+            <div
+                class="spe*k-box"
+                style="widt*:100%;">
+
+                <div class="speak-title">
+ 
+                    NEXT LESSON
+
+                </div>
+
+                <div class="speak-text">
+
+                    ガ ギ グ ゲ ゴ<br>
+                    ザ ジ ズ * ゾ
+
+                </div>
+
+            </div>
+
+        </div>
+
+    ` },/* =================================================
+   37P
+================================================= */
+
+	{
+		label: "LESSON 10",
+
+		title: `
+        ガ행 (탁음)
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ガ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ガ
+                <span>가</span>
+            </div>
+
+            <div class="kana-box">
+                ギ
+                <span>기</span>
+            </div>
+
+            <div class="kana-box">
+                グ
+                <span>구</span>
+            </div>
+
+            <div class="kana-box">
+                ゲ
+                <span>게</span>
+            </div>
+
+            <div class="kana-box">
+                ゴ
+                <span>고</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ガ ギ グ ゲ ゴ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                POINT
+            </strong>
+
+            <p>
+                탁점(゛)이 붙으면
+                カ행이 ガ행으로 변합니다.
+            </p>
+
+            <p>
+
+                カ → ガ<br>
+                キ → ギ<br>
+                ク → グ<br>
+                ケ → ゲ<br>
+                コ → ゴ
+
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   38P
+================================================= */
+
+	{
+		label: "LESSON 10 · WORD",
+
+		title: `
+        ガ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    ギター
+                </strong>
+                <span>
+                    기타
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ゴルフ
+                </strong>
+                <span>
+                    골프
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ガイド
+                </strong>
+                <span>
+                    가이드
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ゲーム
+                </strong>
+                <span>
+                    게임
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ギター<br>
+                ゴルフ<br>
+                ガイド<br>
+                ゲーム
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   39P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        ガ행 복습
+    `,
+
+		html: `
+
+        <h3>
+            읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                カ キ ク ケ コ<br>
+                ガ ギ グ ゲ ゴ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+
+                カ와 ガ<br>
+                キ와 ギ<br>
+                ク와 グ
+
+            </p>
+
+            <p>
+                탁점 유무에 따라
+                소리가 달라집니다.
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   40P
+================================================= */
+
+	{
+		label: "NEXT",
+
+		title: `
+        다음은<br>
+        ザ행 입니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                첫 번째 탁음을<br>
+
+                <strong>
+                    완성했습니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                ザ ジ ズ ゼ ゾ 를 배웁니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+
+                    NEXT LESSON
+
+                </div>
+
+                <div class="speak-text">
+
+                    ザ ジ ズ ゼ ゾ
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   41P
+================================================= */
+
+	{
+		label: "LESSON 11",
+
+		title: `
+        ザ행 (탁음)
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ザ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ザ
+                <span>자</span>
+            </div>
+
+            <div class="kana-box">
+                ジ
+                <span>지</span>
+            </div>
+
+            <div class="kana-box">
+                ズ
+                <span>즈</span>
+            </div>
+
+            <div class="kana-box">
+                ゼ
+                <span>제</span>
+            </div>
+
+            <div class="kana-box">
+                ゾ
+                <span>조</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ザ ジ ズ ゼ ゾ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                POINT
+            </strong>
+
+            <p>
+
+                サ행에 탁점(゛)이 붙으면<br>
+
+                サ → ザ<br>
+                シ → ジ<br>
+                ス → ズ<br>
+                セ → ゼ<br>
+                ソ → ゾ
+
+            </p>
+
+        </div>
+
+    `
+	},
+	/* =================================================
+	 42P
+================================================= */
+
+	{
+		label: "LESSON 11 · WORD",
+
+		title: `
+        ザ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    ジュース
+                </strong>
+                <span>
+                    주스
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    デザイン
+                </strong>
+                <span>
+                    디자인
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ゼリー
+                </strong>
+                <span>
+                    젤리
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ズボン
+                </strong>
+                <span>
+                    바지
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ジュース<br>
+                デザイン<br>
+                ゼリー<br>
+                ズボン
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   43P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        ザ행 복습
+    `,
+
+		html: `
+
+        <h3>
+            읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                サ シ ス セ ソ<br>
+                ザ ジ ズ ゼ ゾ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+
+                サ ↔ ザ<br>
+                シ ↔ ジ<br>
+                ス ↔ ズ<br>
+                セ ↔ ゼ<br>
+                ソ ↔ ゾ
+
+            </p>
+
+            <p>
+
+                탁점 하나로
+                소리가 달라집니다.
+
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   44P
+================================================= */
+
+	{
+		label: "NEXT",
+
+		title: `
+        다음은<br>
+        ダ행 입니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                ガ행에 이어<br>
+
+                <strong>
+                    ザ행도 완성했습니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                ダ ヂ ヅ デ ド 를 배웁니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+
+                    NEXT LESSON
+
+                </div>
+
+                <div class="speak-text">
+
+                    ダ ヂ ヅ デ ド
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   45P
+================================================= */
+
+	{
+		label: "LESSON 12",
+
+		title: `
+        ダ행 (탁음)
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ダ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                ダ
+                <span>다</span>
+            </div>
+
+            <div class="kana-box">
+                ヂ
+                <span>지</span>
+            </div>
+
+            <div class="kana-box">
+                ヅ
+                <span>즈</span>
+            </div>
+
+            <div class="kana-box">
+                デ
+                <span>데</span>
+            </div>
+
+            <div class="kana-box">
+                ド
+                <span>도</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                ダ ヂ ヅ デ ド
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                POINT
+            </strong>
+
+            <p>
+
+                タ행에 탁점(゛)이 붙으면<br>
+
+                タ → ダ<br>
+                チ → ヂ<br>
+                ツ → ヅ<br>
+                テ → デ<br>
+                ト → ド
+
+            </p>
+
+            <p>
+
+                실제 일본어에서는
+                ヂ, ヅ 보다
+                ダ, デ, ド를 훨씬 자주 봅니다.
+
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   46P
+================================================= */
+
+	{
+		label: "LESSON 12 · WORD",
+
+		title: `
+        ダ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    デザイン
+                </strong>
+                <span>
+                    디자인
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ドア
+                </strong>
+                <span>
+                    문
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ダンス
+                </strong>
+                <span>
+                    댄스
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ドリンク
+                </strong>
+                <span>
+                    음료
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                デザイン<br>
+                ドア<br>
+                ダンス<br>
+                ドリンク
+
+            </div>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 47P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        ダ행 복습
+    `,
+
+		html: `
+
+        <h3>
+            읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                タ チ ツ テ ト<br>
+                ダ ヂ ヅ デ ド
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+
+                タ ↔ ダ<br>
+                チ ↔ ヂ<br>
+                ツ ↔ ヅ<br>
+                テ ↔ デ<br>
+                ト ↔ ド
+
+            </p>
+
+            <p>
+
+                ヂ와 ヅ는 실제 사용 빈도가
+                비교적 낮습니다.
+
+            </p>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 48P
+================================================= */
+
+	{
+		label: "NEXT",
+
+		title: `
+        다음은<br>
+        バ행 입니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                ガ행 · ザ행 · ダ행을<br>
+
+                <strong>
+                    모두 읽을 수 있게 되었습니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                バ ビ ブ ベ ボ 를 배웁니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+
+                    NEXT LESSON
+
+                </div>
+
+                <div class="speak-text">
+
+                    バ ビ ブ ベ ボ
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 49P
+================================================= */
+
+	{
+		label: "LESSON 13",
+
+		title: `
+        パ행 (반탁음)
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            パ
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                パ
+                <span>파</span>
+            </div>
+
+            <div class="kana-box">
+                ピ
+                <span>피</span>
+            </div>
+
+            <div class="kana-box">
+                プ
+                <span>푸</span>
+            </div>
+
+            <div class="kana-box">
+                ペ
+                <span>페</span>
+            </div>
+
+            <div class="kana-box">
+                ポ
+                <span>포</span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                👄 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                パ ピ プ ペ ポ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                POINT
+            </strong>
+
+            <p>
+
+                ハ행에 반탁점(゜)이 붙으면<br>
+
+                ハ → パ<br>
+                ヒ → ピ<br>
+                フ → プ<br>
+                ヘ → ペ<br>
+                ホ → ポ
+
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   50P
+================================================= */
+
+	{
+		label: "LESSON 13 · WORD",
+
+		title: `
+        パ행을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    パン
+                </strong>
+                <span>
+                    빵
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    パソコン
+                </strong>
+                <span>
+                    컴퓨터
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ペン
+                </strong>
+                <span>
+                    펜
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ポケット
+                </strong>
+                <span>
+                    주머니
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ピアノ
+                </strong>
+                <span>
+                    피아노
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                パン<br>
+                パソコン<br>
+                ペン<br>
+                ポケット<br>
+                ピアノ
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   51P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        ハ행 · バ행 · パ행
+    `,
+
+		html: `
+
+        <h3>
+            읽어보세요.
+        </h3>
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                ハ ヒ フ ヘ ホ<br>
+                バ ビ ブ ベ ボ<br>
+                パ ピ プ ペ ポ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+
+                ハ = h 소리<br>
+                バ = b 소리<br>
+                パ = p 소리
+
+            </p>
+
+            <p>
+
+                점(゛)과 동그라미(゜)
+                차이를 확인해보세요.
+
+            </p>
+
+        </div>
+
+    `
+	},
+	/* =================================================
+	 52P
+================================================= */
+
+	{
+		label: "NEXT",
+
+		title: `
+        다음은<br>
+        요음입니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                기본 가타카나와<br>
+                탁음 · 반탁음을 완성했습니다.
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                キャ・キュ・キョ<br>
+                シャ・シュ・ショ<br>
+                チャ・チュ・チョ
+
+                를 배웁니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+
+                    NEXT LESSON
+
+                </div>
+
+                <div class="speak-text">
+
+                    キャ キュ キョ<br>
+                    シャ シュ ショ<br>
+                    チャ チュ チョ
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 53P
+================================================= */
+
+	{
+		label: "LESSON 14",
+
+		title: `
+        요음<br>
+        キャ・シュ・チョ
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ャ ュ ョ
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                POINT
+            </div>
+
+            <div class="speak-text">
+
+                ヤ ユ ヨ 가 아닌<br>
+                작은 ャ ュ ョ 를 사용합니다.
+
+            </div>
+
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                キャ
+                <span>캬</span>
+            </div>
+
+            <div class="kana-box">
+                キュ
+                <span>큐</span>
+            </div>
+
+            <div class="kana-box">
+                キョ
+                <span>쿄</span>
+            </div>
+
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                シャ
+                <span>샤</span>
+            </div>
+
+            <div class="kana-box">
+                シュ
+                <span>슈</span>
+            </div>
+
+            <div class="kana-box">
+                ショ
+                <span>쇼</span>
+            </div>
+
+        </div>
+
+        <div class="kana-row">
+
+            <div class="kana-box">
+                チャ
+                <span>챠</span>
+            </div>
+
+            <div class="kana-box">
+                チュ
+                <span>츄</span>
+            </div>
+
+            <div class="kana-box">
+                チョ
+                <span>쵸</span>
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   54P
+================================================= */
+
+	{
+		label: "LESSON 14 · WORD",
+
+		title: `
+        요음을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    キャベツ
+                </strong>
+                <span>
+                    양배추
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    シャンプー
+                </strong>
+                <span>
+                    샴푸
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    チョコレート
+                </strong>
+                <span>
+                    초콜릿
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ミュージック
+                </strong>
+                <span>
+                    음악
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                キャベツ<br>
+                シャンプー<br>
+                チョコレート<br>
+                ミュージック
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   55P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        대표 요음 정리
+    `,
+
+		html: `
+
+        <div class="speak-box">
+
+            <div class="speak-text">
+
+                キャ キュ キョ<br>
+                シャ シュ ショ<br>
+                チャ チュ チョ<br>
+                ニャ ニュ ニョ<br>
+                ミャ ミュ ミョ<br>
+                リャ リュ リョ
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+
+                キヤ ❌<br>
+                キャ ⭕
+
+            </p>
+
+            <p>
+
+                작은 ャ・ュ・ョ 를
+                사용하는 것이 핵심입니다.
+
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   56P
+================================================= */
+
+	{
+		label: "FINISH",
+
+		   title: `
+        요음을<br>
+       *마스터했습니다.
+    `,
+
+		html: `
+
+       <div class="final-message">
+
+          <div class="big">
+
+               이제 일본어 외래어의<br>
+
+               <strong>
+                    대부분을 읽을 수 있습니다.
+                </strong>
+
+            </div>
+
+           <p>
+
+                다음 수업에서*<br>
+                ッ(촉음) 과 ー(장음)* 배웁니다.
+
+            </p>
+
+            <div
+                class="spe*k-box"
+                style="widt*:100%;">
+
+                <div cla*s="speak-title">
+
+                    TODAY'S YOON
+
+                <*div>
+
+                <div class="*peak-text">
+
+                    キ* シュ チョ<br>
+                    ミュ *ョ ニャ
+
+                </div>
+
+          </div>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 57P
+================================================= */
+
+	{
+		label: "LESSON 15",
+
+		title: `
+        장음<br>
+        ー
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ー
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                POINT
+            </div>
+
+            <div class="speak-text">
+
+                ー 는 앞 글자를<br>
+                길게 읽는 표시입니다.
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                예시
+            </strong>
+
+            <p>
+
+                コ → 코<br>
+                コー → 코오
+
+            </p>
+
+            <p>
+
+                ト → 토<br>
+                トー → 토오
+
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   58P
+================================================= */
+
+	{
+		label: "LESSON 15 · WORD",
+
+		title: `
+        장음을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    コーヒー
+                </strong>
+                <span>
+                    커피
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ケーキ
+                </strong>
+                <span>
+                    케이크
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    メール
+                </strong>
+                <span>
+                    메일
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    スーパー
+                </strong>
+                <span>
+                    슈퍼마켓
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    タクシー
+                </strong>
+                <span>
+                    택시
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                コーヒー<br>
+                ケーキ<br>
+                メール<br>
+                スーパー<br>
+                タクシー
+
+            </div>
+
+        </div>
+
+    `
+	},/* =================================================
+   59P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        장음 찾기
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    ケーキ
+                </strong>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    コーヒー
+                </strong>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    スーパー
+                </strong>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    メール
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+
+                ー 를 빼면<br>
+                전혀 다른 발음이 됩니다.
+
+            </p>
+
+            <p>
+
+                コーヒー ⭕<br>
+                コヒ ❌
+
+            </p>
+
+        </div>
+
+    `
+	},/* =================================================
+   60P
+================================================= */
+
+	{
+		label: "NEXT",
+
+		title: `
+        마지막은<br>
+        촉음 ッ 입니다.
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                장음을 이해하면<br>
+
+                <strong>
+                    일본어 발음이 훨씬 자연스러워집니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                다음 수업에서는<br>
+                작은 ッ를 배우고<br>
+                가타카나 과정을 마무리합니다.
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+
+                    NEXT LESSON
+
+                </div>
+
+                <div class="speak-text">
+
+                    カップ<br>
+                    ベッド<br>
+                    チケット
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 61P
+================================================= */
+
+	{
+		label: "LESSON 16",
+
+		title: `
+        촉음<br>
+        ッ
+    `,
+
+		html: `
+
+        <div class="kana-title">
+            ッ
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                POINT
+            </div>
+
+            <div class="speak-text">
+
+                작은 ッ 는<br>
+                한 박자 멈춘 뒤 읽습니다.
+
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                예시
+            </strong>
+
+            <p>
+
+                カプ ❌<br>
+                カップ ⭕
+
+            </p>
+
+            <p>
+
+                チケト ❌<br>
+                チケット ⭕
+
+            </p>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 62P
+================================================= */
+
+	{
+		label: "LESSON 16 · WORD",
+
+		title: `
+        촉음을<br>
+        단어로 연습해요.
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    カップ
+                </strong>
+                <span>
+                    컵
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ベッド
+                </strong>
+                <span>
+                    침대
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    チケット
+                </strong>
+                <span>
+                    티켓
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    サッカー
+                </strong>
+                <span>
+                    축구
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ショップ
+                </strong>
+                <span>
+                    상점
+                </span>
+            </div>
+
+        </div>
+
+        <div class="speak-box">
+
+            <div class="speak-title">
+                🗣️ 소리 내어 읽어보세요
+            </div>
+
+            <div class="speak-text">
+
+                カップ<br>
+                ベッド<br>
+                チケット<br>
+                サッカー<br>
+                ショップ
+
+            </div>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 63P
+================================================= */
+
+	{
+		label: "REVIEW",
+
+		title: `
+        장음과 촉음
+    `,
+
+		html: `
+
+        <div class="word-grid">
+
+            <div class="word-card">
+                <strong>
+                    コーヒー
+                </strong>
+                <span>
+                    장음
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    ケーキ
+                </strong>
+                <span>
+                    장음
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    カップ
+                </strong>
+                <span>
+                    촉음
+                </span>
+            </div>
+
+            <div class="word-card">
+                <strong>
+                    チケット
+                </strong>
+                <span>
+                    촉음
+                </span>
+            </div>
+
+        </div>
+
+        <div class="check-box">
+
+            <strong>
+                QUICK CHECK
+            </strong>
+
+            <p>
+
+                ー : 길게 읽기<br>
+                ッ : 잠깐 끊고 읽기
+
+            </p>
+
+            <p>
+
+                コーヒー<br>
+                カップ
+
+            </p>
+
+        </div>
+
+    `
+  },
+	/* =================================================
+	 64P
+================================================= */
+
+	{
+		label: "FINISH",
+
+		title: `
+        가타카나 과정<br>
+        완료!
+    `,
+
+		html: `
+
+        <div class="final-message">
+
+            <div class="big">
+
+                ア부터 ン까지<br>
+
+                <strong>
+                    모두 읽을 수 있게 되었습니다.
+                </strong>
+
+            </div>
+
+            <p>
+
+                기본 가타카나<br>
+                탁음 · 반탁음 · 요음<br>
+                장음 · 촉음 완료
+
+            </p>
+
+            <div
+                class="speak-box"
+                style="width:100%;">
+
+                <div class="speak-title">
+
+                    CONGRATULATIONS
+
+                </div>
+
+                <div class="speak-text">
+
+                    カップ<br>
+                    コーヒー<br>
+                    チケット<br>
+                    シャンプー<br>
+                    スーパー
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `
+	}
+
+];
+
+
+/* =====================================================
+   📄 A4 SHEET 자동 생성
+=====================================================
+
+   pages
+
+   [0] + [1]
+       ↓
+   A4 ①
+
+   [2] + [3]
+       ↓
+   A4 ②
+
+
+===================================================== */
+
+
+const book =
+    document.getElementById("book");
+
+
+for (
+    let i = 0;
+    i < pages.length;
+    i += 2
+) {
+
+
+    /* =========================================
+       A4 생성
+    ========================================= */
+
+    const sheet =
+        document.createElement("div");
+
+
+    sheet.className =
+        "sheet";
+
+
+    /* =========================================
+       최대 2페이지
+    ========================================= */
+
+    const firstPage =
+        createPage(
+            pages[i],
+            i
+        );
+
+
+    sheet.appendChild(
+        firstPage
+    );
+
+
+    /* =========================================
+       두 번째 페이지가 존재한다면 생성
+    ========================================= */
+
+    if (
+        pages[i + 1]
+    ) {
+
+        const secondPage =
+            createPage(
+                pages[i + 1],
+                i + 1
+            );
+
+
+        sheet.appendChild(
+            secondPage
+        );
+
+    }
+
+
+    /* =========================================
+       A4를 BOOK에 추가
+    ========================================= */
+
+    book.appendChild(
+        sheet
+    );
+
+}
+
+
+/* =====================================================
+   PAGE 생성 함수
+===================================================== */
+
+function createPage(
+    page,
+    index
+) {
+
+
+    const pageElement =
+        document.createElement("div");
+
+
+    pageElement.className =
+        "page";
+
+
+    /* =========================================
+       COVER
+    ========================================= */
+
+    if (
+        page.type === "cover"
+    ) {
+
+
+        pageElement.classList.add(
+            "cover"
+        );
+
+
+        pageElement.innerHTML = `
+
+            <div class="logo">
+
+                △ SEMO
+
+            </div>
+
+
+            <div class="label">
+
+                ${page.label || ""}
+
+            </div>
+
+
+            <h1>
+
+                ${page.title || ""}
+
+
+                <span>
+
+                    ${page.subtitle || ""}
+
+                </span>
+
+            </h1>
+
+
+            <div class="cover-kana">
+
+                ${page.kana || ""}
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =========================================
+       NORMAL PAGE
+    ========================================= */
+
+    else {
+
+
+        pageElement.innerHTML = `
+
+            <div class="label">
+
+                ${page.label || ""}
+
+            </div>
+
+
+            <h2>
+
+                ${page.title || ""}
+
+            </h2>
+
+
+            ${page.html || ""}
+
+        `;
+
+    }
+
+
+    /* =========================================
+       PAGE NUMBER
+    ========================================= */
+
+    const pageNumber =
+        document.createElement("div");
+
+
+    pageNumber.className =
+        "page-number";
+
+
+    pageNumber.textContent =
+        index + 1;
+
+
+    pageElement.appendChild(
+        pageNumber
+    );
+
+
+    return pageElement;
+
+}
+
+</script>
+
+
+</body>
+
+</html>
