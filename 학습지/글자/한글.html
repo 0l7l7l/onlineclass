@@ -1,0 +1,2849 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SEMO 한국어 한글 완전 기초</title>
+
+<style>
+
+/* =========================================================
+   기본 설정
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #eeeeee;
+    color: #111;
+    font-family:
+        Arial,
+        "Noto Sans KR",
+        "Malgun Gothic",
+        sans-serif;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   전체 교재
+========================================================= */
+
+.book {
+    width: 100%;
+    padding: 40px 0;
+}
+
+
+/* =========================================================
+   A4 한 장
+   297mm × 210mm
+========================================================= */
+
+.sheet {
+    width: 297mm;
+    height: 210mm;
+
+    margin: 0 auto 30mm;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    background: #fff;
+
+    box-shadow:
+        0 5px 25px rgba(0,0,0,0.12);
+}
+
+.cover {
+    width: 297mm;
+    height: 210mm;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.cover-background {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    left: 0;
+    top: 0;
+}
+
+.cover-title {
+    position: absolute;
+
+    top: 40mm;
+
+    width: 100%;
+
+    text-align: center;
+
+    font-size: 48px;
+
+    font-weight: 900;
+}
+/* =========================================================
+   한 페이지
+   148.5mm × 210mm
+========================================================= */
+
+.page {
+    width: 148.5mm;
+    height: 210mm;
+
+    padding: 14mm;
+
+    background: #fff;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* 가운데 구분선 */
+
+.page:first-child {
+    border-right: 1px solid #ddd;
+}
+
+
+/* =========================================================
+   페이지 번호
+========================================================= */
+
+.page-number {
+    position: absolute;
+
+    right: 9mm;
+    bottom: 7mm;
+
+    font-size: 9px;
+
+    color: #777;
+}
+
+
+/* =========================================================
+   표지
+========================================================= */
+
+.cover {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+
+.cover-logo {
+    font-size: 18px;
+
+    font-weight: 900;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 25px;
+}
+
+
+.cover-label {
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+
+.cover h1 {
+    font-size: 38px;
+
+    line-height: 1.25;
+
+    letter-spacing: -2px;
+}
+
+
+.cover-subtitle {
+    margin-top: 20px;
+
+    font-size: 13px;
+
+    color: #555;
+
+    line-height: 1.8;
+}
+
+
+.cover-hangul {
+    margin-top: 38px;
+
+    font-size: 40px;
+
+    font-weight: 900;
+
+    letter-spacing: 12px;
+}
+
+
+/* =========================================================
+   기본 제목
+========================================================= */
+
+.eyebrow {
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    color: #777;
+
+    margin-bottom: 8px;
+}
+
+
+h2 {
+    font-size: 27px;
+
+    line-height: 1.3;
+
+    letter-spacing: -1.5px;
+
+    margin-bottom: 18px;
+}
+
+
+h3 {
+    font-size: 16px;
+
+    margin-bottom: 10px;
+}
+
+
+p {
+    font-size: 12px;
+
+    color: #444;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   설명 박스
+========================================================= */
+
+.explain {
+    border: 1px solid #111;
+
+    padding: 15px;
+
+    margin-top: 18px;
+}
+
+
+.explain-title {
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 8px;
+}
+
+
+.explain p {
+    color: #222;
+}
+
+
+/* =========================================================
+   큰 한글
+========================================================= */
+
+.big-korean {
+    font-size: 75px;
+
+    font-weight: 900;
+
+    line-height: 1;
+
+    text-align: center;
+
+    margin: 20px 0;
+}
+
+
+.big-japanese {
+    text-align: center;
+
+    font-size: 12px;
+
+    color: #555;
+}
+
+
+/* =========================================================
+   자음 / 모음 카드
+========================================================= */
+
+.char-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 6px;
+
+    margin-top: 18px;
+}
+
+
+.char-card {
+    border: 1px solid #ccc;
+
+    padding: 9px 4px;
+
+    text-align: center;
+}
+
+
+.char-card .char {
+    font-size: 27px;
+
+    font-weight: 900;
+
+    line-height: 1.2;
+}
+
+
+.char-card .sound {
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    color: #555;
+}
+
+
+.char-card .jp {
+    font-size: 9px;
+
+    color: #777;
+}
+
+
+.vowel-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 7px;
+
+    margin-top: 18px;
+}
+
+
+.vowel-card {
+    border: 1px solid #111;
+
+    padding: 10px 3px;
+
+    text-align: center;
+}
+
+
+.vowel-card .char {
+    font-size: 28px;
+
+    font-weight: 900;
+}
+
+
+.vowel-card .sound {
+    font-size: 10px;
+
+    color: #555;
+
+    margin-top: 3px;
+}
+
+/* =====================================================
+   ★ 모음 박스
+===================================================== */
+
+/*
+    하나의 vowel-card = 하나의 바깥 박스
+
+    ┌───────────┬───────────┬─────────────────┐
+    │     ㅇ     │     ㅏ     │ 「ア」に近い音    │
+    └───────────┴───────────┴─────────────────┘
+*/
+
+.vowel-card {
+
+    width: 100%;
+
+    min-height: 82px;
+
+    border: 2px solid #111;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        2fr;
+
+    margin-bottom: 17px;
+
+    background: #fff;
+}
+
+
+/* =====================================================
+   각각의 3칸
+===================================================== */
+
+.vowel-cell {
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 10px;
+}
+
+
+/* 가운데 모음 */
+
+.vowel-cell.focus {
+
+    font-size: 43px;
+
+    font-weight: 900;
+}
+
+
+/* ㅇ */
+
+.vowel-cell.base {
+
+    font-size: 40px;
+
+    font-weight: 700;
+
+    color: #111;
+
+    opacity: 0.28;
+}
+
+
+/* 설명 */
+
+.vowel-cell.description {
+
+    justify-content: flex-start;
+
+    text-align: left;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* ★ 칸막이 */
+
+.vowel-cell + .vowel-cell {
+
+    border-left: 1.5px solid #111;
+}
+
+
+/* =====================================================
+   일본어 설명 강조
+===================================================== */
+
+.jp {
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+/* =====================================================
+   연습 영역
+===================================================== */
+
+.practice {
+
+    margin-top: 25px;
+
+    border-top: 2px solid #111;
+
+    padding-top: 15px;
+}
+
+
+.practice-title {
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+}
+
+
+.practice-text {
+
+    font-size: 28px;
+
+    letter-spacing: 10px;
+
+    font-weight: 700;
+}
+
+/* =========================================================
+   조합
+========================================================= */
+
+.combination {
+    margin-top: 20px;
+}
+
+
+.combine-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin: 10px 0;
+}
+
+
+.combine-box {
+    width: 48px;
+    height: 48px;
+
+    border: 1px solid #111;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 23px;
+
+    font-weight: 900;
+}
+
+
+.combine-result {
+    width: 60px;
+    height: 60px;
+
+    border: 2px solid #111;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 34px;
+
+    font-weight: 900;
+}
+
+
+.combine-sign {
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   말하기
+========================================================= */
+
+.speak-box {
+    border: 2px solid #111;
+
+    padding: 15px;
+
+    margin-top: 18px;
+
+    text-align: center;
+}
+
+
+.speak-label {
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 8px;
+}
+
+
+.speak-text {
+    font-size: 28px;
+
+    font-weight: 900;
+
+    letter-spacing: 5px;
+}
+
+
+/* =========================================================
+   연습
+========================================================= */
+
+.practice {
+    margin-top: 18px;
+}
+
+
+.practice-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 7px 0;
+
+    border-bottom: 1px dashed #bbb;
+}
+
+
+.practice-char {
+    width: 35px;
+
+    font-size: 22px;
+
+    font-weight: 900;
+}
+
+
+.practice-line {
+    flex: 1;
+
+    height: 25px;
+
+    border-bottom: 1px solid #888;
+}
+
+
+/* =========================================================
+   단어
+========================================================= */
+
+.word-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+
+.word-card {
+    border: 1px solid #ccc;
+
+    padding: 12px;
+
+    text-align: center;
+}
+
+
+.word-card .korean {
+    font-size: 25px;
+
+    font-weight: 900;
+}
+
+
+.word-card .reading {
+    font-size: 11px;
+
+    color: #555;
+
+    margin-top: 3px;
+}
+
+
+.word-card .japanese {
+    font-size: 10px;
+
+    color: #777;
+}
+
+
+/* =========================================================
+   체크
+========================================================= */
+
+.check-box {
+    border-top: 2px solid #111;
+
+    margin-top: 20px;
+
+    padding-top: 12px;
+}
+
+
+.check-title {
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   마지막 페이지
+========================================================= */
+
+.final {
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+
+.final-big {
+    font-size: 29px;
+
+    font-weight: 900;
+
+    line-height: 1.5;
+}
+
+
+.final-small {
+    margin-top: 18px;
+
+    font-size: 12px;
+
+    color: #555;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   인쇄
+========================================================= */
+
+@page {
+    size: A4 landscape;
+    margin: 0;
+}
+
+
+@media print {
+
+    html,
+    body {
+        width: 297mm;
+
+        background: #fff;
+
+        margin: 0;
+        padding: 0;
+    }
+
+
+    .book {
+        padding: 0;
+    }
+
+
+    .sheet {
+        width: 297mm;
+
+        height: 210mm;
+
+        margin: 0;
+
+        box-shadow: none;
+
+        break-after: page;
+
+        page-break-after: always;
+    }
+
+
+    .sheet:last-child {
+        break-after: auto;
+
+        page-break-after: auto;
+    }
+
+
+    .page {
+        width: 148.5mm;
+
+        height: 210mm;
+
+        padding: 14mm;
+    }
+}
+
+
+/* =========================================================
+   모바일
+========================================================= */
+
+@media screen and (max-width: 900px) {
+
+    body {
+        background: #eee;
+    }
+
+
+    .book {
+        padding: 15px 0;
+    }
+
+
+    .sheet {
+        width: 100%;
+
+        height: auto;
+
+        margin: 0;
+
+        display: block;
+
+        background: transparent;
+
+        box-shadow: none;
+    }
+
+
+    .page {
+        width: 100%;
+
+        height: auto;
+
+        aspect-ratio: 148.5 / 210;
+
+        margin-bottom: 18px;
+
+        padding: 8vw;
+
+        box-shadow:
+            0 3px 15px rgba(0,0,0,0.12);
+    }
+
+
+    .page:first-child {
+        border-right: none;
+    }
+
+
+    .page-number {
+        right: 5vw;
+
+        bottom: 4vw;
+    }
+
+
+    .cover h1 {
+        font-size: 10vw;
+    }
+
+
+    .cover-hangul {
+        font-size: 8vw;
+
+        letter-spacing: 2vw;
+    }
+
+
+    .eyebrow {
+        font-size: 2.5vw;
+    }
+
+
+    h2 {
+        font-size: 7vw;
+    }
+
+
+    h3 {
+        font-size: 4.5vw;
+    }
+
+
+    p {
+        font-size: 3.5vw;
+    }
+
+
+    .big-korean {
+        font-size: 20vw;
+    }
+
+
+    .char-card .char,
+    .vowel-card .char {
+        font-size: 7vw;
+    }
+
+
+    .char-card .sound,
+    .char-card .jp,
+    .vowel-card .sound {
+        font-size: 2.5vw;
+    }
+
+
+    .combine-box {
+        width: 12vw;
+        height: 12vw;
+
+        font-size: 6vw;
+    }
+
+
+    .combine-result {
+        width: 15vw;
+        height: 15vw;
+
+        font-size: 9vw;
+    }
+
+
+    .speak-text {
+        font-size: 7vw;
+    }
+
+
+    .word-card .korean {
+        font-size: 7vw;
+    }
+
+
+    .word-card .reading,
+    .word-card .japanese {
+        font-size: 2.7vw;
+    }
+
+
+    .practice-char {
+        font-size: 6vw;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="book">
+
+<div class="page cover">
+
+    <img
+        src="images/cover-bg.jpg"
+        class="cover-background"
+        alt=""
+    >
+
+    <div class="cover-title">
+        세모
+    </div>
+<p>한국어</p>
+</div>
+
+<!-- =====================================================
+     A4 ①
+     1P
+===================================================== -->
+
+<div class="page cover">
+
+    <div class="cover-logo">
+        △ SEMO
+    </div>
+
+    <div class="cover-label">
+        KOREAN BASIC
+    </div>
+
+    <h1>
+        한글<br>
+        완전 기초
+    </h1>
+
+    <div class="cover-subtitle">
+
+        한국어를 처음 시작하는 일본인을 위한<br>
+        한글 구조부터 배우는 첫 번째 교재
+
+    </div>
+
+    <div class="cover-hangul">
+
+        ㄱ ㄴ ㄷ · ㅏ ㅑ ㅓ
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     2P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        KOREAN BASIC
+    </div>
+
+    <h2>
+        한국어 글자는<br>
+        어떻게 만들어질까요?
+    </h2>
+
+    <p>
+
+        일본어에는 히라가나와 가타카나가 있습니다.
+        한국어에는 <strong>한글</strong>이 있습니다.
+
+        <br><br>
+
+        한글은 글자를 하나씩 이어 쓰는 것이 아니라,
+        자음과 모음을 모아서 하나의 글자 블록을 만듭니다.
+
+    </p>
+
+    <div class="big-korean">
+        한글
+    </div>
+
+    <div class="big-japanese">
+        ハングル = 韓国語の文字
+    </div>
+
+    <div class="explain">
+
+        <div class="explain-title">
+            POINT
+        </div>
+
+        <p>
+
+            한글을 잘 읽기 위해서는
+            글자를 무작정 외우기보다
+            <strong>글자의 구조</strong>를 먼저 이해하는 것이 중요합니다.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     A4 ②
+     3P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        LESSON 01
+    </div>
+
+    <h2>
+        먼저<br>
+        자음을 알아볼까요?
+    </h2>
+
+    <p>
+
+        <strong>자음</strong>은
+        글자의 뼈대가 되는 소리입니다.
+
+        <br><br>
+
+        처음에는 모든 자음을 외우려고 하지 않아도 됩니다.
+
+    </p>
+
+
+    <div class="char-grid">
+
+        <div class="char-card">
+            <div class="char">ㄱ</div>
+            <div class="sound">g / k</div>
+            <div class="jp">カに近い</div>
+        </div>
+
+        <div class="char-card">
+            <div class="char">ㄴ</div>
+            <div class="sound">n</div>
+            <div class="jp">ナの n</div>
+        </div>
+
+        <div class="char-card">
+            <div class="char">ㄷ</div>
+            <div class="sound">d / t</div>
+            <div class="jp">タに近い</div>
+        </div>
+
+        <div class="char-card">
+            <div class="char">ㄹ</div>
+            <div class="sound">r / l</div>
+            <div class="jp">r と l の中間</div>
+        </div>
+
+        <div class="char-card">
+            <div class="char">ㅁ</div>
+            <div class="sound">m</div>
+            <div class="jp">マの m</div>
+        </div>
+
+    </div>
+
+
+    <div class="speak-box">
+
+        <div class="speak-label">
+            SAY IT
+        </div>
+
+        <div class="speak-text">
+            ㄱ　ㄴ　ㄷ　ㄹ　ㅁ
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     4P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        LESSON 02
+    </div>
+
+    <h2>
+        이번에는<br>
+        모음입니다.
+    </h2>
+
+    <p>
+
+        <strong>모음</strong>은
+        자음과 함께 글자를 만드는 소리입니다.
+
+        <br><br>
+
+        일본어의 「あ・い・う・え・お」처럼
+        소리를 만드는 기본 요소라고 생각하면 쉽습니다.
+
+    </p>
+
+
+    <div class="vowel-grid">
+
+        <div class="vowel-card">
+            <div class="char">ㅏ</div>
+            <div class="sound">아</div>
+        </div>
+
+        <div class="vowel-card">
+            <div class="char">ㅑ</div>
+            <div class="sound">야</div>
+        </div>
+
+        <div class="vowel-card">
+            <div class="char">ㅓ</div>
+            <div class="sound">어</div>
+        </div>
+
+        <div class="vowel-card">
+            <div class="char">ㅕ</div>
+            <div class="sound">여</div>
+        </div>
+
+        <div class="vowel-card">
+            <div class="char">ㅗ</div>
+            <div class="sound">오</div>
+        </div>
+
+    </div>
+
+
+    <div class="speak-box">
+
+        <div class="speak-label">
+            SAY IT
+        </div>
+
+        <div class="speak-text">
+            ㅏ　ㅑ　ㅓ　ㅕ　ㅗ
+        </div>
+
+    </div>
+
+
+    <div class="check-box">
+
+        <div class="check-title">
+            일본어와 비교해 보세요
+        </div>
+
+        <p>
+
+            ㅏ = 아<br>
+            ㅑ = 야<br>
+            ㅓ = 어<br>
+            ㅕ = 여<br>
+            ㅗ = 오
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     A4 ③
+     5P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        LESSON 03
+    </div>
+
+    <h2>
+        한글의 핵심<br>
+        자음 + 모음
+    </h2>
+
+    <p>
+
+        이제 가장 중요한 구조를 배웁니다.
+
+        <br><br>
+
+        한글은 자음과 모음을
+        <strong>하나의 글자 안에 조립</strong>합니다.
+
+    </p>
+
+
+    <div class="combination">
+
+        <div class="combine-row">
+
+            <div class="combine-box">
+                ㄱ
+            </div>
+
+            <div class="combine-sign">
+                +
+            </div>
+
+            <div class="combine-box">
+                ㅏ
+            </div>
+
+            <div class="combine-sign">
+                =
+            </div>
+
+            <div class="combine-result">
+                가
+            </div>
+
+        </div>
+
+
+        <div class="combine-row">
+
+            <div class="combine-box">
+                ㄴ
+            </div>
+
+            <div class="combine-sign">
+                +
+            </div>
+
+            <div class="combine-box">
+                ㅏ
+            </div>
+
+            <div class="combine-sign">
+                =
+            </div>
+
+            <div class="combine-result">
+                나
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            이렇게 생각하세요
+        </div>
+
+        <p>
+
+            ㄱ + ㅏ = 가<br>
+            ㄴ + ㅏ = 나
+
+            <br><br>
+
+            <strong>
+                자음과 모음이 만나면
+                하나의 글자가 됩니다.
+            </strong>
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     6P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        LESSON 04
+    </div>
+
+    <h2>
+        자음과 모음의<br>
+        위치도 중요합니다.
+    </h2>
+
+    <p>
+
+        모음의 모양에 따라
+        자음과 모음이 놓이는 위치가 달라집니다.
+
+    </p>
+
+
+    <div class="combination">
+
+        <h3>
+            ① 세로로 생긴 모음
+        </h3>
+
+
+        <div class="combine-row">
+
+            <div class="combine-result">
+                가
+            </div>
+
+            <div class="combine-sign">
+                =
+            </div>
+
+            <div class="combine-box">
+                ㄱ
+            </div>
+
+            <div class="combine-sign">
+                +
+            </div>
+
+            <div class="combine-box">
+                ㅏ
+            </div>
+
+        </div>
+
+
+        <h3>
+            ② 가로로 생긴 모음
+        </h3>
+
+
+        <div class="combine-row">
+
+            <div class="combine-result">
+                고
+            </div>
+
+            <div class="combine-sign">
+                =
+            </div>
+
+            <div class="combine-box">
+                ㄱ
+            </div>
+
+            <div class="combine-sign">
+                +
+            </div>
+
+            <div class="combine-box">
+                ㅗ
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            일본인 학습자를 위한 POINT
+        </div>
+
+        <p>
+
+            「가」와 「고」의 모양이
+            왜 다른지 궁금했나요?
+
+            <br><br>
+
+            모음 <strong>ㅏ</strong>는 오른쪽에,
+            모음 <strong>ㅗ</strong>는 아래쪽에 옵니다.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     A4 ④
+     7P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        PRACTICE
+    </div>
+
+    <h2>
+        직접 만들어볼까요?
+    </h2>
+
+    <p>
+
+        아래의 자음과 모음을 합쳐서
+        어떤 글자가 만들어지는지 생각해보세요.
+
+    </p>
+
+
+    <div class="combination">
+
+        <div class="combine-row">
+
+            <div class="combine-box">ㄴ</div>
+            <div class="combine-sign">+</div>
+            <div class="combine-box">ㅏ</div>
+            <div class="combine-sign">=</div>
+            <div class="combine-result">나</div>
+
+        </div>
+
+
+        <div class="combine-row">
+
+            <div class="combine-box">ㄷ</div>
+            <div class="combine-sign">+</div>
+            <div class="combine-box">ㅏ</div>
+            <div class="combine-sign">=</div>
+            <div class="combine-result">다</div>
+
+        </div>
+
+
+        <div class="combine-row">
+
+            <div class="combine-box">ㅁ</div>
+            <div class="combine-sign">+</div>
+            <div class="combine-box">ㅏ</div>
+            <div class="combine-sign">=</div>
+            <div class="combine-result">마</div>
+
+        </div>
+
+    </div>
+
+
+    <div class="speak-box">
+
+        <div class="speak-label">
+            SPEAK
+        </div>
+
+        <div class="speak-text">
+            가　나　다　마
+        </div>
+
+    </div>
+
+
+    <div class="check-box">
+
+        <div class="check-title">
+            목표
+        </div>
+
+        <p>
+
+            글자를 보고
+            자음과 모음을 하나씩 생각하지 않고
+            한 번에 소리 내어 읽어보세요.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     8P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        READING
+    </div>
+
+    <h2>
+        이제 읽어봅시다.
+    </h2>
+
+    <p>
+
+        지금까지 배운 자음과 모음을 이용해서
+        실제 한국어 글자를 읽어봅니다.
+
+    </p>
+
+
+    <div class="word-grid">
+
+        <div class="word-card">
+
+            <div class="korean">가</div>
+
+            <div class="reading">
+                ga / ka
+            </div>
+
+            <div class="japanese">
+                「カ」に近い
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">나</div>
+
+            <div class="reading">
+                na
+            </div>
+
+            <div class="japanese">
+                ナ
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">다</div>
+
+            <div class="reading">
+                da / ta
+            </div>
+
+            <div class="japanese">
+                タに近い
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">마</div>
+
+            <div class="reading">
+                ma
+            </div>
+
+            <div class="japanese">
+                マ
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="speak-box">
+
+        <div class="speak-label">
+            👄 입으로 읽어보세요
+        </div>
+
+        <div class="speak-text">
+            가　나　다　마
+        </div>
+
+    </div>
+
+
+    <div class="practice">
+
+        <h3>
+            한 번 더 읽어보세요
+        </h3>
+
+
+        <div class="practice-row">
+
+            <div class="practice-char">가</div>
+
+            <div class="practice-line"></div>
+
+        </div>
+
+
+        <div class="practice-row">
+
+            <div class="practice-char">나</div>
+
+            <div class="practice-line"></div>
+
+        </div>
+
+
+        <div class="practice-row">
+
+            <div class="practice-char">다</div>
+
+            <div class="practice-line"></div>
+
+        </div>
+
+
+        <div class="practice-row">
+
+            <div class="practice-char">마</div>
+
+            <div class="practice-line"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     A4 ⑤
+     9P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        LESSON 05
+    </div>
+
+    <h2>
+        자음은 그대로<br>
+        모음만 바꿔볼까요?
+    </h2>
+
+    <p>
+
+        자음 <strong>ㄱ</strong>은 그대로 두고
+        모음만 바꾸어 보겠습니다.
+
+    </p>
+
+
+    <div class="word-grid">
+
+        <div class="word-card">
+
+            <div class="korean">
+                가
+            </div>
+
+            <div class="reading">
+                ㄱ + ㅏ
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">
+                거
+            </div>
+
+            <div class="reading">
+                ㄱ + ㅓ
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">
+                고
+            </div>
+
+            <div class="reading">
+                ㄱ + ㅗ
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">
+                구
+            </div>
+
+            <div class="reading">
+                ㄱ + ㅜ
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="speak-box">
+
+        <div class="speak-label">
+            READ
+        </div>
+
+        <div class="speak-text">
+            가　거　고　구
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            핵심
+        </div>
+
+        <p>
+
+            같은 자음이라도
+            어떤 모음과 결합하느냐에 따라
+            다른 글자가 됩니다.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     10P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        WORD
+    </div>
+
+    <h2>
+        글자를 모으면<br>
+        단어가 됩니다.
+    </h2>
+
+    <p>
+
+        한국어 단어도 결국
+        여러 개의 한글 글자가 모여 만들어집니다.
+
+    </p>
+
+
+    <div class="word-grid">
+
+
+        <div class="word-card">
+
+            <div class="korean">
+                나
+            </div>
+
+            <div class="reading">
+                na
+            </div>
+
+            <div class="japanese">
+                私
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">
+                너
+            </div>
+
+            <div class="reading">
+                neo
+            </div>
+
+            <div class="japanese">
+                あなた
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">
+                나무
+            </div>
+
+            <div class="reading">
+                na-mu
+            </div>
+
+            <div class="japanese">
+                木
+            </div>
+
+        </div>
+
+
+        <div class="word-card">
+
+            <div class="korean">
+                우유
+            </div>
+
+            <div class="reading">
+                u-yu
+            </div>
+
+            <div class="japanese">
+                牛乳
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="speak-box">
+
+        <div class="speak-label">
+            SPEAK
+        </div>
+
+        <div class="speak-text">
+            나　너　나무　우유
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     A4 ⑥
+     11P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        REVIEW
+    </div>
+
+    <h2>
+        오늘 배운 것을<br>
+        다시 확인해요.
+    </h2>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            ① 한글은?
+        </div>
+
+        <p>
+            한국어를 쓰는 문자입니다.
+        </p>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            ② 한글은 무엇으로 만들까요?
+        </div>
+
+        <p>
+            <strong>자음 + 모음</strong>
+        </p>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            ③ 가는 어떻게 만들까요?
+        </div>
+
+        <p>
+            ㄱ + ㅏ = <strong>가</strong>
+        </p>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            ④ 고는 어떻게 만들까요?
+        </div>
+
+        <p>
+            ㄱ + ㅗ = <strong>고</strong>
+        </p>
+
+    </div>
+
+
+    <div class="speak-box">
+
+        <div class="speak-label">
+            FINAL READING
+        </div>
+
+        <div class="speak-text">
+
+            가　나　다　마<br>
+            고　구　너　나무
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     12P
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        FINISH
+    </div>
+
+    <h2>
+        한글의 구조를<br>
+        이해했습니다.
+    </h2>
+
+
+    <div class="final">
+
+        <div class="final-big">
+
+            ㄱ + ㅏ
+
+            <br>
+
+            ↓
+
+            <br>
+
+            가
+
+        </div>
+
+
+        <div class="final-small">
+
+            한글은 외워야 할 모양의 모음이 아니라
+
+            <br>
+
+            <strong>
+                자음과 모음을 조립하는 문자
+            </strong>
+
+            입니다.
+
+            <br><br>
+
+            이제부터 하나씩 글자를 늘려가면
+
+            <br>
+
+            한국어를 읽을 수 있습니다.
+
+        </div>
+
+
+        <div class="speak-box"
+             style="width:100%;">
+
+            <div class="speak-label">
+                TODAY'S KOREAN
+            </div>
+
+            <div class="speak-text">
+                가　나　다　마
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     LESSON 04
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        LESSON 04
+    </div>
+
+    <h2>
+        먼저 오른쪽 모음부터!
+    </h2>
+
+    <p>
+        오늘은 자음의
+        <strong>오른쪽에 붙는 모음</strong>부터
+        공부합니다.
+    </p>
+
+    <p>
+        아래의 박스에서
+        <strong>가운데의 검은색 글자</strong>가
+        오늘 공부할 모음입니다.
+    </p>
+
+    <div class="explain">
+
+        <div class="explain-title">
+            TODAY
+        </div>
+
+        <p>
+            ㅏ　ㅑ　ㅓ　ㅕ　ㅣ
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ★ 오른쪽 모음
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        VOWELS 01
+    </div>
+
+    <h2>
+        오른쪽에 오는
+        모음
+    </h2>
+
+
+    <!-- ㅏ -->
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅏ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「ア」に近い音
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- ㅑ -->
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅑ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「ヤ」に近い音
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- ㅓ -->
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅓ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                日本語に正確に対応する音はありません
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- ㅕ -->
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅕ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「ヨ」に近い音
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- ㅣ -->
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅣ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「イ」に近い音
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ㅏ
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        VOWEL 01
+    </div>
+
+    <h2>
+        ㅏ
+    </h2>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅏ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「ア」に近い音
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            발음
+        </div>
+
+        <p>
+            ㅏ는 일본어의
+            「ア」와 비슷하게 들립니다.
+        </p>
+
+        <p>
+            입을 자연스럽게 벌리고
+            <strong>아</strong>라고 말해보세요.
+        </p>
+
+    </div>
+
+
+    <div class="practice">
+
+        <div class="practice-title">
+            SPEAK
+        </div>
+
+        <div class="practice-text">
+            아　아　아
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ㅑ
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        VOWEL 02
+    </div>
+
+    <h2>
+        ㅑ
+    </h2>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅑ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「ヤ」に近い音
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            ㅏ와 비교
+        </div>
+
+        <p>
+            ㅏ → 아
+        </p>
+
+        <p>
+            ㅑ → 야
+        </p>
+
+        <p>
+            ㅑ는 ㅏ에
+            <strong>y</strong> 소리가 더해진 느낌입니다.
+        </p>
+
+    </div>
+
+
+    <div class="practice">
+
+        <div class="practice-title">
+            SPEAK
+        </div>
+
+        <div class="practice-text">
+            야　야　야
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ㅓ
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        VOWEL 03
+    </div>
+
+    <h2>
+        ㅓ
+    </h2>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅓ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                日本語に正確に対応する音はありません
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            IMPORTANT
+        </div>
+
+        <p>
+            ㅓ는 일본어의 「オ」와
+            정확히 같은 소리가 아닙니다.
+        </p>
+
+        <p>
+            처음에는 조금 어려울 수 있습니다.
+            한국어의 <strong>어</strong>라는 소리를
+            하나의 새로운 소리로 기억해주세요.
+        </p>
+
+    </div>
+
+
+    <div class="practice">
+
+        <div class="practice-title">
+            SPEAK
+        </div>
+
+        <div class="practice-text">
+            어　어　어
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ㅕ
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        VOWEL 04
+    </div>
+
+    <h2>
+        ㅕ
+    </h2>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅕ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「ヨ」に近い音
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            ㅓ와 비교
+        </div>
+
+        <p>
+            ㅓ → 어
+        </p>
+
+        <p>
+            ㅕ → 여
+        </p>
+
+        <p>
+            ㅕ는 ㅓ에
+            <strong>y</strong> 소리가 더해진 느낌입니다.
+        </p>
+
+    </div>
+
+
+    <div class="practice">
+
+        <div class="practice-title">
+            SPEAK
+        </div>
+
+        <div class="practice-text">
+            여　여　여
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ㅣ
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        VOWEL 05
+    </div>
+
+    <h2>
+        ㅣ
+    </h2>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">
+            ㅇ
+        </div>
+
+        <div class="vowel-cell focus">
+            ㅣ
+        </div>
+
+        <div class="vowel-cell description">
+            <span class="jp">
+                「イ」に近い音
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            발음
+        </div>
+
+        <p>
+            일본어의 「イ」와 비슷한 소리입니다.
+        </p>
+
+        <p>
+            입을 옆으로 살짝 벌리고
+            <strong>이</strong>라고 말해보세요.
+        </p>
+
+    </div>
+
+
+    <div class="practice">
+
+        <div class="practice-title">
+            SPEAK
+        </div>
+
+        <div class="practice-text">
+            이　이　이
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     복습
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        REVIEW
+    </div>
+
+    <h2>
+        오른쪽 모음
+        다시 읽어봅시다.
+    </h2>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">ㅇ</div>
+        <div class="vowel-cell focus">ㅏ</div>
+
+        <div class="vowel-cell description">
+            <span class="jp">ア</span>
+        </div>
+
+    </div>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">ㅇ</div>
+        <div class="vowel-cell focus">ㅑ</div>
+
+        <div class="vowel-cell description">
+            <span class="jp">ヤ</span>
+        </div>
+
+    </div>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">ㅇ</div>
+        <div class="vowel-cell focus">ㅓ</div>
+
+        <div class="vowel-cell description">
+            <span class="jp">日本語にない音</span>
+        </div>
+
+    </div>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">ㅇ</div>
+        <div class="vowel-cell focus">ㅕ</div>
+
+        <div class="vowel-cell description">
+            <span class="jp">ヨに近い</span>
+        </div>
+
+    </div>
+
+
+    <div class="vowel-card">
+
+        <div class="vowel-cell base">ㅇ</div>
+        <div class="vowel-cell focus">ㅣ</div>
+
+        <div class="vowel-cell description">
+            <span class="jp">イ</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     다음 수업
+===================================================== -->
+
+<div class="page">
+
+    <div class="eyebrow">
+        NEXT
+    </div>
+
+    <h2>
+        다음은<br>
+        아래쪽 모음!
+    </h2>
+
+    <p>
+        오른쪽에 붙는 모음을 익혔다면
+        이제 아래쪽에 붙는 모음을 배워봅니다.
+    </p>
+
+
+    <div class="explain">
+
+        <div class="explain-title">
+            NEXT VOWELS
+        </div>
+
+        <p>
+            ㅗ　ㅛ　ㅜ　ㅠ　ㅡ
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SCRIPT
+     여기에는 "A4 자동 묶기"만 존재
+===================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const book = document.querySelector(".book");
+
+    const pages = Array.from(
+        book.querySelectorAll(".page")
+    );
+
+
+    /* -----------------------------------------------
+       기존 page들을 임시로 제거
+    ------------------------------------------------ */
+
+    pages.forEach(function (page) {
+        page.remove();
+    });
+
+
+    /* -----------------------------------------------
+       2페이지씩 A4(sheet)로 묶기
+    ------------------------------------------------ */
+
+    for (
+        let i = 0;
+        i < pages.length;
+        i += 2
+    ) {
+
+        const sheet =
+            document.createElement("div");
+
+        sheet.className = "sheet";
+
+
+        /* 첫 번째 페이지 */
+
+        const page1 = pages[i];
+
+        if (page1) {
+
+            sheet.appendChild(page1);
+
+        }
+
+
+        /* 두 번째 페이지 */
+
+        const page2 = pages[i + 1];
+
+        if (page2) {
+
+            sheet.appendChild(page2);
+
+        }
+
+
+        /* A4 추가 */
+
+        book.appendChild(sheet);
+
+    }
+
+
+    /* -----------------------------------------------
+       페이지 번호 자동 생성
+    ------------------------------------------------ */
+
+    const finalPages =
+        book.querySelectorAll(".page");
+
+
+    finalPages.forEach(function (page, index) {
+
+        const number =
+            document.createElement("div");
+
+        number.className =
+            "page-number";
+
+        number.textContent =
+            (index + 1);
+
+        page.appendChild(number);
+
+    });
+
+});
+
+</script>
+
+
+</body>
+
+</html>
