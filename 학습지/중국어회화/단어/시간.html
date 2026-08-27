@@ -15,9 +15,6 @@
 					 font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
 		}
-
-
-
 			 body {
 					 background-color: #f0f2f5;
 					 padding: 40px 20px;
@@ -28,9 +25,6 @@
 					 min-height: 100vh;
 
 		}
-
-
-
 
 		/* =========================================================
 			 펼침면 (B5 규격 비율 364 : 257 & 잘림 방지 반응형)
@@ -46,12 +40,7 @@
 					 box-shadow:  0 15px 35px rgba(0, 0, 0, 0.08),  0 3px 10px rgba(0, 0, 0, 0.04);
 					 overflow: hidden;
 					 position: relative;
-
 		}
-
-
-
-
 			/* 가운데 책 접히는 부분 음영 */
 				 .book-container::after {
 						 content: "";
@@ -64,10 +53,6 @@
 						 z-index: 10;
 
 			}
-
-
-
-
 		/* =========================================================
 			 페이지 레이아웃
 		========================================================= */
@@ -80,12 +65,7 @@
 					 flex-direction: column;
 					 justify-content: space-between;
 					 background-color: #ffffff;
-
 		}
-
-
-
-
 		/* 페이지 헤더 */
 			 .page-header {
 					 display: flex;
@@ -94,11 +74,7 @@
 					 border-bottom: 2px solid #18181b;
 					 padding-bottom: 6px;
 					 margin-bottom: 12px;
-
 		}
-
-
-
 			 .page-header .chapter {
 					 font-size: 0.75rem;
 					 font-weight: 900;
@@ -109,19 +85,12 @@
 					 letter-spacing: 0.5px;
 
 		}
-
-
-
 			 .page-header .title {
 					 font-size: 0.95rem;
 					 font-weight: 800;
 					 color: #18181b;
 
 		}
-
-
-
-
 		/* 상단 말풍선 */
 			 .speech-bubble-container {
 					 position: relative;
@@ -132,9 +101,6 @@
 					 margin-bottom: 12px;
 
 		}
-
-
-
 			 .speech-bubble-container::after {
 					 content: '';
 					 position: absolute;
@@ -145,11 +111,7 @@
 					 border-color: #18181b transparent;
 					 display: block;
 					 width: 0;
-
 		}
-
-
-
 			 .bubble-title {
 					 font-size: 0.7rem;
 					 font-weight: 800;
@@ -157,22 +119,14 @@
 					 margin-bottom: 8px;
 					 text-transform: uppercase;
 					 letter-spacing: 0.5px;
-
 		}
-
-
-
-
-		/* 단어 그리드 & 루비(Ruby) 태그 스타일 */
+			 /* 단어 그리드 & 루비(Ruby) 태그 스타일 */
 			 .word-grid {
 					 display: grid;
 					 grid-template-columns: repeat(2, 1fr);
 					 gap: 6px 8px;
 
 		}
-
-
-
 			 .word-item {
 					 display: flex;
 					 align-items: center;
@@ -182,11 +136,7 @@
 					 padding: 4px 8px;
 					 border: 1px solid #e4e4e7;
 					 border-radius: 3px;
-
 		}
-
-
-
 				 .word-item .kor {
 						 font-weight: 700;
 						 color: #52525b;
@@ -194,9 +144,6 @@
 						 flex-shrink: 0;
 
 			}
-
-
-
 
 		/* 루비 태그 스타일 (병음이 한자 위에 위치) */
 			 ruby {
@@ -206,9 +153,6 @@
 					 ruby-position: over;
 
 		}
-
-
-
 			 rt {
 					 font-size: 0.65rem;
 					 font-weight: 600;
@@ -216,10 +160,6 @@
 					 padding-bottom: 2px;
 
 		}
-
-
-
-
 		/* 하단 연습문제 영역 */
 			 .exercise-section {
 					 flex: 1;
@@ -231,9 +171,6 @@
 					 flex-direction: column;
 
 		}
-
-
-
 			 .exercise-title {
 					 font-size: 0.75rem;
 					 font-weight: 800;
@@ -241,18 +178,12 @@
 					 margin-bottom: 8px;
 
 		}
-
-
-
 			 .quiz-list {
 					 display: flex;
 					 flex-direction: column;
 					 gap: 6px;
 
 		}
-
-
-
 			 .quiz-item {
 					 display: flex;
 					 align-items: center;
@@ -264,17 +195,11 @@
 					 border-left: 3px solid #18181b;
 
 		}
-
-
-
 			 .quiz-question {
 					 font-weight: 700;
 					 color: #27272a;
 
 		}
-
-
-
 			 .quiz-answer {
 					 font-weight: 800;
 					 color: #18181b;
@@ -284,28 +209,17 @@
 					 display: none;
 
 		}
-
-
-
 				 .quiz-answer.show {
 						 display: inline-block;
 
 			}
-
-
-
-
 		/* 푸터 및 버튼 */
 			 .footer-wrapper {
 					 display: flex;
 					 justify-content: space-between;
 					 align-items: center;
 					 margin-top: 8px;
-
 		}
-
-
-
 			 .answer-btn {
 					 padding: 4px 10px;
 					 font-size: 0.7rem;
@@ -318,17 +232,10 @@
 					 transition: all 0.2s ease;
 
 		}
-
-
-
-				 .answer-btn:hover {
+			 .answer-btn:hover {
 						 background-color: #3f3f46;
 
 			}
-
-
-
-
 		/* 페이지 쪽수 */
 			 .footer {
 					 position: absolute;
@@ -338,52 +245,22 @@
 					 font-weight: 900;
 
 		}
-
-
-
 			 .left-page .footer {
 			left: 6%;
 		}
-
 			 .right-page .footer {
 			right: 6%;
 		}
-
-
-
 
 		/* =========================================================
 			 인쇄 미디어 쿼리
 		========================================================= */
 			 @media print {
-					 body
-
-		{
-						 background: none;
-						 padding: 0;
-
-		}
-
-				 .book-container {
-						 max-width: 100%;
-						 box-shadow: none;
-						 border: none;
-						 page-break-after: always;
-
-		}
-
-				 .answer-btn {
-						 display: none !important;
-
-		}
-
-				 .quiz-answer.show {
-						 display: none !important;
-
-		}
-
-
-		}
+				 body { background: none; padding: 0;}
+				 .book-container {max-width: 100%; box-shadow: none; border: none; page-break-after: always;}
+				 .answer-btn { display: none !important;}
+				 .quiz-answer.show { display: none !important;}
+			 }
 	</style>
 </head>
 <body>

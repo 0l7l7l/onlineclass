@@ -1,0 +1,449 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>-게 + 동사 | 한국어 문법</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%}
+body{font-family:"Noto Sans JP","Noto Sans KR","Yu Gothic","Meiryo",sans-serif;background:#ece8e2;color:#1a1a1a;overflow:hidden}
+.ppt-wrapper{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+.page{width:min(1400px,100%);aspect-ratio:16/9;background:#fff;display:none;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.15)}
+.page.active{display:block}
+.page-inner{width:100%;height:100%;padding:7%;display:flex;flex-direction:column;justify-content:center}
+.page-number{position:absolute;bottom:22px;right:28px;color:#888;font-size:13px}
+.small-label{font-size:clamp(14px,1.4vw,22px);font-weight:700;letter-spacing:.08em;color:#7a6f64;margin-bottom:22px}
+.big-title{font-size:clamp(42px,5vw,78px);font-weight:900;line-height:1.15}
+.subtitle{margin-top:28px;font-size:clamp(18px,2vw,30px);line-height:1.7;color:#555}
+.highlight{font-weight:800}
+.blue{color:#285fe0}
+.muted{color:#777}
+.box{padding:24px 28px;border:1px solid #ddd;background:#faf8f5;border-radius:12px}
+
+.page-1 .page-inner,.page-3 .page-inner{align-items:center;text-align:center}
+.arrow{font-size:40px;color:#999;margin:18px 0}
+
+.split-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.example-row{display:flex;gap:16px;margin-top:26px}
+.example{flex:1;padding:20px;border:1px solid #ddd;border-radius:12px;background:#fcfbf9}
+.example .jp{font-size:clamp(18px,1.8vw,28px)}
+.example .kr{margin-top:10px;font-size:clamp(22px,2.3vw,36px);font-weight:800}
+
+.table{width:100%;border-collapse:collapse;margin-top:12px;font-size:18px}
+.table th,.table td{border-bottom:1px solid #ddd;padding:13px;text-align:center}
+.table th{background:#f4f1ec}
+
+.summary-list{margin-top:18px;max-width:900px}
+.summary-item{display:flex;gap:18px;border-bottom:1px solid #ddd;padding:16px 0;font-size:clamp(18px,1.9vw,28px)}
+.summary-number{width:45px;color:#285fe0;font-weight:800}
+
+.controls{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:100}
+.control-btn{width:42px;height:42px;border:none;border-radius:50%;background:rgba(255,255,255,.95);cursor:pointer;font-size:18px;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.page-counter{padding:8px 14px;border-radius:20px;background:rgba(255,255,255,.95);font-size:13px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:24px}
+.modal-overlay.show{display:flex}
+.modal{width:min(1000px,100%);max-height:85vh;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.modal-header{padding:20px 26px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:22px;font-weight:800}
+.modal-close{width:36px;height:36px;border:none;border-radius:50%;background:#f3f3f3;cursor:pointer;font-size:20px}
+.modal-body{padding:26px;overflow-y:auto}
+.menu-list{display:grid;gap:12px}
+.menu-item{width:100%;padding:20px 22px;border:1px solid #ddd;border-radius:12px;background:#fff;cursor:pointer;text-align:left;font-size:17px;transition:.2s}
+.menu-item:hover{background:#f5f7fb;transform:translateY(-1px)}
+.show-answer{margin-top:15px;padding:10px 18px;border:none;border-radius:20px;background:#111;color:#fff;cursor:pointer}
+
+.word-card{padding:25px;border:1px solid #ddd;border-radius:14px;margin-bottom:15px;background:#fcfbf9}
+.word-jp{font-size:17px;color:#777}
+.word-kr{font-size:34px;font-weight:900;margin-top:8px}
+.word-example{margin-top:12px;font-size:18px;line-height:1.6}
+.question-controls{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px}
+.nav-arrow{width:50px;height:50px;border:none;border-radius:50%;background:#f1f1f1;cursor:pointer;font-size:25px}
+.question-count{min-width:88px;text-align:center;font-size:14px;color:#777}
+
+.practice-answer-btn{padding:6px 12px;border:none;border-radius:16px;background:#111;color:#fff;cursor:pointer;font-size:13px}
+.practice-answer{display:none;margin-left:8px;font-weight:800}
+.practice-answer.show{display:inline}
+.question-jp{font-size:clamp(25px,3vw,40px);margin-bottom:30px;text-align:center}
+.answer-box{padding:20px;background:#f6f6f6;border-radius:12px;margin-bottom:25px}
+.answer-box.hidden{filter:blur(7px);user-select:none}
+.question-answer{font-size:clamp(27px,3vw,42px);font-weight:800;text-align:center}
+
+@media (max-width:800px){
+.ppt-wrapper{padding:10px}.page{aspect-ratio:auto;height:calc(100vh - 20px)}.page-inner{padding:9%}
+.split-2{grid-template-columns:1fr}.example-row{flex-direction:column}.modal-body{padding:18px}
+}
+</style>
+</head>
+<body>
+<div class="ppt-wrapper">
+
+<section class="page page-1 active">
+	<div class="page-inner">
+		<div class="small-label">한국어 문법 (日本語で説明)</div>
+		<div class="big-title">形容詞 + <span class="blue">-게</span> + 動詞</div>
+		<div class="subtitle">「どんな状態で / どんなやり方で～するか」を表します。</div>
+		<div class="page-number">1</div>
+	</div>
+</section>
+
+<section class="page page-2">
+	<div class="page-inner">
+		<div class="small-label">1. 基本意味</div>
+		<div class="box" style="font-size:clamp(18px,2vw,28px);line-height:1.8">
+			形容詞の後ろに <strong>-게</strong> をつけると、<strong>「～に / ～く」</strong> の意味になります。<br>
+			つまり、<strong>形容詞 → 副詞</strong> に変わります。<br><br>
+			빠르다 → <strong>빠르게</strong><br>
+			조용하다 → <strong>조용하게</strong><br>
+			예쁘다 → <strong>예쁘게</strong><br>
+			쉽다 → <strong>쉽게</strong>
+		</div>
+		<div class="subtitle">後ろには動詞が来ます: 빠르게 달리다 / 조용하게 말하다</div>
+		<div class="page-number">2</div>
+	</div>
+</section>
+
+<section class="page page-3">
+	<div class="page-inner">
+		<div class="small-label">2. いつ使う？</div>
+		<div class="big-title" style="font-size:clamp(34px,4vw,60px)">動作の「やり方」を説明するとき</div>
+		<div class="example-row" style="width:100%;margin-top:30px">
+			<div class="example"><div class="jp">그 사람은 빠르게 걸어요.</div><div class="kr">彼は速く歩きます。</div></div>
+			<div class="example"><div class="jp">선생님이 쉽게 설명해요.</div><div class="kr">先生が分かりやすく説明します。</div></div>
+			<div class="example"><div class="jp">아이가 조용하게 말하고있어요.</div><div class="kr">子どもが(小さい声)静かに話しています。</div></div>
+		</div>
+		<div class="page-number">3</div>
+	</div>
+</section>
+
+<section class="page page-4">
+	<div class="page-inner">
+		<div class="small-label">3. 作り方</div>
+		<div class="split-2">
+			<div class="box" style="font-size:clamp(18px,2vw,28px);line-height:1.8">
+				<strong>① 一般形容詞</strong><br>
+				크다 → 크게<br>
+				작다 → 작게<br>
+				쉽다 → 쉽게<br>
+				어렵다 → 어렵게<br>
+				좋다 → 좋게<br>
+			</div>
+			<div class="box" style="font-size:clamp(18px,2vw,28px);line-height:1.8">
+				<strong>② -하다 形容詞</strong><br>
+				조용하다 → 조용하게<br>
+				친절하다 → 친절하게<br>
+				정확하다 → 정확하게
+			</div>
+		</div>
+		<div class="page-number">4</div>
+	</div>
+</section>
+
+<section class="page page-5">
+	<div class="page-inner">
+		<div class="small-label">4. よく使う表現</div>
+		<table class="table">
+			<thead>
+				<tr><th>形容詞</th><th>-게 形</th><th>例文</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>빠르다</td><td><strong>빠르게</strong></td><td>빠르게 걸어요.</td></tr>
+				<tr><td>쉽다</td><td><strong>쉽게</strong></td><td>쉽게 설명해 주세요.</td></tr>
+				<tr><td>차갑다</td><td><strong>차갑게</strong></td><td>차갑게 주세요.</td></tr>
+				<tr><td>조용하다</td><td><strong>조용하게</strong></td><td>조용하게 말해 주세요.</td></tr>
+				<tr><td>친절하다</td><td><strong>친절하게</strong></td><td>친절하게 안내 해 줬어요.</td></tr>
+			</tbody>
+		</table>
+		<div class="page-number">5</div>
+	</div>
+</section>
+
+<section class="page page-6">
+	<div class="page-inner">
+		<div class="small-label">5. -게 のニュアンス</div>
+		<div class="example-row">
+			<div class="example">
+				<div class="jp">예쁘다 → 예쁜 상태</div>
+				<div class="kr">「きれいな状態」</div>
+			</div>
+			<div class="example">
+				<div class="jp">예쁘게 입다</div>
+				<div class="kr">きれいな姿で着る</div>
+			</div>
+		</div>
+		<div class="example-row" style="margin-top:16px">
+			<div class="example">
+				<div class="jp">조용하다 → 조용한 상태</div>
+				<div class="kr">「静かな状態」</div>
+			</div>
+			<div class="example">
+				<div class="jp">조용하게 이야기하다</div>
+				<div class="kr">静かなやり方で話す</div>
+			</div>
+		</div>
+		<div class="subtitle">形容詞は「状態」、-게 がつくと「その状態で行動する」意味になります。</div>
+		<div class="page-number">6</div>
+	</div>
+</section>
+
+<section class="page page-7">
+	<div class="page-inner">
+		<div class="small-label">まとめ</div>
+		<div class="big-title" style="font-size:clamp(36px,4.5vw,68px)">形容詞 + <span class="blue">게</span> + 動詞</div>
+		<div class="summary-list">
+			<div class="summary-item"><div class="summary-number">01</div><div>「どうやって～するか」を表す。</div></div>
+			<div class="summary-item"><div class="summary-number">02</div><div>形容詞が副詞に変わる: 빠르다 → 빠르게</div></div>
+			<div class="summary-item"><div class="summary-number">03</div><div>例: 쉽게 설명하다 / 조용하게 말하다</div></div>
+		</div>
+		<div class="page-number">7</div>
+	</div>
+</section>
+
+</div>
+
+<div class="controls">
+	<button class="control-btn" onclick="previousPage()">‹</button>
+	<div class="page-counter" id="pageCounter">1 / 7</div>
+	<button class="control-btn" onclick="nextPage()">›</button>
+</div>
+
+<div class="modal-overlay" id="menuModal">
+	<div class="modal">
+		<div class="modal-header">
+			<div class="modal-title" id="modalTitle">메뉴</div>
+			<button class="modal-close" onclick="closeModal()">×</button>
+		</div>
+		<div class="modal-body" id="modalBody"></div>
+	</div>
+</div>
+
+<script>
+let currentPage = 1;
+const pages = document.querySelectorAll('.page');
+const pageCounter = document.getElementById('pageCounter');
+
+function showPage(pageNumber){
+	if(pageNumber<1) pageNumber=1;
+	if(pageNumber>pages.length) pageNumber=pages.length;
+	currentPage = pageNumber;
+	pages.forEach((page,index)=>page.classList.toggle('active', index===currentPage-1));
+	pageCounter.textContent = `${currentPage} / ${pages.length}`;
+}
+function nextPage(){ showPage(currentPage+1); }
+function previousPage(){ showPage(currentPage-1); }
+
+const modal = document.getElementById('menuModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+
+function openModal(){ modal.classList.add('show'); }
+function closeModal(){ modal.classList.remove('show'); }
+
+const sections = [
+	{ id:'adj-practice', title:'1. 형용사「-게」변형연습', type:'adjPractice' },
+	{ id:'new-words', title:'2. 새로운 단어', type:'words' },
+	{ id:'jp-to-kr', title:'3. 일본어 → 한국어 변형 연습', type:'quiz' }
+];
+
+const adjectivePracticeData = [
+	{ adjective:'빠르다', meaning:'速い', answer:'빠르게,빨리' },
+	{ adjective:'조용하다', meaning:'静かだ', answer:'조용하게,조용히' },
+	{ adjective:'예쁘다', meaning:'きれいだ', answer:'예쁘게' },
+	{ adjective:'쉽다', meaning:'易しい', answer:'쉽게' },
+	{ adjective:'친절하다', meaning:'親切だ', answer:'친절하게' },
+	{ adjective:'정확하다', meaning:'正確だ', answer:'정확하게' },
+	{ adjective: '차갑다', meaning: '冷たい', answer: '차갑게' },
+	{ adjective: '뜨겁다', meaning: '熱い', answer: '뜨겁게' },
+	{ adjective:'좋다', meaning:'良い', answer:'좋게' }
+];
+
+const wordData = [
+	{ jp:'速く', kr:'빠르게', example:'빠르게 달려요.<br>速く走ります。' },
+	{ jp:'静かに', kr:'조용하게', example:'조용하게 말해 주세요.<br>静かに話してください。' },
+	{ jp:'きれいに', kr:'예쁘게', example:'예쁘게 꾸몄어요.<br>きれいに飾りました。' },
+	{ jp:'やさしく / わかりやすく', kr:'쉽게', example:'쉽게 설명해요.<br>分かりやすく説明します。' },
+	{ jp:'親切に', kr:'친절하게', example:'친절하게 안내해 줬어요.<br>親切に案内してくれました。' }
+];
+
+const quizData = [
+	{ jp:'先生が分かりやすく説明しました。', kr:'선생님이 쉽게 설명했어요.' },
+	{ jp:'静かに話してください。', kr:'조용하게 말해 주세요.' },
+	{ jp:'彼は速く走ります。', kr:'그는 빠르게 달려요.' },
+	{ jp:'親切に案内してくれました。', kr:'친절하게 안내해 줬어요.' },
+	{ jp:'冷たくしてください。', kr:'차갑게 주세요.' },
+	{ jp:'きれいに着ました。', kr:'예쁘게 입었어요.' }
+];
+
+let wordIndex = 0;
+let quizIndex = 0;
+
+function openMainMenu(){
+	modalTitle.textContent = '학습 메뉴';
+	modalBody.innerHTML = '';
+	const list = document.createElement('div');
+	list.className = 'menu-list';
+	sections.forEach(section=>{
+		const button = document.createElement('button');
+		button.className = 'menu-item';
+		button.textContent = section.title;
+		button.onclick = ()=>openSection(section);
+		list.appendChild(button);
+	});
+	modalBody.appendChild(list);
+	openModal();
+}
+
+function openSection(section){
+	modalTitle.textContent = section.title;
+	modalBody.innerHTML = '';
+	if(section.type==='adjPractice') renderAdjectivePractice();
+	if(section.type==='words') renderWords();
+	if(section.type==='quiz') renderQuiz();
+	openModal();
+}
+
+function addBackButton(){
+	const back = document.createElement('button');
+	back.className = 'show-answer';
+	back.textContent = '← 메뉴';
+	back.onclick = openMainMenu;
+	modalBody.prepend(back);
+}
+
+function renderAdjectivePractice(){
+	addBackButton();
+	const table = document.createElement('table');
+	table.className = 'table';
+	table.innerHTML = `
+		<thead>
+			<tr>
+				<th>형용사</th>
+				<th>意味</th>
+				<th>-게 변형</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	`;
+	const tbody = table.querySelector('tbody');
+	adjectivePracticeData.forEach(item=>{
+		const tr = document.createElement('tr');
+		tr.innerHTML = `
+			<td>${item.adjective}</td>
+			<td>${item.meaning}</td>
+			<td>
+				<button class="practice-answer-btn" onclick="togglePracticeAnswer(this)">정답 보기</button>
+				<span class="practice-answer">${item.answer}</span>
+			</td>
+		`;
+		tbody.appendChild(tr);
+	});
+	modalBody.appendChild(table);
+}
+
+function togglePracticeAnswer(button){
+	const answer = button.nextElementSibling;
+	if(!answer) return;
+	answer.classList.toggle('show');
+	button.textContent = answer.classList.contains('show') ? '정답 숨기기' : '정답 보기';
+}
+
+function renderWords(){
+	wordIndex = 0;
+	addBackButton();
+	createWordCard();
+}
+
+function createWordCard(){
+	const old = document.getElementById('wordArea');
+	if(old) old.remove();
+	const item = wordData[wordIndex];
+	const area = document.createElement('div');
+	area.id = 'wordArea';
+	area.innerHTML = `
+		<div>
+			<div class="word-card">
+				<div class="word-jp">${item.jp}</div>
+				<div class="word-kr">${item.kr}</div>
+				<div class="word-example">${item.example}</div>
+			</div>
+			<div class="question-controls">
+				<button class="nav-arrow" onclick="previousWord()">‹</button>
+				<div class="question-count">${wordIndex + 1} / ${wordData.length}</div>
+				<button class="nav-arrow" onclick="nextWord()">›</button>
+			</div>
+		</div>
+	`;
+	modalBody.appendChild(area);
+}
+
+function nextWord(){
+	wordIndex = wordIndex >= wordData.length - 1 ? 0 : wordIndex + 1;
+	createWordCard();
+}
+
+function previousWord(){
+	wordIndex = wordIndex <= 0 ? wordData.length - 1 : wordIndex - 1;
+	createWordCard();
+}
+
+function renderQuiz(){
+	quizIndex = 0;
+	addBackButton();
+	createQuiz();
+}
+
+function createQuiz(){
+	const old = document.getElementById('quizArea');
+	if(old) old.remove();
+	const item = quizData[quizIndex];
+	const area = document.createElement('div');
+	area.id = 'quizArea';
+	area.innerHTML = `
+		<div>
+			<div class="question-jp">${item.jp}</div>
+			<div class="answer-box hidden" id="quizAnswer">
+				<div class="question-answer">${item.kr}</div>
+			</div>
+			<div style="text-align:center;">
+				<button class="show-answer" onclick="toggleAnswer()">정답 보기</button>
+			</div>
+			<div class="question-controls">
+				<button class="nav-arrow" onclick="previousQuiz()">‹</button>
+				<div class="question-count">${quizIndex + 1} / ${quizData.length}</div>
+				<button class="nav-arrow" onclick="nextQuiz()">›</button>
+			</div>
+		</div>
+	`;
+	modalBody.appendChild(area);
+}
+
+function toggleAnswer(){
+	const answer = document.getElementById('quizAnswer');
+	if(!answer) return;
+	answer.classList.toggle('hidden');
+}
+
+function nextQuiz(){
+	quizIndex = quizIndex >= quizData.length - 1 ? 0 : quizIndex + 1;
+	createQuiz();
+}
+
+function previousQuiz(){
+	quizIndex = quizIndex <= 0 ? quizData.length - 1 : quizIndex - 1;
+	createQuiz();
+}
+
+document.addEventListener('keydown',function(event){
+	if(event.key==='ArrowRight' || event.key===' ') nextPage();
+	if(event.key==='ArrowLeft') previousPage();
+	if(event.ctrlKey && event.key.toLowerCase()==='m'){ event.preventDefault(); openMainMenu(); }
+	if(event.key==='Escape') closeModal();
+});
+
+modal.addEventListener('click',function(event){ if(event.target===modal) closeModal(); });
+
+showPage(1);
+</script>
+</body>
+</html>

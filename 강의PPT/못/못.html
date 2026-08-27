@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>못 + 동사 | 한국어 문법</title>
+
+<style>
+/* =========================================================
+   기본 설정
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family:
+        "Noto Sans JP",
+        "Noto Sans KR",
+        "Yu Gothic",
+        "Meiryo",
+        sans-serif;
+
+    background: #e9e9e9;
+    color: #111;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   PPT 화면
+========================================================= */
+
+.ppt-wrapper {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+}
+
+.page {
+    width: min(1400px, 100%);
+    aspect-ratio: 16 / 9;
+
+    background: #fff;
+
+    display: none;
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.15);
+}
+
+.page.active {
+    display: block;
+}
+
+/* =========================================================
+   페이지 공통
+========================================================= */
+
+.page-inner {
+    width: 100%;
+    height: 100%;
+
+    padding: 7%;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.page-number {
+    position: absolute;
+
+    bottom: 25px;
+    right: 30px;
+
+    font-size: 13px;
+    color: #888;
+}
+
+.small-label {
+    font-size: clamp(14px, 1.4vw, 22px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.big-title {
+    font-size: clamp(40px, 5vw, 78px);
+    line-height: 1.15;
+    font-weight: 800;
+}
+
+.subtitle {
+    margin-top: 30px;
+
+    font-size: clamp(18px, 2vw, 30px);
+    line-height: 1.7;
+
+    color: #555;
+}
+
+/* =========================================================
+   강조
+========================================================= */
+
+.highlight {
+    font-weight: 800;
+}
+
+.muted {
+    color: #888;
+}
+
+.red {
+    color: #d33;
+}
+
+.blue {
+    color: #2563eb;
+}
+
+.box {
+    padding: 25px 30px;
+
+    border: 1px solid #ddd;
+    background: #fafafa;
+
+    border-radius: 12px;
+}
+
+/* =========================================================
+   1P
+========================================================= */
+
+.page-1 .page-inner {
+    align-items: center;
+    text-align: center;
+}
+
+.jp-question {
+    font-size: clamp(28px, 4vw, 58px);
+    margin-bottom: 40px;
+}
+
+.arrow {
+    font-size: 40px;
+    color: #999;
+    margin: 20px 0;
+}
+
+.answer {
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 800;
+}
+
+/* =========================================================
+   2P
+========================================================= */
+
+.page-2 .page-inner {
+    align-items: center;
+    text-align: center;
+}
+
+.compare-large {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+
+    margin-top: 40px;
+}
+
+.compare-card {
+    min-width: 300px;
+
+    padding: 35px 45px;
+
+    border: 1px solid #ddd;
+    border-radius: 16px;
+
+    background: #fafafa;
+}
+
+.compare-card .jp {
+    font-size: clamp(25px, 3vw, 45px);
+}
+
+.compare-card .kr {
+    margin-top: 20px;
+
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 800;
+}
+
+/* =========================================================
+   3P
+========================================================= */
+
+.page-3 .page-inner {
+    align-items: center;
+    text-align: center;
+}
+
+.grammar-title {
+    font-size: clamp(24px, 2vw, 32px);
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.grammar-main {
+    font-size: clamp(42px, 6vw, 90px);
+    font-weight: 900;
+}
+
+.grammar-main span {
+    color: #2563eb;
+}
+
+/* =========================================================
+   4P
+========================================================= */
+
+.explanation {
+    max-width: 950px;
+}
+
+.explanation h2 {
+    font-size: clamp(28px, 3vw, 48px);
+    margin-bottom: 30px;
+}
+
+.explanation p {
+    font-size: clamp(18px, 2vw, 28px);
+    line-height: 1.8;
+}
+
+.example-row {
+    display: flex;
+    gap: 20px;
+
+    margin-top: 35px;
+}
+
+.example {
+    flex: 1;
+
+    padding: 25px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.example .jp {
+    font-size: clamp(18px, 1.8vw, 27px);
+}
+
+.example .kr {
+    margin-top: 12px;
+
+    font-size: clamp(24px, 2.5vw, 38px);
+    font-weight: 800;
+}
+
+/* =========================================================
+   5P
+========================================================= */
+
+.difference-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 25px;
+
+    margin-top: 35px;
+}
+
+.difference-card {
+    padding: 30px;
+
+    border: 1px solid #ddd;
+    border-radius: 14px;
+}
+
+.difference-card h3 {
+    font-size: clamp(25px, 2.5vw, 38px);
+    margin-bottom: 18px;
+}
+
+.difference-card p {
+    font-size: clamp(17px, 1.7vw, 25px);
+    line-height: 1.7;
+}
+
+/* =========================================================
+   6P
+========================================================= */
+
+.formula {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 18px;
+
+    margin: 40px 0;
+}
+
+.formula-box {
+    padding: 25px 40px;
+
+    border-radius: 12px;
+
+    background: #f4f4f4;
+
+    font-size: clamp(25px, 3vw, 45px);
+    font-weight: 800;
+}
+
+.formula-box:first-child {
+    background: #eaf1ff;
+    color: #2563eb;
+}
+
+.formula-plus {
+    font-size: 35px;
+    color: #999;
+}
+
+.formula-examples {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.formula-example {
+    text-align: center;
+
+    padding: 20px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+}
+
+.formula-example .jp {
+    font-size: 18px;
+    color: #777;
+}
+
+.formula-example .kr {
+    margin-top: 8px;
+
+    font-size: 27px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   7P
+========================================================= */
+
+.summary-list {
+    max-width: 850px;
+    margin-top: 30px;
+}
+
+.summary-item {
+    display: flex;
+    gap: 20px;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid #ddd;
+
+    font-size: clamp(18px, 2vw, 28px);
+}
+
+.summary-number {
+    width: 45px;
+
+    font-weight: 800;
+    color: #2563eb;
+}
+
+/* =========================================================
+   하단 컨트롤
+========================================================= */
+
+.controls {
+    position: fixed;
+
+    bottom: 15px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    z-index: 100;
+}
+
+.control-btn {
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.9);
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    box-shadow:
+        0 3px 12px rgba(0,0,0,0.12);
+}
+
+.control-btn:hover {
+    background: #fff;
+}
+
+.page-counter {
+    padding: 8px 14px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.9);
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   메뉴 모달
+========================================================= */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,0.45);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1000;
+
+    padding: 25px;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal {
+    width: min(1000px, 100%);
+
+    max-height: 85vh;
+
+    background: #fff;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.25);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 22px 28px;
+
+    border-bottom: 1px solid #eee;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #f3f3f3;
+
+    cursor: pointer;
+
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 30px;
+
+    overflow-y: auto;
+}
+
+/* =========================================================
+   메인 메뉴
+========================================================= */
+
+.menu-list {
+    display: grid;
+    gap: 12px;
+}
+
+.menu-item {
+    width: 100%;
+
+    padding: 22px 25px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    background: #fff;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    font-size: 17px;
+
+    transition: 0.2s;
+}
+
+.menu-item:hover {
+    background: #f5f7fb;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   섹션 1 : 변형연습표
+========================================================= */
+
+.practice-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 17px;
+}
+
+.practice-table th,
+.practice-table td {
+    border-bottom: 1px solid #ddd;
+
+    padding: 15px;
+
+    text-align: center;
+}
+
+.practice-table th {
+    background: #f5f5f5;
+}
+
+.practice-answer-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 16px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.practice-answer {
+    display: none;
+    margin-left: 8px;
+    font-weight: 800;
+}
+
+.practice-answer.show {
+    display: inline;
+}
+
+/* =========================================================
+   섹션 2 : 새로운 단어
+========================================================= */
+
+.word-card {
+    padding: 25px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 14px;
+
+    margin-bottom: 15px;
+}
+
+.word-jp {
+    font-size: 17px;
+    color: #777;
+}
+
+.word-kr {
+    font-size: 32px;
+    font-weight: 800;
+
+    margin-top: 8px;
+}
+
+.word-example {
+    margin-top: 12px;
+
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   섹션 3 : 일본어 → 한국어
+========================================================= */
+
+.question-box {
+    text-align: center;
+
+    padding: 30px 20px;
+}
+
+.question-jp {
+    font-size: clamp(25px, 3vw, 40px);
+
+    margin-bottom: 30px;
+}
+
+.answer-box {
+    padding: 20px;
+
+    background: #f6f6f6;
+
+    border-radius: 12px;
+
+    margin-bottom: 25px;
+}
+
+.answer-box.hidden {
+    filter: blur(7px);
+    user-select: none;
+}
+
+.question-answer {
+    font-size: clamp(27px, 3vw, 42px);
+    font-weight: 800;
+}
+
+.question-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+.nav-arrow {
+    width: 50px;
+    height: 50px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #f1f1f1;
+
+    cursor: pointer;
+
+    font-size: 25px;
+}
+
+.nav-arrow:hover {
+    background: #e6e6e6;
+}
+
+.question-count {
+    min-width: 80px;
+
+    text-align: center;
+
+    font-size: 14px;
+    color: #777;
+}
+
+.show-answer {
+    margin-top: 15px;
+
+    padding: 10px 18px;
+
+    border: none;
+    border-radius: 20px;
+
+    background: #111;
+    color: #fff;
+
+    cursor: pointer;
+}
+
+/* =========================================================
+   반응형
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .ppt-wrapper {
+        padding: 10px;
+    }
+
+    .page {
+        aspect-ratio: auto;
+        height: calc(100vh - 20px);
+    }
+
+    .page-inner {
+        padding: 9%;
+    }
+
+    .compare-large {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .compare-card {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .difference-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .formula {
+        gap: 8px;
+    }
+
+    .formula-box {
+        padding: 18px 20px;
+    }
+
+    .formula-examples {
+        grid-template-columns: 1fr;
+    }
+
+    .example-row {
+        flex-direction: column;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     PPT
+===================================================== -->
+
+  <div class="ppt-wrapper">
+
+
+    <!-- =========================
+       1P
+  ========================== -->
+
+    <section class="page page-1 active">
+
+      <div class="page-inner">
+
+        <div class="small-label">
+          まずは、この文を見てください。
+        </div>
+
+        <div class="jp-question">
+          食べません。
+        </div>
+
+        <div class="arrow">
+          ↓
+        </div>
+
+        <div class="answer">
+          韓国語で？
+        </div>
+
+        <div class="page-number">1</div>
+
+      </div>
+
+    </section>
+
+    <section class="page page-1 active">
+
+      <div class="page-inner">
+
+        <div class="small-label">
+          まずは、この文を見てください。
+        </div>
+
+        <div class="jp-question">
+          食べません。
+        </div>
+
+        <div class="arrow">
+          ↓
+        </div>
+
+        <div class="answer">
+          <b>안</b> 먹어요.
+        </div>
+
+        <div class="page-number">1</div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+       2P
+  ========================== -->
+
+    <section class="page page-2">
+      <div class="page-inner">
+        <div class="small-label">
+          では、これは？
+        </div>
+        <div class="compare-large">
+          <div class="compare-card">
+            <div class="jp">
+              食べれません。
+            </div>
+            <div class="kr muted">
+              안 먹어요?
+            </div>
+          </div>
+          <div class="arrow">
+            →
+          </div>
+          <div class="compare-card">
+            <div class="jp">
+              食べられません。
+            </div>
+            <div class="kr">
+              ? 
+            </div>
+          </div>
+        </div>
+        <div class="subtitle">
+          「食べない」と「食べられない」は、韓国語ではどう違う？
+        </div>
+        <div class="page-number">2</div>
+      </div>
+    </section>
+
+
+    <section class="page page-2">
+      <div class="page-inner">
+        <div class="small-label">
+          では、これは？
+        </div>
+        <div class="compare-large">
+          <div class="compare-card">
+            <div class="jp">
+              食べれません。
+            </div>
+            <div class="kr muted">
+              안 먹어요?
+            </div>
+          </div>
+          <div class="arrow">
+            →
+          </div>
+          <div class="compare-card">
+            <div class="jp">
+              食べられません。
+            </div>
+            <div class="kr">
+              못 먹어요.
+            </div>
+          </div>
+        </div>
+        <div class="subtitle">
+          「食べない」と「食べられない」は、韓国語ではどう違う？
+        </div>
+        <div class="page-number">2</div>
+      </div>
+    </section>
+
+
+    <!-- =========================
+       3P
+  ========================== -->
+
+    <section class="page page-3">
+
+      <div class="page-inner">
+
+        <div class="grammar-title">
+          오늘 배울 한국어 문법
+        </div>
+
+        <div class="grammar-main">
+          「<span>못</span>」＋動詞
+        </div>
+
+        <div class="subtitle">
+          「〜できない」「〜することができない」
+        </div>
+
+        <div class="page-number">3</div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+       4P
+  ========================== -->
+
+    <section class="page page-4">
+
+      <div class="page-inner">
+
+        <div class="explanation">
+
+          <div class="small-label">
+            4. 「못」이란 무엇인가?
+          </div>
+
+          <h2>
+            「못」＝ できない
+          </h2>
+
+          <p>
+            「못」は、<strong>
+              したくないのではなく、
+              何かの理由でできない
+            </strong>ときに使います。
+          </p>
+
+          <div class="example-row">
+
+            <div class="example">
+
+              <div class="jp">
+                時間がありません。
+              </div>
+
+              <div class="kr">
+                시간이 없어요.
+              </div>
+
+            </div>
+
+            <div class="example">
+
+              <div class="jp">
+                → 行けません。
+              </div>
+
+              <div class="kr">
+                못 가요.
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="page-number">4</div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+       5P
+  ========================== -->
+
+    <section class="page page-5">
+
+      <div class="page-inner">
+
+        <div class="small-label">
+          5. 「안」と「못」の違い
+        </div>
+
+        <div class="difference-grid">
+
+          <div class="difference-card">
+
+            <h3>
+              안 + 동사
+            </h3>
+
+            <p>
+              「しない」<br>
+              → 自分の意思でしない
+            </p>
+
+            <p style="margin-top:20px;">
+              밥을 <strong>안 먹어요.</strong><br>
+              ご飯を食べません。
+            </p>
+
+          </div>
+
+
+          <div class="difference-card">
+
+            <h3>
+              못 + 동사
+            </h3>
+
+            <p>
+              「できない」<br>
+              → 理由があってできない
+            </p>
+
+            <p style="margin-top:20px;">
+              밥을 <strong>못 먹어요.</strong><br>
+              ご飯を食べられません。
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="page-number">5</div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+       6P
+  ========================== -->
+
+    <section class="page page-6">
+
+      <div class="page-inner">
+
+        <div class="small-label">
+          6. 「못」의 사용법
+        </div>
+
+        <div class="formula">
+
+          <div class="formula-box">
+            못
+          </div>
+
+          <div class="formula-plus">
+            +
+          </div>
+
+          <div class="formula-box">
+            동사
+          </div>
+
+        </div>
+
+        <div class="formula-examples">
+
+          <div class="formula-example">
+            <div class="jp">
+              行く → 行けない
+            </div>
+
+            <div class="kr">
+              못 가요.
+            </div>
+          </div>
+
+          <div class="formula-example">
+            <div class="jp">
+              食べる → 食べられない
+            </div>
+
+            <div class="kr">
+              못 먹어요.
+            </div>
+          </div>
+
+          <div class="formula-example">
+            <div class="jp">
+              する → できない
+            </div>
+
+            <div class="kr">
+              못 해요.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="page-number">6</div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+       7P
+  ========================== -->
+
+    <section class="page page-7">
+
+      <div class="page-inner">
+
+        <div class="small-label">
+          7. 정리
+        </div>
+
+        <div class="big-title">
+          「못」＝ できない
+        </div>
+
+        <div class="summary-list">
+
+          <div class="summary-item">
+
+            <div class="summary-number">
+              01
+            </div>
+
+            <div>
+              못 + 동사
+            </div>
+
+          </div>
+
+          <div class="summary-item">
+
+            <div class="summary-number">
+              02
+            </div>
+
+            <div>
+              안 → 「しない」
+            </div>
+
+          </div>
+
+          <div class="summary-item">
+
+            <div class="summary-number">
+              03
+            </div>
+
+            <div>
+              못 → 「できない」
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="page-number">7</div>
+
+      </div>
+
+    </section>
+
+
+  </div>
+
+
+<!-- =====================================================
+     하단 컨트롤
+===================================================== -->
+
+<div class="controls">
+
+    <button
+        class="control-btn"
+        onclick="previousPage()">
+        ‹
+    </button>
+
+    <div
+        class="page-counter"
+        id="pageCounter">
+        1 / 7
+    </div>
+
+    <button
+        class="control-btn"
+        onclick="nextPage()">
+        ›
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     메뉴 모달
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="menuModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div
+                class="modal-title"
+                id="modalTitle">
+                메뉴
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+        <div
+            class="modal-body"
+            id="modalBody">
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   페이지 관리
+========================================================= */
+
+let currentPage = 1;
+
+const pages = document.querySelectorAll(".page");
+
+const pageCounter =
+    document.getElementById("pageCounter");
+
+
+function showPage(pageNumber) {
+
+    if (pageNumber < 1) {
+        pageNumber = 1;
+    }
+
+    if (pageNumber > pages.length) {
+        pageNumber = pages.length;
+    }
+
+    currentPage = pageNumber;
+
+    pages.forEach((page, index) => {
+
+        page.classList.toggle(
+            "active",
+            index === currentPage - 1
+        );
+
+    });
+
+    pageCounter.textContent =
+        `${currentPage} / ${pages.length}`;
+}
+
+
+function nextPage() {
+
+    showPage(currentPage + 1);
+
+}
+
+
+function previousPage() {
+
+    showPage(currentPage - 1);
+
+}
+
+
+/* =========================================================
+   키보드
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key === " "
+        ) {
+
+            nextPage();
+
+        }
+
+        if (event.key === "ArrowLeft") {
+
+            previousPage();
+
+        }
+
+        /*
+         * Ctrl + M
+         * 메뉴 열기
+         */
+
+        if (
+            event.ctrlKey &&
+            event.key.toLowerCase() === "m"
+        ) {
+
+            event.preventDefault();
+
+            openMainMenu();
+
+        }
+
+        /*
+         * ESC
+         */
+
+        if (event.key === "Escape") {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   메뉴 데이터
+=========================================================
+
+   ★ 여기만 추가하면 메뉴가 자동으로 늘어남.
+
+========================================================= */
+
+const sections = [
+
+    {
+        id: "verb-practice",
+        title: "1. 동사「못」변형연습",
+        type: "verbPractice"
+    },
+
+    {
+        id: "new-words",
+        title: "2. 새로운 단어",
+        type: "words"
+    },
+
+    {
+        id: "jp-to-kr",
+        title: "3. 일본어 → 한국어 변형 연습",
+        type: "quiz"
+    }
+
+];
+
+
+/* =========================================================
+   1. 동사 변형 데이터
+========================================================= */
+
+const verbPracticeData = [
+
+    {
+        verb: "가다",
+        meaning: "行く",
+        answer: "못 가요."
+    },
+
+    {
+        verb: "먹다",
+        meaning: "食べる",
+        answer: "못 먹어요."
+    },
+
+    {
+        verb: "마시다",
+        meaning: "飲む",
+        answer: "못 마셔요."
+    },
+
+    {
+        verb: "보다",
+        meaning: "見る",
+        answer: "못 봐요."
+    },
+
+    {
+        verb: "만나다",
+        meaning: "会う",
+        answer: "못 만나요."
+    },
+
+    {
+        verb: "하다",
+        meaning: "する",
+        answer: "못 해요."
+    },
+
+    {
+        verb: "자다",
+        meaning: "寝る",
+        answer: "못 자요."
+    },
+
+    {
+        verb: "읽다",
+        meaning: "読む",
+        answer: "못 읽어요."
+    },
+
+    {
+        verb: "쓰다",
+        meaning: "書く",
+        answer: "못 써요."
+    },
+
+    {
+        verb: "사다",
+        meaning: "買う",
+        answer: "못 사요."
+    }
+
+];
+
+
+/* =========================================================
+   2. 새로운 단어 데이터
+========================================================= */
+
+const wordData = [
+
+    {
+        jp: "時間",
+        kr: "시간",
+        example: "시간이 없어요.<br>時間がありません。"
+    },
+
+    {
+        jp: "約束",
+        kr: "약속",
+        example: "오늘 약속이 있어요.<br>今日は約束があります。"
+    },
+
+    {
+        jp: "忙しい",
+        kr: "바쁘다",
+        example: "오늘은 너무 바빠요.<br>今日はとても忙しいです。"
+    },
+
+    {
+        jp: "遠い",
+        kr: "멀다",
+        example: "집이 너무 멀어요.<br>家がとても遠いです。"
+    },
+
+    {
+        jp: "遅い",
+        kr: "늦다",
+        example: "늦어서 못 가요.<br>遅くて行けません。"
+    }
+
+];
+
+
+/* =========================================================
+   3. 일본어 → 한국어 문제
+========================================================= */
+
+  const quizData = [
+
+		{
+			jp: "お酒(술)を飲めません。",
+			kr: "술을 못 마셔요."
+		},
+
+		{
+			jp: "韓国語を話せません。",
+			kr: "한국어를 못 해요."
+		},
+		{
+			jp: "今日は映画を見られません。",
+			kr: "오늘은 영화를 못 봐요."
+		},
+		{
+			jp: "今日は遅いので、行けません。",
+			kr: "오늘은 늦어서 못 가요."
+		},
+    {
+        jp: "時間がありません。だから、行けません。",
+        kr: "시간이 없어요. 그래서 못 가요."
+  },
+  {
+		jp: "時間がありませんので、行けません。",
+		kr: "시간이 없어서 못 가요."
+    },
+    {
+			jp: "時間がないので、買えません。",
+			kr: "시간이 없어서 못 사요."
+		},
+
+
+    {
+        jp: "お腹がいっぱいです。だから、食べられません。",
+        kr: "배가 불러요. 그래서 못 먹어요."
+    },
+
+	{
+		jp: "お腹がいっぱいなので、食べられません。",
+		kr: "배가 불러서 못 먹어요."
+	},
+    {
+        jp: "今日は忙しいです。だから、会えません。",
+        kr: "오늘은 바빠요. 그래서 못 만나요."
+    },
+
+	{
+		jp: "今日は忙しいなので、会えません。",
+		kr: "오늘은 바빠서 못 만나요."
+	}
+
+];
+
+
+/* =========================================================
+   모달
+========================================================= */
+
+const modal =
+    document.getElementById("menuModal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const modalBody =
+    document.getElementById("modalBody");
+
+
+function openModal() {
+
+    modal.classList.add("show");
+
+}
+
+
+function closeModal() {
+
+    modal.classList.remove("show");
+
+}
+
+
+/* =========================================================
+   메인 메뉴
+========================================================= */
+
+function openMainMenu() {
+
+    modalTitle.textContent =
+        "학습 메뉴";
+
+    modalBody.innerHTML = "";
+
+    const list =
+        document.createElement("div");
+
+    list.className = "menu-list";
+
+
+    sections.forEach(section => {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "menu-item";
+
+        button.textContent =
+            section.title;
+
+        button.onclick = () => {
+
+            openSection(section);
+
+        };
+
+        list.appendChild(button);
+
+    });
+
+
+    modalBody.appendChild(list);
+
+    openModal();
+
+}
+
+
+/* =========================================================
+   섹션 열기
+========================================================= */
+
+function openSection(section) {
+
+    modalTitle.textContent =
+        section.title;
+
+    modalBody.innerHTML = "";
+
+
+    if (section.type === "verbPractice") {
+
+        renderVerbPractice();
+
+    }
+
+    if (section.type === "words") {
+
+        renderWords();
+
+    }
+
+    if (section.type === "quiz") {
+
+        renderQuiz();
+
+    }
+
+
+    openModal();
+
+}
+
+
+/* =========================================================
+   뒤로가기 버튼
+========================================================= */
+
+function addBackButton() {
+
+    const back =
+        document.createElement("button");
+
+    back.className = "show-answer";
+
+    back.textContent =
+        "← 메뉴";
+
+    back.onclick =
+        openMainMenu;
+
+    modalBody.prepend(back);
+
+}
+
+
+/* =========================================================
+   1. 동사 변형연습표
+========================================================= */
+
+function renderVerbPractice() {
+
+    addBackButton();
+
+
+    const table =
+        document.createElement("table");
+
+    table.className =
+        "practice-table";
+
+
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>동사</th>
+                <th>意味</th>
+                <th>못 + 동사</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+
+
+    const tbody =
+        table.querySelector("tbody");
+
+
+    verbPracticeData.forEach((item, index) => {
+
+        const tr =
+            document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${item.verb}</td>
+            <td>${item.meaning}</td>
+            <td>
+                <button
+                    class="practice-answer-btn"
+                    onclick="togglePracticeAnswer(this)">
+                    정답 보기
+                </button>
+                <span class="practice-answer">${item.answer}</span>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+
+    });
+
+
+    modalBody.appendChild(table);
+
+}
+
+function togglePracticeAnswer(button) {
+
+    const answer = button.nextElementSibling;
+
+    if (!answer) return;
+
+    answer.classList.toggle("show");
+
+    button.textContent = answer.classList.contains("show")
+        ? "정답 숨기기"
+        : "정답 보기";
+
+}
+
+/* =========================================================
+   2. 새로운 단어
+========================================================= */
+
+let quizIndex = 0;
+let wordIndex = 0;
+
+
+function renderWords() {
+
+    wordIndex = 0;
+
+    addBackButton();
+
+    createWordCard();
+
+}
+
+function createWordCard() {
+
+    const old = document.getElementById("wordArea");
+    if (old) old.remove();
+
+    const item = wordData[wordIndex];
+
+    const area = document.createElement("div");
+    area.id = "wordArea";
+
+    area.innerHTML = `
+        <div class="question-box">
+            <div class="word-card">
+                <div class="word-jp">${item.jp}</div>
+                <div class="word-kr">${item.kr}</div>
+                <div class="word-example">${item.example}</div>
+            </div>
+
+            <div class="question-controls">
+                <button class="nav-arrow" onclick="previousWord()">‹</button>
+                <div class="question-count">${wordIndex + 1} / ${wordData.length}</div>
+                <button class="nav-arrow" onclick="nextWord()">›</button>
+            </div>
+        </div>
+    `;
+
+    modalBody.appendChild(area);
+
+}
+
+function nextWord() {
+
+    if (wordIndex >= wordData.length - 1) {
+        wordIndex = 0;
+    } else {
+        wordIndex++;
+    }
+
+    createWordCard();
+
+}
+
+function previousWord() {
+
+    if (wordIndex <= 0) {
+        wordIndex = wordData.length - 1;
+    } else {
+        wordIndex--;
+    }
+
+    createWordCard();
+
+}
+
+
+/* =========================================================
+   3. 일본어 → 한국어
+========================================================= */
+
+function renderQuiz() {
+
+    quizIndex = 0;
+
+    addBackButton();
+
+    createQuiz();
+
+}
+
+
+function createQuiz() {
+    /*
+     * 메뉴로 돌아갈 때 기존 문제 영역 제거
+     */
+    const old =
+        document.getElementById("quizArea");
+    if (old) {
+        old.remove();
+    }
+    const item =
+        quizData[quizIndex];
+    const area =
+        document.createElement("div");
+
+    area.id =
+        "quizArea";
+
+
+    area.innerHTML = `
+
+        <div class="question-box">
+
+            <div class="question-jp">
+                ${item.jp}
+            </div>
+
+            <div
+                class="answer-box hidden"
+                id="quizAnswer">
+
+                <div class="question-answer">
+                    ${item.kr}
+                </div>
+
+            </div>
+
+            <button
+                class="show-answer"
+                onclick="toggleAnswer()">
+
+                정답 보기
+
+            </button>
+
+
+            <div class="question-controls">
+
+                <button
+                    class="nav-arrow"
+                    onclick="previousQuiz()">
+
+                    ‹
+
+                </button>
+
+
+                <div
+                    class="question-count">
+
+                    ${quizIndex + 1}
+                    /
+                    ${quizData.length}
+
+                </div>
+
+
+                <button
+                    class="nav-arrow"
+                    onclick="nextQuiz()">
+
+                    ›
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    modalBody.appendChild(area);
+
+}
+
+
+/* =========================================================
+   정답 보기
+========================================================= */
+
+function toggleAnswer() {
+
+    const answer =
+        document.getElementById("quizAnswer");
+
+    if (!answer) return;
+
+    answer.classList.toggle("hidden");
+
+}
+
+
+/* =========================================================
+   다음 문제
+========================================================= */
+
+function nextQuiz() {
+
+    if (quizIndex >= quizData.length - 1) {
+
+        quizIndex = 0;
+
+    } else {
+
+        quizIndex++;
+
+    }
+
+    createQuiz();
+
+}
+
+
+/* =========================================================
+   이전 문제
+========================================================= */
+
+function previousQuiz() {
+
+    if (quizIndex <= 0) {
+
+        quizIndex =
+            quizData.length - 1;
+
+    } else {
+
+        quizIndex--;
+
+    }
+
+    createQuiz();
+
+}
+
+
+/* =========================================================
+   모달 바깥 클릭
+========================================================= */
+
+modal.addEventListener(
+    "click",
+    function(event) {
+
+        if (event.target === modal) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   시작
+========================================================= */
+
+showPage(1);
+
+</script>
+
+</body>
+</html>

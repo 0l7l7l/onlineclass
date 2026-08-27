@@ -1,0 +1,3347 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>韓国語文法｜못 + 動詞</title>
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+
+    background: #d9d9d9;
+
+    color: #111;
+
+    font-family:
+        "Noto Sans JP",
+        "Yu Gothic",
+        "Hiragino Kaku Gothic ProN",
+        Meiryo,
+        sans-serif;
+}
+
+
+/* =========================================================
+   BOOK
+   화면에서는 A4 spread가 세로로 쌓인다.
+========================================================= */
+
+.book {
+
+    width: 297mm;
+
+    margin: 35px auto 100px;
+}
+
+
+/* =========================================================
+   A4 LANDSCAPE
+   1P + 2P = 297 × 210mm
+========================================================= */
+
+.spread {
+
+    width: 297mm;
+    height: 210mm;
+
+    display: flex;
+
+    background: #fff;
+
+    margin-bottom: 28mm;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, .15);
+}
+
+
+/* =========================================================
+   HALF PAGE
+   A4 가로의 절반
+   148.5 × 210mm
+========================================================= */
+
+.page {
+
+    position: relative;
+
+    width: 148.5mm;
+    height: 210mm;
+
+    flex: 0 0 148.5mm;
+
+    background: #fff;
+
+    padding:
+        13mm
+        12mm
+        12mm;
+
+    overflow: hidden;
+}
+
+
+/* 가운데 접히는 부분 */
+
+.page:first-child {
+
+    border-right: 1px solid #dedede;
+}
+
+
+/* =========================================================
+   PAGE NUMBER
+========================================================= */
+
+.page-number {
+
+    position: absolute;
+
+    bottom: 7mm;
+    right: 8mm;
+
+    font-size: 8pt;
+
+    color: #aaa;
+}
+
+.page:first-child .page-number {
+
+    left: 8mm;
+    right: auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-header {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 7mm;
+
+    font-size: 7.5pt;
+
+    color: #999;
+
+    letter-spacing: .08em;
+}
+
+.lesson-number {
+
+    font-weight: 800;
+
+    color: #555;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.title-jp {
+
+    margin-bottom: 2mm;
+
+    font-size: 8.5pt;
+
+    color: #888;
+
+    line-height: 1.5;
+}
+
+
+.title {
+
+    margin-bottom: 7mm;
+
+    font-size: 22pt;
+
+    font-weight: 900;
+
+    line-height: 1.3;
+
+    letter-spacing: -.03em;
+}
+
+
+.subtitle {
+
+    margin-top: -4mm;
+
+    margin-bottom: 6mm;
+
+    font-size: 9.5pt;
+
+    color: #777;
+}
+
+
+/* =========================================================
+   BODY TEXT
+========================================================= */
+
+.jp-text {
+
+    font-size: 9.2pt;
+
+    line-height: 1.9;
+}
+
+.jp-text strong {
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   BIG KOREAN
+========================================================= */
+
+.korean-word {
+
+    margin: 8mm 0 1mm;
+
+    font-size: 39pt;
+
+    font-weight: 900;
+
+    letter-spacing: .03em;
+}
+
+
+.korean-meaning {
+
+    font-size: 10pt;
+
+    color: #777;
+}
+
+
+/* =========================================================
+   INTRO BOX
+========================================================= */
+
+.intro-box {
+
+    margin-top: 8mm;
+
+    padding: 6mm;
+
+    background: #f5f5f5;
+
+    border-left: 3px solid #111;
+
+    font-size: 9pt;
+
+    line-height: 1.9;
+}
+
+
+/* =========================================================
+   QUESTION
+========================================================= */
+
+.question-box {
+
+    margin-bottom: 6mm;
+
+    padding: 7mm 5mm;
+
+    background: #f6f6f6;
+
+    text-align: center;
+
+    border-radius: 4px;
+}
+
+
+.question-jp {
+
+    margin-bottom: 3mm;
+
+    font-size: 10pt;
+
+    color: #777;
+}
+
+
+.question-kr {
+
+    font-size: 22pt;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   FORMULA
+========================================================= */
+
+.formula {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 3mm;
+
+    margin: 8mm 0;
+}
+
+
+.formula-item {
+
+    min-width: 35mm;
+
+    padding: 5mm 6mm;
+
+    background: #f1f1f1;
+
+    text-align: center;
+
+    border-radius: 4px;
+
+    font-size: 17pt;
+
+    font-weight: 900;
+}
+
+
+.formula-item.black {
+
+    color: #fff;
+
+    background: #111;
+}
+
+
+.formula-plus {
+
+    font-size: 16pt;
+
+    color: #888;
+}
+
+
+/* =========================================================
+   EXAMPLE
+========================================================= */
+
+.example {
+
+    margin-bottom: 4mm;
+
+    padding: 4mm 5mm;
+
+    border: 1px solid #ddd;
+
+    border-radius: 4px;
+}
+
+
+.example-jp {
+
+    margin-bottom: 1.5mm;
+
+    font-size: 8pt;
+
+    color: #888;
+}
+
+
+.example-kr {
+
+    font-size: 13pt;
+
+    font-weight: 900;
+}
+
+
+.example-explanation {
+
+    margin-top: 1.5mm;
+
+    font-size: 7.8pt;
+
+    color: #777;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   TWO COLUMN
+========================================================= */
+
+.two-column {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 4mm;
+}
+
+
+/* =========================================================
+   COMPARE
+========================================================= */
+
+.compare-box {
+
+    padding: 5mm;
+
+    border: 1px solid #ddd;
+
+    border-radius: 4px;
+}
+
+
+.compare-title {
+
+    font-size: 22pt;
+
+    font-weight: 900;
+}
+
+
+.compare-meaning {
+
+    margin: 1mm 0 4mm;
+
+    font-size: 8pt;
+
+    color: #777;
+}
+
+
+.compare-description {
+
+    font-size: 8.5pt;
+
+    line-height: 1.8;
+}
+
+
+.compare-example {
+
+    margin-top: 4mm;
+
+    font-size: 12pt;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   POINT
+========================================================= */
+
+.point {
+
+    margin-top: 5mm;
+
+    padding: 4.5mm 5mm;
+
+    border: 1px dashed #aaa;
+
+    background: #fafafa;
+
+    font-size: 8.5pt;
+
+    line-height: 1.8;
+}
+
+
+.point-title {
+
+    margin-bottom: 1.5mm;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.word-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 8pt;
+}
+
+
+.word-table th,
+.word-table td {
+
+    padding: 2.8mm 2mm;
+
+    border-bottom: 1px solid #ddd;
+
+    text-align: center;
+}
+
+
+.word-table th {
+
+    background: #f3f3f3;
+
+    font-weight: 800;
+}
+
+
+.word-table td.kr {
+
+    font-size: 11pt;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   PRACTICE GRID
+========================================================= */
+
+.practice-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 3mm;
+}
+
+
+.practice-item {
+
+    min-height: 27mm;
+
+    padding: 4mm;
+
+    border: 1px solid #ddd;
+
+    border-radius: 4px;
+}
+
+
+.practice-number {
+
+    margin-bottom: 1mm;
+
+    font-size: 7.5pt;
+
+    color: #aaa;
+}
+
+
+.practice-word {
+
+    font-size: 11pt;
+
+    font-weight: 900;
+}
+
+
+.answer-line {
+
+    height: 7mm;
+
+    margin-top: 4mm;
+
+    border-bottom: 1px solid #999;
+}
+
+
+/* =========================================================
+   CONVERSATION
+========================================================= */
+
+.dialogue {
+
+    margin-bottom: 4mm;
+
+    padding: 4mm 5mm;
+
+    border-left: 3px solid #111;
+
+    background: #f7f7f7;
+
+    font-size: 9pt;
+
+    line-height: 1.8;
+}
+
+
+.dialogue .ko {
+
+    font-size: 12pt;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   REVIEW
+========================================================= */
+
+.review-main {
+
+    margin: 7mm 0;
+
+    text-align: center;
+}
+
+
+.review-word {
+
+    font-size: 38pt;
+
+    font-weight: 900;
+}
+
+
+.review-meaning {
+
+    font-size: 10pt;
+
+    color: #777;
+}
+
+
+.review-item {
+
+    margin-bottom: 3mm;
+
+    padding: 4mm 5mm;
+
+    border: 1px solid #ddd;
+
+    border-radius: 4px;
+
+    font-size: 8.5pt;
+
+    line-height: 1.7;
+}
+
+
+.review-item strong {
+
+    font-size: 9pt;
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+.final-box {
+
+    margin-top: 8mm;
+
+    padding: 7mm;
+
+    background: #f5f5f5;
+
+    border-radius: 4px;
+
+    font-size: 9pt;
+
+    line-height: 2;
+}
+
+
+.final-korean {
+
+    margin-top: 4mm;
+
+    font-size: 14pt;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   MENU OVERLAY
+========================================================= */
+
+.menu-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0, 0, 0, .45);
+}
+
+
+.menu-overlay.active {
+
+    display: flex;
+}
+
+
+.menu-modal {
+
+    width: min(620px, 100%);
+
+    max-height: 85vh;
+
+    overflow: hidden;
+
+    background: #fff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, .3);
+}
+
+
+/* =========================================================
+   MENU HEADER
+========================================================= */
+
+.menu-header {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 17px 20px;
+
+    border-bottom: 1px solid #eee;
+}
+
+
+.menu-header h2 {
+
+    font-size: 17px;
+}
+
+
+.close-button {
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #eee;
+
+    cursor: pointer;
+
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   MENU BODY
+========================================================= */
+
+.menu-body {
+
+    max-height: calc(85vh - 70px);
+
+    overflow-y: auto;
+
+    padding: 18px;
+}
+
+
+.menu-list {
+
+    display: grid;
+
+    gap: 10px;
+}
+
+
+.menu-button {
+
+    width: 100%;
+
+    padding: 15px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 7px;
+
+    background: #fff;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    transition: .15s;
+}
+
+
+.menu-button:hover {
+
+    background: #f5f5f5;
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+.quiz {
+
+    padding: 5px;
+
+    text-align: center;
+}
+
+
+.quiz-progress {
+
+    margin-bottom: 6mm;
+
+    font-size: 8pt;
+
+    color: #999;
+}
+
+
+.quiz-jp {
+
+    margin-bottom: 6mm;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    line-height: 1.7;
+}
+
+
+.quiz-answer {
+
+    min-height: 20mm;
+
+    margin-bottom: 4mm;
+
+    padding: 5mm;
+
+    background: #f3f3f3;
+
+    border-radius: 5px;
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+
+.quiz-answer.hidden {
+
+    filter: blur(8px);
+
+    user-select: none;
+}
+
+
+.show-answer {
+
+    padding: 8px 17px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    background: #111;
+
+    color: #fff;
+
+    cursor: pointer;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   ARROW NAVIGATION
+========================================================= */
+
+.quiz-navigation {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 18px;
+
+    margin-top: 7mm;
+}
+
+
+.arrow {
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #eee;
+
+    cursor: pointer;
+
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   WORD CARD
+========================================================= */
+
+.word-card {
+
+    margin-bottom: 4mm;
+
+    padding: 5mm;
+
+    border: 1px solid #ddd;
+
+    border-radius: 5px;
+}
+
+
+.word-jp {
+
+    font-size: 8pt;
+
+    color: #888;
+}
+
+
+.word-kr {
+
+    margin: 1mm 0;
+
+    font-size: 17pt;
+
+    font-weight: 900;
+}
+
+
+.word-example {
+
+    font-size: 8.5pt;
+
+    color: #666;
+}
+
+
+/* =========================================================
+   MOBILE / SMALL SCREEN
+   A4 비율을 유지하면서 화면에 맞게 축소
+========================================================= */
+
+@media screen and (max-width: 297mm) {
+
+    .book {
+
+        transform-origin: top center;
+
+    }
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+
+    @page {
+
+        size: A4 landscape;
+
+        margin: 0;
+    }
+
+
+    html,
+    body {
+
+        width: 100%;
+
+        margin: 0;
+
+        padding: 0;
+
+        background: #fff;
+    }
+
+
+    .book {
+
+        width: 297mm;
+
+        margin: 0;
+    }
+
+
+    .spread {
+
+        width: 297mm;
+
+        height: 210mm;
+
+        margin: 0;
+
+        box-shadow: none;
+
+        page-break-after: always;
+
+        break-after: page;
+    }
+
+
+    .page {
+
+        width: 148.5mm;
+
+        height: 210mm;
+
+        flex: 0 0 148.5mm;
+    }
+
+
+    .menu-overlay {
+
+        display: none !important;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     BOOK START
+========================================================= -->
+
+<div class="book">
+
+
+<!-- =========================================================
+     A4 01
+     1P + 2P
+========================================================= -->
+
+<div class="spread">
+
+
+<!-- =========================
+     1P
+========================= -->
+
+<section  class="page"  id="page-1">
+    <div class="page-header">
+        <span class="lesson-number">
+            LESSON 01
+        </span>
+        <span>
+            韓国語文法・初級
+        </span>
+    </div>
+
+
+    <div class="title-jp">
+        「～しない」と「～できない」は
+        どう違う？
+    </div>
+
+
+    <h1 class="title">
+        못 ＋ 動詞
+    </h1>
+
+
+    <div class="korean-word">
+        못
+    </div>
+
+
+    <div class="korean-meaning">
+        ～できない / ～することができない
+    </div>
+
+
+    <div class="intro-box">
+        韓国語で「食べません」と言いたいとき、
+        <br>
+        <strong>안 먹어요.</strong>
+        と言います。
+        <br><br>
+        では、
+        <strong>「食べられません」</strong>
+        は韓国語で何と言うでしょうか？
+    </div>
+    <div class="example">
+        <div class="example-jp">
+            食べません。
+        </div>
+        <div class="example-kr">
+            안 먹어요.
+        </div>
+    </div>
+    <div class="example">
+        <div class="example-jp">
+            食べられません。
+        </div>
+        <div class="example-kr">
+            못 먹어요.
+        </div>
+    </div>
+    <div class="page-number">1</div>
+</section>
+
+
+
+<!-- =========================
+     2P
+========================= -->
+
+<section  class="page"  id="page-2">
+    <div class="page-header">
+        <span>
+            START
+        </span>
+        <span>
+            考えてみよう
+        </span>
+    </div>
+    <div class="title">
+        안 먹어요.
+    </div>
+    <div class="question-box">
+        <div class="question-jp">
+            「食べません。」
+        </div>
+        <div class="question-kr">
+            안 먹어요.
+        </div>
+    </div>
+    <div class="title">
+        못 먹어요.
+    </div>
+    <div class="question-box">
+        <div class="question-jp">
+            「食べられません。」
+        </div>
+        <div class="question-kr">
+            못 먹어요.
+        </div>
+    </div>
+    <div class="point">
+        <div class="point-title">
+            今日のポイント
+        </div>
+        <strong>안</strong> と
+        <strong>못</strong> は、
+        どちらも動詞の前に置くことができます。
+        <br>
+        しかし、意味は違います。
+    </div>
+    <div class="page-number"> 2 </div>
+</section>
+</div>
+
+
+
+<!-- =========================================================
+     A4 02
+     3P + 4P
+========================================================= -->
+
+<div class="spread">
+
+
+<!-- =========================
+     3P
+========================= -->
+<section class="page"  id="page-3">
+    <div class="page-header">
+        <span> 01 </span>
+      <span> 못とは？  </span>
+    </div>
+    <div class="title-jp">
+        「못」の基本的な意味
+    </div>
+    <h2 class="title">
+      「못」は何を表す？
+    </h2>
+    <p class="jp-text">
+        <strong>못</strong> は、
+        ある理由や状況によって、
+        <strong>「～することができない」</strong>
+        という意味を表します。
+    </p>
+    <div class="intro-box">
+        ポイントは、
+        <br><br>
+        <strong>
+            「したくない」のではなく、
+            「したいけれど、できない」
+        </strong>
+
+        ということです。
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            時間がありません。
+
+        </div>
+
+        <div class="example-kr">
+
+            시간이 없어요.
+
+        </div>
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            時間がないので、行けません。
+
+        </div>
+
+        <div class="example-kr">
+
+            시간이 없어서 못 가요.
+
+        </div>
+
+    </div>
+
+
+    <div class="point">
+
+        <div class="point-title">
+
+            기억하기
+
+        </div>
+
+        못 ＝ 「～できない」
+
+    </div>
+
+
+    <div class="page-number">
+
+        3
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     4P
+========================= -->
+
+<section
+    class="page"
+    id="page-4"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            01
+        </span>
+
+        <span>
+            못の使い方
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        못 ＋ 動詞
+
+    </div>
+
+
+    <p class="jp-text">
+
+        <strong>못</strong> は、
+
+        動詞の前に置いて使います。
+
+        <br>
+
+        「못」自体は変化しません。
+
+    </p>
+
+
+    <div class="formula">
+
+        <div class="formula-item black">
+
+            못
+
+        </div>
+
+        <div class="formula-plus">
+
+            ＋
+
+        </div>
+
+        <div class="formula-item">
+
+            動詞
+
+        </div>
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            行く → 行けません
+
+        </div>
+
+        <div class="example-kr">
+
+            못 가요.
+
+        </div>
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            食べる → 食べられません
+
+        </div>
+
+        <div class="example-kr">
+
+            못 먹어요.
+
+        </div>
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            飲む → 飲めません
+
+        </div>
+
+        <div class="example-kr">
+
+            못 마셔요.
+
+        </div>
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            見る → 見られません
+
+        </div>
+
+        <div class="example-kr">
+
+            못 봐요.
+
+        </div>
+
+    </div>
+
+
+    <div class="page-number">
+
+        4
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<!-- =========================================================
+     A4 03
+     5P + 6P
+========================================================= -->
+
+<div class="spread">
+
+
+<!-- =========================
+     5P
+========================= -->
+
+<section
+    class="page"
+    id="page-5"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            02
+        </span>
+
+        <span>
+            안との違い
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        안 と 못 の違い
+
+    </div>
+
+
+    <div class="two-column">
+
+
+        <div class="compare-box">
+
+            <div class="compare-title">
+
+                안
+
+            </div>
+
+            <div class="compare-meaning">
+
+                ～しない
+
+            </div>
+
+            <div class="compare-description">
+
+                自分の意思で、
+
+                その行動をしない。
+
+            </div>
+
+            <div class="compare-example">
+
+                밥을 안 먹어요.
+
+            </div>
+
+            <div class="compare-description">
+
+                ご飯を食べません。
+
+            </div>
+
+        </div>
+
+
+
+        <div class="compare-box">
+
+            <div class="compare-title">
+
+                못
+
+            </div>
+
+            <div class="compare-meaning">
+
+                ～できない
+
+            </div>
+
+            <div class="compare-description">
+
+                理由や状況によって、
+
+                その行動ができない。
+
+            </div>
+
+            <div class="compare-example">
+
+                밥을 못 먹어요.
+
+            </div>
+
+            <div class="compare-description">
+
+                ご飯を食べられません。
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="point">
+
+        <div class="point-title">
+
+            簡単に覚えよう！
+
+        </div>
+
+        <strong>안</strong>
+        → しない
+
+        <br>
+
+        <strong>못</strong>
+        → できない
+
+    </div>
+
+
+    <div class="page-number">
+
+        5
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     6P
+========================= -->
+
+<section
+    class="page"
+    id="page-6"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            02
+        </span>
+
+        <span>
+            상황으로 비교
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        状況で比べてみよう
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            ダイエット中なので、
+            ご飯を食べません。
+
+        </div>
+
+        <div class="example-kr">
+
+            다이어트 중이라서
+            밥을 안 먹어요.
+
+        </div>
+
+        <div class="example-explanation">
+
+            → 食べられないのではなく、
+            自分の意思で食べない。
+
+        </div>
+
+    </div>
+
+
+    <div class="example">
+
+        <div class="example-jp">
+
+            お腹がいっぱいなので、
+            ご飯を食べられません。
+
+        </div>
+
+        <div class="example-kr">
+
+            배가 불러서
+            밥을 못 먹어요.
+
+        </div>
+
+        <div class="example-explanation">
+
+            → 状況によって、
+            食べることができない。
+
+        </div>
+
+    </div>
+
+
+    <div class="point">
+
+        <div class="point-title">
+
+            判断のコツ
+
+        </div>
+
+        「どうしてしないの？」
+
+        と考えてみましょう。
+
+        <br><br>
+
+        自分の意思なら
+
+        → <strong>안</strong>
+
+        <br>
+
+        理由・状況によって
+        できないなら
+
+        → <strong>못</strong>
+
+    </div>
+
+
+    <div class="page-number">
+
+        6
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<!-- =========================================================
+     A4 04
+     7P + 8P
+========================================================= -->
+
+<div class="spread">
+
+
+<!-- =========================
+     7P
+========================= -->
+
+<section
+    class="page"
+    id="page-7"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            03
+        </span>
+
+        <span>
+            표현 정리
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        よく使う表現
+
+    </div>
+
+
+    <table class="word-table">
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    動詞
+                </th>
+
+                <th>
+                    못 ＋ 動詞
+                </th>
+
+                <th>
+                    日本語
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td>
+                    가다
+                </td>
+
+                <td class="kr">
+                    못 가요.
+                </td>
+
+                <td>
+                    行けません。
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    먹다
+                </td>
+
+                <td class="kr">
+                    못 먹어요.
+                </td>
+
+                <td>
+                    食べられません。
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    마시다
+                </td>
+
+                <td class="kr">
+                    못 마셔요.
+                </td>
+
+                <td>
+                    飲めません。
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    보다
+                </td>
+
+                <td class="kr">
+                    못 봐요.
+                </td>
+
+                <td>
+                    見られません。
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    만나다
+                </td>
+
+                <td class="kr">
+                    못 만나요.
+                </td>
+
+                <td>
+                    会えません。
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    하다
+                </td>
+
+                <td class="kr">
+                    못 해요.
+                </td>
+
+                <td>
+                    できません。
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="point">
+
+        <div class="point-title">
+
+            ポイント
+
+        </div>
+
+        「못」はそのまま！
+
+        <br>
+
+        <strong>
+            못 ＋ 動詞
+        </strong>
+
+    </div>
+
+
+    <div class="page-number">
+
+        7
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     8P
+========================= -->
+
+<section
+    class="page"
+    id="page-8"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            PRACTICE 01
+        </span>
+
+        <span>
+            変形練習
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        못 ＋ 動詞にしてみよう
+
+    </div>
+
+
+    <p class="jp-text">
+
+        次の動詞を使って、
+
+        <strong>「못 ＋ 動詞」</strong>
+
+        の形を作ってみましょう。
+
+    </p>
+
+
+    <div class="practice-grid">
+
+
+        <div class="practice-item">
+
+            <div class="practice-number">
+                01
+            </div>
+
+            <div class="practice-word">
+                가다
+            </div>
+
+            <div class="answer-line"></div>
+
+        </div>
+
+
+        <div class="practice-item">
+
+            <div class="practice-number">
+                02
+            </div>
+
+            <div class="practice-word">
+                먹다
+            </div>
+
+            <div class="answer-line"></div>
+
+        </div>
+
+
+        <div class="practice-item">
+
+            <div class="practice-number">
+                03
+            </div>
+
+            <div class="practice-word">
+                마시다
+            </div>
+
+            <div class="answer-line"></div>
+
+        </div>
+
+
+        <div class="practice-item">
+
+            <div class="practice-number">
+                04
+            </div>
+
+            <div class="practice-word">
+                보다
+            </div>
+
+            <div class="answer-line"></div>
+
+        </div>
+
+
+        <div class="practice-item">
+
+            <div class="practice-number">
+                05
+            </div>
+
+            <div class="practice-word">
+                만나다
+            </div>
+
+            <div class="answer-line"></div>
+
+        </div>
+
+
+        <div class="practice-item">
+
+            <div class="practice-number">
+                06
+            </div>
+
+            <div class="practice-word">
+                하다
+            </div>
+
+            <div class="answer-line"></div>
+
+        </div>
+
+    </div>
+
+
+    <div class="page-number">
+
+        8
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<!-- =========================================================
+     A4 05
+     9P + 10P
+========================================================= -->
+
+<div class="spread">
+
+
+<!-- =========================
+     9P
+========================= -->
+
+<section
+    class="page"
+    id="page-9"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            PRACTICE 02
+        </span>
+
+        <span>
+            日本語 → 韓国語
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        日本語を韓国語にしてみよう
+
+    </div>
+
+
+    <p class="jp-text">
+
+        「～できません」を使って
+        韓国語で言ってみましょう。
+
+    </p>
+
+
+    <div class="practice-item">
+
+        <div class="practice-number">
+            01
+        </div>
+
+        <div class="practice-word">
+
+            今日は行けません。
+
+        </div>
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <div class="practice-item">
+
+        <div class="practice-number">
+            02
+        </div>
+
+        <div class="practice-word">
+
+            ご飯を食べられません。
+
+        </div>
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <div class="practice-item">
+
+        <div class="practice-number">
+            03
+        </div>
+
+        <div class="practice-word">
+
+            お酒を飲めません。
+
+        </div>
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <div class="practice-item">
+
+        <div class="practice-number">
+            04
+        </div>
+
+        <div class="practice-word">
+
+            友達に会えません。
+
+        </div>
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <div class="page-number">
+
+        9
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     10P
+========================= -->
+
+<section
+    class="page"
+    id="page-10"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            PRACTICE 03
+        </span>
+
+        <span>
+            会話練習
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        왜 못 해요?
+
+    </div>
+
+
+    <div class="dialogue">
+
+        <div class="ko">
+
+            A：왜 못 가요?
+
+        </div>
+
+        <div>
+
+            どうして行けませんか？
+
+        </div>
+
+    </div>
+
+
+    <div class="dialogue">
+
+        <div class="ko">
+
+            B：시간이 없어서 못 가요.
+
+        </div>
+
+        <div>
+
+            時間がなくて行けません。
+
+        </div>
+
+    </div>
+
+
+    <div class="point">
+
+        <div class="point-title">
+
+            あなたなら何と答えますか？
+
+        </div>
+
+        次の質問に、自分で答えてみましょう。
+
+        <br><br>
+
+        <strong>
+            왜 못 먹어요?
+        </strong>
+
+        <br>
+
+        → どうして食べられませんか？
+
+        <br><br>
+
+        <strong>
+            왜 못 가요?
+        </strong>
+
+        <br>
+
+        → どうして行けませんか？
+
+        <br><br>
+
+        <strong>
+            왜 못 만나요?
+        </strong>
+
+        <br>
+
+        → どうして会えませんか？
+
+    </div>
+
+
+    <div class="page-number">
+
+        10
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<!-- =========================================================
+     A4 06
+     11P + 12P
+========================================================= -->
+
+<div class="spread">
+
+
+<!-- =========================
+     11P
+========================= -->
+
+<section
+    class="page"
+    id="page-11"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            REVIEW
+        </span>
+
+        <span>
+            今日のまとめ
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        今日の文法を整理しよう
+
+    </div>
+
+
+    <div class="review-main">
+
+        <div class="review-word">
+
+            못
+
+        </div>
+
+        <div class="review-meaning">
+
+            ～できない
+
+        </div>
+
+    </div>
+
+
+    <div class="review-item">
+
+        <strong>
+            ① 形
+        </strong>
+
+        <br>
+
+        못 ＋ 動詞
+
+    </div>
+
+
+    <div class="review-item">
+
+        <strong>
+            ② 意味
+        </strong>
+
+        <br>
+
+        理由や状況によって、
+        ある行動ができない。
+
+    </div>
+
+
+    <div class="review-item">
+
+        <strong>
+            ③ 안 との違い
+        </strong>
+
+        <br>
+
+        안 → ～しない
+
+        <br>
+
+        못 → ～できない
+
+    </div>
+
+
+    <div class="review-item">
+
+        <strong>
+            ④ ポイント
+        </strong>
+
+        <br>
+
+        못 は動詞の前に置いて使う。
+
+    </div>
+
+
+    <div class="page-number">
+
+        11
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     12P
+========================= -->
+
+<section
+    class="page"
+    id="page-12"
+>
+
+
+    <div class="page-header">
+
+        <span>
+            FINAL
+        </span>
+
+        <span>
+            실제로 말해보기
+        </span>
+
+    </div>
+
+
+    <div class="title">
+
+        오늘 뭐 못 해요?
+
+    </div>
+
+
+    <div class="final-box">
+
+        <strong>
+            今日、自分が「できないこと」を
+            3つ言ってみましょう。
+        </strong>
+
+        <br><br>
+
+        例えば、
+
+        <div class="final-korean">
+
+            오늘 운동을 못 해요.
+
+        </div>
+
+        <div class="final-korean">
+
+            오늘 친구를 못 만나요.
+
+        </div>
+
+        <div class="final-korean">
+
+            오늘 영화를 못 봐요.
+
+        </div>
+
+    </div>
+
+
+    <div class="practice-item">
+
+        ①
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <div class="practice-item">
+
+        ②
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <div class="practice-item">
+
+        ③
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <div class="point">
+
+        <div class="point-title">
+
+            마지막으로 말해보세요!
+
+        </div>
+
+        오늘은 왜 못 해요?
+
+    </div>
+
+
+    <div class="page-number">
+
+        12
+
+    </div>
+
+</section>
+
+</div>
+
+
+</div>
+<!-- BOOK END -->
+
+
+
+<!-- =========================================================
+     MENU
+========================================================= -->
+
+<div
+    class="menu-overlay"
+    id="menuOverlay"
+>
+
+
+    <div class="menu-modal">
+
+
+        <div class="menu-header">
+
+            <h2>
+                学習メニュー
+            </h2>
+
+            <button
+                class="close-button"
+                onclick="closeMenu()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="menu-body"
+            id="menuBody"
+        >
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   DATA
+========================================================= */
+
+const verbData = [
+
+    {
+        word: "가다",
+        answer: "못 가요."
+    },
+
+    {
+        word: "먹다",
+        answer: "못 먹어요."
+    },
+
+    {
+        word: "마시다",
+        answer: "못 마셔요."
+    },
+
+    {
+        word: "보다",
+        answer: "못 봐요."
+    },
+
+    {
+        word: "만나다",
+        answer: "못 만나요."
+    },
+
+    {
+        word: "하다",
+        answer: "못 해요."
+    },
+
+    {
+        word: "읽다",
+        answer: "못 읽어요."
+    },
+
+    {
+        word: "쓰다",
+        answer: "못 써요."
+    },
+
+    {
+        word: "자다",
+        answer: "못 자요."
+    },
+
+    {
+        word: "사다",
+        answer: "못 사요."
+    }
+
+];
+
+
+const wordData = [
+
+    {
+        jp: "時間",
+        kr: "시간",
+        example: "시간이 없어요."
+    },
+
+    {
+        jp: "約束",
+        kr: "약속",
+        example: "약속이 있어요."
+    },
+
+    {
+        jp: "忙しい",
+        kr: "바쁘다",
+        example: "오늘은 바빠요."
+    },
+
+    {
+        jp: "遅い",
+        kr: "늦다",
+        example: "너무 늦었어요."
+    },
+
+    {
+        jp: "お腹がいっぱいだ",
+        kr: "배부르다",
+        example: "배가 불러요."
+    },
+
+    {
+        jp: "時間がない",
+        kr: "시간이 없다",
+        example: "시간이 없어요."
+    }
+
+];
+
+
+const quizData = [
+
+    {
+        jp: "今日は行けません。",
+        kr: "오늘은 못 가요."
+    },
+
+    {
+        jp: "ご飯を食べられません。",
+        kr: "밥을 못 먹어요."
+    },
+
+    {
+        jp: "お酒を飲めません。",
+        kr: "술을 못 마셔요."
+    },
+
+    {
+        jp: "友達に会えません。",
+        kr: "친구를 못 만나요."
+    },
+
+    {
+        jp: "映画を見ることができません。",
+        kr: "영화를 못 봐요."
+    },
+
+    {
+        jp: "今日は勉強できません。",
+        kr: "오늘은 공부를 못 해요."
+    },
+
+    {
+        jp: "本を読めません。",
+        kr: "책을 못 읽어요."
+    },
+
+    {
+        jp: "今日は寝られません。",
+        kr: "오늘은 못 자요."
+    }
+
+];
+
+
+let quizIndex = 0;
+
+let wordIndex = 0;
+
+
+/* =========================================================
+   MENU OPEN
+========================================================= */
+
+function openMenu() {
+
+    const overlay =
+        document.getElementById("menuOverlay");
+
+    overlay.classList.add("active");
+
+    renderMainMenu();
+
+}
+
+
+/* =========================================================
+   MENU CLOSE
+========================================================= */
+
+function closeMenu() {
+
+    document
+        .getElementById("menuOverlay")
+        .classList
+        .remove("active");
+
+}
+
+
+/* =========================================================
+   MAIN MENU
+========================================================= */
+
+function renderMainMenu() {
+
+    const body =
+        document.getElementById("menuBody");
+
+
+    body.innerHTML = `
+
+        <div class="menu-list">
+
+            <button
+                class="menu-button"
+                onclick="showVerbPractice()"
+            >
+                1. 動詞「못」変形練習
+            </button>
+
+
+            <button
+                class="menu-button"
+                onclick="showWords()"
+            >
+                2. 新しい単語
+            </button>
+
+
+            <button
+                class="menu-button"
+                onclick="showQuiz()"
+            >
+                3. 日本語 → 韓国語変形練習
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   BACK
+========================================================= */
+
+function addBackButton() {
+
+    const body =
+        document.getElementById("menuBody");
+
+
+    const button =
+        document.createElement("button");
+
+
+    button.className =
+        "menu-button";
+
+
+    button.style.marginTop =
+        "15px";
+
+
+    button.textContent =
+        "← 学習メニューに戻る";
+
+
+    button.onclick =
+        renderMainMenu;
+
+
+    body.appendChild(button);
+
+}
+
+
+/* =========================================================
+   1. VERB PRACTICE
+========================================================= */
+
+function showVerbPractice() {
+
+    const body =
+        document.getElementById("menuBody");
+
+
+    body.innerHTML = `
+
+        <h3 style="
+            margin-bottom:15px;
+            font-size:17px;
+        ">
+            動詞「못」変形練習
+        </h3>
+
+        <p style="
+            margin-bottom:18px;
+            font-size:12px;
+            color:#777;
+        ">
+            動詞の前に「못」を置いてみましょう。
+        </p>
+
+    `;
+
+
+    verbData.forEach(
+        (item, index) => {
+
+
+            const box =
+                document.createElement("div");
+
+
+            box.className =
+                "practice-item";
+
+
+            box.style.marginBottom =
+                "10px";
+
+
+            box.innerHTML = `
+
+                <div class="practice-number">
+
+                    ${index + 1}
+
+                </div>
+
+
+                <div class="practice-word">
+
+                    ${item.word}
+
+                </div>
+
+
+                <div
+                    class="quiz-answer hidden"
+                    id="verbAnswer${index}"
+                    style="margin-top:8px;"
+                >
+
+                    ${item.answer}
+
+                </div>
+
+
+                <button
+                    class="show-answer"
+                    onclick="
+                        toggleAnswer(
+                            'verbAnswer${index}'
+                        )
+                    "
+                >
+
+                    정답 보기
+
+                </button>
+
+            `;
+
+
+            body.appendChild(box);
+
+        }
+    );
+
+
+    addBackButton();
+
+}
+
+
+/* =========================================================
+   2. NEW WORDS
+========================================================= */
+
+function showWords() {
+
+    wordIndex = 0;
+
+    renderWord();
+
+}
+
+
+function renderWord() {
+
+    const body =
+        document.getElementById("menuBody");
+
+
+    const item =
+        wordData[wordIndex];
+
+
+    body.innerHTML = `
+
+        <div class="quiz">
+
+            <div class="quiz-progress">
+
+                ${wordIndex + 1}
+                /
+                ${wordData.length}
+
+            </div>
+
+
+            <div class="word-card">
+
+                <div class="word-jp">
+
+                    日本語
+
+                </div>
+
+
+                <div class="word-kr">
+
+                    ${item.kr}
+
+                </div>
+
+
+                <div class="word-example">
+
+                    ${item.example}
+
+                </div>
+
+            </div>
+
+
+            <div class="quiz-jp">
+
+                ${item.jp}
+
+            </div>
+
+
+            <div class="quiz-navigation">
+
+                <button
+                    class="arrow"
+                    onclick="previousWord()"
+                >
+                    ‹
+                </button>
+
+
+                <span>
+
+                    ${wordIndex + 1}
+                    /
+                    ${wordData.length}
+
+                </span>
+
+
+                <button
+                    class="arrow"
+                    onclick="nextWord()"
+                >
+                    ›
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    addBackButton();
+
+}
+
+
+function nextWord() {
+
+    wordIndex++;
+
+
+    if (
+        wordIndex >=
+        wordData.length
+    ) {
+
+        wordIndex = 0;
+
+    }
+
+
+    renderWord();
+
+}
+
+
+function previousWord() {
+
+    wordIndex--;
+
+
+    if (
+        wordIndex < 0
+    ) {
+
+        wordIndex =
+            wordData.length - 1;
+
+    }
+
+
+    renderWord();
+
+}
+
+
+/* =========================================================
+   3. JAPANESE → KOREAN
+========================================================= */
+
+function showQuiz() {
+
+    quizIndex = 0;
+
+    renderQuiz();
+
+}
+
+
+function renderQuiz() {
+
+    const body =
+        document.getElementById("menuBody");
+
+
+    const item =
+        quizData[quizIndex];
+
+
+    body.innerHTML = `
+
+        <div class="quiz">
+
+
+            <div class="quiz-progress">
+
+                ${quizIndex + 1}
+                /
+                ${quizData.length}
+
+            </div>
+
+
+            <div class="quiz-jp">
+
+                ${item.jp}
+
+            </div>
+
+
+            <div
+                class="quiz-answer hidden"
+                id="quizAnswer"
+            >
+
+                ${item.kr}
+
+            </div>
+
+
+            <button
+                class="show-answer"
+                onclick="
+                    toggleAnswer(
+                        'quizAnswer'
+                    )
+                "
+            >
+
+                정답 보기
+
+            </button>
+
+
+            <div class="quiz-navigation">
+
+
+                <button
+                    class="arrow"
+                    onclick="previousQuiz()"
+                >
+
+                    ‹
+
+                </button>
+
+
+                <span>
+
+                    ${quizIndex + 1}
+                    /
+                    ${quizData.length}
+
+                </span>
+
+
+                <button
+                    class="arrow"
+                    onclick="nextQuiz()"
+                >
+
+                    ›
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+    `;
+
+
+    addBackButton();
+
+}
+
+
+function nextQuiz() {
+
+    quizIndex++;
+
+
+    if (
+        quizIndex >=
+        quizData.length
+    ) {
+
+        quizIndex = 0;
+
+    }
+
+
+    renderQuiz();
+
+}
+
+
+function previousQuiz() {
+
+    quizIndex--;
+
+
+    if (
+        quizIndex < 0
+    ) {
+
+        quizIndex =
+            quizData.length - 1;
+
+    }
+
+
+    renderQuiz();
+
+}
+
+
+/* =========================================================
+   ANSWER
+========================================================= */
+
+function toggleAnswer(id) {
+
+    const element =
+        document.getElementById(id);
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.classList.toggle(
+        "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   CTRL + M
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+
+        if (
+
+            event.ctrlKey &&
+
+            event.key.toLowerCase()
+            === "m"
+
+        ) {
+
+
+            event.preventDefault();
+
+
+            openMenu();
+
+        }
+
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeMenu();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   OUTSIDE CLICK
+========================================================= */
+
+document
+    .getElementById("menuOverlay")
+    .addEventListener(
+        "click",
+        function(event) {
+
+
+            if (
+                event.target === this
+            ) {
+
+                closeMenu();
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
